@@ -1,5 +1,5 @@
-curl  -H "Accept:application/json" -H "Content-Type:application/json" -XPOST  "http://cmsrs2.loc/api/register" -d '{ 
+curl  -H "Accept:application/json" -H "Content-Type:application/json" -XPOST  "http://cmsrs3.loc/api/register" -d '{ 
     "name": "robert", 
-    "email": "rob7@cmsrs.pl", 
+    "email": "rob8@cmsrs.pl", 
     "password": "cmsrs"
 }'
