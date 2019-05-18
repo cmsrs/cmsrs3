@@ -1,37 +1,34 @@
 # cmsRS
 
 
-1.
-composer install
+* composer install
 
+* create vhost
 
-2.
-create vhost
+* permission
 
-
-3.
 chmod -R 777 storage
 chmod -R 777 bootstrap/cache
 
+* set database config in file .env
 
-4. set database config in file .env
+* laravel and jwt config:
 
-
-5.
+```bash
 php artisan key:generate
 php artisan jwt:secret
+```bash
 
+* migrate
 
-6.
 php artisan migrate
 
 
-7.
-run tests
+* run tests
+
 ./vendor/bin/phpunit
 
-
-logs:
+* logs:
 tail -f -n0 /var/log/apache2/cmsrs* storage/logs/*
 
 
