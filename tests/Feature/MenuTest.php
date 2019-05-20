@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Menu;
-use App\User;
+//use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 //use Tests\TestCase;

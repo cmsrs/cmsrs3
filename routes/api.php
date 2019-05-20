@@ -26,11 +26,11 @@ Route::group(['middleware' => ['jwt.auth']], function() {
     Route::get('menus', 'MenuController@index');
     Route::post('menus', 'MenuController@create');
     Route::put('menus/{id}', 'MenuController@update');
-    Route::delete('menus/{id}', 'MenuController@delete');                
+    Route::delete('menus/{id}', 'MenuController@delete');
+
+    Route::get('pages', 'PageController@index');
+    Route::post('pages', 'PageController@create');
+    Route::put('pages/{id}', 'PageController@update');
+    Route::delete('pages/{id}', 'PageController@delete');
+
 });
-
-
-
-//Route::middleware('auth:api')->get('/user', function (Request $request) {
-//    return $request->user();
-//});

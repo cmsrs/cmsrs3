@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use JWTAuth;
+//use JWTAuth;
 
 use App\Menu;
 use Validator;
@@ -48,8 +48,12 @@ class MenuController extends Controller
         return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
     }
 
+    try{
+      $ret = Menu::create( $data );
+    } catch (\Exception $e) {
+      return response()->json(['success'=> false, 'error'=> 'Add menu problem - exeption'], 200);
+    }
 
-    $ret = Menu::create( $data );
     //var_dump($ret);
 
     return response()->json(['success'=> true]);
@@ -79,7 +83,14 @@ class MenuController extends Controller
 
 
       //$res = $menu->update($request->all());
-      $res = $menu->update($data);
+      try{
+        $res = $menu->update($data);
+      } catch (\Exception $e) {
+          return response()->json(['success'=> false, 'error'=> 'Update menu problem - exeption'], 200);
+      }
+
+
+
       if(empty($res)){
         return response()->json(['success'=> false, 'error'=> 'Update menu problem'], 200);
       }
