@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Page;
 use Validator;
+use Illuminate\Support\Facades\Log;
 
 
 class PageController extends Controller
@@ -47,6 +48,7 @@ class PageController extends Controller
     try{
       $ret = Page::create( $data );
     } catch (\Exception $e) {
+      Log::error('page add ex: '.$e->getMessage() );
       return response()->json(['success'=> false, 'error'=> 'Add page problem - exeption'], 200);
     }
 
@@ -73,6 +75,7 @@ class PageController extends Controller
       try{
         $res = $page->update($data);
       } catch (\Exception $e) {
+          Log::error('page update ex: '.$e->getMessage() );
           return response()->json(['success'=> false, 'error'=> 'Update page problem - exeption'], 200);
       }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 //use JWTAuth;
 
 use App\Menu;
@@ -51,6 +52,7 @@ class MenuController extends Controller
     try{
       $ret = Menu::create( $data );
     } catch (\Exception $e) {
+      Log::error('menu add ex: '.$e->getMessage() );
       return response()->json(['success'=> false, 'error'=> 'Add menu problem - exeption'], 200);
     }
 
@@ -86,6 +88,7 @@ class MenuController extends Controller
       try{
         $res = $menu->update($data);
       } catch (\Exception $e) {
+          Log::error('menu update ex: '.$e->getMessage() );
           return response()->json(['success'=> false, 'error'=> 'Update menu problem - exeption'], 200);
       }
 
