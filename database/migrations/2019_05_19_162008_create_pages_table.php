@@ -24,7 +24,7 @@ class CreatePagesTable extends Migration
             $table->integer('position')->unsigned()->nullable();
             $table->enum('type', ['cms', 'gallery']);
             $table->unsignedBigInteger('menu_id')->nullable();
-            $table->foreign('menu_id')->nullable()->references('id')->on('menus');
+            $table->foreign('menu_id')->nullable()->references('id')->on('menus')->onDelete('cascade');
             $table->timestamps();
         });
     }
