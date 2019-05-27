@@ -20,25 +20,39 @@ class PageController extends Controller
       'title' => 'max:255|required',
       'short_title' => 'max:128',
       'published' => 'boolean',
-      'position'=> 'numeric',
+      //'position'=> 'numeric',
+      'type' => 'in:cms,gallery'
       // 'type' => [
       //     'required',
       //     Rule::in(['cms', 'gallery']),
-      // ],
+      // ]
       //'menu_id' => 'integer'
   ];
 
   public function index()
   {
-      $pages = Page::get(['id', 'title', 'short_title', 'published', 'position', 'type', 'menu_id'])->toArray();
+      $pages = Page::query()->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'published', 'position', 'type', 'menu_id'])->toArray();
 
       return response()->json(['success' => true, 'data'=> $pages], 200);
   }
 
+  public function position(Request $request, $direction, $id)
+  {
+      $ret = Page::swapPosition($direction, $id);
+      return response()->json(['success'=> $ret]);
+  }
+
+
   public function create(Request $request)
   {
 
-    $data = $request->only('title', 'short_title', 'published', 'position', 'type', 'menu_id');
+    $data = $request->only('title', 'short_title', 'published',  'type', 'menu_id');
+
+
+    $menuId = empty($data['menu_id']) ? null : $data['menu_id'];
+    $data['position'] = Page::getNextPositionByMenuId($menuId);
+
+
 
     $validator = Validator::make($data, $this->validationRules);
     if($validator->fails()) {
@@ -66,7 +80,7 @@ class PageController extends Controller
         return response()->json(['success'=> false, 'error'=> 'Page not find'], 200);
       }
 
-      $data = $request->only('title', 'short_title', 'published', 'position', 'type', 'menu_id');
+      $data = $request->only('title', 'short_title', 'published',  'type', 'menu_id'); //'position',
       $validator = Validator::make($data, $this->validationRules);
       if($validator->fails()) {
           return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);

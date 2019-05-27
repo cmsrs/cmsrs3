@@ -19,14 +19,14 @@ class MenuController extends Controller
   //   $this->user = JWTAuth::parseToken()->authenticate();
   // }
   private $validationRules = [
-      'name' => 'max:255|required',
-      'position' => 'numeric'
+      'name' => 'max:255|required'
+      //'position' => 'numeric'
   ];
 
 
   public function index()
   {
-      $menus = Menu::get(['id',  'name', 'position'])->toArray();
+      $menus = Menu::query()->orderBy('position', 'asc')->get(['id',  'name', 'position'])->toArray();
 
       return response()->json(['success' => true, 'data'=> $menus], 200);
       //$ret = $this->menu->getAll();
@@ -35,10 +35,17 @@ class MenuController extends Controller
       //die('_____index______');
   }
 
+  public function position(Request $request, $direction, $id)
+  {
+      $ret = Menu::swapPosition($direction, $id);
+      return response()->json(['success'=> $ret]);      
+  }
+
   public function create(Request $request)
   {
 
-    $data = $request->only('name', 'position');
+    //$data = $request->only('name', 'position');
+    $data = $request->only('name');
 
     // $rules = [
     //     'name' => 'max:255|required',
@@ -48,6 +55,8 @@ class MenuController extends Controller
     if($validator->fails()) {
         return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
     }
+
+    $data['position'] = Menu::getNextPosition();
 
     try{
       $ret = Menu::create( $data );
@@ -77,7 +86,9 @@ class MenuController extends Controller
         return response()->json(['success'=> false, 'error'=> 'Menu not find'], 200);
       }
 
-      $data = $request->only('name', 'position');
+      $data = $request->only('name');
+      //, 'position'
+
       $validator = Validator::make($data, $this->validationRules);
       if($validator->fails()) {
           return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);

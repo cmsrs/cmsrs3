@@ -27,10 +27,12 @@ Route::group(['middleware' => ['jwt.auth']], function() {
     Route::post('menus', 'MenuController@create');
     Route::put('menus/{id}', 'MenuController@update');
     Route::delete('menus/{id}', 'MenuController@delete');
+    Route::get('menus/position/{direction}/{id}', 'MenuController@position');
 
     Route::get('pages', 'PageController@index');
     Route::post('pages', 'PageController@create');
     Route::put('pages/{id}', 'PageController@update');
     Route::delete('pages/{id}', 'PageController@delete');
+    Route::get('pages/position/{direction}/{id}', 'PageController@position');
 
 });

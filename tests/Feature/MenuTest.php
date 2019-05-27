@@ -16,6 +16,7 @@ class MenuTest extends Base
     //private $token;
     private $testData;
 
+
     public function setUp(): void
     {
         parent::setUp();
@@ -23,13 +24,67 @@ class MenuTest extends Base
         $this->testData =
         [
              'name'     => 'test menu1',
-             'position' => 2
+             'position' => 4
         ];
 
         $menu = new Menu($this->testData);
 
         $menu->save();
     }
+
+    /** @test */
+    public function it_will_change_position_menus()
+    {
+      //add to test menu
+      $testData2 =
+      [
+           'name'     => 'test menu2',
+           //'position' => 2
+      ];
+      $response2 = $this->post('api/menus?token='.$this->token, $testData2);
+
+      $testData3 =
+      [
+           'name'     => 'test menu3',
+           //'position' => 3
+      ];
+      $response3 = $this->post('api/menus?token='.$this->token, $testData3);
+      //test if 3 $menus
+      $response = $this->get('api/menus?token='.$this->token );
+      $res = $response->getData();
+      $this->assertTrue( $res->success );
+      $this->assertEquals( count($res->data), 3);
+      $this->assertEquals( $res->data[2]->position, 6 );
+
+      $name = $res->data[2]->name;
+      $res = $this->get('api/menus/position/up/'.$res->data[2]->id.'?token='.$this->token );
+
+      $res22a = $res->getData();
+      $this->assertTrue( $res22a->success );
+
+
+      $response = $this->get('api/menus?token='.$this->token );
+      $res1 = $response->getData();
+
+
+      $this->assertEquals( $res1->data[2]->name, $testData2['name'] );
+      $this->assertNotEquals( $res1->data[2]->name, $name );
+
+
+      $name1 = $res1->data[2]->name;
+      $resDown = $this->get('api/menus/position/down/'.$res1->data[2]->id.'?token='.$this->token );
+      $res22a1 = $resDown->getData();
+      $this->assertTrue( $res22a1->success );
+
+
+      $response = $this->get('api/menus?token='.$this->token );
+      $res2 = $response->getData();
+
+      $this->assertNotEquals( $res2->data[2]->name, $name1 );
+      $this->assertEquals( $res2->data[0]->name, $name1);
+      //var_dump($res0); die('--');
+    }
+
 
 
     /** @test */
@@ -55,12 +110,12 @@ class MenuTest extends Base
       $testData2 =
       [
            'name'     => 'test menu2',
-           'position' => 3
+           //'position' => 3
       ];
 
       $response = $this->post('api/menus?token='.$this->token, $testData2);
 
-      //var_dump($response);
+      //var_dump($response); die('----');
 
       $res = $response->getData();
       $this->assertTrue( $res->success );
@@ -73,13 +128,19 @@ class MenuTest extends Base
 
       $this->assertTrue( $res2->success );
       $this->assertEquals( count($res2->data), 2);
+      //print_r((array)$res2->data);
+
       $data = (array)$res2->data[0];
       unset($data['id']);
       $this->assertSame($data, $this->testData);
-
-
       $data2 = (array)$res2->data[1];
+
       unset($data2['id']);
+      $testData2['position'] = $data['position'] + 1;
+
+      //print_r($data2);
+      //print_r($testData2);
+
       $this->assertSame($data2, $testData2);
 
       //wrond data
@@ -91,13 +152,14 @@ class MenuTest extends Base
 
       $response22 = $this->post('api/menus?token='.$this->token, $testData22);
 
+      //var_dump($response22); die('========');
+
+
       $res22 = $response22->getData();
-      $this->assertFalse( $res22->success );
-      $this->assertNotEmpty( $res22->error );
+      $this->assertTrue( $res22->success );
+      //$this->assertEmpty( $res22->error );
 
       //var_dump($response2);
-
-
     }
 
     /** @test */
@@ -107,13 +169,16 @@ class MenuTest extends Base
       $responseAll = $this->get('api/menus?token='.$this->token );
       $resAll = $responseAll->getData();
       $id = $resAll->data[0]->id;
+
+      //print_r($resAll->data[0]);
+
       //$id = 1;
 
       $testData3 =
       [
             'id' => $id,
             'name' => 'test menu3',
-            'position' => 3
+            'position' => $resAll->data[0]->position
       ];
 
       $response0 = $this->put('api/menus/'.$id.'?token='.$this->token, $testData3);
@@ -146,8 +211,8 @@ class MenuTest extends Base
       $response33 = $this->put('api/menus/'.$id.'?token='.$this->token, $testData33);
       //var_dump($response33);
       $res33 = $response33->getData();
-      $this->assertFalse( $res33->success );
-      $this->assertNotEmpty( $res33->error );
+      $this->assertTrue( $res33->success );
+      //$this->assertEmpty( $res33->error );
 
 
     }
@@ -157,7 +222,6 @@ class MenuTest extends Base
     {
       $responseAll = $this->get('api/menus?token='.$this->token );
       $resAll = $responseAll->getData();
-      //var_dump($resAll);
       $this->assertNotEmpty($resAll->data);
       $id = $resAll->data[0]->id;
       $this->assertNotEmpty($id);
