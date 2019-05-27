@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Page extends Model
 {
     protected $fillable = [
-        'title', 'short_title', 'published', 'position', 'type', 'menu_id'
+        'title', 'short_title', 'published', 'position', 'type', 'content', 'menu_id'
     ];
 
     static public function getNextPositionByMenuId( $menuId )

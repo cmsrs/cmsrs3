@@ -30,6 +30,7 @@ class PageTest extends Base
             'published' => 1,
             'position' => 7,
             'type' => 'cms',
+            'content' => 'content test133445',
             'menu_id' => null
         ];
 
@@ -80,6 +81,7 @@ class PageTest extends Base
            'published' => 0,
            //'position' => 3,
            'type' => 'cms',
+           //'content' => null
            'menu_id' => null
       ];
 
@@ -196,6 +198,7 @@ class PageTest extends Base
            'published' => 0,
            //'position' => 3,
            'type' => 'cms',
+           'content' => 'aaa ffdfds',
            'menu_id' => null
       ];
 
@@ -216,6 +219,9 @@ class PageTest extends Base
       $this->assertEquals( count($res2->data), 2);
       $data = (array)$res2->data[0];
       unset($data['id']);
+
+      //dump($data); die('==');
+
       $this->assertSame($data, $this->testData);
 
       $data2 = (array)$res2->data[1];
@@ -259,6 +265,7 @@ class PageTest extends Base
            'published' => 0,
            //'position' => 3,
            'type' => 'cms',
+           'content' => 'sdafsfsdaf asdfasdf',
            'menu_id' =>  2354 //$this->menuId
       ];
 
@@ -338,6 +345,7 @@ class PageTest extends Base
             //'position' => 3,
             'type' => 'cms',
             //'menu_id' => null
+            'content' => 'gg',
             'menu_id' => null
 
       ];
@@ -401,6 +409,7 @@ class PageTest extends Base
             'short_title' => 'p3',
             'published' => 1,
             //'position' => 3,
+            'content' => null,
             'type' => 'cms',
             //'menu_id' => null
             'menu_id' => 9123
