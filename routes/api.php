@@ -35,4 +35,7 @@ Route::group(['middleware' => ['jwt.auth']], function() {
     Route::delete('pages/{id}', 'PageController@delete');
     Route::get('pages/position/{direction}/{id}', 'PageController@position');
 
+    Route::get('images/{pageId}', 'ImageController@getItemByPageId');
+    Route::delete('images/{id}',  'ImageController@delete');
+    Route::get('images/position/{direction}/{id}', 'ImageController@position');    
 });

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 //use JWTAuth;
 
 use App\Page;
+use App\Image;
 use Validator;
 use Illuminate\Support\Facades\Log;
 
@@ -46,7 +47,7 @@ class PageController extends Controller
   public function create(Request $request)
   {
 
-    $data = $request->only('title', 'short_title', 'published',  'type', 'content', 'menu_id');
+    $data = $request->only('title', 'short_title', 'published',  'type', 'content', 'menu_id', 'images');
 
 
     $menuId = empty($data['menu_id']) ? null : $data['menu_id'];
@@ -60,14 +61,33 @@ class PageController extends Controller
     }
 
     try{
-      $ret = Page::create( $data );
+      $page = Page::create( $data );
+      //var_dump($ret->id);
+      if( empty($page->id)){
+        throw new \Exception("I cant get page id");
+      }
+
+      if( !empty($data['images']) && is_array($data['images']) ){
+        //var_dump($data['images']); die('====+++++++++++++==========');
+        Image::createImages($data['images'], $page->id);
+
+
+
+        //var_dump($data);
+        //die('--------');
+
+      }
+
+      //var_dump($data);
+      //var_dump($ret);
+      //die('++++++++++');
+
     } catch (\Exception $e) {
       Log::error('page add ex: '.$e->getMessage() );
-      return response()->json(['success'=> false, 'error'=> 'Add page problem - exeption'], 200);
+      return response()->json(['success'=> false, 'error'=> 'Add page problem, details in the log file.'], 200); //.$e->getMessage()
     }
 
-
-    return response()->json(['success'=> true]);
+    return response()->json(['success'=> true, 'data' => ['pageId' => $page->id, 'data' => $data] ]);
   }
 
   public function update(Request $request, $id)

@@ -71,6 +71,7 @@ class PageTest extends Base
       $this->assertNotEmpty($data['id']);
     }
 
+
     /** @test */
     public function it_will_add_pages_to_check_possition()
     {
