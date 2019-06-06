@@ -21,7 +21,7 @@ class ImageController extends Controller
   public function getItemByPageId(Request $request, $pageId)
   {
     //var_dump($pageId);
-    $images = Image::getImagesByPageId($pageId);
+    $images = Image::getImagesAndThumbsByPageId($pageId, false);
 
     return response()->json(['success' => true, 'data'=> $images], 200);
     //var_dump($data);
@@ -43,13 +43,7 @@ class ImageController extends Controller
         return response()->json(['success'=> false, 'error'=> 'Image not find'], 200);
       }
 
-
-      //$dirFiles = Image::getImageDir( $image->page_id, $image->id );
-      //echo $dirToDel."\n";
-
-      $image->deleteImg();
       $res = $image->delete();
-      //var_dump($res);
       if(empty($res)){
         return response()->json(['success'=> false, 'error'=> 'Update delete problem'], 200);
       }

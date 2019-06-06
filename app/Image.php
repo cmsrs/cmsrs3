@@ -40,19 +40,52 @@ class Image extends Model
         return   strtolower( trim(  $string) );
     }
 
-
-    public function deleteImg()
+    public function delete()
     {
-      $imgDir = Image::getImageDir( $this->page_id, $this->id );
+      //echo "______________________hhh_____________";
 
-      $fileName = pathinfo($this->name, PATHINFO_FILENAME );
-      $imgPathDel = $imgDir.'/'.$fileName.'*.*';
-      $filesToDel = glob($imgPathDel);
-      foreach ($filesToDel as $path) {
-        //echo "\n"."kasuje= ".$path;
+      $this->deleteImg();
+      return parent::delete();
+    }
+
+    private function deleteImg()
+    {
+      $allImg = self::getAllImage($this);
+      foreach ($allImg as $key => $path) {
         unlink($path);
       }
 
+      // $imgDir = Image::getImageDir( $this->page_id, $this->id );
+      // $fileName = pathinfo($this->name, PATHINFO_FILENAME );
+      // $imgPathDel = $imgDir.'/'.$fileName.'*.*';
+      // $filesToDel = glob($imgPathDel);
+      // foreach ($filesToDel as $path) {
+      //   //echo "\n"."kasuje= ".$path;
+      //   unlink($path);
+      // }
+    }
+
+    /**
+    *  return all thumbs and main img
+    */
+    public  static  function getAllImage($img, $isAbs = true){
+      $out = [];
+      $imgDir = Image::getImageDir( $img->page_id, $img->id, $isAbs );
+      $fileName = pathinfo($img->name, PATHINFO_FILENAME );
+      $fileExt = pathinfo($img->name, PATHINFO_EXTENSION );
+
+      $out['org'] = $imgDir.'/'.$img->name;
+      foreach (self::$thumbs as $imgName => $dimention) {
+        $out[$imgName] = $imgDir.'/'.$fileName.'-'.$imgName.'.'.$fileExt;
+      }
+
+      // $imgPathDel = $imgDir.'/'.$fileName.'*.*';
+      // $filesToDel = glob($imgPathDel);
+      // foreach ($filesToDel as $path) {
+      //   $out[] =  $path;
+      // }
+
+      return $out;
     }
 
 
@@ -70,9 +103,15 @@ class Image extends Model
     //   return public_path( Image::IMAGE_DIR.'/'.$pageId.'/'.$imageId.'/'.$name);
     // }
 
-    static public function getImageDir( $pageId, $imageId )
+    static public function getImageDir( $pageId, $imageId, $isAbs = true )
     {
-      return public_path( Image::IMAGE_DIR.'/'.$pageId.'/'.$imageId);
+      $url = Image::IMAGE_DIR.'/'.$pageId.'/'.$imageId;
+
+      if($isAbs){
+        return public_path($url);
+      }
+
+      return '/'.$url;
     }
 
     static public function createImages($images, $pageId){
@@ -147,6 +186,17 @@ class Image extends Model
         return 1;
       }
       return  $image->position+1;
+    }
+
+    static public function getImagesAndThumbsByPageId($pageId = null)
+    {
+      $images  = Image::getImagesByPageId($pageId);
+      foreach($images  as $k => $img){
+        $images[$k]['fs']  = Image::getAllImage($img, false);
+      }
+      //echo public_path();
+
+      return $images;
     }
 
     static public function getImagesByPageId($pageId = null)

@@ -15,20 +15,54 @@ class ImageTest extends Base
     //use DatabaseMigrations;
     use RefreshDatabase;
 
-    //private $token;
-    private $testData;
-    private $testDataMenu;
-    private $menuId;
+    private $name1;
+    private $name2;
+    private $pageId;
+    private $testImgData;
 
     public function setUp(): void
     {
         parent::setUp();
+
+        $this->name1 = 'phpunittest1.jpg';
+        $file1 = $this->getFixtureBase64($this->name1);
+
+        $this->name2 = 'phpunittest2.jpg';
+        $file2 = $this->getFixtureBase64($this->name2);
+
+        $this->testImgData =
+        [
+            'title' => 'img Title',
+            'images' => [
+              ['name' => $this->name1, 'data' => $file1],
+              ['name' => $this->name2, 'data' => $file2]
+            ]
+        ];
+
+        $response = $this->post('api/pages?token='.$this->token, $this->testImgData);
+        //var_dump($response); die('==========');
+
+
+        $res = $response->getData();
+        $this->assertTrue( $res->success );
+
+        $this->assertNotEmpty( $pageId = $res->data->pageId);
+
+        $this->pageId = $pageId;
     }
 
+    // protected function tearDown(): void
+    // {
+    //   parent::tearDown();
+    // }
 
-    private function checkFileExists($imgDbData, $pageId)
-    {
-      foreach ($imgDbData as $key => $img) {
+    private function clear_imgs(){
+      $pageId = $this->pageId;
+      $responseClear = $this->get('api/images/'.$pageId.'?token='.$this->token);
+      $resClear = $responseClear->getData();
+      $this->assertTrue( $resClear->success );
+
+      foreach ($resClear->data as $key => $img) {
         $pId = $img->page_id;
         $imgId = $img->id;
         $name = $img->name;
@@ -57,62 +91,56 @@ class ImageTest extends Base
       }
     }
 
+
     /** @test */
-    public function it_will_add_pages_with_images()
+    public function it_will_get_pages_with_images()
     {
-      $name1 = 'phpunittest1.jpg';
-      $file1 = $this->getFixtureBase64($name1);
+      $response2 = $this->get('api/images/'.$this->pageId.'?token='.$this->token);
+      //var_dump($response2); die('-------------');
 
-      $name2 = 'phpunittest2.jpg';
-      $file2 = $this->getFixtureBase64($name2);
-
-      $testImgData =
-      [
-          'title' => 'img Title',
-          'images' => [
-            ['name' => $name1, 'data' => $file1],
-            ['name' => $name2, 'data' => $file2]
-          ]
-      ];
-
-      $response = $this->post('api/pages?token='.$this->token, $testImgData);
-      //var_dump($response); die('==========');
-
-
-      $res = $response->getData();
-      $this->assertTrue( $res->success );
-
-      $this->assertNotEmpty( $pageId = $res->data->pageId);
-
-      // $images = $testImgData['images'];
-      // $out = Image::createImages($images, $pageId);
-      // $this->assertEquals( count($out), 2);
-      // $out2 = Image::getImagesByPageId();
-      // var_dump($out2->toArray());
-
-
-      $response2 = $this->get('api/images/'.$pageId.'?token='.$this->token);
       $res2 = $response2->getData();
       $this->assertTrue( $res2->success );
       $this->assertEquals( count($res2->data), 2);
 
-      //swap possition
-      //print_r($res2->data);
-      $this->assertEquals($res2->data[0]->name, $name1);
+      foreach($res2->data as $imageUrl ){
+        $fs = (array)$imageUrl->fs;
+
+        $this->assertEquals(count($fs),  count(Image::$thumbs) + 1);
+      }
+      $this->assertEquals($res2->data[0]->name, $this->name1);
+
+
+      //dump($res2->data);
+
+
+      $this->clear_imgs();
+    }
+
+    /** @test */
+    public function it_will_get_change_position_images()
+    {
+      $response2 = $this->get('api/images/'.$this->pageId.'?token='.$this->token);
+      $res2 = $response2->getData();
+
 
       $resSwap = $this->get('api/images/position/up/'.$res2->data[0]->id.'?token='.$this->token);
 
-      $response2Swap = $this->get('api/images/'.$pageId.'?token='.$this->token);
+      $response2Swap = $this->get('api/images/'.$this->pageId.'?token='.$this->token);
       $res2Swap = $response2Swap->getData();
       $this->assertTrue( $res2Swap->success );
       $this->assertEquals( count($res2Swap->data), 2);
 
-      $this->assertEquals($res2Swap->data[0]->name, $name2);
+      $this->assertEquals($res2Swap->data[0]->name, $this->name2);
+      $this->clear_imgs();
+    }
 
-
-
-
+    /** @test */
+    public function it_will_delete_image()
+    {
       //delete first image
+      $response2 = $this->get('api/images/'.$this->pageId.'?token='.$this->token);
+      $res2 = $response2->getData();
+
       $imgToDel = $res2->data[0];
       $this->assertNotEmpty($imgToDel->id);
 
@@ -136,61 +164,84 @@ class ImageTest extends Base
       }
 
 
-      $response22 = $this->get('api/images/'.$pageId.'?token='.$this->token);
+      $response22 = $this->get('api/images/'.$this->pageId.'?token='.$this->token);
       $res22 = $response22->getData();
       $this->assertTrue( $res22->success );
       $this->assertEquals( count($res22->data), 1);
+      $this->clear_imgs();
+    }
 
 
+    /** @test */
+    public function it_will_delete_page_with_images()
+    {
 
-      //file exist and delete
-      $this->checkFileExists($res22->data, $pageId);
+      $responseAllBefore = $this->get('api/images/'.$this->pageId.'?token='.$this->token );
+      $resAllBefore = $responseAllBefore->getData();
 
+      foreach( $resAllBefore->data as $img ){
+        $imagesFs =  Image::getAllImage($img);
+        foreach( $imagesFs as $imgFs ){
+          //echo $imgFs."\n";
+          $this->assertFileExists($imgFs);
+        }
+      }
+
+
+      $response0 = $this->delete('api/pages/'.$this->pageId.'?token='.$this->token);
+      //var_dump($response0); die('============');
+
+      $res0 = $response0->getData();
+      $this->assertTrue( $res0->success );
+
+
+      $responseAllAfter = $this->get('api/pages?token='.$this->token );
+      $resAllAfter = $responseAllAfter->getData();
+      $this->assertEmpty($resAllAfter->data);
+
+      $responseAllImgAfter = $this->get('api/images/'.$this->pageId.'?token='.$this->token );
+      $resAllImgAfter = $responseAllImgAfter->getData();
+      $this->assertEmpty($resAllImgAfter->data);
+
+
+      //echo "\n"."poooooo";
+
+      foreach( $resAllBefore->data as $img ){
+        $imagesFs =  Image::getAllImage($img);
+        foreach( $imagesFs as $imgFs ){
+          //echo($imgFs);
+          $this->assertFileNotExists($imgFs);
+        }
+      }
+      $this->clear_imgs();
+    }
+
+
+    /** @test */
+    public function it_will_add_fake_pages_with_images()
+    {
 
       //test fake
-      $testImgData['images'][1]['name'] =  $name1;
-      $this->assertEquals($testImgData['images'][0]['name'], $testImgData['images'][1]['name']);
+      $this->testImgData['images'][1]['name'] =  $this->name1;
+      $this->assertEquals($this->testImgData['images'][0]['name'], $this->testImgData['images'][1]['name']);
       //var_dump($testImgData);
-      $responseErr = $this->post('api/pages?token='.$this->token, $testImgData);
+      $responseErr = $this->post('api/pages?token='.$this->token, $this->testImgData);
       //var_dump($responseErr);
       $resErr = $responseErr->getData();
       $this->assertFalse( $resErr->success );
       $this->assertNotEmpty( $resErr->error );
 
 
+      //clear images all pages
+      $response = $this->get('api/pages?token='.$this->token );
+      $res = $response->getData();
+      $this->assertTrue( $res->success );
 
-
-
-
-
-
+      foreach($res->data as $page){
+        //dump($page->id);
+        $this->pageId = $page->id;
+        $this->clear_imgs();
+      }
     }
-
-    /** @test */
-    /*
-    public function it_will_delete_page()
-    {
-      $responseAll = $this->get('api/pages?token='.$this->token );
-      $resAll = $responseAll->getData();
-      //var_dump($resAll);
-      $this->assertNotEmpty($resAll->data);
-      $id = $resAll->data[0]->id;
-      $this->assertNotEmpty($id);
-
-      $response0 = $this->delete('api/pages/'.$id.'?token='.$this->token);
-      $res0 = $response0->getData();
-      $this->assertTrue( $res0->success );
-
-      $responseAllAfter = $this->get('api/pages?token='.$this->token );
-      $resAllAfter = $responseAllAfter->getData();
-      //var_dump($resAllAfter);
-      $this->assertEmpty($resAllAfter->data);
-    }
-    */
-
-
-
-
-
 
 }

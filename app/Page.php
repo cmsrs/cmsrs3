@@ -11,6 +11,30 @@ class Page extends Model
         'title', 'short_title', 'published', 'position', 'type', 'content', 'menu_id'
     ];
 
+    public function images()
+    {
+      return $this->hasMany('App\Image');
+    }
+
+    public function delete()
+    {
+
+        foreach($this->images()->get() as $img ){
+          $img->delete();
+        }
+
+        //echo "+++++lllllll";
+
+        //$this->images()->delete();
+        // as suggested by Dirk in comment,
+        // it's an uglier alternative, but faster
+        // Photo::where("user_id", $this->id)->delete()
+
+        // delete the user
+        return parent::delete();
+    }
+
+
     static public function getNextPositionByMenuId( $menuId )
     {
 
