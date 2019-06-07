@@ -200,7 +200,8 @@ class PageTest extends Base
            //'position' => 3,
            'type' => 'cms',
            'content' => 'aaa ffdfds',
-           'menu_id' => null
+           'menu_id' => null,
+           //'images' => []
       ];
 
       $response = $this->post('api/pages?token='.$this->token, $testData2);
@@ -220,13 +221,20 @@ class PageTest extends Base
       $this->assertEquals( count($res2->data), 2);
       $data = (array)$res2->data[0];
       unset($data['id']);
+      unset($data['images']);
 
       //dump($data); die('==');
 
-      $this->assertSame($data, $this->testData);
+      foreach( $data as $k => $v  ){
+        $this->assertEquals( $v, $this->testData[$k]);
+      }
+
+
+      //$this->assertSame($data, $this->testData);
 
       $data2 = (array)$res2->data[1];
       unset($data2['id']);
+      unset($data2['images']);
 
       $testData2['position'] = $this->testData['position'] + 1;
 
@@ -297,6 +305,8 @@ class PageTest extends Base
       $this->assertEquals( count($res2->data), 2);
       $data = (array)$res2->data[1];
       unset($data['id']);
+      unset($data['images']);
+
 
       // dump($data);
       // dump($this->testData);
@@ -307,6 +317,8 @@ class PageTest extends Base
 
       $data2 = (array)$res2->data[0];
       unset($data2['id']);
+      unset($data2['images']);      
+
 
       // dump($data2);
       // dump($testData2);
@@ -347,7 +359,9 @@ class PageTest extends Base
             'type' => 'cms',
             //'menu_id' => null
             'content' => 'gg',
-            'menu_id' => null
+            'menu_id' => null,
+            'images' => []
+
 
       ];
 
@@ -413,7 +427,8 @@ class PageTest extends Base
             'content' => null,
             'type' => 'cms',
             //'menu_id' => null
-            'menu_id' => 9123
+            'menu_id' => 9123,
+            'images' => []
 
       ];
 
@@ -445,7 +460,6 @@ class PageTest extends Base
       $testData3['position'] = $data['position'];
 
       foreach ($data as $key => $value) {
-
         $this->assertEquals( $value,  $testData3[$key] );
       }
 

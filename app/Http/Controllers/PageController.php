@@ -34,6 +34,13 @@ class PageController extends Controller
   {
       $pages = Page::query()->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'published', 'position', 'type', 'content', 'menu_id'])->toArray();
 
+      foreach ($pages as $key => $page) {
+        //var_dump($page['id']);
+        $pages[$key]['images'] = Image::getImagesAndThumbsByPageId($page['id'], false);
+      }
+
+
+
       return response()->json(['success' => true, 'data'=> $pages], 200);
   }
 
@@ -100,7 +107,7 @@ class PageController extends Controller
         return response()->json(['success'=> false, 'error'=> 'Page not find'], 200);
       }
 
-      $data = $request->only('title', 'short_title', 'published',  'type', 'content', 'menu_id'); //'position',
+      $data = $request->only('title', 'short_title', 'published',  'type', 'content', 'menu_id', 'images'); //'position',
       $validator = Validator::make($data, $this->validationRules);
       if($validator->fails()) {
           return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
@@ -108,6 +115,9 @@ class PageController extends Controller
 
       try{
         $res = $page->update($data);
+        if( !empty($data['images']) && is_array($data['images']) ){
+          Image::createImages($data['images'], $page->id);
+        }
       } catch (\Exception $e) {
           Log::error('page update ex: '.$e->getMessage() );
           return response()->json(['success'=> false, 'error'=> 'Update page problem - exeption'], 200);

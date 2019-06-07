@@ -201,6 +201,7 @@ class Image extends Model
 
     static public function getImagesByPageId($pageId = null)
     {
+      $image = [];
       if( empty($pageId) ){
         $image = Image::query()
                   ->whereNull( 'page_id'  )
