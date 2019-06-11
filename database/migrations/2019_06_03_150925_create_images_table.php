@@ -19,7 +19,7 @@ class CreateImagesTable extends Migration
             $table->integer('position')->unsigned()->nullable();
             $table->unsignedBigInteger('page_id')->nullable();
             $table->foreign('page_id')->nullable()->references('id')->on('pages')->onDelete('cascade');
-            $table->unique(['page_id', 'name']);
+            //$table->unique(['page_id', 'name']);
             $table->timestamps();
         });
     }

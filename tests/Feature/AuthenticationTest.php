@@ -33,7 +33,7 @@ class AuthenticationTest extends TestCase
         //print_r( $response->getData()  );
         return $response;
     }
-    
+
 
     private function logout_action( $token )
     {
@@ -49,10 +49,14 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function it_will_register_a_user()
     {
+        //print_r($_ENV['RS_SECRET']);
+
         $response = $this->post('api/register', [
             'email'    => 'test2@email.com',
 //            'name'     => 'iii',
-            'password' => 'cmsrs'
+            'password' => 'cmsrs',
+            'secret' => $_ENV['RS_SECRET']
+
         ]);
 
         //var_dump( $response  );
@@ -63,7 +67,7 @@ class AuthenticationTest extends TestCase
         $this->assertStringStartsWith(  'eyJ0eXA',   $response->data->token );
         $this->assertTrue( $response->success  );
 
-        
+
         $privilege =   $this->privilege_action( $response->data->token );
         $this->assertNotEmpty( $privilege->getData()->testrs );
         $logout =   $this->logout_action( $response->data->token  );
@@ -127,4 +131,4 @@ class AuthenticationTest extends TestCase
         ]);
         */
     }
-}    
+}

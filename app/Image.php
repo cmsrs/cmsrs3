@@ -119,6 +119,7 @@ class Image extends Model
       $out = [];
       foreach ($images as $key => $image) {
         $name = self::filter($image['name']);
+        
         $data = $image['data'];
 
         $dbData = [

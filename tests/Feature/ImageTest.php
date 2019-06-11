@@ -163,7 +163,7 @@ class ImageTest extends Base
     }
 
     /** @test */
-    public function it_will_get_images_with_images()
+    public function it_will_get_images_by_page_id()
     {
       $response2 = $this->get('api/images/'.$this->pageId.'?token='.$this->token);
       //var_dump($response2); die('-------------');
@@ -290,7 +290,7 @@ class ImageTest extends Base
 
 
     /** @test */
-    public function it_will_add_fake_pages_with_images()
+    public function it_will_add_pages_with_the_same_image_name()
     {
 
       //test fake
@@ -300,14 +300,21 @@ class ImageTest extends Base
       $responseErr = $this->post('api/pages?token='.$this->token, $this->testImgData);
       //var_dump($responseErr);
       $resErr = $responseErr->getData();
-      $this->assertFalse( $resErr->success );
-      $this->assertNotEmpty( $resErr->error );
+      $this->assertTrue( $resErr->success );
+      //$this->assertNotEmpty( $resErr->error );
 
 
       //clear images all pages
       $response = $this->get('api/pages?token='.$this->token );
       $res = $response->getData();
       $this->assertTrue( $res->success );
+
+      $this->assertEquals( count($res->data), 2);
+      $this->assertEquals( count($res->data[1]->images), 2);
+
+      $this->assertEquals($res->data[1]->images[0]->name,$res->data[1]->images[1]->name);
+
+      //print_r($res->data);
 
       foreach($res->data as $page){
         //dump($page->id);

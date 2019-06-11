@@ -90,7 +90,7 @@ class PageController extends Controller
       //die('++++++++++');
 
     } catch (\Exception $e) {
-      Log::error('page add ex: '.$e->getMessage() );
+    Log::error('page add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile() ); //.' for: '.var_export($data, true )
       return response()->json(['success'=> false, 'error'=> 'Add page problem, details in the log file.'], 200); //.$e->getMessage()
     }
 
@@ -119,7 +119,7 @@ class PageController extends Controller
           Image::createImages($data['images'], $page->id);
         }
       } catch (\Exception $e) {
-          Log::error('page update ex: '.$e->getMessage() );
+          Log::error('page update ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()  ); //.' for: '.var_export($data, true )
           return response()->json(['success'=> false, 'error'=> 'Update page problem - exeption'], 200);
       }
 
