@@ -43,11 +43,7 @@ php artisan migrate
 tail -f -n0 /var/log/apache2/cmsrs* storage/logs/*
 ```
 
-* create admin user
-
-add RS_SECRET to .env and .env.testing
-e.g.
-RS_SECRET=cmsrs1234
+* create admin user (add RS_SECRET to .env and .env.testing e.g. RS_SECRET=cmsrs1234)
 
 ```bash
 ./go_create_admin.sh
