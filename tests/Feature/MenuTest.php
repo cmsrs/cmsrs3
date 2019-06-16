@@ -171,18 +171,29 @@ class MenuTest extends Base
       $id = $resAll->data[0]->id;
 
       //print_r($resAll->data[0]);
-
       //$id = 1;
+
+      //$this->testData
+
+      $slug = Menu::find($id)->slug;
+      $this->assertEquals($slug,  str_slug($this->testData['name'], "-")    );
+
 
       $testData3 =
       [
             'id' => $id,
-            'name' => 'test menu3',
+            'name' => 'test menu3  żółta żółć',
             'position' => $resAll->data[0]->position
       ];
 
       $response0 = $this->put('api/menus/'.$id.'?token='.$this->token, $testData3);
       //$response0 = $this->put('api/menus/1?token='.$this->token, $testData3);
+
+      $slugAfter = Menu::find($id)->slug;
+      $this->assertNotEquals($slug, $slugAfter);
+      $this->assertEquals($slugAfter,  str_slug($testData3['name'], "-")  );
+
+
 
       //die('==');
       //var_dump($response0);

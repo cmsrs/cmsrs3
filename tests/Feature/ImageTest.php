@@ -141,6 +141,9 @@ class ImageTest extends Base
       //var_dump($response2); die('-------------');
       $res2 = $response2->getData();
       $this->assertTrue( $res2->success );
+
+      //print_r($res2); die();
+
       $this->assertEquals( count($res2->data), 1);
 
       $this->assertEquals( $res2->data[0]->id, $this->pageId);

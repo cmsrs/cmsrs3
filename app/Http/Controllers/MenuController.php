@@ -26,7 +26,10 @@ class MenuController extends Controller
 
   public function index()
   {
-      $menus = Menu::query()->orderBy('position', 'asc')->get(['id',  'name', 'position'])->toArray();
+
+      $menus = Menu::getAllMenus();
+
+      //$menus = Menu::query()->orderBy('position', 'asc')->get(['id',  'name', 'position'])->toArray();
 
       return response()->json(['success' => true, 'data'=> $menus], 200);
       //$ret = $this->menu->getAll();
@@ -38,7 +41,7 @@ class MenuController extends Controller
   public function position(Request $request, $direction, $id)
   {
       $ret = Menu::swapPosition($direction, $id);
-      return response()->json(['success'=> $ret]);      
+      return response()->json(['success'=> $ret]);
   }
 
   public function create(Request $request)

@@ -11,9 +11,27 @@ class Page extends Model
         'title', 'short_title', 'published', 'position', 'type', 'content', 'menu_id'
     ];
 
+    public function setTitleAttribute($value)
+    {
+        $this->attributes['title'] = $value;
+        $this->attributes['slug'] = str_slug($value, "-");
+    }
+
     public function images()
     {
       return $this->hasMany('App\Image');
+    }
+
+    static public function getAllPagesWithImages()
+    {
+      $pages = Page::query()->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'published', 'position', 'type', 'content', 'menu_id'])->toArray();
+
+      foreach ($pages as $key => $page) {
+        //var_dump($page['id']);
+        $pages[$key]['images'] = Image::getImagesAndThumbsByPageId($page['id'], false);
+      }
+
+      return $pages;
     }
 
     public function delete()

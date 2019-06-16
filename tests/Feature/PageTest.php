@@ -18,6 +18,7 @@ class PageTest extends Base
     private $testData;
     private $testDataMenu;
     private $menuId;
+    private $menuObj;
 
     public function setUp(): void
     {
@@ -49,10 +50,85 @@ class PageTest extends Base
         $save = $menu->save();
         $this->assertTrue($save);
 
-        $this->menuId = $menu->all()->first()->id;
+
+        $this->menuObj = $menu->all()->first();
+
+        $this->menuId = $this->menuObj->id;
         //var_dump($rec);
         //Menu
     }
+
+
+    /** @test */
+    public function it_will_add3a_with_menu_pages()
+    {
+
+      $testData3 =
+      [
+           'title'     => 'test p3',
+           'short_title' => 'p33',
+           'published' => 0,
+           //'position' => 3,
+           'type' => 'cms',
+           'content' => 'sdafsfsdaf asdfasdf',
+           'menu_id' =>  $this->menuId
+      ];
+
+      $response = $this->post('api/pages?token='.$this->token, $testData3);
+
+      $this->assertEquals(1, count($this->menuObj->pages));
+      $this->assertEquals(0, count($this->menuObj->pagesPublished) );
+    }
+
+    /** @test */
+    public function it_will_add3_with_menu_pages()
+    {
+
+      $testData3 =
+      [
+           'title'     => 'test p3',
+           'short_title' => 'p33',
+           'published' => 0,
+           //'position' => 3,
+           'type' => 'cms',
+           'content' => 'sdafsfsdaf asdfasdf',
+           'menu_id' =>  $this->menuId
+      ];
+
+      $response = $this->post('api/pages?token='.$this->token, $testData3);
+
+
+      $testData2 =
+      [
+           'title'     => 'test p2222',
+           'short_title' => 'p22222',
+           'published' => 1,
+           //'position' => 3,
+           'type' => 'cms',
+           'content' => 'sdafsfsdaf asdfasdf',
+           'menu_id' =>  $this->menuId
+      ];
+
+      $response2 = $this->post('api/pages?token='.$this->token, $testData2);
+
+
+
+
+
+      $response2 = $this->get('api/pages?token='.$this->token );
+      $res2 = $response2->getData();
+      $this->assertTrue( $res2->success );
+      $this->assertEquals( count($res2->data), 3);
+
+      //var_dump($this->menuObj);
+
+      $this->assertEquals(2, count($this->menuObj->pages));
+      $this->assertEquals(1, count($this->menuObj->pagesPublished));  //tylko jedno jest z published ===1 dla 'menu_id' =>  $this->menuId
+      $this->assertEquals( $this->menuObj->pagesPublished[0]->title, $testData2['title'] );
+    }
+
+
+
 
 
     /** @test */
@@ -264,6 +340,9 @@ class PageTest extends Base
       //var_dump($response2);
     }
 
+
+
+
     /** @test */
     public function it_will_add2_with_menu_pages()
     {
@@ -317,7 +396,7 @@ class PageTest extends Base
 
       $data2 = (array)$res2->data[0];
       unset($data2['id']);
-      unset($data2['images']);      
+      unset($data2['images']);
 
 
       // dump($data2);
@@ -347,12 +426,18 @@ class PageTest extends Base
       $id = $resAll->data[0]->id;
 
       $this->assertNotEmpty($id);
+
+      $slug = Page::find($id)->slug;
+      //str_slug($value, "-");
+      $this->assertEquals($slug,  str_slug($this->testData['title'], "-")    );
+
+
       //$id = 1;
 
       $testData3 =
       [
             'id' => $id,
-            'title' => 'test p3',
+            'title' => 'test p3 żółta żółć',
             'short_title' => 'p3',
             'published' => 1,
             //'position' => 3,
@@ -361,12 +446,18 @@ class PageTest extends Base
             'content' => 'gg',
             'menu_id' => null,
             'images' => []
-
-
       ];
 
       $response0 = $this->put('api/pages/'.$id.'?token='.$this->token, $testData3);
       //$response0 = $this->put('api/menus/1?token='.$this->token, $testData3);
+
+
+
+      $slugAfter = Page::find($id)->slug;
+      $this->assertNotEquals($slug, $slugAfter);
+      $this->assertEquals($slugAfter,  str_slug($testData3['title'], "-")  );
+      //var_dump($slugAfter);
+
 
       //
       //var_dump($response0);die('==');

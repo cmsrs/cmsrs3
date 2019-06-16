@@ -11,6 +11,48 @@ class Menu extends Model
         'name', 'position'
     ];
 
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = $value;
+        $this->attributes['slug'] = str_slug($value, "-");
+    }
+
+    public function pages()
+    {
+      return $this->hasMany('App\Page');
+    }
+
+    public function pagesPublished()
+    {
+      return $this->pages()->where( 'published', '=', 1 );
+      //return $this->hasMany('App\Page');
+
+    }
+
+
+
+
+    static public function getAllMenus()
+    {
+      $menus = Menu::query()->orderBy('position', 'asc')->get(['id',  'name', 'position'])->toArray();
+      return $menus;
+    }
+
+    // static public function getMenusWithPages()
+    // {
+    //
+    //   $pages = Page::getAllPagesWithImages();
+    //   $menus = Menu::getAllMenus();
+    //
+    //
+    //   dump($menus);
+    //   dump($pages);
+    //
+    //
+    //   die('___test111_____________');
+    // }
+
+
     static public function getNextPosition()
     {
 

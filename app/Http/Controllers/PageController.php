@@ -32,14 +32,12 @@ class PageController extends Controller
 
   public function index()
   {
-      $pages = Page::query()->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'published', 'position', 'type', 'content', 'menu_id'])->toArray();
+      $pages = Page::getAllPagesWithImages();
 
-      foreach ($pages as $key => $page) {
-        //var_dump($page['id']);
-        $pages[$key]['images'] = Image::getImagesAndThumbsByPageId($page['id'], false);
-      }
-
-
+      // $pages = Page::query()->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'published', 'position', 'type', 'content', 'menu_id'])->toArray();
+      // foreach ($pages as $key => $page) {
+      //   $pages[$key]['images'] = Image::getImagesAndThumbsByPageId($page['id'], false);
+      // }
 
       return response()->json(['success' => true, 'data'=> $pages], 200);
   }
