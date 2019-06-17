@@ -9,12 +9,15 @@ class Image extends Model
 {
     const IMAGE_DIR = 'images';
 
+    const IMAGE_THUMB_TYPE_SMALL = 'small';
+    const IMAGE_THUMB_TYPE_MEDIUM = 'medium';
+
     public static $thumbs = [
-      'small' => [
+      self::IMAGE_THUMB_TYPE_SMALL => [
         'x' => 100,
         'y' => 100
       ],
-      'medium' => [
+      self::IMAGE_THUMB_TYPE_MEDIUM => [
         'x' => 300,
         'y' => 300
       ]
@@ -42,8 +45,6 @@ class Image extends Model
 
     public function delete()
     {
-      //echo "______________________hhh_____________";
-
       $this->deleteImg();
       return parent::delete();
     }
@@ -54,15 +55,12 @@ class Image extends Model
       foreach ($allImg as $key => $path) {
         unlink($path);
       }
+    }
 
-      // $imgDir = Image::getImageDir( $this->page_id, $this->id );
-      // $fileName = pathinfo($this->name, PATHINFO_FILENAME );
-      // $imgPathDel = $imgDir.'/'.$fileName.'*.*';
-      // $filesToDel = glob($imgPathDel);
-      // foreach ($filesToDel as $path) {
-      //   //echo "\n"."kasuje= ".$path;
-      //   unlink($path);
-      // }
+
+    public function getHtmlImage( $type = self::IMAGE_THUMB_TYPE_MEDIUM ){
+      $img = self::getAllImage($this, false);
+      return $img[$type];
     }
 
     /**
@@ -79,29 +77,8 @@ class Image extends Model
         $out[$imgName] = $imgDir.'/'.$fileName.'-'.$imgName.'.'.$fileExt;
       }
 
-      // $imgPathDel = $imgDir.'/'.$fileName.'*.*';
-      // $filesToDel = glob($imgPathDel);
-      // foreach ($filesToDel as $path) {
-      //   $out[] =  $path;
-      // }
-
       return $out;
     }
-
-
-
-    // static public function createEmptyRecord(){
-    // }
-
-    // static public function getImgPath( $imageId, $pageId, $name )
-    // {
-    //   return Image::IMAGE_DIR.'/'.$pageId.'/'.$imageId.'-'.$name;
-    // }
-    //
-    // static public function getImagePath( $pageId, $imageId, $name )
-    // {
-    //   return public_path( Image::IMAGE_DIR.'/'.$pageId.'/'.$imageId.'/'.$name);
-    // }
 
     static public function getImageDir( $pageId, $imageId, $isAbs = true )
     {
@@ -119,7 +96,8 @@ class Image extends Model
       $out = [];
       foreach ($images as $key => $image) {
         $name = self::filter($image['name']);
-        
+        //$name = str_file($image['name'], "-");
+
         $data = $image['data'];
 
         $dbData = [
@@ -134,11 +112,7 @@ class Image extends Model
         }
         $out[$key] = $image;
 
-        //var_dump($name);
-        //var_dump($data);
-
         $dirImg = Image::getImageDir( $pageId, $image->id );
-        //$dirImg = public_path( Image::IMAGE_DIR.'/'.$pageId.'/'.$image->id);
         if (!file_exists($dirImg)) {
           mkdir($dirImg, 0777, true);
         }
@@ -152,15 +126,7 @@ class Image extends Model
           $fileThumb = $dirImg.'/'.$fileName.'-'.$thumbName.'.'.$fileExt;
           \LibImage::make($data)->resize($dimension['x'], $dimension['y'])->save($fileThumb);
 
-          // echo "\n".$fileThumb;
-          // print_r($dimension);
-          // code...
         }
-
-
-
-        //\LibImage::make('public/foo.jpg')->resize(320, 240);
-
 
       }
       return $out;

@@ -25,11 +25,7 @@ class Menu extends Model
     public function pagesPublished()
     {
       return $this->pages()->where( 'published', '=', 1 );
-      //return $this->hasMany('App\Page');
-
     }
-
-
 
 
     static public function getAllMenus()
@@ -38,24 +34,8 @@ class Menu extends Model
       return $menus;
     }
 
-    // static public function getMenusWithPages()
-    // {
-    //
-    //   $pages = Page::getAllPagesWithImages();
-    //   $menus = Menu::getAllMenus();
-    //
-    //
-    //   dump($menus);
-    //   dump($pages);
-    //
-    //
-    //   die('___test111_____________');
-    // }
-
-
     static public function getNextPosition()
     {
-
       $menu = Menu::query()
                 ->orderBy('position', 'desc')
                 ->first()

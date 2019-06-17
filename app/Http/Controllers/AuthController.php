@@ -110,11 +110,6 @@ class AuthController extends Controller
         $email = $request->email;
         $password = $request->password;
 
-//        print_r( $name   );
-//        print_r( $email   );
-//        print_r( $password   );
-//        die('---------r----------');
-
         //$user = User::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password)]);
         $user = User::create(['name' => $name, 'email' => $email, 'password' => $password]);
 

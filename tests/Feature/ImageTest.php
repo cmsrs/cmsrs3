@@ -80,7 +80,7 @@ class ImageTest extends Base
         $fileName = pathinfo($name, PATHINFO_FILENAME );
         $imgPathDel = $imgDir.'/'.$fileName.'*.*';
         $filesToDel = glob($imgPathDel);
-        $this->assertEquals(count($filesToDel), count(Image::$thumbs) + 1);
+        $this->assertEquals(count($filesToDel), count(Image::$thumbs) + 1); //a jak juz jest w fs jakis obrazek? - poprzedni clean sie nie wyszyscil
 
         foreach ($filesToDel as $path) {
           $this->assertFileExists($path);
@@ -128,6 +128,11 @@ class ImageTest extends Base
 
       $this->assertEquals( pathinfo($testPage->images[2]->fs->org, PATHINFO_BASENAME ), $name3 );
       $this->assertEquals( count( (array)$testPage->images[2]->fs ),  count(Image::$thumbs) + 1 );
+
+
+      $imageObj11 = Image::find($testPage->images[2]->id);
+      $mediumHtml = $imageObj11->getHtmlImage();
+      $this->assertEquals($mediumHtml, $testPage->images[2]->fs->medium);
 
       $this->clear_imgs();
     }
