@@ -31,6 +31,12 @@ php artisan jwt:secret
 php artisan migrate
 ```
 
+* create admin user (add RS_SECRET to .env and .env.testing e.g. RS_SECRET=cmsrs1234)
+
+```bash
+./go_create_admin.sh
+```
+
 * run tests
 
 ```bash
@@ -43,8 +49,12 @@ php artisan migrate
 tail -f -n0 /var/log/apache2/cmsrs* storage/logs/*
 ```
 
-* create admin user (add RS_SECRET to .env and .env.testing e.g. RS_SECRET=cmsrs1234)
+* go to the website /admin:
 
-```bash
-./go_create_admin.sh
-```
+    Add menu
+    Add pages
+    Upload images
+
+* go to the website /
+  and see the front page
+
