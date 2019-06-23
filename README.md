@@ -52,8 +52,11 @@ tail -f -n0 /var/log/apache2/cmsrs* storage/logs/*
 * go to the website /admin:
 
     Add menu
+    
     Add pages
+    
     Upload images
+    
 
 * go to the website /
   and see the front page
