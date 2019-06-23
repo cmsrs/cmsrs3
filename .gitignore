@@ -4,6 +4,7 @@
 /public/storage
 /storage/*.key
 /vendor
+/public/coverage/
 .env
 .env.testing
 .phpunit.result.cache
