@@ -51,6 +51,12 @@ tail -f -n0 /var/log/apache2/cmsrs* storage/logs/*
 
 * go to the website /admin:
 
+    log in as:
+
+    username: admin@cmsrs.pl
+
+    password: cmsrs123
+
     Add menu
     
     Add pages
