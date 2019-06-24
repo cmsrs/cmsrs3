@@ -57,13 +57,11 @@ tail -f -n0 /var/log/apache2/cmsrs* storage/logs/*
 
     password: cmsrs123
 
-    Add menu
+* add menu
     
-    Add pages
-    
-    Upload images
-    
+* add pages
+   
+* upload images
 
-* go to the website /
-  and see the front page
+* go to the main page and see the front page
 
