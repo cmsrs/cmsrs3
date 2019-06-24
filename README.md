@@ -65,3 +65,10 @@ tail -f -n0 /var/log/apache2/cmsrs* storage/logs/*
 
 * go to the main page and see the front page
 
+
+===
+
+React source code you can find on the page:
+
+https://github.com/cmsrs/cmsrs3-react
+
