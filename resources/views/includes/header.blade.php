@@ -8,23 +8,24 @@
 
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
 
+      <ul class="navbar-nav mr-auto">
+          <?php foreach ($menus as $menu) { ?>
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="dropdown{{ $menu->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ $menu->name }}</a>
+              <?php if( count($menu->pagesPublished) ){ ?>
+              <div class="dropdown-menu" aria-labelledby="dropdown{{ $menu->id }}">
+                  <?php foreach ($menu->pagesPublished as $page) { ?>
+                  <a class="dropdown-item" href="/c/{{$menu->slug}}/{{$page->slug}}">{{ $page->title }}</a>
+                  <?php } ?>
+              </div>
+              <?php } ?>
+          </li>
+          <?php } ?>
+      </ul>
+
 
       <!-- Authentication Links -->
       @guest
-        <ul class="navbar-nav mr-auto">
-            <?php foreach ($menus as $menu) { ?>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="dropdown{{ $menu->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ $menu->name }}</a>
-                <?php if( count($menu->pagesPublished) ){ ?>
-                <div class="dropdown-menu" aria-labelledby="dropdown{{ $menu->id }}">
-                    <?php foreach ($menu->pagesPublished as $page) { ?>
-                    <a class="dropdown-item" href="/c/{{$menu->slug}}/{{$page->slug}}">{{ $page->title }}</a>
-                    <?php } ?>
-                </div>
-                <?php } ?>
-            </li>
-            <?php } ?>
-        </ul>
 
         <ul class="nav navbar-nav ml-auto">
             <li class="nav-item">
@@ -38,7 +39,7 @@
         </ul>
 
       @else
-          <ul class="navbar-nav mr-auto">
+          <ul class="nav navbar-nav ml-auto">
               <li class="nav-item active">
                 <a class="nav-link" href="{{ route('home') }}">Home <span class="sr-only">(current)</span></a>
               </li>
