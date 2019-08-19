@@ -21,10 +21,18 @@ class AuthenticationTest extends TestCase
         $user = new User([
              'email'    => 'test@email.com',
              'name'     => 'test testowy',
-             'password' => 'cmsrs'
+             //'password' => 'cmsrs',
+             'role' => User::$role['admin']
          ]);
 
+        $user->password = 'cmsrs';
+
+
         $user->save();
+        //dump($user);
+        //dd('_________');
+
+
     }
 
     private function privilege_action( $token ){
@@ -53,16 +61,20 @@ class AuthenticationTest extends TestCase
 
         $response = $this->post('api/register', [
             'email'    => 'test2@email.com',
-//            'name'     => 'iii',
+            'name'     => 'iii',
             'password' => 'cmsrs',
             'secret' => $_ENV['RS_SECRET']
 
         ]);
 
         //var_dump( $response  );
-
+        //dd('==');
 
         $response = $response->getData();
+
+        //var_dump($response);
+        //die('=====');
+
 
         $this->assertStringStartsWith(  'eyJ0eXA',   $response->data->token );
         $this->assertTrue( $response->success  );
@@ -88,10 +100,14 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function it_will_log_a_user_in()
     {
+
+
         $response = $this->post('api/login', [
             'email'    => 'test@email.com',
             'password' => 'cmsrs'
         ])->getData();
+
+        //dd($response);
 
         $this->assertStringStartsWith(  'eyJ0eXA',   $response->data->token );
         $this->assertTrue( $response->success  );

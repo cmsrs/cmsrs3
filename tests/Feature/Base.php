@@ -18,8 +18,12 @@ class Base extends TestCase
       $user = new User([
            'email'    => 'test@email.com',
            'name'     => 'test testowy',
-           'password' => 'cmsrs'
+           //'password' => 'cmsrs'
+          'role' => User::$role['admin']
        ]);
+
+      $user->password = 'cmsrs';
+
       $user->save();
 
       $this->token = $this->getTestToken();

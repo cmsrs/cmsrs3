@@ -111,12 +111,30 @@ class AuthController extends Controller
         $password = $request->password;
 
         //$user = User::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password)]);
-        $user = User::create(['name' => $name, 'email' => $email, 'password' => $password]);
+        //bcrypt($password)
+
+        //$user = User::create(['name' => $name, 'email' => $email, 'password' => bcrypt($password),  'role' => User::$role['admin'] ]);
+
+        //dd('+++++++++++');
 
 
+        $user = new User([
+            'email'    => $email,
+            'name'     => $name,
+            //'password' => 'cmsrs',
+            'role' => User::$role['admin']
+        ]);
+
+        $user->password = $password;
+
+
+        $user->save();
+
+
+
+        //$user = User::create(['name' => $name, 'email' => $email, 'password' => $password,  'role' => User::$role['admin'] ]);
 
         return $this->getTokenByCredentials($credentials);
-
     }
 
 }
