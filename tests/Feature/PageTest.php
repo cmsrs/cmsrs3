@@ -58,6 +58,11 @@ class PageTest extends Base
         //Menu
     }
 
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+    }
+
 
     /** @test */
     public function it_will_add3a_with_menu_pages()

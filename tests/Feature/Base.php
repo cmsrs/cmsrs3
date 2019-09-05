@@ -24,10 +24,21 @@ class Base extends TestCase
 
       $user->password = 'cmsrs';
 
+      User::where('email',  'test@email.com')->delete();
       $user->save();
+
 
       $this->token = $this->getTestToken();
   }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        //echo "ddddddddd";
+        //$u = User::where('email',  'test@email.com')->delete();
+    }
+
 
   public function getTestToken()
   {

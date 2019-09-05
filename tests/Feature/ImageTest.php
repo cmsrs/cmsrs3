@@ -54,6 +54,13 @@ class ImageTest extends Base
         $this->pageId = $pageId;
     }
 
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+    }
+
+
+
     // protected function tearDown(): void
     // {
     //   parent::tearDown();

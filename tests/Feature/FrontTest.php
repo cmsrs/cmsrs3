@@ -55,6 +55,13 @@ class FrontTest extends Base
         $page->save();
     }
 
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+    }
+
+
+
     /** @test */
     public function it_will_check_set_up()
     {

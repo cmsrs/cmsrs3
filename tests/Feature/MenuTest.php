@@ -32,6 +32,12 @@ class MenuTest extends Base
         $menu->save();
     }
 
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+    }
+
+
     /** @test */
     public function it_will_change_position_menus()
     {
