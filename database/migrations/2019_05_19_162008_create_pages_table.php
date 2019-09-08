@@ -22,7 +22,7 @@ class CreatePagesTable extends Migration
             $table->string('short_title')->nullable();
             $table->boolean('published')->default(0);
             $table->integer('position')->unsigned()->nullable();
-            $table->enum('type', ['cms', 'gallery']);
+            $table->enum('type', ['cms', 'gallery', 'shop']);
             $table->text('content')->nullable();
             $table->string('slug')->notNullable();
             $table->unsignedBigInteger('menu_id')->nullable();

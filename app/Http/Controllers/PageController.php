@@ -22,7 +22,7 @@ class PageController extends Controller
       'short_title' => 'max:128',
       'published' => 'boolean',
       //'position'=> 'numeric',
-      'type' => 'in:cms,gallery'
+      'type' => 'in:cms,gallery,shop'
       // 'type' => [
       //     'required',
       //     Rule::in(['cms', 'gallery']),
@@ -41,6 +41,24 @@ class PageController extends Controller
 
       return response()->json(['success' => true, 'data'=> $pages], 200);
   }
+
+  public function getPagesByType(Request $request, $type)
+  {
+
+//      $validator = Validator::make( ['type' => $type] , [
+//          'type' => $this->validationRules['type'],
+//      ]);
+//      $tmp = $validator->fails();
+
+      $pages = Page::getAllPagesWithImages($type);
+
+      //var_dump($tmp);
+      //die('==');
+
+
+      return response()->json(['success' => true, 'data'=> $pages], 200);
+  }
+
 
   public function position(Request $request, $direction, $id)
   {

@@ -22,9 +22,15 @@ class Page extends Model
       return $this->hasMany('App\Image');
     }
 
-    static public function getAllPagesWithImages()
+    static public function getAllPagesWithImages( $type = null )
     {
-      $pages = Page::query()->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'published', 'position', 'type', 'content', 'menu_id'])->toArray();
+
+      if( $type ){
+          $pages = Page::query()->where('type', $type )->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'published', 'position', 'type', 'content', 'menu_id'])->toArray();
+      }else{
+          $pages = Page::query()->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'published', 'position', 'type', 'content', 'menu_id'])->toArray();
+      }
+
 
       foreach ($pages as $key => $page) {
         //var_dump($page['id']);

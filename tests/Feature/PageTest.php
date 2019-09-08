@@ -279,7 +279,7 @@ class PageTest extends Base
            'short_title' => 'p22',
            'published' => 0,
            //'position' => 3,
-           'type' => 'cms',
+           'type' => 'shop',
            'content' => 'aaa ffdfds',
            'menu_id' => null,
            //'images' => []
@@ -345,7 +345,52 @@ class PageTest extends Base
       //var_dump($response2);
     }
 
+    /** @test */
+    public function it_will_get_pages_by_type()
+    {
 
+        $testData2 =
+            [
+                'title' => 'test p2',
+                'short_title' => 'p22',
+                'published' => 0,
+                //'position' => 3,
+                'type' => 'shop',
+                'content' => 'aaa ffdfds',
+                'menu_id' => null,
+                //'images' => []
+            ];
+
+        $response = $this->post('api/pages?token=' . $this->token, $testData2);
+
+        //var_dump($response); die('=========');
+
+        $res = $response->getData();
+        $this->assertTrue($res->success);
+
+
+        $type = 'shop';
+        $res = $this->get('api/pages/type/'.$type.'?token=' . $this->token);
+
+        $data =  $res->getData();
+
+        $this->assertTrue($data->success);
+        //dd(count($data->data));
+        //dd($data->data[0]->type);
+
+        $this->assertEquals(1,count($data->data));
+        $this->assertEquals( $type, $data->data[0]->type );
+
+
+
+        $typeErr = 'sasdasd';
+        $res = $this->get('api/pages/type/'.$typeErr.'?token=' . $this->token);
+        $data =  $res->getData();
+        $this->assertTrue($data->success);
+        $this->assertEmpty(count($data->data));
+        //dd($data);
+
+    }
 
 
     /** @test */
