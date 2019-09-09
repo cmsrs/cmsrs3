@@ -41,4 +41,11 @@ Route::group(['middleware' => ['jwt.auth']], function() {
     Route::get('images/position/{direction}/{id}', 'ImageController@position');
 
     Route::get('users/clients', 'UserController@getClients');
+
+
+    Route::get('products', 'ProductController@index');
+    Route::post('products', 'ProductController@create');
+    Route::put('products/{id}', 'ProductController@update');
+    Route::delete('products/{id}', 'ProductController@delete');
+
 });

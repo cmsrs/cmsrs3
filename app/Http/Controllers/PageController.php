@@ -159,7 +159,7 @@ class PageController extends Controller
       $res = $page->delete();
       //var_dump($res);
       if(empty($res)){
-        return response()->json(['success'=> false, 'error'=> 'Update delete problem'], 200);
+        return response()->json(['success'=> false, 'error'=> 'Page delete problem'], 200);
       }
 
       return response()->json(['success'=> true], 200);
