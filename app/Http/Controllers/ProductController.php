@@ -27,6 +27,14 @@ class ProductController extends Controller
 
       $products = Product::query()->orderBy('id', 'asc' )->get()->toArray();
 
+      foreach ($products as $key => $product) {
+          //getImagesAndThumbsByTypeAndRefId(  $type, $refId = null)
+          //$products[$key]['images'] = Image::getImagesAndThumbsByPageId($product['id'], false);
+
+          $products[$key]['images'] = Image::getImagesAndThumbsByTypeAndRefId( 'product', $product['id']);
+
+      }
+
       return response()->json(['success' => true, 'data'=> $products], 200);
   }
 
@@ -38,8 +46,8 @@ class ProductController extends Controller
             'sku',
             'price',
             'description',
-            'photo',
-            'page_id'
+            'page_id',
+            'images'
         );
 
       $validator = Validator::make($data, $this->validationRules);
@@ -53,8 +61,10 @@ class ProductController extends Controller
         throw new \Exception("I cant get product id");
       }
 
+       //print_r($data);  die('_________');
+
       if( !empty($data['images']) && is_array($data['images']) ){
-        Image::createImages($data['images'], $product->id);
+        Image::createImages($data['images'], 'product',  $product->id);
       }
 
     } catch (\Exception $e) {
@@ -79,8 +89,8 @@ class ProductController extends Controller
           'sku',
           'price',
           'description',
-          'photo',
-          'page_id'
+          'page_id',
+          'images'
           );
 
       $this->validationRules['sku'] = $this->validationRules['sku'] . ',id,' . $id; //sku przy update - ma byc unikatowe dla produkctId
@@ -92,7 +102,7 @@ class ProductController extends Controller
       try{
           $res = $product->update($data);
           if( !empty($data['images']) && is_array($data['images']) ){
-              Image::createImages($data['images'], $product->id);
+              Image::createImages($data['images'], 'product', $product->id);
           }
       } catch (\Exception $e) {
           Log::error('product update ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()  ); //.' for: '.var_export($data, true )

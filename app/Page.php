@@ -33,8 +33,8 @@ class Page extends Model
 
 
       foreach ($pages as $key => $page) {
-        //var_dump($page['id']);
-        $pages[$key]['images'] = Image::getImagesAndThumbsByPageId($page['id'], false);
+        //$pages[$key]['images'] = Image::getImagesAndThumbsByPageId($page['id'], false);
+        $pages[$key]['images'] = Image::getImagesAndThumbsByTypeAndRefId( 'page', $page['id']);
       }
 
       return $pages;

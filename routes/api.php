@@ -36,9 +36,9 @@ Route::group(['middleware' => ['jwt.auth']], function() {
     Route::get('pages/position/{direction}/{id}', 'PageController@position');
     Route::get('pages/type/{type}', 'PageController@getPagesByType');
 
-    Route::get('images/{pageId}', 'ImageController@getItemByPageId');
+    Route::get('images/{type}/{pageId}', 'ImageController@getItemByTypeAndRefId'); //getItemByPageId
     Route::delete('images/{id}',  'ImageController@delete');
-    Route::get('images/position/{direction}/{id}', 'ImageController@position');
+    Route::get('images/position/{direction}/{id}', 'ImageController@position'); //only for type page is working
 
     Route::get('users/clients', 'UserController@getClients');
 

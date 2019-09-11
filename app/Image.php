@@ -24,7 +24,12 @@ class Image extends Model
     ];
 
     protected $fillable = [
-        'name', 'position', 'page_id'
+        'name', 'position', 'page_id', 'product_id'
+    ];
+
+    static private  $type = [
+        'page' => 'page_id',
+        'product' => 'product_id'
     ];
 
 
@@ -57,18 +62,45 @@ class Image extends Model
       }
     }
 
-
     public function getHtmlImage( $type = self::IMAGE_THUMB_TYPE_MEDIUM ){
       $img = self::getAllImage($this, false);
       return $img[$type];
     }
+
+    public function getRefId()
+    {
+        if($this->page_id){
+            return $this->page_id;
+        }
+        if($this->product_id){
+            return $this->product_id;
+        }
+        return null;
+    }
+
+    public function getRefType()
+    {
+        if($this->page_id){
+            return 'page';
+        }
+        if($this->product_id){
+            return 'product';
+        }
+        return null;
+    }
+
+
 
     /**
     *  return all thumbs and main img
     */
     public  static  function getAllImage($img, $isAbs = true){
       $out = [];
-      $imgDir = Image::getImageDir( $img->page_id, $img->id, $isAbs );
+      $objImg = Image::find($img->id);
+      if(empty($objImg)){
+        return false;
+      }
+      $imgDir = Image::getImageDir( $objImg->getRefType(),  $objImg->getRefId(), $img->id, $isAbs );
       $fileName = pathinfo($img->name, PATHINFO_FILENAME );
       $fileExt = pathinfo($img->name, PATHINFO_EXTENSION );
 
@@ -80,18 +112,22 @@ class Image extends Model
       return $out;
     }
 
-    static public function getImageDir( $pageId, $imageId, $isAbs = true )
+    static public function getImageDir( $type, $refId, $imageId, $isAbs = true )
     {
-      $url = Image::IMAGE_DIR.'/'.$pageId.'/'.$imageId;
+        if( empty(  Image::$type[$type]) ){
+            throw new \Exception("I can't get image type");
+        }
 
-      if($isAbs){
-        return public_path($url);
-      }
+        $url = Image::IMAGE_DIR.'/'. $type .'/'.$refId.'/'.$imageId;
 
-      return '/'.$url;
+        if($isAbs){
+            return public_path($url);
+        }
+
+        return '/'.$url;
     }
 
-    static public function createImages($images, $pageId){
+    static public function createImages($images, $type,  $refId){
       //var_dump($images);
       $out = [];
       foreach ($images as $key => $image) {
@@ -100,10 +136,14 @@ class Image extends Model
 
         $data = $image['data'];
 
+        if( empty( $strRefId = Image::$type[$type]) ){
+            throw new \Exception("I can't get image type in createImages");
+        }
+
         $dbData = [
             'name' => $name,
-            'position' => Image::getNextPositionByPageId( $pageId ),
-            'page_id' => $pageId
+            'position' => Image::getNextPositionByTypeAndRefId( $type,  $refId ),
+            $strRefId => $refId
         ];
         $image = Image::create($dbData);
 
@@ -112,7 +152,7 @@ class Image extends Model
         }
         $out[$key] = $image;
 
-        $dirImg = Image::getImageDir( $pageId, $image->id );
+        $dirImg = Image::getImageDir( $type,  $refId, $image->id );
         if (!file_exists($dirImg)) {
           mkdir($dirImg, 0777, true);
         }
@@ -132,18 +172,22 @@ class Image extends Model
       return $out;
     }
 
-    static public function getNextPositionByPageId( $pageId )
+    static public function getNextPositionByTypeAndRefId( $type,  $refId )
+    //static public function getNextPositionByPageId( $pageId )
     {
+      if( empty( $strRefId = Image::$type[$type]) ){
+           throw new \Exception("I can't get image type in getNextPositionByTypeAndRefId");
+      }
 
-      if( empty($pageId) ){
+      if( empty($refId) ){
         $image = Image::query()
-                  ->whereNull( 'page_id'  )
+                  ->whereNull( $strRefId  )
                   ->orderBy('position', 'desc')
                   ->first()
                   ;
       }else{
         $image = Image::query()
-                  ->where( 'page_id', '=', $pageId )
+                  ->where( $strRefId, '=', $refId )
                   ->orderBy('position', 'desc')
                   ->first()
                   ;
@@ -155,9 +199,17 @@ class Image extends Model
       return  $image->position+1;
     }
 
-    static public function getImagesAndThumbsByPageId($pageId = null)
+
+    //static public function getImagesAndThumbsByPageId($pageId = null)
+    static public function getImagesAndThumbsByTypeAndRefId(  $type, $refId = null)
     {
-      $images  = Image::getImagesByPageId($pageId);
+        //echo "++++++++++++";
+
+      //$images  = Image::getImagesByPageId($pageId);
+      $images  = Image::getImagesByTypeAndRefId(  $type, $refId);
+
+      //dump($images);
+
       foreach($images  as $k => $img){
         $images[$k]['fs']  = Image::getAllImage($img, false);
       }
@@ -166,18 +218,24 @@ class Image extends Model
       return $images;
     }
 
-    static public function getImagesByPageId($pageId = null)
+    //static public function getImagesByPageId($pageId = null)
+    static public function getImagesByTypeAndRefId(  $type, $refId = null)
     {
+
+      if( empty( $strRefId = Image::$type[$type]) ){
+            throw new \Exception("I can't get image type in getImagesByTypeAndRefId");
+      }
+
       $image = [];
-      if( empty($pageId) ){
+      if( empty($refId) ){
         $image = Image::query()
-                  ->whereNull( 'page_id'  )
+                  ->whereNull( $strRefId  )
                   ->orderBy('position', 'asc')
                   ->get()
                   ;
       }else{
         $image = Image::query()
-                  ->where( 'page_id', '=', $pageId )
+                  ->where( $strRefId, '=', $refId )
                   ->orderBy('position', 'asc')
                   ->get()
                   ;
@@ -193,7 +251,7 @@ class Image extends Model
           return false;
       }
       $pageId = $image->page_id;
-      $images = Image::getImagesByPageId($pageId);
+      $images = Image::getImagesByTypeAndRefId( 'page', $pageId);
 
       $countImages = count($images);
       if($countImages < 2){

@@ -9,10 +9,12 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 //use Tests\TestCase;
 
-class ProductsTest extends Base
+class ProductTest extends Base
 {
-    //use DatabaseMigrations;
     use RefreshDatabase;
+
+    private $name1;
+    private $name2;
 
     private $testData;
     private $testPage;
@@ -64,13 +66,25 @@ class ProductsTest extends Base
         $this->pageId = $data->data[0]->id;
         $this->assertNotEmpty($this->pageId);
 
+
+        $this->name1 = 'phpunittest1.jpg';
+        $file1 = $this->getFixtureBase64($this->name1);
+
+        $this->name2 = 'phpunittest2.jpg';
+        $file2 = $this->getFixtureBase64($this->name2);
+
+
         $this->testData = [
             'name' =>  'php3 aplikacje bazodanowe',
             'sku' => 'AN/34534',
             'price' => 123,
             'description' => 'opis ksiazki',
-            'photo' => null,
-            'page_id' => $this->pageId
+            //'photo' => null,
+            'page_id' => $this->pageId,
+            'images' => [
+                ['name' => $this->name1, 'data' => $file1],
+                ['name' => $this->name2, 'data' => $file2]
+            ]
         ];
 
     }
@@ -115,17 +129,28 @@ class ProductsTest extends Base
     /** @test */
     public function it_will_read_product()
     {
-        $this->post('api/products?token=' . $this->token, $this->testData);
+        $res0 = $this->post('api/products?token=' . $this->token, $this->testData);
+        $res = $res0->getData();
+        $this->assertTrue($res->success);
+
+        //dump($res0);   die('88888888888888888');
 
         $response22 = $this->get('api/products?token='.$this->token );
         //var_dump($response22); die('===');
 
         $res22 = $response22->getData();
 
+        //dump($res22);
+
         $this->assertTrue( $res22->success );
         $this->assertEquals( count($res22->data), 1);
         $this->assertEquals( $res22->data[0]->sku, $this->testData['sku']);
         $this->assertNotEmpty( $res22->data[0]->id);
+
+        $this->assertEquals( count($res22->data[0]->images), 2);
+        $this->assertEquals( $res22->data[0]->images[0]->name,  $this->name1 );
+        $this->assertEquals( $res22->data[0]->images[1]->name,  $this->name2 );
+
     }
 
     /** @test */
@@ -141,6 +166,11 @@ class ProductsTest extends Base
         $newName = 'PHP7';
         $this->testData['name'] = $newName;
 
+        $images = $this->testData['images'];
+        array_shift($images);
+        $this->testData['images'] = $images;
+
+        //var_dump($this->testData); die('++');
 
         $response33 = $this->put('api/products/'.$productId.'?token='.$this->token, $this->testData);
         //var_dump($response33); die('===========');
@@ -151,8 +181,11 @@ class ProductsTest extends Base
         $res222 = $response222->getData();
         $productId2 = $res222->data[0]->id;
 
+        $this->assertEquals(count($res222->data), 1);
         $this->assertEquals( $productId2,  $productId );
         $this->assertEquals( $res222->data[0]->name, $newName);
+
+        $this->assertEquals(count($res222->data[0]->images), 3);
     }
 
     /** @test */

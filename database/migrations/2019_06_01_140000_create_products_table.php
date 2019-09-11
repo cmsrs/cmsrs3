@@ -19,7 +19,7 @@ class CreateProductsTable extends Migration
             $table->string('sku')->nullable();
             $table->integer('price');
             $table->text('description')->nullable();
-            $table->string('photo')->nullable();
+            //$table->string('photo')->nullable();
             $table->unsignedBigInteger('page_id')->nullable();
             $table->foreign('page_id')->nullable()->references('id')->on('pages')->onDelete('cascade');
             $table->timestamps();

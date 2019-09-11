@@ -18,10 +18,9 @@ class ImageController extends Controller
       'name' => 'max:255',
   ];
 
-  public function getItemByPageId(Request $request, $pageId)
+  public function getItemByTypeAndRefId(Request $request, $type,  $refId)
   {
-    //var_dump($pageId);
-    $images = Image::getImagesAndThumbsByPageId($pageId, false);
+    $images = Image::getImagesAndThumbsByTypeAndRefId(  $type,  $refId);
 
     return response()->json(['success' => true, 'data'=> $images], 200);
   }
