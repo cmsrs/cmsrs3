@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 //use JWTAuth;
 
 use App\Page;
+use App\Product;
 use App\Menu;
 //use Validator;
 
@@ -28,17 +29,21 @@ class FronController extends Controller
   public function cms($menuSlug, $pageSlug)
   {
     $pageOut = null;
+    $products = null;
     foreach ($this->menus as $menu) {
       if( $menuSlug == $menu->slug ){
         foreach ($menu->pagesPublished  as $page) {
           if( $pageSlug == $page->slug ){
             $pageOut = $page;
+            if( 'shop' === $page->type){
+              $products = Product::getAllProductsWithImages();
+            }
           }
         }
       }
     }
 
-    return view('cms', [ 'menus' => $this->menus,  'page' => $pageOut  ] );
+    return view('cms', [ 'menus' => $this->menus,  'page' => $pageOut, 'products' => $products ]);
   }
 
 

@@ -17,25 +17,25 @@ class ProductController extends Controller
 
   private $validationRules = [
       'name' => 'max:255|required',
-      'sku' => 'max:128|unique:products',
-      'price' => 'integer',
+      'sku' => 'max:128|required|unique:products',
+      'price' => 'integer|required',
       'description' => 'max:1280'
   ];
 
   public function index()
   {
 
-      $products = Product::query()->orderBy('id', 'asc' )->get()->toArray();
+        $products = Product::getAllProductsWithImages();
 
-      foreach ($products as $key => $product) {
-          //getImagesAndThumbsByTypeAndRefId(  $type, $refId = null)
-          //$products[$key]['images'] = Image::getImagesAndThumbsByPageId($product['id'], false);
+    //   $products = Product::query()->orderBy('id', 'asc' )->get()->toArray();
 
-          $products[$key]['images'] = Image::getImagesAndThumbsByTypeAndRefId( 'product', $product['id']);
+    //   foreach ($products as $key => $product) {
 
-      }
+    //       $products[$key]['images'] = Image::getImagesAndThumbsByTypeAndRefId( 'product', $product['id']);
 
-      return response()->json(['success' => true, 'data'=> $products], 200);
+    //   }
+
+        return response()->json(['success' => true, 'data'=> $products], 200);
   }
 
   public function create(Request $request)
