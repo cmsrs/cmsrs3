@@ -11,7 +11,7 @@
         @endforeach
       @endif
 
-      <div class="mt-2">{{$page->content}}</div>
+      <div class="mt-2">{!! $page->content !!}</div>
 
   @elseif($page->type  === 'gallery')
 
@@ -26,21 +26,21 @@
 
       <div id="app" class="container">
         <div class="row">
-          <div class="col-8">                    
-            @foreach($products as $product)            
+          <div class="col-8">
+            @foreach($products as $product)
             <div class="container">
               <div class="row">
-                <div class="col">          
+                <div class="col">
                 @if( !empty($product['images']) &&  !empty($product['images'][0]) )
                   <img class="m-3" src="{{$product['images'][0]->getHtmlImage()}}" alt="{{$product['images'][0]->name}}" />
-                @endif          
+                @endif
                 </div>
                 <div class="col">
                   <ul class="list-unstyled">
                     <li>Name: {{$product['name']}}</li>
                     <li>Sku: {{$product['sku']}}</li>
-                    <li>Price: {{$product['price']}}</li>              
-                    <li>{{$product['description']}}</li>                            
+                    <li>Price: {{$product['price']}}</li>
+                    <li>{{$product['description']}}</li>
                   </ul>
                   <?php
                     $id =  $product['id'];
@@ -52,11 +52,11 @@
                 </div>
               </div>
             </div>
-            <br><br>            
+            <br><br>
             @endforeach
 
           </div>
-          <div class="col-4">                    
+          <div class="col-4">
             SHOPPING CART:
             <ul>
               <li v-for="item in cart" v-bind:key="item.id">
@@ -75,13 +75,13 @@
 
           </div>
 
-        </div>          
+        </div>
       </div>
 
 
-      <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>      
-      <script src="/js/shop.js"></script>            
-        
+      <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+      <script src="/js/shop.js"></script>
+
 
   @endif
 
