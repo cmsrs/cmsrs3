@@ -65,6 +65,17 @@ tail -f -n0 /var/log/apache2/cmsrs* storage/logs/*
 
 * go to the main page and see the front page
 
+===
+
+Tutorial:
+
+http://www.cmsrs.pl/en/cms/cmsrs/cmsrs-video-tutorial
+
+===
+
+More information:
+
+http://www.cmsrs.pl/en/cms/cmsrs/about-cmsrs
 
 ===
 
