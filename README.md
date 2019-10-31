@@ -79,7 +79,7 @@ http://www.cmsrs.pl/en/cms/cmsrs/about-cmsrs
 
 ===
 
-React source code you can find on the page:
+React source code:
 
 https://github.com/cmsrs/cmsrs3-react
 
