@@ -57,14 +57,14 @@ class AuthenticationTest extends TestCase
     /** @test */
     public function it_will_register_a_user()
     {
-        //print_r($_ENV['RS_SECRET']);
+        //print_r($_ENV['RS_SECRET']); die('============');
+        $secret = $_ENV['RS_SECRET'];
 
         $response = $this->post('api/register', [
+            'secret' => $secret,            
             'email'    => 'test2@email.com',
             'name'     => 'iii',
-            'password' => 'cmsrs',
-            'secret' => $_ENV['RS_SECRET']
-
+            'password' => 'cmsrs'
         ]);
 
         //var_dump( $response  );
