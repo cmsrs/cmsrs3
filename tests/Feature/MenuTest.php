@@ -6,6 +6,7 @@ use App\Menu;
 //use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 //use Tests\TestCase;
 
 class MenuTest extends Base
@@ -182,7 +183,7 @@ class MenuTest extends Base
       //$this->testData
 
       $slug = Menu::find($id)->slug;
-      $this->assertEquals($slug,  str_slug($this->testData['name'], "-")    );
+      $this->assertEquals($slug,  Str::slug($this->testData['name'], "-")    );
 
 
       $testData3 =
@@ -197,7 +198,7 @@ class MenuTest extends Base
 
       $slugAfter = Menu::find($id)->slug;
       $this->assertNotEquals($slug, $slugAfter);
-      $this->assertEquals($slugAfter,  str_slug($testData3['name'], "-")  );
+      $this->assertEquals($slugAfter,  Str::slug($testData3['name'], "-")  );
 
 
 

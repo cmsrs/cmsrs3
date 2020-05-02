@@ -7,6 +7,7 @@ use App\Menu;
 //use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 //use Tests\TestCase;
 
 class PageTest extends Base
@@ -479,7 +480,7 @@ class PageTest extends Base
 
       $slug = Page::find($id)->slug;
       //str_slug($value, "-");
-      $this->assertEquals($slug,  str_slug($this->testData['title'], "-")    );
+      $this->assertEquals($slug,  Str::slug($this->testData['title'], "-")    );
 
 
       //$id = 1;
@@ -505,7 +506,7 @@ class PageTest extends Base
 
       $slugAfter = Page::find($id)->slug;
       $this->assertNotEquals($slug, $slugAfter);
-      $this->assertEquals($slugAfter,  str_slug($testData3['title'], "-")  );
+      $this->assertEquals($slugAfter,  Str::slug($testData3['title'], "-")  );
       //var_dump($slugAfter);
 
 

@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use App\Page;
 use App\Menu;
+use Illuminate\Support\Str;
 
 
 class FrontTest extends Base
@@ -87,11 +88,11 @@ class FrontTest extends Base
     public function it_will_get_cms_page()
     {
         $title = $this->testData['title'];
-        $pageSlug = str_slug($title);
+        $pageSlug = Str::slug($title);
         //print_r($slugTitle);
 
         $menuName = $this->testDataMenu['name'];
-        $menuSlug = str_slug($menuName);
+        $menuSlug = Str::slug($menuName);
 
 
         $response = $this->get('/c/'.$menuSlug.'/'.$pageSlug);
