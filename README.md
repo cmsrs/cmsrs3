@@ -1,4 +1,4 @@
-# INSALLATION:
+# INSALLATION
 
 * download
 > 
@@ -8,11 +8,11 @@
 > ```
 >
 * install dependency
-
-```bash
-composer install
-```
-
+> 
+> ```bash
+> composer install
+> ```
+>
 * set database config in file .env
 > 
 > create user and database
@@ -37,50 +37,49 @@ composer install
 > ```
 >
 * laravel and jwt config (create tokens):
-
-```bash
-php artisan key:generate && php artisan jwt:secret
-```
-
+>
+> ```bash
+> php artisan key:generate && php artisan jwt:secret
+> ```
+> 
 * create database tables and create admin user (email: adm@cmsrs.pl, pass: cmsrs123) 
-
-```bash
-php artisan migrate  && php artisan db:seed
-```
-
+>
+> ```bash
+> php artisan migrate  && php artisan db:seed
+> ```
+> 
 * set permission 
-
-```bash
-./go_privilege.sh
-```
-
+> 
+> ```bash
+> ./go_privilege.sh
+> ```
+> 
 * optionally - testing
-
-
-prepare testing:
-```bash
-sudo mysql --default-character-set=utf8 -e  "CREATE DATABASE cmsrs3g_testing CHARACTER SET utf8 COLLATE utf8_general_ci;"
-cp .env .env.testing 
-```
-
-change in file .env.testing:
-
-```bash
-DB_DATABASE=cmsrs3g_testing
-```
-
-run tests
-
-```bash
-./vendor/bin/phpunit
-```
-
+>
+> prepare testing:
+> ```bash
+> sudo mysql --default-character-set=utf8 -e  "CREATE DATABASE cmsrs3g_testing CHARACTER SET utf8 COLLATE utf8_general_ci;"
+> cp .env .env.testing 
+> ```
+> 
+> change in file .env.testing:
+> 
+> ```bash
+> DB_DATABASE=cmsrs3g_testing
+> ```
+> 
+> run tests
+> 
+> ```bash
+> ./vendor/bin/phpunit
+> ```
+> 
 * start server
-
-```bash
-php artisan serve
-```
-
+> 
+> ```bash
+> php artisan serve
+> ```
+> 
 # TROUBLESHOOTING
 
 * logs:
