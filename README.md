@@ -1,52 +1,41 @@
-# cmsRS
-
-INSALLATION:
+# INSALLATION:
 
 * download
-
-```bash
-git clone https://github.com/cmsrs/cmsrs3.git
-cd cmsrs3
-```
-
+> 
+> ```bash
+> git clone https://github.com/cmsrs/cmsrs3.git
+> cd cmsrs3
+> ```
+>
 * install dependency
 
 ```bash
 composer install
 ```
 
-
-* permission
-
-```bash
-chmod -R 777 storage
-chmod -R 777 bootstrap/cache
-```
-
 * set database config in file .env
-
-
-create user and database
-```bash
-sudo mysql --default-character-set=utf8 -e  "CREATE USER 'cmsrs'@'localhost' IDENTIFIED BY 'AlaMaKota95*';"
-sudo mysql --default-character-set=utf8 -e  "GRANT ALL PRIVILEGES ON *.* TO 'cmsrs'@'localhost' WITH GRANT OPTION;"
-sudo mysql --default-character-set=utf8 -e  "CREATE DATABASE cmsrs3g CHARACTER SET utf8 COLLATE utf8_general_ci;"
-```
-
-```bash
-cp .env.example .env
-```
-
-change in file .env:
-
-```bash
-APP_NAME=cmsRS
-APP_URL=http://127.0.0.1:8000
-DB_DATABASE=cmsrs3g
-DB_USERNAME=cmsrs
-DB_PASSWORD="AlaMaKota95*"
-```
-
+> 
+> create user and database
+> ```bash
+> sudo mysql --default-character-set=utf8 -e  "CREATE USER 'cmsrs'@'localhost' IDENTIFIED BY 'AlaMaKota95*';"
+> sudo mysql --default-character-set=utf8 -e  "GRANT ALL PRIVILEGES ON *.* TO 'cmsrs'@'localhost' WITH GRANT OPTION;"
+> sudo mysql --default-character-set=utf8 -e  "CREATE DATABASE cmsrs3g CHARACTER SET utf8 COLLATE utf8_general_ci;"
+> ```
+> 
+> ```bash
+> cp .env.example .env
+> ```
+>
+> change in file .env:
+> 
+> ```bash
+> APP_NAME=cmsRS
+> APP_URL=http://127.0.0.1:8000
+> DB_DATABASE=cmsrs3g
+> DB_USERNAME=cmsrs
+> DB_PASSWORD="AlaMaKota95*"
+> ```
+>
 * laravel and jwt config (create tokens):
 
 ```bash
@@ -92,7 +81,7 @@ run tests
 php artisan serve
 ```
 
-TROUBLESHOOTING
+# TROUBLESHOOTING
 
 * logs:
 
@@ -101,7 +90,7 @@ tail -f -n0 storage/logs/*
 ```
 
 
-MANAGMENT
+# MANAGMENT
 
 * go to the website /admin:
 
