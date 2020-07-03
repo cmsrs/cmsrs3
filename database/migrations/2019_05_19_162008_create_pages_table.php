@@ -21,6 +21,7 @@ class CreatePagesTable extends Migration
             $table->string('title')->notNullable();
             $table->string('short_title')->nullable();
             $table->boolean('published')->default(0);
+            $table->boolean('comment')->default(0);
             $table->integer('position')->unsigned()->nullable();
             $table->enum('type', ['cms', 'gallery', 'shop']);
             $table->text('content')->nullable();

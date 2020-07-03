@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 class Page extends Model
 {
     protected $fillable = [
-        'title', 'short_title', 'published', 'position', 'type', 'content', 'menu_id'
+        'title', 'short_title', 'published', 'comment', 'position', 'type', 'content', 'menu_id'
     ];
 
     public function setTitleAttribute($value)
@@ -26,9 +26,9 @@ class Page extends Model
     {
 
       if( $type ){
-          $pages = Page::query()->where('type', $type )->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'published', 'position', 'type', 'content', 'menu_id'])->toArray();
+          $pages = Page::query()->where('type', $type )->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'published', 'comment', 'position', 'type', 'content', 'menu_id'])->toArray();
       }else{
-          $pages = Page::query()->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'published', 'position', 'type', 'content', 'menu_id'])->toArray();
+          $pages = Page::query()->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'published', 'comment', 'position', 'type', 'content', 'menu_id'])->toArray();
       }
 
 
