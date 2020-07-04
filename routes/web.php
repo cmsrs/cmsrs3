@@ -14,8 +14,8 @@ use Illuminate\Support\Facades\Auth;
 */
 
 
-Route::get('/', 'FronController@index');
-Route::get('/c/{menuSlug}/{pageSlug}', 'FronController@cms');
+Route::get('/', 'FrontController@index');
+Route::get('/c/{menuSlug}/{pageSlug}', 'FrontController@cms');
 
 // Route::get('/', function () {
 //     return view('welcome');

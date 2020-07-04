@@ -12,7 +12,7 @@ use App\Menu;
 //use Validator;
 
 
-class FronController extends Controller
+class FrontController extends Controller
 {
   private $menus;
 

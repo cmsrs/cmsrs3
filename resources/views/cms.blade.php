@@ -3,6 +3,13 @@
 
   <h1 class="mb-4 mt-3">{{$page->title}}</h1>
 
+
+  
+
+
+
+
+  <div id="app">
   @if ( $page->type  === 'cms')
 
       @if( $page->images)
@@ -24,7 +31,7 @@
 
   @elseif($page->type  === 'shop')
 
-      <div id="app" class="container">
+      <div class="container">
         <div class="row">
           <div class="col-8">
             @foreach($products as $product)
@@ -79,10 +86,15 @@
       </div>
 
 
-      <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-      <script src="/js/shop.js"></script>
-
-
   @endif
+
+  @if ( $page->comment )
+    <div> Tu bedzie komentarz..... </div>
+  @endif
+  </div> <!-- div app -->
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="/js/shop.js"></script>
+
 
 @stop
