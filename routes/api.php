@@ -13,10 +13,13 @@ use Illuminate\Http\Request;
 |
 */
 
-
 Route::post('register', 'AuthController@register');
 Route::post('login', 'AuthController@login');
 Route::post('recover', 'AuthController@recover');
+
+Route::get('comments/{pageId}', 'CommentController@index');
+Route::post('comments/{pageId}', 'CommentController@create');
+
 
 Route::group(['middleware' => ['jwt.auth']], function() {
     Route::get('logout', 'AuthController@logout');
