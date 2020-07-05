@@ -113,7 +113,6 @@ class CommentTest extends Base
 
 
         $res = $response->getData();
-        //print_r();
 
         $this->assertTrue($res->success);
         $this->assertTrue(is_array($res->data));
