@@ -3,13 +3,8 @@
 
   <h1 class="mb-4 mt-3">{{$page->title}}</h1>
 
-
-  
-
-
-
-
   <div id="app">
+  <div id="page_id" data-page-id="{{$page->id}}"></div>  
   @if ( $page->type  === 'cms')
 
       @if( $page->images)
@@ -89,12 +84,21 @@
   @endif
 
   @if ( $page->comment )
-    <div> Tu bedzie komentarz..... </div>
+    <h5 class="mb-2 mt-3">Comments: </h5>
+    <li v-for="item in comments" :key="item.content"  style="list-style: none;" class="ml-3 mb-2 mt-2">
+      @{{ item.content }}
+    </li>
+    <h5 class="mb-2 mt-3">Add comment: </h5>
+    <form  method="get">
+      <textarea v-model="comment" placeholder="add comment" rows="4" cols="60"></textarea>
+      <p>
+      <button v-on:click="addComment( $event )" class="add-to-cart btn">Add comment</button>
+      </p>
+    </form>
   @endif
-  </div> <!-- div app -->
-
+  </div> <!-- div app -->  
+  
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src="/js/shop.js"></script>
-
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>      
+  <script src="/js/cmsrs.js"></script>
 @stop
