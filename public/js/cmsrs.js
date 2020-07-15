@@ -35,6 +35,11 @@ new Vue({
         },
         pay: function(){
             alert('TODO payment='+this.total);
-        }
+		},
+		addComment: function(pageId){
+			alert('aaaa='+this.comment+"pId="+pageId);
+			e.preventDefault();
+			return true;
+		}
 	}
 });

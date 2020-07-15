@@ -3,12 +3,6 @@
 
   <h1 class="mb-4 mt-3">{{$page->title}}</h1>
 
-
-  
-
-
-
-
   <div id="app">
   @if ( $page->type  === 'cms')
 
@@ -89,12 +83,18 @@
   @endif
 
   @if ( $page->comment )
-    <div> Tu bedzie komentarz..... </div>
+    <h5 class="mb-2 mt-3">Add comment: </h5>
+    <form v-on:submit.prevent="onSubmit"  method="get">
+      <textarea v-model="comment" placeholder="add comment"></textarea>
+      <p>
+      <button v-on:click="addComment( {{$page->id}} )" class="add-to-cart btn">Add comment</button>
+      </p>
+    </form>
   @endif
   </div> <!-- div app -->
 
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src="/js/shop.js"></script>
+  <script src="/js/cmsrs.js"></script>
 
 
 @stop
