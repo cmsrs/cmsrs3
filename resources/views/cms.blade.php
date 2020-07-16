@@ -93,12 +93,6 @@
       <textarea v-model="comment" placeholder="add comment" rows="4" cols="60"></textarea>
       <p>
       <button v-on:click="addComment( $event )" class="add-to-cart btn">Add comment</button>
-    <h5 class="mb-2 mt-3">Add comment: </h5>
-    <form v-on:submit.prevent="onSubmit"  method="get">
-      <textarea v-model="comment" placeholder="add comment"></textarea>
-      <p>
-      <button v-on:click="addComment( {{$page->id}} )" class="add-to-cart btn">Add comment</button>
-      </p>
     </form>
   @endif
   </div> <!-- div app -->  
