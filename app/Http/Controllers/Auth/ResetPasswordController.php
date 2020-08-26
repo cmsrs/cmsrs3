@@ -34,6 +34,12 @@ class ResetPasswordController extends Controller
      */
     public function __construct()
     {
+        $demoStatus = env('DEMO_STATUS', false);
+        if($demoStatus){
+            echo "Not permission";
+            die();
+        }
+
         $this->middleware('guest');
     }
 }

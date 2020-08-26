@@ -12,6 +12,7 @@
 @include('includes.links')
 </main><!-- /.container -->
 
+
 @include('includes.footer')
 </body>
 </html>

@@ -92,49 +92,51 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        if(  '127.0.0.1' !== $request->ip() ||  ($request->input('secret') !== $_ENV['RS_SECRET'])  ){
-          return response()->json(['success'=> false, 'error'=> 'no access'  ]);
+        $demoStatus = env('DEMO_STATUS', false);
+        if($demoStatus){
+            echo "Not permission";
+        }else{
+            if(  '127.0.0.1' !== $request->ip() ||  ($request->input('secret') !== $_ENV['RS_SECRET'])  ){
+                return response()->json(['success'=> false, 'error'=> 'no access'  ]);
+              }
+      
+              $credentials = $request->only('name', 'email', 'password');
+      
+              $rules = [
+                  'name' => 'max:255',
+                  'email' => 'required|email|max:255|unique:users'
+              ];
+              $validator = Validator::make($credentials, $rules);
+              if($validator->fails()) {
+                  return response()->json(['success'=> false, 'error'=> $validator->messages()]);
+              }
+              $name = $request->name;
+              $email = $request->email;
+              $password = $request->password;
+      
+              //$user = User::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password)]);
+              //bcrypt($password)
+      
+              //$user = User::create(['name' => $name, 'email' => $email, 'password' => bcrypt($password),  'role' => User::$role['admin'] ]);
+      
+              //dd('+++++++++++');
+      
+      
+              $user = new User([
+                  'email'    => $email,
+                  'name'     => $name,
+                  //'password' => 'cmsrs',
+                  'role' => User::$role['admin']
+              ]);
+      
+              $user->password = $password;      
+              $user->save();
+            
+              //$user = User::create(['name' => $name, 'email' => $email, 'password' => $password,  'role' => User::$role['admin'] ]);
+      
+              return $this->getTokenByCredentials($credentials);      
         }
 
-        $credentials = $request->only('name', 'email', 'password');
-
-        $rules = [
-            'name' => 'max:255',
-            'email' => 'required|email|max:255|unique:users'
-        ];
-        $validator = Validator::make($credentials, $rules);
-        if($validator->fails()) {
-            return response()->json(['success'=> false, 'error'=> $validator->messages()]);
-        }
-        $name = $request->name;
-        $email = $request->email;
-        $password = $request->password;
-
-        //$user = User::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password)]);
-        //bcrypt($password)
-
-        //$user = User::create(['name' => $name, 'email' => $email, 'password' => bcrypt($password),  'role' => User::$role['admin'] ]);
-
-        //dd('+++++++++++');
-
-
-        $user = new User([
-            'email'    => $email,
-            'name'     => $name,
-            //'password' => 'cmsrs',
-            'role' => User::$role['admin']
-        ]);
-
-        $user->password = $password;
-
-
-        $user->save();
-
-
-
-        //$user = User::create(['name' => $name, 'email' => $email, 'password' => $password,  'role' => User::$role['admin'] ]);
-
-        return $this->getTokenByCredentials($credentials);
     }
 
 }

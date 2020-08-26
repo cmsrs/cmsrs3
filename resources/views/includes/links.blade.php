@@ -1,6 +1,6 @@
-<div>
+<p class="starter-template">
     <h5>Links:</h5>
-    <ul class="nav">
+    <ul>
         <?php foreach ($menus as $menu) { ?>
         <li>
             <div>{{ $menu->name }}</div>
@@ -14,4 +14,4 @@
         </li>
         <?php } ?>
     </ul>
-</div>
+</p>
