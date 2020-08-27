@@ -30,7 +30,7 @@ class PageTest extends Base
             'title' => 'page 1 test',
             'short_title' => 'page1',
             'published' => 1,
-            'comment' => 1,
+            'commented' => 1,
             'position' => 7,
             'type' => 'cms',
             'content' => 'content test133445',
@@ -280,7 +280,7 @@ class PageTest extends Base
            'title'     => 'test p2',
            'short_title' => 'p22',
            'published' => 0,
-           'comment' => 0,
+           'commented' => 0,
            //'position' => 3,
            'type' => 'shop',
            'content' => 'aaa ffdfds',
@@ -404,7 +404,7 @@ class PageTest extends Base
            'title'     => 'test p2',
            'short_title' => 'p22',
            'published' => 0,
-           'comment' => 0,
+           'commented' => 0,
            //'position' => 3,
            'type' => 'cms',
            'content' => 'sdafsfsdaf asdfasdf',
@@ -494,7 +494,7 @@ class PageTest extends Base
             'title' => 'test p3 żółta żółć',
             'short_title' => 'p3',
             'published' => 1,
-            'comment' => 0,
+            'commented' => 0,
 
             //'position' => 3,
             'type' => 'cms',
@@ -543,7 +543,7 @@ class PageTest extends Base
       [
             'id' => $id,
             'title' => 'test p3',
-            'comment' => 1,
+            'commented' => 1,
             'position' => '3d33'
       ];
       $response33 = $this->put('api/pages/'.$id.'?token='.$this->token, $testData33);
@@ -571,7 +571,7 @@ class PageTest extends Base
             'title' => 'test p3',
             'short_title' => 'p3',
             'published' => 1,
-            'comment' => 0,
+            'commented' => 0,
 
             //'position' => 3,
             'content' => null,
