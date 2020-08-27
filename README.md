@@ -109,7 +109,7 @@ tail -f -n0 storage/logs/*
 
 ===
 
-Demo
+Demo:
 
 http://demo.cmsrs.pl
 
