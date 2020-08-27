@@ -109,15 +109,21 @@ tail -f -n0 storage/logs/*
 
 ===
 
-Tutorial:
+Demo
 
-http://www.cmsrs.pl/en/cms/cmsrs/cmsrs-video-tutorial
+http://demo.cmsrs.pl
 
 ===
 
 More information:
 
 http://www.cmsrs.pl/en/cms/cmsrs/about-cmsrs
+
+===
+
+Tutorial:
+
+http://www.cmsrs.pl/en/cms/cmsrs/cmsrs-video-tutorial
 
 ===
 
