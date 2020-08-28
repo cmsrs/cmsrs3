@@ -9,7 +9,7 @@
 
 <main role="main" class="container">
 @yield('content')
-@include('includes.links')
+<!-- @include('includes.links') -->
 </main><!-- /.container -->
 
 

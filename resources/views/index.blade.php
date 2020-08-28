@@ -18,6 +18,10 @@
     user: adm@cmsrs.pl
     <br>    
     pass: cmsrs123 
+
+    <br>
+    <br>    
+    More information: <a title="cmsRS" href="http://www.cmsrs.pl" >http://www.cmsrs.pl</a>
     
     </p>
 
