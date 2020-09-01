@@ -13,14 +13,15 @@ use Validator;
 class MenuController extends Controller
 {
   private $validationRules = [
-      'name' => 'max:255|required'
-      //'position' => 'numeric'
+      'name' => 'max:255|required',
+      'position' => 'numeric'
   ];
 
 
   public function index()
   {
       $menus = Menu::getAllMenus();
+      //var_dump( $menus  );
 
       return response()->json(['success' => true, 'data'=> $menus], 200);
   }

@@ -22,9 +22,18 @@ class ImageTest extends Base
     private $testImgData;
     private $pagesData;
 
+    //function __construct()
+    //{
+    //    parent::setUp();
+    //}
+
     public function setUp(): void
     {
+
         parent::setUp();
+        ini_set('memory_limit', '256M');
+        $this->createUser();
+
         $this->arrPageId = array();
 
         $this->name1 = 'phpunittest1.jpg';
@@ -43,16 +52,24 @@ class ImageTest extends Base
         ];
 
         $response = $this->post('api/pages?token='.$this->token, $this->testImgData);
-        //var_dump($response); die('==========');
+        //var_dump($response); 
+        //die('==========');
 
         $res = $response->getData();
-        //var_dump($res);
+
         $this->assertTrue( $res->success );
 
-        $this->assertNotEmpty( $pageId = $res->data->pageId);
+        $pageId = $res->data->pageId;
+        $this->assertNotEmpty( $pageId );
+
+        //var_dump($pageId);
         $this->pageData = $res->data->data;
 
         $this->pageId = $pageId;
+
+        //var_dump($res->success);
+        //var_dump($pageId);
+
     }
 
     protected function tearDown(): void
@@ -65,7 +82,6 @@ class ImageTest extends Base
             $this->clear_imgs();
           }
         }
-
         parent::tearDown();
     }
 
@@ -112,47 +128,104 @@ class ImageTest extends Base
     }
 
     /** @test */
-    public function it_will_update_page_with_images()
+    public function it_will_delete_page_with_images()
     {
-      $this->assertEquals(count( (array)$this->pageData->images), 2);
-      $this->assertEquals($this->pageData->title, $this->testImgData['title']);
 
-      $name3 = 'phpunittest3.jpg';
-      $file3 = $this->getFixtureBase64($name3);
+      $responseAllBefore = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token );
+      $resAllBefore = $responseAllBefore->getData();
 
-      //var_dump($this->pagesData);
+      foreach( $resAllBefore->data as $img ){
 
-      $updateTitle = 'Update img Title';
-      $this->testImgData['title'] = 'Update img Title';
-      $this->testImgData['images'] = [
-        ['name' => $name3, 'data' => $file3]
-      ];
-
-      $response = $this->put('api/pages/'.$this->pageId.'?token='.$this->token, $this->testImgData);
-      $res = $response->getData();
-      $this->assertTrue( $res->success );
-
-      $response2 = $this->get('api/pages?token='.$this->token);
-      $res2 = $response2->getData();
-      $this->assertTrue( $res2->success );
-      //ages =  $res2->getData();
-      $testPage = $res2->data[0];
-      $this->assertEquals($testPage->id, $this->pageId);
-
-      //print_r($pages);
-      $this->assertEquals($testPage->title, $updateTitle);
-      $this->assertEquals(count($testPage->images), 3);
-
-      $this->assertEquals( pathinfo($testPage->images[2]->fs->org, PATHINFO_BASENAME ), $name3 );
-      $this->assertEquals( count( (array)$testPage->images[2]->fs ),  count(Image::$thumbs) + 1 );
+        $imagesFs =  Image::getAllImage($img);
+        //print_r(  $imagesFs );
 
 
-      $imageObj11 = Image::find($testPage->images[2]->id);
-      $mediumHtml = $imageObj11->getHtmlImage();
-      $this->assertEquals($mediumHtml, $testPage->images[2]->fs->medium);
+        foreach( $imagesFs as $imgFs ){
+          //echo $imgFs."\n";
+          $this->assertFileExists($imgFs);
+        }
+      }
 
+
+      $response0 = $this->delete('api/pages/'.$this->pageId.'?token='.$this->token);
+      //var_dump($response0); die('============');
+
+      $res0 = $response0->getData();
+      $this->assertTrue( $res0->success );
+
+
+      $responseAllAfter = $this->get('api/pages?token='.$this->token );
+      $resAllAfter = $responseAllAfter->getData();
+      $this->assertEmpty($resAllAfter->data);
+
+      $responseAllImgAfter = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token );
+      $resAllImgAfter = $responseAllImgAfter->getData();
+      $this->assertEmpty($resAllImgAfter->data);
+
+
+      //echo "\n"."poooooo";
+      //  print_r($resAllBefore->data);
+
+      foreach( $resAllBefore->data as $img ){
+          //print_r($img ); die('===');
+        $imagesFs =  Image::getAllImage($img);
+
+
+        if($imagesFs){
+            foreach( $imagesFs as $imgFs ){
+                //echo($imgFs);
+                $this->assertFileNotExists($imgFs);
+            }
+
+        }
+      }
       //$this->clear_imgs();
     }
+
+
+    /** @test */
+    public function it_will_delete_image()
+    {
+      //delete first image
+      $response2 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
+      $res2 = $response2->getData();
+
+      $imgToDel = $res2->data[0];
+      $this->assertNotEmpty($imgToDel->id);
+
+      $imgDir = Image::getImageDir( 'page', $imgToDel->page_id, $imgToDel->id );
+      $file = $imgDir."/".$imgToDel->name;
+      $this->assertFileExists($file);
+
+      $fileName = pathinfo($imgToDel->name, PATHINFO_FILENAME );
+      $fileExt = pathinfo($imgToDel->name, PATHINFO_EXTENSION );
+      foreach (Image::$thumbs as $thumbName => $dimension) {
+        $fileThumb = $imgDir.'/'.$fileName.'-'.$thumbName.'.'.$fileExt;
+        $this->assertFileExists($fileThumb);
+      }
+
+      $responseDel = $this->delete('api/images/'.$imgToDel->id.'?token='.$this->token);
+
+       //var_dump($responseDel); die('===');
+
+      $this->assertFileNotExists($file);
+
+      foreach (Image::$thumbs as $thumbName => $dimension) {
+        $fileThumb = $imgDir.'/'.$fileName.'-'.$thumbName.'.'.$fileExt;
+        $this->assertFileNotExists($fileThumb);
+      }
+
+
+      $response22 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
+      $res22 = $response22->getData();
+      $this->assertTrue( $res22->success );
+      $this->assertEquals( count($res22->data), 1);
+      //$this->clear_imgs();
+    }
+
+
+
+
 
     /** @test */
     public function it_will_get_pages_with_images()
@@ -211,124 +284,6 @@ class ImageTest extends Base
       //$this->clear_imgs();
     }
 
-    /** @test */
-    public function it_will_get_change_position_images()
-    {
-      $response2 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
-      $res2 = $response2->getData();
-
-
-      $resSwap = $this->get('api/images/position/up/'.$res2->data[0]->id.'?token='.$this->token);
-
-      $response2Swap = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
-      $res2Swap = $response2Swap->getData();
-      $this->assertTrue( $res2Swap->success );
-      $this->assertEquals( count($res2Swap->data), 2);
-
-      $this->assertEquals($res2Swap->data[0]->name, $this->name2);
-      //$this->clear_imgs();
-    }
-
-    /** @test */
-    public function it_will_delete_image()
-    {
-      //delete first image
-      $response2 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
-      $res2 = $response2->getData();
-
-      $imgToDel = $res2->data[0];
-      $this->assertNotEmpty($imgToDel->id);
-
-      $imgDir = Image::getImageDir( 'page', $imgToDel->page_id, $imgToDel->id );
-      $file = $imgDir."/".$imgToDel->name;
-      $this->assertFileExists($file);
-
-      $fileName = pathinfo($imgToDel->name, PATHINFO_FILENAME );
-      $fileExt = pathinfo($imgToDel->name, PATHINFO_EXTENSION );
-      foreach (Image::$thumbs as $thumbName => $dimension) {
-        $fileThumb = $imgDir.'/'.$fileName.'-'.$thumbName.'.'.$fileExt;
-        $this->assertFileExists($fileThumb);
-      }
-
-      $responseDel = $this->delete('api/images/'.$imgToDel->id.'?token='.$this->token);
-
-       //var_dump($responseDel); die('===');
-
-      $this->assertFileNotExists($file);
-
-      foreach (Image::$thumbs as $thumbName => $dimension) {
-        $fileThumb = $imgDir.'/'.$fileName.'-'.$thumbName.'.'.$fileExt;
-        $this->assertFileNotExists($fileThumb);
-      }
-
-
-      $response22 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
-      $res22 = $response22->getData();
-      $this->assertTrue( $res22->success );
-      $this->assertEquals( count($res22->data), 1);
-      //$this->clear_imgs();
-    }
-
-
-    /** @test */
-    public function it_will_delete_page_with_images()
-    {
-
-      $responseAllBefore = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token );
-      $resAllBefore = $responseAllBefore->getData();
-
-
-
-      foreach( $resAllBefore->data as $img ){
-
-
-
-        $imagesFs =  Image::getAllImage($img);
-        //print_r(  $imagesFs );
-
-
-        foreach( $imagesFs as $imgFs ){
-          //echo $imgFs."\n";
-          $this->assertFileExists($imgFs);
-        }
-      }
-
-
-      $response0 = $this->delete('api/pages/'.$this->pageId.'?token='.$this->token);
-      //var_dump($response0); die('============');
-
-      $res0 = $response0->getData();
-      $this->assertTrue( $res0->success );
-
-
-      $responseAllAfter = $this->get('api/pages?token='.$this->token );
-      $resAllAfter = $responseAllAfter->getData();
-      $this->assertEmpty($resAllAfter->data);
-
-      $responseAllImgAfter = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token );
-      $resAllImgAfter = $responseAllImgAfter->getData();
-      $this->assertEmpty($resAllImgAfter->data);
-
-
-      //echo "\n"."poooooo";
-      //  print_r($resAllBefore->data);
-
-      foreach( $resAllBefore->data as $img ){
-          //print_r($img ); die('===');
-        $imagesFs =  Image::getAllImage($img);
-
-
-        if($imagesFs){
-            foreach( $imagesFs as $imgFs ){
-                //echo($imgFs);
-                $this->assertFileNotExists($imgFs);
-            }
-
-        }
-      }
-      //$this->clear_imgs();
-    }
-
 
     /** @test */
     public function it_will_add_pages_with_the_same_image_name()
@@ -364,5 +319,72 @@ class ImageTest extends Base
         //$this->clear_imgs();
       }
     }
+
+
+    /** @test */
+    public function it_will_update_page_with_images()
+    {
+      $this->assertEquals(count( (array)$this->pageData->images), 2);
+      $this->assertEquals($this->pageData->title, $this->testImgData['title']);
+
+      $name3 = 'phpunittest3.jpg';
+      $file3 = $this->getFixtureBase64($name3);
+
+      //var_dump($this->pagesData);
+
+      $updateTitle = 'Update img Title';
+      $this->testImgData['title'] = 'Update img Title';
+      $this->testImgData['images'] = [
+        ['name' => $name3, 'data' => $file3]
+      ];
+
+      $response = $this->put('api/pages/'.$this->pageId.'?token='.$this->token, $this->testImgData);
+      $res = $response->getData();
+      $this->assertTrue( $res->success );
+
+      $response2 = $this->get('api/pages?token='.$this->token);
+      $res2 = $response2->getData();
+      $this->assertTrue( $res2->success );
+      //ages =  $res2->getData();
+      $testPage = $res2->data[0];
+      $this->assertEquals($testPage->id, $this->pageId);
+
+      //print_r($pages);
+      $this->assertEquals($testPage->title, $updateTitle);
+      $this->assertEquals(count($testPage->images), 3);
+
+      $this->assertEquals( pathinfo($testPage->images[2]->fs->org, PATHINFO_BASENAME ), $name3 );
+      $this->assertEquals( count( (array)$testPage->images[2]->fs ),  count(Image::$thumbs) + 1 );
+
+
+      $imageObj11 = Image::find($testPage->images[2]->id);
+      $mediumHtml = $imageObj11->getHtmlImage();
+      $this->assertEquals($mediumHtml, $testPage->images[2]->fs->medium);
+
+      //$this->clear_imgs();
+    }
+
+
+
+    /** @test */
+    public function it_will_get_change_position_images()
+    {
+      $response2 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
+      $res2 = $response2->getData();
+
+
+      $resSwap = $this->get('api/images/position/up/'.$res2->data[0]->id.'?token='.$this->token);
+
+      $response2Swap = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
+      $res2Swap = $response2Swap->getData();
+      $this->assertTrue( $res2Swap->success );
+      $this->assertEquals( count($res2Swap->data), 2);
+
+      $this->assertEquals($res2Swap->data[0]->name, $this->name2);
+      //$this->clear_imgs();
+    }
+
+
+
 
 }

@@ -24,6 +24,7 @@ class PageTest extends Base
     public function setUp(): void
     {
         parent::setUp();
+        $this->createUser();
 
         $this->testData =
         [

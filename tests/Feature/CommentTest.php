@@ -27,6 +27,7 @@ class CommentTest extends Base
     public function setUp(): void
     {
         parent::setUp();
+        $this->createUser();
 
         $this->testMenu =
             [

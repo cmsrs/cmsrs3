@@ -25,6 +25,7 @@ class FrontTest extends Base
     public function setUp(): void
     {
         parent::setUp();
+        $this->createUser();
 
 
         $this->testDataMenu =

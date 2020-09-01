@@ -26,7 +26,9 @@ class ProductTest extends Base
 
     public function setUp(): void
     {
+
         parent::setUp();
+        $this->createUser();
 
         $this->testMenu =
             [
@@ -86,6 +88,8 @@ class ProductTest extends Base
                 ['name' => $this->name2, 'data' => $file2]
             ]
         ];
+
+
 
     }
 

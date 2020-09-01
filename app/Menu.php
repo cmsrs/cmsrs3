@@ -14,6 +14,10 @@ class Menu extends Model
         'name', 'position'
     ];
 
+    protected $casts = [
+        'position' => 'integer',
+    ];
+
     public function setNameAttribute($value)
     {
         $this->attributes['name'] = $value;

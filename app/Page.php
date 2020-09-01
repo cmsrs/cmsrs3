@@ -11,6 +11,12 @@ class Page extends Model
         'title', 'short_title', 'published', 'commented', 'position', 'type', 'content', 'menu_id'
     ];
 
+    protected $casts = [
+           'published' => 'integer',
+           'commented' => 'integer',
+           'position' => 'integer'       
+    ];
+
     public function setTitleAttribute($value)
     {
         $this->attributes['title'] = $value;

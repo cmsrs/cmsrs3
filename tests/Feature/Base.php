@@ -11,9 +11,9 @@ class Base extends TestCase
 
   protected $token;
 
-  public function setUp(): void
+
+  public function createUser()
   {
-      parent::setUp();
 
       $user = new User([
            'email'    => 'test@email.com',
@@ -29,6 +29,15 @@ class Base extends TestCase
 
 
       $this->token = $this->getTestToken();
+  }
+
+
+
+  public function setUp(): void
+  {
+      parent::setUp();
+
+
   }
 
     protected function tearDown(): void

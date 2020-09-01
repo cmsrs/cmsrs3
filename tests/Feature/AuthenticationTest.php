@@ -17,6 +17,7 @@ class AuthenticationTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        //$this->createUser();
 
         $user = new User([
              'email'    => 'test@email.com',
