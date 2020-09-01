@@ -18,12 +18,14 @@ class ImageTest extends Base
     private $name1;
     private $name2;
     private $pageId;
+    private $arrPageId;    
     private $testImgData;
     private $pagesData;
 
     public function setUp(): void
     {
         parent::setUp();
+        $this->arrPageId = array();
 
         $this->name1 = 'phpunittest1.jpg';
         $file1 = $this->getFixtureBase64($this->name1);
@@ -55,6 +57,15 @@ class ImageTest extends Base
 
     protected function tearDown(): void
     {
+        if(empty($this->arrPageId)){
+          $this->clear_imgs();
+        }else{
+          foreach($this->arrPageId as $pageId){
+            $this->pageId = $pageId;
+            $this->clear_imgs();
+          }
+        }
+
         parent::tearDown();
     }
 
@@ -140,7 +151,7 @@ class ImageTest extends Base
       $mediumHtml = $imageObj11->getHtmlImage();
       $this->assertEquals($mediumHtml, $testPage->images[2]->fs->medium);
 
-      $this->clear_imgs();
+      //$this->clear_imgs();
     }
 
     /** @test */
@@ -173,7 +184,7 @@ class ImageTest extends Base
         $this->assertFileExists($fs);
       }
 
-      $this->clear_imgs();
+      //$this->clear_imgs();
     }
 
     /** @test */
@@ -197,7 +208,7 @@ class ImageTest extends Base
       //dump($res2->data);
 
 
-      $this->clear_imgs();
+      //$this->clear_imgs();
     }
 
     /** @test */
@@ -215,7 +226,7 @@ class ImageTest extends Base
       $this->assertEquals( count($res2Swap->data), 2);
 
       $this->assertEquals($res2Swap->data[0]->name, $this->name2);
-      $this->clear_imgs();
+      //$this->clear_imgs();
     }
 
     /** @test */
@@ -255,7 +266,7 @@ class ImageTest extends Base
       $res22 = $response22->getData();
       $this->assertTrue( $res22->success );
       $this->assertEquals( count($res22->data), 1);
-      $this->clear_imgs();
+      //$this->clear_imgs();
     }
 
 
@@ -315,7 +326,7 @@ class ImageTest extends Base
 
         }
       }
-      $this->clear_imgs();
+      //$this->clear_imgs();
     }
 
 
@@ -345,11 +356,12 @@ class ImageTest extends Base
       $this->assertEquals($res->data[1]->images[0]->name,$res->data[1]->images[1]->name);
 
       //print_r($res->data);
-
+      
       foreach($res->data as $page){
         //dump($page->id);
-        $this->pageId = $page->id;
-        $this->clear_imgs();
+        //$this->pageId = $page->id;
+        $this->arrPageId[] = $page->id;
+        //$this->clear_imgs();
       }
     }
 
