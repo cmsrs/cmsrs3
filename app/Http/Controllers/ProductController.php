@@ -1,15 +1,12 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-//use JWTAuth;
 
 use App\Product;
 use App\Image;
 use Validator;
 use Illuminate\Support\Facades\Log;
-
 
 class ProductController extends Controller
 {
@@ -27,13 +24,10 @@ class ProductController extends Controller
 
         $products = Product::getAllProductsWithImages();
 
-    //   $products = Product::query()->orderBy('id', 'asc' )->get()->toArray();
-
-    //   foreach ($products as $key => $product) {
-
-    //       $products[$key]['images'] = Image::getImagesAndThumbsByTypeAndRefId( 'product', $product['id']);
-
-    //   }
+        //   $products = Product::query()->orderBy('id', 'asc' )->get()->toArray();
+        //   foreach ($products as $key => $product) {
+        //       $products[$key]['images'] = Image::getImagesAndThumbsByTypeAndRefId( 'product', $product['id']);
+        //   }
 
         return response()->json(['success' => true, 'data'=> $products], 200);
   }
@@ -41,13 +35,13 @@ class ProductController extends Controller
   public function create(Request $request)
   {
 
-    $data = $request->only(
+      $data = $request->only(
         'name',
-            'sku',
-            'price',
-            'description',
-            'page_id',
-            'images'
+        'sku',
+        'price',
+        'description',
+        'page_id',
+        'images'
         );
 
       $validator = Validator::make($data, $this->validationRules);
@@ -56,17 +50,7 @@ class ProductController extends Controller
       }
 
     try{
-      $product = Product::create( $data );
-      if( empty($product->id)){
-        throw new \Exception("I cant get product id");
-      }
-
-       //print_r($data);  die('_________');
-
-      if( !empty($data['images']) && is_array($data['images']) ){
-        Image::createImages($data['images'], 'product',  $product->id);
-      }
-
+        $product = Product::wrapCreate($data);
     } catch (\Exception $e) {
       Log::error('product add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile() ); //.' for: '.var_export($data, true )
       return response()->json(['success'=> false, 'error'=> 'Add product problem, details in the log file.'], 200); //.$e->getMessage()

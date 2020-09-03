@@ -28,6 +28,25 @@ class Page extends Model
       return $this->hasMany('App\Image');
     }
 
+    /**
+     * use also in script to load demo (test) data
+     * php artisan command:load-demo-data
+     */
+    static public function wrapCreate($data)
+    {
+      $page = Page::create( $data );
+      if( empty($page->id)){
+        throw new \Exception("I cant get page id");
+      }
+
+      if( !empty($data['images']) && is_array($data['images']) ){
+        Image::createImages($data['images'], 'page', $page->id);
+      }
+
+      return $page;
+    }
+
+
     static public function getAllPagesWithImages( $type = null )
     {
 
@@ -39,7 +58,6 @@ class Page extends Model
 
 
       foreach ($pages as $key => $page) {
-        //$pages[$key]['images'] = Image::getImagesAndThumbsByPageId($page['id'], false);
         $pages[$key]['images'] = Image::getImagesAndThumbsByTypeAndRefId( 'page', $page['id']);
       }
 

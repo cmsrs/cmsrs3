@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'adm',
             'email' => 'adm@cmsrs.pl',
             'password' => Hash::make('cmsrs123'),
+            'role' => 'admin'
         ]);
 
 

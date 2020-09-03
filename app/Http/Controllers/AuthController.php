@@ -96,7 +96,7 @@ class AuthController extends Controller
         if($demoStatus){
             echo "Not permission";
         }else{
-            if(  '127.0.0.1' !== $request->ip() ||  ($request->input('secret') !== $_ENV['RS_SECRET'])  ){
+              if(  '127.0.0.1' !== $request->ip() ||  ($request->input('secret') !== $_ENV['RS_SECRET'])  ){
                 return response()->json(['success'=> false, 'error'=> 'no access'  ]);
               }
       

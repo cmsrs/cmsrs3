@@ -89,6 +89,12 @@ tail -f -n0 storage/logs/*
 ```
 
 
+# LOAD TEST DATA 
+
+```bash
+php artisan command:load-demo-data
+```
+
 # MANAGMENT
 
 * go to the website /admin:
@@ -130,3 +136,4 @@ http://www.cmsrs.pl/en/cms/cmsrs/cmsrs-video-tutorial
 React source code:
 
 https://github.com/cmsrs/cmsrs3-react
+

@@ -72,7 +72,7 @@ class User extends Authenticatable implements JWTSubject
             if( $this->role === 'admin' ) {
                 $this->attributes['password'] = bcrypt($password);
             }else{
-                $this->attributes['password'] = $password;
+                $this->attributes['password'] = bcrypt($password);
             }
         }
     }

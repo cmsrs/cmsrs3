@@ -42,10 +42,8 @@ class MenuController extends Controller
         return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
     }
 
-    $data['position'] = Menu::getNextPosition();
-
     try{
-      $ret = Menu::create( $data );
+      Menu::wrapCreate($data);
     } catch (\Exception $e) {
       Log::error('menu add ex: '.$e->getMessage() );
       return response()->json(['success'=> false, 'error'=> 'Add menu problem - exeption'], 200);

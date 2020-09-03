@@ -18,6 +18,17 @@ class Menu extends Model
         'position' => 'integer',
     ];
 
+    /**
+     * use also in script to load demo (test) data
+     * php artisan command:load-demo-data
+     */
+    static public function wrapCreate($data)
+    {
+      $data['position'] = Menu::getNextPosition();
+      $ret = Menu::create( $data );
+      return $ret;
+    }
+
     public function setNameAttribute($value)
     {
         $this->attributes['name'] = $value;
@@ -33,7 +44,6 @@ class Menu extends Model
     {
       return $this->pages()->where( 'published', '=', 1 );
     }
-
 
     static public function getAllMenus()
     {
