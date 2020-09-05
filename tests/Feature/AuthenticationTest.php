@@ -137,6 +137,30 @@ class AuthenticationTest extends TestCase
     }
 
     /** @test */
+    public function it_will_log_client_in()
+    {
+        $user = new User([
+            'email'    => 'client@email.com',
+            'name'     => 'client test',
+            //'password' => 'cmsrs',
+            'role' => User::$role['client']
+        ]);
+    
+       $user->password = 'cmsrs456';    
+       $user->save();
+
+       $response = $this->post('api/login', [
+        'email'    => 'client@email.com',
+        'password' => 'cmsrs456'
+        ])->getData();
+
+        $this->assertFalse($response->success);    
+    }
+
+
+
+
+    /** @test */
     public function it_will_not_log_an_invalid_user_in()
     {
         $response = $this->post('api/login', [

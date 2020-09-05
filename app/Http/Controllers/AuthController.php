@@ -50,6 +50,12 @@ class AuthController extends Controller
             // something went wrong whilst attempting to encode the token
             return response()->json(['success' => false, 'error' => 'Failed to login, please try again.'], 500);
         }
+
+        $user = User::where('email', '=', $credentials['email'])->firstOrFail();
+        if($user->role != User::$role['admin'] ){
+            return response()->json(['success' => false, 'error' => 'No access.'], 401);
+        }
+
         // all good so return the token
         return response()->json(['success' => true, 'data'=> [ 'token' => $token ]], 200);
     }

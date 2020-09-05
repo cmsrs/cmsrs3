@@ -40,7 +40,7 @@ if($demoStatus){
         Route::get('products', 'ProductController@index');
     });
 }else{
-    Route::post('register', 'AuthController@register');
+    #Route::post('register', 'AuthController@register');
     Route::post('login', 'AuthController@login');
     Route::post('recover', 'AuthController@recover');
 
