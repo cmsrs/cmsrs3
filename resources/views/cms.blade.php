@@ -28,7 +28,7 @@
 
       <div class="container">
         <div class="row">
-          <div class="col-8">
+          <div class="col">
             @foreach($products as $product)
             <div class="container">
               <div class="row">
@@ -58,7 +58,7 @@
             @endforeach
 
           </div>
-          <div class="col-4">
+          <div class="col">
             SHOPPING CART:
             <ul>
               <li v-for="item in cart" v-bind:key="item.id">

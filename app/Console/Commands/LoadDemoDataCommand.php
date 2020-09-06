@@ -53,7 +53,7 @@ class LoadDemoDataCommand extends Command
             'content' => $this->getDummyTest(),
             'menu_id' => $m1->id,
             'images' => [
-                ['name' => 'About me', 'data' => $this->getTestPhoto( 'about_me/me.jpg' ) ]
+                ['name' => 'me.jpg', 'data' => $this->getTestPhoto( 'about_me/me.jpg' ) ]
             ]
         ];
 
@@ -83,10 +83,10 @@ class LoadDemoDataCommand extends Command
             'content' => '',
             'menu_id' => $m2->id,
             'images' => [
-                ['name' => 'Image 1', 'data' => $this->getTestPhoto( 'gallery/img1.jpg' ) ],
-                ['name' => 'Image 2', 'data' => $this->getTestPhoto( 'gallery/img2.jpg' ) ],
-                ['name' => 'Image 3', 'data' => $this->getTestPhoto( 'gallery/img3.jpg' ) ],
-                ['name' => 'Image 4', 'data' => $this->getTestPhoto( 'gallery/img4.jpg' ) ],                                                
+                ['name' => 'img1.jpg', 'data' => $this->getTestPhoto( 'gallery/img1.jpg' ) ],
+                ['name' => 'img2.jpg', 'data' => $this->getTestPhoto( 'gallery/img2.jpg' ) ],
+                ['name' => 'img3.jpg', 'data' => $this->getTestPhoto( 'gallery/img3.jpg' ) ],
+                ['name' => 'img4.jpg', 'data' => $this->getTestPhoto( 'gallery/img4.jpg' ) ],                                                
             ]
         ];
         Page::wrapCreate($data3p);
@@ -110,17 +110,17 @@ class LoadDemoDataCommand extends Command
             'description' => 'Php book',
             'page_id' => $p4->id,
             'images' =>   [
-                ['name' => 'Php', 'data' => $this->getTestPhoto( 'books/php.jpg' ) ]
+                ['name' => 'php.jpg', 'data' => $this->getTestPhoto( 'books/php.jpg' ) ]
             ]
         ];
         $products2 = [
             'name' => 'Java',
             'sku' => '3/13/4',
-            'price' => 11,
+            'price' => 23,
             'description' => 'Java book',
             'page_id' => $p4->id,
             'images' =>   [
-                ['name' => 'Java', 'data' => $this->getTestPhoto( 'books/java.jpg' ) ]
+                ['name' => 'java.jpg', 'data' => $this->getTestPhoto( 'books/java.jpg' ) ]
             ]
         ];
         
