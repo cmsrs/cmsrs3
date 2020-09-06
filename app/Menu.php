@@ -42,7 +42,7 @@ class Menu extends Model
 
     public function pagesPublished()
     {
-      return $this->pages()->where( 'published', '=', 1 );
+      return $this->pages()->where( 'published', '=', 1 )->orderBy('position', 'asc');
     }
 
     static public function getAllMenus()

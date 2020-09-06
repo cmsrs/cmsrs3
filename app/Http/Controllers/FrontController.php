@@ -18,7 +18,7 @@ class FrontController extends Controller
 
   public function __construct()
   {
-    $this->menus = Menu::all(); //TODO cached
+    $this->menus = Menu::all()->sortBy('position'); //TODO cached
   }
 
   public function index()

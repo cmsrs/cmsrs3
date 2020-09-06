@@ -34,6 +34,9 @@ class Page extends Model
      */
     static public function wrapCreate($data)
     {
+      $menuId = empty($data['menu_id']) ? null : $data['menu_id'];
+      $data['position'] = Page::getNextPositionByMenuId($menuId);  
+
       $page = Page::create( $data );
       if( empty($page->id)){
         throw new \Exception("I cant get page id");
@@ -132,6 +135,8 @@ class Page extends Model
         return false;
       }
 
+      //dump($pages[1]->position, $direction, $id);
+
       foreach ($pages as $key => $p) {
 
         if( ($p->id == $id)  ){
@@ -144,12 +149,25 @@ class Page extends Model
           }
 
           $positionKey = $p->position;
-          $p->position = $pages[$swapKey]->position;
-          $p->save();
-          $pages[$swapKey]->position = $positionKey;
-          $pages[$swapKey]->save();
+
+
+          //echo "-----".$p->id.'+++++++++'.$pages[$swapKey]->id."\n";
+          Page::where( 'id', $p->id)->update([ 'position' => $pages[$swapKey]->position ]);
+          //$obj1->position = 88; //$pages[$swapKey]->position;
+          //$obj1->save();
+
+          Page::where( 'id', $pages[$swapKey]->id )->update( ['position' => $positionKey ]  );
+          //$obj2 = Page::find($pages[$swapKey]->id);          
+          //$obj2->position = 44;  //$positionKey;
+          //$obj2->save();
         }
       }
+      //$pages->fresh();
+      //dd(Page::all());
+
+
+      //dump($pages[1]->position);
+      //dd('==');
       return true;
     }
 }

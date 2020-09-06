@@ -228,6 +228,7 @@ class PageTest extends Base
       $this->assertEquals( count($res22->data), 4);
       $data22 = (array)$res22->data;
 
+      //print_r($data22); //przed!!!
 
       $tmpArr = [];
       foreach ($data22 as $key => $page) {
@@ -236,22 +237,61 @@ class PageTest extends Base
         }
       }
 
+      //print_r($tmpArr);
+
 
       $this->assertEquals(count($tmpArr), 2);
 
       $this->assertEquals($tmpArr[0]->title, $testDataWithMenu['title']);
       $this->assertEquals($tmpArr[1]->title, $testDataWithMenuB['title']);
 
+      $positionBefore = $tmpArr[1]->position;
+      $this->assertNotEmpty($positionBefore);
+      $this->assertEquals($positionBefore, 2 );
+
       //2x change position - and result should be the same.
       $res1a = $this->get('api/pages/position/down/'.$tmpArr[1]->id.'?token='.$this->token );
+
+
+      //exit;
+      //dd($res1a);
+
+
       $res22a = $res1a->getData();
       $this->assertTrue( $res22a->success );
 
-      $res2b = $this->get('api/pages/position/down/'.$tmpArr[0]->id.'?token='.$this->token );
+      $res22firstData = Page::all();
+
+      /*
+      //not work  ??
+      $response22cfirst = $this->get('api/pages?token='.$this->token );
+      $res22first = $response22->getData();
+      $this->assertTrue($res22first->success);
+
+      //print_r($tmpArr[1]->id);
+      print_r($res22first->data); //po!!!
+      exit;
+      */
+      //wybieramy dany rekord
+      $item = [];
+      foreach($res22firstData as $page){
+        if($page->id == $tmpArr[1]->id){
+          $item = $page;
+        }
+      }
+      //dd($item);
+
+
+      $this->assertNotEmpty($item->position);      
+      $this->assertNotEquals($item->position,  $positionBefore);
+      $this->assertEquals($item->position,  1);
+
+
+      $res2b = $this->get('api/pages/position/down/'.$tmpArr[1]->id.'?token='.$this->token );
       $res22b = $res2b->getData();
       $this->assertTrue( $res22b->success );
 
-
+/*
       $response22c = $this->get('api/pages?token='.$this->token );
       $res22c = $response22c->getData();
 
@@ -259,14 +299,17 @@ class PageTest extends Base
       $this->assertTrue( $res22c->success );
       $this->assertEquals( count($res22c->data), 4);
       $data22c = (array)$res22c->data;
+*/
 
-
+      $data22c = Page::all();
       $tmpArr2 = [];
       foreach ($data22c as $key => $pageC) {
         if( $pageC->menu_id == $this->menuId ){
-          $tmpArr2[] = $page;
+          $tmpArr2[] = $pageC;
         }
       }
+
+      //print_r($tmpArr2);
 
       $this->assertSame($tmpArr[0]->title, $tmpArr2[0]->title);
     }
@@ -385,8 +428,6 @@ class PageTest extends Base
         $this->assertEquals(1,count($data->data));
         $this->assertEquals( $type, $data->data[0]->type );
 
-
-
         $typeErr = 'sasdasd';
         $res = $this->get('api/pages/type/'.$typeErr.'?token=' . $this->token);
         $data =  $res->getData();
@@ -422,8 +463,6 @@ class PageTest extends Base
 
 
       $response = $this->post('api/pages?token='.$this->token, $testData2);
-
-
 
       $res = $response->getData();
       $this->assertTrue( $res->success );
@@ -465,12 +504,7 @@ class PageTest extends Base
       foreach ($data2 as $key => $val) {
           $this->assertEquals( $val, $testData2[$key]  );
       }
-
-
     }
-
-
-
 
     /** @test */
     public function it_will_update_page()
@@ -552,8 +586,6 @@ class PageTest extends Base
       $res33 = $response33->getData();
       $this->assertTrue( $res33->success );
       //$this->assertNotEmpty( $res33->error );
-
-
     }
 
     /** @test **/

@@ -63,9 +63,6 @@ class PageController extends Controller
 
     $data = $request->only('title', 'short_title', 'published', 'commented',  'type', 'content', 'menu_id', 'images');
 
-    $menuId = empty($data['menu_id']) ? null : $data['menu_id'];
-    $data['position'] = Page::getNextPositionByMenuId($menuId);
-
     $validator = Validator::make($data, $this->validationRules);
     if($validator->fails()) {
         return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
