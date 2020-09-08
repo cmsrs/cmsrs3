@@ -30,10 +30,12 @@ class FrontController extends Controller
   {
     $pageOut = null;
     $products = null;
+    $find = false;
     foreach ($this->menus as $menu) {
       if( $menuSlug == $menu->slug ){
-        foreach ($menu->pagesPublished  as $page) {
+        foreach ($menu->pagesPublished  as $page){
           if( $pageSlug == $page->slug ){
+            $find = true;
             $pageOut = $page;
             if( 'shop' === $page->type){
               $products = Product::getAllProductsWithImages();
@@ -41,6 +43,9 @@ class FrontController extends Controller
           }
         }
       }
+    }
+    if(!$find){
+      abort(404);
     }
 
     return view('cms', [ 'menus' => $this->menus,  'page' => $pageOut, 'products' => $products ]);
