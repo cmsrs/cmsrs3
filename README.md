@@ -54,32 +54,36 @@
 > ./go_privilege.sh
 > ```
 > 
-* optionally - testing
->
-> prepare testing:
-> ```bash
-> sudo mysql --default-character-set=utf8 -e  "CREATE DATABASE cmsrs3g_testing CHARACTER SET utf8 COLLATE utf8_general_ci;"
-> cp .env .env.testing 
-> ```
-> 
-> change in file .env.testing:
-> 
-> ```bash
-> DB_DATABASE=cmsrs3g_testing
-> ```
-> 
-> run tests
-> 
-> ```bash
-> ./vendor/bin/phpunit
-> ```
-> 
 * start server
 > 
 > ```bash
 > php artisan serve
 > ```
 > 
+# RUN TESTS
+
+* prepare testing:
+
+```bash
+sudo mysql --default-character-set=utf8 -e  "CREATE DATABASE cmsrs3g_testing CHARACTER SET utf8 COLLATE utf8_general_ci;"
+cp .env .env.testing 
+```
+ 
+change in file .env.testing:
+
+```bash
+DB_DATABASE=cmsrs3g_testing
+```
+
+* run tests: 
+
+It is recommended to run tests on a clean instance (without images)
+
+```bash
+./go_privilege.sh
+./vendor/bin/phpunit
+```
+ 
 # TROUBLESHOOTING
 
 * logs:
