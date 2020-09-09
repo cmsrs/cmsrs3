@@ -55,7 +55,7 @@ class AuthenticationTest extends TestCase
     }
 
 
-    /** @test */
+    /** @skip */
     public function it_will_register_a_user()
     {
         //print_r($_ENV['RS_SECRET']); die('============');

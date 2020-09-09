@@ -86,45 +86,13 @@ class ImageTest extends Base
     }
 
 
-
-    // protected function tearDown(): void
-    // {
-    //   parent::tearDown();
-    // }
-
     private function clear_imgs(){
       $pageId = $this->pageId;
-      $responseClear = $this->get('api/images/page/'.$pageId.'?token='.$this->token);
-      $resClear = $responseClear->getData();
-      $this->assertTrue( $resClear->success );
 
-      foreach ($resClear->data as $key => $img) {
-        $pId = $img->page_id;
-        $imgId = $img->id;
-        $name = $img->name;
-        $this->assertEquals($pageId, $pId);
-        $imgDir = Image::getImageDir( 'page', $pId,  $imgId );
-        $imgPath = $imgDir.'/'.$name;
-
-        $this->assertFileExists($imgPath);
-        //var_dump($imgPath);
-
-        //delete test files
-        $fileName = pathinfo($name, PATHINFO_FILENAME );
-        $imgPathDel = $imgDir.'/'.$fileName.'*.*';
-        $filesToDel = glob($imgPathDel);
-        $this->assertEquals(count($filesToDel), count(Image::$thumbs) + 1); //a jak juz jest w fs jakis obrazek? - poprzedni clean sie nie wyszyscil
-
-        foreach ($filesToDel as $path) {
-          $this->assertFileExists($path);
-          $this->assertNotEmpty(filesize($path));
-          //echo "\n"."delete file: ".$path." file size: ".filesize($path);
-          unlink($path);
-          $this->assertFileNotExists($path);
-        }
-
-        $this->assertFileNotExists($imgPath);
-      }
+      $objPage = Page::find($pageId);
+      if($objPage){  //delete img from fs.
+        $objPage->delete();
+      }    
     }
 
     /** @test */
@@ -222,10 +190,6 @@ class ImageTest extends Base
       $this->assertEquals( count($res22->data), 1);
       //$this->clear_imgs();
     }
-
-
-
-
 
     /** @test */
     public function it_will_get_pages_with_images()

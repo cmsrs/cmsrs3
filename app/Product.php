@@ -16,6 +16,11 @@ class Product extends Model
         'page_id'
     ];
 
+    public function images()
+    {
+      return $this->hasMany('App\Image');
+    }    
+
     /**
      * use also in script to load demo (test) data
      * php artisan command:load-demo-data
@@ -44,5 +49,15 @@ class Product extends Model
         }  
         return $products;
     }
+
+    public function delete()
+    {
+        foreach($this->images()->get() as $img ){
+          $img->delete();
+        }
+
+        return parent::delete();
+    }
+    
 
 }

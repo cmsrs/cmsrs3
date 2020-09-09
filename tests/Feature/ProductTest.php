@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Page;
 use App\Menu;
+use App\Image;
+use App\Product;
 //use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -88,9 +90,6 @@ class ProductTest extends Base
                 ['name' => $this->name2, 'data' => $file2]
             ]
         ];
-
-
-
     }
 
     protected function tearDown(): void
@@ -114,12 +113,12 @@ class ProductTest extends Base
     public function it_will_create_product()
     {
 
-        $response = $this->post('api/products?token=' . $this->token, $this->testData);
+        $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
 
-        $res = $response->getData();
-        $this->assertTrue($res->success);
+        $res0 = $response0->getData();
+        $this->assertTrue($res0->success);
 
-        $this->assertNotEmpty($res->data->productId);
+        $this->assertNotEmpty($res0->data->productId);
 
         $response = $this->post('api/products?token=' . $this->token, $this->testData);
 
@@ -128,6 +127,8 @@ class ProductTest extends Base
         $this->assertFalse($res->success);
         $this->assertNotEmpty($res->error);
         $this->assertNotEmpty($res->error->sku);
+
+        $this->clear_imgs($res0->data->productId);        
     }
 
     /** @test */
@@ -144,10 +145,13 @@ class ProductTest extends Base
 
         $res22 = $response22->getData();
 
+        //dump($res->data->productId);
         //dump($res22);
 
         $this->assertTrue( $res22->success );
         $this->assertEquals( count($res22->data), 1);
+        $this->assertEquals($res->data->productId, $res22->data[0]->id);
+
         $this->assertEquals( $res22->data[0]->sku, $this->testData['sku']);
         $this->assertNotEmpty( $res22->data[0]->id);
 
@@ -155,12 +159,18 @@ class ProductTest extends Base
         $this->assertEquals( $res22->data[0]->images[0]->name,  $this->name1 );
         $this->assertEquals( $res22->data[0]->images[1]->name,  $this->name2 );
 
+        $this->assertFileExists( public_path().'/'.$res22->data[0]->images[1]->fs->medium);
+        
+        //$this->removeImgDir($res->data->productId, 'product' );//remove file
+        $this->clear_imgs($res->data->productId);
     }
 
     /** @test */
     public function it_will_update_product()
     {
-        $this->post('api/products?token=' . $this->token, $this->testData);
+        $res0 = $this->post('api/products?token=' . $this->token, $this->testData);
+        $res = $res0->getData();
+
         $response22 = $this->get('api/products?token='.$this->token );
         $res22 = $response22->getData();
         $productId = $res22->data[0]->id;
@@ -190,20 +200,32 @@ class ProductTest extends Base
         $this->assertEquals( $res222->data[0]->name, $newName);
 
         $this->assertEquals(count($res222->data[0]->images), 3);
+
+        //$this->removeImgDir($res->data->productId, 'product' ); //remove file
+        $this->clear_imgs($res->data->productId);
     }
 
     /** @test */
     public function it_will_delete_product()
     {
-        $this->post('api/products?token=' . $this->token, $this->testData);
+        $res0 = $this->post('api/products?token=' . $this->token, $this->testData);
+        $res = $res0->getData();
+
         $response22 = $this->get('api/products?token='.$this->token );
         $res22 = $response22->getData();
         $productId = $res22->data[0]->id;
 
-        $this->assertEquals(count($res22->data), 1);
+        $testFile = public_path($res22->data[0]->images[0]->fs->medium);
+        $this->assertFileExists($testFile);
 
+        $this->assertEquals(count($res22->data), 1);
+        
         $response33 = $this->delete('api/products/'.$productId.'?token='.$this->token);
+
+        //dd($response33);
         $res33 = $response33->getData();
+
+
         $this->assertTrue( $res33->success );
 
         $response222 = $this->get('api/products?token='.$this->token );
@@ -211,7 +233,24 @@ class ProductTest extends Base
 
         $this->assertEmpty(count($res222->data));
 
+        $testFileDirname = pathinfo($testFile, PATHINFO_DIRNAME);
+        $this->assertFileExists($testFileDirname);
+        $this->assertFileNotExists($testFile);
+
+        //$imgDir = Image::getAbsRefDir( $res->data->productId, 'product' ).'/1/';
+        //$this->assertFileExists($imgDir);
+        //$this->assertTrue($this->is_dir_empty($imgDir));
+        //dd($imgDir);
+
+        //$this->removeImgDir($res->data->productId, 'product' ); //remove file
     }
 
+    private function clear_imgs($productId){
+        $obj = Product::find($productId);
+        if($obj){  //delete img from fs.
+          $obj->delete();
+        }    
+      }
+  
 
 }
