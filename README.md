@@ -68,18 +68,21 @@
 > DB_DATABASE=cmsrs3g_testing
 > ```
 > 
-> run tests
-> 
-> ```bash
-> ./vendor/bin/phpunit
-> ```
-> 
 * start server
 > 
 > ```bash
 > php artisan serve
 > ```
 > 
+# RUN TESTS
+
+It is recommended to run tests on a clean instance (without images)
+
+```bash
+./go_privilege.sh
+./vendor/bin/phpunit
+```
+ 
 # TROUBLESHOOTING
 
 * logs:
