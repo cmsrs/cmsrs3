@@ -30,6 +30,7 @@ class PageTest extends Base
         [
             'title' => 'page 1 test',
             'short_title' => 'page1',
+            'description' => 'this page: test desc ...',            
             'published' => 1,
             'commented' => 1,
             'position' => 7,
@@ -119,10 +120,6 @@ class PageTest extends Base
 
       $response2 = $this->post('api/pages?token='.$this->token, $testData2);
 
-
-
-
-
       $response2 = $this->get('api/pages?token='.$this->token );
       $res2 = $response2->getData();
       $this->assertTrue( $res2->success );
@@ -134,10 +131,6 @@ class PageTest extends Base
       $this->assertEquals(1, count($this->menuObj->pagesPublished));  //tylko jedno jest z published ===1 dla 'menu_id' =>  $this->menuId
       $this->assertEquals( $this->menuObj->pagesPublished[0]->title, $testData2['title'] );
     }
-
-
-
-
 
     /** @test */
     public function it_will_show_all_pages()
@@ -323,6 +316,7 @@ class PageTest extends Base
       [
            'title'     => 'test p2',
            'short_title' => 'p22',
+           'description' => 'test1234',
            'published' => 0,
            'commented' => 0,
            //'position' => 3,
@@ -445,6 +439,7 @@ class PageTest extends Base
       [
            'title'     => 'test p2',
            'short_title' => 'p22',
+           'description' => 'ttt',
            'published' => 0,
            'commented' => 0,
            //'position' => 3,
@@ -528,6 +523,7 @@ class PageTest extends Base
             'id' => $id,
             'title' => 'test p3 żółta żółć',
             'short_title' => 'p3',
+            'description' => 'sss',
             'published' => 1,
             'commented' => 0,
 
@@ -601,8 +597,9 @@ class PageTest extends Base
       $testData3 =
       [
             'id' => $id,
-            'title' => 'test p3',
+            'title' => 'test p3',            
             'short_title' => 'p3',
+            'description' => null,
             'published' => 1,
             'commented' => 0,
 

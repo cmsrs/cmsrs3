@@ -24,7 +24,7 @@ class Image extends Model
     ];
 
     protected $fillable = [
-        'name', 'position', 'page_id', 'product_id'
+        'name', 'alt', 'position', 'page_id', 'product_id'
     ];
 
     static private  $type = [
@@ -132,6 +132,7 @@ class Image extends Model
       $out = [];
       foreach ($images as $key => $image) {
         $name = self::filter($image['name']);
+        $alt = empty($image['alt']) ? null : $image['alt'];
         //$name = str_file($image['name'], "-");
 
         $data = $image['data'];
@@ -143,6 +144,7 @@ class Image extends Model
         $dbData = [
             'name' => $name,
             'position' => Image::getNextPositionByTypeAndRefId( $type,  $refId ),
+            'alt' => $alt,
             $strRefId => $refId
         ];
         $image = Image::create($dbData);

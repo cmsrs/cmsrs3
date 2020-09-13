@@ -46,14 +46,13 @@ class ImageTest extends Base
         [
             'title' => 'img Title',
             'images' => [
-              ['name' => $this->name1, 'data' => $file1],
+              ['name' => $this->name1, 'data' => $file1, 'alt' => 'description img1'],
               ['name' => $this->name2, 'data' => $file2]
             ]
         ];
 
         $response = $this->post('api/pages?token='.$this->token, $this->testImgData);
-        //var_dump($response); 
-        //die('==========');
+        //dd($response);
 
         $res = $response->getData();
 
@@ -94,6 +93,52 @@ class ImageTest extends Base
         $objPage->delete();
       }    
     }
+
+
+    /** @test */
+    public function it_will_get_pages_with_images()
+    {
+      //  /'.$this->pageId.'
+
+      $response2 = $this->get('api/pages?token='.$this->token);
+      //var_dump($response2); die('-------------');
+      $res2 = $response2->getData();
+      $this->assertTrue( $res2->success );
+
+      //print_r($res2);
+
+      $this->assertEquals( count($res2->data), 1);
+
+      $this->assertEquals( $res2->data[0]->id, $this->pageId);
+
+      $this->assertEquals( count($res2->data[0]->images), count($this->testImgData['images']));
+
+      //print_r($res2->data[0]->images[0]->fs);
+      $this->assertEquals( count( (array)$res2->data[0]->images[0]->fs), count(Image::$thumbs) + 1);
+      $this->assertEquals( count( (array)$res2->data[0]->images[1]->fs), count(Image::$thumbs) + 1);
+
+
+      $this->assertEquals($res2->data[0]->images[0]->name, $this->testImgData['images'][0]['name'] );
+      $this->assertEquals($res2->data[0]->images[0]->alt, $this->testImgData['images'][0]['alt'] );
+
+      $this->assertEquals($res2->data[0]->images[1]->name, $this->testImgData['images'][1]['name'] );
+
+      $this->assertEquals(null, $res2->data[0]->images[1]->alt);
+      //$this->assertEquals($res2->data[0]->images[1]->alt, $this->testImgData['images'][1]['alt'] );
+
+      //die('========');
+
+      //dump($res2->data[0]->images[1]->fs->org);
+      $this->assertEquals( pathinfo($res2->data[0]->images[1]->fs->org, PATHINFO_BASENAME ), $this->name2 );
+
+      foreach ($res2->data[0]->images[0]->fs as $key => $urlImg) {
+        $fs = public_path($urlImg);
+        $this->assertFileExists($fs);
+      }
+
+      //$this->clear_imgs();
+    }
+
 
     /** @test */
     public function it_will_delete_page_with_images()
@@ -191,38 +236,6 @@ class ImageTest extends Base
       //$this->clear_imgs();
     }
 
-    /** @test */
-    public function it_will_get_pages_with_images()
-    {
-      //  /'.$this->pageId.'
-
-      $response2 = $this->get('api/pages?token='.$this->token);
-      //var_dump($response2); die('-------------');
-      $res2 = $response2->getData();
-      $this->assertTrue( $res2->success );
-
-      //print_r($res2); die();
-
-      $this->assertEquals( count($res2->data), 1);
-
-      $this->assertEquals( $res2->data[0]->id, $this->pageId);
-
-      $this->assertEquals( count($res2->data[0]->images), count($this->testImgData['images']));
-
-      //print_r($res2->data[0]->images[0]->fs);
-      $this->assertEquals( count( (array)$res2->data[0]->images[0]->fs), count(Image::$thumbs) + 1);
-      $this->assertEquals( count( (array)$res2->data[0]->images[1]->fs), count(Image::$thumbs) + 1);
-
-      //dump($res2->data[0]->images[1]->fs->org);
-      $this->assertEquals( pathinfo($res2->data[0]->images[1]->fs->org, PATHINFO_BASENAME ), $this->name2 );
-
-      foreach ($res2->data[0]->images[0]->fs as $key => $urlImg) {
-        $fs = public_path($urlImg);
-        $this->assertFileExists($fs);
-      }
-
-      //$this->clear_imgs();
-    }
 
     /** @test */
     public function it_will_get_images_by_page_id()
@@ -284,7 +297,6 @@ class ImageTest extends Base
       }
     }
 
-
     /** @test */
     public function it_will_update_page_with_images()
     {
@@ -328,13 +340,40 @@ class ImageTest extends Base
       //$this->clear_imgs();
     }
 
+    /** @test */
+    public function it_will_update_images_alt()
+    {
+      $response = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
+      $res = $response->getData();
+      $this->assertTrue( $res->success );
+      $this->assertEquals( $this->testImgData['images'][0]['alt']  ,$res->data[0]->alt );
+      $this->assertEquals( null  ,$res->data[1]->alt );
 
+      $this->assertNotEmpty( $res->data[0]->id );
+      $this->assertNotEmpty( $res->data[1]->id );      
+
+      $response1 = $this->put('api/images/'.$res->data[0]->id.'?token='.$this->token, ['alt' => 'img1' ]);
+      $res1 = $response1->getData();
+      $this->assertTrue( $res1->success );
+
+      $response2 = $this->put('api/images/'.$res->data[1]->id.'?token='.$this->token, ['alt' => 'img2' ]);
+      $res2 = $response2->getData();
+      $this->assertTrue( $res2->success );
+
+      $response3 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
+      $res3 = $response3->getData();
+      $this->assertTrue( $res3->success );
+
+      $this->assertEquals( 'img1'  ,$res3->data[0]->alt );
+      $this->assertEquals( 'img2'  ,$res3->data[1]->alt );
+    }
 
     /** @test */
     public function it_will_get_change_position_images()
     {
       $response2 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
       $res2 = $response2->getData();
+      $this->assertTrue( $res2->success );      
 
 
       $resSwap = $this->get('api/images/position/up/'.$res2->data[0]->id.'?token='.$this->token);
@@ -347,8 +386,4 @@ class ImageTest extends Base
       $this->assertEquals($res2Swap->data[0]->name, $this->name2);
       //$this->clear_imgs();
     }
-
-
-
-
 }

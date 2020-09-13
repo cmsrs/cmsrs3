@@ -20,6 +20,7 @@ class CreatePagesTable extends Migration
             $table->bigIncrements('id')->index();
             $table->string('title')->notNullable();
             $table->string('short_title')->nullable();
+            $table->string('description')->nullable();
             $table->boolean('published')->default(0);
             $table->boolean('commented')->default(0);
             $table->integer('position')->unsigned()->nullable();

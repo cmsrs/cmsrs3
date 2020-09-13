@@ -101,7 +101,6 @@ class ProductTest extends Base
     /** @test */
     public function it_will_check_fixtures_get_pages_by_type()
     {
-
         $type = 'shop';
         $res = $this->get('api/pages/type/' . $type . '?token=' . $this->token);
 
