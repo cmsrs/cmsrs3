@@ -246,6 +246,7 @@ class ImageTest extends Base
       $res2 = $response2->getData();
       $this->assertTrue( $res2->success );
       $this->assertEquals( count($res2->data), 2);
+      $this->assertEquals( $res2->data[0]->alt, $this->testImgData['images'][0]['alt'] );
 
       foreach($res2->data as $imageUrl ){
         $fs = (array)$imageUrl->fs;
