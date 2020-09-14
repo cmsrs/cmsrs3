@@ -47,6 +47,7 @@ class LoadDemoDataCommand extends Command
         $data1p = [
             'title'     => 'About me',
             'short_title' => 'About me',
+            'description' => 'Description... Needed for google',
             'published' => 1,
             'commented' => 0,
             'type' => 'cms',
@@ -60,6 +61,7 @@ class LoadDemoDataCommand extends Command
         $data2p = [
             'title'     => 'About page',
             'short_title' => 'About page',
+            'description' => 'Description... Needed for google',            
             'published' => 1,
             'commented' => 1,
             'type' => 'cms',
@@ -77,6 +79,7 @@ class LoadDemoDataCommand extends Command
         $data3p = [
             'title'     => 'Poland',
             'short_title' => 'Poland',
+            'description' => 'Description...  needed for google',            
             'published' => 1,
             'commented' => 0,
             'type' => 'gallery',
@@ -95,6 +98,7 @@ class LoadDemoDataCommand extends Command
         $data4p = [
             'title'     => 'IT books',
             'short_title' => 'IT books',
+            'description' => 'Description... Needed for google',            
             'published' => 1,
             'commented' => 0,
             'type' => 'shop',
@@ -127,7 +131,7 @@ class LoadDemoDataCommand extends Command
         Product::wrapCreate($products1);
         Product::wrapCreate($products2);   
            
-        //to zakldadamy za pomoca 'seed'
+        //It,s created by the 'seed'
         // $user = new User([
         //     'email'    => 'adm@cmsrs.pl',
         //     'name'     => 'adm',
