@@ -54,7 +54,7 @@ class LoadDemoDataCommand extends Command
             'content' => $this->getDummyTest(),
             'menu_id' => $m1->id,
             'images' => [
-                ['name' => 'me.jpg', 'data' => $this->getTestPhoto( 'about_me/me.jpg' ) ]
+                ['name' => 'me.jpg', 'data' => $this->getTestPhoto( 'about_me/me.jpg' ), 'alt'=>'About me image' ]
             ]
         ];
 
@@ -86,10 +86,10 @@ class LoadDemoDataCommand extends Command
             'content' => '',
             'menu_id' => $m2->id,
             'images' => [
-                ['name' => 'img1.jpg', 'data' => $this->getTestPhoto( 'gallery/img1.jpg' ) ],
-                ['name' => 'img2.jpg', 'data' => $this->getTestPhoto( 'gallery/img2.jpg' ) ],
-                ['name' => 'img3.jpg', 'data' => $this->getTestPhoto( 'gallery/img3.jpg' ) ],
-                ['name' => 'img4.jpg', 'data' => $this->getTestPhoto( 'gallery/img4.jpg' ) ],                                                
+                ['name' => 'img1.jpg', 'data' => $this->getTestPhoto( 'gallery/img1.jpg' ), 'alt'=>'gallery image 1' ],
+                ['name' => 'img2.jpg', 'data' => $this->getTestPhoto( 'gallery/img2.jpg' ), 'alt'=>'gallery image 2' ],
+                ['name' => 'img3.jpg', 'data' => $this->getTestPhoto( 'gallery/img3.jpg' ), 'alt'=>'gallery image 3' ],
+                ['name' => 'img4.jpg', 'data' => $this->getTestPhoto( 'gallery/img4.jpg' ), 'alt'=>'gallery image 4' ],                                                
             ]
         ];
         Page::wrapCreate($data3p);
@@ -114,7 +114,7 @@ class LoadDemoDataCommand extends Command
             'description' => 'Php book',
             'page_id' => $p4->id,
             'images' =>   [
-                ['name' => 'php.jpg', 'data' => $this->getTestPhoto( 'books/php.jpg' ) ]
+                ['name' => 'php.jpg', 'data' => $this->getTestPhoto( 'books/php.jpg' ), 'alt'=>'php book image' ]
             ]
         ];
         $products2 = [
@@ -124,7 +124,7 @@ class LoadDemoDataCommand extends Command
             'description' => 'Java book',
             'page_id' => $p4->id,
             'images' =>   [
-                ['name' => 'java.jpg', 'data' => $this->getTestPhoto( 'books/java.jpg' ) ]
+                ['name' => 'java.jpg', 'data' => $this->getTestPhoto( 'books/java.jpg' ), 'alt'=>'java book image' ]
             ]
         ];
         
