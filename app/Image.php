@@ -89,8 +89,6 @@ class Image extends Model
         return null;
     }
 
-
-
     /**
     *  return all thumbs and main img
     */
@@ -127,13 +125,43 @@ class Image extends Model
         return '/'.$url;
     }
 
+    static public function createImagesAndUpdateAlt($images, $type,  $refId){
+      $imagesCreate = [];
+      $imagesUpdate = [];
+
+      foreach($images as $image){
+        if(!empty($image['id'])){
+          $imagesUpdate[] = $image;
+        }else{
+          $imagesCreate[] = $image;
+        }
+      }
+
+      //the order is important - first update then create
+      if($imagesUpdate){
+        Image::updateImages($imagesUpdate);
+      }
+      if($imagesCreate){
+        Image::createImages($imagesCreate, $type,  $refId);
+      }
+
+      return true;    
+    }
+
+    static public function updateImages($images){
+      foreach($images as $image){
+        $objImage = Image::findOrFail($image['id']);
+        $objImage->update([ 'id' => $image['id'],  'alt' => $image['alt']]);
+      }
+    }
+
     static public function createImages($images, $type,  $refId){
       //var_dump($images);
       $out = [];
+
+      // \Illuminate\Support\Facades\Log::error('custom: '.var_export($images, true ) );
       foreach ($images as $key => $image) {
         $name = self::filter($image['name']);
-        $alt = empty($image['alt']) ? null : $image['alt'];
-        //$name = str_file($image['name'], "-");
 
         $data = $image['data'];
 
@@ -144,7 +172,6 @@ class Image extends Model
         $dbData = [
             'name' => $name,
             'position' => Image::getNextPositionByTypeAndRefId( $type,  $refId ),
-            'alt' => $alt,
             $strRefId => $refId
         ];
         $image = Image::create($dbData);
@@ -158,7 +185,6 @@ class Image extends Model
         if (!file_exists($dirImg)) {
           mkdir($dirImg, 0777, true);
         }
-        //var_dump($dirImg);
         \LibImage::make($data)->save($dirImg.'/'.$name);
 
         $fileName = pathinfo($name, PATHINFO_FILENAME );
@@ -205,17 +231,11 @@ class Image extends Model
     //static public function getImagesAndThumbsByPageId($pageId = null)
     static public function getImagesAndThumbsByTypeAndRefId(  $type, $refId = null)
     {
-        //echo "++++++++++++";
-
-      //$images  = Image::getImagesByPageId($pageId);
       $images  = Image::getImagesByTypeAndRefId(  $type, $refId);
-
-      //dump($images);
 
       foreach($images  as $k => $img){
         $images[$k]['fs']  = Image::getAllImage($img, false);
       }
-      //echo public_path();
 
       return $images;
     }

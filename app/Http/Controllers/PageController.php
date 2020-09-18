@@ -95,7 +95,7 @@ class PageController extends Controller
       try{
         $res = $page->update($data);
         if( !empty($data['images']) && is_array($data['images']) ){
-          Image::createImages($data['images'], 'page', $page->id);
+          Image::createImagesAndUpdateAlt($data['images'], 'page', $page->id);
         }
       } catch (\Exception $e) {
           Log::error('page update ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()  ); //.' for: '.var_export($data, true )

@@ -49,9 +49,9 @@ if($demoStatus){
 
     Route::group(['middleware' => ['jwt.auth']], function() {
         Route::get('logout', 'AuthController@logout');
-        Route::get('test', function(){
-            return response()->json(['testrs'=>'ok']);
-        });
+        // Route::get('test', function(){
+        //     return response()->json(['testrs'=>'ok']);
+        // });
         Route::get('menus', 'MenuController@index');
         Route::post('menus', 'MenuController@create');
         Route::put('menus/{id}', 'MenuController@update');
@@ -67,7 +67,6 @@ if($demoStatus){
 
         Route::get('images/{type}/{pageId}', 'ImageController@getItemByTypeAndRefId'); //getItemByPageId
         Route::delete('images/{id}',  'ImageController@delete');
-        Route::put('images/{id}',  'ImageController@update');        
         Route::get('images/position/{direction}/{id}', 'ImageController@position'); //only for type page is working
 
         Route::get('users/clients', 'UserController@getClients');
