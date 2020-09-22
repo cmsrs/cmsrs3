@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 class Page extends Model
 {
     protected $fillable = [
-        'title', 'short_title', 'description', 'published', 'commented', 'position', 'type', 'content', 'menu_id'
+        'title', 'short_title', 'description', 'published', 'commented', 'position', 'type', 'content', 'menu_id', 'page_id'
     ];
 
     protected $casts = [
@@ -54,9 +54,9 @@ class Page extends Model
     {
 
       if( $type ){
-          $pages = Page::query()->where('type', $type )->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'published', 'commented', 'position', 'type', 'content', 'menu_id'])->toArray();
+          $pages = Page::query()->where('type', $type )->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'published', 'commented', 'position', 'type', 'content', 'menu_id', 'page_id'])->toArray();
       }else{
-          $pages = Page::query()->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'description', 'published', 'commented', 'position', 'type', 'content', 'menu_id'])->toArray();
+          $pages = Page::query()->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'description', 'published', 'commented', 'position', 'type', 'content', 'menu_id', 'page_id'])->toArray();
       }
 
 
@@ -101,17 +101,26 @@ class Page extends Model
       return  $page->position+1;
     }
 
-    static public function getPagesByMenuId($menuId)
+    static public function getPagesByMenuId($menuId, $pageId)
     {
+      $page = [];
       if( empty($menuId) ){
         $page = Page::query()
                   ->whereNull( 'menu_id'  )
                   ->orderBy('position', 'asc')
                   ->get()
                   ;
-      }else{
+      }elseif( !empty($menuId) && empty($pageId) ) {
         $page = Page::query()
                   ->where( 'menu_id', '=', $menuId )
+                  ->whereNull( 'page_id'  )                  
+                  ->orderBy('position', 'asc')
+                  ->get()
+                  ;
+      }elseif(!empty($menuId) && !empty($pageId)){
+        $page = Page::query()
+                  ->where( 'menu_id', '=', $menuId )
+                  ->where( 'page_id', '=', $pageId )                  
                   ->orderBy('position', 'asc')
                   ->get()
                   ;
@@ -128,12 +137,16 @@ class Page extends Model
           return false;
       }
       $menuId = $page->menu_id;
-      $pages = Page::getPagesByMenuId($menuId);
+      $pageId = $page->page_id;
+      $pages = Page::getPagesByMenuId($menuId, $pageId);
+
 
       $countPages = count($pages);
       if($countPages < 2){
         return false;
       }
+
+      //print_r($pages->toArray());
 
       //dump($pages[1]->position, $direction, $id);
 
@@ -162,8 +175,10 @@ class Page extends Model
           //$obj2->save();
         }
       }
-      //$pages->fresh();
+      //$pages->fresh();      
       //dd(Page::all());
+      //$out =  Page::getPagesByMenuId($menuId, $pageId);
+      //print_r($out->toArray());
 
 
       //dump($pages[1]->position);

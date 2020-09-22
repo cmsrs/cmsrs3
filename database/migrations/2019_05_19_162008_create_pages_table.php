@@ -14,8 +14,6 @@ class CreatePagesTable extends Migration
     public function up()
     {
 
-      //'title', 'short_title', 'published', 'position', 'type', 'menu_id'
-
         Schema::create('pages', function (Blueprint $table) {
             $table->bigIncrements('id')->index();
             $table->string('title')->notNullable();
@@ -27,6 +25,10 @@ class CreatePagesTable extends Migration
             $table->enum('type', ['cms', 'gallery', 'shop']);
             $table->text('content')->nullable();
             $table->string('slug')->notNullable();
+
+            $table->unsignedBigInteger('page_id')->nullable();
+            $table->foreign('page_id')->nullable()->references('id')->on('pages');
+
             $table->unsignedBigInteger('menu_id')->nullable();
             $table->foreign('menu_id')->nullable()->references('id')->on('menus')->onDelete('cascade');
             $table->timestamps();

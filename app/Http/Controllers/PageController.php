@@ -62,7 +62,7 @@ class PageController extends Controller
   public function create(Request $request)
   {
 
-    $data = $request->only('title', 'short_title', 'description', 'published', 'commented',  'type', 'content', 'menu_id', 'images');    
+    $data = $request->only('title', 'short_title', 'description', 'published', 'commented',  'type', 'content', 'menu_id', 'page_id', 'images');    
     $validator = Validator::make($data, $this->validationRules);
     if($validator->fails()) {
         return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
@@ -86,7 +86,7 @@ class PageController extends Controller
         return response()->json(['success'=> false, 'error'=> 'Page not find'], 200);
       }
 
-      $data = $request->only('title', 'short_title', 'description', 'published', 'commented', 'type', 'content', 'menu_id', 'images'); //'position',
+      $data = $request->only('title', 'short_title', 'description', 'published', 'commented', 'type', 'content', 'menu_id', 'page_id', 'images'); //'position',
       $validator = Validator::make($data, $this->validationRules);
       if($validator->fails()) {
           return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
