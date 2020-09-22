@@ -27,7 +27,7 @@ class CreatePagesTable extends Migration
             $table->string('slug')->notNullable();
 
             $table->unsignedBigInteger('page_id')->nullable();
-            $table->foreign('page_id')->nullable()->references('id')->on('pages');
+            $table->foreign('page_id')->nullable()->references('id')->on('pages')->onDelete('set null');;
 
             $table->unsignedBigInteger('menu_id')->nullable();
             $table->foreign('menu_id')->nullable()->references('id')->on('menus')->onDelete('cascade');

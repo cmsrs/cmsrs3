@@ -146,6 +146,40 @@ class PageTest extends Base
     }
 
     /** @test */
+    public function it_will_delete_parent()
+    {
+      $parentId = $this->dateToTestParent();
+      $pages = Page::All()->toArray();
+
+      $pagesBeforeCount = count($pages);
+      $this->assertEquals($pagesBeforeCount, 6);
+
+      $pagesChild = Page::query()->where('page_id', $parentId)->orderBy('position', 'asc' )->get()->toArray();
+      $this->assertEquals(count($pagesChild), 2);
+
+      $this->assertEquals($pagesChild[0]['page_id'], $parentId);
+      $this->assertEquals($pagesChild[1]['page_id'], $parentId);      
+
+      $pageToDel = Page::findorfail($parentId);
+      $this->assertEquals($pageToDel->title, self::STR_PARENT_TWO);
+      $pageToDel->delete();
+
+      $pagesAfter = Page::All()->toArray();
+      $this->assertEquals(count($pagesAfter), $pagesBeforeCount-1);
+
+      $pagesChildAfter = Page::query()->where('page_id', $parentId)->orderBy('position', 'asc' )->get()->toArray();
+      $this->assertEquals(count($pagesChildAfter), 0);
+
+      $pageAfter1 = Page::findorfail($pagesChild[0]['id']);
+      $pageAfter2 = Page::findorfail($pagesChild[1]['id']);      
+
+
+      $this->assertEquals($pageAfter1->page_id, null);            
+      $this->assertEquals($pageAfter2->page_id, null);                  
+    }
+
+
+    /** @test */
     public function it_will_add_test_page_id_check_position_child()
     {
 
