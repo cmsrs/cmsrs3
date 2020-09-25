@@ -54,7 +54,7 @@ class LoadDemoDataCommand extends Command
             'content' => $this->getDummyTest(),
             'menu_id' => $m1->id,
             'images' => [
-                ['name' => 'me.jpg', 'data' => $this->getTestPhoto( 'about_me/me.jpg' ), 'alt'=>'About me image' ]
+                ['name' => 'me.jpg', 'data' => $this->getTestPhoto( 'about_me/me.jpg' )]
             ]
         ];
 
@@ -86,10 +86,10 @@ class LoadDemoDataCommand extends Command
             'content' => '',
             'menu_id' => $m2->id,
             'images' => [
-                ['name' => 'img1.jpg', 'data' => $this->getTestPhoto( 'gallery/img1.jpg' ), 'alt'=>'gallery image 1' ],
-                ['name' => 'img2.jpg', 'data' => $this->getTestPhoto( 'gallery/img2.jpg' ), 'alt'=>'gallery image 2' ],
-                ['name' => 'img3.jpg', 'data' => $this->getTestPhoto( 'gallery/img3.jpg' ), 'alt'=>'gallery image 3' ],
-                ['name' => 'img4.jpg', 'data' => $this->getTestPhoto( 'gallery/img4.jpg' ), 'alt'=>'gallery image 4' ],                                                
+                ['name' => 'img1.jpg', 'data' => $this->getTestPhoto( 'gallery/img1.jpg' )],
+                ['name' => 'img2.jpg', 'data' => $this->getTestPhoto( 'gallery/img2.jpg' )],
+                ['name' => 'img3.jpg', 'data' => $this->getTestPhoto( 'gallery/img3.jpg' )],
+                ['name' => 'img4.jpg', 'data' => $this->getTestPhoto( 'gallery/img4.jpg' )],
             ]
         ];
         Page::wrapCreate($data3p);
@@ -101,35 +101,100 @@ class LoadDemoDataCommand extends Command
             'description' => 'Description... Needed for google',            
             'published' => 1,
             'commented' => 0,
-            'type' => 'shop',
-            'content' => '',
+            'type' => 'cms',
+            'content' => $this->getDummyTest(),
             'menu_id' => $m3->id
         ];
         $p4 = Page::wrapCreate($data4p);
 
+        $data5p = [
+            'title'     => 'PHP books',
+            'short_title' => 'PHP books',
+            'description' => 'Description... Needed for google',            
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'shop',
+            'content' => '',
+            'page_id' => $p4->id,
+            'menu_id' => $m3->id
+        ];
+        $p5 = Page::wrapCreate($data5p);
+
+        $data6p = [
+            'title'     => 'Java books',
+            'short_title' => 'Java books',
+            'description' => 'Description... Needed for google',            
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'shop',
+            'content' => '',
+            'page_id' => $p4->id,            
+            'menu_id' => $m3->id
+        ];
+        $p6 = Page::wrapCreate($data6p);
+
+        $data7p = [
+            'title'     => 'English books',
+            'short_title' => 'English books',
+            'description' => 'Description... Needed for google',            
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'shop',
+            'content' => '',
+            'menu_id' => $m3->id
+        ];
+        $p7 = Page::wrapCreate($data7p);
+
+
+
         $products1 = [
-            'name' => 'PHP',
+            'name' => 'PHP3',
             'sku' => '1/23/4',
             'price' => 11,
             'description' => 'Php book',
-            'page_id' => $p4->id,
+            'page_id' => $p5->id,
             'images' =>   [
-                ['name' => 'php.jpg', 'data' => $this->getTestPhoto( 'books/php.jpg' ), 'alt'=>'php book image' ]
+                ['name' => 'php.jpg', 'data' => $this->getTestPhoto( 'books/php3.jpg' ) ]                
             ]
         ];
         $products2 = [
+            'name' => 'PHP5',
+            'sku' => '1/234/4',
+            'price' => 30,
+            'description' => 'Php5 book',
+            'page_id' => $p5->id,
+            'images' =>   [
+                ['name' => 'php5.jpg', 'data' => $this->getTestPhoto( 'books/php5.jpg' ) ],
+                ['name' => 'php5_back.jpg', 'data' => $this->getTestPhoto( 'books/php5_back.jpg' ) ],
+            ]
+        ];
+        $products3 = [            
             'name' => 'Java',
             'sku' => '3/13/4',
             'price' => 23,
             'description' => 'Java book',
-            'page_id' => $p4->id,
+            'page_id' => $p6->id,
             'images' =>   [
-                ['name' => 'java.jpg', 'data' => $this->getTestPhoto( 'books/java.jpg' ), 'alt'=>'java book image' ]
+                ['name' => 'java.jpg', 'data' => $this->getTestPhoto( 'books/java.jpg' )],
+                ['name' => 'java_back.jpg', 'data' => $this->getTestPhoto( 'books/java_back.jpg' )],
             ]
         ];
-        
+        $products4 = [            
+            'name' => 'English',
+            'sku' => 'A/3/3/4',
+            'price' => 28,
+            'description' => 'English book',
+            'page_id' => $p7->id,
+            'images' =>   [
+                ['name' => 'english.jpg', 'data' => $this->getTestPhoto( 'books/english.jpg' )],
+                ['name' => 'english_back.jpg', 'data' => $this->getTestPhoto( 'books/english_back.jpg' )],
+            ]
+        ];    
+
         Product::wrapCreate($products1);
-        Product::wrapCreate($products2);   
+        Product::wrapCreate($products2);        
+        Product::wrapCreate($products3);
+        Product::wrapCreate($products4);           
            
         //It,s created by the 'seed'
         // $user = new User([

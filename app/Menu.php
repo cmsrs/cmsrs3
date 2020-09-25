@@ -45,6 +45,25 @@ class Menu extends Model
       return $this->pages()->where( 'published', '=', 1 )->orderBy('position', 'asc');
     }
 
+    public function pagesPublishedTree()
+    {
+      $tree = array();
+      $pagesByMenu = $this->pagesPublished()->get()->toArray();
+      foreach($pagesByMenu as $page){
+        if(empty($page['page_id'])){
+          $tree[$page['id']] = $page;
+        }
+      }
+
+      foreach($pagesByMenu as $page){
+        if(!empty($page['page_id'])){
+          $tree[$page['page_id']]['children'][] = $page;
+        }
+      }
+
+      return $tree;
+    }
+
     static public function getAllMenus()
     {
       $menus = Menu::query()->orderBy('position', 'asc')->get(['id',  'name', 'position'])->toArray();

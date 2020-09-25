@@ -17,6 +17,7 @@ class MenuTest extends Base
     //private $token;
     private $testData;
 
+    private $objMenu;
 
     public function setUp(): void
     {
@@ -32,11 +33,25 @@ class MenuTest extends Base
         $menu = new Menu($this->testData);
 
         $menu->save();
+        $this->objMenu = $menu;
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
+    }
+
+    /** @test */
+    public function it_will_get_tree_by_menu()
+    {
+      //var_dump($this->objMenu->id);
+      $parentId = $this->dateToTestParent( $this->objMenu->id );
+      $tree = $this->objMenu->pagesPublishedTree();
+      $this->assertEquals(3, count($tree));
+      $this->assertEquals(2, count($tree[$parentId]['children']));
+
+      $this->assertEquals(PageTest::STR_CHILD_ONE, $tree[$parentId]['children'][0]['title']);
+      $this->assertEquals(PageTest::STR_CHILD_TWO, $tree[$parentId]['children'][1]['title']);
     }
 
 

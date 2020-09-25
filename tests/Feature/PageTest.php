@@ -74,81 +74,11 @@ class PageTest extends Base
         parent::tearDown();
     }
 
-    private function dateToTestParent()
-    {
-      $testData1 =
-      [
-           'title'     => 'test p1',
-           'short_title' => 'p11',
-           'published' => 1,
-           'type' => 'cms',
-           'content' => 'ppp1',
-           'menu_id' =>  $this->menuId
-      ];
-      $response1 = $this->post('api/pages?token='.$this->token, $testData1);
-
-      $testData2 =
-      [
-           'title' =>  self::STR_PARENT_TWO , //this string dont touch (change)
-           'short_title' => 'p22',
-           'published' => 1,
-           'type' => 'cms',
-           'content' => 'parent page ppp2',
-           'menu_id' =>  $this->menuId
-      ];
-      $response2 = $this->post('api/pages?token='.$this->token, $testData2);
-
-      //check pages:
-      $res = $this->get('api/pages?token='.$this->token );
-      $r = $res->getData();
-      $this->assertTrue( $r->success );
-
-      $parentId = $r->data[1]->id;
-      $this->assertNotEmpty($parentId);
-
-      $testData3 =
-      [
-           'title'     =>  self::STR_CHILD_ONE,
-           'short_title' => 'p33',
-           'published' => 1,
-           'type' => 'cms',
-           'content' => 'child page ppp1',
-           'page_id' => $parentId,
-           'menu_id' =>  $this->menuId
-      ];
-      $response3 = $this->post('api/pages?token='.$this->token, $testData3);
-
-      $testData4 =
-      [
-           'title'     => self::STR_CHILD_TWO,
-           'short_title' => 'p44',
-           'published' => 1,
-           'type' => 'cms',
-           'content' => 'child page ppp2',
-           'page_id' => $parentId,
-           'menu_id' =>  $this->menuId
-      ];
-      $response4 = $this->post('api/pages?token='.$this->token, $testData4);
-
-      $testData5 =
-      [
-           'title'     =>  self::STR_PARENT_TREE , // 'p5',
-           'short_title' => 'p55',
-           'published' => 1,
-           'type' => 'cms',
-           'content' => 'pppppppp5',
-           //'page_id' => $parentId,
-           'menu_id' =>  $this->menuId
-      ];
-      $response5 = $this->post('api/pages?token='.$this->token, $testData5);
-
-      return $parentId;
-    }
 
     /** @test */
     public function it_will_delete_parent()
     {
-      $parentId = $this->dateToTestParent();
+      $parentId = $this->dateToTestParent( $this->menuId );
       $pages = Page::All()->toArray();
 
       $pagesBeforeCount = count($pages);
@@ -161,7 +91,7 @@ class PageTest extends Base
       $this->assertEquals($pagesChild[1]['page_id'], $parentId);      
 
       $pageToDel = Page::findorfail($parentId);
-      $this->assertEquals($pageToDel->title, self::STR_PARENT_TWO);
+      $this->assertEquals($pageToDel->title, PageTest::STR_PARENT_TWO);
       $pageToDel->delete();
 
       $pagesAfter = Page::All()->toArray();
@@ -183,7 +113,7 @@ class PageTest extends Base
     public function it_will_add_test_page_id_check_position_child()
     {
 
-      $parentId = $this->dateToTestParent();
+      $parentId = $this->dateToTestParent( $this->menuId );
 
       $pages = Page::query()->where('page_id', $parentId)->orderBy('position', 'asc' )->get()->toArray();
       //print_r($pages);
@@ -197,8 +127,8 @@ class PageTest extends Base
       $positionBefore1 = $pages[0]['position'];
       $positionBefore2 = $pages[1]['position'];      
 
-      $this->assertEquals($pages[0]['title'], self::STR_CHILD_ONE );
-      $this->assertEquals($pages[1]['title'], self::STR_CHILD_TWO );      
+      $this->assertEquals($pages[0]['title'], PageTest::STR_CHILD_ONE );
+      $this->assertEquals($pages[1]['title'], PageTest::STR_CHILD_TWO );      
 
       $res2a = $this->get('api/pages/position/up/'.$pages[0]['id'].'?token='.$this->token );
       //dd($res2a);
@@ -220,8 +150,8 @@ class PageTest extends Base
 
       //$this->assertTrue( $positionAfter1 < $positionAfter2 );
 
-      $this->assertEquals(self::STR_CHILD_TWO, $pages22[0]['title']);
-      $this->assertEquals(self::STR_CHILD_ONE,  $pages22[1]['title']);       
+      $this->assertEquals(PageTest::STR_CHILD_TWO, $pages22[0]['title']);
+      $this->assertEquals(PageTest::STR_CHILD_ONE,  $pages22[1]['title']);       
 
       //$this->assertEquals($pages22[0]['position'], $beforePostion1);      
       //$this->assertEquals($pages22[1]['position'], $beforePostion0);            
@@ -231,7 +161,7 @@ class PageTest extends Base
     public function it_will_add_test_page_id_check_position_parent()
     {
 
-      $parentId = $this->dateToTestParent();
+      $parentId = $this->dateToTestParent( $this->menuId );
 
       $pages = Page::query()->where('page_id', null )->where('menu_id', $this->menuId)->orderBy('position', 'asc' )->get()->toArray();
       //print_r(Page::all()->toArray());
@@ -240,8 +170,8 @@ class PageTest extends Base
       $this->assertEquals(count($pages), 3);
 
       // $this->assertEquals($pages[0]['page_id'], $parentId);
-      $this->assertEquals($pages[1]['title'], self::STR_PARENT_TWO);      
-      $this->assertEquals($pages[2]['title'], self::STR_PARENT_TREE);       
+      $this->assertEquals($pages[1]['title'], PageTest::STR_PARENT_TWO);      
+      $this->assertEquals($pages[2]['title'], PageTest::STR_PARENT_TREE);       
 
       $this->assertEquals($pages[1]['page_id'], null);
       $this->assertEquals($pages[2]['page_id'], null);      
@@ -278,8 +208,8 @@ class PageTest extends Base
       //$this->assertTrue($positionBefore1 > $positionAfter1);      
 
 
-      $this->assertEquals(self::STR_PARENT_TREE, $pages22[1]['title']);
-      $this->assertEquals(self::STR_PARENT_TWO,  $pages22[2]['title']);       
+      $this->assertEquals(PageTest::STR_PARENT_TREE, $pages22[1]['title']);
+      $this->assertEquals(PageTest::STR_PARENT_TWO,  $pages22[2]['title']);       
     }
 
     /** @test */

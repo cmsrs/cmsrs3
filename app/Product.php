@@ -48,6 +48,16 @@ class Product extends Model
         return $products;
     }
 
+    static public function getProductsWithImagesByPage($pageId)
+    {      
+        $products = Product::query()->where('page_id', $pageId)->orderBy('id', 'asc' )->get()->toArray();
+
+        foreach ($products as $key => $product) {
+            $products[$key]['images'] = Image::getImagesAndThumbsByTypeAndRefId( 'product', $product['id']);
+        }  
+        return $products;
+    }
+
     public function delete()
     {
         foreach($this->images()->get() as $img){
