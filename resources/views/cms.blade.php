@@ -46,7 +46,7 @@
                   <ul class="list-unstyled">
                     <li>Name: {{$product['name']}}</li>
                     <li>Sku: {{$product['sku']}}</li>
-                    <li>Price: {{$product['price']}}</li>
+                    <li>Price: ${{$product['price']}}</li>
                     <li>{{$product['description']}}</li>
                   </ul>
                   <?php
@@ -64,18 +64,21 @@
 
           </div>
           <div class="col">
+            &nbsp;
+          </div>            
+          <div class="col mp-3">
             SHOPPING CART:
             <ul>
-              <li v-for="item in cart" v-bind:key="item.id">
-                <div>@{{ item.title }}</div>
-                <span>@{{ item.price  }} x @{{ item.qty }}</span>
+              <li class="mt-2" v-for="item in cart" v-bind:key="item.id">              
+                <div>@{{ item.name }}</div>
+                <span>$@{{ item.price  }} x @{{ item.qty }}</span>
                 <button class="btn" v-on:click="increment(item)">+</button>
                 <button class="btn" v-on:click="decrement(item)">-</button>
               </li>
             </ul>
 
             <div v-if="cart.length">
-              <div class="cart-total">Total: @{{ total }}</div>
+              <div class="cart-total">Total: $@{{ total }}</div>
               <br/><br/>
               <button class="btn" v-on:click="pay()">Pay</button>
             </div>
