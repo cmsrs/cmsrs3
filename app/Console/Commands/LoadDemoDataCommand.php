@@ -145,8 +145,6 @@ class LoadDemoDataCommand extends Command
         ];
         $p7 = Page::wrapCreate($data7p);
 
-
-
         $products1 = [
             'name' => 'PHP3',
             'sku' => '1/23/4',

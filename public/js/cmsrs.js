@@ -50,31 +50,30 @@ new Vue({
 					alert('TODO payment='+this.total);
 				},
 
-				addComment: function( event){
-						let pageId = this.page_id;
-						if(!this.comment.length){
-								return false;
-						}
-						let self = this;
-						let content =  this.comment
+                addComment: function( event){
+                                let pageId = this.page_id;
+                                if(!this.comment.length){
+                                                return false;
+                                }
+                                let self = this;
+                                let content =  this.comment
 
-						//TODO -  uniq key
-						axios.post('/api/comments/'+pageId, {
-								content: this.comment
-						}).then( function (response){
-								self.comments.push({
-										content: content
-								});
-						})
-						.catch(function (error) {
-								alert('err - add post')
-						});                     
-						this.comment = '';      
-						if (event) {
-								event.preventDefault()
-						}
-						return false;
-				}
-			}
+                                //TODO -  uniq key
+                                axios.post('/api/comments/'+pageId, {
+                                                content: this.comment
+                                }).then( function (response){
+                                                self.comments.push({
+                                                                content: content
+                                                });
+                                })
+                                .catch(function (error) {
+                                                alert('err - add post')
+                                });                     
+                                this.comment = '';      
+                                if (event) {
+                                                event.preventDefault()
+                                }
+                                return false;
+                }
+        }
 });
-	

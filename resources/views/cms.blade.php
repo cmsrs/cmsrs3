@@ -17,12 +17,17 @@
 
   @elseif($page->type  === 'gallery')
 
+      <link href="/css/lightbox.min.css" rel="stylesheet">
+
       @if( $page->images)
         @foreach($page->images as $image)
-            <img class="m-3" src="{{$image->getHtmlImage()}}" alt="{{$image->name}}" />
+        <a class="example-image-link" href="{{$image->getHtmlImage('org')}}" data-lightbox="example-set" data-title="Click the right half of the image to move forward.">
+            <img class="m-3 example-image" src="{{$image->getHtmlImage()}}" alt="{{$image->name}}" />
+        </a>
         @endforeach
       @endif
-
+      <!-- see: https://www.jqueryscript.net/lightbox/lightbox2.html -->
+      <script src="/js/lightbox-plus-jquery.min.js"></script>  
 
   @elseif($page->type  === 'shop')
 
@@ -99,5 +104,6 @@
   
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>      
+  <script src="https://unpkg.com/@diracleo/vue-enlargeable-image/dist/vue-enlargeable-image.min.js"></script>    
   <script src="/js/cmsrs.js"></script>
 @stop

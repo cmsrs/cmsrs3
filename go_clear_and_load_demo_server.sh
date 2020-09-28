@@ -1,5 +1,5 @@
-rm -rf public/images
-mkdir  public/images
+rm -rf public/images/page
+rm -rf public/images/product
 #./go_privilege.sh 
 
 php73 artisan migrate:refresh
