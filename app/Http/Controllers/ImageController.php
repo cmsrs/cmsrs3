@@ -16,6 +16,7 @@ class ImageController extends Controller
 
   private $validationRules = [
       'name' => 'max:255',
+      'alt' => 'max:255'
   ];
 
   public function getItemByTypeAndRefId(Request $request, $type,  $refId)

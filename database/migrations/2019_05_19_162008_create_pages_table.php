@@ -14,18 +14,21 @@ class CreatePagesTable extends Migration
     public function up()
     {
 
-      //'title', 'short_title', 'published', 'position', 'type', 'menu_id'
-
         Schema::create('pages', function (Blueprint $table) {
             $table->bigIncrements('id')->index();
             $table->string('title')->notNullable();
             $table->string('short_title')->nullable();
+            $table->string('description')->nullable();
             $table->boolean('published')->default(0);
             $table->boolean('commented')->default(0);
             $table->integer('position')->unsigned()->nullable();
             $table->enum('type', ['cms', 'gallery', 'shop']);
             $table->text('content')->nullable();
             $table->string('slug')->notNullable();
+
+            $table->unsignedBigInteger('page_id')->nullable();
+            $table->foreign('page_id')->nullable()->references('id')->on('pages')->onDelete('set null');;
+
             $table->unsignedBigInteger('menu_id')->nullable();
             $table->foreign('menu_id')->nullable()->references('id')->on('menus')->onDelete('cascade');
             $table->timestamps();

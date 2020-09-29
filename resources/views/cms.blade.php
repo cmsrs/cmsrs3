@@ -17,12 +17,17 @@
 
   @elseif($page->type  === 'gallery')
 
+      <link href="/css/lightbox.min.css" rel="stylesheet">
+
       @if( $page->images)
         @foreach($page->images as $image)
-            <img class="m-3" src="{{$image->getHtmlImage()}}" alt="{{$image->name}}" />
+        <a class="example-image-link" href="{{$image->getHtmlImage('org')}}" data-lightbox="example-set" data-title="Click the right half of the image to move forward.">
+            <img class="m-3 example-image" src="{{$image->getHtmlImage()}}" alt="{{$image->name}}" />
+        </a>
         @endforeach
       @endif
-
+      <!-- see: https://www.jqueryscript.net/lightbox/lightbox2.html -->
+      <script src="/js/lightbox-plus-jquery.min.js"></script>  
 
   @elseif($page->type  === 'shop')
 
@@ -41,7 +46,7 @@
                   <ul class="list-unstyled">
                     <li>Name: {{$product['name']}}</li>
                     <li>Sku: {{$product['sku']}}</li>
-                    <li>Price: {{$product['price']}}</li>
+                    <li>Price: ${{$product['price']}}</li>
                     <li>{{$product['description']}}</li>
                   </ul>
                   <?php
@@ -59,18 +64,21 @@
 
           </div>
           <div class="col">
+            &nbsp;
+          </div>            
+          <div class="col mp-3">
             SHOPPING CART:
             <ul>
-              <li v-for="item in cart" v-bind:key="item.id">
-                <div>@{{ item.title }}</div>
-                <span>@{{ item.price  }} x @{{ item.qty }}</span>
+              <li class="mt-2" v-for="item in cart" v-bind:key="item.id">              
+                <div>@{{ item.name }}</div>
+                <span>$@{{ item.price  }} x @{{ item.qty }}</span>
                 <button class="btn" v-on:click="increment(item)">+</button>
                 <button class="btn" v-on:click="decrement(item)">-</button>
               </li>
             </ul>
 
             <div v-if="cart.length">
-              <div class="cart-total">Total: @{{ total }}</div>
+              <div class="cart-total">Total: $@{{ total }}</div>
               <br/><br/>
               <button class="btn" v-on:click="pay()">Pay</button>
             </div>
@@ -99,5 +107,6 @@
   
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>      
+  <script src="https://unpkg.com/@diracleo/vue-enlargeable-image/dist/vue-enlargeable-image.min.js"></script>    
   <script src="/js/cmsrs.js"></script>
 @stop

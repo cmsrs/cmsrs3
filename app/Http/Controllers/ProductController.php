@@ -86,7 +86,7 @@ class ProductController extends Controller
       try{
           $res = $product->update($data);
           if( !empty($data['images']) && is_array($data['images']) ){
-              Image::createImages($data['images'], 'product', $product->id);
+              Image::createImagesAndUpdateAlt($data['images'], 'product', $product->id);
           }
       } catch (\Exception $e) {
           Log::error('product update ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()  ); //.' for: '.var_export($data, true )

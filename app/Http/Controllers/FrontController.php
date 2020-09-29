@@ -38,7 +38,7 @@ class FrontController extends Controller
             $find = true;
             $pageOut = $page;
             if( 'shop' === $page->type){
-              $products = Product::getAllProductsWithImages();
+              $products = Product::getProductsWithImagesByPage($page->id);
             }
           }
         }

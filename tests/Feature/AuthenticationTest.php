@@ -38,7 +38,7 @@ class AuthenticationTest extends TestCase
 
     private function privilege_action( $token ){
 
-        $response = $this->get('api/test?token='.$token );
+        $response = $this->get('api/menus?token='.$token );
         //print_r( $response->getData()  );
         return $response;
     }
@@ -118,7 +118,9 @@ class AuthenticationTest extends TestCase
         $this->assertTrue( $response->success  );
 
         $privilege =   $this->privilege_action( $response->data->token );
-        $this->assertNotEmpty( $privilege->getData()->testrs );
+        $this->assertTrue($privilege->getData()->success);
+
+        //$this->assertNotEmpty( $privilege->getData()->testrs );
         $logout =   $this->logout_action( $response->data->token  );
         $this->assertTrue( $logout->getData()->success );
         $privilegeAfterLogout =    $this->privilege_action( $response->data->token );

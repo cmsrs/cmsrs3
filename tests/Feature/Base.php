@@ -77,6 +77,78 @@ class Base extends TestCase
   }
 
 
+  protected function dateToTestParent( $menuId )
+  {
+    $testData1 =
+    [
+         'title'     => 'test p1',
+         'short_title' => 'p11',
+         'published' => 1,
+         'type' => 'cms',
+         'content' => 'ppp1',
+         'menu_id' =>  $menuId
+    ];
+    $response1 = $this->post('api/pages?token='.$this->token, $testData1);
+
+    $testData2 =
+    [
+         'title' =>  PageTest::STR_PARENT_TWO , //this string dont touch (change)
+         'short_title' => 'p22',
+         'published' => 1,
+         'type' => 'cms',
+         'content' => 'parent page ppp2',
+         'menu_id' =>  $menuId
+    ];
+    $response2 = $this->post('api/pages?token='.$this->token, $testData2);
+
+    //check pages:
+    $res = $this->get('api/pages?token='.$this->token );
+    $r = $res->getData();
+    $this->assertTrue( $r->success );
+
+    $parentId = $r->data[1]->id;
+    $this->assertNotEmpty($parentId);
+
+    $testData3 =
+    [
+         'title'     =>  PageTest::STR_CHILD_ONE,
+         'short_title' => 'p33',
+         'published' => 1,
+         'type' => 'cms',
+         'content' => 'child page ppp1',
+         'page_id' => $parentId,
+         'menu_id' =>  $menuId
+    ];
+    $response3 = $this->post('api/pages?token='.$this->token, $testData3);
+
+    $testData4 =
+    [
+         'title'     => PageTest::STR_CHILD_TWO,
+         'short_title' => 'p44',
+         'published' => 1,
+         'type' => 'cms',
+         'content' => 'child page ppp2',
+         'page_id' => $parentId,
+         'menu_id' =>  $menuId
+    ];
+    $response4 = $this->post('api/pages?token='.$this->token, $testData4);
+
+    $testData5 =
+    [
+         'title'     =>  PageTest::STR_PARENT_TREE , // 'p5',
+         'short_title' => 'p55',
+         'published' => 1,
+         'type' => 'cms',
+         'content' => 'pppppppp5',
+         //'page_id' => $parentId,
+         'menu_id' =>  $menuId
+    ];
+    $response5 = $this->post('api/pages?token='.$this->token, $testData5);
+
+    return $parentId;
+  }
+
+
 
 
 }

@@ -49,9 +49,9 @@ if($demoStatus){
 
     Route::group(['middleware' => ['jwt.auth']], function() {
         Route::get('logout', 'AuthController@logout');
-        Route::get('test', function(){
-            return response()->json(['testrs'=>'ok']);
-        });
+        // Route::get('test', function(){
+        //     return response()->json(['testrs'=>'ok']);
+        // });
         Route::get('menus', 'MenuController@index');
         Route::post('menus', 'MenuController@create');
         Route::put('menus/{id}', 'MenuController@update');

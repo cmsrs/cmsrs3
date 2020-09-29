@@ -101,7 +101,6 @@ class ProductTest extends Base
     /** @test */
     public function it_will_check_fixtures_get_pages_by_type()
     {
-
         $type = 'shop';
         $res = $this->get('api/pages/type/' . $type . '?token=' . $this->token);
 
@@ -174,15 +173,29 @@ class ProductTest extends Base
         $response22 = $this->get('api/products?token='.$this->token );
         $res22 = $response22->getData();
         $productId = $res22->data[0]->id;
+        $oldImages = $res22->data[0]->images;
+        $this->assertEquals(count($oldImages), 2);
+
+        $arrOldImage = [];
+        $i = 1;
+        foreach($oldImages  as $img){
+            $arrImg =  (array)$img;
+            $arrImg['alt'] = 'alt'.$i;
+            $arrOldImage[] = $arrImg;
+            $i++;
+        }
 
         $this->assertEquals( $res22->data[0]->name, $this->testData['name']);
 
         $newName = 'PHP7';
         $this->testData['name'] = $newName;
 
-        $images = $this->testData['images'];
-        array_shift($images);
-        $this->testData['images'] = $images;
+        $imagesNew = $this->testData['images'][1];
+
+        $imagesTab = array_merge($arrOldImage, [$imagesNew]);
+
+        //array_shift($images);
+        $this->testData['images'] = $imagesTab;
 
         //var_dump($this->testData); die('++');
 
@@ -200,6 +213,10 @@ class ProductTest extends Base
         $this->assertEquals( $res222->data[0]->name, $newName);
 
         $this->assertEquals(count($res222->data[0]->images), 3);
+
+        $this->assertEquals($res222->data[0]->images[0]->alt, 'alt1');
+        $this->assertEquals($res222->data[0]->images[1]->alt, 'alt2');        
+        $this->assertEquals($res222->data[0]->images[2]->alt, null);                
 
         //$this->removeImgDir($res->data->productId, 'product' ); //remove file
         $this->clear_imgs($res->data->productId);
@@ -250,7 +267,63 @@ class ProductTest extends Base
         if($obj){  //delete img from fs.
           $obj->delete();
         }    
-      }
+    }
+
+    /** @test */
+    public function it_will_get_change_position_product_images()
+    {
+        $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
+
+        $res0 = $response0->getData();
+        $this->assertTrue($res0->success);
+
+        $productId = $res0->data->productId;
+        $this->assertNotEmpty($productId);
+        
+        $resprod = $this->get('api/products?token=' . $this->token);
+        $res2prod = $resprod->getData();
+        //dd($res2prod->data);
+        $this->assertEquals($res2prod->data[0]->images[0]->name,'phpunittest1.jpg');
+
+        $response2 = $this->get('api/images/product/'.$productId.'?token='.$this->token);
+        $res2 = $response2->getData();
+        $this->assertTrue( $res2->success );    
+        
+        $this->assertEquals($res2->data[0]->name, 'phpunittest1.jpg' );
+        $this->assertEquals($res2->data[0]->position, 1 );        
   
+        $resSwap = $this->get('api/images/position/up/'.$res2->data[0]->id.'?token='.$this->token);
+  
+        $response2Swap = $this->get('api/images/product/'.$productId.'?token='.$this->token);
+        $res2Swap = $response2Swap->getData();
+        $this->assertTrue( $res2Swap->success );
+        $this->assertEquals( count($res2Swap->data), 2);
+  
+        $this->assertEquals($res2Swap->data[0]->name, 'phpunittest2.jpg');
+        $this->assertEquals($res2Swap->data[0]->position, 1 );                
+
+
+        $resprod3 = $this->get('api/products?token=' . $this->token);
+        $res3prod = $resprod3->getData();
+        $this->assertEquals($res3prod->data[0]->images[0]->name,'phpunittest2.jpg');
+
+        $resSwap2 = $this->get('api/images/position/up/'.$res2->data[0]->id.'?token='.$this->token);
+  
+        $response3Swap = $this->get('api/images/product/'.$productId.'?token='.$this->token);
+        $res3Swap = $response3Swap->getData();
+        $this->assertTrue( $res3Swap->success );
+        $this->assertEquals( count($res3Swap->data), 2);
+  
+        $this->assertEquals($res3Swap->data[0]->name, 'phpunittest1.jpg');
+        $this->assertEquals($res3Swap->data[0]->position, 1 );                
+
+
+        $resprod4 = $this->get('api/products?token=' . $this->token);
+        $res4prod = $resprod4->getData();
+        $this->assertEquals($res4prod->data[0]->images[0]->name,'phpunittest1.jpg');
+
+        //clear images!
+        $this->clear_imgs($productId);
+    }    
 
 }

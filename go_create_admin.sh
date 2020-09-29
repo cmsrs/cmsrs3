@@ -1,3 +1,6 @@
+###################
+##depreciate#######
+###################
 secret=$(grep  "RS_SECRET" .env | awk -F "=" '{ print $2 }')
 #echo $secret
 
