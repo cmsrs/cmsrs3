@@ -90,6 +90,11 @@ class LoadDemoDataCommand extends Command
                 ['name' => 'img2.jpg', 'data' => $this->getTestPhoto( 'gallery/img2.jpg' )],
                 ['name' => 'img3.jpg', 'data' => $this->getTestPhoto( 'gallery/img3.jpg' )],
                 ['name' => 'img4.jpg', 'data' => $this->getTestPhoto( 'gallery/img4.jpg' )],
+                ['name' => 'imgb1.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb1.jpg' )],
+                ['name' => 'imgb2.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb2.jpg' )],
+                ['name' => 'imgb3.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb3.jpg' )],
+                ['name' => 'imgb4.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb4.jpg' )],
+
             ]
         ];
         Page::wrapCreate($data3p);
