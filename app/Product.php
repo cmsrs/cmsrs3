@@ -16,6 +16,12 @@ class Product extends Model
         'page_id'
     ];
 
+    protected $casts = [
+      'price' => 'integer',
+      'page_id' => 'integer'
+    ];
+
+
     public function images()
     {
       return $this->hasMany('App\Image');

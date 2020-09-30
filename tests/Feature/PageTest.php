@@ -74,6 +74,32 @@ class PageTest extends Base
         parent::tearDown();
     }
 
+    /** @test */
+    public function it_will_check_type_pages()
+    {
+      $parentId = $this->dateToTestParent( $this->menuId );
+      //$pages = Page::All()->toArray();
+
+      $response2 = $this->get('api/pages?token='.$this->token );
+      $res2 = $response2->getData();
+      $this->assertTrue( $res2->success );
+      
+      $testItem = $res2->data[2];
+
+      // 'published' => 'integer',
+      // 'commented' => 'integer',
+      // 'position' => 'integer',
+      // 'menu_id' => 'integer', 
+      // 'page_id' => 'integer'
+      $this->assertIsInt($testItem->id); 
+      $this->assertIsInt($testItem->published); 
+      $this->assertIsInt($testItem->commented); 
+      $this->assertIsInt($testItem->position);
+      $this->assertIsInt($testItem->menu_id); 
+      $this->assertIsInt($testItem->page_id); 
+    }
+
+
 
     /** @test */
     public function it_will_delete_parent()

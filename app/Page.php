@@ -12,9 +12,11 @@ class Page extends Model
     ];
 
     protected $casts = [
-           'published' => 'integer',
-           'commented' => 'integer',
-           'position' => 'integer'       
+          'published' => 'integer',
+          'commented' => 'integer',
+          'position' => 'integer',
+          'menu_id' => 'integer', 
+          'page_id' => 'integer'
     ];
 
     public function setTitleAttribute($value)

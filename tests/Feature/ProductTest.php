@@ -98,6 +98,8 @@ class ProductTest extends Base
     }
 
 
+
+
     /** @test */
     public function it_will_check_fixtures_get_pages_by_type()
     {
@@ -145,7 +147,6 @@ class ProductTest extends Base
         $res22 = $response22->getData();
 
         //dump($res->data->productId);
-        //dump($res22);
 
         $this->assertTrue( $res22->success );
         $this->assertEquals( count($res22->data), 1);
@@ -159,7 +160,13 @@ class ProductTest extends Base
         $this->assertEquals( $res22->data[0]->images[1]->name,  $this->name2 );
 
         $this->assertFileExists( public_path().'/'.$res22->data[0]->images[1]->fs->medium);
-        
+
+        $this->assertIsInt($res22->data[0]->id);        
+        $this->assertIsInt($res22->data[0]->price);
+        $this->assertIsInt($res22->data[0]->page_id);
+        $this->assertIsInt($res22->data[0]->images[0]->position);
+        $this->assertIsInt($res22->data[0]->images[0]->product_id);
+
         //$this->removeImgDir($res->data->productId, 'product' );//remove file
         $this->clear_imgs($res->data->productId);
     }

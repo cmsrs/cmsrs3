@@ -135,6 +135,10 @@ class MenuTest extends Base
 
       $this->assertSame($data['name'], $this->testData['name']);
       $this->assertSame($data['position'], $this->testData['position']);
+
+      $this->assertIsInt($data['position']);
+      $this->assertIsInt($data['id']);      
+
       $this->assertNotEmpty($data['id']);
     }
 

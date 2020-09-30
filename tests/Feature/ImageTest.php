@@ -114,6 +114,11 @@ class ImageTest extends Base
 
 
       $this->assertEquals($res2->data[0]->images[0]->name, $this->testImgData['images'][0]['name'] );
+
+      $this->assertIsInt($res2->data[0]->images[0]->position);
+      $this->assertIsInt($res2->data[0]->images[0]->page_id);
+      $this->assertIsInt($res2->data[0]->images[0]->id);      
+
       $this->assertObjectHasAttribute( 'alt',  $res2->data[0]->images[0]);
       $this->assertEquals($res2->data[0]->images[0]->alt, null);
 

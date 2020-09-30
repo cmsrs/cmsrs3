@@ -32,6 +32,11 @@ class Image extends Model
         'product' => 'product_id'
     ];
 
+    protected $casts = [
+      'page_id' => 'integer',
+      'product_id' => 'integer',
+      'position' => 'integer'
+    ];
 
     /**
     * TODO - mmove function to helper
