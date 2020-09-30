@@ -18,3 +18,4 @@ yarn-error.log
 awstats/
 logs/
 stats/
+/public/admin_*
