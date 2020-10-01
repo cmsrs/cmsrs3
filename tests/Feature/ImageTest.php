@@ -372,6 +372,14 @@ class ImageTest extends Base
       $this->assertEquals( count($res2Swap->data), 2);
 
       $this->assertEquals($res2Swap->data[0]->name, $this->name2);
+
+      $page = Page::findOrFail($this->pageId);
+      $images =  $page->images;
+      $arrImages = $images->toArray();
+      //dd($arrImages);
+
+      $this->assertTrue($arrImages[0]['position'] < $arrImages[1]['position']);
+
       //$this->clear_imgs();
     }
 }
