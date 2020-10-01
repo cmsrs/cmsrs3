@@ -37,6 +37,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
+        //abort(404); //TODO 
         $this->middleware('guest');
     }
 
@@ -63,6 +64,8 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        abort(404);
+
         $demoStatus = env('DEMO_STATUS', false);
         if($demoStatus){
             echo "Not permission";
