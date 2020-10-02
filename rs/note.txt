@@ -1,0 +1,34 @@
+20201002
+
+todo
+- wiecej jezykow
+- kontakt form + capute
+- alt obrazka na froncie - i dodatnie go do skryptu
+- wydajnosc gallerii - duzo wiecej zdjec
+- cache
+- strony dostepne tylko po zalogowaniu
+
+
+- nie intuicyjnie dziala add/edit w panelu administracyjnym
+- pokazanie w panelu, ktore srony sa odpublikowane
+
+
+na dalszy plan:
+- zarzadzanie komentarzami 
+- (do przemyslenia)  moze nalezy zrobic dodatkowy input na url i h1 (bo to sie zapisuje jako title), albo przynajmniej jakies info, ze to tak dziala przy inpucie title
+- wyszukiwarka kontentu
+- menu lewe czy pokazywac
+
+
+
+
+bledy:
+- w admin/pages - dodaje obrazek a pozniej przechodze na inna strone to obrazek zostaje
+
+
+
+kamienie milowe:
+- testy reacta
+- migracja
+- docker
+
