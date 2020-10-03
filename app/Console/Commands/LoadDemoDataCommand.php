@@ -54,7 +54,7 @@ class LoadDemoDataCommand extends Command
             'content' => $this->getDummyTest(),
             'menu_id' => $m1->id,
             'images' => [
-                ['name' => 'me.jpg', 'data' => $this->getTestPhoto( 'about_me/me.jpg' )]
+                ['name' => 'me.jpg', 'data' => $this->getTestPhoto( 'about_me/me.jpg' ), 'alt' => 'about me']
             ]
         ];
 
@@ -86,14 +86,14 @@ class LoadDemoDataCommand extends Command
             'content' => '',
             'menu_id' => $m2->id,
             'images' => [
-                ['name' => 'img1.jpg', 'data' => $this->getTestPhoto( 'gallery/img1.jpg' )],
-                ['name' => 'img2.jpg', 'data' => $this->getTestPhoto( 'gallery/img2.jpg' )],
-                ['name' => 'img3.jpg', 'data' => $this->getTestPhoto( 'gallery/img3.jpg' )],
-                ['name' => 'img4.jpg', 'data' => $this->getTestPhoto( 'gallery/img4.jpg' )],
-                ['name' => 'imgb1.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb1.jpg' )],
-                ['name' => 'imgb2.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb2.jpg' )],
-                ['name' => 'imgb3.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb3.jpg' )],
-                ['name' => 'imgb4.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb4.jpg' )],
+                ['name' => 'img1.jpg', 'data' => $this->getTestPhoto( 'gallery/img1.jpg'), 'alt' => 'description img1'  ],
+                ['name' => 'img2.jpg', 'data' => $this->getTestPhoto( 'gallery/img2.jpg'), 'alt' => 'description img2'  ],
+                ['name' => 'img3.jpg', 'data' => $this->getTestPhoto( 'gallery/img3.jpg'), 'alt' => 'description img3'  ],
+                ['name' => 'img4.jpg', 'data' => $this->getTestPhoto( 'gallery/img4.jpg'), 'alt' => 'description img4'  ],
+                ['name' => 'imgb1.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb1.jpg' ), 'alt' => 'description imgb1'  ],
+                ['name' => 'imgb2.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb2.jpg' ), 'alt' => 'description imgb2'  ],
+                ['name' => 'imgb3.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb3.jpg' ), 'alt' => 'description imgb3'  ],
+                ['name' => 'imgb4.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb4.jpg' ), 'alt' => 'description imgb4'  ],
 
             ]
         ];
@@ -157,7 +157,7 @@ class LoadDemoDataCommand extends Command
             'description' => 'Php book',
             'page_id' => $p5->id,
             'images' =>   [
-                ['name' => 'php.jpg', 'data' => $this->getTestPhoto( 'books/php3.jpg' ) ]                
+                ['name' => 'php.jpg', 'data' => $this->getTestPhoto( 'books/php3.jpg' ), 'alt' => 'php3 front' ]                
             ]
         ];
         $products2 = [
@@ -167,8 +167,8 @@ class LoadDemoDataCommand extends Command
             'description' => 'Php5 book',
             'page_id' => $p5->id,
             'images' =>   [
-                ['name' => 'php5.jpg', 'data' => $this->getTestPhoto( 'books/php5.jpg' ) ],
-                ['name' => 'php5_back.jpg', 'data' => $this->getTestPhoto( 'books/php5_back.jpg' ) ],
+                ['name' => 'php5.jpg', 'data' => $this->getTestPhoto( 'books/php5.jpg' ), 'alt' => 'php5 front' ],
+                ['name' => 'php5_back.jpg', 'data' => $this->getTestPhoto( 'books/php5_back.jpg' ), 'alt' => 'php5 back' ],
             ]
         ];
         $products3 = [            
@@ -178,8 +178,8 @@ class LoadDemoDataCommand extends Command
             'description' => 'Java book',
             'page_id' => $p6->id,
             'images' =>   [
-                ['name' => 'java.jpg', 'data' => $this->getTestPhoto( 'books/java.jpg' )],
-                ['name' => 'java_back.jpg', 'data' => $this->getTestPhoto( 'books/java_back.jpg' )],
+                ['name' => 'java.jpg', 'data' => $this->getTestPhoto( 'books/java.jpg' ), 'alt' => 'java front'  ],
+                ['name' => 'java_back.jpg', 'data' => $this->getTestPhoto( 'books/java_back.jpg' ), 'alt' => 'java back'  ],
             ]
         ];
         $products4 = [            
@@ -189,8 +189,8 @@ class LoadDemoDataCommand extends Command
             'description' => 'English book',
             'page_id' => $p7->id,
             'images' =>   [
-                ['name' => 'english.jpg', 'data' => $this->getTestPhoto( 'books/english.jpg' )],
-                ['name' => 'english_back.jpg', 'data' => $this->getTestPhoto( 'books/english_back.jpg' )],
+                ['name' => 'english.jpg', 'data' => $this->getTestPhoto( 'books/english.jpg' ), 'alt' => 'english front' ],
+                ['name' => 'english_back.jpg', 'data' => $this->getTestPhoto( 'books/english_back.jpg' ), 'alt' => 'english back' ],
             ]
         ];    
 

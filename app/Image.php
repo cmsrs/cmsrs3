@@ -162,11 +162,13 @@ class Image extends Model
 
     static public function createImages($images, $type,  $refId){
       //var_dump($images);
+
       $out = [];
 
       // \Illuminate\Support\Facades\Log::error('custom: '.var_export($images, true ) );
       foreach ($images as $key => $image) {
         $name = self::filter($image['name']);
+        $alt = !empty($image['alt']) ? $image['alt'] : null;
 
         $data = $image['data'];
 
@@ -176,6 +178,7 @@ class Image extends Model
 
         $dbData = [
             'name' => $name,
+            'alt' => $alt,
             'position' => Image::getNextPositionByTypeAndRefId( $type,  $refId ),
             $strRefId => $refId
         ];

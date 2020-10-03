@@ -15,6 +15,8 @@ class ImageTest extends Base
     //use DatabaseMigrations;
     use RefreshDatabase;
 
+    const STR_DESC_IMG1 = 'description img1';
+
     private $name1;
     private $name2;
     private $pageId;
@@ -46,14 +48,16 @@ class ImageTest extends Base
         [
             'title' => 'img Title',
             'images' => [
-              ['name' => $this->name1, 'data' => $file1],  //it is create, not update therefore is ('alt' => 'description img1') not allowed
-              ['name' => $this->name2, 'data' => $file2]
+              ['name' => $this->name1, 'data' => $file1, 'alt' => self::STR_DESC_IMG1 ],
+              ['name' => $this->name2, 'data' => $file2 ] //, 'alt' => 'description img2'
             ]
         ];
 
         $response = $this->post('api/pages?token='.$this->token, $this->testImgData);
+        //dd($response);
 
         $res = $response->getData();
+
 
         $this->assertTrue( $res->success );
 
@@ -61,6 +65,7 @@ class ImageTest extends Base
         $this->assertNotEmpty( $pageId );
 
         $this->pageData = $res->data->data;
+        //dd($this->pageData);
 
         $this->pageId = $pageId;
 
@@ -120,7 +125,9 @@ class ImageTest extends Base
       $this->assertIsInt($res2->data[0]->images[0]->id);      
 
       $this->assertObjectHasAttribute( 'alt',  $res2->data[0]->images[0]);
-      $this->assertEquals($res2->data[0]->images[0]->alt, null);
+      //$this->assertEquals($res2->data[0]->images[0]->alt, null);
+      $this->assertNotEmpty($res2->data[0]->images[0]->alt);      
+      $this->assertEquals(self::STR_DESC_IMG1,  $res2->data[0]->images[0]->alt);            
 
       $this->assertEquals($res2->data[0]->images[1]->name, $this->testImgData['images'][1]['name'] );
 
