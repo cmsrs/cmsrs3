@@ -95,6 +95,24 @@ class LoadDemoDataCommand extends Command
                 ['name' => 'imgb3.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb3.jpg' ), 'alt' => 'description imgb3'  ],
                 ['name' => 'imgb4.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb4.jpg' ), 'alt' => 'description imgb4'  ],
 
+                ['name' => 'imgc1.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc1.jpg' ), 'alt' => 'description imgc1'  ],                
+                ['name' => 'imgc2.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc2.jpg' ), 'alt' => 'description imgc2'  ],                
+                ['name' => 'imgc3.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc3.jpg' ), 'alt' => 'description imgc3'  ],                
+                ['name' => 'imgc4.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc4.jpg' ), 'alt' => 'description imgc4'  ],                
+                ['name' => 'imgc5.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc5.jpg' ), 'alt' => 'description imgc5'  ],                
+                ['name' => 'imgc6.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc6.jpg' ), 'alt' => 'description imgc6'  ],                
+                ['name' => 'imgc7.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc7.jpg' ), 'alt' => 'description imgc7'  ],                
+                ['name' => 'imgc8.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc8.jpg' ), 'alt' => 'description imgc8'  ],                
+                ['name' => 'imgc9.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc9.jpg' ), 'alt' => 'description imgc9'  ],                
+                ['name' => 'imgc10.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc10.jpg' ), 'alt' => 'description imgc10'  ],                
+                ['name' => 'imgc11.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc11.jpg' ), 'alt' => 'description imgc11'  ],                
+                ['name' => 'imgc12.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc12.jpg' ), 'alt' => 'description imgc12'  ],                                
+
+
+
+
+
+
             ]
         ];
         Page::wrapCreate($data3p);
