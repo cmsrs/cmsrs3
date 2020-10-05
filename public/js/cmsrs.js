@@ -7,14 +7,15 @@ new Vue({
                 results: [],
                 comment: '',
                 comments: [],
-                page_id: ''
+                page_id: '',
+                images: []
         },
         created() {             
-                //-----comments----
+                let self = this;
                 const el = document.querySelector('#page_id');
                 this.page_id = el.dataset.pageId;
 
-                let self = this
+                //-----comments----
                 //TODO - no comments in page
                 axios.get('/api/comments/'+this.page_id).then( function (response){
                         self.comments = response.data.data;
@@ -26,6 +27,12 @@ new Vue({
                 for (var i = 0; i < this.cart.length; i++) {
                         this.total += this.cart[i].qty * this.cart[i].price;
                 }
+
+                //---gallery---
+                axios.get('/api/page/'+this.page_id).then( function (response){
+                        self.images = (response.data.data.type === 'gallery')  ? response.data.data.images: [];
+                });
+
         },
         methods: {
                 addToCart: function(product) {

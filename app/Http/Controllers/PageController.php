@@ -26,6 +26,18 @@ class PageController extends Controller
       'type' => 'in:cms,gallery,shop'
   ];
 
+  public function oneItem(Request $request, $id)
+  {
+    $page = Page::find($id);
+
+    if(empty($page)){
+      return response()->json(['success'=> false, 'error'=> 'Page not find'], 404);
+    }
+
+    $page = $page->getPageWithImages();
+    return response()->json(['success' => true, 'data'=> $page], 200);
+  }
+
   public function index()
   {
       $pages = Page::getAllPagesWithImages();

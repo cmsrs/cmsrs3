@@ -51,6 +51,27 @@ class Page extends Model
       return $page;
     }
 
+    public function arrImages()
+    {
+      $out = [];
+      foreach($this->images as $image){
+        $item = Image::getAllImage($image, false);        
+        $item['id'] = $image->id;
+        $item['alt'] = $image->alt;        
+        $out[] = $item;
+      }
+      return $out;
+    }
+
+    public function getPageWithImages()
+    {
+      $p['id'] =$this->id; 
+      $p['type'] =$this->type;
+      //$p['title'] =$this->title; 
+      $p['images'] = $this->arrImages();
+      return $p;
+    }
+
 
     static public function getAllPagesWithImages( $type = null )
     {

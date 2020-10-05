@@ -9,7 +9,7 @@
 
       @if( $page->images)
         @foreach($page->images as $image)
-            <img class="m-3" src="{{$image->getHtmlImage()}}" alt="{{$image->name}}" />
+            <img class="m-3" src="{{$image->getHtmlImage()}}" alt="{{$image->alt}}" />
         @endforeach
       @endif
 
@@ -17,12 +17,21 @@
 
   @elseif($page->type  === 'gallery')
 
+    @if( $page->images)
+      <span v-for="image in images"  v-bind:key="image.id">
+          <img class="m-3" :src="image.medium" :alt="image.alt" />
+      </span>
+    @endif
+
+
+  @elseif($page->type  === 'gallery_old_delete_this')
+
       <link href="/css/lightbox.min.css" rel="stylesheet">
 
       @if( $page->images)
         @foreach($page->images as $image)
-        <a class="example-image-link" href="{{$image->getHtmlImage('org')}}" data-lightbox="example-set" data-title="Click the right half of the image to move forward.">
-            <img class="m-3 example-image" src="{{$image->getHtmlImage()}}" alt="{{$image->name}}" />
+        <a class="example-image-link" href="{{$image->getHtmlImage('org')}}" data-lightbox="example-set" data-title="{{$image->alt}}">
+            <img class="m-3 example-image" src="{{$image->getHtmlImage()}}" alt="{{$image->alt}}" />
         </a>
         @endforeach
       @endif
@@ -39,7 +48,7 @@
               <div class="row">
                 <div class="col">
                 @if( !empty($product['images']) &&  !empty($product['images'][0]) )
-                  <img class="m-3" src="{{$product['images'][0]->getHtmlImage()}}" alt="{{$product['images'][0]->name}}" />
+                  <img class="m-3" src="{{$product['images'][0]->getHtmlImage()}}" alt="{{$product['images'][0]->alt}}" />
                 @endif
                 </div>
                 <div class="col">
@@ -87,8 +96,6 @@
 
         </div>
       </div>
-
-
   @endif
 
   @if ( $page->commented )
@@ -104,9 +111,8 @@
     </form>
   @endif
   </div> <!-- div app -->  
-  
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>      
-  <script src="https://unpkg.com/@diracleo/vue-enlargeable-image/dist/vue-enlargeable-image.min.js"></script>    
   <script src="/js/cmsrs.js"></script>
+
 @stop

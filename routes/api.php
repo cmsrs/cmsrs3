@@ -47,6 +47,8 @@ if($demoStatus){
     Route::get('comments/{pageId}', 'CommentController@index');
     Route::post('comments/{pageId}', 'CommentController@create');
 
+    Route::get('page/{id}', 'PageController@oneItem');
+
     Route::group(['middleware' => ['jwt.auth']], function() {
         Route::get('logout', 'AuthController@logout');
         // Route::get('test', function(){

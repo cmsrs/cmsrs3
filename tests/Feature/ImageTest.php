@@ -94,6 +94,23 @@ class ImageTest extends Base
       }    
     }
 
+    /** @test */
+    public function it_will_get_page_with_images()
+    {      
+      $response3 = $this->get('api/page/'.$this->pageId);
+
+      $res3 = $response3->getData();
+      $this->assertTrue( $res3->success );
+      $this->assertEquals($this->pageId, $res3->data->id);
+      $this->assertNotEmpty($res3->data->type);
+      $this->assertEquals(2, count($res3->data->images));      
+      //print_r($res3->data);
+
+      $page = Page::findOrFail($this->pageId);
+      $arrImages =  $page->arrImages();
+      $this->assertEquals($arrImages[0], (array)$res3->data->images[0]);      
+      $this->assertEquals($arrImages[1], (array)$res3->data->images[1]);
+    }
 
     /** @test */
     public function it_will_get_pages_with_images()
@@ -135,6 +152,8 @@ class ImageTest extends Base
       $this->assertEquals($res2->data[0]->images[1]->alt, null );
 
       //die('========');
+      //echo '=========='.$this->pageId."=====";
+      //dd($res2->data);
 
       //dump($res2->data[0]->images[1]->fs->org);
       $this->assertEquals( pathinfo($res2->data[0]->images[1]->fs->org, PATHINFO_BASENAME ), $this->name2 );
@@ -143,6 +162,17 @@ class ImageTest extends Base
         $fs = public_path($urlImg);
         $this->assertFileExists($fs);
       }
+      
+      $page = Page::findOrFail($this->pageId);
+      $arrImages =  $page->arrImages();
+      $this->assertEquals(2, count($arrImages));
+
+      $this->assertNotEmpty($arrImages[0][Image::IMAGE_ORG]);
+      $this->assertNotEmpty($arrImages[0][Image::IMAGE_THUMB_TYPE_SMALL]);
+      $this->assertNotEmpty($arrImages[0][Image::IMAGE_THUMB_TYPE_MEDIUM]);
+      $this->assertNotEmpty($arrImages[0]['alt']);
+      $this->assertNotEmpty($arrImages[0]['id']);      
+      
 
       //$this->clear_imgs();
     }

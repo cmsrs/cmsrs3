@@ -9,6 +9,7 @@ class Image extends Model
 {
     const IMAGE_DIR = 'images';
 
+    const IMAGE_ORG = 'org';
     const IMAGE_THUMB_TYPE_SMALL = 'small';
     const IMAGE_THUMB_TYPE_MEDIUM = 'medium';
 
@@ -107,7 +108,7 @@ class Image extends Model
       $fileName = pathinfo($img->name, PATHINFO_FILENAME );
       $fileExt = pathinfo($img->name, PATHINFO_EXTENSION );
 
-      $out['org'] = $imgDir.'/'.$img->name;
+      $out[self::IMAGE_ORG] = $imgDir.'/'.$img->name;
       foreach (self::$thumbs as $imgName => $dimention) {
         $out[$imgName] = $imgDir.'/'.$fileName.'-'.$imgName.'.'.$fileExt;
       }
