@@ -1,3 +1,5 @@
+var LOAD_NUM = 18;
+
 new Vue({
         el: "#app",
         data: {
@@ -8,6 +10,7 @@ new Vue({
                 comment: '',
                 comments: [],
                 page_id: '',
+                page : {},
                 images: []
         },
         created() {             
@@ -30,11 +33,34 @@ new Vue({
 
                 //---gallery---
                 axios.get('/api/page/'+this.page_id).then( function (response){
-                        self.images = (response.data.data.type === 'gallery')  ? response.data.data.images: [];
+                        self.page = response.data.data;
+                        self.images = self.page.images.slice(0, LOAD_NUM);
                 });
 
         },
+        mounted () {
+                this.scroll()
+        },              
         methods: {
+
+                scroll: function() {
+                        window.onscroll = () => {
+                                let bottomOfWindow = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop) + window.innerHeight === document.documentElement.offsetHeight
+                        
+                                if (bottomOfWindow) {
+
+                                        if(this.images.length < this.page.images.length) {
+                                                var toAppend = this.page.images.slice(
+                                                this.images.length,
+                                                LOAD_NUM + this.images.length
+                                                );
+                                                this.images = this.images.concat(toAppend);
+                                        }                                                                
+
+                                }
+                        }
+                },
+
                 addToCart: function(product) {
                         this.total += product.price;
                         var found = false;
