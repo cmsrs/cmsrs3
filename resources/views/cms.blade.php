@@ -4,6 +4,7 @@
   <h1 class="mb-4 mt-3">{{$page->title}}</h1>
 
   <div id="app">
+
   <div id="page_id" data-page-id="{{$page->id}}"></div>  
   @if ( $page->type  === 'cms')
 
@@ -19,24 +20,10 @@
 
     @if( $page->images)
       <span v-for="image in images"  v-bind:key="image.id">
-          <img class="m-3" :src="image.medium" :alt="image.alt" />
+            <img  @click="clickImg(image.id, image.org, image.alt)" class="m-3 myImgs" :src="image.medium" :alt="image.alt"  />
       </span>
+
     @endif
-
-
-  @elseif($page->type  === 'gallery_old_delete_this')
-
-      <link href="/css/lightbox.min.css" rel="stylesheet">
-
-      @if( $page->images)
-        @foreach($page->images as $image)
-        <a class="example-image-link" href="{{$image->getHtmlImage('org')}}" data-lightbox="example-set" data-title="{{$image->alt}}">
-            <img class="m-3 example-image" src="{{$image->getHtmlImage()}}" alt="{{$image->alt}}" />
-        </a>
-        @endforeach
-      @endif
-      <!-- see: https://www.jqueryscript.net/lightbox/lightbox2.html -->
-      <script src="/js/lightbox-plus-jquery.min.js"></script>  
 
   @elseif($page->type  === 'shop')
 
@@ -109,8 +96,28 @@
       <p>
       <button v-on:click="addComment( $event )" class="add-to-cart btn">Add comment</button>
     </form>
-  @endif
-  </div> <!-- div app -->  
+  @endif      
+    </div> <!-- div app -->  
+
+      <!-- The Modal -->
+      <div id="myModal" class="modal">
+
+        <!-- The Close Button -->
+        <span class="close">&times;</span>
+
+        <!-- Modal Content (The Image) -->
+        <img class="modal-content" id="img01">
+
+        <!-- Next and previous buttons -->
+        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+
+        <!-- Modal Caption (Image Text) -->
+        <div id="caption"></div>
+      </div>      
+
+
+  <script>var images = JSON.parse('<?php echo json_encode($page->arrImages()) ?>');</script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>      
   <script src="/js/cmsrs.js"></script>

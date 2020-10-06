@@ -1,4 +1,10 @@
 var LOAD_NUM = 18;
+//var LOAD_NUM = 9;
+var modal = document.getElementById("myModal");
+var modalImg = document.getElementById("img01");
+var captionText = document.getElementById("caption");
+var currentImgId = '';
+
 
 new Vue({
         el: "#app",
@@ -37,11 +43,18 @@ new Vue({
                         self.images = self.page.images.slice(0, LOAD_NUM);
                 });
 
+
         },
         mounted () {
                 this.scroll()
         },              
         methods: {
+                clickImg: function(imgId, org, alt){
+                        modal.style.display = "block";
+                        modalImg.src = org;
+                        currentImgId = imgId;
+                        captionText.innerHTML = alt;   
+                },
 
                 scroll: function() {
                         window.onscroll = () => {
@@ -137,3 +150,30 @@ new Vue({
                 }
         }
 });
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() { 
+        modal.style.display = "none";
+}
+function plusSlides(direct){
+        for (var i = 0; i < images.length; i++) {
+                if( images[i].id === currentImgId ){
+                        var index = i + direct;
+                        if(index < 0){
+                                index = images.length -1;
+                        }
+                        if(index > images.length - 1){
+                                index = 0;
+                        }
+                        if(images[index]){
+                                modalImg.src = images[index].org;
+                                currentImgId = images[index].id;
+                                captionText.innerHTML = images[index].alt;   
+                                break;        
+                        }                
+                }
+        }
+}
