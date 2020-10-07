@@ -490,7 +490,7 @@ class PageTest extends Base
            'published' => 0,
            'commented' => 0,
            //'position' => 3,
-           'type' => 'shop',
+           'type' => 'contact',
            'content' => 'aaa ffdfds',
            'menu_id' => null,
            'page_id' => null,           

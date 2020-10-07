@@ -23,7 +23,7 @@ class PageController extends Controller
       'published' => 'boolean',
       'commented' => 'boolean',
       //'position'=> 'numeric',
-      'type' => 'in:cms,gallery,shop'
+      'type' => 'in:cms,gallery,shop,contact'
   ];
 
   public function oneItem(Request $request, $id)
