@@ -69,8 +69,22 @@ class LoadDemoDataCommand extends Command
             'menu_id' => $m1->id
         ];
 
+        $data22pSecret = [
+            'title'     =>  'Secret info',
+            'short_title' =>  'Secret info',
+            'description' => 'Description... Needed for google',            
+            'published' => 1,
+            'commented' => 0,
+            'after_login' => 1,
+            'type' => 'cms',
+            'content' => 'Secret information after logging in',
+            'menu_id' => $m1->id
+        ];
+
+
         Page::wrapCreate($data1p);
         $p2 = Page::wrapCreate($data2p);
+        Page::wrapCreate($data22pSecret);
 
         Comment::create( ['page_id' => $p2->id,  'content' => 'First test comment - test1' ] );
         Comment::create( ['page_id' => $p2->id,  'content' => 'Second test comment - test2' ] );
@@ -106,16 +120,28 @@ class LoadDemoDataCommand extends Command
                 ['name' => 'imgc9.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc9.jpg' ), 'alt' => 'description imgc9'  ],                
                 ['name' => 'imgc10.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc10.jpg' ), 'alt' => 'description imgc10'  ],                
                 ['name' => 'imgc11.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc11.jpg' ), 'alt' => 'description imgc11'  ],                
-                ['name' => 'imgc12.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc12.jpg' ), 'alt' => 'description imgc12'  ],                                
-
-
-
-
-
-
+                ['name' => 'imgc12.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc12.jpg' ), 'alt' => 'description imgc12'  ], 
             ]
-        ];
+        ];        
         Page::wrapCreate($data3p);
+
+        $data4p = [
+            'title'     => 'Greece',
+            'short_title' => 'Greece',
+            'description' => 'Description...  needed for google',            
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'gallery',
+            'content' => '',
+            'menu_id' => $m2->id,
+            'images' => [
+                ['name' => 'imggreece1.jpg', 'data' => $this->getTestPhoto( 'gallery/greece/imggreece1.jpg'), 'alt' => 'description imggreece1'  ],
+                ['name' => 'imggreece2.jpg', 'data' => $this->getTestPhoto( 'gallery/greece/imggreece2.jpg'), 'alt' => 'description imggreece2'  ]
+            ]
+        ];        
+        Page::wrapCreate($data4p);
+
+
 
         $m3 = Menu::wrapCreate(['name' => 'Shop']);
         $data4p = [
