@@ -42,7 +42,12 @@ class Menu extends Model
 
     public function pagesPublished()
     {
-      //dump(Auth::check());
+      $pages = $this->pages()->where( 'published', '=', 1 )->orderBy('position', 'asc');
+      return $pages;
+    }
+
+    public function pagesPublishedAndAccess()
+    {
       if (Auth::check()) {
         $pages = $this->pages()->where( 'published', '=', 1 )->orderBy('position', 'asc');
       }else{
@@ -55,7 +60,7 @@ class Menu extends Model
     public function pagesPublishedTree()
     {
       $tree = array();
-      $pagesByMenu = $this->pagesPublished()->get()->toArray();
+      $pagesByMenu = $this->pagesPublishedAndAccess()->get()->toArray();
       foreach($pagesByMenu as $page){
         if(empty($page['page_id'])){
           $tree[$page['id']] = $page;

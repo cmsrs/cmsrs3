@@ -27,7 +27,7 @@ Route::get('/c/{menuSlug}/{pageSlug}', 'FrontController@cms');
 // Route::post('password/reset', 'Auth\ResetPasswordController@postReset')->name('password.reset');
 
 //Auth::routes();
-Auth::routes(['register' => false]);
+Auth::routes(['register' => false, 'reset' => false]);
 //Route::post('/register', 'AuthController@register');
 //Route::post('/login', 'AuthController@login');
 //Route::post('/logout', 'AuthController@logout');

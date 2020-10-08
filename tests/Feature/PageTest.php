@@ -197,21 +197,9 @@ class PageTest extends Base
       
 
       $menu = Menu::findOrFail($this->menuId);
-      $pagePublish = $menu->pagesPublished()->get()->toArray();
-
-      //dump($pagePublish);
+      $pagePublish = $menu->pagesPublishedAndAccess()->get()->toArray();
 
       $this->assertEquals(2, count($pagePublish));
-
-
-      $response9 = $this->get('api/logout?token='.$this->token );
-      $res9 = $response9->getData();
-      $this->assertTrue( $res9->success );
-      User::query()->delete();      
-      $menu2 = Menu::findOrFail($this->menuId);
-
-      $pagePublish2 = $menu2->pagesPublished()->get()->toArray();   
-      $this->assertEquals(2, count($pagePublish2)); //TODO - it should by 1 !!!!??
     }
 
 
