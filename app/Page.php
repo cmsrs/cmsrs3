@@ -40,6 +40,16 @@ class Page extends Model
       $menuId = empty($data['menu_id']) ? null : $data['menu_id'];
       $data['position'] = Page::getNextPositionByMenuId($menuId);  
 
+      if( isSet($data['type']) && ($data['type'] == 'main_page') ){
+        $p = Page::where('type', '=', 'main_page')->where( 'published', '=', 1 )->get()->toArray();
+
+        if($p){
+          throw new \Exception("Two main page not allowed");  
+        }
+        $data['menu_id'] = null;
+        $data['page_id'] = null;
+      }
+
       $page = Page::create( $data );
       if( empty($page->id)){
         throw new \Exception("I cant get page id");

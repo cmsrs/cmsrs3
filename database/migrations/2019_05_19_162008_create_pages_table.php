@@ -23,7 +23,7 @@ class CreatePagesTable extends Migration
             $table->boolean('commented')->default(0);
             $table->boolean('after_login')->default(0);            
             $table->integer('position')->unsigned()->nullable();
-            $table->enum('type', ['cms', 'gallery', 'shop', 'contact']);
+            $table->enum('type', ['cms', 'gallery', 'shop', 'contact', 'main_page']);
             $table->text('content')->nullable();
             $table->string('slug')->notNullable();
 

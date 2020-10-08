@@ -78,6 +78,72 @@ class PageTest extends Base
     }
 
     /** @test */
+    public function it_will_add_main_page()
+    {
+      $parentId = $this->dateToTestParent( $this->menuId );
+      $testData2 =
+      [
+          'title'     => 'test p2xx',
+          'short_title' => 'p22',
+          'description' => 'test1234',
+          'published' => 1,
+          'commented' => 0,
+          'after_login' => 1,
+          //'position' => 3,
+          'type' => 'main_page',
+          'content' => 'aaa ffdfds',
+          'menu_id' => $this->menuId, //it must be null for type main_page
+          'page_id' => $parentId, //it must be null for type main_page
+          //'images' => []
+      ];
+
+      $response = $this->post('api/pages?token='.$this->token, $testData2);
+
+      $res = $response->getData();
+      $this->assertTrue( $res->success );      
+
+      $response2 = $this->get('api/pages?token='.$this->token );
+      $res2 = $response2->getData();
+      $this->assertTrue( $res2->success );      
+
+      $page = [];
+      foreach($res2->data as  $p){
+        if( $p->type == 'main_page' ){
+          $page = $p;
+        }
+      }
+      $this->assertNotEmpty($page);
+      $this->assertEquals('main_page', $page->type);      
+      $this->assertEquals(null, $page->menu_id);
+      $this->assertEquals(null, $page->page_id);
+
+      $testData3 =
+      [
+          'title'     => 'second main page - wrong!',
+          'short_title' => 'p33',
+          'description' => 'tes333',
+          'published' => 0,
+          'commented' => 0,
+          'after_login' => 1,
+          //'position' => 3,
+          'type' => 'main_page',
+          'content' => 'aaa ffdfds',
+          'menu_id' => null,
+          'page_id' => null
+          //'images' => []
+      ];
+      $response3 = $this->post('api/pages?token='.$this->token, $testData3);
+
+      //dd($response3);
+
+      $res3 = $response3->getData();
+      $this->assertFalse( $res3->success );      
+
+
+    }
+
+
+    /** @test */
     public function it_will_add_with_after_login()
     {
       $testData2 =
@@ -552,8 +618,7 @@ class PageTest extends Base
 
       $this->assertSame($tmpArr[0]->title, $tmpArr2[0]->title);
     }
-
-
+    
     /** @test */
     public function it_will_add_pages()
     {

@@ -24,7 +24,7 @@ class PageController extends Controller
       'commented' => 'boolean',
       'after_login' => 'boolean',
       //'position'=> 'numeric',
-      'type' => 'in:cms,gallery,shop,contact'
+      'type' => 'in:cms,gallery,shop,contact,main_page'
   ];
 
   public function oneItem(Request $request, $id)
