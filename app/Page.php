@@ -8,12 +8,13 @@ use Illuminate\Support\Str;
 class Page extends Model
 {
     protected $fillable = [
-        'title', 'short_title', 'description', 'published', 'commented', 'position', 'type', 'content', 'menu_id', 'page_id'
+        'title', 'short_title', 'description', 'published', 'commented', 'after_login', 'position', 'type', 'content', 'menu_id', 'page_id'
     ];
 
     protected $casts = [
           'published' => 'integer',
           'commented' => 'integer',
+          'after_login' => 'integer',          
           'position' => 'integer',
           'menu_id' => 'integer', 
           'page_id' => 'integer'
@@ -77,9 +78,9 @@ class Page extends Model
     {
 
       if( $type ){
-          $pages = Page::query()->where('type', $type )->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'published', 'commented', 'position', 'type', 'content', 'menu_id', 'page_id'])->toArray();
+          $pages = Page::query()->where('type', $type )->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'published', 'commented', 'after_login', 'position', 'type', 'content', 'menu_id', 'page_id'])->toArray();
       }else{
-          $pages = Page::query()->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'description', 'published', 'commented', 'position', 'type', 'content', 'menu_id', 'page_id'])->toArray();
+          $pages = Page::query()->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'description', 'published', 'commented', 'after_login', 'position', 'type', 'content', 'menu_id', 'page_id'])->toArray();
       }
 
 

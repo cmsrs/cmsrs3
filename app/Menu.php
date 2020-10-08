@@ -4,7 +4,7 @@ namespace App;
 
 
 use Illuminate\Support\Str;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 
 
@@ -42,7 +42,14 @@ class Menu extends Model
 
     public function pagesPublished()
     {
-      return $this->pages()->where( 'published', '=', 1 )->orderBy('position', 'asc');
+      //dump(Auth::check());
+      if (Auth::check()) {
+        $pages = $this->pages()->where( 'published', '=', 1 )->orderBy('position', 'asc');
+      }else{
+        $pages = $this->pages()->where( 'published', '=', 1 )->where( 'after_login', '=', 0 )->orderBy('position', 'asc');
+      }
+
+      return $pages;
     }
 
     public function pagesPublishedTree()

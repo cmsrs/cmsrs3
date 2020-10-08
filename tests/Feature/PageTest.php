@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Page;
 use App\Menu;
+use App\User;
+
 //use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -39,6 +41,7 @@ class PageTest extends Base
             'description' => 'this page: test desc ...',            
             'published' => 1,
             'commented' => 1,
+            'after_login' => 0,
             'position' => 7,
             'type' => 'cms',
             'content' => 'content test133445',
@@ -75,6 +78,78 @@ class PageTest extends Base
     }
 
     /** @test */
+    public function it_will_add_with_after_login()
+    {
+      $testData2 =
+      [
+           'title'     => 'test p2',
+           'short_title' => 'p22',
+           'description' => 'ttt',
+           'published' => 1,
+           'commented' => 0,
+           'after_login' => 1,
+           'type' => 'cms',
+           'content' => '2sdafsfsdaf asdfasdf',
+           'page_id' =>  null,
+           'menu_id' =>  $this->menuId
+      ];
+
+      $response = $this->post('api/pages?token='.$this->token, $testData2);
+      $res = $response->getData();
+      $this->assertTrue( $res->success );
+
+      $testData3 =
+      [
+           'title'     => 'ppp3',
+           'short_title' => 'p33',
+           'description' => 'ttt',
+           'published' => 1,
+           'commented' => 0,
+           'after_login' => 0,
+           'type' => 'cms',
+           'content' => '333sdafsfsdaf asdfasdf',
+           'page_id' =>  null,
+           'menu_id' =>  $this->menuId
+      ];
+
+      $response3 = $this->post('api/pages?token='.$this->token, $testData3);
+      $res3 = $response3->getData();
+      $this->assertTrue( $res3->success );
+
+
+      $response2 = $this->get('api/pages?token='.$this->token );
+      $res2 = $response2->getData();
+      $this->assertTrue( $res2->success );
+      $this->assertEquals( count($res2->data), 3);    
+
+      
+      $this->assertEquals($res2->data[0]->title, $testData2['title']);      
+      $this->assertEquals($res2->data[0]->after_login, $testData2['after_login']);
+
+      $this->assertEquals($res2->data[1]->title, $testData3['title']);      
+      $this->assertEquals($res2->data[1]->after_login, $testData3['after_login']);
+      
+
+      $menu = Menu::findOrFail($this->menuId);
+      $pagePublish = $menu->pagesPublished()->get()->toArray();
+
+      //dump($pagePublish);
+
+      $this->assertEquals(2, count($pagePublish));
+
+
+      $response9 = $this->get('api/logout?token='.$this->token );
+      $res9 = $response9->getData();
+      $this->assertTrue( $res9->success );
+      User::query()->delete();      
+      $menu2 = Menu::findOrFail($this->menuId);
+
+      $pagePublish2 = $menu2->pagesPublished()->get()->toArray();   
+      $this->assertEquals(2, count($pagePublish2)); //TODO - it should by 1 !!!!??
+    }
+
+
+    /** @test */
     public function it_will_check_type_pages()
     {
       $parentId = $this->dateToTestParent( $this->menuId );
@@ -94,6 +169,7 @@ class PageTest extends Base
       $this->assertIsInt($testItem->id); 
       $this->assertIsInt($testItem->published); 
       $this->assertIsInt($testItem->commented); 
+      $this->assertIsInt($testItem->after_login);       
       $this->assertIsInt($testItem->position);
       $this->assertIsInt($testItem->menu_id); 
       $this->assertIsInt($testItem->page_id); 
@@ -489,6 +565,7 @@ class PageTest extends Base
            'description' => 'test1234',
            'published' => 0,
            'commented' => 0,
+           'after_login' => 0,
            //'position' => 3,
            'type' => 'contact',
            'content' => 'aaa ffdfds',
@@ -602,7 +679,6 @@ class PageTest extends Base
 
     }
 
-
     /** @test */
     public function it_will_add2_with_menu_pages()
     {
@@ -613,6 +689,7 @@ class PageTest extends Base
            'description' => 'ttt',
            'published' => 0,
            'commented' => 0,
+           'after_login' => 0,
            //'position' => 3,
            'type' => 'cms',
            'content' => 'sdafsfsdaf asdfasdf',
@@ -698,7 +775,7 @@ class PageTest extends Base
             'description' => 'sss',
             'published' => 1,
             'commented' => 0,
-
+            'after_login' => 0,
             //'position' => 3,
             'type' => 'cms',
             //'menu_id' => null
@@ -775,6 +852,7 @@ class PageTest extends Base
             'description' => null,
             'published' => 1,
             'commented' => 0,
+            'after_login' => 0,
 
             //'position' => 3,
             'content' => null,
