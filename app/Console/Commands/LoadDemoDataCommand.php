@@ -46,9 +46,9 @@ class LoadDemoDataCommand extends Command
 
         $mainPage =
         [
-            'title'     => 'cmsrs demo site',
-            'short_title' => 'cmsrs demo site',
-            'description' => 'cmsrs demo site',
+            'title'     => 'cmsRS demo site - title',
+            'short_title' => 'cmsRS short title',
+            'description' => 'cmsRS demo site - description',
             'published' => 1,
             'commented' => 0,
             'after_login' => 0,

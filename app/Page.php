@@ -32,7 +32,7 @@ class Page extends Model
       return $this->hasMany('App\Image')->orderBy('position');
     }
 
-    //TODO - test this function - problem with Auth::check() teesting
+    //TODO - test this function - problem with Auth::check() testing
     public function checkAuth(){
       if($this->after_login && !(Auth::check())){
         return false;
