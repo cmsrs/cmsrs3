@@ -42,6 +42,44 @@ class LoadDemoDataCommand extends Command
      */
     public function handle()
     {
+        $appUrl = env('APP_URL');
+
+        $mainPage =
+        [
+            'title'     => 'cmsrs demo site',
+            'short_title' => 'cmsrs demo site',
+            'description' => 'cmsrs demo site',
+            'published' => 1,
+            'commented' => 0,
+            'after_login' => 0,
+            'type' => 'main_page',
+            'content' => "<h1>cmsRS demo version</h1>
+            <div>
+                <p class='lead'>The demo version was created for demonstration purposes.<p>
+                    <div class='alert alert-danger' role='alert'>Saving, updating, deleting a single record has been disabled.</div>
+                    <br><br>
+                    <p class='lead'>
+                    Login to the admin panel: <a href=\"$appUrl/admin\">$appUrl/admin</a>
+                    <br>
+                    and customer zone: <a href=\"$appUrl/login\">$appUrl/login</a>
+                    <br>
+                    <br>
+                    user: adm@cmsrs.pl
+                    <br>
+                    pass: cmsrs123
+                    <br>
+                    <br>
+                    More information: <a title='cmsRS' href='http://www.cmsrs.pl' >http://www.cmsrs.pl</a>
+                </p>
+            </div>
+            ",
+            'menu_id' => null,
+            'page_id' => null,
+            //'images' => []
+        ];
+
+        Page::wrapCreate($mainPage);
+
         $m1 = Menu::wrapCreate(['name' => 'About']);
         
         $data1p = [

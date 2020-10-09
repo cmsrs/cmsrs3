@@ -10,7 +10,7 @@ use App\Page;
 use App\Product;
 use App\Menu;
 //use Validator;
-use Illuminate\Support\Facades\Auth;
+
 
 class FrontController extends Controller
 {
@@ -23,7 +23,16 @@ class FrontController extends Controller
 
   public function index()
   {
-    return view('index', [ 'menus' => $this->menus  ] );
+    $page = Page::getMainPage();
+    if(empty($page)){
+      abort(404);
+    }
+
+    if(!$page->checkAuth()){
+      abort(401);        
+    }
+
+    return view('index', [ 'menus' => $this->menus, 'page' => $page ] );
   }
 
   public function cms($menuSlug, $pageSlug)
@@ -37,8 +46,8 @@ class FrontController extends Controller
           if( $pageSlug == $page->slug ){
             $find = true;
             $pageOut = $page;
-            if($page->after_login && !(Auth::check())){
-              abort(401);
+            if(!$page->checkAuth()){
+              abort(401);        
             }
             if( 'shop' === $page->type){
               $products = Product::getProductsWithImagesByPage($page->id);

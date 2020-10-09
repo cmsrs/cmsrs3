@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class Page extends Model
 {
@@ -31,6 +32,24 @@ class Page extends Model
       return $this->hasMany('App\Image')->orderBy('position');
     }
 
+    //TODO - test this function - problem with Auth::check() teesting
+    public function checkAuth(){
+      if($this->after_login && !(Auth::check())){
+        return false;
+      }
+      return true;
+    }      
+
+    static public function getMainPage()
+    {
+      $p = Page::where('type', '=', 'main_page')->where( 'published', '=', 1 )->get();
+
+      if( !isSet($p[0]) ) {
+        return false;
+      }
+      return $p[0];
+    }
+
     /**
      * use also in script to load demo (test) data
      * php artisan command:load-demo-data
@@ -41,7 +60,7 @@ class Page extends Model
       $data['position'] = Page::getNextPositionByMenuId($menuId);  
 
       if( isSet($data['type']) && ($data['type'] == 'main_page') ){
-        $p = Page::where('type', '=', 'main_page')->where( 'published', '=', 1 )->get()->toArray();
+        $p = Page::getMainPage();
 
         if($p){
           throw new \Exception("Two main page not allowed");  

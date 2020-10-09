@@ -80,8 +80,42 @@ class FrontTest extends Base
     {
         //$this->assertTrue( true );
         $response = $this->get('/');
-        $response->assertStatus(200);
+        $response->assertStatus(404);
+
+        $testData2 =
+        [
+            'title'     => 'cmsRS',
+            'short_title' => 'cmsRS',
+            'description' => 'cmsRS',
+            'published' => 1,
+            'commented' => 0,
+            'after_login' => 0,
+            //'position' => 3,
+            'type' => 'main_page',
+            'content' => 'main page',
+            'menu_id' => null,
+            'page_id' => null
+            //'images' => []
+        ];
+  
+        $response = $this->post('api/pages?token='.$this->token, $testData2);
+  
+        $res = $response->getData();
+        $this->assertTrue( $res->success );      
+
+        //$pages = Page::all()->toArray();
+        //dd($pages);
+
+        $response = $this->get('/');
+        $response->assertStatus(200);          
     }
+
+    /** @test */
+    //TODO
+    //problem testing Auth::check() - ??
+    // public function it_will_get_after_login_main_page()
+    // {
+    // }
 
 
 
