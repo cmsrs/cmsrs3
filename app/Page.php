@@ -50,6 +50,22 @@ class Page extends Model
       return $p[0];
     }
 
+    static public function validateMainPage( $data, $create = true )
+    {
+      if( isSet($data['type']) && ($data['type'] == 'main_page') ){
+        if($create){
+          $p = Page::getMainPage();
+          if($p){
+            throw new \Exception("Two main page not allowed");  
+          }  
+        }
+
+        $data['menu_id'] = null;
+        $data['page_id'] = null;
+      }
+      return $data;
+    }
+    
     /**
      * use also in script to load demo (test) data
      * php artisan command:load-demo-data
@@ -58,16 +74,7 @@ class Page extends Model
     {
       $menuId = empty($data['menu_id']) ? null : $data['menu_id'];
       $data['position'] = Page::getNextPositionByMenuId($menuId);  
-
-      if( isSet($data['type']) && ($data['type'] == 'main_page') ){
-        $p = Page::getMainPage();
-
-        if($p){
-          throw new \Exception("Two main page not allowed");  
-        }
-        $data['menu_id'] = null;
-        $data['page_id'] = null;
-      }
+      $data = Page::validateMainPage($data);
 
       $page = Page::create( $data );
       if( empty($page->id)){

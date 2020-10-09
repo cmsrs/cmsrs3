@@ -113,10 +113,49 @@ class PageTest extends Base
         }
       }
       $this->assertNotEmpty($page);
+      $this->assertNotEmpty($page->id);      
       $this->assertEquals('main_page', $page->type);      
       $this->assertEquals(null, $page->menu_id);
       $this->assertEquals(null, $page->page_id);
 
+
+      $testData2Update =
+      [
+          'title'     => 'Update',
+          'short_title' => 'Update',
+          'description' => 'test1234',
+          'published' => 1,
+          'commented' => 0,
+          'after_login' => 1,
+          //'position' => 3,
+          'type' => 'main_page',
+          'content' => 'aaa ffdfds',
+          'menu_id' => $this->menuId, //it must be null for type main_page
+          'page_id' => $parentId, //it must be null for type main_page
+          //'images' => []
+      ];
+
+      $responseUpdate = $this->put('api/pages/'.$page->id.'?token='.$this->token, $testData2Update);
+
+      $resUpdate = $responseUpdate->getData();
+      $this->assertTrue( $resUpdate->success );      
+
+      $response2Update = $this->get('api/pages?token='.$this->token );
+      $res2Update = $response2Update->getData();
+      $this->assertTrue( $res2Update->success );      
+
+      $pageU = [];
+      foreach($res2Update->data as  $pp){
+        if( $pp->type == 'main_page' ){
+          $pageU = $pp;
+        }
+      }
+      $this->assertNotEmpty($pageU);
+      $this->assertEquals('main_page', $pageU->type);      
+      $this->assertEquals(null, $pageU->menu_id);
+      $this->assertEquals(null, $pageU->page_id);
+      $this->assertEquals($testData2Update['title'], $pageU->title);
+      
       $testData3 =
       [
           'title'     => 'second main page - wrong!',

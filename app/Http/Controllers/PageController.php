@@ -43,11 +43,6 @@ class PageController extends Controller
   {
       $pages = Page::getAllPagesWithImages();
 
-      // $pages = Page::query()->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'published', 'position', 'type', 'content', 'menu_id'])->toArray();
-      // foreach ($pages as $key => $page) {
-      //   $pages[$key]['images'] = Image::getImagesAndThumbsByPageId($page['id'], false);
-      // }
-
       return response()->json(['success' => true, 'data'=> $pages], 200);
   }
 
@@ -106,6 +101,7 @@ class PageController extends Controller
       }
 
       try{
+        $data = Page::validateMainPage($data, false);
         $res = $page->update($data);
         if( !empty($data['images']) && is_array($data['images']) ){
           Image::createImagesAndUpdateAlt($data['images'], 'page', $page->id);
@@ -114,8 +110,6 @@ class PageController extends Controller
           Log::error('page update ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()  ); //.' for: '.var_export($data, true )
           return response()->json(['success'=> false, 'error'=> 'Update page problem - exeption'], 200);
       }
-
-
 
       if(empty($res)){
         return response()->json(['success'=> false, 'error'=> 'Update page problem'], 200);
