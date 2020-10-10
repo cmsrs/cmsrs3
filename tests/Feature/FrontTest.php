@@ -12,11 +12,8 @@ use Illuminate\Support\Str;
 
 class FrontTest extends Base
 {
-
-    //use DatabaseMigrations;
     use RefreshDatabase;
 
-    //private $token;
     private $testData;
     private $testDataMenu;
     private $menuId;
@@ -62,8 +59,6 @@ class FrontTest extends Base
         parent::tearDown();
     }
 
-
-
     /** @test */
     public function it_will_check_set_up()
     {
@@ -72,8 +67,6 @@ class FrontTest extends Base
       $this->assertTrue( $res->success );
       $this->assertEquals( count($res->data), 1);
     }
-
-
 
     /** @test */
     public function it_will_get_main_page()
@@ -103,28 +96,15 @@ class FrontTest extends Base
         $res = $response->getData();
         $this->assertTrue( $res->success );      
 
-        //$pages = Page::all()->toArray();
-        //dd($pages);
-
         $response = $this->get('/');
         $response->assertStatus(200);          
     }
-
-    /** @test */
-    //TODO
-    //problem testing Auth::check() - ??
-    // public function it_will_get_after_login_main_page()
-    // {
-    // }
-
-
 
     /** @test */
     public function it_will_get_cms_page()
     {
         $title = $this->testData['title'];
         $pageSlug = Str::slug($title);
-        //print_r($slugTitle);
 
         $menuName = $this->testDataMenu['name'];
         $menuSlug = Str::slug($menuName);
@@ -132,11 +112,6 @@ class FrontTest extends Base
 
         $response = $this->get('/c/'.$menuSlug.'/'.$pageSlug);
 
-        //var_dump($response);
-        //die('===');
         $response->assertStatus(200);
     }
-
-
-
 }
