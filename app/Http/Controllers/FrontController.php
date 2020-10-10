@@ -35,13 +35,13 @@ class FrontController extends Controller
     return view('index', [ 'menus' => $this->menus, 'page' => $page ] );
   }
 
-  public function cms($menuSlug, $pageSlug)
+  public function manyPages($menuSlug, $pageSlug)
   {
     $pageOut = null;
     $products = null;
     $find = false;
     foreach ($this->menus as $menu) {
-      if( $menuSlug == $menu->slug ){
+      if( ($menuSlug == $menu->slug)  &&  (1 < count($menu->pagesPublished)) ){
         foreach ($menu->pagesPublished  as $page){
           if( $pageSlug == $page->slug ){
             $find = true;
@@ -52,6 +52,7 @@ class FrontController extends Controller
             if( 'shop' === $page->type){
               $products = Product::getProductsWithImagesByPage($page->id);
             }
+            break;
           }
         }
       }
@@ -63,5 +64,30 @@ class FrontController extends Controller
     return view('cms', [ 'menus' => $this->menus,  'page' => $pageOut, 'products' => $products ]);
   }
 
+  public function onePage($menuSlug)
+  {
+    $pageOut = null;
+    $products = null;
+    $find = false;
+    foreach ($this->menus as $menu) {
+      if( ($menuSlug == $menu->slug) && (1 === count($menu->pagesPublished)) ){
+        $find = true;
+        $page = $menu->pagesPublished->first();
+        $pageOut = $page;
+        if(!$page->checkAuth()){
+          abort(401);        
+        }
+        if( 'shop' === $page->type){
+          $products = Product::getProductsWithImagesByPage($page->id);
+        }
+        break;
+      }
+    }
+    if(!$find){
+      abort(404);
+    }
+
+    return view('cms', [ 'menus' => $this->menus,  'page' => $pageOut, 'products' => $products ]);
+  }
 
 }

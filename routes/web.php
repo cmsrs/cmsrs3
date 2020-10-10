@@ -15,21 +15,11 @@ use Illuminate\Support\Facades\Auth;
 
 
 Route::get('/', 'FrontController@index');
-Route::get('/c/{menuSlug}/{pageSlug}', 'FrontController@cms');
+Route::get('/{menuSlug}', 'FrontController@onePage');
+Route::get('/c/{menuSlug}/{pageSlug}', 'FrontController@manyPages');
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
-
-// Route::get('user/verify/{verification_code}', 'AuthController@verifyUser');
-// Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.request');
-// Route::post('password/reset', 'Auth\ResetPasswordController@postReset')->name('password.reset');
 
 //Auth::routes();
 Auth::routes(['register' => false, 'reset' => false]);
-//Route::post('/register', 'AuthController@register');
-//Route::post('/login', 'AuthController@login');
-//Route::post('/logout', 'AuthController@logout');
 
 Route::get('/home', 'HomeController@index')->name('home');
