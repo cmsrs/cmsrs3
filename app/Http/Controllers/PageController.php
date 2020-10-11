@@ -102,6 +102,9 @@ class PageController extends Controller
 
       try{
         $data = Page::validateMainPage($data, false);
+        if( empty($data['published']) ){
+          $page->unpublishedChildren();
+        }
         $res = $page->update($data);
         if( !empty($data['images']) && is_array($data['images']) ){
           Image::createImagesAndUpdateAlt($data['images'], 'page', $page->id);

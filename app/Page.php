@@ -27,6 +27,15 @@ class Page extends Model
         $this->attributes['slug'] = Str::slug($value, "-");
     }
 
+    public function unpublishedChildren()
+    {
+      $pages = Page::where('page_id', '=', $this->id)->get();
+      foreach($pages as $page){
+        $page->published = 0;
+        $page->update();
+      }
+    }
+
     public function images()
     {
       return $this->hasMany('App\Image')->orderBy('position');
@@ -65,6 +74,20 @@ class Page extends Model
       }
       return $data;
     }
+
+    /**
+     * if parent page.published == 0 then child this page.published = 0
+     */
+    static public function validateParentPublished($data)
+    {
+      if( !empty($data['page_id']) ){
+        $p = Page::findOrFail($data['page_id']);
+        if(0 == $p->published){
+          $data['published'] = 0;
+        }
+      }
+      return $data;
+    }
     
     /**
      * use also in script to load demo (test) data
@@ -75,6 +98,7 @@ class Page extends Model
       $menuId = empty($data['menu_id']) ? null : $data['menu_id'];
       $data['position'] = Page::getNextPositionByMenuId($menuId);  
       $data = Page::validateMainPage($data);
+      $data = Page::validateParentPublished($data);
 
       $page = Page::create( $data );
       if( empty($page->id)){

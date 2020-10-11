@@ -92,7 +92,7 @@ class Base extends TestCase
 
     $testData2 =
     [
-         'title' =>  PageTest::STR_PARENT_TWO , //this string dont touch (change)
+         'title' =>  PageTest::STR_PARENT_TWO,
          'short_title' => 'p22',
          'published' => 1,
          'type' => 'cms',
@@ -107,6 +107,7 @@ class Base extends TestCase
     $this->assertTrue( $r->success );
 
     $parentId = $r->data[1]->id;
+    $this->assertEquals( PageTest::STR_PARENT_TWO, $r->data[1]->title );
     $this->assertNotEmpty($parentId);
 
     $testData3 =

@@ -78,6 +78,71 @@ class PageTest extends Base
     }
 
     /** @test */
+    public function it_will_not_create_child_for_unpublished_parent()
+    {
+      $testData =
+      [
+           'title'     =>  'test unpublished',
+           'short_title' => 'unpuplish',
+           'published' => 0,
+           'type' => 'cms',
+           'content' => 'pppppppp',
+           'menu_id' => $this->menuId
+      ];
+      $p = Page::wrapCreate($testData);
+
+      $testDataChild =
+      [
+           'title'     =>  'test child',
+           'short_title' => 'child unpuplish parent',
+           'published' => 1,
+           'type' => 'cms',
+           'content' => 'pppppppp2',
+           'page_id' => $p->id,
+           'menu_id' => $this->menuId
+      ];
+      $pChild = Page::wrapCreate($testDataChild);
+
+      $this->assertNotEquals($testDataChild['published'], $pChild->published);
+      $this->assertEquals(0, $pChild->published);      
+    }
+
+
+    /** @test */
+    public function it_will_unpublished_children_by_update()
+    {
+      $parentId = $this->dateToTestParent( $this->menuId );
+      $testData2 =
+      [
+           'title' =>  PageTest::STR_PARENT_TWO,
+           'short_title' => 'p22',
+           'published' => 0, //this change
+           'type' => 'cms',
+           'content' => 'parent page ppp2',
+           'menu_id' =>  $this->menuId
+      ];
+  
+      $responseUpdate = $this->put('api/pages/'.$parentId.'?token='.$this->token, $testData2);
+
+      $resUpdate = $responseUpdate->getData();
+      $this->assertTrue( $resUpdate->success );      
+
+      $response2Update = $this->get('api/pages?token='.$this->token );
+      $res2Update = $response2Update->getData();
+      $this->assertTrue( $res2Update->success );      
+
+      $pageU = [];
+      foreach($res2Update->data as  $pp){
+        if( $pp->page_id == $parentId ){
+          $this->assertEquals(0, $pp->published);
+          $pageU[] = $pp;
+        }
+      }
+
+      $this->assertEquals( 2, count($pageU));
+    }
+
+    /** @test */
     public function it_will_add_main_page()
     {
       $parentId = $this->dateToTestParent( $this->menuId );
