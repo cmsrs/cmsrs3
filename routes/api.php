@@ -46,6 +46,7 @@ if($demoStatus){
 
     Route::get('comments/{pageId}', 'CommentController@index');
     Route::post('comments/{pageId}', 'CommentController@create');
+    Route::post('contact', 'ContactController@create');    
 
     Route::get('page/{id}', 'PageController@oneItem');
 
