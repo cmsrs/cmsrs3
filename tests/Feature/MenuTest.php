@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Menu;
+//use App\Page;
 //use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -34,6 +35,7 @@ class MenuTest extends Base
 
         $menu->save();
         $this->objMenu = $menu;
+        //$this->menuId = $this->objMenu->id;
     }
 
     protected function tearDown(): void
@@ -44,9 +46,10 @@ class MenuTest extends Base
     /** @test */
     public function it_will_get_tree_by_menu()
     {
-      //var_dump($this->objMenu->id);
       $parentId = $this->dateToTestParent( $this->objMenu->id );
-      $tree = $this->objMenu->pagesPublishedTree();
+
+      $publishedAndAccess = $this->objMenu->pagesPublishedAndAccess()->get()->toArray();
+      $tree = $this->objMenu->pagesPublishedTree($publishedAndAccess);
       $this->assertEquals(3, count($tree));
       $this->assertEquals(2, count($tree[$parentId]['children']));
 

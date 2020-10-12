@@ -10,14 +10,14 @@
 
       <ul class="navbar-nav mr-auto">
           <?php foreach ($menus as $menu) { ?>
-            <?php $pagesPublishedTree = $menu->pagesPublishedTree(); ?>    
+            <?php $pagesPublishedAndAccess = $menu->pagesPublishedAndAccess()->get()->toArray(); ?>    
             <li class="nav-item dropdown">
-            <?php if( 1 === count($pagesPublishedTree) ){  ?>
+            <?php if( 1 == count($pagesPublishedAndAccess) ){  ?>
               <a class="nav-link" href="/{{$menu->slug}}">{{ $menu->name }}</a>            
             <?php }else{ ?>
               <a class="nav-link dropdown-toggle" href="#" id="dropdown{{ $menu->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ $menu->name }}</a>
               <div class="dropdown-menu" aria-labelledby="dropdown{{ $menu->id }}">
-                  <?php foreach ($pagesPublishedTree as $page) { ?>                                
+                  <?php foreach ($menu->pagesPublishedTree($pagesPublishedAndAccess) as $page) { ?>                                
                     <a class="dropdown-item" href="/c/{{$menu->slug}}/{{$page['slug']}}">{{ $page['title'] }}</a>
                     <?php if( !empty($page['children']) && !empty($page['published']) ){ ?>
                         <?php foreach ($page['children'] as $p) { ?>                    

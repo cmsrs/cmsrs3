@@ -40,6 +40,7 @@ class Menu extends Model
       return $this->hasMany('App\Page');
     }
 
+
     public function pagesPublished()
     {
       $pages = $this->pages()->where( 'published', '=', 1 )->orderBy('position', 'asc');
@@ -57,10 +58,11 @@ class Menu extends Model
       return $pages;
     }
 
-    public function pagesPublishedTree()
+    //in: $arrPagesPublishedAndAccess
+    public function pagesPublishedTree($pagesByMenu)
     {
       $tree = array();
-      $pagesByMenu = $this->pagesPublishedAndAccess()->get()->toArray();
+      //$pagesByMenu = $this->pagesPublishedAndAccess()->get()->toArray();
       foreach($pagesByMenu as $page){
         if(empty($page['page_id'])){
           $tree[$page['id']] = $page;
