@@ -17,7 +17,15 @@ new Vue({
                 comments: [],
                 page_id: '',
                 page : {},
-                images: []
+                images: [],
+
+                //contact
+                email: '',
+                emailErr: '',                
+                message: '',
+                messageErr: '',                
+                messageInfo: ''
+
         },
         created() {             
                 let self = this;
@@ -122,7 +130,6 @@ new Vue({
                 pay: function(){
                         alert('TODO payment=$'+this.total);
                 },
-
                 addComment: function( event){
                         let pageId = this.page_id;
                         if(!this.comment.length){
@@ -135,7 +142,7 @@ new Vue({
                         axios.post('/api/comments/'+pageId, {
                                         content: this.comment
                         }).then( function (response){
-                                        self.comments.push({
+                                        self.comments.unshift({
                                                         content: content
                                         });
                         })
@@ -147,7 +154,38 @@ new Vue({
                                         event.preventDefault()
                         }
                         return false;
+                },
+                contact: function( event){
+                        let self = this;
+
+                        axios.post('/api/contact', {
+                                email: this.email,
+                                message: this.message
+                        }).then( function (response){
+                                if( response.data.success ){
+                                        self.messageInfo = response.data.message;
+                                        self.email = '';
+                                        self.emailErr = '';
+                                        self.message = '';
+                                        self.messageErr = '';
+                                }else{
+                                        self.emailErr = response.data.error.email ? (response.data.error.email[0] || ''): '';
+                                        self.messageErr = response.data.error.message ? (response.data.error.message[0] || ''): '';
+                                }
+                        })
+                        .catch(function (error) {
+                                alert('err - contact form');
+                        });                     
+                        
+                        if (event) {
+                                event.preventDefault()
+                        }
+                        return false;
+                },
+                clearMessageInfo: function(){
+                        this.messageInfo = '';
                 }
+                
         }
 });
 

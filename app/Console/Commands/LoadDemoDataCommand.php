@@ -236,8 +236,8 @@ class LoadDemoDataCommand extends Command
 
         $mContact = Menu::wrapCreate(['name' => 'Contact']);        
         $pContact = [
-            'title'     => 'Contact me',
-            'short_title' => 'Contact me',
+            'title'     => 'Contact form',
+            'short_title' => 'Contact',
             'description' => 'Description... Needed for google',
             'published' => 1,
             'commented' => 0,

@@ -16,7 +16,8 @@ class ContactController extends Controller
 
   private $validationRules = [
       //'email' => 'email|required',
-      'email'=> 'required|regex:/(.+)@(.+)\.(.+)/i',
+      'email'=> 'required|regex:/^[a-zA-Z0-9\.\-_]+\@[a-zA-Z0-9\.\-_]+\.[a-z]{2,4}$/D',
+      //'email'=> 'required|regex:/(.+)@(.+)\.(.+)/i',
       'message' => 'max:500|required'
   ];
 
@@ -46,7 +47,7 @@ class ContactController extends Controller
       return response()->json(['success'=> false, 'error'=> 'Add contact problem, details in the log file.'], 200); 
     }
 
-    return response()->json(['success'=> true ]);
+    return response()->json(['success'=> true, 'message' => 'Thank you for using the contact form'  ]);
   }
 
 }

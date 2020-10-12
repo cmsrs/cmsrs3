@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use Tests\TestCase;
 
-class ContactTest  extends TestCase
+class ContactGuestTest  extends TestCase
 {
     use RefreshDatabase;
 
@@ -23,6 +23,7 @@ class ContactTest  extends TestCase
         $response = $this->post('api/contact', $content);
         $res = $response->getData();
         $this->assertTrue($res->success);
+        $this->assertNotEmpty($res->message);
         
         $this->assertEquals(1, Contact::all()->count());
         $item =  Contact::all()->first();

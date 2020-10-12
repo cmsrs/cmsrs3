@@ -40,12 +40,12 @@ class CommentController extends Controller
       return response()->json(['success'=> false, 'error'=> 'Add comment problem, details in the log file.'], 200); //.$e->getMessage()
     }
 
-    return response()->json(['success'=> true ]);
+    return response()->json(['success'=> true]);
   }
 
   public function index(Request $request, $pageId)
   {
-    $comments = Comment::where('page_id', $pageId)->get( ['content'] )->toArray();       
+    $comments = Comment::where('page_id', $pageId)->orderby('created_at', 'desc' )->get( ['content'] )->toArray();       
     return response()->json(['success' => true, 'data'=> $comments], 200);
   }
 

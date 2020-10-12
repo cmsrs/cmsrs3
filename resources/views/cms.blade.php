@@ -22,8 +22,30 @@
       <span v-for="image in images"  v-bind:key="image.id">
             <img  @click="clickImg(image.id, image.org, image.alt)" class="m-3 myImgs" :src="image.medium" :alt="image.alt"  />
       </span>
-
     @endif
+
+  @elseif($page->type  === 'contact')
+
+    <div v-if="messageInfo"  class="alert alert-success" role="alert">
+      @{{ messageInfo }}
+    </div>
+    <form>
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <input type="text" class="form-control" id="email" v-model="email"  @click="clearMessageInfo()">
+        <div  v-if="emailErr"  class="invalid-feedback" style="display:block">
+          @{{ emailErr }}
+        </div>        
+      </div>
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea class="form-control" id="message" rows="6" v-model="message"  @click="clearMessageInfo()"></textarea>
+        <div  v-if="messageErr"  class="invalid-feedback" style="display:block">
+          @{{ messageErr }}
+        </div>        
+      </div>
+      <button type="submit" class="btn btn-primary" v-on:click="contact( $event )">Submit</button>
+    </form>
 
   @elseif($page->type  === 'shop')
 
@@ -86,16 +108,16 @@
   @endif
 
   @if ( $page->commented )
-    <h5 class="mb-2 mt-3">Comments: </h5>
-    <li v-for="item in comments" :key="item.content"  style="list-style: none;" class="ml-3 mb-2 mt-2">
-      @{{ item.content }}
-    </li>
     <h5 class="mb-2 mt-3">Add comment: </h5>
     <form  method="get">
       <textarea v-model="comment" placeholder="add comment" rows="4" cols="60"></textarea>
       <p>
       <button v-on:click="addComment( $event )" class="add-to-cart btn">Add comment</button>
     </form>
+    <h5 class="mb-2 mt-3">Comments: </h5>
+    <li v-for="item in comments" :key="item.content"  style="list-style: none;" class="ml-3 mb-2 mt-2">
+      @{{ item.content }}
+    </li>
   @endif      
     </div> <!-- div app -->  
 
