@@ -15,8 +15,9 @@ class ContactController extends Controller
 {
 
   private $validationRules = [
-      'email' => 'email:rfc|required',
-      'message' => 'max:1022|required'
+      //'email' => 'email|required',
+      'email'=> 'required|regex:/(.+)@(.+)\.(.+)/i',
+      'message' => 'max:500|required'
   ];
 
   public function create(Request $request)
@@ -28,6 +29,8 @@ class ContactController extends Controller
     );
 
     $validator = Validator::make($data, $this->validationRules);
+
+
     if($validator->fails()) {
         return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
     }
