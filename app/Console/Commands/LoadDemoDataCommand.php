@@ -42,6 +42,10 @@ class LoadDemoDataCommand extends Command
      */
     public function handle()
     {
+        /*---------------------*/
+        /*--- pages an menu ---*/
+        /*---------------------*/
+
         $appUrl = env('APP_URL');
 
         $mainPage =
@@ -52,7 +56,7 @@ class LoadDemoDataCommand extends Command
             'published' => 1,
             'commented' => 0,
             'after_login' => 0,
-            'type' => 'main_page',
+            'type' => 'main_page', //!!
             'content' => "<h1>cmsRS demo version</h1>
             <div>
                 <p class='lead'>The demo version was created for demonstration purposes.<p>
@@ -146,7 +150,6 @@ class LoadDemoDataCommand extends Command
                 ['name' => 'imgb2.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb2.jpg' ), 'alt' => 'description imgb2'  ],
                 ['name' => 'imgb3.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb3.jpg' ), 'alt' => 'description imgb3'  ],
                 ['name' => 'imgb4.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb4.jpg' ), 'alt' => 'description imgb4'  ],
-
                 ['name' => 'imgc1.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc1.jpg' ), 'alt' => 'description imgc1'  ],                
                 ['name' => 'imgc2.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc2.jpg' ), 'alt' => 'description imgc2'  ],                
                 ['name' => 'imgc3.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc3.jpg' ), 'alt' => 'description imgc3'  ],                
@@ -178,8 +181,6 @@ class LoadDemoDataCommand extends Command
             ]
         ];        
         Page::wrapCreate($data4p);
-
-
 
         $m3 = Menu::wrapCreate(['name' => 'Shop']);
         $data4p = [
@@ -232,6 +233,27 @@ class LoadDemoDataCommand extends Command
         ];
         $p7 = Page::wrapCreate($data7p);
 
+
+        $mContact = Menu::wrapCreate(['name' => 'Contact']);        
+        $pContact = [
+            'title'     => 'Contact me',
+            'short_title' => 'Contact me',
+            'description' => 'Description... Needed for google',
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'contact',
+            'content' => '',
+            'menu_id' => $mContact->id,
+            'images' => [
+            ]
+        ];
+        Page::wrapCreate($pContact);
+
+
+        /*---------------------*/
+        /*--- products --------*/
+        /*---------------------*/        
+
         $products1 = [
             'name' => 'PHP3',
             'sku' => '1/23/4',
@@ -281,6 +303,10 @@ class LoadDemoDataCommand extends Command
         Product::wrapCreate($products3);
         Product::wrapCreate($products4);           
            
+        /*---------------------*/
+        /* ---users -----------*/
+        /*---------------------*/
+
         //It,s created by the 'seed'
         // $user = new User([
         //     'email'    => 'adm@cmsrs.pl',
