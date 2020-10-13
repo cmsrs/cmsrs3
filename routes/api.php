@@ -74,6 +74,7 @@ if($demoStatus){
 
         Route::get('users/clients', 'UserController@getClients');
 
+        Route::get('config', 'ConfigController@index');
 
         Route::get('products', 'ProductController@index');
         Route::post('products', 'ProductController@create');

@@ -47,16 +47,21 @@ class Page extends Model
         return false;
       }
       return true;
-    }      
+    }  
+    
+    static public function getFirstPageByType($type)
+    {
+      return Page::where('type', '=', $type)->where( 'published', '=', 1 )->get()->first();
+
+      // if( !isSet($p[0]) ) {
+      //   return false;
+      // }
+      // return $p[0];
+    }
 
     static public function getMainPage()
     {
-      $p = Page::where('type', '=', 'main_page')->where( 'published', '=', 1 )->get();
-
-      if( !isSet($p[0]) ) {
-        return false;
-      }
-      return $p[0];
+      return Page::getFirstPageByType('main_page');
     }
 
     static public function validateMainPage( $data, $create = true )

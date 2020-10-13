@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Page;
+use App\Config;
 use App\Image;
 use Validator;
 use Illuminate\Support\Facades\Log;
@@ -12,6 +13,10 @@ use Illuminate\Support\Facades\Log;
 
 class PageController extends Controller
 {
+
+  public function __construct(){
+    $this->validationRules['type'] = 'in:'.Config::getPageTypes();
+  }
 
   private $validationRules = [
       //'name' => 'max:255|required',
@@ -24,9 +29,9 @@ class PageController extends Controller
       'commented' => 'boolean',
       'after_login' => 'boolean',
       //'position'=> 'numeric',
-      'type' => 'in:cms,gallery,shop,contact,main_page'
+      //'type' => 'in:cms,gallery,shop,contact,main_page'
   ];
-
+  
   public function oneItem(Request $request, $id)
   {
     $page = Page::find($id);
