@@ -17,6 +17,7 @@ class FrontTest extends Base
     private $testData;
     private $testDataMenu;
     private $menuId;
+    private $menuObj;    
 
 
     public function setUp(): void
@@ -32,7 +33,10 @@ class FrontTest extends Base
         ];
 
         $menu = new Menu($this->testDataMenu);
+
+        
         $save = $menu->save();
+        $this->menuObj =$menu;
         $this->assertTrue($save);
 
         $this->menuId = $menu->all()->first()->id;
@@ -58,6 +62,68 @@ class FrontTest extends Base
     {
         parent::tearDown();
     }
+
+
+    /**
+     * maybe it will be usefull for sitemap
+     * links without: home, login, logout
+     */
+    /** @test */
+    public function it_will_get_all_pages_status()
+    {
+      //$parentId = $this->dateToTestParent( $this->objMenu->id );
+      $this->setDemoDataMenusAndPages();
+
+
+      //cms link
+      //see in: resources/views/includes/header.blade.php
+      //maybe this logic - move to another file
+      $url = [];
+      $menus = Menu::All();
+      $f0 = false;
+      $f1 = false;      
+      $f2 = false;            
+      //print_r($menus->toArray());
+      foreach ($menus as $menu) { 
+        $pagesPublishedAndAccess = $menu->pagesPublishedAndAccess()->get();
+        if( 1 == $pagesPublishedAndAccess->count() ){ 
+          $f0 = true;
+          $url[] = $pagesPublishedAndAccess->first()->getUrl();
+        }else{
+          foreach ($menu->pagesPublishedTree($pagesPublishedAndAccess) as $page) {
+                $url[] = $page->getUrl();
+                $f1 = true;
+                if( !empty($page['children']) && !empty($page->published) ){
+                    foreach ($page['children'] as $p) {
+                        $f2 = true;                      
+                        $url[] = $p->getUrl();
+                    }
+                }
+          }
+        }
+      }
+      $this->assertTrue($f0);
+      $this->assertTrue($f1);
+      $this->assertTrue($f2);
+
+      foreach( $url as $u){
+        $response = $this->get($u);
+        //dump($u);
+        $response->assertStatus(200);          
+      }
+
+      //independent
+      $url2 = Page::getFirstPageByType('privacy_policy' )->getUrl();
+      $response2 = $this->get($url2);
+      $response2->assertStatus(200);          
+      
+      //$urlLogin = route('login');
+      //$response3 = $this->get($urlLogin);
+      //$response3->assertStatus(200);          
+
+    }
+
+
 
     /** @test */
     public function it_will_check_set_up()
@@ -110,14 +176,17 @@ class FrontTest extends Base
         $menuName = $this->testDataMenu['name'];
         $menuSlug = Str::slug($menuName);
 
-        $p0 = Page::query()->where('menu_id', $this->menuId)->get()->toArray();
-        $this->assertEquals(1, count($p0));
+        $p0 = Page::query()->where('menu_id', $this->menuId)->get()->first();
+        $this->assertNotEmpty($p0);
+        //$this->assertEquals(1, $p0->count());
 
+        //$url = $p0->getUrl();
+        $url =  $p0->getUrl();
 
-        $response = $this->get('/c/'.$menuSlug.'/'.$pageSlug);
-        $response->assertStatus(404);
+        //$response = $this->get('/c/'.$menuSlug.'/'.$pageSlug);
+        //$response->assertStatus(404);
         
-        $response1 = $this->get('/'.$menuSlug);
+        $response1 = $this->get($url);
         $response1->assertStatus(200);
     }
 
@@ -130,8 +199,8 @@ class FrontTest extends Base
         $menuName = $this->testDataMenu['name'];
         $menuSlug = Str::slug($menuName);
 
-        $p0 = Page::query()->where('menu_id', $this->menuId)->get()->toArray();
-        $this->assertEquals(1, count($p0));
+        $p0 = Page::query()->where('menu_id', $this->menuId)->get(); //->toArray();
+        $this->assertEquals(1, $p0->count());
 
         //not working - see this it_will_get_cms_page0 (this work)
         // $response = $this->get('/c/'.$menuSlug.'/'.$pageSlug);
@@ -162,61 +231,23 @@ class FrontTest extends Base
         $res = $response->getData();
         $this->assertTrue( $res->success );      
 
-        $p = Page::query()->where('menu_id', $this->menuId)->get()->toArray();
-        $this->assertEquals(2, count($p));
+        $p = Page::query()->where('menu_id', $this->menuId)->get(); //->toArray();
+        $this->assertEquals(2, $p->count()  );
 
-        $responseA = $this->get('/c/'.$menuSlug.'/'.$pageSlug);
-        $responseA->assertStatus(200);
+        //dd($this->menuObj->slug);
+        $i = 0;
+        foreach( $p as $pp){
+            //$url0 = $pp->getUrl($this->menuObj->slug);
+            $url0 = $pp->getUrl();            
+            $response = $this->get($url0);
+            $response->assertStatus(200);
+            $i++;
+        }
+        $this->assertEquals(2, $i );        
+
         
         $responseB = $this->get('/'.$menuSlug);
         $responseB->assertStatus(404);
-
-
-        $page2Slug = Str::slug($testData2['title']);
-        $responseC = $this->get('/c/'.$menuSlug.'/'.$page2Slug);
-        $responseC->assertStatus(200);
-
-
-
-
-        // $response2 = $this->get('api/pages?token='.$this->token );
-        // $res2 = $response2->getData();
-        // $this->assertTrue( $res2->success );
-        // dd($res2);
-
-  
-        // $response = $this->get('/c/'.$menuSlug.'/'.$pageSlug);
-        // $response->assertStatus(200);
-
-        // $response2 = $this->get('/'.$menuSlug);
-        // $response2->assertStatus(404);
- 
-        /*
-        $testData3 =
-        [
-            'title'     => 'cmsRS',
-            'short_title' => 'cmsRS',
-            'description' => 'cmsRS',
-            'published' => 1,
-            'commented' => 0,
-            'after_login' => 0,
-            //'position' => 3,
-            'type' => 'main_page',
-            'content' => 'main page',
-            'menu_id' => $this->menuId,
-            'page_id' => null
-            //'images' => []
-        ];
-  
-        $response3 = $this->post('api/pages?token='.$this->token, $testData3);
-        dd($response3);
-  
-        $res3 = $response3->getData();
-        $this->assertTrue( $res3->success );      
-
-        $p3 = Page::query()->where('menu_id', $this->menuId)->get()->toArray();
-        $this->assertEquals(2, count($p3));
-        */
 
     }
 }

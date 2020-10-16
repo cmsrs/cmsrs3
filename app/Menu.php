@@ -34,6 +34,17 @@ class Menu extends Model
         $this->attributes['name'] = $value;
         $this->attributes['slug'] = Str::slug($value, "-");
     }
+    /*
+    public function getSlug()
+    {
+      return $this->slug;
+    }
+
+    public function getUrl()
+    {
+      return '/c/'.$this->slug;
+    }
+    */
 
     public function pages()
     {
@@ -64,16 +75,24 @@ class Menu extends Model
       $tree = array();
       //$pagesByMenu = $this->pagesPublishedAndAccess()->get()->toArray();
       foreach($pagesByMenu as $page){
-        if(empty($page['page_id'])){
-          $tree[$page['id']] = $page;
+        if(empty($page->page_id)){
+          //dump($page->page_id);
+          $tree[$page->id] = $page;
         }
       }
 
+      //dd('--');
+
       foreach($pagesByMenu as $page){
-        if(!empty($page['page_id'])){
-          $tree[$page['page_id']]['children'][] = $page;
+        if(!empty($page->page_id)){
+          $children = empty($tree[$page->page_id]['children']) ? [] : $tree[$page->page_id]['children'];
+          array_push($children, $page);
+          //dd($tree[$page->page_id]);
+          $tree[$page->page_id]->setAttribute('children', $children);
         }
       }
+
+      //dd('--');
 
       return $tree;
     }

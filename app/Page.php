@@ -27,6 +27,85 @@ class Page extends Model
         $this->attributes['slug'] = Str::slug($value, "-");
     }
 
+    public function menu()
+    {
+      return $this->hasOne('App\Menu', 'id', 'menu_id');
+    }
+    
+
+    static public function getFooterPages()
+    {
+
+
+      //$privacyPolicy = Page::getFirstPageByType('privacy_policy' );
+
+      $privacyPolicy = Page::getFirstPageByType('privacy_policy' );
+      $contact = Page::getFirstPageByType('contact' );    
+
+      $out = [];
+      $policyUrl = null;
+      $policyTitle = null;
+      if(!empty($privacyPolicy)){
+          //this 'if' is needed to phpunit
+          //$policyUrl = $footerPages['privacy_policy']->getSeparateUrl();
+          //see AppServiceProvider
+          $policyUrl = $privacyPolicy->getUrl();    
+          $policyTitle = $privacyPolicy->title;
+      }
+
+      $contactUrl = null;
+      $contactTitle = null;
+      if(!empty($contact)){
+        //this 'if' is needed to phpunit
+        //$policyUrl = $footerPages['privacy_policy']->getSeparateUrl();
+        //see AppServiceProvider
+        $contactUrl = $contact->getUrl();    
+        $contactTitle = $contact->title;
+      }
+
+      $out['policyUrl'] = $policyUrl;
+      $out['policyTitle'] =  $policyTitle;
+      $out['contactUrl'] =  $contactUrl;
+      $out['contactTitle'] =  $contactTitle;
+    
+      return $out;
+  }
+
+    /*
+    static public function getPageToPrivacyPolicy()
+    {
+      $page = Page::getFirstPageByType('privacy_policy' );
+      return $page; //->getSeparateUrl();  
+    }
+    */
+
+    public function getUrl()
+    {
+      // if(  'contact' == $this->type ){ //it was wrong if many pages will be on that menu
+      //   return $this->getCmsMenuUrl();
+      if( 'privacy_policy' == $this->type ){
+        return $this->getSeparateUrl();
+      }
+      return $this->getCmsUrl();
+    }
+    
+    // private function getCmsMenuUrl()
+    // {
+    //   //$menuSlug = $this->menu()->get()->first()->slug;      
+    //   return "/c/".$this->slug;
+    // }    
+
+    private function getCmsUrl()
+    {   
+      $menuSlug = $this->menu()->get()->first()->slug;      
+      return "/c/".$menuSlug."/".$this->slug;
+    }
+
+    private function getSeparateUrl()
+    {
+      return "/in/".$this->slug;
+    }
+
     public function unpublishedChildren()
     {
       $pages = Page::where('page_id', '=', $this->id)->get();
@@ -51,7 +130,13 @@ class Page extends Model
     
     static public function getFirstPageByType($type)
     {
-      return Page::where('type', '=', $type)->where( 'published', '=', 1 )->get()->first();
+      //echo $type."------";
+      //$tmp = Page::all();// ->toArray();
+      ///dd($tmp);
+      $ret =  Page::where('type', '=', $type)->where( 'published', '=', 1 )->get()->first();
+      //dd($ret);
+
+      return $ret;
 
       // if( !isSet($p[0]) ) {
       //   return false;

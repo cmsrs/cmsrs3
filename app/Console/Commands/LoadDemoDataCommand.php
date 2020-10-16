@@ -46,6 +46,7 @@ class LoadDemoDataCommand extends Command
         /*--- pages an menu ---*/
         /*---------------------*/
 
+        $p = [];
         $appUrl = env('APP_URL');
 
         $mainPage =
@@ -206,7 +207,7 @@ class LoadDemoDataCommand extends Command
             'page_id' => $p4->id,
             'menu_id' => $m3->id
         ];
-        $p5 = Page::wrapCreate($data5p);
+        $p['p5'] = Page::wrapCreate($data5p);
 
         $data6p = [
             'title'     => 'Java books',
@@ -219,7 +220,7 @@ class LoadDemoDataCommand extends Command
             'page_id' => $p4->id,            
             'menu_id' => $m3->id
         ];
-        $p6 = Page::wrapCreate($data6p);
+        $p['p6'] = Page::wrapCreate($data6p);
 
         $data7p = [
             'title'     => 'English books',
@@ -231,12 +232,12 @@ class LoadDemoDataCommand extends Command
             'content' => '',
             'menu_id' => $m3->id
         ];
-        $p7 = Page::wrapCreate($data7p);
+        $p['p7'] = Page::wrapCreate($data7p);
 
 
-        $mContact = Menu::wrapCreate(['name' => 'Contact']);        
+        $mContact = Menu::wrapCreate(['name' => 'Contact me']);
         $pContact = [
-            'title'     => 'Contact form',
+            'title'     => 'Contact',
             'short_title' => 'Contact',
             'description' => 'Description... Needed for google',
             'published' => 1,
@@ -250,6 +251,20 @@ class LoadDemoDataCommand extends Command
         Page::wrapCreate($pContact);
 
 
+        $pPrivacy = [
+            'title'     => 'Privacy policy',
+            'short_title' => 'Privacy policy',
+            'description' => 'Description... Needed for google',
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'privacy_policy',
+            'content' => $this->getPrivacyPolicy(),
+            'images' => [
+            ]
+        ];
+        Page::wrapCreate($pPrivacy);
+        
+
         /*---------------------*/
         /*--- products --------*/
         /*---------------------*/        
@@ -259,7 +274,7 @@ class LoadDemoDataCommand extends Command
             'sku' => '1/23/4',
             'price' => 11,
             'description' => 'Php book',
-            'page_id' => $p5->id,
+            'page_id' => $p['p5']->id,
             'images' =>   [
                 ['name' => 'php.jpg', 'data' => $this->getTestPhoto( 'books/php3.jpg' ), 'alt' => 'php3 front' ]                
             ]
@@ -269,7 +284,7 @@ class LoadDemoDataCommand extends Command
             'sku' => '1/234/4',
             'price' => 30,
             'description' => 'Php5 book',
-            'page_id' => $p5->id,
+            'page_id' => $p['p5']->id,
             'images' =>   [
                 ['name' => 'php5.jpg', 'data' => $this->getTestPhoto( 'books/php5.jpg' ), 'alt' => 'php5 front' ],
                 ['name' => 'php5_back.jpg', 'data' => $this->getTestPhoto( 'books/php5_back.jpg' ), 'alt' => 'php5 back' ],
@@ -280,7 +295,7 @@ class LoadDemoDataCommand extends Command
             'sku' => '3/13/4',
             'price' => 23,
             'description' => 'Java book',
-            'page_id' => $p6->id,
+            'page_id' => $p['p6']->id,
             'images' =>   [
                 ['name' => 'java.jpg', 'data' => $this->getTestPhoto( 'books/java.jpg' ), 'alt' => 'java front'  ],
                 ['name' => 'java_back.jpg', 'data' => $this->getTestPhoto( 'books/java_back.jpg' ), 'alt' => 'java back'  ],
@@ -291,7 +306,7 @@ class LoadDemoDataCommand extends Command
             'sku' => 'A/3/3/4',
             'price' => 28,
             'description' => 'English book',
-            'page_id' => $p7->id,
+            'page_id' => $p['p7']->id,
             'images' =>   [
                 ['name' => 'english.jpg', 'data' => $this->getTestPhoto( 'books/english.jpg' ), 'alt' => 'english front' ],
                 ['name' => 'english_back.jpg', 'data' => $this->getTestPhoto( 'books/english_back.jpg' ), 'alt' => 'english back' ],
@@ -343,6 +358,11 @@ class LoadDemoDataCommand extends Command
     private function getDummyTest()
     {    
         return "<b>Lorem Ipsum</b> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
+    }
+
+    private function getPrivacyPolicy()
+    {    
+        return '<p>POLITYKA COOKIES<br /> <br />Zgodnie z wymaganiami dotyczącymi serwisów internetowych, informuje Państwa, że dla zapewnienia lepszego działania serwisu używam mechanizmu plików cookies.<br /><br />1. Pliki cookies (tzw. "ciasteczka”) stanowią dane informatyczne, w szczególności pliki tekstowe, które są zapisywane i przechowywane w urządzeniu końcowym Użytkownika Serwisu ( na komputerze, smartfonie, tablecie itp.) i przeznaczone są do korzystania ze stron internetowych Serwisu. Cookies zazwyczaj zawierają nazwę strony internetowej, z której pochodzą, czas przechowywania plików cookies na urządzeniu końcowym oraz unikalny numer, służący do identyfikacji przeglądarki, z jakiej następuje połączenie ze stroną internetową.<br /> <br />2.Pliki cookies wykorzystywane są w celu:<br /><br />a) dostosowania zawartości stron internetowych Serwisu do preferencji Użytkownika oraz optymalizacji korzystania ze stron internetowych; w szczególności pliki te pozwalają rozpoznać urządzenie końcowe Użytkownika Serwisu i odpowiednio wyświetlić stronę internetową, dostosowaną do jego indywidualnych potrzeb;<br /><br />b) tworzenia statystyk, które pomagają zrozumieć, w jaki sposób Użytkownicy Serwisu korzystają ze stron internetowych, co umożliwia ulepszanie ich struktury i zawartości;<br /> <br />c) utrzymanie sesji Użytkownika Serwisu (po zalogowaniu), dzięki której Użytkownik nie musi na każdej podstronie Serwisu ponownie wpisywać loginu i hasła (o ile funkcja logowań ie jest dostępna w Serwisie).<br />  <br />3. W ramach Serwisu stosowane są dwa zasadnicze rodzaje plików cookies:<br /> <br />a) "sesyjne" (session cookies), które są plikami tymczasowymi, które przechowywane są w urządzeniu końcowym Użytkownika do czasu wylogowania, opuszczenia strony internetowej lub wyłączenia oprogramowania (przeglądarki internetowej) i które są niezbędne do działania Serwisu oraz korzystania z usług dostępnych w ramach Serwisu;<br /> <br />b) "stałe" (persistent cookies),które przechowywane są w urządzeniu końcowym Użytkownika przez czas określony w parametrach plików cookies lub do czasu ich usunięcia przez Użytkownika.<br /> <br />4. W ramach Serwisu pliki cookies mogą być wykorzystywane w celu:<br /> <br />a) zbierania informacji o sposobie korzystania przez Użytkownika ze stron internetowych Serwisu (np.: informacji na temat obszarów, które odwiedza Użytkownik, czasu jaki na nich spędza oraz problemów jakie na nich napotyka), co pozwala poprawiać działanie stron internetowych Serwisu,<br /> <br />b) zapamiętania wybranych przez Użytkownika ustawień by zapewnić personalizację interfejsu Użytkownika (np. w zakresie wybranego języka lub regionu, z którego pochodzi Użytkownik, rozmiaru czcionki, wyglądu strony internetowej) oraz by dostarczyć Użytkownikowi bardziej spersonalizowane treści i usługi;<br /> <br />5. W wielu przypadkach przeglądark i internetowe domyślnie dopuszczają przechowywanie plików cookies w urządzeniu końcowym Użytkownika. Użytkownicy Serwisu mogą dokonać w każdym czasie zmiany ustawień dotyczących plików cookies w swoich przeglądarkach internetowych. Zmiana ustawień może w szczególności polegać na blokowaniu automatycznej obsługi plików cookies bądź na informowaniu o każdorazowym zamieszczeniu plików cookies w urządzeniu końcowym Użytkownika Serwisu. Szczegółowe informacje o możliwości i sposobach obsługi plików cookies dostępne są w ustawieniach przeglądarki internetowej.<br /> <br />6. Informuje, że ograniczenia stosowania plików cookies mogą wpłynąć na niektóre funkcjonalności dostępne na stronach internetowych Serwisu, co może negatywnie wpłynąć na wygodę korzystania z Serwisu lub doprowadzić do zablokowania niektórych funkcjonalności.</p>';
     }
 
 }

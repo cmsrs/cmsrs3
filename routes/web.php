@@ -15,8 +15,9 @@ use Illuminate\Support\Facades\Auth;
 
 
 Route::get('/', 'FrontController@index');
-Route::get('/{menuSlug}', 'FrontController@onePage');
-Route::get('/c/{menuSlug}/{pageSlug}', 'FrontController@manyPages');
+//Route::get('/c/{pageSlug}', 'FrontController@getPageForMenu');
+Route::get('/c/{menuSlug}/{pageSlug}', 'FrontController@getPage');
+Route::get('/in/{pageSlug}', 'FrontController@getSeparatePage');
 
 
 //Auth::routes();

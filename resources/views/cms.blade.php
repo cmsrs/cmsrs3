@@ -39,7 +39,7 @@
       </div>
       <div class="form-group">
         <label for="message">Message</label>
-        <textarea class="form-control" id="message" rows="6" v-model="message"  @click="clearMessageInfo()"></textarea>
+        <textarea class="form-control" id="message" rows="10" v-model="message"  @click="clearMessageInfo()"></textarea>
         <div  v-if="messageErr"  class="invalid-feedback" style="display:block">
           @{{ messageErr }}
         </div>        
@@ -105,6 +105,9 @@
 
         </div>
       </div>
+  @else
+      <!-- type == privacy-policy -->
+      <div class="mt-2">{!! $page->content !!}</div>
   @endif
 
   @if ( $page->commented )
@@ -119,7 +122,7 @@
       @{{ item.content }}
     </li>
   @endif      
-    </div> <!-- div app -->  
+  </div> <!-- div app -->  
 
       <!-- The Modal -->
       <div id="myModal" class="modal">

@@ -48,7 +48,7 @@ class MenuTest extends Base
     {
       $parentId = $this->dateToTestParent( $this->objMenu->id );
 
-      $publishedAndAccess = $this->objMenu->pagesPublishedAndAccess()->get()->toArray();
+      $publishedAndAccess = $this->objMenu->pagesPublishedAndAccess()->get(); //->toArray();
       $tree = $this->objMenu->pagesPublishedTree($publishedAndAccess);
       $this->assertEquals(3, count($tree));
       $this->assertEquals(2, count($tree[$parentId]['children']));

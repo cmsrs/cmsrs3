@@ -32,6 +32,7 @@ class PageTest extends Base
     public function setUp(): void
     {
         parent::setUp();
+
         $this->createUser();
 
         $this->testData =
@@ -76,6 +77,10 @@ class PageTest extends Base
     {
         parent::tearDown();
     }
+    
+
+    
+
 
     /** @test */
     public function it_will_not_create_child_for_unpublished_parent()

@@ -5,6 +5,8 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\User;
+use App\Page;
+use App\Menu;
 
 class Base extends TestCase
 {
@@ -150,6 +152,211 @@ class Base extends TestCase
   }
 
 
+  public function setDemoDataMenusAndPages()
+  {
+      $p = [];
+      $appUrl = env('APP_URL');
 
+      $f1 = $this->getFixtureBase64('phpunittest1.jpg');
+
+
+      $mainPage =
+      [
+          'title'     => 'cmsRS demo site - title',
+          'short_title' => 'cmsRS short title',
+          'description' => 'cmsRS demo site - description',
+          'published' => 1,
+          'commented' => 0,
+          'after_login' => 0,
+          'type' => 'main_page', //!!
+          'content' => "<h1>cmsRS demo version</h1>
+          <div>
+              <p class='lead'>The demo version was created for demonstration purposes.<p>
+                  <div class='alert alert-danger' role='alert'>Saving, updating, deleting a single record has been disabled.</div>
+                  <br><br>
+                  <p class='lead'>
+                  Login to the admin panel: <a href=\"$appUrl/admin\">$appUrl/admin</a>
+                  <br>
+                  and customer zone: <a href=\"$appUrl/login\">$appUrl/login</a>
+                  <br>
+                  <br>
+                  user: adm@cmsrs.pl
+                  <br>
+                  pass: cmsrs123
+                  <br>
+                  <br>
+                  More information: <a title='cmsRS' href='http://www.cmsrs.pl' >http://www.cmsrs.pl</a>
+              </p>
+          </div>
+          ",
+          'menu_id' => null,
+          'page_id' => null,
+          //'images' => []
+      ];
+
+      Page::wrapCreate($mainPage);
+
+      $m1 = Menu::wrapCreate(['name' => 'About']);
+      
+      $data1p = [
+          'title'     => 'About me',
+          'short_title' => 'About me',
+          'description' => 'Description... Needed for google',
+          'published' => 1,
+          'commented' => 0,
+          'type' => 'cms',
+          'content' => '$this->getDummyTest()',
+          'menu_id' => $m1->id,
+          'images' => [
+              ['name' => 'me.jpg', 'data' => $f1, 'alt' => 'about me']
+          ]
+      ];
+
+      $data2p = [
+          'title'     => 'About page',
+          'short_title' => 'About page',
+          'description' => 'Description... Needed for google',            
+          'published' => 1,
+          'commented' => 1,
+          'type' => 'cms',
+          'content' => '$this->getDummyTest()',
+          'menu_id' => $m1->id
+      ];
+
+      $data22pSecret = [
+          'title'     =>  'Secret info',
+          'short_title' =>  'Secret info',
+          'description' => 'Description... Needed for google',            
+          'published' => 1,
+          'commented' => 0,
+          'after_login' => 1,
+          'type' => 'cms',
+          'content' => 'Secret information after logging in',
+          'menu_id' => $m1->id
+      ];
+
+
+      Page::wrapCreate($data1p);
+      $p2 = Page::wrapCreate($data2p);
+      Page::wrapCreate($data22pSecret);
+
+      //Comment::create( ['page_id' => $p2->id,  'content' => 'First test comment - test1' ] );
+      //Comment::create( ['page_id' => $p2->id,  'content' => 'Second test comment - test2' ] );
+
+      $m2 = Menu::wrapCreate(['name' => 'Gallery']);
+      $data3p = [
+          'title'     => 'Poland',
+          'short_title' => 'Poland',
+          'description' => 'Description...  needed for google',            
+          'published' => 1,
+          'commented' => 0,
+          'type' => 'gallery',
+          'content' => '',
+          'menu_id' => $m2->id,
+          'images' => [
+              ['name' => 'img1.jpg', 'data' => $f1, 'alt' => 'description img1'  ],
+              ['name' => 'img2.jpg', 'data' => $f1, 'alt' => 'description img2'  ],
+              ['name' => 'imgc12.jpg', 'data' => $f1, 'alt' => 'description imgc12'  ], 
+          ]
+      ];        
+      Page::wrapCreate($data3p);
+
+      $data4p = [
+          'title'     => 'Greece',
+          'short_title' => 'Greece',
+          'description' => 'Description...  needed for google',            
+          'published' => 1,
+          'commented' => 0,
+          'type' => 'gallery',
+          'content' => '',
+          'menu_id' => $m2->id,
+          'images' => [
+              ['name' => 'imggreece1.jpg', 'data' => $f1, 'alt' => 'description imggreece1'  ],
+              ['name' => 'imggreece2.jpg', 'data' => $f1, 'alt' => 'description imggreece2'  ]
+          ]
+      ];        
+      Page::wrapCreate($data4p);
+
+      $m3 = Menu::wrapCreate(['name' => 'Shop']);
+      $data4p = [
+          'title'     => 'IT books',
+          'short_title' => 'IT books',
+          'description' => 'Description... Needed for google',            
+          'published' => 1,
+          'commented' => 0,
+          'type' => 'cms',
+          'content' => '$this->getDummyTest()',
+          'menu_id' => $m3->id
+      ];
+      $p4 = Page::wrapCreate($data4p);
+
+      $data5p = [
+          'title'     => 'PHP books',
+          'short_title' => 'PHP books',
+          'description' => 'Description... Needed for google',            
+          'published' => 1,
+          'commented' => 0,
+          'type' => 'shop',
+          'content' => '',
+          'page_id' => $p4->id,
+          'menu_id' => $m3->id
+      ];
+      $p['p5'] = Page::wrapCreate($data5p);
+
+      $data6p = [
+          'title'     => 'Java books',
+          'short_title' => 'Java books',
+          'description' => 'Description... Needed for google',            
+          'published' => 1,
+          'commented' => 0,
+          'type' => 'shop',
+          'content' => '',
+          'page_id' => $p4->id,            
+          'menu_id' => $m3->id
+      ];
+      $p['p6'] = Page::wrapCreate($data6p);
+
+      $data7p = [
+          'title'     => 'English books',
+          'short_title' => 'English books',
+          'description' => 'Description... Needed for google',            
+          'published' => 1,
+          'commented' => 0,
+          'type' => 'shop',
+          'content' => '',
+          'menu_id' => $m3->id
+      ];
+      $p['p7'] = Page::wrapCreate($data7p);
+
+      $mContact = Menu::wrapCreate(['name' => 'Contact']);        
+      $pContact = [
+          'title'     => 'Contact form',
+          'short_title' => 'Contact',
+          'description' => 'Description... Needed for google',
+          'published' => 1,
+          'commented' => 0,
+          'type' => 'contact',
+          'content' => '',
+          'menu_id' => $mContact->id,
+          'images' => [
+          ]
+      ];
+      Page::wrapCreate($pContact);
+
+      $pPrivacy = [
+        'title'     => 'Privacy policy',
+        'short_title' => 'Privacy policy',
+        'description' => 'Description... Needed for google',
+        'published' => 1,
+        'commented' => 0,
+        'type' => 'privacy_policy',
+        'content' => 'qwertuyuio qwweertt',
+        'images' => [
+        ]
+    ];
+    Page::wrapCreate($pPrivacy);
+  
+
+  }
 
 }
