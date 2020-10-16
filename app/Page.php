@@ -84,7 +84,7 @@ class Page extends Model
       // if(  'contact' == $this->type ){ //it was wrong if many pages will be on that menu
       //   return $this->getCmsMenuUrl();
       if( 'privacy_policy' == $this->type ){
-        return $this->getSeparateUrl();
+        return $this->getIndependentUrl();
       }
       return $this->getCmsUrl();
     }
@@ -101,7 +101,7 @@ class Page extends Model
       return "/c/".$menuSlug."/".$this->slug;
     }
 
-    private function getSeparateUrl()
+    private function getIndependentUrl()
     {
       return "/in/".$this->slug;
     }
