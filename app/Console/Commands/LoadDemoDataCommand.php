@@ -45,7 +45,7 @@ class LoadDemoDataCommand extends Command
         /*---------------------*/
         /*--- pages an menu ---*/
         /*---------------------*/
-        ini_set('memory_limit', '512M');
+        ini_set('memory_limit', '1028M');
 
         $p = [];
         $appUrl = env('APP_URL');

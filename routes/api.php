@@ -19,6 +19,7 @@ $demoStatus = env('DEMO_STATUS', false);
 if($demoStatus){
     Route::post('login', 'AuthController@login');
     Route::get('comments/{pageId}', 'CommentController@index');
+    Route::get('page/{id}', 'PageController@oneItem');
 
     Route::group(['middleware' => ['jwt.auth']], function() {
         Route::get('logout', 'AuthController@logout');
@@ -36,6 +37,7 @@ if($demoStatus){
         //Route::get('images/position/{direction}/{id}', 'ImageController@position'); //only for type page is working
 
         Route::get('users/clients', 'UserController@getClients');
+        Route::get('config', 'ConfigController@index');
 
         Route::get('products', 'ProductController@index');
     });
