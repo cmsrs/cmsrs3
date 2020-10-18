@@ -23,6 +23,7 @@ class ConfigTest extends Base
     public function it_will_get_config()
     {
         $response = $this->get('api/config?token='.$this->token );
+        //dd($response);        
 
         $res = $response->getData();
 
@@ -31,6 +32,9 @@ class ConfigTest extends Base
         //dd($res->data);
         $this->assertNotEmpty($res->data);
 
+        /***************/
+        /**page_types **/
+        /***************/        
         $this->assertNotEmpty($res->data->page_types);
         $this->assertTrue( is_array($res->data->page_types) );
         $this->assertEquals('privacy_policy', $res->data->page_types[5] );        
@@ -53,6 +57,16 @@ class ConfigTest extends Base
         $this->assertTrue($in);
         $pagesNum = Page::all()->count();
         $this->assertEquals($pagesNum, count($res->data->page_types) );
+
+        /***************/
+        /*******langs **/
+        /***************/        
+        $this->assertTrue( is_array($res->data->langs) );        
+        $this->assertEquals(2,  count($res->data->langs) );                
+        $this->assertEquals( 'en',  ($res->data->langs[0]) );                
+        $this->assertEquals( 'pl',  ($res->data->langs[1]) );                                
+
+
     }
 
 }
