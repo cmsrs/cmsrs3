@@ -11,6 +11,7 @@ class Page extends Model
 
     private $translate;
     private $content;    
+    public $pageFields;
 
     protected $fillable = [
         //'title', 
@@ -39,6 +40,8 @@ class Page extends Model
     {
         parent::__construct($attributes);
 
+        $this->pageFields = ['id', 'published', 'commented', 'after_login', 'position', 'type',  'menu_id', 'page_id'];          
+        //dd('______cojest__');
         $this->translate = new Translate;  
         $this->content = new Content;          
     }
@@ -125,10 +128,21 @@ class Page extends Model
       return $page;
     }
     
-    public function createTranslate( $dd ){
-        $this->translate->wrapCreate( $dd );      
-        $this->content->wrapCreate( $dd );
+    public function createTranslate( $dd, $create = true ){
+        $this->translate->wrapCreate( $dd, $create );      
+        $this->content->wrapCreate( $dd, $create );
     }
+
+    public function wrapUpdate($data) 
+    {
+      //dd('_______');
+      $this->update($data); 
+      //dd('________jestem____');
+      $this->createTranslate( [ 'page_id' => $this->id, 'data' => $data ], false );
+      //dd('---t111-');
+      return true;
+    }    
+
 
     /*
     public function setLangs($arrLang){
@@ -288,23 +302,43 @@ class Page extends Model
     }
 
 
-    static public function getAllPagesWithImages( $type = null )
+    public function getAllPagesWithImages( $type = null )
     {
+
+      //dd($this->pageFields);
+
+      //['id',  'published', 'commented', 'after_login', 'position', 'type', 'menu_id', 'page_id']
+      //['id', 'published', 'commented', 'after_login', 'position', 'type',  'menu_id', 'page_id']
+
 
       if( $type ){
           //'title', 'short_title',        'content',
-          $pages = Page::query()->where('type', $type )->orderBy('position', 'asc' )->get(['id',  'published', 'commented', 'after_login', 'position', 'type', 'menu_id', 'page_id'])->toArray();
+          $pages = Page::with(['translates', 'contents'])->where('type', $type )->orderBy('position', 'asc' )->get($this->pageFields)->toArray();
+
       }else{
           //'title', 'short_title', 'description', 'content',
-          $pages = Page::query()->orderBy('position', 'asc' )->get(['id', 'published', 'commented', 'after_login', 'position', 'type',  'menu_id', 'page_id'])->toArray();
+          $pages = Page::with(['translates', 'contents'])->orderBy('position', 'asc' )->get($this->pageFields)->toArray();
       }
 
 
-      foreach ($pages as $key => $page) {
-        $pages[$key]['images'] = Image::getImagesAndThumbsByTypeAndRefId( 'page', $page['id']);
+
+      $i = 0;
+      $out = [];
+      foreach ($pages as $page) {
+        foreach($this->pageFields as $field ){
+          $out[$i][$field] = $page[$field];
+        }
+        foreach($page['translates'] as $translate){
+          $out[$i][$translate['column']][$translate['lang']] = $translate['value'];
+        }
+        foreach($page['contents'] as $translate){
+          $out[$i][$translate['column']][$translate['lang']] = $translate['value'];
+        }
+        $out[$i]['images'] = Image::getImagesAndThumbsByTypeAndRefId( 'page', $page['id']);
+        $i++;
       }
 
-      return $pages;
+      return $out;
     }
 
     public function delete()

@@ -174,7 +174,7 @@ class Image extends Model
     static public function updateImages($images){
       foreach($images as $image){
         $objImage = Image::findOrFail($image['id']);
-        $objImage->update([ 'id' => $image['id'],  'alt' => $image['alt']]);
+        $objImage->update([ 'id' => $image['id'],  'alt' => $image['alt']]); //TODO
       }
     }
 

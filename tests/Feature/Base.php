@@ -84,6 +84,7 @@ class Base extends TestCase
 
   protected function dateToTestParent( $menuId )
   {
+    $this->assertNotEmpty($menuId);
     $testData1 =
     [
          'title'     => ["en" => 'test p1'],
@@ -113,7 +114,7 @@ class Base extends TestCase
     $r = $res->getData();
     $this->assertTrue( $r->success );
 
-    $parentId = $r->data[1]->id;
+    $parentId = $r->data[2]->id;
 
     $this->assertEquals( PageTest::STR_PARENT_TWO, Page::find($parentId)->translatesByColumnAndLang( 'title', 'en' ) );
     $this->assertNotEmpty($parentId);

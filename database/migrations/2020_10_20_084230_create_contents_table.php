@@ -17,14 +17,14 @@ class CreateContentsTable extends Migration
             $table->bigIncrements('id')->index();
 
             $table->string('lang', 8)->notNullable();
-            //$table->string('column', 32)->notNullable();            
+            $table->string('column', 32)->notNullable();
             $table->text('value')->nullable();
             
             $table->unsignedBigInteger('page_id')->nullable();
             $table->foreign('page_id')->nullable()->references('id')->on('pages')->onDelete('set null');
 
             //'column',
-            $table->unique(['lang',  'page_id' ]);
+            $table->unique(['lang', 'column', 'page_id' ]);
             $table->timestamps();
         });
     }

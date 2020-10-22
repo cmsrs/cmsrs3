@@ -46,7 +46,8 @@ class PageController extends Controller
 
   public function index()
   {
-      $pages = Page::getAllPagesWithImages();
+      $pages = (new Page)->getAllPagesWithImages();
+
 
       return response()->json(['success' => true, 'data'=> $pages], 200);
   }
@@ -110,7 +111,8 @@ class PageController extends Controller
         if( empty($data['published']) ){
           $page->unpublishedChildren();
         }
-        $res = $page->update($data);
+        //$res = $page->update($data);
+        $res = $page->wrapUpdate($data);
         if( !empty($data['images']) && is_array($data['images']) ){
           Image::createImagesAndUpdateAlt($data['images'], 'page', $page->id);
         }
