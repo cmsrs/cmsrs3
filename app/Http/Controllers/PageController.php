@@ -81,8 +81,8 @@ class PageController extends Controller
         return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
     }
 
-    try{
-      $page = Page::wrapCreate($data);
+    try{      
+      $page =  (new Page)->wrapCreate($data);
     } catch (\Exception $e) {
       Log::error('page add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile() ); //.' for: '.var_export($data, true )
       return response()->json(['success'=> false, 'error'=> 'Add page problem, details in the log file.'], 200); //.$e->getMessage()

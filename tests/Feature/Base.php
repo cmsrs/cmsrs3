@@ -8,6 +8,9 @@ use App\User;
 use App\Page;
 use App\Menu;
 
+use App\Translate;
+use App\Content;
+
 class Base extends TestCase
 {
 
@@ -83,25 +86,27 @@ class Base extends TestCase
   {
     $testData1 =
     [
-         'title'     => 'test p1',
-         'short_title' => 'p11',
+         'title'     => ["en" => 'test p1'],
+         'short_title' => ["en" => 'p11'],
          'published' => 1,
          'type' => 'cms',
-         'content' => 'ppp1',
+         'content' => ["en" => 'ppp1'],
          'menu_id' =>  $menuId
     ];
     $response1 = $this->post('api/pages?token='.$this->token, $testData1);
+    $this->assertTrue( $response1->getData()->success );
 
     $testData2 =
     [
-         'title' =>  PageTest::STR_PARENT_TWO,
-         'short_title' => 'p22',
+         'title' =>  ["en" =>PageTest::STR_PARENT_TWO],
+         'short_title' => ["en" =>'p22'],
          'published' => 1,
          'type' => 'cms',
-         'content' => 'parent page ppp2',
+         'content' => ["en" =>'parent page ppp2'],
          'menu_id' =>  $menuId
     ];
     $response2 = $this->post('api/pages?token='.$this->token, $testData2);
+    $this->assertTrue( $response2->getData()->success );    
 
     //check pages:
     $res = $this->get('api/pages?token='.$this->token );
@@ -109,44 +114,48 @@ class Base extends TestCase
     $this->assertTrue( $r->success );
 
     $parentId = $r->data[1]->id;
-    $this->assertEquals( PageTest::STR_PARENT_TWO, $r->data[1]->title );
+
+    $this->assertEquals( PageTest::STR_PARENT_TWO, Page::find($parentId)->translatesByColumnAndLang( 'title', 'en' ) );
     $this->assertNotEmpty($parentId);
 
     $testData3 =
     [
-         'title'     =>  PageTest::STR_CHILD_ONE,
-         'short_title' => 'p33',
+         'title'     => ["en" => PageTest::STR_CHILD_ONE],
+         'short_title' => ["en" =>'p33'],
          'published' => 1,
          'type' => 'cms',
-         'content' => 'child page ppp1',
+         'content' => ["en" =>'child page ppp1'],
          'page_id' => $parentId,
          'menu_id' =>  $menuId
     ];
     $response3 = $this->post('api/pages?token='.$this->token, $testData3);
+    $this->assertTrue( $response3->getData()->success );        
 
     $testData4 =
     [
-         'title'     => PageTest::STR_CHILD_TWO,
-         'short_title' => 'p44',
+         'title'     => ["en" =>PageTest::STR_CHILD_TWO],
+         'short_title' => ["en" =>'p44'],
          'published' => 1,
          'type' => 'cms',
-         'content' => 'child page ppp2',
+         'content' => ["en" => 'child page ppp2'],
          'page_id' => $parentId,
          'menu_id' =>  $menuId
     ];
     $response4 = $this->post('api/pages?token='.$this->token, $testData4);
+    $this->assertTrue( $response4->getData()->success );        
 
     $testData5 =
     [
-         'title'     =>  PageTest::STR_PARENT_TREE , // 'p5',
-         'short_title' => 'p55',
+         'title'     => ["en" => PageTest::STR_PARENT_TREE ], // 'p5',
+         'short_title' => ["en" =>'p55'],
          'published' => 1,
          'type' => 'cms',
-         'content' => 'pppppppp5',
+         'content' => ["en" =>'pppppppp5'],
          //'page_id' => $parentId,
          'menu_id' =>  $menuId
     ];
     $response5 = $this->post('api/pages?token='.$this->token, $testData5);
+    $this->assertTrue( $response5->getData()->success );            
 
     return $parentId;
   }
@@ -355,8 +364,28 @@ class Base extends TestCase
         ]
     ];
     Page::wrapCreate($pPrivacy);
-  
+  }
 
+  protected function getPageTestData()
+  {
+      $m = (new Menu)->wrapCreate(['name' => ['en' => 'About cmsRS', 'pl' => 'O cmsRS' ] ]);
+      $this->assertNotEmpty( $m->id );        
+
+      $data1p = [
+          'title'     =>  ['en' => 'About me', 'pl' => 'O mnie', 'es' => 'Fake' ],//require
+          'short_title' => ['en' =>'About me', 'pl' => 'O mnie', 'es' => 'Fake'],//require
+          'description' => ['en' =>'Description... Needed for google', 'pplll' => 'Opis... potrzebne dla googla', 'es' => 'Fake'],//not require
+          'published' => 1,
+          'commented' => 0,
+          'type' => 'cms',
+          'content' => ['en' => 'Content about me', 'pl' => 'Zawartosc o mnie', 'es' => 'Fake' ],//not require
+          'menu_id' => $m->id,
+          'images' => [
+              ['name' => 'phpunittest1.jpg', 'data' => $this->getFixtureBase64('phpunittest1.jpg') ],
+              ['name' => 'phpunittest2.jpg', 'data' => $this->getFixtureBase64('phpunittest2.jpg'), 'alt' => ['pl' => 'jakis opis', 'es' => 'Fake' ] ]
+            ]
+        ];
+        return  $data1p;
   }
 
 }

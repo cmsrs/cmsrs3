@@ -8,6 +8,8 @@ use App\Menu;
 use App\User;
 use App\Comment;
 use App\Product;
+use App\Translate;
+use App\Content;
 
 class LoadDemoDataCommand extends Command
 {
@@ -25,6 +27,11 @@ class LoadDemoDataCommand extends Command
      */
     protected $description = 'Load Demo Data';
 
+
+    private $langs;
+    private $translate;
+    private $content;
+
     /**
      * Create a new command instance.
      *
@@ -33,6 +40,35 @@ class LoadDemoDataCommand extends Command
     public function __construct()
     {
         parent::__construct();
+
+        $this->langs = ['en'];
+        $this->translate = new Translate;
+        $this->translate->setArrLangs($this->langs);
+        $this->content = new Content;
+        $this->content->setArrLangs($this->langs);
+
+    }
+
+    private function  getPageObj()
+    {
+        $pageObj = new Page;        
+        $pageObj->setTranslate($this->translate);
+        $pageObj->setContent($this->content);
+        return $pageObj;
+    }
+
+    private function  getMenuObj()
+    {
+        $menuObj = new Menu;
+        $menuObj->setTranslate($this->translate);
+        return $menuObj;
+    }
+
+    private function  getProductObj()
+    {
+        $productObj = new Product;
+        $productObj->setTranslate($this->translate);
+        return $productObj;
     }
 
     /**
@@ -50,16 +86,17 @@ class LoadDemoDataCommand extends Command
         $p = [];
         $appUrl = env('APP_URL');
 
+
         $mainPage =
         [
-            'title'     => 'cmsRS demo site - title',
-            'short_title' => 'cmsRS short title',
-            'description' => 'cmsRS demo site - description',
+            'title'     =>[ "en" =>  'cmsRS demo site - title' ],
+            'short_title' =>[ "en" =>  'cmsRS short title' ],
+            'description' =>[ "en" =>  'cmsRS demo site - description' ],
             'published' => 1,
             'commented' => 0,
             'after_login' => 0,
             'type' => 'main_page', //!!
-            'content' => "<h1>cmsRS demo version</h1>
+            'content' => [ "en" => "<h1>cmsRS demo version</h1>
             <div>
                 <p class='lead'>The demo version was created for demonstration purposes.<p>
                     <div class='alert alert-danger' role='alert'>Saving, updating, deleting a single record has been disabled.</div>
@@ -78,129 +115,130 @@ class LoadDemoDataCommand extends Command
                     More information: <a title='cmsRS' href='http://www.cmsrs.pl' >http://www.cmsrs.pl</a>
                 </p>
             </div>
-            ",
+            " ],
             'menu_id' => null,
             'page_id' => null,
             //'images' => []
         ];
 
-        Page::wrapCreate($mainPage);
+        $this->getPageObj()->wrapCreate($mainPage);
+        //Page::wrapCreate($mainPage);
 
-        $m1 = Menu::wrapCreate(['name' => 'About']);
+        $m1 = $this->getMenuObj()->wrapCreate(['name' => [ "en" => 'About']]);
         
         $data1p = [
-            'title'     => 'About me',
-            'short_title' => 'About me',
-            'description' => 'Description... Needed for google',
+            'title'     => [ "en" => 'About me'],
+            'short_title' => [ "en" => 'About me'],
+            'description' => [ "en" => 'Description... Needed for google'],
             'published' => 1,
             'commented' => 0,
             'type' => 'cms',
-            'content' => $this->getDummyTest(),
+            'content' => [ "en" => $this->getDummyTest()],
             'menu_id' => $m1->id,
             'images' => [
-                ['name' => 'me.jpg', 'data' => $this->getTestPhoto( 'about_me/me.jpg' ), 'alt' => 'about me']
+                ['name' => 'me.jpg', 'data' => $this->getTestPhoto( 'about_me/me.jpg' ), 'alt' => [ "en" =>'about me']]
             ]
         ];
 
         $data2p = [
-            'title'     => 'About page',
-            'short_title' => 'About page',
-            'description' => 'Description... Needed for google',            
+            'title'     => [ "en" =>'About page'],
+            'short_title' => [ "en" =>'About page'],
+            'description' => [ "en" =>'Description... Needed for google'],            
             'published' => 1,
             'commented' => 1,
             'type' => 'cms',
-            'content' => $this->getDummyTest(),
+            'content' => [ "en" =>$this->getDummyTest()],
             'menu_id' => $m1->id
         ];
 
         $data22pSecret = [
-            'title'     =>  'Secret info',
-            'short_title' =>  'Secret info',
-            'description' => 'Description... Needed for google',            
+            'title'     =>  [ "en" =>'Secret info'],
+            'short_title' =>  [ "en" =>'Secret info'],
+            'description' => [ "en" =>'Description... Needed for google'],            
             'published' => 1,
             'commented' => 0,
             'after_login' => 1,
             'type' => 'cms',
-            'content' => 'Secret information after logging in',
+            'content' => [ "en" =>'Secret information after logging in'],
             'menu_id' => $m1->id
         ];
 
 
-        Page::wrapCreate($data1p);
-        $p2 = Page::wrapCreate($data2p);
-        Page::wrapCreate($data22pSecret);
+        $this->getPageObj()->wrapCreate($data1p);
+        $p2 = $this->getPageObj()->wrapCreate($data2p);
+        $this->getPageObj()->wrapCreate($data22pSecret);
 
         Comment::create( ['page_id' => $p2->id,  'content' => 'First test comment - test1' ] );
         Comment::create( ['page_id' => $p2->id,  'content' => 'Second test comment - test2' ] );
 
-        $m2 = Menu::wrapCreate(['name' => 'Gallery']);
+        $m2 = $this->getMenuObj()->wrapCreate(['name' => ["en" => 'Gallery' ] ]);
         $data3p = [
-            'title'     => 'Poland',
-            'short_title' => 'Poland',
-            'description' => 'Description...  needed for google',            
+            'title'     => [ "en" =>'Poland'],
+            'short_title' => [ "en" =>'Poland'],
+            'description' => [ "en" =>'Description...  needed for google'],            
             'published' => 1,
             'commented' => 0,
             'type' => 'gallery',
             'content' => '',
             'menu_id' => $m2->id,
             'images' => [
-                ['name' => 'img1.jpg', 'data' => $this->getTestPhoto( 'gallery/img1.jpg'), 'alt' => 'description img1'  ],
-                ['name' => 'img2.jpg', 'data' => $this->getTestPhoto( 'gallery/img2.jpg'), 'alt' => 'description img2'  ],
-                ['name' => 'img3.jpg', 'data' => $this->getTestPhoto( 'gallery/img3.jpg'), 'alt' => 'description img3'  ],
-                ['name' => 'img4.jpg', 'data' => $this->getTestPhoto( 'gallery/img4.jpg'), 'alt' => 'description img4'  ],
-                ['name' => 'imgb1.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb1.jpg' ), 'alt' => 'description imgb1'  ],
-                ['name' => 'imgb2.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb2.jpg' ), 'alt' => 'description imgb2'  ],
-                ['name' => 'imgb3.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb3.jpg' ), 'alt' => 'description imgb3'  ],
-                ['name' => 'imgb4.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb4.jpg' ), 'alt' => 'description imgb4'  ],
-                ['name' => 'imgc1.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc1.jpg' ), 'alt' => 'description imgc1'  ],                
-                ['name' => 'imgc2.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc2.jpg' ), 'alt' => 'description imgc2'  ],                
-                ['name' => 'imgc3.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc3.jpg' ), 'alt' => 'description imgc3'  ],                
-                ['name' => 'imgc4.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc4.jpg' ), 'alt' => 'description imgc4'  ],                
-                ['name' => 'imgc5.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc5.jpg' ), 'alt' => 'description imgc5'  ],                
-                ['name' => 'imgc6.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc6.jpg' ), 'alt' => 'description imgc6'  ],                
-                ['name' => 'imgc7.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc7.jpg' ), 'alt' => 'description imgc7'  ],                
-                ['name' => 'imgc8.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc8.jpg' ), 'alt' => 'description imgc8'  ],                
-                ['name' => 'imgc9.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc9.jpg' ), 'alt' => 'description imgc9'  ],                
-                ['name' => 'imgc10.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc10.jpg' ), 'alt' => 'description imgc10'  ],                
-                ['name' => 'imgc11.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc11.jpg' ), 'alt' => 'description imgc11'  ],                
-                ['name' => 'imgc12.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc12.jpg' ), 'alt' => 'description imgc12'  ], 
+                ['name' => 'img1.jpg', 'data' => $this->getTestPhoto( 'gallery/img1.jpg'), 'alt' => [ "en" =>'description img1'  ]],
+                ['name' => 'img2.jpg', 'data' => $this->getTestPhoto( 'gallery/img2.jpg'), 'alt' => [ "en" =>'description img2'  ]],
+                ['name' => 'img3.jpg', 'data' => $this->getTestPhoto( 'gallery/img3.jpg'), 'alt' => [ "en" =>'description img3'  ]],
+                ['name' => 'img4.jpg', 'data' => $this->getTestPhoto( 'gallery/img4.jpg'), 'alt' => [ "en" =>'description img4'  ]],
+                ['name' => 'imgb1.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb1.jpg' ), 'alt' => [ "en" =>'description imgb1'  ]],
+                ['name' => 'imgb2.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb2.jpg' ), 'alt' => [ "en" =>'description imgb2'  ]],
+                ['name' => 'imgb3.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb3.jpg' ), 'alt' => [ "en" =>'description imgb3'  ]],
+                ['name' => 'imgb4.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb4.jpg' ), 'alt' => [ "en" =>'description imgb4'  ]],
+                ['name' => 'imgc1.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc1.jpg' ), 'alt' => [ "en" =>'description imgc1'  ]],                
+                ['name' => 'imgc2.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc2.jpg' ), 'alt' => [ "en" =>'description imgc2'  ]],                
+                ['name' => 'imgc3.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc3.jpg' ), 'alt' => [ "en" =>'description imgc3'  ]],                
+                ['name' => 'imgc4.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc4.jpg' ), 'alt' => [ "en" =>'description imgc4'  ]],                
+                ['name' => 'imgc5.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc5.jpg' ), 'alt' => [ "en" =>'description imgc5'  ]],                
+                ['name' => 'imgc6.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc6.jpg' ), 'alt' => [ "en" =>'description imgc6'  ]],                
+                ['name' => 'imgc7.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc7.jpg' ), 'alt' => [ "en" =>'description imgc7'  ]],                
+                ['name' => 'imgc8.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc8.jpg' ), 'alt' => [ "en" =>'description imgc8'  ]],                
+                ['name' => 'imgc9.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc9.jpg' ), 'alt' => [ "en" =>'description imgc9'  ]],                
+                ['name' => 'imgc10.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc10.jpg' ), 'alt' => [ "en" =>'description imgc10'  ]],                
+                ['name' => 'imgc11.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc11.jpg' ), 'alt' => [ "en" =>'description imgc11'  ]],                
+                ['name' => 'imgc12.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc12.jpg' ), 'alt' => [ "en" =>'description imgc12'  ]], 
             ]
         ];        
-        Page::wrapCreate($data3p);
+        $this->getPageObj()->wrapCreate($data3p);
 
         $data4p = [
-            'title'     => 'Greece',
-            'short_title' => 'Greece',
-            'description' => 'Description...  needed for google',            
+            'title'     => [ "en" =>'Greece'],
+            'short_title' => [ "en" =>'Greece'],
+            'description' => [ "en" =>'Description...  needed for google'],            
             'published' => 1,
             'commented' => 0,
             'type' => 'gallery',
             'content' => '',
             'menu_id' => $m2->id,
             'images' => [
-                ['name' => 'imggreece1.jpg', 'data' => $this->getTestPhoto( 'gallery/greece/imggreece1.jpg'), 'alt' => 'description imggreece1'  ],
-                ['name' => 'imggreece2.jpg', 'data' => $this->getTestPhoto( 'gallery/greece/imggreece2.jpg'), 'alt' => 'description imggreece2'  ]
+                ['name' => 'imggreece1.jpg', 'data' => $this->getTestPhoto( 'gallery/greece/imggreece1.jpg'), 'alt' => [ "en" =>'description imggreece1'  ]],
+                ['name' => 'imggreece2.jpg', 'data' => $this->getTestPhoto( 'gallery/greece/imggreece2.jpg'), 'alt' => [ "en" =>'description imggreece2'  ]]
             ]
         ];        
-        Page::wrapCreate($data4p);
+        $this->getPageObj()->wrapCreate($data4p);
 
-        $m3 = Menu::wrapCreate(['name' => 'Shop']);
+        $m3 = $this->getMenuObj()->wrapCreate(['name' => ["en" => 'Shop'] ]);
         $data4p = [
-            'title'     => 'IT books',
-            'short_title' => 'IT books',
-            'description' => 'Description... Needed for google',            
+            'title'     => [ "en" =>'IT books'],
+            'short_title' => [ "en" =>'IT books'],
+            'description' => [ "en" =>'Description... Needed for google'],            
             'published' => 1,
             'commented' => 0,
             'type' => 'cms',
-            'content' => $this->getDummyTest(),
+            'content' => [ "en" =>$this->getDummyTest()],
             'menu_id' => $m3->id
         ];
-        $p4 = Page::wrapCreate($data4p);
+        $p4 = $this->getPageObj()->wrapCreate($data4p);
 
         $data5p = [
-            'title'     => 'PHP books',
-            'short_title' => 'PHP books',
-            'description' => 'Description... Needed for google',            
+            'title'     => [ "en" =>'PHP books'],
+            'short_title' => [ "en" =>'PHP books'],
+            'description' => [ "en" =>'Description... Needed for google'],            
             'published' => 1,
             'commented' => 0,
             'type' => 'shop',
@@ -208,12 +246,12 @@ class LoadDemoDataCommand extends Command
             'page_id' => $p4->id,
             'menu_id' => $m3->id
         ];
-        $p['p5'] = Page::wrapCreate($data5p);
+        $p['p5'] = $this->getPageObj()->wrapCreate($data5p);
 
         $data6p = [
-            'title'     => 'Java books',
-            'short_title' => 'Java books',
-            'description' => 'Description... Needed for google',            
+            'title'     => [ "en" =>'Java books'],
+            'short_title' => [ "en" =>'Java books'],
+            'description' => [ "en" =>'Description... Needed for google'],            
             'published' => 1,
             'commented' => 0,
             'type' => 'shop',
@@ -221,26 +259,27 @@ class LoadDemoDataCommand extends Command
             'page_id' => $p4->id,            
             'menu_id' => $m3->id
         ];
-        $p['p6'] = Page::wrapCreate($data6p);
+        $p['p6'] = $this->getPageObj()->wrapCreate($data6p);
 
         $data7p = [
-            'title'     => 'English books',
-            'short_title' => 'English books',
-            'description' => 'Description... Needed for google',            
+            'title'     => [ "en" =>'English books'],
+            'short_title' => [ "en" =>'English books'],
+            'description' => [ "en" =>'Description... Needed for google'],            
             'published' => 1,
             'commented' => 0,
             'type' => 'shop',
             'content' => '',
             'menu_id' => $m3->id
         ];
-        $p['p7'] = Page::wrapCreate($data7p);
+        $p['p7'] = $this->getPageObj()->wrapCreate($data7p);
 
 
-        $mContact = Menu::wrapCreate(['name' => 'Contact me']);
+        $mContact = $this->getMenuObj()->wrapCreate( ['name' => ["en"  => 'Contact me'] ] );
+
         $pContact = [
-            'title'     => 'Contact',
-            'short_title' => 'Contact',
-            'description' => 'Description... Needed for google',
+            'title'     => [ "en" =>'Contact'],
+            'short_title' => [ "en" =>'Contact'],
+            'description' => [ "en" =>'Description... Needed for google'],
             'published' => 1,
             'commented' => 0,
             'type' => 'contact',
@@ -249,21 +288,21 @@ class LoadDemoDataCommand extends Command
             'images' => [
             ]
         ];
-        Page::wrapCreate($pContact);
+        $this->getPageObj()->wrapCreate($pContact);
 
 
         $pPrivacy = [
-            'title'     => 'Privacy policy',
-            'short_title' => 'Privacy policy',
-            'description' => 'Description... Needed for google',
+            'title'     => [ "en" =>'Privacy policy'],
+            'short_title' => [ "en" =>'Privacy policy'],
+            'description' => [ "en" =>'Description... Needed for google'],
             'published' => 1,
             'commented' => 0,
             'type' => 'privacy_policy',
-            'content' => $this->getPrivacyPolicy(),
+            'content' => [ "en" => $this->getPrivacyPolicy()],
             'images' => [
             ]
         ];
-        Page::wrapCreate($pPrivacy);
+        $this->getPageObj()->wrapCreate($pPrivacy);
         
 
         /*---------------------*/
@@ -277,7 +316,7 @@ class LoadDemoDataCommand extends Command
             'description' => 'Php book',
             'page_id' => $p['p5']->id,
             'images' =>   [
-                ['name' => 'php.jpg', 'data' => $this->getTestPhoto( 'books/php3.jpg' ), 'alt' => 'php3 front' ]                
+                ['name' => 'php.jpg', 'data' => $this->getTestPhoto( 'books/php3.jpg' ), 'alt' => [ "en" =>'php3 front' ]]                
             ]
         ];
         $products2 = [
@@ -287,8 +326,8 @@ class LoadDemoDataCommand extends Command
             'description' => 'Php5 book',
             'page_id' => $p['p5']->id,
             'images' =>   [
-                ['name' => 'php5.jpg', 'data' => $this->getTestPhoto( 'books/php5.jpg' ), 'alt' => 'php5 front' ],
-                ['name' => 'php5_back.jpg', 'data' => $this->getTestPhoto( 'books/php5_back.jpg' ), 'alt' => 'php5 back' ],
+                ['name' => 'php5.jpg', 'data' => $this->getTestPhoto( 'books/php5.jpg' ), 'alt' => [ "en" =>'php5 front' ]],
+                ['name' => 'php5_back.jpg', 'data' => $this->getTestPhoto( 'books/php5_back.jpg' ), 'alt' => [ "en" =>'php5 back' ]],
             ]
         ];
         $products3 = [            
@@ -298,8 +337,8 @@ class LoadDemoDataCommand extends Command
             'description' => 'Java book',
             'page_id' => $p['p6']->id,
             'images' =>   [
-                ['name' => 'java.jpg', 'data' => $this->getTestPhoto( 'books/java.jpg' ), 'alt' => 'java front'  ],
-                ['name' => 'java_back.jpg', 'data' => $this->getTestPhoto( 'books/java_back.jpg' ), 'alt' => 'java back'  ],
+                ['name' => 'java.jpg', 'data' => $this->getTestPhoto( 'books/java.jpg' ), 'alt' => [ "en" =>'java front'  ]],
+                ['name' => 'java_back.jpg', 'data' => $this->getTestPhoto( 'books/java_back.jpg' ), 'alt' => [ "en" =>'java back'  ]],
             ]
         ];
         $products4 = [            
@@ -309,15 +348,15 @@ class LoadDemoDataCommand extends Command
             'description' => 'English book',
             'page_id' => $p['p7']->id,
             'images' =>   [
-                ['name' => 'english.jpg', 'data' => $this->getTestPhoto( 'books/english.jpg' ), 'alt' => 'english front' ],
-                ['name' => 'english_back.jpg', 'data' => $this->getTestPhoto( 'books/english_back.jpg' ), 'alt' => 'english back' ],
+                ['name' => 'english.jpg', 'data' => $this->getTestPhoto( 'books/english.jpg' ), 'alt' => [ "en" =>'english front' ]],
+                ['name' => 'english_back.jpg', 'data' => $this->getTestPhoto( 'books/english_back.jpg' ), 'alt' => [ "en" =>'english back' ]],
             ]
         ];    
 
-        Product::wrapCreate($products1);
-        Product::wrapCreate($products2);        
-        Product::wrapCreate($products3);
-        Product::wrapCreate($products4);           
+        $this->getProductObj()->wrapCreate($products1);
+        $this->getProductObj()->wrapCreate($products2);        
+        $this->getProductObj()->wrapCreate($products3);
+        $this->getProductObj()->wrapCreate($products4);           
            
         /*---------------------*/
         /* ---users -----------*/

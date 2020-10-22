@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Menu;
-//use App\Page;
+use App\Page;
 //use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -21,79 +21,94 @@ class MenuTest extends Base
     private $objMenu;
 
     public function setUp(): void
-    {
+    {        
+        
         parent::setUp();
+        //putenv("LANGS=en,pl");      
+        
         $this->createUser();
 
+        
         $this->testData =
         [
-             'name'     => 'test menu1',
-             'position' => 4
+             'name'     => ['en' => 'test menu1']
+             //'position' => 4
         ];
 
-        $menu = new Menu($this->testData);
-
-        $menu->save();
-        $this->objMenu = $menu;
-        //$this->menuId = $this->objMenu->id;
-    }
+        
+        // $menu = new Menu($this->testData);
+        // $menu->save();
+        // $this->objMenu = $menu;
+        
+    }  
 
     protected function tearDown(): void
     {
         parent::tearDown();
     }
 
+    private  function  setTestData()
+    {
+        $this->objMenu = (new Menu)->wrapCreate($this->testData);
+    }
+
     /** @test */
     public function it_will_get_tree_by_menu()
     {
+      $this->setTestData();
       $parentId = $this->dateToTestParent( $this->objMenu->id );
+      //dd(Page::all()->toArray());
 
       $publishedAndAccess = $this->objMenu->pagesPublishedAndAccess()->get(); //->toArray();
       $tree = $this->objMenu->pagesPublishedTree($publishedAndAccess);
       $this->assertEquals(3, count($tree));
       $this->assertEquals(2, count($tree[$parentId]['children']));
-
-      $this->assertEquals(PageTest::STR_CHILD_ONE, $tree[$parentId]['children'][0]['title']);
-      $this->assertEquals(PageTest::STR_CHILD_TWO, $tree[$parentId]['children'][1]['title']);
+      
+      $this->assertEquals(PageTest::STR_CHILD_ONE, Page::find($tree[$parentId]['children'][0]->id)->translatesByColumnAndLang( 'title', 'en' ));
+      $this->assertEquals(PageTest::STR_CHILD_TWO, Page::find($tree[$parentId]['children'][1]->id)->translatesByColumnAndLang( 'title', 'en' ));
     }
 
 
     /** @test */
     public function it_will_change_position_menus()
     {
+      $this->setTestData();
+
       //add to test menu
       $testData2 =
       [
-           'name'     => 'test menu2',
+           'name'     => ['en' => 'test menu2'],
            //'position' => 2
       ];
       $response2 = $this->post('api/menus?token='.$this->token, $testData2);
+      //dd($response2);
+      $this->assertTrue( $response2->getData()->success );        
 
       $testData3 =
       [
-           'name'     => 'test menu3',
+           'name'     => ['en' => 'test menu3'],
            //'position' => 3
       ];
       $response3 = $this->post('api/menus?token='.$this->token, $testData3);
+      $this->assertTrue( $response3->getData()->success );        
       //test if 3 $menus
       $response = $this->get('api/menus?token='.$this->token );
       $res = $response->getData();
       $this->assertTrue( $res->success );      
       $this->assertEquals( count($res->data), 3);
 
-      //dump($res->data);
-      $this->assertEquals( $res->data[0]->position, 4 );      
-      $this->assertEquals( $res->data[1]->position, 5 );      
-      $this->assertEquals( $res->data[2]->position, 6 );
+      //dd($res->data);
+      $this->assertEquals( $res->data[0]->position, 1 );      
+      $this->assertEquals( $res->data[1]->position, 2 );      
+      $this->assertEquals( $res->data[2]->position, 3 );
 
-      $name = $res->data[2]->name;
-      $this->assertEquals( $name, $testData3['name'] );
+      $name = Menu::find( $res->data[2]->id )->translatesByColumnAndLang( 'name', 'en' );
+      $this->assertNotEmpty($name);
+      //$name = $res->data[2]->name;
+      $this->assertEquals( $name, $testData3['name']['en'] );
 
       $res = $this->get('api/menus/position/up/'.$res->data[2]->id.'?token='.$this->token );
-
       $res22a = $res->getData();
-
-
       $this->assertTrue( $res22a->success );
 
 
@@ -101,11 +116,12 @@ class MenuTest extends Base
       $res1 = $response->getData();
       //dump($res1->data);
 
-      $this->assertEquals( $res1->data[2]->name, $testData2['name'] );
-      $this->assertNotEquals( $res1->data[2]->name, $name );
+      $name2 = Menu::find( $res1->data[2]->id )->translatesByColumnAndLang( 'name', 'en' );      
+      $this->assertEquals( $name2, $testData2['name']['en'] );
+      $this->assertNotEquals( $name2, $name );
 
 
-      $name1 = $res1->data[2]->name;
+      $name1 = Menu::find( $res1->data[2]->id )->translatesByColumnAndLang( 'name', 'en' );
       $resDown = $this->get('api/menus/position/down/'.$res1->data[2]->id.'?token='.$this->token );
       $res22a1 = $resDown->getData();
       $this->assertTrue( $res22a1->success );
@@ -114,30 +130,31 @@ class MenuTest extends Base
       $response = $this->get('api/menus?token='.$this->token );
       $res2 = $response->getData();
 
-      $this->assertNotEquals( $res2->data[2]->name, $name1 );
+      $this->assertNotEquals(  Menu::find($res2->data[2]->id)->translatesByColumnAndLang( 'name', 'en' ), $name1 );
       //dd($res2->data);
       
-      $this->assertEquals( $res2->data[0]->name, $name1);
-      $this->assertEquals( $res2->data[0]->name, 'test menu2');
-      $this->assertEquals( $res2->data[0]->position, 4);      
+      $this->assertEquals(  Menu::find($res2->data[0]->id)->translatesByColumnAndLang( 'name', 'en' ), $name1);
+      $this->assertEquals(  Menu::find($res2->data[0]->id)->translatesByColumnAndLang( 'name', 'en' ), 'test menu2');
+      $this->assertEquals( $res2->data[0]->position, 1);      
       //var_dump($res0); die('--');
     }
-
 
 
     /** @test */
     public function it_will_show_all_menus()
     {
+      $this->setTestData();
+
       $response = $this->get('api/menus?token='.$this->token );
       $res = $response->getData();
       $this->assertTrue( $res->success );
       $this->assertEquals( count($res->data), 1);
       $data = (array)$res->data[0];
-      //var_dump($data);
+      //var_dump($data); dd('--');
       //$this->testData['id'] = 1;
 
-      $this->assertSame($data['name'], $this->testData['name']);
-      $this->assertSame($data['position'], $this->testData['position']);
+      $this->assertSame(  Menu::find($data['id'])->translatesByColumnAndLang( 'name', 'en' ), $this->testData['name']['en']);
+      $this->assertSame($data['position'], 1/*$this->testData['position']*/);
 
       $this->assertIsInt($data['position']);
       $this->assertIsInt($data['id']);      
@@ -148,10 +165,10 @@ class MenuTest extends Base
     /** @test */
     public function it_will_add_menus()
     {
-
+      $this->setTestData();
       $testData2 =
       [
-           'name'     => 'test menu2',
+           'name'     => ['en' =>  'test menu2'],
            //'position' => 3
       ];
 
@@ -170,26 +187,26 @@ class MenuTest extends Base
 
       $this->assertTrue( $res2->success );
       $this->assertEquals( count($res2->data), 2);
-      //print_r((array)$res2->data);
 
       $data = (array)$res2->data[0];
-      unset($data['id']);
-      $this->assertSame($data, $this->testData);
+      //unset($data['id']);
+      $this->assertSame( Menu::find( $data['id'])->translatesByColumnAndLang( 'name', 'en' ) , $this->testData['name']['en']);
       $data2 = (array)$res2->data[1];
 
-      unset($data2['id']);
+      //unset($data2['id']);
       $testData2['position'] = $data['position'] + 1;
 
       //print_r($data2);
       //print_r($testData2);
 
-      $this->assertSame($data2, $testData2);
+      $this->assertSame($data2['position'], $testData2['position']);
 
       //wrond data
       $testData22 =
       [
-           'name'     => 'test menu2',
-           'position' => '3a12'
+           'name'     => ['en' => 'test menu2'],
+           'position' => '3a12',
+           'fake' => 234
       ];
 
       $response22 = $this->post('api/menus?token='.$this->token, $testData22);
@@ -207,7 +224,8 @@ class MenuTest extends Base
     /** @test */
     public function it_will_update_menu()
     {
-
+      $this->setTestData();
+      //dd('00000000000');
       $responseAll = $this->get('api/menus?token='.$this->token );
       $resAll = $responseAll->getData();
       $id = $resAll->data[0]->id;
@@ -217,23 +235,27 @@ class MenuTest extends Base
 
       //$this->testData
 
-      $slug = Menu::find($id)->slug;
-      $this->assertEquals($slug,  Str::slug($this->testData['name'], "-")    );
+      $slug = Menu::find($id)->getSlugByLang('en');
+      //dd($slug);
+      $this->assertEquals($slug,  Str::slug($this->testData['name']['en'], "-")    );
 
 
       $testData3 =
       [
             'id' => $id,
-            'name' => 'test menu3  żółta żółć',
-            'position' => $resAll->data[0]->position
+            'name' =>  ['en' => 'test menu3  żółta żółć'],
+            'position' => $resAll->data[0]->position //? - is it pass postition by edit menu ?? TODO
       ];
 
+      //dd('++++++++++++11+++');
       $response0 = $this->put('api/menus/'.$id.'?token='.$this->token, $testData3);
+      //dd($response0);
+      $this->assertTrue( $response0->getData()->success ); 
       //$response0 = $this->put('api/menus/1?token='.$this->token, $testData3);
 
-      $slugAfter = Menu::find($id)->slug;
+      $slugAfter = Menu::find($id)->getSlugByLang('en');
       $this->assertNotEquals($slug, $slugAfter);
-      $this->assertEquals($slugAfter,  Str::slug($testData3['name'], "-")  );
+      $this->assertEquals($slugAfter,  Str::slug($testData3['name']['en'], "-")  );
 
 
 
@@ -250,7 +272,9 @@ class MenuTest extends Base
       $this->assertEquals( count($res->data), 1);
       $data = (array)$res->data[0];
       //unset($data['id']);
-      //var_dump($data);
+
+      //dump($testData3);
+      dd($data);
 
       $this->assertSame($data, $testData3);
 

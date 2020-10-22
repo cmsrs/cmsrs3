@@ -8,8 +8,22 @@ use Illuminate\Support\Facades\Auth;
 
 class Page extends Model
 {
+
+    private $translate;
+    private $content;    
+
     protected $fillable = [
-        'title', 'short_title', 'description', 'published', 'commented', 'after_login', 'position', 'type', 'content', 'menu_id', 'page_id'
+        //'title', 
+        //'short_title', 
+        //'description', 
+        'published', 
+        'commented', 
+        'after_login', 
+        'position', 
+        'type', 
+        //'content', 
+        'menu_id', 
+        'page_id'
     ];
 
     protected $casts = [
@@ -21,22 +35,120 @@ class Page extends Model
           'page_id' => 'integer'
     ];
 
+    public function __construct(array $attributes = array())
+    {
+        parent::__construct($attributes);
+
+        $this->translate = new Translate;  
+        $this->content = new Content;          
+    }
+
+    // public function  getPageObj()
+    // {
+    //     $this->setTranslate($this->translate);
+    //     $this->setContent($this->content);
+    //     return $this;
+    // }
+    
+
+    public function setTranslate( $objTranslate )
+    {
+        if(!empty($objTranslate)){
+            $this->translate = $objTranslate;
+        }
+    }      
+
+    public function setContent( $objContent )
+    {    
+        if( !empty($objContent) ){
+            $this->content = $objContent;
+        }
+    }  
+
+    public function menu()
+    {
+      return $this->hasOne('App\Menu', 'id', 'menu_id');
+    }        
+
+    public function translates()
+    {
+      return $this->hasMany('App\Translate');
+    }
+
+    public function translatesByColumnAndLang( $column, $lang )
+    {
+      return $this->translates()->where( 'column', $column )->where('lang', $lang)->first()->value;
+    }
+
+    public function contents()
+    {
+      return $this->hasMany('App\Content');
+    }
+
+    
+
     public function setTitleAttribute($value)
     {
         $this->attributes['title'] = $value;
         $this->attributes['slug'] = Str::slug($value, "-");
     }
 
-    public function menu()
+    static public function CreatePage($data)
     {
-      return $this->hasOne('App\Menu', 'id', 'menu_id');
+      $menuId = empty($data['menu_id']) ? null : $data['menu_id'];
+      $data['position'] = Page::getNextPositionByMenuId($menuId);  
+      $data = Page::validateMainPage($data);
+      $data = Page::validateParentPublished($data);
+
+      $page = Page::create( $data );
+      if( empty($page->id)){
+        throw new \Exception("I cant get page id");
+      }
+      return $page;
+    }
+
+    /**
+     * use also in script to load demo (test) data
+     * php artisan command:load-demo-data
+     */
+    public function wrapCreate($data)
+    {
+      $page = Page::CreatePage($data);
+      $this->createTranslate([ 'page_id' => $page->id, 'data' => $data ]);
+
+      if( !empty($data['images']) && is_array($data['images']) ){
+        $objImage = new Image;
+        $objImage->setTranslate($this->translate);
+        $objImage->createImages($data['images'], 'page', $page->id);
+      }
+
+      return $page;
     }
     
+    public function createTranslate( $dd ){
+        $this->translate->wrapCreate( $dd );      
+        $this->content->wrapCreate( $dd );
+    }
 
+    /*
+    public function setLangs($arrLang){
+        $this->translate->setArrLangs($arrLang);
+        $this->content->setArrLangs($arrLang);      
+    }
+
+    public function getArrLangs(){
+        $langT = $this->translate->setArrLangs();
+        $langC = $this->content->setArrLangs();      
+
+        if( count($langT) != count($langC)){ //it should be the same!
+          throw new \Exception("Wrond langs.. not the same langs: translate and content");
+        }
+        return $langC; 
+    }
+    */
+    
     static public function getFooterPages()
     {
-
-
       //$privacyPolicy = Page::getFirstPageByType('privacy_policy' );
 
       $privacyPolicy = Page::getFirstPageByType('privacy_policy' );
@@ -71,30 +183,14 @@ class Page extends Model
       return $out;
   }
 
-    /*
-    static public function getPageToPrivacyPolicy()
-    {
-      $page = Page::getFirstPageByType('privacy_policy' );
-      return $page; //->getSeparateUrl();  
-    }
-    */
-
     public function getUrl()
     {
-      // if(  'contact' == $this->type ){ //it was wrong if many pages will be on that menu
-      //   return $this->getCmsMenuUrl();
       if( 'privacy_policy' == $this->type ){
         return $this->getIndependentUrl();
       }
       return $this->getCmsUrl();
     }
     
-    // private function getCmsMenuUrl()
-    // {
-    //   //$menuSlug = $this->menu()->get()->first()->slug;      
-    //   return "/c/".$this->slug;
-    // }    
-
     private function getCmsUrl()
     {   
       $menuSlug = $this->menu()->get()->first()->slug;      
@@ -130,18 +226,9 @@ class Page extends Model
     
     static public function getFirstPageByType($type)
     {
-      //echo $type."------";
-      //$tmp = Page::all();// ->toArray();
-      ///dd($tmp);
       $ret =  Page::where('type', '=', $type)->where( 'published', '=', 1 )->get()->first();
-      //dd($ret);
 
       return $ret;
-
-      // if( !isSet($p[0]) ) {
-      //   return false;
-      // }
-      // return $p[0];
     }
 
     static public function getMainPage()
@@ -179,29 +266,6 @@ class Page extends Model
       return $data;
     }
     
-    /**
-     * use also in script to load demo (test) data
-     * php artisan command:load-demo-data
-     */
-    static public function wrapCreate($data)
-    {
-      $menuId = empty($data['menu_id']) ? null : $data['menu_id'];
-      $data['position'] = Page::getNextPositionByMenuId($menuId);  
-      $data = Page::validateMainPage($data);
-      $data = Page::validateParentPublished($data);
-
-      $page = Page::create( $data );
-      if( empty($page->id)){
-        throw new \Exception("I cant get page id");
-      }
-
-      if( !empty($data['images']) && is_array($data['images']) ){
-        Image::createImages($data['images'], 'page', $page->id);
-      }
-
-      return $page;
-    }
-
     public function arrImages()
     {
       $out = [];
@@ -228,9 +292,11 @@ class Page extends Model
     {
 
       if( $type ){
-          $pages = Page::query()->where('type', $type )->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'published', 'commented', 'after_login', 'position', 'type', 'content', 'menu_id', 'page_id'])->toArray();
+          //'title', 'short_title',        'content',
+          $pages = Page::query()->where('type', $type )->orderBy('position', 'asc' )->get(['id',  'published', 'commented', 'after_login', 'position', 'type', 'menu_id', 'page_id'])->toArray();
       }else{
-          $pages = Page::query()->orderBy('position', 'asc' )->get(['id', 'title', 'short_title', 'description', 'published', 'commented', 'after_login', 'position', 'type', 'content', 'menu_id', 'page_id'])->toArray();
+          //'title', 'short_title', 'description', 'content',
+          $pages = Page::query()->orderBy('position', 'asc' )->get(['id', 'published', 'commented', 'after_login', 'position', 'type',  'menu_id', 'page_id'])->toArray();
       }
 
 

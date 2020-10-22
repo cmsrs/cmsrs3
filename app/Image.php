@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Image extends Model
 {
+
+    private $translate;
+
     const IMAGE_DIR = 'images';
 
     const IMAGE_ORG = 'org';
@@ -38,6 +41,20 @@ class Image extends Model
       'product_id' => 'integer',
       'position' => 'integer'
     ];
+
+    public function __construct(array $attributes = array())
+    {
+        parent::__construct($attributes);
+
+        $this->translate = new Translate;  
+    }
+
+    public function setTranslate( $objTranslate )
+    {
+        if( !empty($objTranslate) ){
+            $this->translate = $objTranslate;
+        }
+    }
 
     /**
     * TODO - mmove function to helper
@@ -161,7 +178,7 @@ class Image extends Model
       }
     }
 
-    static public function createImages($images, $type,  $refId){
+    public function createImages($images, $type,  $refId ){
       //var_dump($images);
 
       $out = [];
@@ -179,7 +196,7 @@ class Image extends Model
 
         $dbData = [
             'name' => $name,
-            'alt' => $alt,
+            //'alt' => $alt,
             'position' => Image::getNextPositionByTypeAndRefId( $type,  $refId ),
             $strRefId => $refId
         ];
@@ -188,6 +205,9 @@ class Image extends Model
         if( empty($image->id) ){
           throw new \Exception("I can't get image id");
         }
+
+        $this->translate->wrapCreate( [ 'image_id' => $image->id, 'data' => ['alt' => $alt ] ] );  
+
         $out[$key] = $image;
 
         $dirImg = Image::getImageDir( $type,  $refId, $image->id );

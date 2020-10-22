@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    private $translate;
+
     protected $fillable = [
         'name',
         'sku',
@@ -21,17 +23,36 @@ class Product extends Model
       'page_id' => 'integer'
     ];
 
-
     public function images()
     {
       return $this->hasMany('App\Image');
+    }  
+
+    public function __construct(array $attributes = array())
+    {
+        parent::__construct($attributes);
+
+        $this->translate = new Translate;  
+    }
+
+
+    public function setTranslate( $objTranslate )
+    {
+        if( !empty($objTranslate) ){
+            $this->translate = $objTranslate;
+        }
     }    
+
+    // static public function  getProductObj()
+    // {
+    //     return $this->setTranslate($this->translate);
+    // }    
 
     /**
      * use also in script to load demo (test) data
      * php artisan command:load-demo-data
      */
-    static public function wrapCreate($data)
+    public function wrapCreate($data)
     {
         $product = Product::create( $data );
         if( empty($product->id)){
@@ -39,7 +60,9 @@ class Product extends Model
         }
   
         if( !empty($data['images']) && is_array($data['images']) ){
-          Image::createImages($data['images'], 'product',  $product->id);
+          $objImage = new Image;
+          $objImage->setTranslate($this->translate);
+          $objImage->createImages($data['images'], 'product',  $product->id);
         }
         return $product;
     }

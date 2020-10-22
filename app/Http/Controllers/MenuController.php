@@ -43,7 +43,7 @@ class MenuController extends Controller
     }
 
     try{
-      Menu::wrapCreate($data);
+      (new Menu)->wrapCreate($data);
     } catch (\Exception $e) {
       Log::error('menu add ex: '.$e->getMessage() );
       return response()->json(['success'=> false, 'error'=> 'Add menu problem - exeption'], 200);
@@ -71,7 +71,8 @@ class MenuController extends Controller
       }
 
       try{
-        $res = $menu->update($data);
+        //dd( $data );
+        $res = $menu->wrapUpdate($data);
       } catch (\Exception $e) {
           Log::error('menu update ex: '.$e->getMessage() );
           return response()->json(['success'=> false, 'error'=> 'Update menu problem - exeption'], 200);
