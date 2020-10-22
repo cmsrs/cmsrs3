@@ -183,9 +183,21 @@ class Menu extends Model
 
     static public function getAllMenus()
     {
-      //'name',
-      $menus = Menu::query()->orderBy('position', 'asc')->get(['id',  'position'])->toArray();
-      return $menus;
+
+      $menus =  Menu::with('translates')->orderBy('position', 'asc')->get()->toArray();
+
+      $out = [];
+      $i = 0;
+      foreach($menus as $menu){
+        $out[$i]['id'] = $menu['id'];
+        $out[$i]['position'] = $menu['position'];
+        foreach($menu['translates'] as $translate){
+          $out[$i][$translate['column']][$translate['lang']] = $translate['value'];
+        }
+        $i++;
+      }
+
+      return $out;
     }
 
     static public function getNextPosition()
