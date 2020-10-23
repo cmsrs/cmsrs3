@@ -15,6 +15,7 @@ class ConfigTest extends Base
 
     public function setUp(): void
     {
+        putenv('LANGS="en"');
         parent::setUp();
         $this->createUser();
     }
@@ -42,16 +43,16 @@ class ConfigTest extends Base
         $in = false;
         foreach($res->data->page_types as $page_type ){
             $data = [
-                'title'     => $page_type,
-                'short_title' => $page_type,
-                'description' => 'Description... Needed for google',            
+                'title'     => ['en' => $page_type],
+                'short_title' => ['en' =>$page_type],
+                'description' => ['en' =>'Description... Needed for google'],
                 'published' => 1,
                 'commented' => 1,
                 'type' => $page_type,
-                'content' => 'test',
+                'content' => ['en' =>'test'],
                 'menu_id' => null
             ];
-            Page::wrapCreate($data);    
+            (new Page)->wrapCreate($data);    
             $in = true;
         }
         $this->assertTrue($in);
@@ -62,9 +63,9 @@ class ConfigTest extends Base
         /*******langs **/
         /***************/        
         $this->assertTrue( is_array($res->data->langs) );        
-        $this->assertEquals(2,  count($res->data->langs) );                
+        $this->assertEquals(1,  count($res->data->langs) );                
         $this->assertEquals( 'en',  ($res->data->langs[0]) );                
-        $this->assertEquals( 'pl',  ($res->data->langs[1]) );                                
+        //$this->assertEquals( 'pl',  ($res->data->langs[1]) );                                
 
 
     }
