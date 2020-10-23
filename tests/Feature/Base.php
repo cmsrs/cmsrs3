@@ -114,10 +114,21 @@ class Base extends TestCase
     $r = $res->getData();
     $this->assertTrue( $r->success );
 
-    $parentId = $r->data[2]->id;
+    //find parenent page    
+    $parentId = null;
+    $pages = Page::all();
+    foreach($pages as $p){
+        $title = Page::find($p->id)->translatesByColumnAndLang( 'title', 'en' );
+        if(PageTest::STR_PARENT_TWO == $title){
+            $parentId = $p->id;
+        }
+    }
 
-    $this->assertEquals( PageTest::STR_PARENT_TWO, Page::find($parentId)->translatesByColumnAndLang( 'title', 'en' ) );
     $this->assertNotEmpty($parentId);
+    
+    // $parentId = $r->data[2]->id;
+    // $this->assertEquals( PageTest::STR_PARENT_TWO, Page::find($parentId)->translatesByColumnAndLang( 'title', 'en' ) );
+    // $this->assertNotEmpty($parentId);
 
     $testData3 =
     [

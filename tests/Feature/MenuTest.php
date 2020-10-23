@@ -53,6 +53,23 @@ class MenuTest extends Base
     }
 
     /** @test */
+    // public function it_will_get_slug()
+    // {
+
+    /** @test */
+    public function it_will_get_slug()
+    {
+      $this->setTestData();
+      $responseAll = $this->get('api/menus?token='.$this->token );
+      $resAll = $responseAll->getData();
+      $id = $resAll->data[0]->id;
+
+      $slug = Menu::find($id)->getSlugByLang('en');
+      //dd($slug);
+      $this->assertEquals($slug,  Str::slug($this->testData['name']['en'], "-")    );
+    }
+
+    /** @test */
     public function it_will_get_tree_by_menu()
     {
       $this->setTestData();

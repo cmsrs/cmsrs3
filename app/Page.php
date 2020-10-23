@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
+//use Illuminate\Support\Facades\Auth;
 
-class Page extends Model
+class Page extends Base
 {
 
     private $translate;
@@ -78,17 +78,37 @@ class Page extends Model
       return $this->hasMany('App\Translate');
     }
 
-    public function translatesByColumnAndLang( $column, $lang )
-    {
-      return $this->translates()->where( 'column', $column )->where('lang', $lang)->first()->value;
-    }
+    // public function translatesByColumnAndLang( $column, $lang )
+    // {
+    //   return $this->translates()->where( 'column', $column )->where('lang', $lang)->first()->value;
+    // }
 
     public function contents()
     {
       return $this->hasMany('App\Content');
     }
 
-    
+    public function getSlugByLang($lang)
+    {
+        //
+        $column = 'title';
+        $name = $this->translatesByColumnAndLang( $column, $lang );
+        //dd($name);
+        if( empty($name) ){
+          throw new \Exception("I cant create slug for page column: $column for lang: $lang, because value is empty");
+        }
+        return Str::slug($name, "-");
+    }
+
+    public function getAllTranslate()
+    {
+      $translates = $this->translates()->where('page_id', $this->id )->get(['lang', 'column', 'value'])->toArray();
+      $contents = $this->contents()->where('page_id', $this->id )->get(['lang', 'column', 'value'])->toArray();
+
+      $ret = array_merge($translates, $contents);
+
+      return $ret;
+    }    
 
     public function setTitleAttribute($value)
     {

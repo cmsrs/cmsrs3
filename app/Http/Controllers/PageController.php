@@ -60,7 +60,7 @@ class PageController extends Controller
       //      ]);
       //      $tmp = $validator->fails();
 
-      $pages = Page::getAllPagesWithImages($type);
+      $pages = (new Page)->getAllPagesWithImages($type);
 
       return response()->json(['success' => true, 'data'=> $pages], 200);
   }

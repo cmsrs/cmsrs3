@@ -5,10 +5,10 @@ namespace App;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Model;
+//use Illuminate\Database\Eloquent\Model;
 
 
-class Menu extends Model
+class Menu extends Base
 {
     private $translate;
 
@@ -95,12 +95,20 @@ class Menu extends Model
     
     public function getSlugByLang($lang)
     {
-        $name = $this->translatesByColumnAndLang( 'name', $lang );
+        $column = 'name';
+        $name = $this->translatesByColumnAndLang( $column, $lang );
         if( empty($name) ){
-          throw new \Exception("I cant create slug for menu");
+          throw new \Exception("I cant create slug for menu, column $column for lang: $lang, because value is empty");
         }
         return Str::slug($name, "-");
     }
+
+    public function getAllTranslate()
+    {
+        return  $this->translates()->where('menu_id', $this->id )->get(['lang', 'column', 'value'])->toArray();
+    }
+
+
 
     /*
     public function setNameAttribute($value)
@@ -129,11 +137,6 @@ class Menu extends Model
     public function translates()
     {
       return $this->hasMany('App\Translate');
-    }
-
-    public function translatesByColumnAndLang( $column, $lang )
-    {
-      return $this->translates()->where( 'column', $column )->where('lang', $lang)->first()->value;
     }
 
     public function pagesPublished()

@@ -17,7 +17,7 @@ class CreateTranslatesTable extends Migration
             $table->bigIncrements('id')->index();
             $table->string('lang', 8)->notNullable();
             $table->string('column', 32)->notNullable();            
-            $table->string('value', 510)->notNullable();                        
+            $table->string('value', 510)->nullable();                        
             
             $table->unsignedBigInteger('menu_id')->nullable();
             $table->foreign('menu_id')->nullable()->references('id')->on('menus')->onDelete('set null');
