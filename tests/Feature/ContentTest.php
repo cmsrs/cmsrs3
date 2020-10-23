@@ -121,18 +121,22 @@ class ContentTest extends Base
 
         //$this->expectException(\Exception::class);
         $p = (new Page)->wrapCreate($data1p);
-        $this->assertEquals( 0, Content::query()->where('page_id', $p->id )->count() );        
+        $this->assertEquals( 2, Content::query()->where('page_id', $p->id )->whereNotNull('value')->count() );        
+        //Content::find($p->id)
     }
 
     /** @test */
     public function page_content_wrap_create_wrong()
     {
         $data1p = $this->getPageTestData();
+        
         $data1p['content'] = 'str fake';
+        $data1p['description'] = 'strereer';
+        //dd($data1p);
 
         //$this->expectException(\Exception::class);
         $p = (new Page)->wrapCreate($data1p);
-        $this->assertEquals( 0, Content::query()->where('page_id', $p->id )->count() );        
+        $this->assertEquals( 0, Content::query()->where('page_id', $p->id )->whereNull('value')->count() );        
     }
 
     
