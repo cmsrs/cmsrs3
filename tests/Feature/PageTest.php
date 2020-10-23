@@ -148,6 +148,7 @@ class PageTest extends Base
     /** @test */
     public function it_will_unpublished_children_by_update()
     {
+      $this->setTestData();
       $parentId = $this->dateToTestParent( $this->menuId );
       $testData2 =
       [
@@ -182,6 +183,7 @@ class PageTest extends Base
     /** @test */
     public function it_will_add_main_page()
     {
+      $this->setTestData();
       $parentId = $this->dateToTestParent( $this->menuId );
       $testData2 =
       [
@@ -1037,6 +1039,10 @@ class PageTest extends Base
       $id = $resAll->data[0]->id;
 
       $this->assertNotEmpty($id);
+
+      $allTranslate = Page::find($id)->getAllTranslate();
+      $this->assertEquals(4, count($allTranslate));
+
       //$id = 1;
 
       $testData3 =
@@ -1082,11 +1088,16 @@ class PageTest extends Base
       $this->assertTrue( $res->success );
       $this->assertEquals( count($res->data), 1);
       $data = $res->data[0];
+
+      $allTranslate = Page::find($id)->getAllTranslate();
+      $this->assertEquals(4, count($allTranslate));
+
       //unset($data['id']);
       //var_dump($data);
 
       //dump($data);
       //dump($testData3);
+      //dd('----------');
       $this->comparePageFields($testData3, $data);
 
 

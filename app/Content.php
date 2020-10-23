@@ -36,11 +36,13 @@ class Content extends Base
             $obj = Content::where( 'page_id', $row['page_id'] )->where( 'column', $row['column'] )->where('lang', $row['lang'] )->first();
         }
 
-        if($obj){
-            $obj->update([ 'value' => $row['value']] );
-        }else{
-            $this->createRow( $row );
-        }
+        $this->wrapTranslateUpdate( $obj, $row );
+
+        // if($obj){
+        //     $obj->update([ 'value' => $row['value']] );
+        // }else{
+        //     $this->createRow( $row );
+        // }
 
         return true;
     }

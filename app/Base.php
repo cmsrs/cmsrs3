@@ -37,7 +37,7 @@ class Base extends Model
                     //if( !empty($data[$column][$lang]) ){                        
                     $value = isSet($data[$column][$lang]) ? $data[$column][$lang] : '';
                     $row = [ $refName => $refId, 'column' => $column, 'lang' => $lang, 'value' => $value ];
-                    if($create){
+                    if($create ){
                         $this->createRow( $row );
                     }else{
                         $this->updateRow( $row );
@@ -56,6 +56,7 @@ class Base extends Model
     public function getAllTranslateByColumn()
     {
         $data = $this->getAllTranslate();
+        //dd($data);
 
         $out = [];
         foreach($data as $d){
@@ -92,8 +93,22 @@ class Base extends Model
     } 
     */   
     
+    protected function wrapTranslateUpdate( $obj, $row )
+    {
+        if($obj){
+            $obj->update([ 'value' => $row['value']] );
+            // if(empty($row['value'])){
+            //     $obj->delete();
+            // }else{
+            //     $obj->update([ 'value' => $row['value']] );
+            // }
+        }else{
+            $this->createRow( $row );
+        }
+    }
 
-    protected function createRow( $row ){
+    protected function createRow( $row )
+    {
         $translate = $this->create($row);
         if( empty($translate->id) ){
             throw new \Exception("problem with save into translate table");

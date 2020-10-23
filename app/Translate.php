@@ -52,11 +52,8 @@ class Translate extends Base
         }elseif( !empty($row['image_id'])  ){
             $obj = Translate::where( 'image_id', $row['image_id'] )->where( 'column', $row['column'] )->where('lang', $row['lang'] )->first();
         }
-        if($obj){
-            $obj->update([ 'value' => $row['value']] );
-        }else{
-            $this->createRow( $row );
-        }
+
+        $this->wrapTranslateUpdate( $obj, $row );
 
         return true;
     }
