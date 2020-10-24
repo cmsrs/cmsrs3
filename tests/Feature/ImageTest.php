@@ -227,11 +227,27 @@ class ImageTest extends Base
         }
       }
 
+      $translateBefore = Translate::query()->whereNotNull('image_id')->where('column', 'alt' )->get()->toArray();
+      $this->assertEquals(2, count($translateBefore));
+      $this->assertEquals(self::STR_DESC_IMG1, $translateBefore[0]['value']);
+      $this->assertEquals(null, $translateBefore[1]['value']);      
+
+
+      // $translateAfter = Translate::query()->whereNotNull('image_id')->where('column', 'alt' )->get()->toArray();      
+      // $this->assertEquals(4, count($translateAfter));
+      // $this->assertEquals($alt1['en'], $translateAfter[0]['value']);
+      // $this->assertEquals($alt2['en'], $translateAfter[1]['value']);      
+      // $this->assertEquals(null, $translateAfter[2]['value']);
+      // $this->assertEquals(null, $translateAfter[3]['value']);
+
+
 
       $response0 = $this->delete('api/pages/'.$this->pageId.'?token='.$this->token);
       $res0 = $response0->getData();
       $this->assertTrue( $res0->success );
 
+      $translateAfter = Translate::query()->whereNotNull('image_id')->where('column', 'alt' )->get()->toArray();      
+      $this->assertEmpty($translateAfter);
 
       $responseAllAfter = $this->get('api/pages?token='.$this->token );
       $resAllAfter = $responseAllAfter->getData();
@@ -276,7 +292,14 @@ class ImageTest extends Base
         $this->assertFileExists($fileThumb);
       }
 
+      $translateBefore = Translate::query()->where('image_id', $imgToDel->id )->where('column', 'alt' )->get()->toArray();
+      $this->assertEquals(1, count($translateBefore));
+      $this->assertEquals(self::STR_DESC_IMG1, $translateBefore[0]['value']);
+
       $responseDel = $this->delete('api/images/'.$imgToDel->id.'?token='.$this->token);
+
+      $translateAfter = Translate::query()->where('image_id', $imgToDel->id )->where('column', 'alt' )->get()->toArray();   
+      $this->assertEmpty($translateAfter);
 
        //var_dump($responseDel); die('===');
 

@@ -21,7 +21,7 @@ class CreateContentsTable extends Migration
             $table->text('value')->nullable();
             
             $table->unsignedBigInteger('page_id')->nullable();
-            $table->foreign('page_id')->nullable()->references('id')->on('pages')->onDelete('set null');
+            $table->foreign('page_id')->nullable()->references('id')->on('pages')->onDelete('cascade');
 
             //'column',
             $table->unique(['lang', 'column', 'page_id' ]);

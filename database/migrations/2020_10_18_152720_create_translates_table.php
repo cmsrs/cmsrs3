@@ -20,13 +20,13 @@ class CreateTranslatesTable extends Migration
             $table->string('value', 510)->nullable();
             
             $table->unsignedBigInteger('menu_id')->nullable();
-            $table->foreign('menu_id')->nullable()->references('id')->on('menus')->onDelete('set null');
+            $table->foreign('menu_id')->nullable()->references('id')->on('menus')->onDelete('cascade');
 
             $table->unsignedBigInteger('page_id')->nullable();
-            $table->foreign('page_id')->nullable()->references('id')->on('pages')->onDelete('set null');
+            $table->foreign('page_id')->nullable()->references('id')->on('pages')->onDelete('cascade');
 
             $table->unsignedBigInteger('image_id')->nullable();
-            $table->foreign('image_id')->nullable()->references('id')->on('images')->onDelete('set null');
+            $table->foreign('image_id')->nullable()->references('id')->on('images')->onDelete('cascade');
 
             $table->unique(['lang', 'column', 'menu_id', 'page_id', 'image_id' ]); 
             $table->timestamps();        
