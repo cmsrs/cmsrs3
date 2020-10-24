@@ -40,7 +40,18 @@ class Page extends Base
     {
         parent::__construct($attributes);
 
-        $this->pageFields = ['id', 'published', 'commented', 'after_login', 'position', 'type',  'menu_id', 'page_id'];          
+        $this->pageFields = [
+          'id', 
+          'published', 
+          'commented', 
+          'after_login', 
+          'position', 
+          'type',  
+          'menu_id', 
+          'page_id'
+      ];
+  
+        //$this->
         //dd('______cojest__');
         $this->translate = new Translate;  
         $this->content = new Content;          
@@ -306,7 +317,7 @@ class Page extends Base
       foreach($this->images as $image){
         $item = Image::getAllImage($image, false);        
         $item['id'] = $image->id;
-        $item['alt'] = $image->alt;        
+        $item['alt'] = Image::getAltImg($image);
         $out[] = $item;
       }
       return $out;

@@ -2,10 +2,10 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+//use Illuminate\Database\Eloquent\Model;
 
 
-class Image extends Model
+class Image extends Base
 {
 
     private $translate;
@@ -28,7 +28,11 @@ class Image extends Model
     ];
 
     protected $fillable = [
-        'name', 'alt', 'position', 'page_id', 'product_id'
+        'name', 
+        //'alt', 
+        'position', 
+        'page_id', 
+        'product_id'
     ];
 
     static private  $type = [
@@ -167,19 +171,24 @@ class Image extends Model
 
       //the order is important - first update then create
       if($imagesUpdate){
-        Image::updateImages($imagesUpdate);
+        (new Image)->updateImages($imagesUpdate);
       }
       if($imagesCreate){
-        Image::createImages($imagesCreate, $type,  $refId);
+        (new Image)->createImages($imagesCreate, $type,  $refId);
       }
 
       return true;    
     }
 
-    static public function updateImages($images){
+    public function updateImages($images){
       foreach($images as $image){
-        $objImage = Image::findOrFail($image['id']);
-        $objImage->update([ 'id' => $image['id'],  'alt' => $image['alt']]); //TODO
+        //$objImage = Image::findOrFail($image['id']);
+        //$objImage->update([ 'id' => $image['id'],  'alt' => $image['alt']]); //TODO
+        //$this->createTranslate( [ 'image_id' => $this->id, 'data' => $image['alt'] ], false );
+
+        //dump([ 'image_id' => $image['id'], 'data' => $image ]);
+        //dd('_____jestem____');
+        $this->translate->wrapCreate( [ 'image_id' => $image['id'], 'data' => $image ], false );    
       }
     }
 
@@ -268,8 +277,7 @@ class Image extends Model
       $images  = Image::getImagesByTypeAndRefId(  $type, $refId);
 
       foreach($images  as $k => $img){
-        $translates =  $img->translates->toArray();
-        $images[$k]['alt'] = Image::getAltImg($translates);
+        $images[$k]['alt'] = Image::getAltImg($img);
         $images[$k]['fs']  = Image::getAllImage($img, false);
         unset($img['translates']);
       }
@@ -278,11 +286,14 @@ class Image extends Model
       return $images;
     }
 
-    static private function getAltImg( $translates )
+    static public function getAltImg( $objImg )
     {
       $out = [];          
+      $translates = $objImg->translates->toArray();
       foreach($translates as $translate){
-        $out[$translate['column']][$translate['lang']] = $translate['value'];
+        if($translate['column'] == 'alt' ){
+          $out[$translate['lang']] = $translate['value'];
+        }
       }
       return $out;
     }
