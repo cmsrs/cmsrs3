@@ -18,6 +18,7 @@ class ContentTest extends Base
 {
     //use DatabaseMigrations;
     use RefreshDatabase;
+    public $numOfLangs;
 
 
     public function setUp(): void
@@ -26,6 +27,11 @@ class ContentTest extends Base
         parent::setUp();
 
         $this->createUser();
+
+        $numOfLangs = count((new Translate)->getArrLangs());
+        $this->assertEquals(2, $numOfLangs);
+        $this->numOfLangs = $numOfLangs;
+        
     }
 
     protected function tearDown(): void
@@ -93,12 +99,14 @@ class ContentTest extends Base
     /** @test */
     public function page_content_wrap_create_empty_1()
     {
+
+
         $data1p = $this->getPageTestData();
         unset($data1p['content']);
 
         //$this->expectException(\Exception::class);
         $p = (new Page)->wrapCreate($data1p);
-        $this->assertEquals( 0, Content::query()->where('page_id', $p->id )->count() );
+        $this->assertEquals( $this->numOfLangs, Content::query()->where('page_id', $p->id )->count() );
         
     }
 
@@ -110,7 +118,7 @@ class ContentTest extends Base
 
         //$this->expectException(\Exception::class);
         $p = (new Page)->wrapCreate($data1p);
-        $this->assertEquals( 0, Content::query()->where('page_id', $p->id )->count() );        
+        $this->assertEquals( $this->numOfLangs, Content::query()->where('page_id', $p->id )->count() );        
     }
 
     /** @test */
@@ -121,7 +129,7 @@ class ContentTest extends Base
 
         //$this->expectException(\Exception::class);
         $p = (new Page)->wrapCreate($data1p);
-        $this->assertEquals( 2, Content::query()->where('page_id', $p->id )->whereNotNull('value')->count() );        
+        $this->assertEquals( $this->numOfLangs, Content::query()->where('page_id', $p->id )->where('column', 'content')->whereNull('value')->count() );        
         //Content::find($p->id)
     }
 
@@ -136,7 +144,8 @@ class ContentTest extends Base
 
         //$this->expectException(\Exception::class);
         $p = (new Page)->wrapCreate($data1p);
-        $this->assertEquals( 0, Content::query()->where('page_id', $p->id )->whereNull('value')->count() );        
+        $this->assertEquals( $this->numOfLangs, Content::query()->where('page_id', $p->id )->where('column', 'content')->whereNull('value')->count() );        
+        $this->assertEquals( $this->numOfLangs, Translate::query()->where('page_id', $p->id )->where('column', 'description')->whereNull('value')->count() );                
     }
 
     

@@ -30,6 +30,7 @@ class PageTest extends Base
 
     public function setUp(): void
     {
+        putenv('LANGS="en"');            
         parent::setUp();
 
         $this->createUser();
@@ -1050,13 +1051,13 @@ class PageTest extends Base
             'id' => $id,
             'title' => ['en' =>  'test p3333'],            
             'short_title' => ['en' => 'p3333'],
-            'description' => ['en' =>  ''],
+            'description' => ['en' =>  null],
             'published' => 1,
             'commented' => 0,
             'after_login' => 0,
 
             //'position' => 3,
-            'content' => ['en' =>  ''],
+            'content' => ['en' =>  null],
             'type' => 'cms',
             'page_id' => null,
             'menu_id' => 9123,
@@ -1120,11 +1121,11 @@ class PageTest extends Base
               //'id' => $id,
               'title' => ['en' =>  'test p3333'],            
               'short_title' => ['en' => 'p3333'],
-              'description' => ['en' =>  ''],
+              'description' => ['en' =>  null],
               'published' => 1,
               'commented' => 0,
               'after_login' => 0,
-              'content' => ['en' =>  ''],
+              'content' => ['en' =>  null],
               'type' => 'cms',
               'page_id' => null,
               'menu_id' => $menu->id,

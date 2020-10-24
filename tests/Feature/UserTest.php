@@ -13,6 +13,7 @@ class UserTest extends Base
 
     public function setUp(): void
     {
+        putenv('LANGS="en"');
         parent::setUp();
         $this->createUser();
 

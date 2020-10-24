@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Page;
 use App\Menu;
 use App\Image;
+use App\Translate;
+
 //use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -31,7 +33,7 @@ class ImageTest extends Base
 
     public function setUp(): void
     {
-
+        putenv('LANGS="en"');      
         parent::setUp();
         ini_set('memory_limit', '256M');
         $this->createUser();
@@ -46,9 +48,10 @@ class ImageTest extends Base
 
         $this->testImgData =
         [
-            'title' => 'img Title',
+            'title' => ['en' => 'img Title'],
+            'short_title' => ['en' => 'short img Title'],
             'images' => [
-              ['name' => $this->name1, 'data' => $file1, 'alt' => self::STR_DESC_IMG1 ],
+              ['name' => $this->name1, 'data' => $file1, 'alt' => ['en' => self::STR_DESC_IMG1] ],
               ['name' => $this->name2, 'data' => $file2 ] //, 'alt' => 'description img2'
             ]
         ];
@@ -95,6 +98,22 @@ class ImageTest extends Base
     }
 
     /** @test */
+    public function it_will_set_translate()
+    { 
+
+      //one lang: en, and two images
+      $this->assertEquals( 2, Translate::query()->whereNotNull('image_id')->where('column', 'alt' )->count());        
+
+      $altEn1 = Translate::query()->whereNotNull('image_id')->where('column', 'alt' )->where('lang', 'en' )->whereNotNull('value')->get('value')->first()->value;
+      $this->assertEquals(self::STR_DESC_IMG1, $altEn1);
+
+      $altEn2 = Translate::query()->whereNotNull('image_id')->where('column', 'alt' )->where('lang', 'en' )->whereNull('value')->get('value')->first()->value;
+      $this->assertEquals(null, $altEn2);
+
+
+    }
+
+    /** @test */
     public function it_will_get_page_with_images()
     {      
       $response3 = $this->get('api/page/'.$this->pageId);
@@ -118,10 +137,13 @@ class ImageTest extends Base
       //  /'.$this->pageId.'
 
       $response2 = $this->get('api/pages?token='.$this->token);
+      //dd($response2);
+
       //var_dump($response2); die('-------------');
       $res2 = $response2->getData();
       $this->assertTrue( $res2->success );
 
+      //dd($res2->data);
       //print_r($res2);
 
       $this->assertEquals( count($res2->data), 1);
@@ -140,6 +162,8 @@ class ImageTest extends Base
       $this->assertIsInt($res2->data[0]->images[0]->position);
       $this->assertIsInt($res2->data[0]->images[0]->page_id);
       $this->assertIsInt($res2->data[0]->images[0]->id);      
+
+      dd($res2->data[0]->images);
 
       $this->assertObjectHasAttribute( 'alt',  $res2->data[0]->images[0]);
       //$this->assertEquals($res2->data[0]->images[0]->alt, null);

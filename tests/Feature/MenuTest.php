@@ -22,7 +22,7 @@ class MenuTest extends Base
 
     public function setUp(): void
     {        
-        
+        putenv('LANGS="en"');                    
         parent::setUp();
         //putenv("LANGS=en,pl");      
         

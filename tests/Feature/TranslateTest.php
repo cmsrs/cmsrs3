@@ -31,6 +31,7 @@ class TranslateTest extends Base
 
     protected function tearDown(): void
     {
+        putenv('LANGS="en,pl"');
         parent::tearDown();
     }
 
@@ -42,7 +43,9 @@ class TranslateTest extends Base
     public function  get_arr_langs()
     {
         $translate = new Translate;
+        $translate->setArrLangs(['en','pl']);
         $arrLangs = $translate->getArrLangs();
+
         $this->assertTrue(is_array($arrLangs));
         $this->assertEquals(2, count($arrLangs));
 
@@ -63,59 +66,18 @@ class TranslateTest extends Base
         $this->assertNotEmpty( $m->id );        
     }
 
-    /*
-    public function menu_translate_wrap_create_ok_1()
-    {
-        $data = ['name' => ['en' => 'About cmsRS', 'pl' => 'O cmsRS', 'es' => 'Fake' ] ];
-        //wrapCreate($data, $objTranslate = null ) 
-
-
-        $menu = Menu::CreateMenu($data);
-        $this->assertNotEmpty( $menu->id );
-
-        $translate = new Translate;
-        $ret = $translate->wrapCreate( [ 'menu_id' => $menu->id, 'data' => $data ] );
-        $this->assertTrue( $ret );
-
-        $countItem = Translate::query()->where('menu_id', $menu->id )->where('column', 'name' )->count();
-        $this->assertEquals(2, $countItem);
-    }
-    */
-
     /** @test */
     public function menu_translate_wrap_create_ok_1b()
     {
         $data = ['name' => ['en' => 'About cmsRS', 'pl' => 'O cmsRS', 'es' => 'Fake' ] ];
-        //wrapCreate($data, $objTranslate = null ) 
-
 
         $menu = (new Menu)->wrapCreate($data);
 
-        // $this->assertNotEmpty( $menu->id );
-        // $translate = new Translate;
-        // $ret = $translate->wrapCreate( [ 'menu_id' => $menu->id, 'data' => $data ] );
-        // $this->assertTrue( $ret );
-
-        $countItem = Translate::query()->where('menu_id', $menu->id )->where('column', 'name' )->count();
+        $translate = new Translate;
+        $translate->setArrLangs(['en','pl']);
+        $countItem = $translate->query()->where('menu_id', $menu->id )->where('column', 'name' )->count();
         $this->assertEquals(2, $countItem);
     }
-
-    /*
-    public function menu_translate_wrap_create_ok_2()
-    {
-        $data = ['name' => ['pl' => 'O cmsRS', 'en' => 'fake' ] ];
-        $menu = Menu::CreateMenu($data);
-        $this->assertNotEmpty( $menu->id );
-
-        $translate = new Translate;
-        $translate->setArrLangs(['pl']);
-        $ret = $translate->wrapCreate( [ 'menu_id' => $menu->id, 'data' => $data ] );
-        $this->assertTrue( $ret );
-
-        $countItem = Translate::query()->where('menu_id', $menu->id )->where('column', 'name' )->count();
-        $this->assertEquals(1, $countItem);
-    }
-    */
 
     /** @test */
     public function menu_translate_wrap_create_ok_2b()
@@ -129,10 +91,6 @@ class TranslateTest extends Base
         $objMenu->setTranslate( $translate );
 
         $menu = $objMenu->wrapCreate($data);
-        //$this->assertNotEmpty( $menu->id );
-
-        //$ret = $translate->wrapCreate( [ 'menu_id' => $menu->id, 'data' => $data ] );
-        //$this->assertTrue( $ret );
 
         $countItem = Translate::query()->where('menu_id', $menu->id )->where('column', 'name' )->count();
         $this->assertEquals(1, $countItem);
@@ -145,17 +103,7 @@ class TranslateTest extends Base
         $data = ['name' => ['en' => 'About cmsRS' ] ];
 
         $this->expectException(\Exception::class);
-        $menu = (new Menu)->wrapCreate($data);
-        // $menu = Menu::CreateMenu($data);
-        // $this->assertNotEmpty( $menu->id );
-
-        // $this->expectException(\Exception::class);
-        // $translate = new Translate;
-        // $ret = $translate->wrapCreate( [ 'menu_id' => $menu->id, 'data' => $data ] );
-
-        // $countItem = Translate::query()->where('menu_id', $menu->id )->where('column', 'name' )->count();
-        // $this->assertEquals(0, $countItem);
-        
+        $menu = (new Menu)->wrapCreate($data);        
     }
 
     /** @test */
@@ -165,16 +113,6 @@ class TranslateTest extends Base
 
         $this->expectException(\Exception::class);
         $menu = (new Menu)->wrapCreate($data);
-
-        // $menu = Menu::CreateMenu($data);
-        // $this->assertNotEmpty( $menu->id );
-
-        // $this->expectException(\Exception::class);
-        // $translate = new Translate;
-        // $ret = $translate->wrapCreate( [ 'menu_id' => $menu->id, 'data' => $data ] );
-
-        // $countItem = Translate::query()->where('menu_id', $menu->id )->where('column', 'name' )->count();
-        // $this->assertEquals(0, $countItem);
     }
 
     /** @test */
@@ -184,16 +122,6 @@ class TranslateTest extends Base
 
         $this->expectException(\Exception::class);
         $menu = (new Menu)->wrapCreate($data);
-
-        // $menu = Menu::CreateMenu($data);
-        // $this->assertNotEmpty( $menu->id );
-
-        // $this->expectException(\Exception::class);
-        // $translate = new Translate;
-        // $ret = $translate->wrapCreate( [ 'menu_id' => $menu->id, 'data' => $data ] );
-
-        // $countItem = Translate::query()->where('menu_id', $menu->id )->where('column', 'name' )->count();
-        // $this->assertEquals(0, $countItem);        
     }
 
     /*******************/
@@ -230,19 +158,27 @@ class TranslateTest extends Base
     /** @test */
     public function page_translate_wrap_create_ok_1()
     {
-        //putenv('LANGS="en,pl"');
-        //parent::setUp();
         $data1p = $this->getPageTestData();
+        $numOfLangs = (new Translate)->getArrLangs();
+        $this->assertEquals(2, count($numOfLangs));
+
+        //dump($data1p);
         $p = (new Page)->wrapCreate($data1p);
         $this->assertNotEmpty( $p->id );
 
         $this->assertEquals( 2, Translate::query()->where('page_id', $p->id )->where('column', 'title' )->count() );
         $this->assertEquals( 2, Translate::query()->where('page_id', $p->id )->where('column', 'short_title' )->count() );
-        $this->assertEquals( 1, Translate::query()->where('page_id', $p->id )->where('column', 'description' )->count() );
+        $this->assertEquals( 2, Translate::query()->where('page_id', $p->id )->where('column', 'description' )->count() );
+
+        $d = Translate::query()->where('page_id', $p->id )->where('column', 'description' )->get()->toArray();
+        $this->assertEquals( 2, count($d) );
+
+        $this->assertEquals( 1, Translate::query()->where('page_id', $p->id )->where('column', 'description' )->whereNotNull('value' )->count() );
+        $this->assertEquals( 1, Translate::query()->where('page_id', $p->id )->where('column', 'description' )->whereNull('value' )->count() );        
         $this->assertEquals( 2, Content::query()->where('page_id', $p->id )->count() );        
 
 
-        $this->assertEquals( 1, Translate::query()->whereNotNull('image_id')->where('column', 'alt' )->count());
+        $this->assertEquals( 4, Translate::query()->whereNotNull('image_id')->where('column', 'alt' )->count());
     }
 
     /** @test */
@@ -256,7 +192,6 @@ class TranslateTest extends Base
             ['name' => 'phpunittest2.jpg', 'data' => $this->getFixtureBase64('phpunittest2.jpg'), 'alt' => [ 'en' => 'some desc2', 'pl' => 'jakis opis2', 'es' => 'Fake2' ] ]            
         ];
 
-        //$page = Page::CreatePage($data);
 
         $translate = new Translate;
         $translate->setArrLangs(['pl']);
@@ -265,20 +200,47 @@ class TranslateTest extends Base
         $objPage->setTranslate($translate);
 
         $page = $objPage->wrapCreate($data, $translate);
-
-        // $translate->wrapCreate( [ 'page_id' => $page->id, 'data' => $data ] );      
-  
-        // if( !empty($data['images']) && is_array($data['images']) ){
-        //   Image::createImages($data['images'], 'page', $page->id);
-        // }
   
         $this->assertEquals( 1, Translate::query()->where('page_id', $page->id )->where('column', 'title' )->count() );
         $this->assertEquals( 1, Translate::query()->where('page_id', $page->id )->where('column', 'short_title' )->where('lang', 'pl')->count() );        
-        $this->assertEquals( 0, Translate::query()->where('page_id', $page->id )->where('column', 'description' )->count() );                        
+        $this->assertEquals( 1, Translate::query()->where('page_id', $page->id )->where('column', 'description' )->count() );                        
         $this->assertEquals( 2, Content::query()->where('page_id', $page->id )->count() ); //not set DI, therefore is 2
 
         $this->assertEquals( 3, Translate::query()->whereNotNull('image_id')->where('column', 'alt' )->count());        
     }
+
+    /** @test */
+    public  function page_translate_wrap_create_null_val()
+    {
+        $numOfLangs = count((new Translate)->getArrLangs());
+        $this->assertEquals(2, $numOfLangs);
+
+        $data = $this->getPageTestData();
+        unset($data['description']);
+        unset($data['content']);        
+        $data['images'] =[
+            ['name' => 'phpunittest1.jpg', 'data' => $this->getFixtureBase64('phpunittest1.jpg'), 'alt' => [ 'en' => '', 'pl' => '', 'es' => 'Fake' ] ],
+            ['name' => 'phpunittest2.jpg', 'data' => $this->getFixtureBase64('phpunittest2.jpg')  ],
+            ['name' => 'phpunittest2.jpg', 'data' => $this->getFixtureBase64('phpunittest2.jpg'), 'alt' => [ 'en' => null, 'pl' => null, 'es' => 'Fake2' ] ]            
+        ];
+        $p = (new Page)->wrapCreate($data);
+        $this->assertNotEmpty( $p->id );
+
+        $this->assertEquals( $numOfLangs, Translate::query()->where('page_id', $p->id )->where('column', 'title' )->count() );
+        $this->assertEquals( $numOfLangs, Translate::query()->where('page_id', $p->id )->where('column', 'short_title' )->count() );
+
+        $d = Translate::query()->where('page_id', $p->id )->get()->toArray();
+        //dd($d);
+
+
+        $this->assertEquals( $numOfLangs, Translate::query()->where('page_id', $p->id )->where('column', 'description' )->whereNull('value' )->count() );
+        $this->assertEquals( $numOfLangs, Content::query()->where('page_id', $p->id )->where('column', 'content' )->whereNull('value' )->count() );        
+
+        $this->assertEquals( 3*$numOfLangs, Translate::query()->whereNotNull('image_id')->where('column', 'alt' )->whereNull('value' )->count());
+    }
+
+
+
 
     /** @test */
     public function page_translate_wrap_create_wrong_1()
@@ -288,11 +250,6 @@ class TranslateTest extends Base
 
         $this->expectException(\Exception::class);
         $p = (new Page)->wrapCreate($data1p);
-
-        // $this->assertNotEmpty( $p->id );
-        // $this->assertEquals( 0, Translate::query()->where('page_id', $p->id )->where('column', 'title' )->count() );
-        // $this->assertEquals( 0, Translate::query()->where('page_id', $p->id )->where('column', 'short_title' )->count() );        
-        // $this->assertEquals( 0, Translate::query()->where('page_id', $p->id )->where('column', 'description' )->count() );                        
     }
 
     /** @test */
@@ -303,12 +260,6 @@ class TranslateTest extends Base
 
         $this->expectException(\Exception::class);
         $p = (new Page)->wrapCreate($data1p);
-
-        //this is not important because before is exeption
-        // $this->assertNotEmpty( $p->id );
-        // $this->assertEquals( 10, Translate::query()->where('page_id', $p->id )->where('column', 'title' )->count() );
-        // $this->assertEquals( 10, Translate::query()->where('page_id', $p->id )->where('column', 'short_title' )->count() );        
-        // $this->assertEquals( 10, Translate::query()->where('page_id', $p->id )->where('column', 'description' )->count() );                        
     }
    
 }

@@ -11,6 +11,12 @@ class ContactGuestTest  extends TestCase
 {
     use RefreshDatabase;
 
+    public function setUp(): void
+    {
+        putenv('LANGS="en"');
+        parent::setUp();
+    }
+
     /** @test */
     public function it_will_create_contact()
     {

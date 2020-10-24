@@ -13,6 +13,13 @@ use Illuminate\Support\Str;
 class FrontGuestTest extends TestCase
 {
 
+    public function setUp(): void
+    {
+        putenv('LANGS="en"');
+        parent::setUp();
+    }
+
+
     //use DatabaseMigrations;
     use RefreshDatabase;
 

@@ -71,6 +71,11 @@ class Image extends Model
         return   strtolower( trim(  $string) );
     }
 
+    public function translates()
+    {
+      return $this->hasMany('App\Translate');
+    }
+
     public function delete()
     {
       $this->deleteImg();
@@ -263,10 +268,23 @@ class Image extends Model
       $images  = Image::getImagesByTypeAndRefId(  $type, $refId);
 
       foreach($images  as $k => $img){
+        $translates =  $img->translates->toArray();
+        $images[$k]['alt'] = Image::getAltImg($translates);
         $images[$k]['fs']  = Image::getAllImage($img, false);
+        unset($img['translates']);
       }
+      //dd( $images->toArray() );
 
       return $images;
+    }
+
+    static private function getAltImg( $translates )
+    {
+      $out = [];          
+      foreach($translates as $translate){
+        $out[$translate['column']][$translate['lang']] = $translate['value'];
+      }
+      return $out;
     }
 
     //static public function getImagesByPageId($pageId = null)
@@ -279,13 +297,13 @@ class Image extends Model
 
       $image = [];
       if( empty($refId) ){
-        $image = Image::query()
+        $image = Image::with(['translates'])
                   ->whereNull( $strRefId  )
                   ->orderBy('position', 'asc')
                   ->get()
                   ;
       }else{
-        $image = Image::query()
+        $image = Image::with(['translates'])
                   ->where( $strRefId, '=', $refId )
                   ->orderBy('position', 'asc')
                   ->get()

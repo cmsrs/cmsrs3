@@ -29,13 +29,15 @@ class Base extends Model
         foreach($columns as $column => $require ){
             if( $require && empty($data[$column]) ){
                 throw new \Exception("Translation problem, require column: $column, var= ". var_export($data, true ));
-            }elseif( !empty($data[$column]) ){
+            }else{                
+                $col = !empty($data[$column]) ? $data[$column] : [];
                 foreach($this->getArrLangs() as $lang ){
-                    if( $require && empty($data[$column][$lang]) ){
+                    $value = !empty($col[$lang]) ? $col[$lang] : null;
+
+                    if( $require && !$value ){
                         throw new \Exception("Translation problem, require lang: $lang for column: $column, var= ". var_export($data, true ));
                     }
-                    //if( !empty($data[$column][$lang]) ){                        
-                    $value = isSet($data[$column][$lang]) ? $data[$column][$lang] : '';
+
                     $row = [ $refName => $refId, 'column' => $column, 'lang' => $lang, 'value' => $value ];
                     if($create ){
                         $this->createRow( $row );
