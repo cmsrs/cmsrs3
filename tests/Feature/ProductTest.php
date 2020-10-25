@@ -6,6 +6,7 @@ use App\Page;
 use App\Menu;
 use App\Image;
 use App\Product;
+use App\Translate;
 //use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -26,6 +27,8 @@ class ProductTest extends Base
 
     private $pageId;
 
+    const STR_DESC_IMG1 = 'description img1 - product image';
+
     public function setUp(): void
     {
         putenv('LANGS="en"');
@@ -35,48 +38,73 @@ class ProductTest extends Base
 
         $this->testMenu =
             [
-                'name'     => 'books',
-                'position' => 77
+                'name'     => ['en' => 'books'],
+                //'position' => 77
             ];
 
-        $menu = new Menu($this->testMenu);
-        $save = $menu->save();
-        $this->assertTrue($save);
+        // $menu = new Menu($this->testMenu);
+        // $save = $menu->save();
+        // $this->assertTrue($save);
+        // $menuObj = $menu->all()->first();
+        // $this->menuId = $menuObj->id;
 
 
-        $menuObj = $menu->all()->first();
+        // $page = new Page($this->testPage);
+        // $page->save();
 
-        $this->menuId = $menuObj->id;
+        // $type = 'shop';
+        // $res = $this->get('api/pages/type/' . $type . '?token=' . $this->token);
 
+        // $data = $res->getData();
+        // $this->pageId = $data->data[0]->id;
+        // $this->assertNotEmpty($this->pageId);
+
+
+        $this->name1 = 'phpunittest1.jpg';
+        //$file1 = $this->getFixtureBase64($this->name1);
+
+        $this->name2 = 'phpunittest2.jpg';
+        //$file2 = $this->getFixtureBase64($this->name2);
+
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+    }
+
+    private  function setTestData()
+    {
+        $menu = (new Menu)->wrapCreate($this->testMenu);
+
+        $this->menuObj = $menu->all()->first();
+        $this->menuId = $this->menuObj->id;
+        $this->assertNotEmpty($this->menuId);
 
         $this->testPage =
         [
-            'title' => 'programmer',
-            'short_title' => 'page1',
+            'title' => ['en' => 'programmer' ],
+            'short_title' => ['en' => 'page1' ],
             'published' => 1,
             'position' => 7,
             'type' => 'shop',
-            'content' => 'content test133445',
+            'content' => ['en' => 'content test133445' ],
             'menu_id' => $this->menuId
         ];
-
-        $page = new Page($this->testPage);
-
-        $page->save();
+        
+        $p = (new Page)->wrapCreate($this->testPage);
+        $this->assertNotEmpty($p->id);        
 
         $type = 'shop';
         $res = $this->get('api/pages/type/' . $type . '?token=' . $this->token);
 
         $data = $res->getData();
+        $this->assertTrue($data->success);
+
         $this->pageId = $data->data[0]->id;
+        //dd($this->pageId);
         $this->assertNotEmpty($this->pageId);
-
-
-        $this->name1 = 'phpunittest1.jpg';
-        $file1 = $this->getFixtureBase64($this->name1);
-
-        $this->name2 = 'phpunittest2.jpg';
-        $file2 = $this->getFixtureBase64($this->name2);
+        $this->assertEquals($p->id, $this->pageId);
 
 
         $this->testData = [
@@ -87,34 +115,28 @@ class ProductTest extends Base
             //'photo' => null,
             'page_id' => $this->pageId,
             'images' => [
-                ['name' => $this->name1, 'data' => $file1],
-                ['name' => $this->name2, 'data' => $file2]
+                ['name' => $this->name1, 'data' => $this->getFixtureBase64($this->name1),  'alt' => ['en' =>  self::STR_DESC_IMG1 ] ],
+                ['name' => $this->name2, 'data' => $this->getFixtureBase64($this->name2)]
             ]
-        ];
+        ];        
+
     }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-    }
-
-
-
 
     /** @test */
     public function it_will_check_fixtures_get_pages_by_type()
     {
+        $this->setTestData();
         $type = 'shop';
         $res = $this->get('api/pages/type/' . $type . '?token=' . $this->token);
 
         $data = $res->getData();
-        $this->assertEquals($data->data[0]->title,$this->testPage['title']);
+        $this->assertEquals($data->data[0]->title->en,$this->testPage['title']['en']);
     }
 
     /** @test */
     public function it_will_create_product()
     {
-
+        $this->setTestData();
         $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
 
         $res0 = $response0->getData();
@@ -136,7 +158,12 @@ class ProductTest extends Base
     /** @test */
     public function it_will_read_product()
     {
+        $this->setTestData();
+        //dd($this->pageId);
+        //dd($this->testData);
+
         $res0 = $this->post('api/products?token=' . $this->token, $this->testData);
+        //dd('______________');
         $res = $res0->getData();
         $this->assertTrue($res->success);
 
@@ -147,11 +174,18 @@ class ProductTest extends Base
 
         $res22 = $response22->getData();
 
+        //dump($res22->data);
         //dump($res->data->productId);
+        //dd($res->data);
 
         $this->assertTrue( $res22->success );
         $this->assertEquals( count($res22->data), 1);
         $this->assertEquals($res->data->productId, $res22->data[0]->id);
+
+        //dump($res22->data);
+
+        $products = Product::all()->toArray();
+        $this->assertEquals(1, count($products));
 
         $this->assertEquals( $res22->data[0]->sku, $this->testData['sku']);
         $this->assertNotEmpty( $res22->data[0]->id);
@@ -168,6 +202,10 @@ class ProductTest extends Base
         $this->assertIsInt($res22->data[0]->images[0]->position);
         $this->assertIsInt($res22->data[0]->images[0]->product_id);
 
+        $this->assertEquals( self::STR_DESC_IMG1,  $res22->data[0]->images[0]->alt->en ); 
+
+        $this->assertEquals( null,  $res22->data[0]->images[1]->alt->en );                
+
         //$this->removeImgDir($res->data->productId, 'product' );//remove file
         $this->clear_imgs($res->data->productId);
     }
@@ -175,6 +213,8 @@ class ProductTest extends Base
     /** @test */
     public function it_will_update_product()
     {
+        $this->setTestData();
+
         $res0 = $this->post('api/products?token=' . $this->token, $this->testData);
         $res = $res0->getData();
 
@@ -188,7 +228,7 @@ class ProductTest extends Base
         $i = 1;
         foreach($oldImages  as $img){
             $arrImg =  (array)$img;
-            $arrImg['alt'] = 'alt'.$i;
+            $arrImg['alt'] = ['en' => 'alt'.$i];
             $arrOldImage[] = $arrImg;
             $i++;
         }
@@ -222,9 +262,9 @@ class ProductTest extends Base
 
         $this->assertEquals(count($res222->data[0]->images), 3);
 
-        $this->assertEquals($res222->data[0]->images[0]->alt, 'alt1');
-        $this->assertEquals($res222->data[0]->images[1]->alt, 'alt2');        
-        $this->assertEquals($res222->data[0]->images[2]->alt, null);                
+        $this->assertEquals($res222->data[0]->images[0]->alt->en, 'alt1');
+        $this->assertEquals($res222->data[0]->images[1]->alt->en, 'alt2');        
+        $this->assertEquals($res222->data[0]->images[2]->alt->en, null);                
 
         //$this->removeImgDir($res->data->productId, 'product' ); //remove file
         $this->clear_imgs($res->data->productId);
@@ -233,6 +273,8 @@ class ProductTest extends Base
     /** @test */
     public function it_will_delete_product()
     {
+        $this->setTestData();
+
         $res0 = $this->post('api/products?token=' . $this->token, $this->testData);
         $res = $res0->getData();
 
@@ -245,13 +287,21 @@ class ProductTest extends Base
 
         $this->assertEquals(count($res22->data), 1);
         
-        $response33 = $this->delete('api/products/'.$productId.'?token='.$this->token);
 
+        $translateBefore = Translate::query()->whereNotNull('image_id')->where('column', 'alt' )->get()->toArray();
+        $this->assertEquals(2, count($translateBefore));
+        $this->assertEquals(self::STR_DESC_IMG1, $translateBefore[0]['value']);
+        $this->assertEquals(null, $translateBefore[1]['value']);      
+  
+  
+        $response33 = $this->delete('api/products/'.$productId.'?token='.$this->token);    
         //dd($response33);
         $res33 = $response33->getData();
-
-
         $this->assertTrue( $res33->success );
+
+        $translateAfter = Translate::query()->whereNotNull('image_id')->where('column', 'alt' )->get()->toArray();      
+        $this->assertEmpty($translateAfter);
+
 
         $response222 = $this->get('api/products?token='.$this->token );
         $res222 = $response222->getData();
@@ -280,6 +330,7 @@ class ProductTest extends Base
     /** @test */
     public function it_will_get_change_position_product_images()
     {
+        $this->setTestData();        
         $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
 
         $res0 = $response0->getData();

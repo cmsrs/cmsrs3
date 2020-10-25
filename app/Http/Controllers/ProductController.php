@@ -35,28 +35,28 @@ class ProductController extends Controller
   public function create(Request $request)
   {
 
-      $data = $request->only(
-        'name',
-        'sku',
-        'price',
-        'description',
-        'page_id',
-        'images'
+        $data = $request->only(
+            'name',
+            'sku',
+            'price',
+            'description',
+            'page_id',
+            'images'
         );
 
-      $validator = Validator::make($data, $this->validationRules);
-      if($validator->fails()) {
-          return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
-      }
+        $validator = Validator::make($data, $this->validationRules);
+        if($validator->fails()) {
+            return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
+        }
 
-    try{
-        $product = Product::wrapCreate($data);
-    } catch (\Exception $e) {
-      Log::error('product add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile() ); //.' for: '.var_export($data, true )
-      return response()->json(['success'=> false, 'error'=> 'Add product problem, details in the log file.'], 200); //.$e->getMessage()
-    }
+        try{
+            $product = (new Product)->wrapCreate($data);
+        } catch (\Exception $e) {
+        Log::error('product add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile() ); //.' for: '.var_export($data, true )
+        return response()->json(['success'=> false, 'error'=> 'Add product problem, details in the log file.'], 200); //.$e->getMessage()
+        }
 
-    return response()->json(['success'=> true, 'data' => ['productId' => $product->id, 'data' => $data] ]);
+        return response()->json(['success'=> true, 'data' => ['productId' => $product->id, 'data' => $data] ]);
   }
 
   public function update(Request $request, $id)
