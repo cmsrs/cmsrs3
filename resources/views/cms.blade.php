@@ -57,7 +57,7 @@
               <div class="row">
                 <div class="col">
                 @if( !empty($product['images']) &&  !empty($product['images'][0]) )
-                  <img class="m-3" src="{{$product['images'][0]->getHtmlImage()}}" alt="{{$product['images'][0]->alt['en']}}" />
+                  <img class="m-3" src="{{$product['images'][0]->getHtmlImage()}}" alt="{{$product['images'][0]->alt[$lang]}}" />
                 @endif
                 </div>
                 <div class="col">
