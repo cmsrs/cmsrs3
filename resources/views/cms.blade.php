@@ -1,7 +1,7 @@
 @extends('layouts.default')
 @section('content')
 
-  <h1 class="mb-4 mt-3">{{$page->title}}</h1>
+  <h1 class="mb-4 mt-3">{{$page->translatesByColumnAndLang( 'title', $lang )}}</h1>
 
   <div id="app">
 
@@ -14,7 +14,7 @@
         @endforeach
       @endif
 
-      <div class="mt-2">{!! $page->content !!}</div>
+      <div class="mt-2">{!! $page->translatesByColumnAndLang( 'content', $lang ) !!}</div>
 
   @elseif($page->type  === 'gallery')
 
@@ -57,7 +57,7 @@
               <div class="row">
                 <div class="col">
                 @if( !empty($product['images']) &&  !empty($product['images'][0]) )
-                  <img class="m-3" src="{{$product['images'][0]->getHtmlImage()}}" alt="{{$product['images'][0]->alt}}" />
+                  <img class="m-3" src="{{$product['images'][0]->getHtmlImage()}}" alt="{{$product['images'][0]->alt['en']}}" />
                 @endif
                 </div>
                 <div class="col">

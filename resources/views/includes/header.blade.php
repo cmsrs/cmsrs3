@@ -15,7 +15,7 @@
             <?php if( 1 == $pagesPublishedAndAccess->count() ){  ?>
               <a class="nav-link" href="{{$pagesPublishedAndAccess->first()->getUrl($lang)}}">{{ $pagesPublishedAndAccess->first()->translatesByColumnAndLang( 'title', $lang ) }}</a>
             <?php }else{ ?>
-              <a class="nav-link dropdown-toggle" href="#" id="dropdown{{ $menu->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ $menu->name }}</a>
+              <a class="nav-link dropdown-toggle" href="#" id="dropdown{{ $menu->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ $menu->translatesByColumnAndLang( 'name', $lang ) }}</a>
               <div class="dropdown-menu" aria-labelledby="dropdown{{ $menu->id }}">
                   <?php foreach ($menu->pagesPublishedTree($pagesPublishedAndAccess) as $page) { ?>                                
                     <a class="dropdown-item" href="{{$page->getUrl($lang)}}">{{ $page->translatesByColumnAndLang( 'title', $lang ) }}</a>

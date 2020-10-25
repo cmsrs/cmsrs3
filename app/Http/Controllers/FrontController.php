@@ -25,6 +25,8 @@ class FrontController extends Controller
     $this->menus = Menu::all()->sortBy('position'); //TODO cached
     $this->langs = (new Config)->arrGetLangs();
     $this->lang = (1 == count($this->langs)) ?  $this->langs[0] : null;
+
+    $this->footerPages = Page::getFooterPages($this->lang);
   }
 
   private function validatePage($page)
@@ -43,7 +45,12 @@ class FrontController extends Controller
     $page = Page::getMainPage();
     $this->validatePage($page);
 
-    return view('index', [ 'menus' => $this->menus, 'page' => $page ] );
+    return view('index', [ 
+      'menus' => $this->menus, 
+      'page' => $page, 
+      'lang' => $this->lang, 
+      'footerPages' => $this->footerPages  
+    ] );
   }
 
   // public function getPageForMenu($pageSlug ){
@@ -69,7 +76,6 @@ class FrontController extends Controller
       }elseif( ($menuSlug == $menu->getSlugByLang($this->lang))  &&  (1 < count($menu->pagesPublished)) ){
         foreach ($menu->pagesPublished  as $page){
           if( $pageSlug == $page->getSlugByLang($this->lang) ){
-            //echo "______jestem_________";
             $pageOut = $page;
             break;
           }
@@ -82,7 +88,13 @@ class FrontController extends Controller
       $products = Product::getProductsWithImagesByPage($pageOut->id);
     }
 
-    return view('cms', [ 'menus' => $this->menus,  'page' => $pageOut, 'products' => $products, 'lang' => $this->lang]);
+    return view('cms', [ 
+      'menus' => $this->menus,  
+      'page' => $pageOut, 
+      'products' => $products, 
+      'lang' => $this->lang, 
+      'footerPages' => $this->footerPages
+    ]);
   }
 
   public function getSeparatePage($pageSlug)
@@ -98,7 +110,13 @@ class FrontController extends Controller
     }
     $this->validatePage($pageOut);
 
-    return view('cms', [ 'menus' => $this->menus,  'page' => $pageOut, 'products' => $products, 'lang' => $this->lang]);
+    return view('cms', [ 
+      'menus' => $this->menus,  
+      'page' => $pageOut, 
+      'products' => $products, 
+      'lang' => $this->lang, 
+      'footerPages' => $this->footerPages
+    ]);
   }
 
 

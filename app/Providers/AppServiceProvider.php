@@ -27,14 +27,14 @@ class AppServiceProvider extends ServiceProvider
         //$footerPages = true;
 
         //to tests:
-        $footerPages['policyUrl'] = 'a';
-        $footerPages['policyTitle'] = 'b';
-        $footerPages['contactUrl']  = 'c';
-        $footerPages['contactTitle']  = 'd';
+        // $footerPages['policyUrl'] = 'a';
+        // $footerPages['policyTitle'] = 'b';
+        // $footerPages['contactUrl']  = 'c';
+        // $footerPages['contactTitle']  = 'd';
 
-        //$footerPages = Page::getFooterPages();
+        //$footerPages = Page::getFooterPages('en');
         //dd($footerPages);
 
-        view()->share('footerPages', $footerPages);
+        //view()->share('footerPages', $footerPages);
     }
 }
