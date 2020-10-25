@@ -9,16 +9,22 @@ use Illuminate\Support\Facades\Log;
 use App\Page;
 use App\Product;
 use App\Menu;
+use App\Config;
+
+
 //use Validator;
 
 
 class FrontController extends Controller
 {
   private $menus;
+  private $langs;  
 
   public function __construct()
   {
     $this->menus = Menu::all()->sortBy('position'); //TODO cached
+    $this->langs = (new Config)->arrGetLangs();
+    $this->lang = (1 == count($this->langs)) ?  $this->langs[0] : null;
   }
 
   private function validatePage($page)
@@ -47,6 +53,7 @@ class FrontController extends Controller
   //pagesPublishedAndAccess()
   public function getPage($menuSlug, $pageSlug )
   {
+    //dd('________________jestem___'.$this->lang);    
     $pageOut = null;
     $products = null;
     foreach ($this->menus as $menu) {
@@ -55,13 +62,13 @@ class FrontController extends Controller
 
       // echo "______jestem0_________";
       // echo $menu->slug.'______';
-      if(  (1 === count($menu->pagesPublished)) &&  ($pageSlug == $menu->pagesPublished()->first()->slug ) ){
+      if(  (1 === count($menu->pagesPublished)) &&  ($pageSlug == $menu->pagesPublished()->first()->getSlugByLang($this->lang) ) ){
         $page = $menu->pagesPublished->first();
         $pageOut = $page;
         break;
-      }elseif( ($menuSlug == $menu->slug)  &&  (1 < count($menu->pagesPublished)) ){
+      }elseif( ($menuSlug == $menu->getSlugByLang($this->lang))  &&  (1 < count($menu->pagesPublished)) ){
         foreach ($menu->pagesPublished  as $page){
-          if( $pageSlug == $page->slug ){
+          if( $pageSlug == $page->getSlugByLang($this->lang) ){
             //echo "______jestem_________";
             $pageOut = $page;
             break;
@@ -75,7 +82,7 @@ class FrontController extends Controller
       $products = Product::getProductsWithImagesByPage($pageOut->id);
     }
 
-    return view('cms', [ 'menus' => $this->menus,  'page' => $pageOut, 'products' => $products ]);
+    return view('cms', [ 'menus' => $this->menus,  'page' => $pageOut, 'products' => $products, 'lang' => $this->lang]);
   }
 
   public function getSeparatePage($pageSlug)
@@ -84,14 +91,14 @@ class FrontController extends Controller
     $pageOut = null;
     $pages = Page::all();
     foreach($pages as $page){
-      if($page->slug == $pageSlug){
+      if($page->getSlugByLang($this->lang) == $pageSlug){
         $pageOut = $page;
         break;
       }
     }
     $this->validatePage($pageOut);
 
-    return view('cms', [ 'menus' => $this->menus,  'page' => $pageOut, 'products' => $products ]);
+    return view('cms', [ 'menus' => $this->menus,  'page' => $pageOut, 'products' => $products, 'lang' => $this->lang]);
   }
 
 

@@ -25,8 +25,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //$footerPages = true;
-        $footerPages = Page::getFooterPages();
 
+        //to tests:
+        $footerPages['policyUrl'] = 'a';
+        $footerPages['policyTitle'] = 'b';
+        $footerPages['contactUrl']  = 'c';
+        $footerPages['contactTitle']  = 'd';
+
+        //$footerPages = Page::getFooterPages();
         //dd($footerPages);
 
         view()->share('footerPages', $footerPages);

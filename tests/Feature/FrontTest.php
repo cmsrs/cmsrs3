@@ -29,40 +29,38 @@ class FrontTest extends Base
 
         $this->testDataMenu =
         [
-             'name'     => 'test men7 zółć',
-             'position' => 1
+             'name'     =>  ['en' => 'test men7 zółć'],
+             //'position' => 1
         ];
-
-        $menu = new Menu($this->testDataMenu);
-
-        
-        $save = $menu->save();
-        $this->menuObj =$menu;
-        $this->assertTrue($save);
-
-        $this->menuId = $menu->all()->first()->id;
-
-
-        $this->testData =
-        [
-            'title' => 'page 1 test test slug',
-            'short_title' => 'page1',
-            'published' => 1,
-            'position' => 7,
-            'type' => 'cms',
-            'content' => 'content test133445',
-            'menu_id' => $this->menuId
-        ];
-
-        $page = new Page($this->testData);
-
-        $page->save();
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
     }
+
+    private  function setTestData()
+    {
+        $menu = (new Menu)->wrapCreate($this->testDataMenu);
+
+        $this->menuObj = $menu;
+        $this->menuId = $menu->id;        
+        $this->assertNotEmpty($this->menuId);
+
+        $this->testData =
+        [
+            'title' =>  ['en' => 'page 1 test test slug'],
+            'short_title' =>  ['en' => 'page1'],
+            'published' => 1,
+            'position' => 7,
+            'type' => 'cms',
+            'content' =>  ['en' => 'content test133445'],
+            'menu_id' => $this->menuId
+        ];
+
+        (new Page)->wrapCreate($this->testData);
+    }
+    
 
 
     /**
@@ -72,6 +70,7 @@ class FrontTest extends Base
     /** @test */
     public function it_will_get_all_pages_status()
     {
+      $this->setTestData();
       //$parentId = $this->dateToTestParent( $this->objMenu->id );
       $this->setDemoDataMenusAndPages();
 
@@ -129,6 +128,7 @@ class FrontTest extends Base
     /** @test */
     public function it_will_check_set_up()
     {
+      $this->setTestData();
       $response = $this->get('api/pages?token='.$this->token );
       $res = $response->getData();
       $this->assertTrue( $res->success );
@@ -144,15 +144,15 @@ class FrontTest extends Base
 
         $testData2 =
         [
-            'title'     => 'cmsRS',
-            'short_title' => 'cmsRS',
-            'description' => 'cmsRS',
+            'title'     =>  ['en' =>'cmsRS'],
+            'short_title' =>  ['en' =>'cmsRS'],
+            'description' =>  ['en' =>'cmsRS'],
             'published' => 1,
             'commented' => 0,
             'after_login' => 1,
             //'position' => 3,
             'type' => 'main_page',
-            'content' => 'main page',
+            'content' =>  ['en' =>'main page'],
             'menu_id' => null,
             'page_id' => null
             //'images' => []
@@ -171,10 +171,11 @@ class FrontTest extends Base
     /** @test */
     public function it_will_get_cms_page0()
     {
-        $title = $this->testData['title'];
+        $this->setTestData();
+        $title = $this->testData['title']['en'];
         $pageSlug = Str::slug($title);
 
-        $menuName = $this->testDataMenu['name'];
+        $menuName = $this->testDataMenu['name']['en'];
         $menuSlug = Str::slug($menuName);
 
         $p0 = Page::query()->where('menu_id', $this->menuId)->get()->first();
@@ -182,7 +183,7 @@ class FrontTest extends Base
         //$this->assertEquals(1, $p0->count());
 
         //$url = $p0->getUrl();
-        $url =  $p0->getUrl();
+        $url =  $p0->getUrl('en');
 
         //$response = $this->get('/c/'.$menuSlug.'/'.$pageSlug);
         //$response->assertStatus(404);
@@ -194,10 +195,11 @@ class FrontTest extends Base
     /** @test */
     public function it_will_get_cms_page()
     {
-        $title = $this->testData['title'];
+        $this->setTestData();      
+        $title = $this->testData['title']['en'];
         $pageSlug = Str::slug($title);
 
-        $menuName = $this->testDataMenu['name'];
+        $menuName = $this->testDataMenu['name']['en'];
         $menuSlug = Str::slug($menuName);
 
         $p0 = Page::query()->where('menu_id', $this->menuId)->get(); //->toArray();
@@ -213,15 +215,15 @@ class FrontTest extends Base
 
         $testData2 =
         [
-            'title'     => 'cmsRS',
-            'short_title' => 'cmsRS',
-            'description' => 'cmsRS',
+            'title'     =>  ['en' =>'cmsRS'],
+            'short_title' =>  ['en' =>'cmsRS'],
+            'description' =>  ['en' =>'cmsRS'],
             'published' => 1,
             'commented' => 0,
             'after_login' => 1,
             //'position' => 3,
             'type' => 'cms',
-            'content' => 'main page',
+            'content' =>  ['en' =>'main page'],
             'menu_id' => $this->menuId,
             'page_id' => null
             //'images' => []
@@ -239,7 +241,7 @@ class FrontTest extends Base
         $i = 0;
         foreach( $p as $pp){
             //$url0 = $pp->getUrl($this->menuObj->slug);
-            $url0 = $pp->getUrl();            
+            $url0 = $pp->getUrl('en');            
             $response = $this->get($url0);
             $response->assertStatus(200);
             $i++;

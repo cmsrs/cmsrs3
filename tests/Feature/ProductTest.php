@@ -77,8 +77,8 @@ class ProductTest extends Base
     {
         $menu = (new Menu)->wrapCreate($this->testMenu);
 
-        $this->menuObj = $menu->all()->first();
-        $this->menuId = $this->menuObj->id;
+        $this->menuObj = $menu; //$menu->all()->first();
+        $this->menuId = $menu->id;  // $this->menuObj->id;
         $this->assertNotEmpty($this->menuId);
 
         $this->testPage =

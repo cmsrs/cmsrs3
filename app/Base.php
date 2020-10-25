@@ -81,10 +81,11 @@ class Base extends Model
         return $value;
     }    
 
-    /*
+/*    
     public function translatesByColumn( $column )
     {
-      $data = $this->getAllTranslate();
+      $data = $this->getAllTranslateByColumn();
+      //dd($data);
 
       $values = [];
       if( isSet($data[$column]) ){
@@ -93,7 +94,7 @@ class Base extends Model
 
       return $values;
     } 
-    */   
+*/       
     
     protected function wrapTranslateUpdate( $obj, $row )
     {

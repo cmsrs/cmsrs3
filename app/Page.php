@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-//use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;
 
 class Page extends Base
 {
@@ -192,7 +192,7 @@ class Page extends Base
     }
     */
     
-    static public function getFooterPages()
+    static public function getFooterPages( $lang )
     {
       //$privacyPolicy = Page::getFirstPageByType('privacy_policy' );
 
@@ -206,8 +206,8 @@ class Page extends Base
           //this 'if' is needed to phpunit
           //$policyUrl = $footerPages['privacy_policy']->getSeparateUrl();
           //see AppServiceProvider
-          $policyUrl = $privacyPolicy->getUrl();    
-          $policyTitle = $privacyPolicy->title;
+          $policyUrl = $privacyPolicy->getUrl($lang);
+          $policyTitle = $privacyPolicy->translatesByColumnAndLang('title', $lang);
       }
 
       $contactUrl = null;
@@ -216,8 +216,8 @@ class Page extends Base
         //this 'if' is needed to phpunit
         //$policyUrl = $footerPages['privacy_policy']->getSeparateUrl();
         //see AppServiceProvider
-        $contactUrl = $contact->getUrl();    
-        $contactTitle = $contact->title;
+        $contactUrl = $contact->getUrl($lang);
+        $contactTitle = $contact->translatesByColumnAndLang('title', $lang);
       }
 
       $out['policyUrl'] = $policyUrl;
@@ -228,23 +228,23 @@ class Page extends Base
       return $out;
   }
 
-    public function getUrl()
+    public function getUrl($lang)
     {
       if( 'privacy_policy' == $this->type ){
-        return $this->getIndependentUrl();
+        return $this->getIndependentUrl($lang);
       }
-      return $this->getCmsUrl();
+      return $this->getCmsUrl($lang);
     }
     
-    private function getCmsUrl()
+    private function getCmsUrl($lang)
     {   
-      $menuSlug = $this->menu()->get()->first()->slug;      
-      return "/c/".$menuSlug."/".$this->slug;
+      $menuSlug = $this->menu()->get()->first()->getSlugByLang($lang);
+      return "/c/".$menuSlug."/".$this->getSlugByLang($lang);
     }
 
-    private function getIndependentUrl()
+    private function getIndependentUrl($lang)
     {
-      return "/in/".$this->slug;
+      return "/in/".$this->getSlugByLang($lang);
     }
 
     public function unpublishedChildren()

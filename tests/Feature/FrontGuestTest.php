@@ -48,9 +48,9 @@ class FrontGuestTest extends TestCase
         
         $testData2 =
         [
-            'title'     => 'cmsRS',
-            'short_title' => 'cmsRS',
-            'description' => 'cmsRS',
+            'title'     =>  ['en' => 'cmsRS'],
+            'short_title' =>  ['en' => 'cmsRS'],
+            'description' =>  ['en' => 'cmsRS'],
             'published' => 1,
             'commented' => 0,
             'after_login' => 1,
@@ -61,7 +61,7 @@ class FrontGuestTest extends TestCase
             'page_id' => null
             //'images' => []
         ];
-        Page::wrapCreate($testData2);
+        (new Page)->wrapCreate($testData2);
 
         $response = $this->get('/');
         $response->assertStatus(401);        
@@ -78,20 +78,20 @@ class FrontGuestTest extends TestCase
         
         $testData2 =
         [
-            'title'     => 'cmsRS',
-            'short_title' => 'cmsRS',
-            'description' => 'cmsRS',
+            'title'     => ['en' =>'cmsRS'],
+            'short_title' => ['en' =>'cmsRS'],
+            'description' => ['en' =>'cmsRS'],
             'published' => 1,
             'commented' => 0,
             'after_login' => 0,
             //'position' => 3,
             'type' => 'main_page',
-            'content' => 'main page',
+            'content' =>['en' => 'main page'],
             'menu_id' => null,
             'page_id' => null
             //'images' => []
         ];
-        Page::wrapCreate($testData2);
+        (new Page)->wrapCreate($testData2);
 
         $response = $this->get('/');
         $response->assertStatus(200);        
@@ -102,15 +102,15 @@ class FrontGuestTest extends TestCase
     {
         $testData2 =
         [
-            'title'     => 'cmsRS',
-            'short_title' => 'cmsRS',
-            'description' => 'cmsRS',
+            'title'     =>  ['en' =>'cmsRS'],
+            'short_title' =>  ['en' =>'cmsRS'],
+            'description' =>  ['en' =>'cmsRS'],
             'published' => 1,
             'commented' => 0,
             'after_login' => 0,
             //'position' => 3,
             'type' => 'main_page',
-            'content' => 'main page',
+            'content' =>  ['en' =>'main page'],
             'menu_id' => null,
             'page_id' => null
             //'images' => []
@@ -119,23 +119,23 @@ class FrontGuestTest extends TestCase
 
         
         $pPrivacy = [
-            'title'     => 'Privacy policy',
-            'short_title' => 'Privacy policy',
-            'description' => 'Description... Needed for google',
+            'title'     =>  ['en' =>'Privacy policy'],
+            'short_title' =>  ['en' =>'Privacy policy'],
+            'description' =>  ['en' =>'Description... Needed for google'],
             'published' => 1,
             'commented' => 0,
             'type' => 'privacy_policy',
-            'content' => 'jakies belkot prawniczy',
+            'content' =>  ['en' =>'jakies belkot prawniczy'],
             'images' => [
             ]
         ];
 
 
-        $mContact = Menu::wrapCreate(['name' => 'Contact']);        
+        $mContact = (new Menu)->wrapCreate(['name' =>  ['en' =>'Contact']]);        
         $pContact = [
-            'title'     => 'Contact form',
-            'short_title' => 'Contact',
-            'description' => 'Description... Needed for google',
+            'title'     =>  ['en' =>'Contact form'],
+            'short_title' =>  ['en' =>'Contact'],
+            'description' =>  ['en' =>'Description... Needed for google'],
             'published' => 1,
             'commented' => 0,
             'type' => 'contact',
@@ -145,15 +145,15 @@ class FrontGuestTest extends TestCase
             ]
         ];
         
-        Page::wrapCreate($testData2);
-        Page::wrapCreate($pPrivacy);                
-        Page::wrapCreate($pContact);
+        (new Page)->wrapCreate($testData2);
+        (new Page)->wrapCreate($pPrivacy);                
+        (new Page)->wrapCreate($pContact);
 
         //$pArr = Page::all()->toArray();
         //dump($pArr);
         //die('ggg');
 
-        $footerPages = Page::getFooterPages();
+        $footerPages = Page::getFooterPages('en');
         //dd($footerPages);
         
         //$p = $footerPages['privacy_policy'];
@@ -172,10 +172,14 @@ class FrontGuestTest extends TestCase
 
         $response = $this->get( $footerPages['policyUrl'] );
         //dd($response);        
+
+
         $response->assertStatus(200);
+        //dd($footerPages['policyUrl'] );        
 
         $response2 = $this->get( $footerPages['contactUrl'] );
-        //dd($response2);
+        //dd($footerPages['contactUrl']);
+
 
         $response2->assertStatus(200);
 
@@ -185,47 +189,47 @@ class FrontGuestTest extends TestCase
 
     /** @test */
     public function it_will_link_0(){
-        $testDataMenu = ['name' => 'About'];
-        $m1 = Menu::wrapCreate($testDataMenu);
+        $testDataMenu = ['name' =>  ['en' => 'About']];
+        $m1 = (new Menu)->wrapCreate($testDataMenu);
         
         $data1p = [
-            'title'     => 'About me',
-            'short_title' => 'About me',
-            'description' => 'Description... Needed for google',
+            'title'     =>  ['en' => 'About me'],
+            'short_title' =>  ['en' => 'About me'],
+            'description' =>   ['en' => 'Description... Needed for google'],
             'published' => 1,
             'commented' => 0,
             'type' => 'cms',
-            'content' => 'testt44',
+            'content' =>  ['en' => 'testt44'],
             'menu_id' => $m1->id,
             'images' => [
             ]
         ];
 
         $data2p = [
-            'title'     => 'About page',
-            'short_title' => 'About page',
-            'description' => 'Description... Needed for google',
+            'title'     =>  ['en' => 'About page'],
+            'short_title' =>   ['en' => 'About page'],
+            'description' =>    ['en' => 'Description... Needed for google'],
             'published' => 1,
             'commented' => 0,
             'type' => 'cms',
-            'content' => 'testt66',
+            'content' =>  ['en' => 'testt66'],
             'menu_id' => $m1->id,
             'images' => [
             ]
         ];
 
         
-        $p1 = Page::wrapCreate($data1p);
-        $p2 = Page::wrapCreate($data2p);        
+        $p1 = (new Page)->wrapCreate($data1p);
+        $p2 = (new Page)->wrapCreate($data2p);        
 
-        $page1Slug = Str::slug($data1p['title']);
-        $page2Slug = Str::slug($data2p['title']);        
+        $page1Slug = $p1->getSlugByLang('en'); //Str::slug($data1p['title']['en']);
+        $page2Slug = $p2->getSlugByLang('en'); //Str::slug($data2p['title']['en']);        
 
         // $menuName = $testDataMenu['name'];
         // $menuSlug = Str::slug($menuName);
         //$url1 = $p1->getUrl($m1->slug);
-        $url1 = $p1->getUrl();        
-        $this->assertSame('/c/'.$m1->slug.'/'.$page1Slug, $url1);    
+        $url1 = $p1->getUrl('en');        
+        $this->assertSame('/c/'.$m1->getSlugByLang('en').'/'.$page1Slug, $url1);    
 
         //$response1 = $this->get('/c/'.$menuSlug.'/'.$page1Slug);
         //dump($url1);
@@ -235,8 +239,8 @@ class FrontGuestTest extends TestCase
 
         //$response2 = $this->get('/c/'.$menuSlug.'/'.$page2Slug);
         //$url2 = $p2->getUrl($m1->slug);
-        $url2 = $p2->getUrl();        
-        $this->assertSame('/c/'.$m1->slug.'/'.$page2Slug, $url2);    
+        $url2 = $p2->getUrl('en');        
+        $this->assertSame('/c/'.$m1->getSlugByLang('en').'/'.$page2Slug, $url2);    
         $response2 = $this->get($url2);
         $response2->assertStatus(200);            
 
@@ -245,40 +249,40 @@ class FrontGuestTest extends TestCase
 
     /** @test */
     public function it_will_link_forbid(){
-        $testDataMenu = ['name' => 'About'];
-        $m1 = Menu::wrapCreate($testDataMenu);
+        $testDataMenu = ['name' =>  ['en' => 'About']];
+        $m1 = (new Menu)->wrapCreate($testDataMenu);
         
         $data1p = [
-            'title'     => 'About me',
-            'short_title' => 'About me',
-            'description' => 'Description... Needed for google',
+            'title'     =>  ['en' => 'About me'],
+            'short_title' =>  ['en' => 'About me'],
+            'description' =>  ['en' => 'Description... Needed for google'],
             'published' => 1,
             'commented' => 0,
             'after_login' => 1,
             'type' => 'cms',
-            'content' => 'testt44',
+            'content' =>   ['en' => 'testt44'],
             'menu_id' => $m1->id,
             'images' => [
             ]
         ];
 
         $data2p = [
-            'title'     => 'About page',
-            'short_title' => 'About page',
-            'description' => 'Description... Needed for google',
+            'title'     =>  ['en' =>  'About page'],
+            'short_title' =>   ['en' =>  'About page'],
+            'description' =>   ['en' =>  'Description... Needed for google'],
             'published' => 1,
             'commented' => 0,
             'after_login' => 1,
             'type' => 'cms',
-            'content' => 'testt66',
+            'content' =>  ['en' =>  'testt66'],
             'menu_id' => $m1->id,
             'images' => [
             ]
         ];
 
 
-        $p1 = Page::wrapCreate($data1p);
-        $p2 = Page::wrapCreate($data2p);
+        $p1 = (new Page)->wrapCreate($data1p);
+        $p2 = (new Page)->wrapCreate($data2p);
 
 
         // $page1Slug = Str::slug($data1p['title']);
@@ -289,62 +293,62 @@ class FrontGuestTest extends TestCase
 
 
         //$response1 = $this->get($p1->getUrl($m1->slug));
-        $response1 = $this->get($p1->getUrl());        
+        $response1 = $this->get($p1->getUrl('en'));        
         $response1->assertStatus(401);            
         //$response2 = $this->get($p2->getUrl($m1->slug));
-        $response2 = $this->get($p2->getUrl());        
+        $response2 = $this->get($p2->getUrl('en'));        
         $response2->assertStatus(401);            
     }
 
     /** @test */
     public function it_will_one_link_in_menu_forbid()
     {
-        $testDataMenu = ['name' => 'Contact'];
-        $m1 = Menu::wrapCreate($testDataMenu);
+        $testDataMenu = ['name' =>   ['en' =>'Contact']];
+        $m1 = (new Menu)->wrapCreate($testDataMenu);
         
         $data1p = [
-            'title'     => 'Contact me',
-            'short_title' => 'Contact me',
-            'description' => 'Description... Needed for google',
+            'title'     =>  ['en' => 'Contact me'],
+            'short_title' =>  ['en' =>'Contact me'],
+            'description' =>  ['en' =>'Description... Needed for google'],
             'published' => 1,
             'commented' => 0,
             'after_login' => 1,
             'type' => 'cms',
-            'content' => 'testt44',
+            'content' =>  ['en' =>'testt44'],
             'menu_id' => $m1->id,
             'images' => [
             ]
         ];
 
         $data2p = [
-            'title'     => 'test unpublished',
-            'short_title' => 'test unpublished',
-            'description' => 'Description... Needed for google',
+            'title'     =>  ['en' =>  'test unpublished'],
+            'short_title' =>   ['en' =>  'test unpublished'],
+            'description' =>   ['en' =>  'Description... Needed for google'],
             'published' => 0,
             'commented' => 0,
             'after_login' => 1,
             'type' => 'cms',
-            'content' => 'testt66',
+            'content' =>   ['en' =>  'testt66'],
             'menu_id' => $m1->id,
             'images' => [
             ]
         ];
 
-        $menuName = $testDataMenu['name'];
+        $menuName = $testDataMenu['name']['en'];
         $menuSlug = Str::slug($menuName);
 
-        $p1 = Page::wrapCreate($data1p);
-        $p2 = Page::wrapCreate($data2p);
+        $p1 = (new Page)->wrapCreate($data1p);
+        $p2 = (new Page)->wrapCreate($data2p);
 
-        $page1Slug = Str::slug($data1p['title']);
-        $page2Slug = Str::slug($data2p['title']);        
+        $page1Slug = Str::slug($data1p['title']['en']);
+        $page2Slug = Str::slug($data2p['title']['en']);        
 
 
         //$response1 = $this->get($m1->getUrl()  ) ;
-        $response1 = $this->get($p1->getUrl()  ) ;        
+        $response1 = $this->get($p1->getUrl('en')  ) ;        
         $response1->assertStatus(401);      
 
-        $response1 = $this->get($p2->getUrl()  ) ;        
+        $response1 = $this->get($p2->getUrl('en')  ) ;        
         $response1->assertStatus(404);      
 
 
@@ -358,52 +362,52 @@ class FrontGuestTest extends TestCase
     /** @test */
     public function it_will_one_link_in_menu_normal()
     {
-        $testDataMenu = ['name' => 'Contact'];
-        $m1 = Menu::wrapCreate($testDataMenu);
+        $testDataMenu = ['name' => ['en' => 'Contact']];
+        $m1 = (new Menu)->wrapCreate($testDataMenu);
         
         $data1p = [
-            'title'     => 'Contact me',
-            'short_title' => 'Contact me',
-            'description' => 'Description... Needed for google',
+            'title'     =>   ['en' =>  'Contact me'],
+            'short_title' =>   ['en' =>  'Contact me'],
+            'description' =>   ['en' =>  'Description... Needed for google'],
             'published' => 1,
             'commented' => 0,
             'after_login' => 0,
             'type' => 'cms',
-            'content' => 'testt44',
+            'content' =>  ['en' =>  'testt44'],
             'menu_id' => $m1->id,
             'images' => [
             ]
         ];
 
         $data2p = [
-            'title'     => 'test unpublished',
-            'short_title' => 'test unpublished',
-            'description' => 'Description... Needed for google',
+            'title'     =>   ['en' =>  'test unpublished'],
+            'short_title' =>   ['en' =>   'test unpublished'],
+            'description' =>   ['en' =>  'Description... Needed for google'],
             'published' => 0,
             'commented' => 0,
             'after_login' => 1,
             'type' => 'cms',
-            'content' => 'testt66',
+            'content' =>   ['en' =>  'testt66'],
             'menu_id' => $m1->id,
             'images' => [
             ]
         ];
 
-        $menuName = $testDataMenu['name'];
+        $menuName = $testDataMenu['name']['en'];
         $menuSlug = Str::slug($menuName);
 
-        $p1 = Page::wrapCreate($data1p);
-        $p2 = Page::wrapCreate($data2p);
+        $p1 = (new Page)->wrapCreate($data1p);
+        $p2 = (new Page)->wrapCreate($data2p);
 
-        $page1Slug = Str::slug($data1p['title']);
-        $page2Slug = Str::slug($data2p['title']);        
+        $page1Slug = Str::slug($data1p['title']['en']);
+        $page2Slug = Str::slug($data2p['title']['en']);        
 
 
         //$response1 = $this->get($m1->getUrl());
-        $response1 = $this->get($p1->getUrl());        
+        $response1 = $this->get($p1->getUrl('en'));        
         $response1->assertStatus(200);
 
-        $response2 = $this->get($p2->getUrl());        
+        $response2 = $this->get($p2->getUrl('en'));        
         $response2->assertStatus(404);
 
         //$//response11 = $this->get('/c/'.$menuSlug.'/'.$page1Slug);

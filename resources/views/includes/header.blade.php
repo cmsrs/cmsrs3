@@ -13,15 +13,15 @@
             <?php $pagesPublishedAndAccess = $menu->pagesPublishedAndAccess()->get(); //->toArray(); ?>    
             <li class="nav-item dropdown">
             <?php if( 1 == $pagesPublishedAndAccess->count() ){  ?>
-              <a class="nav-link" href="{{$pagesPublishedAndAccess->first()->getUrl()}}">{{ $pagesPublishedAndAccess->first()->title }}</a>
+              <a class="nav-link" href="{{$pagesPublishedAndAccess->first()->getUrl($lang)}}">{{ $pagesPublishedAndAccess->first()->translatesByColumnAndLang( 'title', $lang ) }}</a>
             <?php }else{ ?>
               <a class="nav-link dropdown-toggle" href="#" id="dropdown{{ $menu->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ $menu->name }}</a>
               <div class="dropdown-menu" aria-labelledby="dropdown{{ $menu->id }}">
                   <?php foreach ($menu->pagesPublishedTree($pagesPublishedAndAccess) as $page) { ?>                                
-                    <a class="dropdown-item" href="{{$page->getUrl()}}">{{ $page->title }}</a>
+                    <a class="dropdown-item" href="{{$page->getUrl($lang)}}">{{ $page->translatesByColumnAndLang( 'title', $lang ) }}</a>
                     <?php if( !empty($page['children']) && !empty($page->published) ){ ?>
                         <?php foreach ($page['children'] as $p) { ?>                    
-                            <a class="dropdown-item ml-3" href="{{$p->getUrl()}}">{{ $p->title }}</a>                        
+                            <a class="dropdown-item ml-3" href="{{$p->getUrl($lang)}}">{{ $p->translatesByColumnAndLang( 'title', $lang ) }}</a>
                         <?php } ?>
                     <?php } ?>                  
                   <?php } ?>
