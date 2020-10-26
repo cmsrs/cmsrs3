@@ -54,6 +54,44 @@ class Base extends TestCase
     }
 
 
+    public function getAllCmsUrl( $lang )
+    {
+      //cms link
+      //see in: resources/views/includes/header.blade.php
+      //this function only use in tests - maybe it will use in code in future
+      $url = [];
+      $menus = Menu::All();
+      $f0 = false;
+      $f1 = false;      
+      $f2 = false;            
+      //print_r($menus->toArray());
+      foreach ($menus as $menu) { 
+        $pagesPublishedAndAccess = $menu->pagesPublishedAndAccess()->get();
+        if( 1 == $pagesPublishedAndAccess->count() ){ 
+          $f0 = true;
+          $url[] = $pagesPublishedAndAccess->first()->getUrl($lang);
+        }else{
+          foreach ($menu->pagesPublishedTree($pagesPublishedAndAccess) as $page) {
+                $url[] = $page->getUrl($lang);
+                $f1 = true;
+                if( !empty($page['children']) && !empty($page->published) ){
+                    foreach ($page['children'] as $p) {
+                        $f2 = true;                      
+                        $url[] = $p->getUrl($lang);
+                    }
+                }
+          }
+        }
+      }
+      $this->assertTrue($f0);
+      $this->assertTrue($f1);
+      $this->assertTrue($f2);
+
+      return $url;
+    }
+
+
+
   public function getTestToken()
   {
     $response = $this->post('api/login', [
@@ -172,7 +210,7 @@ class Base extends TestCase
     return $parentId;
   }
 
-
+/*
   public function setDemoDataMenusAndPages()
   {
       $p = [];
@@ -377,6 +415,7 @@ class Base extends TestCase
     ];
     Page::wrapCreate($pPrivacy);
   }
+*/
 
   protected function getPageTestData()
   {

@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use App\Page;
 use App\Menu;
+use App\Data\Demo;
 use Illuminate\Support\Str;
 
 
@@ -70,56 +71,44 @@ class FrontTest extends Base
     /** @test */
     public function it_will_get_all_pages_status()
     {
-      $this->setTestData();
-      //$parentId = $this->dateToTestParent( $this->objMenu->id );
-      $this->setDemoDataMenusAndPages();
 
+        //ini_set('memory_limit', '1028M');
+        $objDemoData = new Demo;
+        $p = $objDemoData->pagesAndMenu( true );
 
-      //cms link
-      //see in: resources/views/includes/header.blade.php
-      //maybe this logic - move to another file
-      $url = [];
-      $menus = Menu::All();
-      $f0 = false;
-      $f1 = false;      
-      $f2 = false;            
-      //print_r($menus->toArray());
-      foreach ($menus as $menu) { 
-        $pagesPublishedAndAccess = $menu->pagesPublishedAndAccess()->get();
-        if( 1 == $pagesPublishedAndAccess->count() ){ 
-          $f0 = true;
-          $url[] = $pagesPublishedAndAccess->first()->getUrl();
-        }else{
-          foreach ($menu->pagesPublishedTree($pagesPublishedAndAccess) as $page) {
-                $url[] = $page->getUrl();
-                $f1 = true;
-                if( !empty($page['children']) && !empty($page->published) ){
-                    foreach ($page['children'] as $p) {
-                        $f2 = true;                      
-                        $url[] = $p->getUrl();
-                    }
-                }
-          }
+        $lang = 'en';
+
+        /*
+        foreach($p as $page){
+            $title = $page->translatesByColumnAndLang( 'title', $lang );
+            dump($title);
+            $u = $page->getUrl($lang);
+            dump($u);
         }
-      }
-      $this->assertTrue($f0);
-      $this->assertTrue($f1);
-      $this->assertTrue($f2);
+        */
 
-      foreach( $url as $u){
-        $response = $this->get($u);
-        //dump($u);
-        $response->assertStatus(200);          
-      }
 
-      //independent
-      $url2 = Page::getFirstPageByType('privacy_policy' )->getUrl();
-      $response2 = $this->get($url2);
-      $response2->assertStatus(200);          
-      
-      //$urlLogin = route('login');
-      //$response3 = $this->get($urlLogin);
-      //$response3->assertStatus(200);          
+        //dump(count($p));
+
+
+        $url = $this->getAllCmsUrl( 'en' );
+        //dump($url);
+        //dd('');
+
+        foreach( $url as $u){
+            $response = $this->get($u);
+            //dump($u);
+            $response->assertStatus(200);          
+        }
+
+        //independent
+        $url2 = Page::getFirstPageByType('privacy_policy' )->getUrl($lang);
+        $response2 = $this->get($url2);
+        $response2->assertStatus(200);          
+        
+        //$urlLogin = route('login');
+        //$response3 = $this->get($urlLogin);
+        //$response3->assertStatus(200);          
 
     }
 
