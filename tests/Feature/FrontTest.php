@@ -7,7 +7,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use App\Page;
 use App\Menu;
-use App\Data\Demo;
 use Illuminate\Support\Str;
 
 
@@ -71,44 +70,10 @@ class FrontTest extends Base
     /** @test */
     public function it_will_get_all_pages_status()
     {
-
-        //ini_set('memory_limit', '1028M');
-        $objDemoData = new Demo;
-        $p = $objDemoData->pagesAndMenu( true );
+        ini_set('memory_limit', '1028M');
 
         $lang = 'en';
-
-        /*
-        foreach($p as $page){
-            $title = $page->translatesByColumnAndLang( 'title', $lang );
-            dump($title);
-            $u = $page->getUrl($lang);
-            dump($u);
-        }
-        */
-
-
-        //dump(count($p));
-
-
-        $url = $this->getAllCmsUrl( 'en' );
-        //dump($url);
-        //dd('');
-
-        foreach( $url as $u){
-            $response = $this->get($u);
-            //dump($u);
-            $response->assertStatus(200);          
-        }
-
-        //independent
-        $url2 = Page::getFirstPageByType('privacy_policy' )->getUrl($lang);
-        $response2 = $this->get($url2);
-        $response2->assertStatus(200);          
-        
-        //$urlLogin = route('login');
-        //$response3 = $this->get($urlLogin);
-        //$response3->assertStatus(200);          
+        $this->checkAllPagesByLang( $lang );
 
     }
 

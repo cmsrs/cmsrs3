@@ -7,6 +7,7 @@ use Tests\TestCase;
 use App\User;
 use App\Page;
 use App\Menu;
+use App\Data\Demo;
 
 use App\Translate;
 use App\Content;
@@ -54,11 +55,11 @@ class Base extends TestCase
     }
 
 
-    public function getAllCmsUrl( $lang )
+    public function getAllUrlRelatedToMenus( $lang )
     {
       //cms link
       //see in: resources/views/includes/header.blade.php
-      //this function only use in tests - maybe it will use in code in future
+      //this function only use in tests - maybe it will use in code in the future
       $url = [];
       $menus = Menu::All();
       $f0 = false;
@@ -88,6 +89,51 @@ class Base extends TestCase
       $this->assertTrue($f2);
 
       return $url;
+    }
+
+    public function checkAllPagesByLang( $lang )
+    {
+        $objDemoData = new Demo;
+        $p = $objDemoData->pagesAndMenu( true );
+
+
+        $numOfInPages = count($p);
+        $this->assertNotEmpty($numOfInPages);
+        $this->assertEmpty(0);        
+
+        $urlIn = [];
+        foreach($p as $page){
+            //$title = $page->translatesByColumnAndLang( 'title', $lang );
+            //dump($title);
+            $urlIn[] = $page->getUrl($lang);
+        }
+        
+        //All Url Related To Menus
+        $url = $this->getAllUrlRelatedToMenus( $lang );
+        foreach( $url as $u){
+            $response = $this->get($u);
+            $response->assertStatus(200);          
+        }
+
+        //independent
+        $urlPolicy = Page::getFirstPageByType('privacy_policy' )->getUrl($lang);
+        $response2 = $this->get($urlPolicy);
+        $response2->assertStatus(200);    
+        $url[] = $urlPolicy;
+
+        //main page
+        $urlMainPage = Page::getFirstPageByType('main_page' )->getUrl($lang);
+        $response3 = $this->get($urlMainPage);
+        $response3->assertStatus(200);            
+        $url[] = $urlMainPage;
+
+        $this->assertEquals($numOfInPages, count($url));
+
+        foreach($url as $uu){
+            $isInTable = in_array($uu, $urlIn);
+            $this->assertTrue($isInTable);
+        }        
+
     }
 
 

@@ -30,6 +30,9 @@ class FrontGuestTest extends TestCase
         $response = $this->get('/pl/cms/test/dsas');
         $response->assertStatus(404);
 
+        $response = $this->get('/en');
+        $response->assertStatus(404);
+
         $response = $this->get('/pl');
         $response->assertStatus(404);
 
@@ -416,8 +419,5 @@ class FrontGuestTest extends TestCase
         //$response2 = $this->get('/c/'.$menuSlug.'/'.$page2Slug);
         //$response2->assertStatus(404);            
         
-
-    }
-    
-
+    }    
 }

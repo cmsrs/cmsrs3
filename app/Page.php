@@ -230,7 +230,9 @@ class Page extends Base
 
     public function getUrl($lang)
     {
-      if( 'privacy_policy' == $this->type ){
+      if( 'main_page' == $this->type ){
+        return $this->getMainUrl($lang);
+      }elseif( 'privacy_policy' == $this->type ){
         return $this->getIndependentUrl($lang);
       }
       return $this->getCmsUrl($lang);
@@ -241,6 +243,19 @@ class Page extends Base
       $menuSlug = $this->menu()->get()->first()->getSlugByLang($lang);
       return "/c/".$menuSlug."/".$this->getSlugByLang($lang);
     }
+
+    private function getMainUrl($lang)
+    {
+      $langs = $this->getArrLangs();
+      array_shift($langs); //after this langs will be changed. It has rest of langs without first one.
+
+      if( empty($langs) ){
+        $url = "/";
+      }else{
+        $url = in_array($lang, $langs) ? "/".$lang : "/";
+      }
+      return $url; 
+    }    
 
     private function getIndependentUrl($lang)
     {

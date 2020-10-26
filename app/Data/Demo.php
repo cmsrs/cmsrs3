@@ -175,7 +175,7 @@ Class Demo{
         ];
 
 
-        $this->getPageObj()->wrapCreate($data1p);
+        $p['p222'] =  $this->getPageObj()->wrapCreate($data1p);
         $p['p2'] = $this->getPageObj()->wrapCreate($data2p);
         $p['p22'] = $this->getPageObj()->wrapCreate($data22pSecret);
 
