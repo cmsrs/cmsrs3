@@ -107,7 +107,7 @@
       </div>
   @else
       <!-- type == privacy-policy -->
-      <div class="mt-2">{!! $page->content !!}</div>
+      <div class="mt-2">{!! $page->translatesByColumnAndLang( 'content', $lang ) !!}</div>
   @endif
 
   @if ( $page->commented )

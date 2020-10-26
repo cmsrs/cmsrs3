@@ -1,4 +1,5 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+<?php $bg = env('DEMO_STATUS') ?  'bg-secondary' : 'bg-dark'; ?>
+<nav class="navbar navbar-expand-md navbar-dark  {{ $bg }} fixed-top">
     <a class="navbar-brand" href="{{ url('/') }}">
         {{ config('app.name', 'cmsRS') }}
     </a>
