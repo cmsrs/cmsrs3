@@ -232,7 +232,8 @@ class FrontGuestTest extends TestCase
         // $menuSlug = Str::slug($menuName);
         //$url1 = $p1->getUrl($m1->slug);
         $url1 = $p1->getUrl('en');        
-        $this->assertSame('/c/'.$m1->getSlugByLang('en').'/'.$page1Slug, $url1);    
+
+        $this->assertSame('/'.Page::PREFIX_CMS_URL.'/'.$m1->getSlugByLang('en').'/'.$page1Slug, $url1);    
 
         //$response1 = $this->get('/c/'.$menuSlug.'/'.$page1Slug);
         //dump($url1);
@@ -243,7 +244,7 @@ class FrontGuestTest extends TestCase
         //$response2 = $this->get('/c/'.$menuSlug.'/'.$page2Slug);
         //$url2 = $p2->getUrl($m1->slug);
         $url2 = $p2->getUrl('en');        
-        $this->assertSame('/c/'.$m1->getSlugByLang('en').'/'.$page2Slug, $url2);    
+        $this->assertSame('/'.Page::PREFIX_CMS_URL.'/'.$m1->getSlugByLang('en').'/'.$page2Slug, $url2);    
         $response2 = $this->get($url2);
         $response2->assertStatus(200);            
 

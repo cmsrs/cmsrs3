@@ -7,10 +7,11 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use App\Page;
 use App\Menu;
+use App\Config;
 use Illuminate\Support\Str;
 
 
-class FrontTest extends Base
+class FrontLangsTest extends Base
 {
     use RefreshDatabase;
 
@@ -18,18 +19,24 @@ class FrontTest extends Base
     private $testDataMenu;
     private $menuId;
     private $menuObj;    
+    private $titleEn = 'eeeeeeeeeeeeeeeennnnnnnnnnnnnnnnn';
+    private $titlePl = 'pppppppppppppppplllllllllllllllll';
+    private $langs;
+
 
 
     public function setUp(): void
     {
-        putenv('LANGS="en"');      
+        putenv('LANGS="pl,en"');      
         parent::setUp();
         $this->createUser();
+        $this->langs = (new Config)->arrGetLangs();
+
 
 
         $this->testDataMenu =
         [
-             'name'     =>  ['en' => 'test men7 zółć'],
+             'name'     =>  ['pl' => 'test men7 zółć',  'en' => 'menu test' ],
              //'position' => 1
         ];
     }
@@ -49,12 +56,12 @@ class FrontTest extends Base
 
         $this->testData =
         [
-            'title' =>  ['en' => 'page 1 test test slug'],
-            'short_title' =>  ['en' => 'page1'],
+            'title' =>  ['en' => 'page 1 test test slug', 'pl' => 'strona testowa' ],
+            'short_title' =>  ['en' => 'page1', 'pl' => 'strona testowa' ],
             'published' => 1,
             'position' => 7,
             'type' => 'cms',
-            'content' =>  ['en' => 'content test133445'],
+            'content' =>  ['en' => 'content test133445', 'pl' => 'strona testowa' ],
             'menu_id' => $this->menuId
         ];
 
@@ -87,6 +94,11 @@ class FrontTest extends Base
       $res = $response->getData();
       $this->assertTrue( $res->success );
       $this->assertEquals( count($res->data), 1);
+
+      $this->assertEquals(2, count($this->langs));
+      $this->assertEquals('pl', $this->langs[0]);
+      $this->assertEquals('en', $this->langs[1]);
+
     }
 
     /** @test */
@@ -98,15 +110,15 @@ class FrontTest extends Base
 
         $testData2 =
         [
-            'title'     =>  ['en' =>'cmsRS'],
-            'short_title' =>  ['en' =>'cmsRS'],
-            'description' =>  ['en' =>'cmsRS'],
+            'title'     =>  ['en' => $this->titleEn, 'pl' => $this->titlePl],
+            'short_title' =>  ['en' =>'cmsRS', 'pl' =>'cmsRS'],
+            'description' =>  ['en' =>'cmsRS', 'pl' =>'cmsRS'],
             'published' => 1,
             'commented' => 0,
             'after_login' => 1,
             //'position' => 3,
             'type' => 'main_page',
-            'content' =>  ['en' =>'main page'],
+            'content' =>  ['en' =>'main page', 'pl' =>'cmsRS'],
             'menu_id' => null,
             'page_id' => null
             //'images' => []
@@ -117,8 +129,18 @@ class FrontTest extends Base
         $res = $response->getData();
         $this->assertTrue( $res->success );      
 
-        $response = $this->get('/');
-        $response->assertStatus(200);          
+        $response1 = $this->get('/');
+        $response1->assertStatus(200);          
+        $this->assertNotEmpty( strpos( $response1->getContent() ,  $this->titlePl ));
+
+        $response2 = $this->get('/en');
+        $response2->assertStatus(200);          
+        $this->assertNotEmpty( strpos( $response2->getContent() ,  $this->titleEn ));        
+        $this->assertEmpty( strpos( $response2->getContent() ,  $this->titlePl ));                
+
+        $response3 = $this->get('/pl');
+        $response3->assertStatus(404);          
+        $this->assertEmpty( strpos( $response3->getContent() ,  $this->titlePl ));        
     }
 
 
@@ -126,32 +148,33 @@ class FrontTest extends Base
     public function it_will_get_cms_page0()
     {
         $this->setTestData();
-        $title = $this->testData['title']['en'];
-        $pageSlug = Str::slug($title);
 
-        $menuName = $this->testDataMenu['name']['en'];
-        $menuSlug = Str::slug($menuName);
+        // $title = $this->testData['title']['en'];
+        // $pageSlug = Str::slug($title);
+        // $menuName = $this->testDataMenu['name']['en'];
+        // $menuSlug = Str::slug($menuName);
 
         $p0 = Page::query()->where('menu_id', $this->menuId)->get()->first();
         $this->assertNotEmpty($p0);
+
         //$this->assertEquals(1, $p0->count());
-
         //$url = $p0->getUrl();
-        $url =  $p0->getUrl('en');
 
-        //$response = $this->get('/c/'.$menuSlug.'/'.$pageSlug);
-        //$response->assertStatus(404);
-        
-        $response1 = $this->get($url);
-        $response1->assertStatus(200);
+        foreach($this->langs as $lang){
+            $url =  $p0->getUrl($lang); 
+            //dump($url);
+            $this->assertNotEmpty($url);
+            $response1 = $this->get($url);
+            $response1->assertStatus(200);    
+        }
     }
 
     /** @test */
     public function it_will_get_cms_page()
     {
         $this->setTestData();      
-        $title = $this->testData['title']['en'];
-        $pageSlug = Str::slug($title);
+        //$title = $this->testData['title']['en'];
+        //$pageSlug = Str::slug($title);
 
         $menuName = $this->testDataMenu['name']['en'];
         $menuSlug = Str::slug($menuName);
@@ -169,15 +192,15 @@ class FrontTest extends Base
 
         $testData2 =
         [
-            'title'     =>  ['en' =>'cmsRS'],
-            'short_title' =>  ['en' =>'cmsRS'],
-            'description' =>  ['en' =>'cmsRS'],
+            'title'     =>  ['en' =>'cmsRS', 'pl' =>'cmsRS'],
+            'short_title' =>  ['en' =>'cmsRS', 'pl' =>'cmsRS'],
+            'description' =>  ['en' =>'cmsRS', 'pl' =>'cmsRS'],
             'published' => 1,
             'commented' => 0,
             'after_login' => 1,
             //'position' => 3,
             'type' => 'cms',
-            'content' =>  ['en' =>'main page'],
+            'content' =>  ['en' =>'main page', 'pl' =>'str gl'],
             'menu_id' => $this->menuId,
             'page_id' => null
             //'images' => []
@@ -226,12 +249,17 @@ class FrontTest extends Base
         $p = (new Page)->wrapCreate($pPrivacy);
         $this->assertNotEmpty($p->id );
 
-        $lang = 'en';
-        $url =  $p->getUrl($lang); 
-        //dump($url);
-        $this->assertNotEmpty($url);
-        $response1 = $this->get($url);
-        $response1->assertStatus(200);    
+        foreach($this->langs as $lang){
+            $url =  $p->getUrl($lang); 
+            //dump($url);
+            $this->assertNotEmpty($url);
+            $response1 = $this->get($url);
+            $response1->assertStatus(200);    
+        }
    }
-    
+
+
+
+
+
 }

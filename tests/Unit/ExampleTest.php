@@ -7,6 +7,14 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ExampleTest extends TestCase
 {
+
+    public function setUp(): void
+    {
+        putenv('LANGS="en"');      
+        parent::setUp();
+    }
+
+    
     /**
      * A basic test example.
      *

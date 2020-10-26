@@ -8,10 +8,13 @@ use Illuminate\Support\Facades\Auth;
 
 class Page extends Base
 {
+    const PREFIX_CMS_URL = 'cms';
+    const PREFIX_IN_URL = 'in'; //(in) independent
 
     private $translate;
     private $content;    
     public $pageFields;
+    private $langs;
 
     protected $fillable = [
         //'title', 
@@ -55,6 +58,7 @@ class Page extends Base
         //dd('______cojest__');
         $this->translate = new Translate;  
         $this->content = new Content;          
+        $this->langs = $this->getArrLangs();
     }
 
     // public function  getPageObj()
@@ -203,9 +207,6 @@ class Page extends Base
       $policyUrl = null;
       $policyTitle = null;
       if(!empty($privacyPolicy)){
-          //this 'if' is needed to phpunit
-          //$policyUrl = $footerPages['privacy_policy']->getSeparateUrl();
-          //see AppServiceProvider
           $policyUrl = $privacyPolicy->getUrl($lang);
           $policyTitle = $privacyPolicy->translatesByColumnAndLang('title', $lang);
       }
@@ -213,11 +214,8 @@ class Page extends Base
       $contactUrl = null;
       $contactTitle = null;
       if(!empty($contact)){
-        //this 'if' is needed to phpunit
-        //$policyUrl = $footerPages['privacy_policy']->getSeparateUrl();
-        //see AppServiceProvider
-        $contactUrl = $contact->getUrl($lang);
-        $contactTitle = $contact->translatesByColumnAndLang('title', $lang);
+          $contactUrl = $contact->getUrl($lang);
+          $contactTitle = $contact->translatesByColumnAndLang('title', $lang);
       }
 
       $out['policyUrl'] = $policyUrl;
@@ -241,12 +239,17 @@ class Page extends Base
     private function getCmsUrl($lang)
     {   
       $menuSlug = $this->menu()->get()->first()->getSlugByLang($lang);
-      return "/c/".$menuSlug."/".$this->getSlugByLang($lang);
+      $url = "/".Page::PREFIX_CMS_URL."/".$menuSlug."/".$this->getSlugByLang($lang);
+      if(1 < count($this->langs)){
+        $url = "/".$lang.$url;
+      }
+
+      return $url;
     }
 
     private function getMainUrl($lang)
     {
-      $langs = $this->getArrLangs();
+      $langs = $this->langs;
       array_shift($langs); //after this langs will be changed. It has rest of langs without first one.
 
       if( empty($langs) ){
@@ -259,7 +262,12 @@ class Page extends Base
 
     private function getIndependentUrl($lang)
     {
-      return "/in/".$this->getSlugByLang($lang);
+      $url = "/".Page::PREFIX_IN_URL."/".$this->getSlugByLang($lang);
+      if(1 < count($this->langs)){
+        $url = "/".$lang.$url;
+      }
+
+      return $url;
     }
 
     public function unpublishedChildren()

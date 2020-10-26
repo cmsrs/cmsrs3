@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+use App\Config;
+use App\Page;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,12 +15,18 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
+$langs = (new Config)->arrGetLangs();
 
 Route::get('/', 'FrontController@index');
-//Route::get('/c/{pageSlug}', 'FrontController@getPageForMenu');
-Route::get('/c/{menuSlug}/{pageSlug}', 'FrontController@getPage');
-Route::get('/in/{pageSlug}', 'FrontController@getSeparatePage');
-
+if(1 == count($langs)){    
+    //Route::get('/c/{pageSlug}', 'FrontController@getPageForMenu');
+    Route::get('/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}', 'FrontController@getPage');
+    Route::get('/'.Page::PREFIX_IN_URL.'/{pageSlug}', 'FrontController@getSeparatePage');    
+}else{
+    Route::get('/{lang}', 'FrontController@index');
+    Route::get('/{lang}/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}', 'FrontController@getPageLangs');
+    Route::get('/{lang}/'.Page::PREFIX_IN_URL.'/{pageSlug}', 'FrontController@getSeparatePageLangs');
+}
 
 //Auth::routes();
 Auth::routes(['register' => false, 'reset' => false]);
