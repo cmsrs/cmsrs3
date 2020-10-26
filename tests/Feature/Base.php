@@ -96,16 +96,22 @@ class Base extends TestCase
         $objDemoData = new Demo;
         $p = $objDemoData->pagesAndMenu( true );
 
-
         $numOfInPages = count($p);
         $this->assertNotEmpty($numOfInPages);
-        $this->assertEmpty(0);        
+        //$this->assertEmpty(0);        
 
         $urlIn = [];
         foreach($p as $page){
-            //$title = $page->translatesByColumnAndLang( 'title', $lang );
-            //dump($title);
-            $urlIn[] = $page->getUrl($lang);
+            $pageTitle = $page->translatesByColumnAndLang( 'title', $lang );
+            $pageShortTitle = $page->translatesByColumnAndLang( 'short_title', $lang );
+            $this->assertNotEmpty($pageTitle);
+            $this->assertNotEmpty($pageShortTitle);                        
+
+            $itemUrlIn = $page->getUrl($lang);
+            //$res = $this->get($itemUrlIn);
+            //dd($res->dump() );
+            $urlIn[] = $itemUrlIn; 
+
         }
         
         //All Url Related To Menus
