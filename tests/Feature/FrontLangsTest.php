@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Page;
 use App\Menu;
 use App\Config;
+use App\Data\Demo;
 use Illuminate\Support\Str;
 
 
@@ -79,8 +80,10 @@ class FrontLangsTest extends Base
     {
         ini_set('memory_limit', '1028M');
 
-        $lang = 'en';
-        $this->checkAllPagesByLang( $lang );
+        $p = (new Demo)->pagesAndMenu( true );
+
+        $this->checkAllPagesByLang($p, 'pl' );        
+        $this->checkAllPagesByLang($p, 'en' );
 
     }
 

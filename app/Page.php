@@ -108,10 +108,11 @@ class Page extends Base
         //
         $column = 'title';
         $name = $this->translatesByColumnAndLang( $column, $lang );
-        //dd($name);
-        if( empty($name) ){
-          throw new \Exception("I cant create slug for page column: $column for lang: $lang, because value is empty");
-        }
+
+        // if( empty($name) ){
+        //   throw new \Exception("I cant create slug for page column: $column for lang: $lang, because value is empty");
+        // }
+
         return Str::slug($name, "-");
     }
 

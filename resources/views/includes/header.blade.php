@@ -18,10 +18,10 @@
             <?php }else{ ?>
               <a class="nav-link dropdown-toggle" href="#" id="dropdown{{ $menu->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ $menu->translatesByColumnAndLang( 'name', $lang ) }}</a>
               <div class="dropdown-menu" aria-labelledby="dropdown{{ $menu->id }}">
-                  <?php foreach ($menu->pagesPublishedTree($pagesPublishedAndAccess) as $page) { ?>                                
-                    <a class="dropdown-item" href="{{$page->getUrl($lang)}}">{{ $page->translatesByColumnAndLang( 'title', $lang ) }}</a>
-                    <?php if( !empty($page['children']) && !empty($page->published) ){ ?>
-                        <?php foreach ($page['children'] as $p) { ?>                    
+                  <?php foreach ($menu->pagesPublishedTree($pagesPublishedAndAccess) as $pageMenu) { ?>                                
+                    <a class="dropdown-item" href="{{$pageMenu->getUrl($lang)}}">{{ $pageMenu->translatesByColumnAndLang( 'title', $lang ) }}</a>
+                    <?php if( !empty($pageMenu['children']) && !empty($pageMenu->published) ){ ?>
+                        <?php foreach ($pageMenu['children'] as $p) { ?>                    
                             <a class="dropdown-item ml-3" href="{{$p->getUrl($lang)}}">{{ $p->translatesByColumnAndLang( 'title', $lang ) }}</a>
                         <?php } ?>
                     <?php } ?>                  
@@ -31,6 +31,17 @@
             </li>
           <?php } ?>
       </ul>
+      
+
+
+      <ul class="nav navbar-nav ml-auto">
+            <?php foreach($langs as $lang){  ?>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ $page->getUrl($lang) }}"><img src="/images/cms/{{ $lang }}.png" alt="{{ $lang }}" /> {{ strtoupper($lang) }}</a>
+            </li>
+            <?php } ?>
+        </ul>
+        <?php //dump( $page ) ?>
 
       <!-- Authentication Links -->
       @guest

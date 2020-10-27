@@ -97,9 +97,11 @@ class Menu extends Base
     {
         $column = 'name';
         $name = $this->translatesByColumnAndLang( $column, $lang );
-        if( empty($name) ){
-          throw new \Exception("I cant create slug for menu, column $column for lang: $lang, because value is empty");
-        }
+
+        // if( empty($name) ){
+        //   throw new \Exception("I cant create slug for menu, column $column for lang: $lang, because value is empty");
+        // }
+
         return Str::slug($name, "-");
     }
 

@@ -35,7 +35,7 @@ Class Demo{
     private function imgUnit1()
     {
         $images = [
-            ['name' => 'phpunittest1.jpg', 'data' => $this->getTestPhoto( 'test/phpunittest1.jpg'), 'alt' => [ "en" =>'phpunittest1'  ]]
+            ['name' => 'phpunittest1.jpg', 'data' => $this->getTestPhoto( 'test/phpunittest1.jpg'), 'alt' => [ "en" =>'phpunittest1', "pl" =>'phpunittest1'  ]]
         ];
         return $images;
     }
@@ -43,8 +43,8 @@ Class Demo{
     private function imgUnit2()
     {
         $images = [
-            ['name' => 'phpunittest1.jpg', 'data' => $this->getTestPhoto( 'test/phpunittest1.jpg'), 'alt' => [ "en" =>'phpunittest1'  ]],
-            ['name' => 'phpunittest2.jpg', 'data' => $this->getTestPhoto( 'test/phpunittest2.jpg'), 'alt' => [ "en" =>'phpunittest2'  ]]            
+            ['name' => 'phpunittest1.jpg', 'data' => $this->getTestPhoto( 'test/phpunittest1.jpg'), 'alt' => [ "en" =>'phpunittest1', "pl" =>'phpunittest1'  ]],
+            ['name' => 'phpunittest2.jpg', 'data' => $this->getTestPhoto( 'test/phpunittest2.jpg'), 'alt' => [ "en" =>'phpunittest2', "pl" =>'phpunittest1'  ]]            
         ];
         return $images;
     }
@@ -53,34 +53,34 @@ Class Demo{
     {
         if(!$unitTest){
             $img = [
-                ['name' => 'me.jpg', 'data' => $this->getTestPhoto( 'about_me/me.jpg' ), 'alt' => [ "en" =>'about me']]
+                ['name' => 'me.jpg', 'data' => $this->getTestPhoto( 'about_me/me.jpg' ), 'alt' => [ "en" =>'about me', "en" =>'o mnie'  ]]
             ];
             $images = [
-                ['name' => 'img1.jpg', 'data' => $this->getTestPhoto( 'gallery/img1.jpg'), 'alt' => [ "en" =>'description img1'  ]],
-                ['name' => 'img2.jpg', 'data' => $this->getTestPhoto( 'gallery/img2.jpg'), 'alt' => [ "en" =>'description img2'  ]],
-                ['name' => 'img3.jpg', 'data' => $this->getTestPhoto( 'gallery/img3.jpg'), 'alt' => [ "en" =>'description img3'  ]],
-                ['name' => 'img4.jpg', 'data' => $this->getTestPhoto( 'gallery/img4.jpg'), 'alt' => [ "en" =>'description img4'  ]],
-                ['name' => 'imgb1.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb1.jpg' ), 'alt' => [ "en" =>'description imgb1'  ]],
-                ['name' => 'imgb2.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb2.jpg' ), 'alt' => [ "en" =>'description imgb2'  ]],
-                ['name' => 'imgb3.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb3.jpg' ), 'alt' => [ "en" =>'description imgb3'  ]],
-                ['name' => 'imgb4.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb4.jpg' ), 'alt' => [ "en" =>'description imgb4'  ]],
-                ['name' => 'imgc1.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc1.jpg' ), 'alt' => [ "en" =>'description imgc1'  ]],                
-                ['name' => 'imgc2.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc2.jpg' ), 'alt' => [ "en" =>'description imgc2'  ]],                
-                ['name' => 'imgc3.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc3.jpg' ), 'alt' => [ "en" =>'description imgc3'  ]],                
-                ['name' => 'imgc4.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc4.jpg' ), 'alt' => [ "en" =>'description imgc4'  ]],                
-                ['name' => 'imgc5.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc5.jpg' ), 'alt' => [ "en" =>'description imgc5'  ]],                
-                ['name' => 'imgc6.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc6.jpg' ), 'alt' => [ "en" =>'description imgc6'  ]],                
-                ['name' => 'imgc7.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc7.jpg' ), 'alt' => [ "en" =>'description imgc7'  ]],                
-                ['name' => 'imgc8.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc8.jpg' ), 'alt' => [ "en" =>'description imgc8'  ]],                
-                ['name' => 'imgc9.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc9.jpg' ), 'alt' => [ "en" =>'description imgc9'  ]],                
-                ['name' => 'imgc10.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc10.jpg' ), 'alt' => [ "en" =>'description imgc10'  ]],                
-                ['name' => 'imgc11.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc11.jpg' ), 'alt' => [ "en" =>'description imgc11'  ]],                
-                ['name' => 'imgc12.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc12.jpg' ), 'alt' => [ "en" =>'description imgc12'  ]], 
+                ['name' => 'img1.jpg', 'data' => $this->getTestPhoto( 'gallery/img1.jpg'), 'alt' => [ "en" =>'description img1', "pl" =>'opis img1'  ]],
+                ['name' => 'img2.jpg', 'data' => $this->getTestPhoto( 'gallery/img2.jpg'), 'alt' => [ "en" =>'description img2', "pl" =>'opis img2'  ]],
+                ['name' => 'img3.jpg', 'data' => $this->getTestPhoto( 'gallery/img3.jpg'), 'alt' => [ "en" =>'description img3', "pl" =>'opis img3'  ]],
+                ['name' => 'img4.jpg', 'data' => $this->getTestPhoto( 'gallery/img4.jpg'), 'alt' => [ "en" =>'description img4', "pl" =>'opis img4'  ]],
+                ['name' => 'imgb1.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb1.jpg' ), 'alt' => [ "en" =>'description imgb1', "pl" =>'opis imgb1' ]],
+                ['name' => 'imgb2.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb2.jpg' ), 'alt' => [ "en" =>'description imgb2', "pl" =>'opis imgb2'  ]],
+                ['name' => 'imgb3.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb3.jpg' ), 'alt' => [ "en" =>'description imgb3', "pl" =>'opis imgb3'  ]],
+                ['name' => 'imgb4.jpg', 'data' => $this->getTestPhoto( 'gallery/imgb4.jpg' ), 'alt' => [ "en" =>'description imgb4', "pl" =>'opis imgb4'  ]],
+                ['name' => 'imgc1.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc1.jpg' ), 'alt' => [ "en" =>'description imgc1', "pl" =>'opis imgc1'  ]],                
+                ['name' => 'imgc2.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc2.jpg' ), 'alt' => [ "en" =>'description imgc2', "pl" =>'opis imgc2'  ]],                
+                ['name' => 'imgc3.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc3.jpg' ), 'alt' => [ "en" =>'description imgc3', "pl" =>'opis imgc3'  ]],                
+                ['name' => 'imgc4.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc4.jpg' ), 'alt' => [ "en" =>'description imgc4', "pl" =>'opis imgc4'  ]],                
+                ['name' => 'imgc5.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc5.jpg' ), 'alt' => [ "en" =>'description imgc5', "pl" =>'opis imgc5'  ]],                
+                ['name' => 'imgc6.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc6.jpg' ), 'alt' => [ "en" =>'description imgc6', "pl" =>'opis imgc6'  ]],                
+                ['name' => 'imgc7.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc7.jpg' ), 'alt' => [ "en" =>'description imgc7', "pl" =>'opis imgc7'  ]],                
+                ['name' => 'imgc8.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc8.jpg' ), 'alt' => [ "en" =>'description imgc8', "pl" =>'opis imgc8'  ]],                
+                ['name' => 'imgc9.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc9.jpg' ), 'alt' => [ "en" =>'description imgc9', "pl" =>'opis imgc9'  ]],                
+                ['name' => 'imgc10.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc10.jpg' ), 'alt' => [ "en" =>'description imgc10', "pl" =>'opis imgc10'  ]],                
+                ['name' => 'imgc11.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc11.jpg' ), 'alt' => [ "en" =>'description imgc11', "pl" =>'opis imgc11'  ]],                
+                ['name' => 'imgc12.jpg', 'data' => $this->getTestPhoto( 'gallery/imgc12.jpg' ), 'alt' => [ "en" =>'description imgc12', "pl" =>'opis imgc12'  ]], 
             ];
 
             $imagesGrec = [
-                ['name' => 'imggreece1.jpg', 'data' => $this->getTestPhoto( 'gallery/greece/imggreece1.jpg'), 'alt' => [ "en" =>'description imggreece1'  ]],
-                ['name' => 'imggreece2.jpg', 'data' => $this->getTestPhoto( 'gallery/greece/imggreece2.jpg'), 'alt' => [ "en" =>'description imggreece2'  ]]
+                ['name' => 'imggreece1.jpg', 'data' => $this->getTestPhoto( 'gallery/greece/imggreece1.jpg'), 'alt' => [ "en" =>'description imggreece1', "pl" =>'opis imggreece1'  ]],
+                ['name' => 'imggreece2.jpg', 'data' => $this->getTestPhoto( 'gallery/greece/imggreece2.jpg'), 'alt' => [ "en" =>'description imggreece2', "pl" =>'opis imggreece2'  ]]
             ];              
         }else{
             $img = $this->imgUnit1();
@@ -102,9 +102,9 @@ Class Demo{
 
         $mainPage =
         [
-            'title'     =>[ "en" =>  'cmsRS demo site - title' ],
-            'short_title' =>[ "en" =>  'cmsRS short title' ],
-            'description' =>[ "en" =>  'cmsRS demo site - description' ],
+            'title'     =>[ "en" =>  'cmsRS demo site', "pl" =>  'cmsRS wersja demo'],
+            'short_title' =>[ "en" =>  'cmsRS demo', "pl" =>  'cmsRS demo'],
+            'description' =>[ "en" =>  'cmsRS demo site - description', "pl" =>  'cmsRS wersja demo' ],
             'published' => 1,
             'commented' => 0,
             'after_login' => 0,
@@ -128,6 +128,25 @@ Class Demo{
                     More information: <a title='cmsRS' href='http://www.cmsrs.pl' >http://www.cmsrs.pl</a>
                 </p>
             </div>
+            ", "pl" => "<h1>cmsRS wersja demo</h1>
+            <div>
+                <p class='lead'>Wersja demo została stworzona tylko dla celów demonstarcyjnych.<p>
+                    <div class='alert alert-danger' role='alert'>Zapisywanie, aktualizacja i kasowanie rekordu zostały zabronione.</div>
+                    <br><br>
+                    <p class='lead'>
+                    Login do panelu administracyjnego: <a href=\"$appUrl/admin\">$appUrl/admin</a>
+                    <br>
+                    i do strefy klienta: <a href=\"$appUrl/login\">$appUrl/login</a>
+                    <br>
+                    <br>
+                    użytkownik: adm@cmsrs.pl
+                    <br>
+                    hasło: cmsrs123
+                    <br>
+                    <br>
+                    Więcej informacji: <a title='cmsRS' href='http://www.cmsrs.pl' >http://www.cmsrs.pl</a>
+                </p>
+            </div>
             " ],
             'menu_id' => null,
             'page_id' => null,
@@ -137,40 +156,40 @@ Class Demo{
         $p['p1'] = $this->getPageObj()->wrapCreate($mainPage);
         //Page::wrapCreate($mainPage);
 
-        $m1 = $this->getMenuObj()->wrapCreate(['name' => [ "en" => 'About']]);
+        $m1 = $this->getMenuObj()->wrapCreate(['name' => [ "en" => 'About', "pl" => 'O mnie']]);
         
         $data1p = [
-            'title'     => [ "en" => 'About me'],
-            'short_title' => [ "en" => 'About me'],
-            'description' => [ "en" => 'Description... Needed for google'],
+            'title'     => [ "en" => 'About me', "pl" => 'O mnie'],
+            'short_title' => [ "en" => 'About me', "pl" => 'O mnie'],
+            'description' => [ "en" => 'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla'],
             'published' => 1,
             'commented' => 0,
             'type' => 'cms',
-            'content' => [ "en" => $this->getDummyTest()],
+            'content' => [ "en" => $this->getDummyTest(), "pl" => $this->getDummyTestPl()],
             'menu_id' => $m1->id,
             'images' => $images['about_me']
         ];
 
         $data2p = [
-            'title'     => [ "en" =>'About page'],
-            'short_title' => [ "en" =>'About page'],
-            'description' => [ "en" =>'Description... Needed for google'],            
+            'title'     => [ "en" =>'About page', "pl" =>'O stronie'],
+            'short_title' => [ "en" =>'About page', "pl" =>'O stronie'],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla'],            
             'published' => 1,
             'commented' => 1,
             'type' => 'cms',
-            'content' => [ "en" =>$this->getDummyTest()],
+            'content' => [ "en" =>$this->getDummyTest(), "pl" => $this->getDummyTestPl()],
             'menu_id' => $m1->id
         ];
 
         $data22pSecret = [
-            'title'     =>  [ "en" =>'Secret info'],
-            'short_title' =>  [ "en" =>'Secret info'],
-            'description' => [ "en" =>'Description... Needed for google'],            
+            'title'     =>  [ "en" =>'Secret info', "pl" =>'Tajna informacja' ],
+            'short_title' =>  [ "en" =>'Secret info', "pl" =>'Tajna informacja'],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla' ],            
             'published' => 1,
             'commented' => 0,
             'after_login' => 1,
             'type' => 'cms',
-            'content' => [ "en" =>'Secret information after logging in'],
+            'content' => [ "en" =>'Message avaliable after log in.', "pl" => "Widomość dostępna tylko po zalogowaniu." ],
             'menu_id' => $m1->id
         ];
 
@@ -179,11 +198,11 @@ Class Demo{
         $p['p2'] = $this->getPageObj()->wrapCreate($data2p);
         $p['p22'] = $this->getPageObj()->wrapCreate($data22pSecret);
 
-        $m2 = $this->getMenuObj()->wrapCreate(['name' => ["en" => 'Gallery' ] ]);
+        $m2 = $this->getMenuObj()->wrapCreate(['name' => ["en" => 'Gallery', "pl" => "Galeria" ] ]);
         $data3p = [
-            'title'     => [ "en" =>'Poland'],
-            'short_title' => [ "en" =>'Poland'],
-            'description' => [ "en" =>'Description...  needed for google'],            
+            'title'     => [ "en" =>'Poland', "pl" =>'Polska'],
+            'short_title' => [ "en" =>'Poland', "pl" =>'Polska'],
+            'description' => [ "en" =>'Description...  needed for google', "pl" => 'Opis..... Potrzebne dla googla'  ],            
             'published' => 1,
             'commented' => 0,
             'type' => 'gallery',
@@ -194,9 +213,9 @@ Class Demo{
         $p['p3']  = $this->getPageObj()->wrapCreate($data3p);
 
         $data44p = [
-            'title'     => [ "en" =>'Greece'],
-            'short_title' => [ "en" =>'Greece'],
-            'description' => [ "en" =>'Description...  needed for google'],            
+            'title'     => [ "en" =>'Greece', "pl" => "Grecja"],
+            'short_title' => [ "en" =>'Greece', "pl" => "Grecja"],
+            'description' => [ "en" =>'Description...  needed for google', "pl" => 'Opis..... Potrzebne dla googla'  ],            
             'published' => 1,
             'commented' => 0,
             'type' => 'gallery',
@@ -206,23 +225,23 @@ Class Demo{
         ];        
         $p['p44'] = $this->getPageObj()->wrapCreate($data44p);
 
-        $m3 = $this->getMenuObj()->wrapCreate(['name' => ["en" => 'Shop'] ]);
+        $m3 = $this->getMenuObj()->wrapCreate(['name' => ["en" => 'Shop', "pl" => "Sklep" ] ]);
         $data4p = [
-            'title'     => [ "en" =>'IT books'],
-            'short_title' => [ "en" =>'IT books'],
-            'description' => [ "en" =>'Description... Needed for google'],            
+            'title'     => [ "en" =>'IT books', "pl" => "Książki IT" ],
+            'short_title' => [ "en" =>'IT books', "pl" => "Książki IT" ],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla' ],            
             'published' => 1,
             'commented' => 0,
             'type' => 'cms',
-            'content' => [ "en" =>$this->getDummyTest()],
+            'content' => [ "en" =>$this->getDummyTest(),  "pl" =>$this->getDummyTestPl()],
             'menu_id' => $m3->id
         ];
         $p['p4'] = $this->getPageObj()->wrapCreate($data4p);
 
         $data5p = [
-            'title'     => [ "en" =>'PHP books'],
-            'short_title' => [ "en" =>'PHP books'],
-            'description' => [ "en" =>'Description... Needed for google'],            
+            'title'     => [ "en" =>'PHP', "pl" =>'PHP' ],
+            'short_title' => [ "en" =>'PHP',  "pl" =>'PHP' ],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla' ],            
             'published' => 1,
             'commented' => 0,
             'type' => 'shop',
@@ -233,9 +252,9 @@ Class Demo{
         $p['p5'] = $this->getPageObj()->wrapCreate($data5p);
 
         $data6p = [
-            'title'     => [ "en" =>'Java books'],
-            'short_title' => [ "en" =>'Java books'],
-            'description' => [ "en" =>'Description... Needed for google'],            
+            'title'     => [ "en" =>'Java', "pl" =>'Java' ],
+            'short_title' => [ "en" =>'Java', "pl" =>'Java'   ],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla' ],            
             'published' => 1,
             'commented' => 0,
             'type' => 'shop',
@@ -246,9 +265,9 @@ Class Demo{
         $p['p6'] = $this->getPageObj()->wrapCreate($data6p);
 
         $data7p = [
-            'title'     => [ "en" =>'English books'],
-            'short_title' => [ "en" =>'English books'],
-            'description' => [ "en" =>'Description... Needed for google'],            
+            'title'     => [ "en" =>'English', "pl" =>'Angielski' ],
+            'short_title' => [ "en" =>'English', "pl" =>'Angielski'   ],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla' ],            
             'published' => 1,
             'commented' => 0,
             'type' => 'shop',
@@ -258,12 +277,12 @@ Class Demo{
         $p['p7'] = $this->getPageObj()->wrapCreate($data7p);
 
 
-        $mContact = $this->getMenuObj()->wrapCreate( ['name' => ["en"  => 'Contact me'] ] );
+        $mContact = $this->getMenuObj()->wrapCreate( ['name' => ["en"  => 'Contact me', "pl"=> "Skontaktuj się ze mną"] ] );
 
         $pContact = [
-            'title'     => [ "en" =>'Contact'],
-            'short_title' => [ "en" =>'Contact'],
-            'description' => [ "en" =>'Description... Needed for google'],
+            'title'     => [ "en" =>'Contact', "pl" =>'Kontakt'],
+            'short_title' => [ "en" =>'Contact', "pl" =>'Kontakt'],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla' ],
             'published' => 1,
             'commented' => 0,
             'type' => 'contact',
@@ -276,13 +295,13 @@ Class Demo{
 
 
         $pPrivacy = [
-            'title'     => [ "en" =>'Privacy policy'],
-            'short_title' => [ "en" =>'Privacy policy'],
-            'description' => [ "en" =>'Description... Needed for google'],
+            'title'     => [ "en" =>'Privacy policy', "pl" => "Polityka prywatności" ],
+            'short_title' => [ "en" =>'Privacy policy', "pl" => "Polityka prywatności"],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla'  ],
             'published' => 1,
             'commented' => 0,
             'type' => 'privacy_policy',
-            'content' => [ "en" => $this->getPrivacyPolicy()],
+            'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
             'images' => [
             ]
         ];
@@ -301,7 +320,7 @@ Class Demo{
             'description' => 'Php book',
             'page_id' => $p['p5']->id,
             'images' =>   [
-                ['name' => 'php.jpg', 'data' => $this->getTestPhoto( 'books/php3.jpg' ), 'alt' => [ "en" =>'php3 front' ]]                
+                ['name' => 'php.jpg', 'data' => $this->getTestPhoto( 'books/php3.jpg' ), 'alt' => [ "en" =>'php3 front', "pl" =>'php3 front' ]]                
             ]
         ];
         $products2 = [
@@ -311,8 +330,8 @@ Class Demo{
             'description' => 'Php5 book',
             'page_id' => $p['p5']->id,
             'images' =>   [
-                ['name' => 'php5.jpg', 'data' => $this->getTestPhoto( 'books/php5.jpg' ), 'alt' => [ "en" =>'php5 front' ]],
-                ['name' => 'php5_back.jpg', 'data' => $this->getTestPhoto( 'books/php5_back.jpg' ), 'alt' => [ "en" =>'php5 back' ]],
+                ['name' => 'php5.jpg', 'data' => $this->getTestPhoto( 'books/php5.jpg' ), 'alt' => [ "en" =>'php5 front', "pl" =>'php5 front' ]],
+                ['name' => 'php5_back.jpg', 'data' => $this->getTestPhoto( 'books/php5_back.jpg' ), 'alt' => [ "en" =>'php5 back', "pl" =>'php5 back' ]],
             ]
         ];
         $products3 = [            
@@ -322,8 +341,8 @@ Class Demo{
             'description' => 'Java book',
             'page_id' => $p['p6']->id,
             'images' =>   [
-                ['name' => 'java.jpg', 'data' => $this->getTestPhoto( 'books/java.jpg' ), 'alt' => [ "en" =>'java front'  ]],
-                ['name' => 'java_back.jpg', 'data' => $this->getTestPhoto( 'books/java_back.jpg' ), 'alt' => [ "en" =>'java back'  ]],
+                ['name' => 'java.jpg', 'data' => $this->getTestPhoto( 'books/java.jpg' ), 'alt' => [ "en" =>'java front',"pl" =>'java front'  ]],
+                ['name' => 'java_back.jpg', 'data' => $this->getTestPhoto( 'books/java_back.jpg' ), 'alt' => [ "en" =>'java back', "pl" => 'java back' ]],
             ]
         ];
         $products4 = [            
@@ -333,8 +352,8 @@ Class Demo{
             'description' => 'English book',
             'page_id' => $p['p7']->id,
             'images' =>   [
-                ['name' => 'english.jpg', 'data' => $this->getTestPhoto( 'books/english.jpg' ), 'alt' => [ "en" =>'english front' ]],
-                ['name' => 'english_back.jpg', 'data' => $this->getTestPhoto( 'books/english_back.jpg' ), 'alt' => [ "en" =>'english back' ]],
+                ['name' => 'english.jpg', 'data' => $this->getTestPhoto( 'books/english.jpg' ), 'alt' => [ "en" =>'english front', "pl" =>'english front' ]],
+                ['name' => 'english_back.jpg', 'data' => $this->getTestPhoto( 'books/english_back.jpg' ), 'alt' => [ "en" =>'english back', "pl" =>'english back' ]]
             ]
         ];    
 
@@ -383,6 +402,11 @@ Class Demo{
     private function getDummyTest()
     {    
         return "<b>Lorem Ipsum</b> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
+    }
+
+    private function getDummyTestPl()
+    {    
+        return "<b>Lorem Ipsum</b> jest tekstem stosowanym jako przykładowy wypełniacz w przemyśle poligraficznym. Został po raz pierwszy użyty w XV w. przez nieznanego drukarza do wypełnienia tekstem próbnej książki. Pięć wieków później zaczął być używany przemyśle elektronicznym, pozostając praktycznie niezmienionym. Spopularyzował się w latach 60. XX w. wraz z publikacją arkuszy Letrasetu, zawierających fragmenty Lorem Ipsum, a ostatnio z zawierającym różne wersje Lorem Ipsum oprogramowaniem przeznaczonym do realizacji druków na komputerach osobistych, jak Aldus PageMaker";
     }
 
     private function getPrivacyPolicy()

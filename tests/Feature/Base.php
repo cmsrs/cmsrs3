@@ -7,7 +7,6 @@ use Tests\TestCase;
 use App\User;
 use App\Page;
 use App\Menu;
-use App\Data\Demo;
 
 use App\Translate;
 use App\Content;
@@ -91,10 +90,8 @@ class Base extends TestCase
       return $url;
     }
 
-    public function checkAllPagesByLang( $lang )
+    public function checkAllPagesByLang( $p, $lang )
     {
-        $objDemoData = new Demo;
-        $p = $objDemoData->pagesAndMenu( true );
 
         $numOfInPages = count($p);
         $this->assertNotEmpty($numOfInPages);
@@ -110,6 +107,7 @@ class Base extends TestCase
             $itemUrlIn = $page->getUrl($lang);
             //$res = $this->get($itemUrlIn);
             //dd($res->dump() );
+            //dump($itemUrlIn);
             $urlIn[] = $itemUrlIn; 
 
         }

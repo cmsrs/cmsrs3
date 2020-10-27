@@ -4,16 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-//use JWTAuth;
 
 use App\Page;
 use App\Product;
 use App\Menu;
 use App\Config;
-
-
-//use Validator;
-
 
 class FrontController extends Controller
 {
@@ -55,39 +50,32 @@ class FrontController extends Controller
       'menus' => $this->menus, 
       'page' => $page, 
       'lang' => $lang, 
+      'langs' => $this->langs,
       'footerPages' => $footerPages  
     ] );
   }
 
-  // public function getPageForMenu($pageSlug ){
-  //   $this->getPage(null, $pageSlug );
-  // }
-
   public function getPageLangs($lang, $menuSlug, $pageSlug )
   {
-    $this->getPage($menuSlug, $pageSlug, $lang );
+    $data = $this->getPage($menuSlug, $pageSlug, $lang );
+    return view('cms', $data);
   }
 
-  //pagesPublishedAndAccess()
   public function getPage($menuSlug, $pageSlug, $lang = null )
   {
-    //dd('________________jestem1111___'.$lang);        
+    
     if(empty($lang)){
+      $manyLangs = false;
       $lang = $this->langs[0];
+    }else{
+      $manyLangs = true;
     }
-
-    //dd($lang);
 
     $footerPages = Page::getFooterPages($lang);        
 
     $pageOut = null;
     $products = null;
     foreach ($this->menus as $menu) {
-      //echo $menuSlug.'==';      
-      //echo $pageSlug.'==';
-
-      // echo "______jestem0_________";
-      // echo $menu->slug.'______';
       if(  (1 === count($menu->pagesPublished)) &&  ($pageSlug == $menu->pagesPublished()->first()->getSlugByLang($lang) ) ){
         $page = $menu->pagesPublished->first();
         $pageOut = $page;
@@ -107,24 +95,35 @@ class FrontController extends Controller
       $products = Product::getProductsWithImagesByPage($pageOut->id);
     }
 
-    return view('cms', [ 
+    $data = [ 
       'menus' => $this->menus,  
       'page' => $pageOut, 
       'products' => $products, 
       'lang' => $lang, 
+      'langs' => $this->langs,
       'footerPages' => $footerPages
-    ]);
+    ];
+
+    if($manyLangs){
+      return $data;
+    }
+
+    return view('cms', $data);
   }
 
   public function  getSeparatePageLangs($lang, $pageSlug)
   {
-    $this->getSeparatePage($pageSlug, $lang);
+    $data = $this->getSeparatePage($pageSlug, $lang);
+    return view('cms', $data);
   }
 
   public function getSeparatePage($pageSlug, $lang = null)
   {
     if(empty($lang)){
+      $manyLangs = false;
       $lang = $this->langs[0];
+    }else{
+      $manyLangs = true;
     }
     
     $products = null;
@@ -140,41 +139,20 @@ class FrontController extends Controller
     $footerPages = Page::getFooterPages($lang);
     $this->validatePage($pageOut);
 
-    return view('cms', [ 
+    $data = [ 
       'menus' => $this->menus,  
       'page' => $pageOut, 
       'products' => $products, 
       'lang' => $lang, 
+      'langs' => $this->langs,
       'footerPages' => $footerPages
-    ]);
+    ];
+
+    if($manyLangs){
+      return $data;
+    }
+    
+    return view('cms', $data);
   }
-
-
-
-  /*
-  public function onePage($menuSlug)
-  {
-    $pageOut = null;
-    $products = null;
-    foreach ($this->menus as $menu) {
-      if( ($menuSlug == $menu->slug) && (1 === count($menu->pagesPublished)) ){
-        $page = $menu->pagesPublished->first();
-        $pageOut = $page;
-        break;
-      }
-    }
-    if(!$find){
-      abort(404);
-    }
-    if(!$pageOut->checkAuth()){
-      abort(401);        
-    }
-    if( 'shop' === $pageOut->type){
-      $products = Product::getProductsWithImagesByPage($pageOut->id);
-    }
-
-    return view('cms', [ 'menus' => $this->menus,  'page' => $pageOut, 'products' => $products ]);
-  }
-  */
 
 }

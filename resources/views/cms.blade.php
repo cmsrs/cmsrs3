@@ -65,7 +65,7 @@
                     <li>Name: {{$product['name']}}</li>
                     <li>Sku: {{$product['sku']}}</li>
                     <li>Price: ${{$product['price']}}</li>
-                    <li>{{$product['description']}}</li>
+                  <!--  <li>{{$product['description']}}</li> -->
                   </ul>
                   <?php
                     $id =  $product['id'];
