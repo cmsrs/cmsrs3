@@ -53,7 +53,7 @@ Class Demo{
     {
         if(!$unitTest){
             $img = [
-                ['name' => 'me.jpg', 'data' => $this->getTestPhoto( 'about_me/me.jpg' ), 'alt' => [ "en" =>'about me', "en" =>'o mnie'  ]]
+                ['name' => 'me.jpg', 'data' => $this->getTestPhoto( 'about_me/me.jpg' ), 'alt' => [ "en" =>'about me', "pl" =>'o mnie'  ]]
             ];
             $images = [
                 ['name' => 'img1.jpg', 'data' => $this->getTestPhoto( 'gallery/img1.jpg'), 'alt' => [ "en" =>'description img1', "pl" =>'opis img1'  ]],
@@ -277,7 +277,7 @@ Class Demo{
         $p['p7'] = $this->getPageObj()->wrapCreate($data7p);
 
 
-        $mContact = $this->getMenuObj()->wrapCreate( ['name' => ["en"  => 'Contact me', "pl"=> "Skontaktuj się ze mną"] ] );
+        $mContact = $this->getMenuObj()->wrapCreate( ['name' => ["en"  => 'Contact me', "pl"=> "Kontakt"] ] );
 
         $pContact = [
             'title'     => [ "en" =>'Contact', "pl" =>'Kontakt'],
@@ -306,6 +306,19 @@ Class Demo{
             ]
         ];
         $p['p9'] = $this->getPageObj()->wrapCreate($pPrivacy);
+
+        $pLogin = [
+            'title'     => [ "en" =>'login', "pl" => "login" ],
+            'short_title' => [ "en" =>'login', "pl" => "login"],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla'  ],
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'login',
+            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            'images' => [
+            ]
+        ];
+        $p['p10'] = $this->getPageObj()->wrapCreate($pLogin);
         
         return $p;
     }
@@ -363,26 +376,6 @@ Class Demo{
         $this->getProductObj()->wrapCreate($products4);           
         
     }
-
-/*
-    public function getFixturePath($file){
-        $path = getcwd().'/tests/Feature/fixture/';
-        //if($file){
-        $path = $path.$file;
-        $this->assertFileExists($path);
-        //}
-    
-        return $path;
-      }
-      public function getFixtureBase64($file){
-        $path = $this->getFixturePath($file);
-        $type = pathinfo($path, PATHINFO_EXTENSION);
-        $data = file_get_contents($path);
-        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-        return $base64;
-      }
-*/      
-    
 
     private function getTestPhoto( $imgPath )
     {

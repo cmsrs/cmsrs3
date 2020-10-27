@@ -105,6 +105,13 @@ class Base extends TestCase
             $this->assertNotEmpty($pageShortTitle);                        
 
             $itemUrlIn = $page->getUrl($lang);
+            $response = $this->get($itemUrlIn);
+            $response->assertStatus(200);   
+            if( 'login' !=  $page->type ) {
+                $pos = strpos( $response->getContent(), $pageTitle );
+                $this->assertNotEmpty($pos);    
+            }
+    
             //$res = $this->get($itemUrlIn);
             //dd($res->dump() );
             //dump($itemUrlIn);
@@ -130,6 +137,12 @@ class Base extends TestCase
         $response3 = $this->get($urlMainPage);
         $response3->assertStatus(200);            
         $url[] = $urlMainPage;
+
+        //login
+        $urlLogin = Page::getFirstPageByType('login' )->getUrl($lang);
+        $response3 = $this->get($urlMainPage);
+        $response3->assertStatus(200);            
+        $url[] = $urlLogin;
 
         $this->assertEquals($numOfInPages, count($url));
 

@@ -69,14 +69,19 @@ class Base extends Model
     }    
     
 
+    /**
+     * TODO - cache
+     */
     public function translatesByColumnAndLang( $column, $lang )
     {
+
         $data = $this->getAllTranslateByColumn();
 
         $value = '';
         if( isSet($data[$column]) && isSet($data[$column][$lang]) ){
             $value = $data[$column][$lang];
         }
+        //dd('======++=='.$value);        
 
         return $value;
     }    

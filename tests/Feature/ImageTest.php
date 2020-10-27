@@ -52,7 +52,7 @@ class ImageTest extends Base
             'short_title' => ['en' => 'short img Title'],
             'images' => [
               ['name' => $this->name1, 'data' => $file1, 'alt' => ['en' => self::STR_DESC_IMG1] ],
-              ['name' => $this->name2, 'data' => $file2 ] //, 'alt' => 'description img2'
+              ['name' => $this->name2, 'data' => $file2 ] //, 'alt' => ['en' => 'description img2' ]]
             ]
         ];
 
@@ -92,6 +92,7 @@ class ImageTest extends Base
       $pageId = $this->pageId;
 
       $objPage = Page::find($pageId);
+
       if($objPage){  //delete img from fs.
         $objPage->delete();
       }    
@@ -240,11 +241,17 @@ class ImageTest extends Base
       // $this->assertEquals(null, $translateAfter[2]['value']);
       // $this->assertEquals(null, $translateAfter[3]['value']);
 
+      $objPage = Page::find($this->pageId);
+      $altEn = $objPage->images()->first()->translatesByColumnAndLang( 'alt', 'en' ); //For this method (translatesByColumnAndLang) maybe should create new test.
+      $this->assertEquals(self::STR_DESC_IMG1, $altEn);
+      $this->assertEquals(2, $objPage->images()->get()->count());
 
 
       $response0 = $this->delete('api/pages/'.$this->pageId.'?token='.$this->token);
       $res0 = $response0->getData();
       $this->assertTrue( $res0->success );
+
+      $this->assertEquals(0, $objPage->images()->get()->count());
 
       $translateAfter = Translate::query()->whereNotNull('image_id')->where('column', 'alt' )->get()->toArray();      
       $this->assertEmpty($translateAfter);

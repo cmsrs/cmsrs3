@@ -32,6 +32,14 @@ class FrontController extends Controller
     }
   }
 
+  // public function showLoginForm()
+  // {
+  //     die('__ddddddddddddd___');
+  //     //dd('_xxxx_sdss__');
+  //     return view('auth.login');
+  // }
+
+
   public function index($lang = null)
   {
     if( (count($this->langs) > 1) && $lang == $this->langs[0]  ){

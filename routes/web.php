@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
+//use Illuminate\Support\Facades\Auth;
 use App\Config;
 use App\Page;
 
@@ -17,18 +17,21 @@ use App\Page;
 
 $langs = (new Config)->arrGetLangs();
 
+Route::get('/home', 'HomeController@index')->name('home');
+
 Route::get('/', 'FrontController@index');
 if(1 == count($langs)){    
     //Route::get('/c/{pageSlug}', 'FrontController@getPageForMenu');
+    Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');    
     Route::get('/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}', 'FrontController@getPage');
     Route::get('/'.Page::PREFIX_IN_URL.'/{pageSlug}', 'FrontController@getSeparatePage');    
 }else{
     Route::get('/{lang}', 'FrontController@index');
+    Route::get('/{lang}/login', 'Auth\LoginController@showLoginForm')->name('login');    
     Route::get('/{lang}/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}', 'FrontController@getPageLangs');
     Route::get('/{lang}/'.Page::PREFIX_IN_URL.'/{pageSlug}', 'FrontController@getSeparatePageLangs');
 }
 
-//Auth::routes();
 Auth::routes(['register' => false, 'reset' => false]);
 
-Route::get('/home', 'HomeController@index')->name('home');
+

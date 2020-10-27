@@ -10,7 +10,7 @@
 
       @if( $page->images)
         @foreach($page->images as $image)
-            <img class="m-3" src="{{$image->getHtmlImage()}}" alt="{{$image->alt}}" />
+            <img class="m-3" src="{{$image->getHtmlImage()}}" alt="{{$image->translatesByColumnAndLang( 'alt', $lang ) }}" />
         @endforeach
       @endif
 
@@ -142,6 +142,9 @@
       </div>      
 
 
+<?php
+//dd($lang);
+?>
   <script>var images = JSON.parse('<?php echo json_encode($page->arrImages()) ?>');</script>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>      

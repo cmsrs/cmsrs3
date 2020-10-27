@@ -60,6 +60,11 @@ class Image extends Base
         }
     }
 
+    public function getAllTranslate()
+    {
+        return  $this->translates()->where('image_id', $this->id )->get(['lang', 'column', 'value'])->toArray();
+    }    
+
     /**
     * TODO - mmove function to helper
     */

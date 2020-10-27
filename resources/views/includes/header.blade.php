@@ -1,7 +1,11 @@
+<?php $manyLangs = ( 1 < count($langs)); ?>
 <?php $bg = env('DEMO_STATUS') ?  'bg-secondary' : 'bg-dark'; ?>
+<?php $pLogin = App\Page::getFirstPageByType('login');  ?>
+
+
 <nav class="navbar navbar-expand-md navbar-dark  {{ $bg }} fixed-top">
     <a class="navbar-brand" href="{{ url('/') }}">
-        {{ config('app.name', 'cmsRS') }}
+        <img src="/images/cms/logo_cmsrs.png" alt="{{ config('app.name', 'cmsRS') }}" />        
     </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -31,39 +35,34 @@
             </li>
           <?php } ?>
       </ul>
-      
-
-
-      <ul class="nav navbar-nav ml-auto">
-            <?php foreach($langs as $lang){  ?>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ $page->getUrl($lang) }}"><img src="/images/cms/{{ $lang }}.png" alt="{{ $lang }}" /> {{ strtoupper($lang) }}</a>
-            </li>
-            <?php } ?>
-        </ul>
-        <?php //dump( $page ) ?>
-
+          
+      <ul class="nav navbar-nav ml-auto" >
       <!-- Authentication Links -->
-      @guest
-
-        <ul class="nav navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+      <?php if($pLogin){ ?>
+      <?php $loginStyle = $manyLangs ? 'mr-4' : ''; ?>          
+      @guest            
+            <li class="nav-item {{$loginStyle}}">
+                <a class="nav-link" href="{{ $pLogin->getUrl($lang) }}">{{ 'login' }}</a>
             </li>
             @if (Route::has('register'))
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                 </li>
             @endif
-        </ul>
-
       @else
-          <ul class="nav navbar-nav ml-auto">
-              <li class="nav-item active">
+            <li class="nav-item active {{$loginStyle}}">
                 <a class="nav-link" href="{{ route('home') }}">Home <span class="sr-only">(current)</span></a>
-              </li>
-          </ul>
+            </li>
       @endguest
+      <?php } ?>
+          <?php if( $manyLangs ) { ?>
+            <?php foreach($langs as $lang){  ?>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ $page->getUrl($lang) }}"><img src="/images/cms/{{ $lang }}.png" alt="{{ $lang }}" /> {{ strtoupper($lang) }}</a>
+            </li>
+            <?php } ?>
+          <?php } ?>          
+       </ul>
 
   </div>
 </nav>

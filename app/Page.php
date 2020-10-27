@@ -93,6 +93,7 @@ class Page extends Base
       return $this->hasMany('App\Translate');
     }
 
+
     // public function translatesByColumnAndLang( $column, $lang )
     // {
     //   return $this->translates()->where( 'column', $column )->where('lang', $lang)->first()->value;
@@ -102,6 +103,11 @@ class Page extends Base
     {
       return $this->hasMany('App\Content');
     }
+
+    public function images()
+    {
+      return $this->hasMany('App\Image')->orderBy('position');
+    }    
 
     public function getSlugByLang($lang)
     {
@@ -228,13 +234,25 @@ class Page extends Base
   }
 
     public function getUrl($lang)
-    {
+    {      
       if( 'main_page' == $this->type ){
         return $this->getMainUrl($lang);
+      }elseif('login' == $this->type){
+        return $this->getTypeUrl($lang);
       }elseif( 'privacy_policy' == $this->type ){
         return $this->getIndependentUrl($lang);
       }
       return $this->getCmsUrl($lang);
+    }
+
+    private function getTypeUrl($lang)
+    {
+      $url = "/".$this->type;
+      if(1 < count($this->langs)){
+        $url = "/".$lang.$url;
+      }
+
+      return $url;
     }
     
     private function getCmsUrl($lang)
@@ -280,10 +298,6 @@ class Page extends Base
       }
     }
 
-    public function images()
-    {
-      return $this->hasMany('App\Image')->orderBy('position');
-    }
 
     //test this function - in frontGuestTest
     public function checkAuth(){
@@ -339,9 +353,10 @@ class Page extends Base
     {
       $out = [];
       foreach($this->images as $image){
+        $trans = Image::getAltImg($image);
         $item = Image::getAllImage($image, false);        
         $item['id'] = $image->id;
-        $item['alt'] = Image::getAltImg($image);
+        $item['alt'] = $trans;
         $out[] = $item;
       }
       return $out;
