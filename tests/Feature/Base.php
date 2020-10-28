@@ -105,18 +105,20 @@ class Base extends TestCase
             $this->assertNotEmpty($pageShortTitle);                        
 
             $itemUrlIn = $page->getUrl($lang);
-            $response = $this->get($itemUrlIn);
-            $response->assertStatus(200);   
-            if( 'login' !=  $page->type ) {
-                $pos = strpos( $response->getContent(), $pageTitle );
-                $this->assertNotEmpty($pos);    
-            }
-    
-            //$res = $this->get($itemUrlIn);
-            //dd($res->dump() );
-            //dump($itemUrlIn);
-            $urlIn[] = $itemUrlIn; 
 
+            //dump();
+            $response = $this->get($itemUrlIn);
+
+            if( 'login' ==  $page->type ) {
+                $response->assertStatus(302);   //redirect to home page, because user is log in
+                $pos = strpos( $response->getContent(), 'home' );
+                $this->assertNotEmpty($pos, $pageTitle);
+            }else{
+                $response->assertStatus(200);                   
+                $pos = strpos( $response->getContent(), $pageTitle );
+                $this->assertNotEmpty($pos, $pageTitle);
+            }
+            $urlIn[] = $itemUrlIn; 
         }
         
         //All Url Related To Menus
@@ -140,8 +142,8 @@ class Base extends TestCase
 
         //login
         $urlLogin = Page::getFirstPageByType('login' )->getUrl($lang);
-        $response3 = $this->get($urlMainPage);
-        $response3->assertStatus(200);            
+        $response3 = $this->get($urlLogin);
+        $response3->assertStatus(302);            
         $url[] = $urlLogin;
 
         $this->assertEquals($numOfInPages, count($url));
@@ -150,7 +152,6 @@ class Base extends TestCase
             $isInTable = in_array($uu, $urlIn);
             $this->assertTrue($isInTable);
         }        
-
     }
 
 

@@ -54,14 +54,14 @@ class LoginController extends Controller
             $lang = $this->langs[0];
         }
       
-        $footerPages = Page::getFooterPages($lang);
+        //$footerPages = Page::getFooterPages($lang);
 
         $data = [ 
             'menus' => $this->menus,  
             'page' => $page, 
             'lang' => $lang, 
             'langs' => $this->langs,
-            'footerPages' => $footerPages
+            //'footerPages' => $footerPages
         ];      
 
         return view('auth.login', $data);

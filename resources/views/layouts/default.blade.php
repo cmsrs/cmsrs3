@@ -7,7 +7,7 @@
 @include('includes.header')
 
 
-<main role="main" class="container">
+<main role="main" class="container pt-4">
 @yield('content')
 <!-- @include('includes.links') -->
 </main><!-- /.container -->

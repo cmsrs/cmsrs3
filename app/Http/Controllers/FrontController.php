@@ -51,7 +51,7 @@ class FrontController extends Controller
 
     $page = Page::getMainPage();
     $this->validatePage($page);
-    $footerPages = Page::getFooterPages($lang);    
+    //$footerPages = Page::getFooterPages($lang);    
 
 
     return view('index', [ 
@@ -59,7 +59,7 @@ class FrontController extends Controller
       'page' => $page, 
       'lang' => $lang, 
       'langs' => $this->langs,
-      'footerPages' => $footerPages  
+      //'footerPages' => $footerPages  
     ] );
   }
 
@@ -79,7 +79,7 @@ class FrontController extends Controller
       $manyLangs = true;
     }
 
-    $footerPages = Page::getFooterPages($lang);        
+    //$footerPages = Page::getFooterPages($lang);        
 
     $pageOut = null;
     $products = null;
@@ -109,7 +109,7 @@ class FrontController extends Controller
       'products' => $products, 
       'lang' => $lang, 
       'langs' => $this->langs,
-      'footerPages' => $footerPages
+      //'footerPages' => $footerPages
     ];
 
     if($manyLangs){
@@ -144,7 +144,7 @@ class FrontController extends Controller
       }
     }
 
-    $footerPages = Page::getFooterPages($lang);
+    //$footerPages = Page::getFooterPages($lang);
     $this->validatePage($pageOut);
 
     $data = [ 
@@ -153,7 +153,7 @@ class FrontController extends Controller
       'products' => $products, 
       'lang' => $lang, 
       'langs' => $this->langs,
-      'footerPages' => $footerPages
+      //'footerPages' => $footerPages
     ];
 
     if($manyLangs){

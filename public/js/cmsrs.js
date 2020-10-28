@@ -57,11 +57,12 @@ new Vue({
                 this.scroll()
         },              
         methods: {
-                clickImg: function(imgId, org, alt){
+                clickImg: function(imgId, org, altlang){
+                        alert( altlang );
                         modal.style.display = "block";
                         modalImg.src = org;
                         currentImgId = imgId;
-                        captionText.innerHTML = alt;   
+                        captionText.innerHTML = altlang;
                 },
 
                 scroll: function() {
@@ -196,6 +197,15 @@ var span = document.getElementsByClassName("close")[0];
 span.onclick = function() { 
         modal.style.display = "none";
 }
+document.addEventListener('keydown', (event) => {        
+        if (event.key === 'Escape') {
+                //if esc key was not pressed in combination with ctrl or alt or shift
+                const isNotCombinedKey = !(event.ctrlKey || event.altKey || event.shiftKey);
+                if (isNotCombinedKey) {
+                        modal.style.display = "none";
+                }
+        }
+});
 function plusSlides(direct){
         for (var i = 0; i < images.length; i++) {
                 if( images[i].id === currentImgId ){
@@ -209,7 +219,7 @@ function plusSlides(direct){
                         if(images[index]){
                                 modalImg.src = images[index].org;
                                 currentImgId = images[index].id;
-                                captionText.innerHTML = images[index].alt;   
+                                captionText.innerHTML = images[index].altlang;   
                                 break;        
                         }                
                 }

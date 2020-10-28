@@ -24,6 +24,39 @@ class FrontGuestTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
+    public function it_will_get_login_page()
+    {
+        $pLogin = [
+            'title'     => [ "en" =>'login', "pl" => "login" ],
+            'short_title' => [ "en" =>'login', "pl" => "login"],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla'  ],
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'login',
+            'images' => [
+            ]
+        ];
+        $p = (new Page)->wrapCreate($pLogin);
+        $this->assertNotEmpty($p->id);
+
+        $lang = 'en';
+		$page = Page::getFirstPageByType('login' );
+        $pageTitle = $page->translatesByColumnAndLang( 'title', $lang );
+        $pageShortTitle = $page->translatesByColumnAndLang( 'short_title', $lang );
+        $this->assertNotEmpty($pageTitle);
+        $this->assertNotEmpty($pageShortTitle);                        
+
+		$urlLogin = $page->getUrl($lang);
+		$response = $this->get($urlLogin);
+		$response->assertStatus(200);            
+		
+        $pos = strpos( $response->getContent(), $pageTitle );
+        $this->assertNotEmpty($pos, $pageTitle);
+
+    }
+
+
+    /** @test */
     public function it_will_get_as_guest_forbiden()
     {
         //$this->assertTrue( true );

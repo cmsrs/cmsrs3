@@ -123,20 +123,38 @@ class ImageTest extends Base
       $this->assertTrue( $res3->success );
       $this->assertEquals($this->pageId, $res3->data->id);
       $this->assertNotEmpty($res3->data->type);
-      $this->assertEquals(2, count($res3->data->images));      
+
+      $count = 2;
+      $this->assertEquals($count, count($res3->data->images));      
 
       $page = Page::findOrFail($this->pageId);
       $arrImages =  $page->arrImages();
 
       //dump($arrImages[0]);
       //dump($res3->data->images[0]);      
-      for($i=0; $i<1; $i++){
+
+      //dump($res3->data->images);
+      for($i=0; $i<$count; $i++){
         $this->assertEquals($arrImages[$i]['org'], $res3->data->images[$i]->org);      
         $this->assertEquals($arrImages[$i]['small'], $res3->data->images[$i]->small);      
         $this->assertEquals($arrImages[$i]['medium'], $res3->data->images[$i]->medium);      
         $this->assertEquals($arrImages[$i]['id'], $res3->data->images[$i]->id);            
         $this->assertEquals($arrImages[$i]['alt']['en'], $res3->data->images[$i]->alt->en);  
+        $this->assertTrue(!isSet($arrImages[$i]['altlang']));  
       }
+      $arrImages =  $page->arrImages('en');   
+
+      for($i=0; $i<$count; $i++){
+        $this->assertEquals($arrImages[$i]['org'], $res3->data->images[$i]->org);      
+        $this->assertEquals($arrImages[$i]['small'], $res3->data->images[$i]->small);      
+        $this->assertEquals($arrImages[$i]['medium'], $res3->data->images[$i]->medium);      
+        $this->assertEquals($arrImages[$i]['id'], $res3->data->images[$i]->id);            
+        $this->assertEquals($arrImages[$i]['alt']['en'], $res3->data->images[$i]->alt->en);  
+
+        //ti is change only after adding parameter to function: arrImages
+        $this->assertTrue(isSet($arrImages[$i]['altlang']));
+      }
+
     }
 
     /** @test */

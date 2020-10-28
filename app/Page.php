@@ -349,14 +349,19 @@ class Page extends Base
       return $data;
     }
     
-    public function arrImages()
+
+    
+    public function arrImages($lang = null)
     {
       $out = [];
       foreach($this->images as $image){
-        $trans = Image::getAltImg($image);
         $item = Image::getAllImage($image, false);        
         $item['id'] = $image->id;
-        $item['alt'] = $trans;
+        $item['alt'] = Image::getAltImg($image);
+        if( $lang ){
+          $item['altlang'] = !empty($item['alt'][$lang]) ? $item['alt'][$lang] : ''; //it neeeds to javascript - to modal window in gallery
+        }
+
         $out[] = $item;
       }
       return $out;

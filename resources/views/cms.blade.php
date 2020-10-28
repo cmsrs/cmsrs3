@@ -19,8 +19,8 @@
   @elseif($page->type  === 'gallery')
 
     @if( $page->images)
-      <span v-for="image in images"  v-bind:key="image.id">
-            <img  @click="clickImg(image.id, image.org, image.alt)" class="m-3 myImgs" :src="image.medium" :alt="image.alt"  />
+      <span v-for="image in images"  v-bind:key="image.id">    
+            <img  @click="clickImg(image.id, image.org, image.altlang)" class="m-3 myImgs" :src="image.medium" :alt="image.altlang"  />
       </span>
     @endif
 
@@ -127,11 +127,12 @@
       <!-- The Modal -->
       <div id="myModal" class="modal">
 
-        <!-- The Close Button -->
-        <span class="close">&times;</span>
 
         <!-- Modal Content (The Image) -->
         <img class="modal-content" id="img01">
+
+        <!-- The Close Button -->
+        <span class="close">&times;</span>
 
         <!-- Next and previous buttons -->
         <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
@@ -144,8 +145,13 @@
 
 <?php
 //dd($lang);
+//dd($page->arrImages($lang));
 ?>
-  <script>var images = JSON.parse('<?php echo json_encode($page->arrImages()) ?>');</script>
+  <script>
+    var images = JSON.parse('<?php echo json_encode($page->arrImages($lang)) ?>');
+    console.log(images);
+  </script>
+  
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>      
   <script src="/js/cmsrs.js"></script>

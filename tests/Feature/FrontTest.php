@@ -31,7 +31,6 @@ class FrontTest extends Base
         $this->testDataMenu =
         [
              'name'     =>  ['en' => 'test men7 zółć'],
-             //'position' => 1
         ];
     }
 
