@@ -6,6 +6,7 @@
   <div id="app">
 
   <div id="page_id" data-page-id="{{$page->id}}"></div>  
+  <div id="lang" data-lang="{{$lang}}"></div>    
   @if ( $page->type  === 'cms')
 
       @if( $page->images)
@@ -148,7 +149,7 @@
 //dd($page->arrImages($lang));
 ?>
   <script>
-    var images = JSON.parse('<?php echo json_encode($page->arrImages($lang)) ?>');
+    var imagesGlobal = JSON.parse('<?php echo json_encode($page->arrImages($lang)) ?>');
     console.log(images);
   </script>
   

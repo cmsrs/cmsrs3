@@ -117,7 +117,11 @@ class ImageTest extends Base
     /** @test */
     public function it_will_get_page_with_images()
     {      
-      $response3 = $this->get('api/page/'.$this->pageId);
+      $response0 = $this->get('api/page/'.$this->pageId.'/fr');  //this method doesnt cointain ticket - ti is avaliable as guest
+
+      $this->assertFalse( $response0->getData()->success );
+      
+      $response3 = $this->get('api/page/'.$this->pageId.'/en');
 
       $res3 = $response3->getData();
       $this->assertTrue( $res3->success );
@@ -128,12 +132,14 @@ class ImageTest extends Base
       $this->assertEquals($count, count($res3->data->images));      
 
       $page = Page::findOrFail($this->pageId);
-      $arrImages =  $page->arrImages();
+
+      //$arrImages =  $page->arrImages();
 
       //dump($arrImages[0]);
       //dump($res3->data->images[0]);      
 
       //dump($res3->data->images);
+      /*
       for($i=0; $i<$count; $i++){
         $this->assertEquals($arrImages[$i]['org'], $res3->data->images[$i]->org);      
         $this->assertEquals($arrImages[$i]['small'], $res3->data->images[$i]->small);      
@@ -142,6 +148,8 @@ class ImageTest extends Base
         $this->assertEquals($arrImages[$i]['alt']['en'], $res3->data->images[$i]->alt->en);  
         $this->assertTrue(!isSet($arrImages[$i]['altlang']));  
       }
+      */
+
       $arrImages =  $page->arrImages('en');   
 
       for($i=0; $i<$count; $i++){
@@ -152,6 +160,13 @@ class ImageTest extends Base
         $this->assertEquals($arrImages[$i]['alt']['en'], $res3->data->images[$i]->alt->en);  
 
         //ti is change only after adding parameter to function: arrImages
+        if( $i == 0 ){
+          $this->assertNotEmpty($arrImages[$i]['altlang']);
+        }
+        if( $i == 1 ){
+          $this->assertEmpty($arrImages[$i]['altlang']);
+        }
+
         $this->assertTrue(isSet($arrImages[$i]['altlang']));
       }
 
@@ -214,7 +229,7 @@ class ImageTest extends Base
       }
       
       $page = Page::findOrFail($this->pageId);
-      $arrImages =  $page->arrImages();
+      $arrImages =  $page->arrImages('en');
       $this->assertEquals(2, count($arrImages));
 
       //dd($arrImages);
@@ -223,7 +238,8 @@ class ImageTest extends Base
       $this->assertNotEmpty($arrImages[0][Image::IMAGE_THUMB_TYPE_SMALL]);
       $this->assertNotEmpty($arrImages[0][Image::IMAGE_THUMB_TYPE_MEDIUM]);
       $this->assertNotEmpty($arrImages[0]['alt']);
-      $this->assertNotEmpty($arrImages[0]['id']);      
+      $this->assertNotEmpty($arrImages[0]['id']); 
+      $this->assertNotEmpty($arrImages[0]['altlang']);           
       
 
       //$this->clear_imgs();

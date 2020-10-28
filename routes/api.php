@@ -19,7 +19,7 @@ $demoStatus = env('DEMO_STATUS', false);
 if($demoStatus){
     Route::post('login', 'AuthController@login');
     Route::get('comments/{pageId}', 'CommentController@index');
-    Route::get('page/{id}', 'PageController@oneItem');
+    Route::get('page/{id}/{lang}', 'PageController@oneItem');
 
     Route::group(['middleware' => ['jwt.auth']], function() {
         Route::get('logout', 'AuthController@logout');
@@ -50,7 +50,7 @@ if($demoStatus){
     Route::post('comments/{pageId}', 'CommentController@create');
     Route::post('contact', 'ContactController@create');    
 
-    Route::get('page/{id}', 'PageController@oneItem');
+    Route::get('page/{id}/{lang}', 'PageController@oneItem');
 
     Route::group(['middleware' => ['jwt.auth']], function() {
         Route::get('logout', 'AuthController@logout');

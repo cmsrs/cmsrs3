@@ -32,7 +32,7 @@ class PageController extends Controller
       //'type' => 'in:cms,gallery,shop,contact,main_page'
   ];
   
-  public function oneItem(Request $request, $id)
+  public function oneItem(Request $request, $id, $lang)
   {
     $page = Page::find($id);
 
@@ -40,7 +40,13 @@ class PageController extends Controller
       return response()->json(['success'=> false, 'error'=> 'Page not find'], 404);
     }
 
-    $page = $page->getPageWithImages();
+    try{
+      $page = $page->getPageWithImages($lang);
+    } catch (\Exception $e) {
+      Log::error('page add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile() ); //.' for: '.var_export($data, true )
+      return response()->json(['success'=> false, 'error'=> 'Get page with lang problem, details in the log file.'], 200); //.$e->getMessage()
+    }
+
     return response()->json(['success' => true, 'data'=> $page], 200);
   }
 

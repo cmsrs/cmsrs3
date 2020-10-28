@@ -351,28 +351,31 @@ class Page extends Base
     
 
     
-    public function arrImages($lang = null)
+    public function arrImages($lang)
     {
       $out = [];
       foreach($this->images as $image){
         $item = Image::getAllImage($image, false);        
         $item['id'] = $image->id;
         $item['alt'] = Image::getAltImg($image);
-        if( $lang ){
-          $item['altlang'] = !empty($item['alt'][$lang]) ? $item['alt'][$lang] : ''; //it neeeds to javascript - to modal window in gallery
-        }
-
+        $item['altlang'] = !empty($item['alt'][$lang]) ? $item['alt'][$lang] : ''; //it neeeds to javascript - to modal window in gallery
         $out[] = $item;
       }
       return $out;
     }
 
-    public function getPageWithImages()
+    public function getPageWithImages( $lang )
     {
+      $langs = $this->getArrLangs();
+
+      if(!in_array($lang, $langs)){
+        throw new \Exception("Problem with langs - lang: $lang no exist");
+      }
+
       $p['id'] =$this->id; 
       $p['type'] =$this->type;
       //$p['title'] =$this->title; 
-      $p['images'] = $this->arrImages();
+      $p['images'] = $this->arrImages($lang);
       return $p;
     }
 

@@ -16,6 +16,7 @@ new Vue({
                 comment: '',
                 comments: [],
                 page_id: '',
+                lang: '',                                
                 page : {},
                 images: [],
 
@@ -32,6 +33,9 @@ new Vue({
                 const el = document.querySelector('#page_id');
                 this.page_id = el.dataset.pageId;
 
+                const el2 = document.querySelector('#lang');
+                this.lang = el2.dataset.lang;
+
                 //-----comments----
                 //TODO - no comments in page
                 axios.get('/api/comments/'+this.page_id).then( function (response){
@@ -46,7 +50,7 @@ new Vue({
                 }
 
                 //---gallery---
-                axios.get('/api/page/'+this.page_id).then( function (response){
+                axios.get('/api/page/'+this.page_id+'/'+this.lang).then( function (response){
                         self.page = response.data.data;
                         self.images = self.page.images.slice(0, LOAD_NUM);
                 });
@@ -58,7 +62,6 @@ new Vue({
         },              
         methods: {
                 clickImg: function(imgId, org, altlang){
-                        alert( altlang );
                         modal.style.display = "block";
                         modalImg.src = org;
                         currentImgId = imgId;
@@ -207,19 +210,19 @@ document.addEventListener('keydown', (event) => {
         }
 });
 function plusSlides(direct){
-        for (var i = 0; i < images.length; i++) {
-                if( images[i].id === currentImgId ){
+        for (var i = 0; i < imagesGlobal.length; i++) {
+                if( imagesGlobal[i].id === currentImgId ){
                         var index = i + direct;
                         if(index < 0){
-                                index = images.length -1;
+                                index = imagesGlobal.length -1;
                         }
-                        if(index > images.length - 1){
+                        if(index > imagesGlobal.length - 1){
                                 index = 0;
                         }
-                        if(images[index]){
-                                modalImg.src = images[index].org;
-                                currentImgId = images[index].id;
-                                captionText.innerHTML = images[index].altlang;   
+                        if(imagesGlobal[index]){
+                                modalImg.src = imagesGlobal[index].org;
+                                currentImgId = imagesGlobal[index].id;
+                                captionText.innerHTML = imagesGlobal[index].altlang;   
                                 break;        
                         }                
                 }
