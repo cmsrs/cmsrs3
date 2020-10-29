@@ -48,6 +48,9 @@ class FrontController extends Controller
     if(empty($lang)){
       $lang = $this->langs[0];
     }
+    if( !in_array($lang, $this->langs) ){
+      abort(404);
+    }
 
     $page = Page::getMainPage();
     $this->validatePage($page);
