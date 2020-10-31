@@ -27,6 +27,7 @@ class PageTest extends Base
     private $testDataMenu;
     private $menuId;
     private $menuObj;
+    private $objPage;
 
     public function setUp(): void
     {
@@ -65,9 +66,7 @@ class PageTest extends Base
     
     private  function  setTestData()
     {
-      (new Page)->wrapCreate($this->testData);
-
-
+      $this->objPage = (new Page)->wrapCreate($this->testData);
 
       $menu = (new Menu)->wrapCreate($this->testDataMenu);
       //$save = $menu->save();
@@ -77,6 +76,51 @@ class PageTest extends Base
       $this->menuObj = $menu->all()->first();
       $this->menuId = $this->menuObj->id;
     }  
+
+    /** @test */
+    public function it_will_wron_add_page()
+    {
+      $testData2 =
+      [
+           'title'     => ['en' =>  ''],
+           //'position' => 3
+      ];
+
+      $response = $this->post('api/pages?token='.$this->token, $testData2);
+      $this->assertFalse( $response->getData()->success );
+      $this->assertNotEmpty($response->getData()->error);
+      //dd($response->getData()->error);
+      //$this->assertEquals(2 , $response->getData()->error->count());            
+      $this->assertEquals(1 , count($response->getData()->error->{"title.en"}));
+      $this->assertNotEmpty($response->getData()->error->{"title.en"}[0]);
+      $this->assertEquals(1 , count($response->getData()->error->{"short_title.en"}));
+      $this->assertNotEmpty($response->getData()->error->{"short_title.en"}[0]);
+    }
+
+    /** @test */
+    public function it_will_wron_update_page()
+    {
+      $this->setTestData();
+      $testData2 =
+      [
+           'title'     => ['en' =>  ''],
+
+      ];
+
+      $id = $this->objPage->id;
+      $response = $this->put('api/pages/'.$id.'?token='.$this->token, $testData2);      
+      $this->assertFalse( $response->getData()->success );
+      $this->assertNotEmpty($response->getData()->error);
+      //$this->assertEquals(2 , count($response->getData()->error));                  
+      $this->assertEquals(1 , count($response->getData()->error->{"title.en"}));
+      $this->assertNotEmpty($response->getData()->error->{"title.en"}[0]);
+      $this->assertEquals(1 , count($response->getData()->error->{"short_title.en"}));
+      $this->assertNotEmpty($response->getData()->error->{"short_title.en"}[0]);
+
+    }
+
+
+
 
     private function comparePageFields($compareWith, $data)
     {

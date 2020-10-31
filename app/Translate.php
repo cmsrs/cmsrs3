@@ -26,13 +26,15 @@ class Translate extends Base
     {
         //dd($create);
         if( !empty($data['menu_id'])  ){
-            $columns = ['name' => true];   
+            $requiredColumn = (new Menu)->requiredColumn;
+            $columns = ['name' => in_array('name', $requiredColumn) ? true : false ];   
             $this->genericCreateTranslate( $data, 'menu_id', $columns, $create);
         }elseif( !empty($data['page_id'])  ){
+            $requiredColumn = (new Page)->requiredColumn;            
             $columns = [
-                'title' => true, 
-                'short_title' => true, 
-                'description' => false 
+                'title' => in_array('title', $requiredColumn) ? true : false, 
+                'short_title' => in_array('short_title', $requiredColumn) ? true : false, 
+                'description' => in_array('description', $requiredColumn) ? true : false
             ];   
             $this->genericCreateTranslate( $data, 'page_id', $columns, $create);
         }elseif( !empty($data['image_id'])  ){

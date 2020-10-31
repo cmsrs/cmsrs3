@@ -53,6 +53,41 @@ class MenuTest extends Base
     }
 
     /** @test */
+    public function it_will_wron_add()
+    {
+      $testData2 =
+      [
+           'name'     => ['en' =>  ''],
+           //'position' => 3
+      ];
+
+      $response = $this->post('api/menus?token='.$this->token, $testData2);
+      $this->assertFalse( $response->getData()->success );
+      $this->assertNotEmpty($response->getData()->error);
+      $this->assertEquals(1 , count($response->getData()->error->{"name.en"}));
+      $this->assertNotEmpty($response->getData()->error->{"name.en"}[0]);
+    }
+
+    /** @test */
+    public function it_will_wron_update()
+    {
+      $this->setTestData();
+      $testData2 =
+      [
+           'name'     => ['en' =>  ''],
+           //'position' => 3
+      ];
+
+      $id = $this->objMenu->id;
+      $response = $this->put('api/menus/'.$id.'?token='.$this->token, $testData2);      
+      $this->assertFalse( $response->getData()->success );
+      $this->assertNotEmpty($response->getData()->error);
+      $this->assertEquals(1 , count($response->getData()->error->{"name.en"}));      
+      $this->assertNotEmpty($response->getData()->error->{"name.en"}[0]);
+    }
+    
+
+    /** @test */
     // public function it_will_get_slug()
     // {
 

@@ -21,6 +21,11 @@ class Menu extends Base
         'position' => 'integer',
     ];
 
+    public $requiredColumn = [
+      'name'
+    ];
+    
+
     public function __construct(array $attributes = array())
     {
         parent::__construct($attributes);

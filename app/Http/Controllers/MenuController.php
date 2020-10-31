@@ -6,14 +6,23 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 //use JWTAuth;
 
+use App\Config;
 use App\Menu;
 use Validator;
 
 
 class MenuController extends Controller
 {
+
+  public function __construct(){
+    $langs = (new Config)->arrGetLangs();
+    foreach($langs as $lang){
+      $this->validationRules['name.'.$lang] = 'max:255|required';
+    }
+  }
+  
   private $validationRules = [
-      'name' => 'max:255|required',
+      //'name' => 'max:255|required',
       'position' => 'numeric'
   ];
 

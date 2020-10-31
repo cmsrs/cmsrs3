@@ -16,15 +16,20 @@ class PageController extends Controller
 
   public function __construct(){
     $this->validationRules['type'] = 'in:'.Config::getPageTypes();
+
+    $langs = (new Config)->arrGetLangs();
+    foreach($langs as $lang){
+      $this->validationRules['title.'.$lang] = 'max:255|required';
+      $this->validationRules['short_title.'.$lang] = 'max:128|required';
+      $this->validationRules['description.'.$lang] = 'max:1027';      
+    }
+
   }
 
   private $validationRules = [
-      //'name' => 'max:255|required',
-      //'position' => 'numeric'
-
-      'title' => 'max:255|required',
-      'short_title' => 'max:128',
-      'description' => 'max:1027',
+      //'title' => 'max:255|required',      
+      //'short_title' => 'max:128',
+      //'description' => 'max:1027',
       'published' => 'boolean',
       'commented' => 'boolean',
       'after_login' => 'boolean',

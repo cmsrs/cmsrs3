@@ -30,6 +30,11 @@ class Page extends Base
         'page_id'
     ];
 
+    public $requiredColumn = [
+      'title',
+      'short_title'
+    ];
+
     protected $casts = [
           'published' => 'integer',
           'commented' => 'integer',
