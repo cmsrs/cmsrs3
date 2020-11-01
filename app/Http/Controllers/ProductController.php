@@ -77,7 +77,7 @@ class ProductController extends Controller
           'images'
           );
 
-      $this->validationRules['sku'] = $this->validationRules['sku'] . ',id,' . $id; //sku przy update - ma byc unikatowe dla produkctId
+      $this->validationRules['sku'] = $this->validationRules['sku'] . ',sku,' . $id; //sku przy update - ma byc unikatowe dla produkctId
       $validator = Validator::make($data, $this->validationRules);
       if($validator->fails()) {
           return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
