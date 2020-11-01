@@ -308,8 +308,8 @@ Class Demo{
         $p['p9'] = $this->getPageObj()->wrapCreate($pPrivacy);
 
         $pLogin = [
-            'title'     => [ "en" =>'login', "pl" => "login" ],
-            'short_title' => [ "en" =>'login', "pl" => "login"],
+            'title'     => [ "en" =>'login', "pl" => "logowanie" ],
+            'short_title' => [ "en" =>'login', "pl" => "logowanie"],
             'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla'  ],
             'published' => 1,
             'commented' => 0,

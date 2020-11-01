@@ -43,7 +43,7 @@
         <?php $loginStyle = $manyLangs ? 'mr-4' : ''; ?>          
         @guest            
               <li class="nav-item {{$loginStyle}}">
-                  <a class="nav-link" href="{{ $pLogin->getUrl($lang) }}">{{ 'login' }}</a>
+                  <a class="nav-link" href="{{ $pLogin->getUrl($lang) }}">{{ $pLogin->translatesByColumnAndLang( 'title', $lang ) }}</a>
               </li>
               @if (Route::has('register'))
                   <li class="nav-item">
