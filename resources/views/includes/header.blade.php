@@ -4,7 +4,7 @@
 <?php $pLogin = App\Page::getFirstPageByType('login');  ?>
 
 
-<nav class="navbar navbar-expand-md navbar-dark  {{ $bg }} fixed-top lead" style="height: 100px;">
+<nav class="navbar navbar-expand-md navbar-dark  {{ $bg }} fixed-top lead">
     <a class="navbar-brand" href="{{ url('/') }}">
         <img src="/images/cms/logo_cmsrs.png" alt="{{ config('app.name', 'cmsRS') }}" />        
     </a>
@@ -57,9 +57,10 @@
         @endguest
       <?php } ?>
           <?php if( $manyLangs ) { ?>
-            <?php foreach($langs as $lang){  ?>
-              <li class="nav-item">
-                  <a class="nav-link" href="{{ $page->getUrl($lang) }}"><img src="/images/cms/{{ $lang }}.png" alt="{{ $lang }}" /> {{ strtoupper($lang) }}</a>
+            <?php foreach($langs as $ll){  ?>
+              <?php $classActive = ($ll == $lang) ? 'active' : ''; ?>
+              <li class="nav-item {{ $classActive }}">
+                  <a class="nav-link" href="{{ $page->getUrl($ll) }}"><img src="/images/cms/{{ $ll }}.png" alt="{{ $ll }}" /> {{ strtoupper($ll) }}</a>
               </li>
             <?php } ?>
           <?php } ?>          
