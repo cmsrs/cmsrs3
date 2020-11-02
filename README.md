@@ -101,6 +101,7 @@ API_SECRET="v3"
 ```
 
 It must be the same like in the admin config file.
+It can be empty string.
 
 
 # TROUBLESHOOTING

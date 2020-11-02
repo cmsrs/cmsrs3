@@ -150,7 +150,6 @@
 ?>
   <script>
     var imagesGlobal = JSON.parse('<?php echo json_encode($page->arrImages($lang)) ?>');
-    console.log(images);
   </script>
   
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
