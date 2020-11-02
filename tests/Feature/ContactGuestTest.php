@@ -14,6 +14,7 @@ class ContactGuestTest  extends TestCase
     public function setUp(): void
     {
         putenv('LANGS="en,pl"');
+        putenv('API_SECRET=""');
         parent::setUp();
     }
 

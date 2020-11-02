@@ -15,6 +15,8 @@ use Illuminate\Http\Request;
 
 
 $demoStatus = env('DEMO_STATUS', false);
+//dump($apiSecret);
+//dd('_________ss_____');
 
 if($demoStatus){
     Route::post('login', 'AuthController@login');
@@ -22,24 +24,26 @@ if($demoStatus){
     Route::get('page/{id}/{lang}', 'PageController@oneItem');
 
     Route::group(['middleware' => ['jwt.auth']], function() {
-        Route::get('logout', 'AuthController@logout');
-        Route::get('test', function(){
-            return response()->json(['testrs'=>'ok']);
-        });
-        Route::get('menus', 'MenuController@index');
+        $apiSecret = env('API_SECRET', '' );
+        if($apiSecret){
+            $apiSecret = $apiSecret.'/';
+        }        
+        
+        Route::get($apiSecret.'logout', 'AuthController@logout');
+        Route::get($apiSecret.'menus', 'MenuController@index');
         //Route::get('menus/position/{direction}/{id}', 'MenuController@position');
 
-        Route::get('pages', 'PageController@index');
+        Route::get($apiSecret.'pages', 'PageController@index');
         //Route::get('pages/position/{direction}/{id}', 'PageController@position');
-        Route::get('pages/type/{type}', 'PageController@getPagesByType');
+        Route::get($apiSecret.'pages/type/{type}', 'PageController@getPagesByType');
 
-        Route::get('images/{type}/{pageId}', 'ImageController@getItemByTypeAndRefId'); //getItemByPageId
+        Route::get($apiSecret.'images/{type}/{pageId}', 'ImageController@getItemByTypeAndRefId'); //getItemByPageId
         //Route::get('images/position/{direction}/{id}', 'ImageController@position'); //only for type page is working
 
-        Route::get('users/clients', 'UserController@getClients');
-        Route::get('config', 'ConfigController@index');
+        Route::get($apiSecret.'users/clients', 'UserController@getClients');
+        Route::get($apiSecret.'config', 'ConfigController@index');
 
-        Route::get('products', 'ProductController@index');
+        Route::get($apiSecret.'products', 'ProductController@index');
     });
 }else{
     #Route::post('register', 'AuthController@register');
@@ -53,35 +57,37 @@ if($demoStatus){
     Route::get('page/{id}/{lang}', 'PageController@oneItem');
 
     Route::group(['middleware' => ['jwt.auth']], function() {
-        Route::get('logout', 'AuthController@logout');
-        // Route::get('test', function(){
-        //     return response()->json(['testrs'=>'ok']);
-        // });
-        Route::get('menus', 'MenuController@index');
-        Route::post('menus', 'MenuController@create');
-        Route::put('menus/{id}', 'MenuController@update');
-        Route::delete('menus/{id}', 'MenuController@delete');
-        Route::get('menus/position/{direction}/{id}', 'MenuController@position');
+        $apiSecret = env('API_SECRET', '' );
+        if($apiSecret){
+            $apiSecret = $apiSecret.'/';
+        }
+        
+        Route::get($apiSecret.'logout', 'AuthController@logout');
+        Route::get($apiSecret.'menus', 'MenuController@index');
+        Route::post($apiSecret.'menus', 'MenuController@create');
+        Route::put($apiSecret.'menus/{id}', 'MenuController@update');
+        Route::delete($apiSecret.'menus/{id}', 'MenuController@delete');
+        Route::get($apiSecret.'menus/position/{direction}/{id}', 'MenuController@position');
 
-        Route::get('pages', 'PageController@index');
-        Route::post('pages', 'PageController@create');
-        Route::put('pages/{id}', 'PageController@update');
-        Route::delete('pages/{id}', 'PageController@delete');
-        Route::get('pages/position/{direction}/{id}', 'PageController@position');
-        Route::get('pages/type/{type}', 'PageController@getPagesByType');
+        Route::get($apiSecret.'pages', 'PageController@index');
+        Route::post($apiSecret.'pages', 'PageController@create');
+        Route::put($apiSecret.'pages/{id}', 'PageController@update');
+        Route::delete($apiSecret.'pages/{id}', 'PageController@delete');
+        Route::get($apiSecret.'pages/position/{direction}/{id}', 'PageController@position');
+        Route::get($apiSecret.'pages/type/{type}', 'PageController@getPagesByType');
 
-        Route::get('images/{type}/{pageId}', 'ImageController@getItemByTypeAndRefId'); //getItemByPageId
-        Route::delete('images/{id}',  'ImageController@delete');
-        Route::get('images/position/{direction}/{id}', 'ImageController@position'); //only for type page is working
+        Route::get($apiSecret.'images/{type}/{pageId}', 'ImageController@getItemByTypeAndRefId'); //getItemByPageId
+        Route::delete($apiSecret.'images/{id}',  'ImageController@delete');
+        Route::get($apiSecret.'images/position/{direction}/{id}', 'ImageController@position'); //only for type page is working
 
-        Route::get('users/clients', 'UserController@getClients');
+        Route::get($apiSecret.'users/clients', 'UserController@getClients');
 
-        Route::get('config', 'ConfigController@index');
+        Route::get($apiSecret.'config', 'ConfigController@index');
 
-        Route::get('products', 'ProductController@index');
-        Route::post('products', 'ProductController@create');
-        Route::put('products/{id}', 'ProductController@update');
-        Route::delete('products/{id}', 'ProductController@delete');
+        Route::get($apiSecret.'products', 'ProductController@index');
+        Route::post($apiSecret.'products', 'ProductController@create');
+        Route::put($apiSecret.'products/{id}', 'ProductController@update');
+        Route::delete($apiSecret.'products/{id}', 'ProductController@delete');
 
     });
 }

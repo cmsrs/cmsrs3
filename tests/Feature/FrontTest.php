@@ -23,7 +23,8 @@ class FrontTest extends Base
 
     public function setUp(): void
     {
-        putenv('LANGS="en"');      
+        putenv('LANGS="en"');    
+        putenv('API_SECRET=""');  
         parent::setUp();
         $this->createUser();
 

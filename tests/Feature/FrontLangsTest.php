@@ -28,7 +28,8 @@ class FrontLangsTest extends Base
 
     public function setUp(): void
     {
-        putenv('LANGS="pl,en"');      
+        putenv('LANGS="pl,en"');   
+        putenv('API_SECRET=""');   
         parent::setUp();
         $this->createUser();
         $this->langs = (new Config)->arrGetLangs();

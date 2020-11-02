@@ -22,7 +22,8 @@ class MenuTest extends Base
 
     public function setUp(): void
     {        
-        putenv('LANGS="en"');                    
+        putenv('LANGS="en"');     
+        putenv('API_SECRET=""');               
         parent::setUp();
         //putenv("LANGS=en,pl");      
         

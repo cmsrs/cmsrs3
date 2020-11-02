@@ -33,7 +33,8 @@ class ImageTest extends Base
 
     public function setUp(): void
     {
-        putenv('LANGS="en"');      
+        putenv('LANGS="en"'); 
+        putenv('API_SECRET=""');     
         parent::setUp();
         ini_set('memory_limit', '256M');
         $this->createUser();
