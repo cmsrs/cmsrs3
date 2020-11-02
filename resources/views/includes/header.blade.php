@@ -1,6 +1,6 @@
 <?php $manyLangs = ( 1 < count($langs)); ?>
-<?php //$bg = !env('DEMO_STATUS') ?  'bg-dark' : 'bg-secondary'; ?>
-<?php $bg = 'bg-secondary'; ?>
+<?php $bg = env('DEMO_STATUS') ?  'bg-dark' : 'bg-secondary'; ?>
+<?php //$bg = 'bg-secondary'; ?>
 <?php $pLogin = App\Page::getFirstPageByType('login');  ?>
 
 
