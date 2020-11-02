@@ -84,6 +84,25 @@ It is recommended to run tests on a clean instance (without images)
 ./vendor/bin/phpunit
 ```
  
+# CONFIGURATION .env FILE
+
+* add langs, example:
+
+```bash
+LANGS="pl,en"
+```
+
+The first one will be default language.
+You have to add at least one lang (it is require)
+
+* add api secret, example:
+```bash
+API_SECRET="v3"
+```
+
+It must be the same like in the admin config file.
+
+
 # TROUBLESHOOTING
 
 * logs:
