@@ -9,6 +9,7 @@ use App\Page;
 use App\Product;
 use App\Menu;
 use App\Config;
+use App;
 
 class FrontController extends Controller
 {
@@ -51,6 +52,7 @@ class FrontController extends Controller
     if( !in_array($lang, $this->langs) ){
       abort(404);
     }
+    App::setLocale($lang);
 
     $page = Page::getMainPage();
     $this->validatePage($page);
@@ -68,7 +70,11 @@ class FrontController extends Controller
 
   public function getPageLangs($lang, $menuSlug, $pageSlug )
   {
+    //dd('++++++++++++');
     $data = $this->getPage($menuSlug, $pageSlug, $lang );
+    //pp::setLocale($lang);
+    //$ll = App::getLocale($lang);
+    //dd($ll);
     return view('cms', $data);
   }
 
@@ -81,6 +87,7 @@ class FrontController extends Controller
     }else{
       $manyLangs = true;
     }
+    App::setLocale($lang);
 
     //$footerPages = Page::getFooterPages($lang);        
 
@@ -136,6 +143,7 @@ class FrontController extends Controller
     }else{
       $manyLangs = true;
     }
+    App::setLocale($lang);
     
     $products = null;
     $pageOut = null;

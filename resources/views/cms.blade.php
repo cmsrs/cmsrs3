@@ -32,20 +32,20 @@
     </div>
     <form>
       <div class="form-group">
-        <label for="email">Email address</label>
+        <label for="email">{{ __('Email address') }}</label>
         <input type="text" class="form-control" id="email" v-model="email"  @click="clearMessageInfo()">
         <div  v-if="emailErr"  class="invalid-feedback" style="display:block">
           @{{ emailErr }}
         </div>        
       </div>
       <div class="form-group">
-        <label for="message">Message</label>
+        <label for="message">{{ __('Message') }}</label>
         <textarea class="form-control" id="message" rows="10" v-model="message"  @click="clearMessageInfo()"></textarea>
         <div  v-if="messageErr"  class="invalid-feedback" style="display:block">
           @{{ messageErr }}
         </div>        
       </div>
-      <button type="submit" class="btn btn-primary" v-on:click="contact( $event )">Submit</button>
+      <button type="submit" class="btn btn-primary" v-on:click="contact( $event )">{{ __('Submit') }}</button>
     </form>
 
   @elseif($page->type  === 'shop')
@@ -63,9 +63,9 @@
                 </div>
                 <div class="col">
                   <ul class="list-unstyled">
-                    <li>Name: {{$product['name']}}</li>
+                    <li>{{ __('Name') }}: {{$product['name']}}</li>
                     <li>Sku: {{$product['sku']}}</li>
-                    <li>Price: ${{$product['price']}}</li>
+                    <li>{{ __('Price') }}: ${{$product['price']}}</li>
                   <!--  <li>{{$product['description']}}</li> -->
                   </ul>
                   <?php
@@ -74,7 +74,7 @@
                     $price = $product['price'];
                   ?>
 
-                  <button v-on:click="addToCart({ id: {{$id}}, name: '{{$name}}', price: {{$price}} })" class="add-to-cart btn">Add to Cart</button>
+                  <button v-on:click="addToCart({ id: {{$id}}, name: '{{$name}}', price: {{$price}} })" class="add-to-cart btn">{{ __('Add to Cart') }}</button>
                 </div>
               </div>
             </div>
@@ -86,7 +86,7 @@
             &nbsp;
           </div>            
           <div class="col mp-3">
-            SHOPPING CART:
+          {{ __('SHOPPING CART') }}:
             <ul>
               <li class="mt-2" v-for="item in cart" v-bind:key="item.id">              
                 <div>@{{ item.name }}</div>
@@ -97,9 +97,9 @@
             </ul>
 
             <div v-if="cart.length">
-              <div class="cart-total">Total: $@{{ total }}</div>
+              <div class="cart-total">{{ __('Total') }}: $@{{ total }}</div>
               <br/><br/>
-              <button class="btn" v-on:click="pay()">Pay</button>
+              <button class="btn" v-on:click="pay()">{{ __('Pay') }}</button>
             </div>
 
           </div>

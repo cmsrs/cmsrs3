@@ -162,7 +162,7 @@ new Vue({
                 contact: function( event){
                         let self = this;
 
-                        axios.post('/api/contact', {
+                        axios.post('/api/contact/'+self.lang, {
                                 email: this.email,
                                 message: this.message
                         }).then( function (response){

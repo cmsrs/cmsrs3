@@ -44,11 +44,11 @@ if($demoStatus){
 }else{
     #Route::post('register', 'AuthController@register');
     Route::post('login', 'AuthController@login');
-    Route::post('recover', 'AuthController@recover');
+    //Route::post('recover', 'AuthController@recover');
 
     Route::get('comments/{pageId}', 'CommentController@index');
     Route::post('comments/{pageId}', 'CommentController@create');
-    Route::post('contact', 'ContactController@create');    
+    Route::post('contact/{lang}', 'ContactController@create');    
 
     Route::get('page/{id}/{lang}', 'PageController@oneItem');
 

@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Page;
 use App\Config;
 use App\Menu;
+use App;
 
 class LoginController extends Controller
 {
@@ -53,6 +54,7 @@ class LoginController extends Controller
         if(empty($lang)){
             $lang = $this->langs[0];
         }
+        App::setLocale($lang);
       
         //$footerPages = Page::getFooterPages($lang);
 

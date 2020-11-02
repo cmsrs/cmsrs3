@@ -5,14 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Contact;
+use App\Config;
 use App\Mail\OrderShipped;
 use Validator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use App;
 
 
 class ContactController extends Controller
 {
+  
 
   private $validationRules = [
       //'email' => 'email|required',
@@ -21,8 +24,13 @@ class ContactController extends Controller
       'message' => 'max:500|required'
   ];
 
-  public function create(Request $request)
+  public function create(Request $request, $lang)
   {
+    $langs = (new Config)->arrGetLangs();
+    if( !in_array($lang, $langs) ){
+        abort(404); 
+    }
+    App::setLocale($lang);    
 
     $data = $request->only(
         'email',
@@ -47,7 +55,7 @@ class ContactController extends Controller
       return response()->json(['success'=> false, 'error'=> 'Add contact problem, details in the log file.'], 200); 
     }
 
-    return response()->json(['success'=> true, 'message' => 'Thank you for using the contact form'  ]);
+    return response()->json(['success'=> true, 'message' => __('Thank you for using the contact form')  ]);
   }
 
 }

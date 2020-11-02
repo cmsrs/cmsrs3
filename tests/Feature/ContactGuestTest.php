@@ -13,7 +13,7 @@ class ContactGuestTest  extends TestCase
 
     public function setUp(): void
     {
-        putenv('LANGS="en"');
+        putenv('LANGS="en,pl"');
         parent::setUp();
     }
 
@@ -26,15 +26,41 @@ class ContactGuestTest  extends TestCase
             'message' => 'test message - test123'
         );
 
-        $response = $this->post('api/contact', $content);
+        $response = $this->post('api/contact/pl', $content);
         $res = $response->getData();
         $this->assertTrue($res->success);
-        $this->assertNotEmpty($res->message);
+        $msgPl = $res->message;
+        $this->assertNotEmpty($msgPl);
         
         $this->assertEquals(1, Contact::all()->count());
         $item =  Contact::all()->first();
         $this->assertEquals($content['email'], $item->email);
         $this->assertEquals($content['message'], $item->message);            
+
+
+
+        $response = $this->post('api/contact/en', $content);
+        $res = $response->getData();
+        $this->assertTrue($res->success);
+        $msgEn = $res->message;
+        $this->assertNotEmpty($msgEn);
+        $this->assertNotEquals($msgPl, $msgEn);
+        
+        $this->assertEquals(2, Contact::all()->count());        
+
+    }
+
+    /** @test */
+    public function it_will_create_contact_wron_lang()
+    {
+
+        $content = array(
+            'email' => 'test@example.com',
+            'message' => 'test message - test123'
+        );
+
+        $response = $this->post('api/contact/fr', $content);
+        $response->assertStatus(404);
     }
 
     /** @test */
@@ -46,7 +72,7 @@ class ContactGuestTest  extends TestCase
             'message' => 'test message - test123'
         );
 
-        $response = $this->post('api/contact', $content);
+        $response = $this->post('api/contact/pl', $content);
 
         //dd($response);
         $res = $response->getData();
@@ -63,7 +89,7 @@ class ContactGuestTest  extends TestCase
             'message' => 'test message - test123'
         );
 
-        $response = $this->post('api/contact', $content);
+        $response = $this->post('api/contact/pl', $content);
 
         //dd($response);
         $res = $response->getData();
@@ -80,7 +106,7 @@ class ContactGuestTest  extends TestCase
             'message' => str_repeat("5", 501)
         );
 
-        $response = $this->post('api/contact', $content);
+        $response = $this->post('api/contact/pl', $content);
 
         //dd($response);
         $res = $response->getData();
@@ -96,7 +122,7 @@ class ContactGuestTest  extends TestCase
             'message' => ''
         );
 
-        $response = $this->post('api/contact', $content);
+        $response = $this->post('api/contact/en', $content);
 
         //dd($response);
         $res = $response->getData();
