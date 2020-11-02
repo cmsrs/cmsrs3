@@ -1,6 +1,6 @@
 {
     "Message" : "Wiadomość",
-    "Email address" : "Adres Email",
+    "Email address" : "Adres email",
     "Submit" : "Wyślij",
     "Thank you for using the contact form" : "Dziękuje za skorzystanie z formularza kontaktowego",
     "Name" : "Nazwa",
@@ -8,6 +8,13 @@
     "SHOPPING CART" : "KOSZYK",
     "Total" : "Do zapłaty",
     "Pay" : "Do kasy",    
-    "Price" : "Cena"
+    "Price" : "Cena",
+
+    "Login" : "Logowanie",
+    "E-Mail Address" : "Adres E-Mail",
+    "Password" : "Hasło",
+    "Remember Me" : "Zapamietaj"
+
+
 
 }
