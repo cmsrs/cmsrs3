@@ -1,12 +1,13 @@
 20201002
 
 todo
-- wiecej jezykow
-- kontakt form + capute
-- alt obrazka na froncie - i dodatnie go do skryptu
-- wydajnosc gallerii - duzo wiecej zdjec
++ wiecej jezykow
++ kontakt form 
+- capute w contact form (TODO)
++ alt obrazka na froncie - i dodatnie go do skryptu
++ wydajnosc gallerii - duzo wiecej zdjec
 - cache
-- strony dostepne tylko po zalogowaniu
++ strony dostepne tylko po zalogowaniu
 
 
 - nie intuicyjnie dziala add/edit w panelu administracyjnym
@@ -31,4 +32,33 @@ kamienie milowe:
 - testy reacta
 - migracja
 - docker
+
+
+
+20201103
+
+
+todo
+- capture w contact form
+- widomosci w panelu z formularza contact form
+- cache - wydajnosc strony
+- sitemap.xml - zrobione z automatu
+- cross w laravelu (po stronie klienta)
+- inny url do admina
+
+- pokazanie w panelu strony, ktore sa odpublikowane (na jakis wyszazony kolor)
+- edycja i dodawanie - malo intuicyjne - do przemyslenia
+
+
+
+bledy (o niskiej waznosci):
+- 2x mozna dodac formularz kontaktowy - moze do poprawy
+- tlumaczenie bledow przy logowaniu na polski
+- tranzakcje db - jesli nie uda sie dodac strony to nalezy usunac takze tlumaczenia powiazane z ta strona
+- obsluzyc przypadek unikatowych tytulow ston dla danego menu
+- obsluzyc przypadek unikatowych tytulow menu
+
+
+
+
 
