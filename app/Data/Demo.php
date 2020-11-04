@@ -117,8 +117,6 @@ Class Demo{
                     <p class='lead'>
                     Login to the admin panel: <a href=\"$appUrl/admin\">$appUrl/admin</a>
                     <br>
-                    and customer zone: <a href=\"$appUrl/login\">$appUrl/login</a>
-                    <br>
                     <br>
                     user: adm@cmsrs.pl
                     <br>
@@ -135,8 +133,6 @@ Class Demo{
                     <br><br>
                     <p class='lead'>
                     Login do panelu administracyjnego: <a href=\"$appUrl/admin\">$appUrl/admin</a>
-                    <br>
-                    i do strefy klienta: <a href=\"$appUrl/login\">$appUrl/login</a>
                     <br>
                     <br>
                     użytkownik: adm@cmsrs.pl
