@@ -17,7 +17,7 @@
 > 
 > create user and database
 > ```bash
-> sudo mysql --default-character-set=utf8 -e  "CREATE USER 'cmsrs'@'localhost' IDENTIFIED BY 'AlaMaKota95*';"
+> sudo mysql --default-character-set=utf8 -e  "CREATE USER 'cmsrs'@'localhost' IDENTIFIED BY 'secret102*';"
 > sudo mysql --default-character-set=utf8 -e  "GRANT ALL PRIVILEGES ON *.* TO 'cmsrs'@'localhost' WITH GRANT OPTION;"
 > sudo mysql --default-character-set=utf8 -e  "CREATE DATABASE cmsrs3g CHARACTER SET utf8 COLLATE utf8_general_ci;"
 > ```
@@ -33,7 +33,7 @@
 > APP_URL=http://127.0.0.1:8000
 > DB_DATABASE=cmsrs3g
 > DB_USERNAME=cmsrs
-> DB_PASSWORD="AlaMaKota95*"
+> DB_PASSWORD="secret102*"
 > ```
 >
 * laravel and jwt config (create tokens):
