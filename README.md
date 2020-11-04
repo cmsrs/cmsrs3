@@ -34,6 +34,8 @@
 > DB_DATABASE=cmsrs3g
 > DB_USERNAME=cmsrs
 > DB_PASSWORD="secret102*"
+>
+> ADM_PASS="cmsrs123"
 > ```
 >
 * laravel and jwt config (create tokens):
