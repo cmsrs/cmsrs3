@@ -12,11 +12,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // $this->call(UsersTableSeeder::class);
+        $admEmail = env('ADM_EMAIL', 'adm@cmsrs.pl');
         $admPass = env('ADM_PASS', 'cmsrs123');
 
         DB::table('users')->insert([
             'name' => 'adm',
-            'email' => 'adm@cmsrs.pl',
+            'email' => $admEmail,
             'password' => Hash::make($admPass),
             'role' => 'admin'
         ]);

@@ -35,6 +35,7 @@
 > DB_USERNAME=cmsrs
 > DB_PASSWORD="secret102*"
 >
+> ADM_EMAIL="adm@cmsrs.pl"
 > ADM_PASS="cmsrs123"
 > ```
 >
