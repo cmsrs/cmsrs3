@@ -19,3 +19,4 @@ awstats/
 logs/
 stats/
 /public/admin_*
+/public/js/projects
