@@ -106,9 +106,6 @@
 
         </div>
       </div>
-  @else
-      <!-- type == privacy-policy -->
-      <div class="mt-2">{!! $page->translatesByColumnAndLang( 'content', $lang ) !!}</div>
   @endif
 
   @if ( $page->commented )
@@ -151,8 +148,11 @@
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>      
   -->
+
+  
   <script src="/js/lib/vue.js"></script>
   <script src="/js/lib/axios.js"></script>
   <script src="/js/cmsrs.js"></script>
+  
 
 @stop

@@ -1,4 +1,8 @@
 <?php
+//$conf = parse_ini_file("../../.env");
+//die('_____sss____'  );
+//
+//var_dump(   );
 
 
 $cmdLogin = 'curl  -H "Accept:application/json" -H "Content-Type:application/json" -XPOST  "http://127.0.0.1:8000/api/login" -d \'{ 

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Config extends Model
 {
-    const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,login'; //default values
+    const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,login,projects'; //default values
 
     private $langs;
 
@@ -32,6 +32,7 @@ class Config extends Model
       }else{
         $pageTypes = Config::PAGE_TYPES_STR_DEFAULT;
       }
+
       return $pageTypes;
     }
 

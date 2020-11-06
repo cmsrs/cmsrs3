@@ -75,7 +75,7 @@ class FrontController extends Controller
     //pp::setLocale($lang);
     //$ll = App::getLocale($lang);
     //dd($ll);
-    return view('cms', $data);
+    return view($data['view'], $data);
   }
 
   public function getPage($menuSlug, $pageSlug, $lang = null )
@@ -119,6 +119,7 @@ class FrontController extends Controller
       'products' => $products, 
       'lang' => $lang, 
       'langs' => $this->langs,
+      'view' => ($pageOut->type == 'projects') ? 'in' : 'cms' //in = independent
       //'footerPages' => $footerPages
     ];
 
@@ -126,13 +127,13 @@ class FrontController extends Controller
       return $data;
     }
 
-    return view('cms', $data);
+    return view($data['view'], $data);
   }
 
   public function  getSeparatePageLangs($lang, $pageSlug)
   {
     $data = $this->getSeparatePage($pageSlug, $lang);
-    return view('cms', $data);
+    return view('in', $data);
   }
 
   public function getSeparatePage($pageSlug, $lang = null)
@@ -171,7 +172,7 @@ class FrontController extends Controller
       return $data;
     }
     
-    return view('cms', $data);
+    return view('in', $data);
   }
 
 }

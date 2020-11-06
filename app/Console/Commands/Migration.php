@@ -114,10 +114,8 @@ class Migration extends Command
             'type' => 'cms',
             'content' => $oldData['content'],
             'menu_id' => $newMenuId,
-            'images' => $this->getOldImagesByPageId($oldPageId)
+            //'images' => $this->getOldImagesByPageId($oldPageId) //comment this if you dont want images
         ];
-        //$images = $this->getOldImagesByPageId($oldPageId);
-        //dump($images);
 
         return (new Page)->wrapCreate($dataP);    
     } 
@@ -185,7 +183,7 @@ class Migration extends Command
             'type' => 'main_page', //!!
             'content' => [ 
                 'en' => '
-            <main role="main">
+            <div>
 
             <div class="jumbotron">
               <div class="container">
@@ -238,10 +236,10 @@ class Migration extends Command
           
             </div> <!-- /container -->
           
-            </main>',
+            </div>',
 
           'pl' => '          
-            <main role="main">
+            <div>
 
             <div class="jumbotron">
               <div class="container">
@@ -292,7 +290,7 @@ class Migration extends Command
               <hr>        
             </div> <!-- /container -->
           
-            </main>'          
+            </div>'          
         
         
         ],
