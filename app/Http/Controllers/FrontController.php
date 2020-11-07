@@ -119,7 +119,7 @@ class FrontController extends Controller
       'products' => $products, 
       'lang' => $lang, 
       'langs' => $this->langs,
-      'view' => ($pageOut->type == 'projects') ? 'in' : 'cms' //in = independent
+      'view' => ($pageOut->type == 'projects') ? 'projects' : 'cms' //in = independent
       //'footerPages' => $footerPages
     ];
 

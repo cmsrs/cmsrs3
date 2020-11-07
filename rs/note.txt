@@ -50,7 +50,7 @@ todo
 - pokazanie w panelu strony, ktore sa odpublikowane (na jakis wyszazony kolor)
 - select w parent page powinien pokazywac short_title a nie title
 - edycja i dodawanie - malo intuicyjne - do przemyslenia
-- dla page.type == project or privacy - tylko jeden jezyk
+- dla page.type == project (or privacy - moze niemkoniecznie) - tylko jeden jezyk
 
 
 
