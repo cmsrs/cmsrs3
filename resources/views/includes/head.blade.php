@@ -5,6 +5,12 @@
 <title>{{ $page->translatesByColumnAndLang( 'title', $lang ) ?? config('app.name', 'cmsRS') }}</title>
 <meta name="author" content="Robert Szczepanski - cmsRS">
 <meta name="description" content="{{  $page->translatesByColumnAndLang( 'description', $lang ) ?? config('app.name', 'cmsRS') }}">
+<script>
+    var lang = '{{ !empty($lang) ? $lang : '' }}';
+    var pathToCheckers = '/projects/checkers/';
+    var pathToTtt = '/projects/ttt/';    
+</script>
+
 
 <!-- Bootstrap core CSS -->
 <link href="/css/lib/bootstrap.min.css" rel="stylesheet">

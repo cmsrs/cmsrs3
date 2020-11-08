@@ -6,6 +6,3 @@
 <div class="mt-2">{!! $page->translatesByColumnAndLang( 'content', $langs[0] ) !!}</div>
 
 @stop
-<script>
-    var lang = '{{ $lang }}';
-</script>

@@ -190,7 +190,7 @@ class Migration extends Command
                 <h1>cmsRS is open source software you can use to create a website, gallery or even online shopping cart</h1>
                 <p class="mt-4">
                     <a class="btn btn-primary btn-lg" href="https://github.com/cmsrs/cmsrs3"  target="_blank" role="button">Download</a>
-                    <a class="btn btn-secondary btn-lg" href="http://demo.cmsrs.pl/en" role="button">Demo</a>                    
+                    <a class="btn btn-danger btn-lg" href="http://demo.cmsrs.pl/en" role="button">Demo</a>                    
                 </p>                
               </div>
             </div>
@@ -246,7 +246,7 @@ class Migration extends Command
                 <h1>cmsRS jest otwartym oprogramowaniem, z którym stworzysz stronę www, galerię, a nawet koszyk sklepu internetowego</h1>
                 <p class="mt-4">
                     <a class="btn btn-primary btn-lg" href="https://github.com/cmsrs/cmsrs3" target="_blank" role="button">Pobierz</a>
-                    <a class="btn btn-secondary btn-lg" href="http://demo.cmsrs.pl" role="button">Demo</a>                    
+                    <a class="btn btn-danger btn-lg" href="http://demo.cmsrs.pl" role="button">Demo</a>                    
                 </p>                
               </div>
             </div>

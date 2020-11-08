@@ -11,7 +11,7 @@ todo
 
 
 - nie intuicyjnie dziala add/edit w panelu administracyjnym
-- pokazanie w panelu, ktore srony sa odpublikowane
++ pokazanie w panelu, ktore srony sa odpublikowane
 
 
 na dalszy plan:
@@ -25,6 +25,7 @@ na dalszy plan:
 
 bledy:
 - w admin/pages - dodaje obrazek a pozniej przechodze na inna strone to obrazek zostaje
+- problem z kolejnoscia obrazkow dla produktu w panelu
 
 
 
@@ -44,13 +45,14 @@ todo
 - cache - wydajnosc strony
 - sitemap.xml - zrobione z automatu
 - cross w laravelu (po stronie servera) - bezpieczenstow
+
+
+
 - inny url do admina - bezpieczenstow
-
-
-- pokazanie w panelu strony, ktore sa odpublikowane (na jakis wyszazony kolor)
-- select w parent page powinien pokazywac short_title a nie title
++ pokazanie w panelu strony, ktore sa odpublikowane (na jakis wyszazony kolor)
+(?)  - select w parent page powinien pokazywac short_title a nie title (to jest nietrafiony pomysl bo w projektach nie widomo co wybrac - jest 2x opis np)
 - edycja i dodawanie - malo intuicyjne - do przemyslenia
-- dla page.type == project (or privacy - moze niemkoniecznie) - tylko jeden jezyk
++ dla page.type == project (or privacy - moze niemkoniecznie) - tylko jeden jezyk
 
 
 
@@ -58,10 +60,6 @@ bledy (o niskiej waznosci):
 - 2x mozna dodac formularz kontaktowy - moze do poprawy
 - tlumaczenie bledow przy logowaniu na polski
 - tranzakcje db - jesli nie uda sie dodac strony to nalezy usunac takze tlumaczenia powiazane z ta strona
-- obsluzyc przypadek unikatowych tytulow ston dla danego menu
+- obsluzyc przypadek unikatowych tytulow ston dla danego menu (chociaz short_title jest takie same w projektach)
 - obsluzyc przypadek unikatowych tytulow menu
-
-
-
-
 
