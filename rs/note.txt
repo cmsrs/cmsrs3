@@ -45,10 +45,11 @@ todo
 - cache - wydajnosc strony
 - sitemap.xml - zrobione z automatu
 - cross w laravelu (po stronie servera) - bezpieczenstow
+- podepnij google analytics
 
 
 
-- inny url do admina - bezpieczenstow
++ inny url do admina - bezpieczenstow
 + pokazanie w panelu strony, ktore sa odpublikowane (na jakis wyszazony kolor)
 (?)  - select w parent page powinien pokazywac short_title a nie title (to jest nietrafiony pomysl bo w projektach nie widomo co wybrac - jest 2x opis np)
 - edycja i dodawanie - malo intuicyjne - do przemyslenia
