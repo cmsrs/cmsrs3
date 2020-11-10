@@ -26,6 +26,8 @@ na dalszy plan:
 bledy:
 - w admin/pages - dodaje obrazek a pozniej przechodze na inna strone to obrazek zostaje
 - problem z kolejnoscia obrazkow dla produktu w panelu
+- galeria po zalogowaniu nie dziala - patrz moja strona
+
 
 
 
@@ -46,13 +48,14 @@ todo
 - sitemap.xml - zrobione z automatu
 - cross w laravelu (po stronie servera) - bezpieczenstow
 - podepnij google analytics
+- unpublish img 
 
 
 
 + inny url do admina - bezpieczenstow
 + pokazanie w panelu strony, ktore sa odpublikowane (na jakis wyszazony kolor)
 (?)  - select w parent page powinien pokazywac short_title a nie title (to jest nietrafiony pomysl bo w projektach nie widomo co wybrac - jest 2x opis np)
-- edycja i dodawanie - malo intuicyjne - do przemyslenia
+- edycja i dodawanie - malo intuicyjne - do przemyslenia (przy kasowaniu obrazkow przechodzi na strone glowna)
 + dla page.type == project (or privacy - moze niemkoniecznie) - tylko jeden jezyk
 
 
