@@ -206,3 +206,8 @@ body {
       width: 250px;
   }
 }
+
+.img-screen {
+  width: 100%;
+  height: 100%;
+}
