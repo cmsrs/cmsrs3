@@ -48,7 +48,7 @@ todo
 - sitemap.xml - zrobione z automatu
 - cross w laravelu (po stronie servera) - bezpieczenstow
 - podepnij google analytics
-- unpublish img 
+
 
 
 
@@ -66,4 +66,13 @@ bledy (o niskiej waznosci):
 - tranzakcje db - jesli nie uda sie dodac strony to nalezy usunac takze tlumaczenia powiazane z ta strona
 - obsluzyc przypadek unikatowych tytulow ston dla danego menu (chociaz short_title jest takie same w projektach)
 - obsluzyc przypadek unikatowych tytulow menu
+
+
+uwagi:
+- zrzuty bez ladowania vue - stworzyc nowy tym np clear (bez vue)
+- zmienic nazwe privacy na independent (chodzi o typ page) - moze niech ta nazwa zostanie - w koncu tylko te prawnicze glupoty nie sa powiazane z menu
+- blad obrazkow w galerii  jest migotanie przy pokazaniu dynamicznie nowych obrazkow
+- galeria po zalogowaniu nie dziala
+- dla typu cms - mozna zrobic edytor wyswig
+- unpublish img (przydaloby sie) 
 

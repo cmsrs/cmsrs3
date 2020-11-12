@@ -113,13 +113,22 @@ class FrontController extends Controller
       $products = Product::getProductsWithImagesByPage($pageOut->id);
     }
 
+    
+    if( $pageOut->type == 'projects' ){
+      $view = 'projects';
+    }elseif( $pageOut->type == 'clear' ){
+      $view = 'clear';
+    }else{
+      $view = 'cms';
+    }
+
     $data = [ 
       'menus' => $this->menus,  
       'page' => $pageOut, 
       'products' => $products, 
       'lang' => $lang, 
       'langs' => $this->langs,
-      'view' => ($pageOut->type == 'projects') ? 'projects' : 'cms' //in = independent
+      'view' => $view
       //'footerPages' => $footerPages
     ];
 
