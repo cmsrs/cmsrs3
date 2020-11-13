@@ -2,6 +2,7 @@
 <html>
 <head>
    @include('includes.head')
+   @includeIf('includes.mysite')
 </head>
 <body>
 @include('includes.header')
