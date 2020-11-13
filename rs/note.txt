@@ -45,7 +45,7 @@ todo
 - capture w contact form
 - widomosci w panelu adm z formularza contact form
 - cache - wydajnosc strony
-- sitemap.xml - zrobione z automatu
++-(podepnij do googla)    sitemap.xml - zrobione z automatu
 - cross w laravelu (po stronie servera) - bezpieczenstow
 - podepnij google analytics
 

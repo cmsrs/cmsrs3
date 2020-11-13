@@ -49,13 +49,7 @@ class CreateSiteMap extends Command
             }    
         }
 
-        //dd(var_export($urls, true));
         $siteMapPath = public_path().'/sitemap.txt';
         file_put_contents($siteMapPath,  $strUrls);
-        //dd($siteMapPath);
-        //
-
-        //dd($urls);
-        //
     }
 }
