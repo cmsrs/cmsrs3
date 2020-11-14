@@ -2,7 +2,13 @@
 <?php $bg = env('DEMO_STATUS') ?  'bg-dark' : 'bg-secondary'; ?>
 <?php //$bg = 'bg-secondary'; ?>
 <?php $pLogin = App\Page::getFirstPageByType('login');  ?>
-<?php $urlMainPage = App\Page::getFirstPageByType('main_page')->getUrl($lang);  ?>
+<?php 
+  $mainPage = App\Page::getFirstPageByType('main_page');  
+  $urlMainPage = '/';
+  if($mainPage){
+    $urlMainPage = $mainPage->getUrl($lang);  
+  }
+?>
 
 
 <nav class="navbar navbar-expand-md navbar-dark  {{ $bg }} fixed-top lead">
