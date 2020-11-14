@@ -106,6 +106,14 @@ API_SECRET="v3"
 It must be the same like in the admin config file.
 It can be empty string.
 
+* (optionally) for google v3 reCaptcha in the contact form: 
+
+```bash
+GOOGLE_RECAPTCHA_PRIV
+GOOGLE_RECAPTCHA_PUBLIC
+```
+ 
+
 
 # TROUBLESHOOTING
 
