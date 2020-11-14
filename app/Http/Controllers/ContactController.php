@@ -52,7 +52,7 @@ class ContactController extends Controller
     //google recaptcvha
     if( !empty($rePriv) && !empty($rePublic) ){
         $googleAns =  empty( $token) ? '0' :  $token; 
-        $secret = "6LdbZ8kZAAAAAOIcLLZy3fL0TMxbHjARHv6Fi47f";
+        $secret = $rePriv;
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL,"https://www.google.com/recaptcha/api/siteverify");
