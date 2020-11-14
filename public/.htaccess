@@ -5,6 +5,119 @@
 
     RewriteEngine On
 
+#--------------------------
+##on my page - start -- to remove! -------
+#--------------------------
+
+    RewriteCond %{HTTP_HOST} !^www. [NC]
+    RewriteRule ^(.*)$ http://www.cmsrs.pl/$1 [L,R=301]
+
+    RewriteRule   ^pl/projekty/checkers  /pl/cms/projekty/warcaby [R=301,L]
+    RewriteRule   ^pl/gallery/chiny  /pl/cms/galeria/chiny [R=301,L]
+    RewriteRule   ^en/projects/kulki  /en/cms/projects/ball-lines [R=301,L]
+    RewriteRule   ^en/projects/checkers  /en/cms/projects/checkers [R=301,L]
+
+
+
+    RewriteRule   ^pl/projekty/tictacto  /pl/cms/projekty/kolko-i-krzyzyk [R=301,L]
+    RewriteRule   ^pl/projekty/kulki  /pl/cms/projekty/kulki [R=301,L]
+
+    #zweryfikuj!!!
+    RewriteRule   ^en/projects/tictactoe  /en/cms/projects/tic-tac-toe [R=301,L]
+    #RewriteRule   ^en/cms/projects/ball-line$  /en/cms/projects/ball-lines [R=301,L]
+
+
+    RewriteRule   ^en/auth/login  /en/login [R=301,L]
+    RewriteRule   ^pl/auth/login  /pl/login [R=301,L]
+
+    RewriteRule   ^en/cms/about-me/robert-szczepanski---professional-experience  /en/cms/about-me/robert-szczepanski-professional-experience [R=301,L]
+    RewriteRule   ^pl/cms/o-mnie/robert-szczepanski---doswiadczenie-zawodowe  /pl/cms/o-mnie/robert-szczepanski-doswiadczenie-zawodowe [R=301,L]
+
+
+
+
+    RewriteRule   ^pl/cms/cmsrs/zrzuty-ekaranu--cmsrs  /pl/cms/cmsrs/zrzuty-ekaranu-cmsrs [R=301,L]
+    RewriteRule   ^pl/cms/cmsrs/cms---laravel-i-react  /pl/cms/cmsrs/cms-laravel-i-react [R=301,L]
+    RewriteRule   ^en/cms/cmsrs/cms---laravel-and-react  /en/cms/cmsrs/cms-laravel-and-react [R=301,L]
+
+    RewriteRule   ^en/cms/projects/game-description---checkers-for-mobile-and-stationary-devices  /en/cms/projects/game-description-checkers-for-mobile-and-stationary-devices [R=301,L]
+    RewriteRule   ^pl/cms/projekty/opis-gry---warcaby-na-urzadzenia-mobile-i-stacjonarne  /pl/cms/projekty/opis-gry-warcaby-na-urzadzenia-mobile-i-stacjonarne [R=301,L]
+
+    RewriteRule   ^pl/cms/projekty/opis-gry---kulki-na-urzadzenia-mobile-i-stacjonarne  /pl/cms/projekty/opis-gry-kulki-na-urzadzenia-mobile-i-stacjonarne [R=301,L]
+
+    RewriteRule   ^pl/cms/projekty/opis-gry---zaawansowane-kolko-i-krzyzyk-na-urzadzenia-mobile-i-stacjonarne /pl/cms/projekty/opis-gry-zaawansowane-kolko-i-krzyzyk-na-urzadzenia-mobile-i-stacjonarne [R=301,L]
+
+    RewriteRule   ^pl/cms/projekty/praca-mgr.-projektowanie-obwodow-analogowych-przy-uzyciu-algorytmow-genetycznych-i-ewolucyjnych /pl/cms/projekty/praca-mgr-projektowanie-obwodow-analogowych-przy-uzyciu-algorytmow-genetycznych-i-ewolucyjnych [R=301,L]
+    RewriteRule   ^en/cms/projects/msc-thesis.-analogue-circuit-design-with-the-use-of-genetic-and-evolutionary-algorithms /en/cms/projects/msc-thesis-analogue-circuit-design-with-the-use-of-genetic-and-evolutionary-algorithms  [R=301,L]
+
+    RewriteRule   ^en/cms/projects/principles-of-map-working--for-mobile-and-stationary-devices  /en/cms/projects/principles-of-map-working-for-mobile-and-stationary-devices [R=301,L]
+
+    RewriteRule   ^en/cms/projects/game-descrition---advanced-tic-tac-toe-for-mobile-and-stationary-devices /en/cms/projects/game-descrition-advanced-tic-tac-toe-for-mobile-and-stationary-devices [R=301,L]
+
+    RewriteRule   ^en/cms/projects/game-descrition---ball-lines-for-mobile-and-stationary-devices  /en/cms/projects/game-descrition-ball-lines-for-mobile-and-stationary-devices   [R=301,L]
+
+
+    RewriteRule   ^pl/gallery/grecja/1  /pl/cms/galeria/grecja [R=301,L]
+    RewriteRule   ^pl/gallery/grecja/2  /pl/cms/galeria/grecja [R=301,L]
+    RewriteRule   ^pl/gallery/grecja/3  /pl/cms/galeria/grecja [R=301,L]
+    RewriteRule   ^pl/gallery/grecja/4  /pl/cms/galeria/grecja [R=301,L]
+    RewriteRule   ^pl/gallery/grecja/5  /pl/cms/galeria/grecja [R=301,L]
+    RewriteRule   ^pl/gallery/grecja/6  /pl/cms/galeria/grecja [R=301,L]
+    RewriteRule   ^pl/gallery/grecja/7  /pl/cms/galeria/grecja [R=301,L]
+    RewriteRule   ^pl/gallery/grecja/8  /pl/cms/galeria/grecja [R=301,L]
+    RewriteRule   ^pl/gallery/grecja/9  /pl/cms/galeria/grecja [R=301,L]
+
+
+    RewriteRule   ^pl/gallery/wojewodztwo-podkarpackie  /pl/cms/galeria/wojewodztwo-podkarpackie [R=301,L]
+    RewriteRule   ^pl/gallery/wojewodztwo-podlaskie  /pl/cms/galeria/wojewodztwo-podlaskie [R=301,L]
+    RewriteRule   ^pl/gallery/wojewodztwo-mazowieckie  /pl/cms/galeria/wojewodztwo-mazowieckie [R=301,L]
+    RewriteRule   ^pl/gallery/wojewodztwo-pomorskie  /pl/cms/galeria/wojewodztwo-pomorskie   [R=301,L]
+    RewriteRule   ^pl/gallery/wojewodztwo-warminsko-mazurskie  /pl/cms/galeria/wojewodztwo-warminsko-mazurskie   [R=301,L]
+    RewriteRule   ^pl/gallery/wojewodztwo-kujawsko-pomorskie    /pl/cms/galeria/wojewodztwo-kujawsko-pomorskie   [R=301,L]
+
+
+    RewriteRule   ^pl/gallery/karkonosze  /pl/cms/galeria/karkonosze [R=301,L]
+    RewriteRule   ^pl/gallery/wojewodztwo-lubelskie   /pl/cms/galeria/wojewodztwo-lubelskie   [R=301,L]
+
+    RewriteRule   ^pl/cms/cmsrs/cmsrs  /pl/cms/cmsrs/o-cmsrs [R=301,L]
+
+
+    RewriteRule   ^pl/gallery/turcja  /pl/cms/galeria/turcja [R=301,L]
+    RewriteRule   ^pl/gallery/wlochy-sycylia  /pl/cms/galeria/wlochy-sycylia  [R=301,L]
+    #RewriteRule   ^pl/gallery/turcja/2  /pl/cms/galeria/turcja [R=301,L]
+    #RewriteRule   ^pl/gallery/turcja/3  /pl/cms/galeria/turcja [R=301,L]
+    #RewriteRule   ^pl/gallery/turcja/4  /pl/cms/galeria/turcja [R=301,L]
+    #RewriteRule   ^pl/gallery/turcja/5  /pl/cms/galeria/turcja [R=301,L]
+    #RewriteRule   ^pl/gallery/turcja/6  /pl/cms/galeria/turcja [R=301,L]
+    #RewriteRule   ^pl/gallery/turcja/7  /pl/cms/galeria/turcja [R=301,L]
+
+    RewriteRule   ^pl/gallery/chorwacja  /pl/cms/galeria/chorwacja [R=301,L]
+    RewriteRule   ^pl/gallery/portugalia  /pl/cms/galeria/portugalia [R=301,L]
+
+    RewriteRule   ^pl/gallery/czarnogora   /pl/cms/galeria/czarnogora  [R=301,L]
+    RewriteRule   ^pl/gallery/egipt   /pl/cms/galeria/egipt  [R=301,L]
+
+
+    RewriteRule   ^en/gallery/china  /en/cms/gallery/china [R=301,L]
+    RewriteRule   ^en/gallery/turkey  /en/cms/gallery/turkey [R=301,L]
+    RewriteRule   ^en/gallery/italy-sicilia  /en/cms/gallery/italy-sicilia [R=301,L]
+    RewriteRule   ^en/gallery/podlaskie-voivodeship  /en/cms/gallery/podlaskie-voivodeship   [R=301,L]
+    RewriteRule   ^en/gallery/podkarpackie-voivodeship  /en/cms/gallery/podkarpackie-voivodeship   [R=301,L]
+    RewriteRule   ^en/gallery/warmian-masurian-voivodeship  /en/cms/gallery/warmian-masurian-voivodeship   [R=301,L]
+    RewriteRule   ^en/gallery/karkonosze  /en/cms/gallery/karkonosze   [R=301,L]
+    RewriteRule   ^en/gallery/kuyavian-pomeranian-voivodeship  /en/cms/gallery/kuyavian-pomeranian-voivodeship   [R=301,L]
+
+
+    RewriteRule   ^pl/kontakt  /pl/cms/kontakt/formularz-kontaktowy [R=301,L]
+    RewriteRule   ^en/contact  /en/cms/contact/contact-form [R=301,L]
+
+#--------------------------
+##on my page - stop -------
+#--------------------------
+
+
+
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
