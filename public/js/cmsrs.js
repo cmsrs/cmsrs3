@@ -161,30 +161,46 @@ new Vue({
                 },
                 contact: function( event){
                         let self = this;
-
-                        axios.post('/api/contact/'+self.lang, {
-                                email: this.email,
-                                message: this.message
-                        }).then( function (response){
-                                if( response.data.success ){
-                                        self.messageInfo = response.data.message;
-                                        self.email = '';
-                                        self.emailErr = '';
-                                        self.message = '';
-                                        self.messageErr = '';
-                                }else{
-                                        self.emailErr = response.data.error.email ? (response.data.error.email[0] || ''): '';
-                                        self.messageErr = response.data.error.message ? (response.data.error.message[0] || ''): '';
-                                }
-                        })
-                        .catch(function (error) {
-                                alert('err - contact form');
-                        });                     
-                        
                         if (event) {
-                                event.preventDefault()
+                                event.preventDefault();
                         }
-                        return false;
+
+                        function sendMsg( _self, _token ){
+                                axios.post('/api/contact/'+_self.lang, {
+                                        email: _self.email,
+                                        token: _token,
+                                        message: _self.message
+                                }).then( function (response){
+                                        if( response.data.success ){
+                                                _self.messageInfo = response.data.message;
+                                                _self.email = '';
+                                                _self.emailErr = '';
+                                                _self.message = '';
+                                                _self.messageErr = '';
+                                        }else{
+                                                _self.emailErr = response.data.error.email ? (response.data.error.email[0] || ''): '';
+                                                _self.messageErr = response.data.error.message ? (response.data.error.message[0] || ''): '';
+                                        }
+                                })
+                                .catch(function (error) {
+                                        alert('err - contact form');
+                                });                     
+                        }
+                        
+                        if(typeof rePublic  !== 'undefined'  ){
+                                grecaptcha.ready(function() {
+                                    grecaptcha.execute(rePublic,  {action: 'submit'}  ).then(function(token) {
+                                                sendMsg( self, token );
+                                    });
+                                });
+                        }else{
+                            sendMsg( self, '' );
+                        }
+              
+ 
+
+                       
+                       return false;
                 },
                 clearMessageInfo: function(){
                         this.messageInfo = '';

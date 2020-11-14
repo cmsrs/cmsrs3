@@ -128,6 +128,8 @@ class FrontController extends Controller
       'products' => $products, 
       'lang' => $lang, 
       'langs' => $this->langs,
+      'type' => $pageOut->type, 
+      're_public' => env('GOOGLE_RECAPTCHA_PUBLIC', ''),
       'view' => $view
       //'footerPages' => $footerPages
     ];

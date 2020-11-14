@@ -48,6 +48,8 @@
       <button type="submit" class="btn btn-primary" v-on:click="contact( $event )">{{ __('Submit') }}</button>
     </form>
 
+
+
   @elseif($page->type  === 'shop')
 
       <div class="container">
@@ -153,6 +155,13 @@
   <script src="/js/lib/vue.js"></script>
   <script src="/js/lib/axios.js"></script>
   <script src="/js/cmsrs.js"></script>
+
+  @if( ($type == 'contact') &&  $re_public )
+    <script src="https://www.google.com/recaptcha/api.js?render={{ $re_public }}"></script>
+    <script>
+        var rePublic = '{{ $re_public }}';
+    </script>
+  @endif      
   
 
 @stop
