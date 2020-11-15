@@ -15,8 +15,6 @@ use Illuminate\Http\Request;
 
 
 $demoStatus = env('DEMO_STATUS', false);
-//dump($apiSecret);
-//dd('_________ss_____');
 
 if($demoStatus){
     Route::post('login', 'AuthController@login');
