@@ -44,6 +44,8 @@ if($demoStatus){
         Route::get($apiSecret.'config', 'ConfigController@index');
 
         Route::get($apiSecret.'products', 'ProductController@index');
+
+        Route::get($apiSecret.'contacts', 'ContactController@index');            
     });
 }else{
     #Route::post('register', 'AuthController@register');
@@ -68,6 +70,9 @@ if($demoStatus){
         Route::put($apiSecret.'menus/{id}', 'MenuController@update');
         Route::delete($apiSecret.'menus/{id}', 'MenuController@delete');
         Route::get($apiSecret.'menus/position/{direction}/{id}', 'MenuController@position');
+
+        Route::get($apiSecret.'contacts', 'ContactController@index');    
+        Route::delete($apiSecret.'contacts/{id}', 'ContactController@delete');            
 
         Route::get($apiSecret.'pages', 'PageController@index');
         Route::post($apiSecret.'pages', 'PageController@create');

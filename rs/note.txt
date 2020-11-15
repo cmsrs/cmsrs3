@@ -10,7 +10,7 @@ UWAGA!!!
 todo
 + wiecej jezykow
 + kontakt form 
-- capute w contact form (TODO)
++ capute w contact form (TODO)
 + alt obrazka na froncie - i dodatnie go do skryptu
 + wydajnosc gallerii - duzo wiecej zdjec
 - cache
@@ -49,7 +49,7 @@ kamienie milowe:
 
 
 todo
-- capture w contact form
++ capture w contact form
 - widomosci w panelu adm z formularza contact form
 - cache - wydajnosc strony
 +-(podepnij do googla)    sitemap.xml - zrobione z automatu
@@ -111,3 +111,7 @@ uwagi:
 
 
 
+<!--
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>      
+-->

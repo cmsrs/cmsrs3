@@ -87,4 +87,31 @@ class ContactController extends Controller
     return response()->json(['success'=> true, 'message' => __('Thank you for using the contact form') ]);
   }
 
+
+  public function index()
+  {
+      $contact = Contact::All();
+      //var_dump( $menus  );
+
+      return response()->json(['success' => true, 'data'=> $contact], 200);
+  }
+
+  public function delete(Request $request, $id)
+  {
+      $contact = Contact::find($id);
+
+      if(empty($contact)){
+        return response()->json(['success'=> false, 'error'=> 'Contact not find'], 200);
+      }
+
+      $res = $contact->delete();
+
+      if(empty($res)){
+        return response()->json(['success'=> false, 'error'=> 'Contact delete problem'], 200);
+      }
+
+      return response()->json(['success'=> true], 200);
+  }
+
+
 }
