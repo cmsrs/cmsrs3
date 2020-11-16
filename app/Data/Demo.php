@@ -109,8 +109,9 @@ Class Demo{
             'commented' => 0,
             'after_login' => 0,
             'type' => 'main_page', //!!
-            'content' => [ "en" => "<h1>cmsRS demo version</h1>
-            <div>
+            'content' => [ "en" => "
+            <div class='container pt-5 starter-template  mt-4 mb-4'>
+                <h1>cmsRS demo version</h1>
                 <p class='lead'>The demo version was created for demonstration purposes.<p>
                     <div class='alert alert-danger' role='alert'>Saving, updating, deleting a single record has been disabled.</div>
                     <br><br>
@@ -126,8 +127,9 @@ Class Demo{
                     More information: <a title='cmsRS' href='http://www.cmsrs.pl' >http://www.cmsrs.pl</a>
                 </p>
             </div>
-            ", "pl" => "<h1>cmsRS wersja demo</h1>
-            <div>
+            ", "pl" => "
+            <div class='container pt-5 starter-template  mt-4 mb-4'>
+                <h1>cmsRS wersja demo</h1>
                 <p class='lead'>Wersja demo została stworzona tylko dla celów demonstarcyjnych.<p>
                     <div class='alert alert-danger' role='alert'>Zapisywanie, aktualizacja i kasowanie rekordu zostały zabronione.</div>
                     <br><br>
