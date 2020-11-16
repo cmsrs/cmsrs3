@@ -10,6 +10,7 @@ use App\Comment;
 use App\Product;
 use App\Translate;
 use App\Content;
+use App\Contact;
 use App\Data\Demo;
 
 class LoadDemoDataCommand extends Command
@@ -79,6 +80,12 @@ class LoadDemoDataCommand extends Command
         /*---------------------*/        
 
         $objDemoData->product($p);
+
+        /*---------------------*/
+        /*--- contacts --------*/
+        /*---------------------*/        
+        (new Contact)->wrapCreate(['email' => 'tt@cmsrs.pl', 'message' => 'test contact message1'  ]);
+        (new Contact)->wrapCreate(['email' => 'tt2@cmsrs.pl', 'message' => 'test contact message2'  ]);        
            
         /*---------------------*/
         /* ---users -----------*/

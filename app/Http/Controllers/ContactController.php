@@ -90,7 +90,8 @@ class ContactController extends Controller
 
   public function index()
   {
-      $contact = Contact::All();
+      //$contact = Contact::All();
+      $contact = (new Contact)->getAllData();
       //var_dump( $menus  );
 
       return response()->json(['success' => true, 'data'=> $contact], 200);

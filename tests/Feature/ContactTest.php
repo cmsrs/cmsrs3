@@ -60,9 +60,16 @@ class ContactTest extends Base
         $res = $response->getData();
         $this->assertTrue( $res->success );
         $this->assertEquals(2, count($res->data));   
+
         
         $this->assertEquals($this->content1['email'], $res->data[0]->email);
-        $this->assertEquals($this->content2['email'], $res->data[1]->email);        
+        $this->assertEquals($this->content2['email'], $res->data[1]->email); 
+        
+        $this->assertNotEmpty($res->data[0]->created_at_format);
+        $this->assertNotEmpty($res->data[1]->created_at_format);        
+
+        $this->assertNotEmpty($res->data[0]->id);        
+        $this->assertNotEmpty($res->data[1]->id);
     }
 
     /** @test */
@@ -84,6 +91,17 @@ class ContactTest extends Base
   
         $this->assertEquals(1, Contact::All()->count() );
     }
+
+    /** @test */
+    public function it_will_create_contact_by_wrap_create()
+    {
+        $ret = (new Contact)->wrapCreate($this->content1);
+        $this->assertEquals(1, Contact::All()->count() );
+
+        $d = Contact::All()->first()->toArray();
+        $this->assertEquals($d['email'], $this->content1['email'] );        
+    }
+
 
 
 }
