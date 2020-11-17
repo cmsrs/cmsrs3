@@ -129,11 +129,21 @@ tail -f -n0 storage/logs/*
 ```
 
 
-# LOAD TEST DATA 
+# CLI COMMAND 
+
+* load test (demo) data: 
 
 ```bash
 php artisan command:load-demo-data
 ```
+
+
+* create sitemap: 
+
+```bash
+php artisan command:create-site-map
+```
+
 
 # MANAGMENT
 
