@@ -23,3 +23,4 @@ stats/
 /public/images/mysite/
 /public/sitemap.txt
 /resources/views/includes/mysite.blade.php
+/storage/debugbar/
