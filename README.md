@@ -129,7 +129,7 @@ tail -f -n0 storage/logs/*
 ```
 
 
-# CLI COMMAND 
+# CLI COMMANDS 
 
 * load test (demo) data: 
 
