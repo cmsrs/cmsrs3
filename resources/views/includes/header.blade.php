@@ -13,7 +13,7 @@
 
 <nav class="navbar navbar-expand-md navbar-dark  {{ $bg }} fixed-top lead">
     <a class="navbar-brand" href="{{ url($urlMainPage) }}">
-        <img src="/images/cms/logo_cmsrs.png" alt="{{ config('app.name', 'cmsRS') }}" />        
+        <img id="logo_cmsrs" src="/images/cms/logo_cmsrs.png" alt="{{ config('app.name', 'cmsRS') }}" />        
     </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
