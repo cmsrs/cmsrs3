@@ -9,6 +9,7 @@ use App\Page;
 use App\Product;
 use App\Menu;
 use App\Config;
+use Carbon\Carbon;
 use App;
 
 class FrontController extends Controller
@@ -18,7 +19,17 @@ class FrontController extends Controller
 
   public function __construct()
   {
-    $this->menus = Menu::all()->sortBy('position'); //TODO cached
+    $isCache = env( 'CACHE_ENABLE', false );
+    if($isCache){
+      $menus = cache()->remember( 'menus', Carbon::now()->addYear(1), function(){
+        return Menu::all()->sortBy('position');
+      });
+    }else{
+      $menus = Menu::all()->sortBy('position');
+    }
+    
+
+    $this->menus = $menus;  //Menu::all()->sortBy('position'); //TODO cached
     $this->langs = (new Config)->arrGetLangs();
   }
 
@@ -91,22 +102,20 @@ class FrontController extends Controller
 
     //$footerPages = Page::getFooterPages($lang);        
 
-    $pageOut = null;
+
     $products = null;
-    foreach ($this->menus as $menu) {
-      if(  (1 === count($menu->pagesPublished)) &&  ($pageSlug == $menu->pagesPublished()->first()->getSlugByLang($lang) ) ){
-        $page = $menu->pagesPublished->first();
-        $pageOut = $page;
-        break;
-      }elseif( ($menuSlug == $menu->getSlugByLang($lang))  &&  (1 < count($menu->pagesPublished)) ){
-        foreach ($menu->pagesPublished  as $page){
-          if( $pageSlug == $page->getSlugByLang($lang) ){
-            $pageOut = $page;
-            break;
-          }
-        }
-      }
+    $menus = $this->menus;
+
+    $isCache = env( 'CACHE_ENABLE', false );
+    if($isCache){  
+      $pageOut = cache()->remember( 'page_'.$menuSlug.'_'.$pageSlug.'_'.$lang  , Carbon::now()->addYear(1), function() use($menus, $menuSlug, $pageSlug, $lang) {
+        return Page::getPageBySlug($menus, $menuSlug, $pageSlug, $lang);
+      });
+    }else{
+      $pageOut = Page::getPageBySlug($menus, $menuSlug, $pageSlug, $lang);
     }
+
+
     $this->validatePage($pageOut);
 
     if( 'shop' === $pageOut->type){
@@ -128,7 +137,7 @@ class FrontController extends Controller
       'products' => $products, 
       'lang' => $lang, 
       'langs' => $this->langs,
-      'type' => $pageOut->type, 
+      //'type' => $pageOut->type, 
       're_public' => env('GOOGLE_RECAPTCHA_PUBLIC', ''),
       'view' => $view
       //'footerPages' => $footerPages

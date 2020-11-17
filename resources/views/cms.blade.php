@@ -156,7 +156,7 @@
   <script src="/js/lib/axios.js"></script>
   <script src="/js/cmsrs.js"></script>
 
-  @if( ($type == 'contact') &&  $re_public )
+  @if( ($page->type == 'contact') &&  $re_public )
     <script src="https://www.google.com/recaptcha/api.js?render={{ $re_public }}"></script>
     <script>
         var rePublic = '{{ $re_public }}';

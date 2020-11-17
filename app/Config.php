@@ -58,5 +58,10 @@ class Config extends Model
       $strLangs = Config::getLangsFromEnv();
       return explode(',',$strLangs);
     }
+
+    static public function arrGetLangsEnv()
+    {
+      return explode(',',env('LANGS', '') );
+    }
     
 }

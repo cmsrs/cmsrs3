@@ -6,6 +6,7 @@ namespace App;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 //use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 
 class Menu extends Base
@@ -112,7 +113,16 @@ class Menu extends Base
 
     public function getAllTranslate()
     {
-        return  $this->translates()->where('menu_id', $this->id )->get(['lang', 'column', 'value'])->toArray();
+        $menuId = $this->id;
+        $isCache = env( 'CACHE_ENABLE', false );
+        if($isCache){        
+          $ret = cache()->remember( 'menutranslatemenuid_'.$menuId  , Carbon::now()->addYear(1), function() use($menuId) {
+            return  $this->translates()->where('menu_id', $menuId )->get(['lang', 'column', 'value'])->toArray();
+          });
+        }else{
+          $ret = $this->translates()->where('menu_id', $menuId )->get(['lang', 'column', 'value'])->toArray();
+        }
+        return $ret;
     }
 
 
@@ -157,7 +167,7 @@ class Menu extends Base
       if (Auth::check()) {
         $pages = $this->pages()->where( 'published', '=', 1 )->orderBy('position', 'asc');
       }else{
-        $pages = $this->pages()->where( 'published', '=', 1 )->where( 'after_login', '=', 0 )->orderBy('position', 'asc');
+        $pages =  $this->pages()->where( 'published', '=', 1 )->where( 'after_login', '=', 0 )->orderBy('position', 'asc');
       }
 
       return $pages;

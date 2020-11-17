@@ -113,6 +113,11 @@ GOOGLE_RECAPTCHA_PRIV
 GOOGLE_RECAPTCHA_PUBLIC
 ```
  
+* (optionally) enable database cache: 
+
+```bash
+CACHE_ENABLE=true
+```
 
 
 # TROUBLESHOOTING

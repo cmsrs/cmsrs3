@@ -3,6 +3,7 @@
 namespace App;
 
 //use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 
 class Image extends Base
@@ -62,7 +63,17 @@ class Image extends Base
 
     public function getAllTranslate()
     {
-        return  $this->translates()->where('image_id', $this->id )->get(['lang', 'column', 'value'])->toArray();
+      $imageId = $this->id;
+      $isCache = env( 'CACHE_ENABLE', false );
+      if($isCache){
+        $ret = cache()->remember( 'imagetranslate_'.$imageId  , Carbon::now()->addYear(1), function() use($imageId) {
+          return $this->translates()->where('image_id', $imageId )->get(['lang', 'column', 'value'])->toArray();
+        });
+      }else{
+        $ret = $this->translates()->where('image_id', $imageId )->get(['lang', 'column', 'value'])->toArray();
+      }
+
+      return $ret;
     }    
 
     /**
@@ -82,7 +93,7 @@ class Image extends Base
 
     public function translates()
     {
-      return $this->hasMany('App\Translate');
+        return $this->hasMany('App\Translate');
     }
 
     public function delete()

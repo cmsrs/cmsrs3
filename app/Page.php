@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class Page extends Base
 {
@@ -62,7 +63,9 @@ class Page extends Base
         //$this->
         //dd('______cojest__');
         $this->translate = new Translate;  
-        $this->content = new Content;          
+        $this->content = new Content;       
+        // $tt = $this->getArrLangs();
+        // dd($tt);
         $this->langs = $this->getArrLangs();
     }
 
@@ -112,7 +115,25 @@ class Page extends Base
     public function images()
     {
       return $this->hasMany('App\Image')->orderBy('position');
-    }    
+    }   
+
+    static public function getPageBySlug($menus, $menuSlug, $pageSlug, $lang)    
+    {
+      $pageOut = null;    
+      foreach ($menus as $menu) {
+        if($menuSlug == $menu->getSlugByLang($lang)){
+          foreach ($menu->pagesPublished  as $page){
+            if( $pageSlug == $page->getSlugByLang($lang) ){
+              $pageOut = $page;
+              break;
+            }
+          }
+        }
+      }
+      return $pageOut;
+    }
+  
+
 
     public function getSlugByLang($lang)
     {
@@ -129,13 +150,28 @@ class Page extends Base
 
     public function getAllTranslate()
     {
-      $translates = $this->translates()->where('page_id', $this->id )->get(['lang', 'column', 'value'])->toArray();
-      $contents = $this->contents()->where('page_id', $this->id )->get(['lang', 'column', 'value'])->toArray();
+      $pageId =$this->id;
 
-      $ret = array_merge($translates, $contents);
+      $isCache = env( 'CACHE_ENABLE', false );
+      if($isCache){
+        $ret = cache()->remember( 'pagetranslatepageid_'.$pageId  , Carbon::now()->addYear(1), function() use($pageId) {
+          return $this->getTranslateMerge( $pageId );
+        });  
+      }else{
+        $ret = $this->getTranslateMerge( $pageId );
+      }
 
       return $ret;
-    }    
+    }  
+    
+    public function getTranslateMerge( $pageId )
+    {
+      $translates = $this->translates()->where('page_id', $pageId )->get(['lang', 'column', 'value'])->toArray();
+      $contents = $this->contents()->where('page_id', $pageId )->get(['lang', 'column', 'value'])->toArray();
+      $ret = array_merge($translates, $contents);
+      return $ret;
+    }
+
 
     public function setTitleAttribute($value)
     {
@@ -253,7 +289,8 @@ class Page extends Base
     private function getTypeUrl($lang)
     {
       $url = "/".$this->type;
-      if(1 < count($this->langs)){
+      $langs = Config::arrGetLangsEnv();
+      if(1 < count($langs)){
         $url = "/".$lang.$url;
       }
 
@@ -262,9 +299,21 @@ class Page extends Base
     
     private function getCmsUrl($lang)
     {   
-      $menuSlug = $this->menu()->get()->first()->getSlugByLang($lang);
+      $pageId = $this->id;
+      $isCache = env( 'CACHE_ENABLE', false );
+      if($isCache){
+        $menuSlug = cache()->remember( 'menusluglang_'.$lang.'_'.$pageId  , Carbon::now()->addYear(1), function() use($lang) {
+          return $this->menu()->get()->first()->getSlugByLang($lang);
+        });
+      }else{
+        $menuSlug = $this->menu()->get()->first()->getSlugByLang($lang);
+      }
       $url = "/".Page::PREFIX_CMS_URL."/".$menuSlug."/".$this->getSlugByLang($lang);
-      if(1 < count($this->langs)){
+
+      //var_dump( count($this->langs)); exit;
+      $langs = Config::arrGetLangsEnv();
+      if(1 < count($langs)){        
+      //if(1 < count($this->langs)){ //problem with cached
         $url = "/".$lang.$url;
       }
 
@@ -273,7 +322,7 @@ class Page extends Base
 
     private function getMainUrl($lang)
     {
-      $langs = $this->langs;
+      $langs = Config::arrGetLangsEnv();
       array_shift($langs); //after this langs will be changed. It has rest of langs without first one.
 
       if( empty($langs) ){
@@ -287,7 +336,8 @@ class Page extends Base
     private function getIndependentUrl($lang)
     {
       $url = "/".Page::PREFIX_IN_URL."/".$this->getSlugByLang($lang);
-      if(1 < count($this->langs)){
+      $langs = Config::arrGetLangsEnv();
+      if(1 < count($langs)){
         $url = "/".$lang.$url;
       }
 
@@ -314,7 +364,14 @@ class Page extends Base
     
     static public function getFirstPageByType($type)
     {
-      $ret =  Page::where('type', '=', $type)->where( 'published', '=', 1 )->get()->first();
+      $isCache = env( 'CACHE_ENABLE', false );
+      if($isCache){
+        $ret = cache()->remember( 'pagebytype_'.$type  , Carbon::now()->addYear(1), function() use($type) {
+          return  Page::where('type', '=', $type)->where( 'published', '=', 1 )->get()->first();        
+        });
+      }else{
+        $ret = Page::where('type', '=', $type)->where( 'published', '=', 1 )->get()->first();        
+      }
 
       return $ret;
     }

@@ -68,6 +68,10 @@ class ConfigTest extends Base
         $this->assertEquals( 'en',  ($res->data->langs[0]) );                
         //$this->assertEquals( 'pl',  ($res->data->langs[1]) );                                
 
+        /***************/
+        /*******cache **/
+        /***************/        
+        $this->assertEquals( false, $res->data->cache_enable );
 
     }
 
