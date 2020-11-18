@@ -79,7 +79,7 @@
     RewriteRule   ^pl/gallery/karkonosze  /pl/cms/galeria/karkonosze [R=301,L]
     RewriteRule   ^pl/gallery/wojewodztwo-lubelskie   /pl/cms/galeria/wojewodztwo-lubelskie   [R=301,L]
 
-    RewriteRule   ^pl/cms/cmsrs/cmsrs  /pl/cms/cmsrs/o-cmsrs [R=301,L]
+    RewriteRule   ^pl/cms/cmsrs/cmsrs$  /pl/cms/cmsrs/o-cmsrs [R=301,L]
 
 
     RewriteRule   ^pl/gallery/turcja  /pl/cms/galeria/turcja [R=301,L]
