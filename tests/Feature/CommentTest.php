@@ -50,29 +50,63 @@ class CommentTest extends Base
 
         $this->testPage =
         [
-            'title' => 'programmer',
-            'short_title' => 'page1',
+            'title' =>  ['en' => 'programmer'],
+            'short_title' =>  ['en' =>'page1' ],
             'published' => 1,
+            'commented' => 1,
             'position' => 7,
             'type' => $type,
-            'content' => 'content test133445',
+            'content' => ['en' =>'content test133445' ],
             'menu_id' => $this->menuId
         ];
 
-        $page = new Page($this->testPage);
-
-        $page->save();
+        //$page = new Page($this->testPage);
+        //$page->save();
+        $objPage = (new Page)->wrapCreate($this->testPage);        
 
         $res = $this->get('api/pages/type/' . $type . '?token=' . $this->token);
 
         $data = $res->getData();
+        //dd($data);
         $this->pageId = $data->data[0]->id;
+
+        $this->assertEquals($this->pageId, $objPage->id);
         $this->assertNotEmpty($this->pageId);
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
+    }
+
+    /** @test */
+    public function it_will_deny_create_comment_fake_page()
+    {
+
+        $content = array(
+            'content' => 'test comment - test123 - fake page'
+        );
+
+        $response = $this->post('api/comments/' . 134, $content);
+        $response->assertStatus(404);
+    }
+
+    /** @test */
+    public function it_will_deny_create_comment_page_not_commented()
+    {
+
+        $content = array(
+            'content' => 'test comment - test123 - deny'
+        );
+
+        $this->testPage['commented'] = 0;
+        $objPage = (new Page)->wrapCreate($this->testPage);
+        $this->assertNotEmpty($objPage->id);
+
+
+        $response = $this->post('api/comments/' . $objPage->id, $content);
+        //dd($response);
+        $response->assertStatus(404);
     }
 
 

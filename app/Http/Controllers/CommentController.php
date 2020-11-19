@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Comment;
+use App\Page;
 use Validator;
 use Illuminate\Support\Facades\Log;
 
@@ -22,6 +23,15 @@ class CommentController extends Controller
     $data = $request->only(
         'content'
     );
+
+    $p = Page::find($pageId);
+    if(empty($p)){
+      abort(404);
+    }
+    if(empty($p->commented)){
+      abort(404);      
+    }
+
     $data['page_id'] = $pageId;
 
     $validator = Validator::make($data, $this->validationRules);
