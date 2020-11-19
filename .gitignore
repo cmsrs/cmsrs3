@@ -19,6 +19,7 @@ awstats/
 logs/
 stats/
 /public/admin_*
+/public/admin-*
 /public/projects
 /public/images/mysite/
 /public/sitemap.txt
