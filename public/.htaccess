@@ -9,8 +9,8 @@
 ##on my page - start -- to remove! -------
 #--------------------------
 
-    RewriteCond %{HTTP_HOST} !^www. [NC]
-    RewriteRule ^(.*)$ http://www.cmsrs.pl/$1 [L,R=301]
+    #RewriteCond %{HTTP_HOST} !^www. [NC]
+    #RewriteRule ^(.*)$ http://www.cmsrs.pl/$1 [L,R=301]
 
     RewriteRule   ^pl/projekty/checkers  /pl/cms/projekty/warcaby [R=301,L]
     RewriteRule   ^pl/gallery/chiny  /pl/cms/galeria/chiny [R=301,L]
@@ -79,7 +79,7 @@
     RewriteRule   ^pl/gallery/karkonosze  /pl/cms/galeria/karkonosze [R=301,L]
     RewriteRule   ^pl/gallery/wojewodztwo-lubelskie   /pl/cms/galeria/wojewodztwo-lubelskie   [R=301,L]
 
-    RewriteRule   ^pl/cms/cmsrs/cmsrs  /pl/cms/cmsrs/o-cmsrs [R=301,L]
+    RewriteRule   ^pl/cms/cmsrs/cmsrs$  /pl/cms/cmsrs/o-cmsrs [R=301,L]
 
 
     RewriteRule   ^pl/gallery/turcja  /pl/cms/galeria/turcja [R=301,L]
