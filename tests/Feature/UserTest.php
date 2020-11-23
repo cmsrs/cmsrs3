@@ -54,10 +54,11 @@ class UserTest extends Base
     }
 
     /** @test */
-    public function it_will_get_all_user_clients()
+    public function it_will_get_all_user_clients_docs()
     {
         $response = $this->get('api/users/clients?token='.$this->token );
         $res = $response->getData();
+        //print_r($res);
 
         $this->assertTrue( $res->success );
         $this->assertEquals( count($res->data), 1);

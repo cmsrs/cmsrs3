@@ -105,16 +105,21 @@ class AuthenticationTest extends TestCase
     }
 
     /** @test */
-    public function it_will_log_a_user_in()
+    public function it_will_log_a_user_in_docs()
     {
-
-
-        $response = $this->post('api/login', [
+        $d  = [
             'email'    => 'test@email.com',
             'password' => 'cmsrs'
-        ])->getData();
+        ];
 
-        //dd($response);
+        //print_r($d);
+
+        $response = $this->post('api/login', $d ); //->getData();
+
+        //dd ($response->getContent());
+        $response = $response->getData();
+        //print_r ($response);
+        //echo "<pre>"; print_r($response);  echo "</pre>";
 
         $this->assertStringStartsWith(  'eyJ0eXA',   $response->data->token );
         $this->assertTrue( $response->success  );
@@ -124,6 +129,9 @@ class AuthenticationTest extends TestCase
 
         //$this->assertNotEmpty( $privilege->getData()->testrs );
         $logout =   $this->logout_action( $response->data->token  );
+
+        //print_r($logout->getData());
+
         $this->assertTrue( $logout->getData()->success );
         $privilegeAfterLogout =    $this->privilege_action( $response->data->token );
         //var_dump($privilegeAfterLogout);

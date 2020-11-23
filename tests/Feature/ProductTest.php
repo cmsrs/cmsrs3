@@ -145,9 +145,11 @@ class ProductTest extends Base
 
         $this->assertNotEmpty($res0->data->productId);
 
+        //print_r($this->testData);
         $response = $this->post('api/products?token=' . $this->token, $this->testData);
 
         $res = $response->getData();
+        //print_r($res);
 
         $this->assertFalse($res->success);
         $this->assertNotEmpty($res->error);
@@ -157,15 +159,18 @@ class ProductTest extends Base
     }
 
     /** @test */
-    public function it_will_read_product()
+    public function it_will_read_product_docs()
     {
         $this->setTestData();
         //dd($this->pageId);
         //dd($this->testData);
 
+        //print_r($this->testData);
         $res0 = $this->post('api/products?token=' . $this->token, $this->testData);
         //dd('______________');
         $res = $res0->getData();
+        //print_r($res);
+
         $this->assertTrue($res->success);
 
         //dump($res0);   die('88888888888888888');
@@ -174,6 +179,7 @@ class ProductTest extends Base
         //var_dump($response22); die('===');
 
         $res22 = $response22->getData();
+        //print_r($res22);
 
         //dump($res22->data);
         //dump($res->data->productId);
@@ -212,7 +218,7 @@ class ProductTest extends Base
     }
 
     /** @test */
-    public function it_will_update_product()
+    public function it_will_update_product_docs()
     {
         $this->setTestData();
 
@@ -248,9 +254,12 @@ class ProductTest extends Base
 
         //var_dump($this->testData); die('++');
 
+        //print_r($this->testData);
         $response33 = $this->put('api/products/'.$productId.'?token='.$this->token, $this->testData);
         //var_dump($response33); die('===========');
         $res33 = $response33->getData();
+        //print_r($res33);
+
         $this->assertTrue( $res33->success );
 
         $response222 = $this->get('api/products?token='.$this->token );
@@ -272,7 +281,7 @@ class ProductTest extends Base
     }
 
     /** @test */
-    public function it_will_delete_product()
+    public function it_will_delete_product_docs()
     {
         $this->setTestData();
 
@@ -298,6 +307,8 @@ class ProductTest extends Base
         $response33 = $this->delete('api/products/'.$productId.'?token='.$this->token);    
         //dd($response33);
         $res33 = $response33->getData();
+        //print_r($res33);
+
         $this->assertTrue( $res33->success );
 
         $translateAfter = Translate::query()->whereNotNull('image_id')->where('column', 'alt' )->get()->toArray();      

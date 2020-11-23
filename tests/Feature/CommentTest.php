@@ -111,21 +111,24 @@ class CommentTest extends Base
 
 
     /** @test */
-    public function it_will_create_comment()
+    public function it_will_create_comment_docs()
     {
 
         $content = array(
             'content' => 'test comment - test123'
         );
 
+        //print_r($content);
+
         $response = $this->post('api/comments/' . $this->pageId, $content);
 
         $res = $response->getData();
+        //print_r($res);        
         $this->assertTrue($res->success);
     }
 
     /** @test */
-    public function it_will_get_comment()
+    public function it_will_get_comment_docs()
     {
 
         $content1 = array(
@@ -150,6 +153,7 @@ class CommentTest extends Base
 
 
         $res = $response->getData();
+        //print_r($res);
 
         $this->assertTrue($res->success);
         $this->assertTrue(is_array($res->data));
