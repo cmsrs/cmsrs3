@@ -49,19 +49,29 @@ class ImageTest extends Base
 
         $this->testImgData =
         [
-            'title' => ['en' => 'img Title'],
-            'short_title' => ['en' => 'short img Title'],
+            'title'     =>  [ 'en' =>  'test p2'],
+            'short_title' =>  [ 'en' =>  'p22'],
+            'description' =>  [ 'en' =>  'test1234'],
+            'published' => 0,
+            'commented' => 0,
+            'after_login' => 0,
+            'type' => 'contact',
+            'content' =>   [ 'en' =>  'lorem ipsum'],
+            'menu_id' => null,
+            'page_id' => null,            
             'images' => [
               ['name' => $this->name1, 'data' => $file1, 'alt' => ['en' => self::STR_DESC_IMG1] ],
               ['name' => $this->name2, 'data' => $file2 ] //, 'alt' => ['en' => 'description img2' ]]
             ]
         ];
 
+
+        //print_r($this->testImgData);
         $response = $this->post('api/pages?token='.$this->token, $this->testImgData);
         //dd($response);
 
         $res = $response->getData();
-
+        //print_r($res);
 
         $this->assertTrue( $res->success );
 
@@ -116,7 +126,7 @@ class ImageTest extends Base
     }
 
     /** @test */
-    public function it_will_get_page_with_images()
+    public function it_will_get_page_with_images_docs()
     {      
       $response0 = $this->get('api/page/'.$this->pageId.'/fr');  //this method doesnt cointain ticket - ti is avaliable as guest
 
@@ -126,6 +136,9 @@ class ImageTest extends Base
 
       $res3 = $response3->getData();
       $this->assertTrue( $res3->success );
+
+      //print_r($res3);
+
       $this->assertEquals($this->pageId, $res3->data->id);
       $this->assertNotEmpty($res3->data->type);
 
@@ -174,7 +187,7 @@ class ImageTest extends Base
     }
 
     /** @test */
-    public function it_will_get_pages_with_images()
+    public function it_will_get_pages_with_images_docs()
     {
       //  /'.$this->pageId.'
 
@@ -183,6 +196,7 @@ class ImageTest extends Base
 
       //var_dump($response2); die('-------------');
       $res2 = $response2->getData();
+      //print_r( $res2 );
       $this->assertTrue( $res2->success );
 
       //dd($res2->data);
@@ -248,7 +262,7 @@ class ImageTest extends Base
 
 
     /** @test */
-    public function it_will_delete_page_with_images()
+    public function it_will_delete_page_with_images_docs()
     {
 
       $responseAllBefore = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token );
@@ -284,6 +298,8 @@ class ImageTest extends Base
 
       $response0 = $this->delete('api/pages/'.$this->pageId.'?token='.$this->token);
       $res0 = $response0->getData();
+      //print_r($res0);
+
       $this->assertTrue( $res0->success );
 
       $this->assertEquals(0, $objPage->images()->get()->count());
@@ -314,7 +330,7 @@ class ImageTest extends Base
 
 
     /** @test */
-    public function it_will_delete_image()
+    public function it_will_delete_image_docs()
     {
       //delete first image
       $response2 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
@@ -339,6 +355,7 @@ class ImageTest extends Base
       $this->assertEquals(self::STR_DESC_IMG1, $translateBefore[0]['value']);
 
       $responseDel = $this->delete('api/images/'.$imgToDel->id.'?token='.$this->token);
+      //print_r($responseDel->getData());
 
       $translateAfter = Translate::query()->where('image_id', $imgToDel->id )->where('column', 'alt' )->get()->toArray();   
       $this->assertEmpty($translateAfter);
@@ -362,12 +379,13 @@ class ImageTest extends Base
 
 
     /** @test */
-    public function it_will_get_images_by_page_id()
+    public function it_will_get_images_by_page_id_docs()
     {
       $response2 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
-      //var_dump($response2); die('-------------');
+
 
       $res2 = $response2->getData();
+      //print_r($res2);      
       $this->assertTrue( $res2->success );
       $this->assertEquals( count($res2->data), 2);
       //$this->assertEquals( $res2->data[0]->alt, $this->testImgData['images'][0]['alt'] );
@@ -423,7 +441,7 @@ class ImageTest extends Base
     }
 
     /** @test */
-    public function it_will_update_page_with_images()
+    public function it_will_update_page_with_images_docs()
     {
       $this->assertEquals(count( (array)$this->pageData->images), 2);
       $this->assertEquals($this->pageData->title->en, $this->testImgData['title']['en']);
@@ -484,6 +502,10 @@ class ImageTest extends Base
 
 
       $res = $response->getData();    
+
+      //print_r($testImgData);
+      //print_r($res);
+
       $this->assertTrue( $res->success );
 
       $response2 = $this->get('api/pages?token='.$this->token);
@@ -513,7 +535,7 @@ class ImageTest extends Base
     }
 
     /** @test */
-    public function it_will_get_change_position_images()
+    public function it_will_get_change_position_images_docs()
     {
       $response2 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
       $res2 = $response2->getData();
@@ -521,6 +543,7 @@ class ImageTest extends Base
 
 
       $resSwap = $this->get('api/images/position/up/'.$res2->data[0]->id.'?token='.$this->token);
+      //print_r($resSwap->getData());
 
       $response2Swap = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
       $res2Swap = $response2Swap->getData();

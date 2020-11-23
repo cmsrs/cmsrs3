@@ -19,16 +19,20 @@ class ContactGuestTest  extends TestCase
     }
 
     /** @test */
-    public function it_will_create_contact()
+    public function it_will_create_contact_docs()
     {
 
         $content = array(
             'email' => 'test@example.com',
             'message' => 'test message - test123'
         );
+        //print_r($content);
 
         $response = $this->post('api/contact/pl', $content);
         $res = $response->getData();
+
+        //print_r($res);
+
         $this->assertTrue($res->success);
         $msgPl = $res->message;
         $this->assertNotEmpty($msgPl);

@@ -123,7 +123,7 @@ class MenuTest extends Base
 
 
     /** @test */
-    public function it_will_change_position_menus()
+    public function it_will_change_position_menus_docs()
     {
       $this->setTestData();
 
@@ -162,6 +162,7 @@ class MenuTest extends Base
 
       $res = $this->get('api/menus/position/up/'.$res->data[2]->id.'?token='.$this->token );
       $res22a = $res->getData();
+      //print_r($res22a);
       $this->assertTrue( $res22a->success );
 
 
@@ -219,7 +220,7 @@ class MenuTest extends Base
     }
 
     /** @test */
-    public function it_will_add_menus()
+    public function it_will_add_menus_docs()
     {
       $this->setTestData();
       $testData2 =
@@ -228,11 +229,13 @@ class MenuTest extends Base
            //'position' => 3
       ];
 
+      //print_r($testData2);
       $response = $this->post('api/menus?token='.$this->token, $testData2);
 
       //var_dump($response); die('----');
 
       $res = $response->getData();
+      //print_r($res);
       $this->assertTrue( $res->success );
 
 
@@ -240,6 +243,7 @@ class MenuTest extends Base
       $response2 = $this->get('api/menus?token='.$this->token );
 
       $res2 = $response2->getData();
+      //print_r($res2);
 
       $this->assertTrue( $res2->success );
       $this->assertEquals( count($res2->data), 2);
@@ -303,7 +307,7 @@ class MenuTest extends Base
     }
 
     /** @test */
-    public function it_will_update_menu()
+    public function it_will_update_menu_docs()
     {
       $this->setTestData();
       //dd('00000000000');
@@ -327,10 +331,12 @@ class MenuTest extends Base
             'name' =>  ['en' => 'test menu3  żółta żółć'],
             //'position' => $resAll->data[0]->position //? - is it pass postition by edit menu ?? TODO
       ];
+      //print_r($testData3);
 
       //dd('++++++++++++11+++');
       $response0 = $this->put('api/menus/'.$id.'?token='.$this->token, $testData3);
       //dd($response0);
+      //print_r($response0->getData());
       $this->assertTrue( $response0->getData()->success ); 
       //$response0 = $this->put('api/menus/1?token='.$this->token, $testData3);
 
@@ -380,7 +386,7 @@ class MenuTest extends Base
     }
 
     /** @test */
-    public function it_will_delete_menu()
+    public function it_will_delete_menu_docs()
     {
       $this->setTestData();
       $responseAll = $this->get('api/menus?token='.$this->token );
@@ -391,6 +397,7 @@ class MenuTest extends Base
 
       $response0 = $this->delete('api/menus/'.$id.'?token='.$this->token);
       $res0 = $response0->getData();
+      //print_r($res0);
       $this->assertTrue( $res0->success );
 
       $responseAllAfter = $this->get('api/menus?token='.$this->token );

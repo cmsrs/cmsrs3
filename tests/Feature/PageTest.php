@@ -79,7 +79,7 @@ class PageTest extends Base
     }  
 
     /** @test */
-    public function it_will_wron_add_page()
+    public function it_will_wrong_add_page()
     {
       $testData2 =
       [
@@ -99,7 +99,7 @@ class PageTest extends Base
     }
 
     /** @test */
-    public function it_will_wron_update_page()
+    public function it_will_wrong_update_page()
     {
       $this->setTestData();
       $testData2 =
@@ -589,7 +589,7 @@ class PageTest extends Base
            'published' => 0,
            //'position' => 3,
            'type' => 'cms',
-           'content' => [ 'en' => 'sdafsfsdaf asdfasdf'],
+           'content' => [ 'en' => 'lerem ipsum ..'],
            'menu_id' =>  $this->menuId
       ];
 
@@ -649,7 +649,7 @@ class PageTest extends Base
 
 
     /** @test */
-    public function it_will_add_pages_to_check_possition()
+    public function it_will_add_pages_to_check_possition_docs()
     {
       $this->setTestData();
       $testData2 =
@@ -746,6 +746,7 @@ class PageTest extends Base
 
 
       $res22a = $res1a->getData();
+      //print_r($res22a);
       $this->assertTrue( $res22a->success );
 
       $res22firstData = Page::all();
@@ -886,7 +887,7 @@ class PageTest extends Base
     }
 
     /** @test */
-    public function it_will_get_pages_by_type()
+    public function it_will_get_pages_by_type_docs()
     {
 
         $testData2 =
@@ -910,7 +911,7 @@ class PageTest extends Base
         $res = $this->get('api/pages/type/'.$type.'?token=' . $this->token);
 
         $data =  $res->getData();
-
+        //print_r($data);
         $this->assertTrue($data->success);
         //dd(count($data->data));
         //dd($data->data[0]->type);
@@ -921,6 +922,7 @@ class PageTest extends Base
         $typeErr = 'sasdasd';
         $res = $this->get('api/pages/type/'.$typeErr.'?token=' . $this->token);
         $data =  $res->getData();
+        //print_r($data);
         $this->assertTrue($data->success);
         $this->assertEmpty(count($data->data));
         //dd($data);

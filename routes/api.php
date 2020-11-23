@@ -63,6 +63,7 @@ if($demoStatus){
         }
         
         Route::get($apiSecret.'logout', 'AuthController@logout');
+        
         Route::get($apiSecret.'menus', 'MenuController@index');
         Route::post($apiSecret.'menus', 'MenuController@create');
         Route::put($apiSecret.'menus/{id}', 'MenuController@update');
