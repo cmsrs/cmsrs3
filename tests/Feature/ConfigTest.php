@@ -22,12 +22,13 @@ class ConfigTest extends Base
     }
 
     /** @test */
-    public function it_will_get_config()
+    public function it_will_get_config_docs()
     {
         $response = $this->get('api/config?token='.$this->token );
         //dd($response);        
 
         $res = $response->getData();
+        //print_r($res);
 
         $this->assertTrue($res->success);
 

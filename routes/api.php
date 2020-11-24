@@ -63,15 +63,6 @@ if($demoStatus){
         }
         
         Route::get($apiSecret.'logout', 'AuthController@logout');
-        
-        Route::get($apiSecret.'menus', 'MenuController@index');
-        Route::post($apiSecret.'menus', 'MenuController@create');
-        Route::put($apiSecret.'menus/{id}', 'MenuController@update');
-        Route::delete($apiSecret.'menus/{id}', 'MenuController@delete');
-        Route::get($apiSecret.'menus/position/{direction}/{id}', 'MenuController@position');
-
-        Route::get($apiSecret.'contacts', 'ContactController@index');    
-        Route::delete($apiSecret.'contacts/{id}', 'ContactController@delete');            
 
         Route::get($apiSecret.'pages', 'PageController@index');
         Route::post($apiSecret.'pages', 'PageController@create');
@@ -85,13 +76,21 @@ if($demoStatus){
         Route::get($apiSecret.'images/position/{direction}/{id}', 'ImageController@position'); //only for type page is working
 
         Route::get($apiSecret.'users/clients', 'UserController@getClients');
-
-        Route::get($apiSecret.'config', 'ConfigController@index');
+        
+        Route::get($apiSecret.'menus', 'MenuController@index');
+        Route::post($apiSecret.'menus', 'MenuController@create');
+        Route::put($apiSecret.'menus/{id}', 'MenuController@update');
+        Route::delete($apiSecret.'menus/{id}', 'MenuController@delete');
+        Route::get($apiSecret.'menus/position/{direction}/{id}', 'MenuController@position');
 
         Route::get($apiSecret.'products', 'ProductController@index');
         Route::post($apiSecret.'products', 'ProductController@create');
         Route::put($apiSecret.'products/{id}', 'ProductController@update');
         Route::delete($apiSecret.'products/{id}', 'ProductController@delete');
 
+        Route::get($apiSecret.'contacts', 'ContactController@index');    
+        Route::delete($apiSecret.'contacts/{id}', 'ContactController@delete');            
+
+        Route::get($apiSecret.'config', 'ConfigController@index');
     });
 }

@@ -52,12 +52,13 @@ class ContactTest extends Base
     }
 
     /** @test */
-    public function it_will_get_contact_data()
+    public function it_will_get_contact_data_docs()
     {
         $this->setTestData();
         
         $response = $this->get('api/contacts?token='.$this->token );
         $res = $response->getData();
+        //print_r($res);
         $this->assertTrue( $res->success );
         $this->assertEquals(2, count($res->data));   
 
@@ -73,7 +74,7 @@ class ContactTest extends Base
     }
 
     /** @test */
-    public function it_will_delete_contact_data()
+    public function it_will_delete_contact_data_docs()
     {
         $this->setTestData();
         
@@ -87,6 +88,8 @@ class ContactTest extends Base
 
         $response0 = $this->delete('api/contacts/'.$id.'?token='.$this->token);
         $res0 = $response0->getData();
+        //print_r($res0);
+
         $this->assertTrue( $res0->success );
   
         $this->assertEquals(1, Contact::All()->count() );
