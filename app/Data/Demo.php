@@ -98,6 +98,7 @@ Class Demo{
 
         $p = [];
         $appUrl = env('APP_URL');
+        $admUrl = ( strpos($appUrl, 'demo.cmsrs.pl') !== false ) ? $appUrl.'/admin-demo' : $appUrl.'/admin/';
 
 
         $mainPage =
@@ -116,7 +117,7 @@ Class Demo{
                     <div class='alert alert-danger' role='alert'>Saving, updating, deleting a single record has been disabled.</div>
                     <br><br>
                     <p class='lead'>
-                    Login to the admin panel: <a href=\"$appUrl/admin-demo\">$appUrl/admin-demo</a>
+                    Login to the admin panel: <a href=\"$admUrl\">$admUrl</a>
                     <br>
                     <br>
                     user: adm@cmsrs.pl
@@ -134,7 +135,7 @@ Class Demo{
                     <div class='alert alert-danger' role='alert'>Zapisywanie, aktualizacja i kasowanie rekordu zostały zabronione.</div>
                     <br><br>
                     <p class='lead'>
-                    Login do panelu administracyjnego: <a href=\"$appUrl/admin-demo\">$appUrl/admin-demo</a>
+                    Login do panelu administracyjnego: <a href=\"$admUrl\">$admUrl</a>
                     <br>
                     <br>
                     użytkownik: adm@cmsrs.pl
