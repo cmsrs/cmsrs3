@@ -147,7 +147,7 @@ php artisan command:create-site-map
 
 # MANAGMENT
 
-* go to the website http://127.0.0.1:8000/admin/:
+* go to the website http://127.0.0.1:8000/admin/
 
     log in as:
 
