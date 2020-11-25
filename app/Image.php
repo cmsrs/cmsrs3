@@ -106,7 +106,9 @@ class Image extends Base
     {
       $allImg = self::getAllImage($this);
       foreach ($allImg as $key => $path) {
-        unlink($path);
+        if( file_exists($path) ){
+            unlink($path);
+        }
       }
     }
 
