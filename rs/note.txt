@@ -13,7 +13,7 @@ todo
 + capute w contact form (TODO)
 + alt obrazka na froncie - i dodatnie go do skryptu
 + wydajnosc gallerii - duzo wiecej zdjec
-- cache
++ cache
 + strony dostepne tylko po zalogowaniu
 
 
@@ -33,7 +33,7 @@ na dalszy plan:
 bledy:
 - w admin/pages - dodaje obrazek a pozniej przechodze na inna strone to obrazek zostaje
 - problem z kolejnoscia obrazkow dla produktu w panelu
-- galeria po zalogowaniu nie dziala - patrz moja strona
++ galeria po zalogowaniu nie dziala - patrz moja strona
 
 
 
@@ -51,7 +51,7 @@ kamienie milowe:
 todo
 + capture w contact form
 + widomosci w panelu adm z formularza contact form
-- cache - wydajnosc strony
++-(mozna poprawic - nie wszystkie zapytania sie cachuja)   cache - wydajnosc strony
 +-(podepnij do googla)    sitemap.xml - zrobione z automatu
 - cross w laravelu (po stronie servera) - bezpieczenstow
 + podepnij google analytics
@@ -64,7 +64,7 @@ todo
 + inny url do admina - bezpieczenstow
 + pokazanie w panelu strony, ktore sa odpublikowane (na jakis wyszazony kolor)
 (?)  - select w parent page powinien pokazywac short_title a nie title (to jest nietrafiony pomysl bo w projektach nie widomo co wybrac - jest 2x opis np)
-- edycja i dodawanie - malo intuicyjne - do przemyslenia (przy kasowaniu obrazkow przechodzi na strone glowna)
+- edycja i dodawanie - malo intuicyjne w panelu administracyjnym - do przemyslenia (przy kasowaniu obrazkow przechodzi na strone glowna)
 + dla page.type == project (or privacy - moze niemkoniecznie) - tylko jeden jezyk
 
 
@@ -75,20 +75,22 @@ bledy (o niskiej waznosci):
 - tranzakcje db - jesli nie uda sie dodac strony to nalezy usunac takze tlumaczenia powiazane z ta strona
 - obsluzyc przypadek unikatowych tytulow ston dla danego menu (chociaz short_title jest takie same w projektach)
 - obsluzyc przypadek unikatowych tytulow menu
+- kolejnosc obrazkow dla produktu - nie zawsze dzialala -do  poprawy
 
 
 uwagi:
 + zrzuty bez ladowania vue - stworzyc nowy tym np clear (bez vue)
 - zmienic nazwe privacy na independent (chodzi o typ page) - moze niech ta nazwa zostanie - w koncu tylko te prawnicze glupoty nie sa powiazane z menu
 - blad obrazkow w galerii  jest migotanie przy pokazaniu dynamicznie nowych obrazkow
-- galeria po zalogowaniu nie dziala
-!!!- dla typu cms - mozna zrobic edytor wyswig
++ galeria po zalogowaniu nie dziala
++ !!!- dla typu cms - mozna zrobic edytor wyswig
 - unpublish img (przydaloby sie) 
 - mozna kod przeleciec jakims parserem (do czyszczenia formatowania sladni)
-- wywalic komentarze
+- wywalic komentarze w kodzie
+- zbiorowy upload image - todo
 
 
-- backup bazy danych kodu zrobic zrobic
++ backup bazy danych kodu zrobic zrobic (kod jest na githubvie - tylko to z gitingnora zrobilem)
 
 
 
