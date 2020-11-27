@@ -125,6 +125,14 @@ class Menu extends Base
         return $ret;
     }
 
+    /**
+     * use in admin area
+     */
+    // public function getAllTranslateMenus()
+    // {
+    //   return  $this->translates()->get();
+    // }
+
 
 
     /*
@@ -221,6 +229,27 @@ class Menu extends Base
         $i++;
       }
 
+      return $out;
+    }
+
+    static public function checkIsDuplicateName($data, $id = '')
+    {
+      $out = ['success' => true ];
+      $menus = Menu::getAllMenus();
+      foreach($menus as $menu){
+        if($menu['id']  == $id ){
+          continue;
+        }
+        foreach($menu['name'] as $lang => $name ){
+          $nameIn = Str::slug($data['name'][$lang], "-");
+          $n = Str::slug($name, "-");
+          if($nameIn == $n ){
+            $out['success'] = false;
+            $out['error'] = "Duplicate menu: $name ($lang)";
+            break;
+          }
+        }
+      }
       return $out;
     }
 

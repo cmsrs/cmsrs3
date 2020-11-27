@@ -54,6 +54,80 @@ class MenuTest extends Base
     }
 
     /** @test */
+    public function it_will_check_uniq_name_add_menus()
+    {
+      $nameEn = 'test menu1';
+      $testData1 =
+      [
+           'name'     => ['en' => $nameEn],
+      ];
+
+      $objMenu1 = (new Menu)->wrapCreate($testData1);      
+      $this->assertNotEmpty($objMenu1->id);
+
+
+      $ttt = 'ttt';
+      $testData =
+      [
+           'title'     =>  ['en' => $nameEn],
+           'short_title' =>  ['en' =>$ttt],
+           'published' => 0,
+           'type' => 'cms',
+           'content' =>  ['en' =>'pppppppp'],
+           'menu_id' => $objMenu1->id
+      ];
+      $response = $this->post('api/pages?token='.$this->token, $testData);
+      $res = $response->getData();
+      $this->assertTrue( $res->success );      
+
+
+      //odkomenuj!!!!!!!!!!!!
+      //$response2ttt = $this->post('api/menus?token='.$this->token, ['name' => ['en' => $ttt]]);
+      //$resttt = $response2ttt->getData();
+      //$this->assertTrue( $resttt->success );
+
+
+      $response2 = $this->post('api/menus?token='.$this->token, $testData1);
+
+      //dd($response2);
+      $res2 = $response2->getData();
+      $this->assertFalse( $res2->success );   
+      $this->assertNotEmpty($res2->error);
+      //$this->assertNotEmpty($res2->error->{"name.en"}[0]);
+
+
+
+      //$this->assertTrue( $res2->success );      
+
+    }
+
+    /** @test */
+    public function it_will_check_uniq_name_update_menus()
+    {
+      $nameEn1 = 'test menu1';
+      $testData1 =
+      [
+           'name'     => ['en' => $nameEn1],
+      ];
+      $objMenu1 = (new Menu)->wrapCreate($testData1);
+      $this->assertNotEmpty($objMenu1->id);
+
+      $nameEn2 = 'test menu2';
+      $testData2 =
+      [
+           'name'     => ['en' => $nameEn2],
+      ];
+      $objMenu2 = (new Menu)->wrapCreate($testData2);
+      $this->assertNotEmpty($objMenu2->id);
+
+      $response = $this->put('api/menus/'.$objMenu2->id.'?token='.$this->token, $testData1);
+      $res = $response->getData();
+      $this->assertFalse( $res->success );
+    }
+
+    
+
+    /** @test */
     public function it_will_wron_add()
     {
       $testData2 =
@@ -265,7 +339,7 @@ class MenuTest extends Base
       //wrond data
       $testData22 =
       [
-           'name'     => ['en' => 'test menu2'],
+           'name'     => ['en' => 'test menu22'],
            'position' => '3a12',
            'fake' => 234
       ];
@@ -282,7 +356,7 @@ class MenuTest extends Base
       //wrong lang
       $testData44 =
       [
-           'namefake'     => ['en' => 'test menu2'],
+           'namefake'     => ['en' => 'test menu2222'],
            'position' => '3a12',
            'fake' => 234
       ];

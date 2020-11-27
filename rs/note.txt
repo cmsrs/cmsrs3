@@ -22,7 +22,7 @@ todo
 
 
 na dalszy plan:
-- zarzadzanie komentarzami 
++ zarzadzanie komentarzami 
 - (do przemyslenia)  moze nalezy zrobic dodatkowy input na url i h1 (bo to sie zapisuje jako title), albo przynajmniej jakies info, ze to tak dziala przy inpucie title
 - wyszukiwarka kontentu
 - menu lewe czy pokazywac

@@ -17,7 +17,7 @@ class MenuController extends Controller
   public function __construct(){
     $langs = (new Config)->arrGetLangs();
     foreach($langs as $lang){
-      $this->validationRules['name.'.$lang] = 'max:255|required';
+      $this->validationRules['name.'.$lang] = 'max:255|required'; //|unique:App\Translate,value,null,menu_id';
     }
   }
   
@@ -51,6 +51,12 @@ class MenuController extends Controller
         return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
     }
 
+    //check unique
+    $valid = Menu::checkIsDuplicateName($data);
+    if( empty($valid['success']) ){
+      return response()->json($valid, 200);
+    }
+
     try{
       (new Menu)->wrapCreate($data);
     } catch (\Exception $e) {
@@ -79,6 +85,12 @@ class MenuController extends Controller
           return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
       }
 
+      //check unique
+      $valid = Menu::checkIsDuplicateName($data, $menu->id);
+      if( empty($valid['success']) ){
+        return response()->json($valid, 200);
+      }
+  
       try{
         //dd( $data );
         $res = $menu->wrapUpdate($data);
