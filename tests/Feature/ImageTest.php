@@ -413,9 +413,13 @@ class ImageTest extends Base
       $this->testImgData['images'][1]['name'] =  $this->name1;
       $this->assertEquals($this->testImgData['images'][0]['name'], $this->testImgData['images'][1]['name']);
       //var_dump($testImgData);
+
+      $this->testImgData['title']['en'] = 'uniq tilte';
       $responseErr = $this->post('api/pages?token='.$this->token, $this->testImgData);
       //var_dump($responseErr);
       $resErr = $responseErr->getData();
+
+      //dd($resErr->error);
       $this->assertTrue( $resErr->success );
       //$this->assertNotEmpty( $resErr->error );
 

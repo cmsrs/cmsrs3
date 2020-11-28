@@ -95,6 +95,12 @@ class PageController extends Controller
         return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
     }
 
+    //check unique
+    $valid = Page::checkIsDuplicateTitleByMenu($data);
+    if( empty($valid['success']) ){
+      return response()->json($valid, 200);
+    }
+
     try{      
       $page =  (new Page)->wrapCreate($data);
     } catch (\Exception $e) {
@@ -120,6 +126,12 @@ class PageController extends Controller
       if($validator->fails()) {
           return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
       }
+
+      //check unique
+      $valid = Page::checkIsDuplicateTitleByMenu($data, $page->id);
+      if( empty($valid['success']) ){
+        return response()->json($valid, 200);
+      }      
 
       try{
         $data = Page::validateMainPage($data, false);

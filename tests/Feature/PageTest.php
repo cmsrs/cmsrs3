@@ -29,6 +29,8 @@ class PageTest extends Base
     private $menuObj;
     private $objPage;
 
+    private $strTestTitle;
+
     public function setUp(): void
     {
         putenv('LANGS="en"');      
@@ -36,10 +38,11 @@ class PageTest extends Base
         parent::setUp();
 
         $this->createUser();
+        $this->strTestTitle = 'page 1 test';
 
         $this->testData =
         [
-            'title' =>  ['en' => 'page 1 test'],
+            'title' =>  ['en' => $this->strTestTitle],
             'short_title' =>  ['en' =>'page1'],
             'description' =>  ['en' =>'this page: test desc ...'],
             'published' => 1,
@@ -52,9 +55,10 @@ class PageTest extends Base
             'page_id' => null            
         ];
 
+        $this->strTestMenuName = 'test men7';
         $this->testDataMenu =
         [
-             'name'     => ['en' => 'test men7'],
+             'name'     => ['en' => $this->strTestMenuName],
              //'position' => 77
         ];
 
@@ -77,6 +81,77 @@ class PageTest extends Base
       $this->menuObj = $menu->all()->first();
       $this->menuId = $this->menuObj->id;
     }  
+
+    /** @test */
+    public function it_will_check_uniq_title_by_empty_menu_add_page()
+    {
+      //page not belong to menu
+      $p1 = (new Page)->wrapCreate($this->testData);
+      $this->assertNotEmpty($p1->id);
+
+      $response = $this->post('api/pages?token='.$this->token, $this->testData);
+      //dd($response->getData()->success);
+      $res = $response->getData();
+      $this->assertFalse( $res->success );
+      $this->assertNotEmpty($res->error);
+      $this->assertEquals(1, Page::All()->count() );
+    }
+
+    /** @test */
+    public function it_will_check_uniq_title_by_menu_add_page()
+    {
+      $menu1 = (new Menu)->wrapCreate($this->testDataMenu);
+      $menu2 = (new Menu)->wrapCreate( [ 'name' => ['en' => $this->strTestTitle]]  );
+
+      $this->assertNotEmpty($menu1->id);
+      $this->assertNotEmpty($menu2->id);      
+      $this->testData['menu_id'] = $menu1->id;
+      //page belong to menu
+      $p1 = (new Page)->wrapCreate($this->testData);
+      $this->assertNotEmpty($p1->id);
+
+      $response = $this->post('api/pages?token='.$this->token, $this->testData);
+      //dd($response->getData()->success);
+      $res = $response->getData();
+      $this->assertFalse( $res->success );
+      $this->assertNotEmpty($res->error);
+      $this->assertEquals(1, Page::All()->count() );
+
+      $this->testData['menu_id'] = $menu2->id;
+      $response = $this->post('api/pages?token='.$this->token, $this->testData);
+      //dd($response->getData()->success);
+      $res = $response->getData();
+      $this->assertTrue( $res->success );
+      $this->assertEquals(2, Page::All()->count() );
+    }
+
+    /** @test */
+    public function it_will_check_uniq_title_by_menu_update_page()
+    {
+      $menu1 = (new Menu)->wrapCreate($this->testDataMenu);
+      $menu2 = (new Menu)->wrapCreate( [ 'name' => ['en' => $this->strTestTitle]]  );
+
+      $this->assertNotEmpty($menu1->id);
+      $this->assertNotEmpty($menu2->id);      
+      $this->testData['menu_id'] = $menu1->id;
+      //page belong to menu
+      $p1 = (new Page)->wrapCreate($this->testData);
+      $this->assertNotEmpty($p1->id);
+
+      $title = 'uniq title';
+      $this->testData['title']['en'] = $title;
+      $p2 = (new Page)->wrapCreate($this->testData);
+      $this->assertNotEmpty($p2->id);
+      $this->assertEquals(2, Page::All()->count() );      
+
+      $response = $this->put('api/pages/'.$p1->id.'?token='.$this->token, $this->testData);
+      $res = $response->getData();
+      $this->assertFalse( $res->success );
+      $this->assertNotEmpty($res->error);
+      $this->assertEquals(2, Page::All()->count() );
+    }
+
+
 
     /** @test */
     public function it_will_wrong_add_page()
@@ -868,7 +943,7 @@ class PageTest extends Base
       //min data
       $testData22 =
       [
-           'title'     => [ 'en' => 'test p2'],
+           'title'     => [ 'en' => 'test p2 uniq'],
            'short_title'     => [ 'en' => 'p2'],           
            'position' => '3a12'
       ];

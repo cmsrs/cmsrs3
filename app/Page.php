@@ -132,6 +132,62 @@ class Page extends Base
       }
       return $pageOut;
     }
+
+    /*
+    static public function checkIsDuplicateName($data, $id = '')
+    {
+      $out = ['success' => true ];
+      $menus = Menu::getAllMenus();
+      foreach($menus as $menu){
+        if($menu['id']  == $id ){
+          continue;
+        }
+        foreach($menu['name'] as $lang => $name ){
+          $nameIn = Str::slug($data['name'][$lang], "-");
+          $n = Str::slug($name, "-");
+          if($nameIn == $n ){
+            $out['success'] = false;
+            $out['error'] = "Duplicate menu: $name ($lang)";
+            break;
+          }
+        }
+      }
+      return $out;
+    }
+    */
+
+    static public function checkIsDuplicateTitleByMenu($data, $id = '')
+    {
+      $menuId = empty($data['menu_id']) ? 0 : $data['menu_id'];
+
+      $out = ['success' => true ];
+      $pages = (new Page)->getAllPagesWithImages();
+      foreach($pages as $page){
+        $mId = empty($page['menu_id']) ? 0 : $page['menu_id'];        
+        if($page['id']  == $id ){
+          continue;
+        }
+        if($mId !=  $menuId){
+          continue;
+        }
+
+        foreach($page['title'] as $lang => $title ){
+          if( empty($data['title']) || empty($data['title'][$lang])){
+            throw new \Exception("page title is empty - but is require");
+          }
+          $titleIn = Str::slug($data['title'][$lang], "-");
+          $t = Str::slug($title, "-");
+          if($titleIn == $t ){
+            $out['success'] = false;
+            $out['error'] = "Duplicate title: $title ($lang)";
+            break;
+          }
+        }
+
+      }
+    
+      return $out;
+    }
   
 
 

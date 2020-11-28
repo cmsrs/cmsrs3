@@ -82,9 +82,9 @@ class MenuTest extends Base
 
 
       //odkomenuj!!!!!!!!!!!!
-      //$response2ttt = $this->post('api/menus?token='.$this->token, ['name' => ['en' => $ttt]]);
-      //$resttt = $response2ttt->getData();
-      //$this->assertTrue( $resttt->success );
+      $response2ttt = $this->post('api/menus?token='.$this->token, ['name' => ['en' => $ttt]]);
+      $resttt = $response2ttt->getData();
+      $this->assertTrue( $resttt->success );
 
 
       $response2 = $this->post('api/menus?token='.$this->token, $testData1);

@@ -241,6 +241,9 @@ class Menu extends Base
           continue;
         }
         foreach($menu['name'] as $lang => $name ){
+          if( empty($data['name']) || empty($data['name'][$lang])){
+            throw new \Exception("menu name is empty - but is require");
+          }
           $nameIn = Str::slug($data['name'][$lang], "-");
           $n = Str::slug($name, "-");
           if($nameIn == $n ){
