@@ -221,6 +221,22 @@ class PageTest extends Base
 
 
     /** @test */
+    public function it_will_show_one_page_docs()
+    {
+      $this->setTestData();
+
+      //$this->objPage->id
+      $response = $this->get('api/pages/'.$this->objPage->id.'?token='.$this->token );
+
+      //dd($response);
+      $res = $response->getData();
+      //print_r($res);
+      $this->assertTrue( $res->success );
+      $this->assertNotEmpty($res->data);
+      $this->assertEquals($this->strTestTitle, $res->data->title->en);
+    }    
+
+    /** @test */
     public function it_will_show_all_pages()
     {
       $this->setTestData();

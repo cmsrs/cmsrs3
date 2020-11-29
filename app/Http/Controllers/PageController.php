@@ -55,6 +55,20 @@ class PageController extends Controller
     return response()->json(['success' => true, 'data'=> $page], 200);
   }
 
+  
+  public function oneItemAdmin(Request $request, $id)
+  {
+    $page = Page::find($id);
+
+    if(empty($page)){
+      return response()->json(['success'=> false, 'error'=> 'Page not find'], 404);
+    }
+
+    $onePage = $page->getAllPagesWithImagesOneItem( null, $id );
+
+    return response()->json(['success' => true, 'data'=> $onePage], 200);
+  }
+
   public function index()
   {
       $pages = (new Page)->getAllPagesWithImages();

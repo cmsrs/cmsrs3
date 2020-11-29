@@ -498,22 +498,33 @@ class Page extends Base
     }
 
 
-    public function getAllPagesWithImages( $type = null )
+    public function getAllPagesWithImagesOneItem( $type = null, $id = null )
+    {
+      $pages = (new Page)->getAllPagesWithImages( $type, $id );
+      if(empty($pages[0])){
+        throw new \Exception("I cant find page by id: $id");        
+      }
+
+      return $pages[0];
+    }
+
+    public function getAllPagesWithImages( $type = null, $id = null )
     {
 
-      //dd($this->pageFields);
-
-      //['id',  'published', 'commented', 'after_login', 'position', 'type', 'menu_id', 'page_id']
-      //['id', 'published', 'commented', 'after_login', 'position', 'type',  'menu_id', 'page_id']
+      if($id){
+        $objPage = Page::findOrFail($id);
+      }else{
+        $objPage = new Page;
+      }
 
 
       if( $type ){
           //'title', 'short_title',        'content',
-          $pages = Page::with(['translates', 'contents'])->where('type', $type )->orderBy('position', 'asc' )->get($this->pageFields)->toArray();
+          $pages = $objPage->with(['translates', 'contents'])->where('type', $type )->orderBy('position', 'asc' )->get($this->pageFields)->toArray();
 
       }else{
           //'title', 'short_title', 'description', 'content',
-          $pages = Page::with(['translates', 'contents'])->orderBy('position', 'asc' )->get($this->pageFields)->toArray();
+          $pages = $objPage->with(['translates', 'contents'])->orderBy('position', 'asc' )->get($this->pageFields)->toArray();
       }
 
 

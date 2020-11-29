@@ -65,6 +65,7 @@ if($demoStatus){
         Route::get($apiSecret.'logout', 'AuthController@logout');
 
         Route::get($apiSecret.'pages', 'PageController@index');
+        Route::get($apiSecret.'pages/{id}', 'PageController@oneItemAdmin');        
         Route::post($apiSecret.'pages', 'PageController@create');
         Route::put($apiSecret.'pages/{id}', 'PageController@update');
         Route::delete($apiSecret.'pages/{id}', 'PageController@delete');
