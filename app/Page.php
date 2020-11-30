@@ -497,34 +497,41 @@ class Page extends Base
       return $p;
     }
 
-
-    public function getAllPagesWithImagesOneItem( $type = null, $id = null )
+    private function getPageDataFormat($page)
     {
-      $pages = (new Page)->getAllPagesWithImages( $type, $id );
-      if(empty($pages[0])){
-        throw new \Exception("I cant find page by id: $id");        
+      $out = [];
+      foreach($this->pageFields as $field ){
+        $out[$field] = $page[$field];
       }
-
-      return $pages[0];
+      foreach($page['translates'] as $translate){
+        $out[$translate['column']][$translate['lang']] = $translate['value'];
+      }
+      foreach($page['contents'] as $translate){
+        $out[$translate['column']][$translate['lang']] = $translate['value'];
+      }
+      return $out;
     }
 
-    public function getAllPagesWithImages( $type = null, $id = null )
+
+    public function getAllPagesWithImagesOneItem()
     {
 
-      if($id){
-        $objPage = Page::findOrFail($id);
-      }else{
-        $objPage = new Page;
-      }
+      $page = $this->where('id', $this->id)->with(['translates', 'contents'])->orderBy('position', 'asc' )->get($this->pageFields)->first()->toArray();
+      $formatPage = $this->getPageDataFormat($page);
 
+      return $formatPage;
+    }
+
+    public function getAllPagesWithImages( $type = null )
+    {
 
       if( $type ){
           //'title', 'short_title',        'content',
-          $pages = $objPage->with(['translates', 'contents'])->where('type', $type )->orderBy('position', 'asc' )->get($this->pageFields)->toArray();
+          $pages = Page::with(['translates', 'contents'])->where('type', $type )->orderBy('position', 'asc' )->get($this->pageFields)->toArray();
 
       }else{
           //'title', 'short_title', 'description', 'content',
-          $pages = $objPage->with(['translates', 'contents'])->orderBy('position', 'asc' )->get($this->pageFields)->toArray();
+          $pages = Page::with(['translates', 'contents'])->orderBy('position', 'asc' )->get($this->pageFields)->toArray();
       }
 
 
@@ -532,15 +539,17 @@ class Page extends Base
       $i = 0;
       $out = [];
       foreach ($pages as $page) {
-        foreach($this->pageFields as $field ){
-          $out[$i][$field] = $page[$field];
-        }
-        foreach($page['translates'] as $translate){
-          $out[$i][$translate['column']][$translate['lang']] = $translate['value'];
-        }
-        foreach($page['contents'] as $translate){
-          $out[$i][$translate['column']][$translate['lang']] = $translate['value'];
-        }
+        // foreach($this->pageFields as $field ){
+        //   $out[$i][$field] = $page[$field];
+        // }
+        // foreach($page['translates'] as $translate){
+        //   $out[$i][$translate['column']][$translate['lang']] = $translate['value'];
+        // }
+        // foreach($page['contents'] as $translate){
+        //   $out[$i][$translate['column']][$translate['lang']] = $translate['value'];
+        // }
+
+        $out[$i] = $this->getPageDataFormat($page);
         $out[$i]['images'] = Image::getImagesAndThumbsByTypeAndRefId( 'page', $page['id']);
         $i++;
       }

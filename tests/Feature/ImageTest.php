@@ -463,7 +463,7 @@ class ImageTest extends Base
       $this->assertEquals(count($existChangeAltImg), 2);      
 
       $alt1 = ['en' => 'alt1'];
-      $alt2 = ['en' => 'alt2'];      
+      $alt2 = ['en' => NULL];      
 
       $existChangeAltImg = [
         ['id' => $existChangeAltImg[0]->id, 'alt' => $alt1],

@@ -64,7 +64,7 @@ class PageController extends Controller
       return response()->json(['success'=> false, 'error'=> 'Page not find'], 404);
     }
 
-    $onePage = $page->getAllPagesWithImagesOneItem( null, $id );
+    $onePage = $page->getAllPagesWithImagesOneItem();
 
     return response()->json(['success' => true, 'data'=> $onePage], 200);
   }
@@ -159,6 +159,7 @@ class PageController extends Controller
         }
       } catch (\Exception $e) {
           Log::error('page update ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()  ); //.' for: '.var_export($data, true )
+          //Log::error('page update ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile() .' for: '.var_export($data, true ));          
           return response()->json(['success'=> false, 'error'=> 'Update page problem - exeption'], 200);
       }
 

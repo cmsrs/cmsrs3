@@ -224,16 +224,34 @@ class PageTest extends Base
     public function it_will_show_one_page_docs()
     {
       $this->setTestData();
+      $title2 = 'must be uniq';
+      $this->testData['title']['en'] = $title2;
+      $objPage2 = (new Page)->wrapCreate($this->testData);
 
-      //$this->objPage->id
+
+      $this->assertNotEmpty($this->objPage->id);
+      $this->assertNotEmpty($objPage2->id);      
+
+      $this->assertNotEquals($this->objPage->id, $objPage2->id );
+      
       $response = $this->get('api/pages/'.$this->objPage->id.'?token='.$this->token );
 
       //dd($response);
       $res = $response->getData();
-      //print_r($res);
       $this->assertTrue( $res->success );
       $this->assertNotEmpty($res->data);
       $this->assertEquals($this->strTestTitle, $res->data->title->en);
+      $this->assertNotEmpty($res->data->id);
+      $this->assertEquals($this->objPage->id, $res->data->id);
+
+
+      $response2 = $this->get('api/pages/'.$objPage2->id.'?token='.$this->token );
+      $res2 = $response2->getData();
+      $this->assertTrue( $res2->success );
+      $this->assertNotEmpty($res2->data);
+      $this->assertEquals($title2, $res2->data->title->en);
+      $this->assertNotEmpty($res2->data->id);
+      $this->assertEquals($objPage2->id, $res2->data->id);
     }    
 
     /** @test */
