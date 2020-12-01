@@ -324,6 +324,8 @@ class Image extends Base
             throw new \Exception("I can't get image type in getImagesByTypeAndRefId");
       }
 
+      //echo "type=".$type;
+
       $image = [];
       if( empty($refId) ){
         $image = Image::with(['translates'])
@@ -348,8 +350,17 @@ class Image extends Base
       if( !$image ){
           return false;
       }
-      $pageId = $image->page_id;
-      $images = Image::getImagesByTypeAndRefId( 'page', $pageId);
+
+      $t = 'page';
+      $refId = null;
+      foreach(Image::$type as $type => $key ){
+        if( !empty($image->{$key}) ){
+          $t = $type;
+          $refId = $image->{$key};
+        }
+      }
+
+      $images = Image::getImagesByTypeAndRefId( $t, $refId);
 
       $countImages = count($images);
       if($countImages < 2){

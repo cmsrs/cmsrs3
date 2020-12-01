@@ -395,6 +395,158 @@ class ProductTest extends Base
 
         //clear images!
         $this->clear_imgs($productId);
-    }    
+    }
+
+
+    /**
+     * I found bug in the change position impage in product, therefore i create lots of tests data
+     */
+    /** @test */
+    public function it_will_get_change_position_product_images_for_lots_of_items()
+    {
+        $this->setTestData();
+
+        //it must be 2 product in this test!!!
+        $this->testData['sku'] = '11';
+        $r0 = $this->post('api/products?token=' . $this->token, $this->testData);
+        $this->assertTrue($r0->getData()->success);
+        $this->testData['sku'] = '22';        
+        $r1 = $this->post('api/products?token=' . $this->token, $this->testData);
+        $this->assertTrue($r1->getData()->success);
+        $this->testData['sku'] = '33';        
+        $r1 = $this->post('api/products?token=' . $this->token, $this->testData);
+        $this->assertTrue($r1->getData()->success);
+
+        $testPage =
+        [
+             'title'     =>  ['en' => 'test unpublished'],
+             'short_title' =>  ['en' =>'unpuplish'],
+             'published' => 0,
+             'type' => 'cms',
+             'content' =>  ['en' =>'pppppppp'],
+             'menu_id' => null
+        ];
+        $p = (new Page)->wrapCreate($testPage);
+        $testPage['title']['en'] = 'uniq1';
+        $p = (new Page)->wrapCreate($testPage);        
+        $testPage['title']['en'] = 'uniq2';
+        $p = (new Page)->wrapCreate($testPage);        
+        $testPage['title']['en'] = 'uniq3';
+        $testPage['menu_id'] = $this->menuId;
+        $p = (new Page)->wrapCreate($testPage);                
+
+
+        $altEnLastImage = 'last image';
+        $testData = [
+            'name' =>  'php3 aplikacje bazodanowe',
+            'sku' => 'AN/34534_xx',
+            'price' => 123,
+            'description' => 'opis ksiazki',
+            //'photo' => null,
+            'page_id' => $this->pageId,
+            'images' => [
+                ['name' => $this->name1, 'data' => $this->getFixtureBase64($this->name1),  'alt' => ['en' =>  self::STR_DESC_IMG1 ] ],
+                ['name' => $this->name1, 'data' => $this->getFixtureBase64($this->name1)],
+                ['name' => $this->name1, 'data' => $this->getFixtureBase64($this->name1),  'alt' => ['en' =>  self::STR_DESC_IMG1 ] ],
+                ['name' => $this->name1, 'data' => $this->getFixtureBase64($this->name1)],
+                ['name' => $this->name1, 'data' => $this->getFixtureBase64($this->name1),  'alt' => ['en' =>  self::STR_DESC_IMG1 ] ],
+                ['name' => $this->name1, 'data' => $this->getFixtureBase64($this->name1)],
+                ['name' => $this->name1, 'data' => $this->getFixtureBase64($this->name1),  'alt' => ['en' =>  self::STR_DESC_IMG1 ] ],
+                ['name' => $this->name1, 'data' => $this->getFixtureBase64($this->name1)],
+                ['name' => $this->name1, 'data' => $this->getFixtureBase64($this->name1),  'alt' => ['en' =>  self::STR_DESC_IMG1 ] ],
+                ['name' => $this->name2, 'data' => $this->getFixtureBase64($this->name2),  'alt' => ['en' =>  $altEnLastImage ] ],
+            ]
+        ];        
+
+        
+        $response0 = $this->post('api/products?token=' . $this->token, $testData);
+
+        $res0 = $response0->getData();
+        $this->assertTrue($res0->success);
+
+        $this->assertNotEmpty($res0->data->productId);
+
+        $countImgs = count($testData['images']);
+        $this->assertNotEmpty($countImgs);
+
+        $countAllImages = Image::count();
+        //dd($countAllImages);
+        $allImgsBefore = Image::where('product_id',  $res0->data->productId)->get()->toArray();
+
+        //dd($allImgsBefore);
+
+        $this->assertEquals($countImgs, count($allImgsBefore) );
+
+        $lastImage = $allImgsBefore[$countImgs-1];
+
+        //$this->assertEquals($countAllImages, $lastImage['id']);
+        $this->assertEquals($this->name2, $lastImage['name']);        
+        $this->assertEquals($countImgs, $lastImage['position']);
+        $this->assertEquals($res0->data->productId, $lastImage['product_id']);
+        $this->assertEquals(null, $lastImage['page_id']);        
+
+        //for($i = 0; $i < count($allImgsBefore)-1; $i++){
+            $resSwap = $this->get('api/images/position/up/'.$lastImage['id'].'?token='.$this->token);        
+            $res = $resSwap->getData();
+            $this->assertTrue( $res->success );    
+
+            $resSwap = $this->get('api/images/position/up/'.$lastImage['id'].'?token='.$this->token);        
+            $res = $resSwap->getData();
+            $this->assertTrue( $res->success );    
+
+            $resSwap = $this->get('api/images/position/up/'.$lastImage['id'].'?token='.$this->token);        
+            $res = $resSwap->getData();
+            $this->assertTrue( $res->success );    
+
+            $resSwap = $this->get('api/images/position/down/'.$lastImage['id'].'?token='.$this->token);        
+            $res = $resSwap->getData();
+            $this->assertTrue( $res->success );    
+
+            $resSwap = $this->get('api/images/position/down/'.$lastImage['id'].'?token='.$this->token);        
+            $res = $resSwap->getData();
+            $this->assertTrue( $res->success );    
+
+            $resSwap = $this->get('api/images/position/down/'.$lastImage['id'].'?token='.$this->token);        
+            $res = $resSwap->getData();
+            $this->assertTrue( $res->success );    
+
+        //}
+
+        //->sortBy('position')
+        $allImgsAfter = Image::where('product_id',  $res0->data->productId)->orderBy('position')->get()->toArray();
+        //dd($allImgsAfter);
+        
+
+        //$allImgsAfterReset = array_values($allImgsAfter); //reset array keys
+        //dd($allImgsAfter);
+        //print_r($allImgsAfterReset);
+
+        $ImageAfter = $allImgsAfter[$countImgs-1];
+        //$this->assertEquals($countAllImages, $ImageAfter['id']);
+        $this->assertEquals($this->name2, $ImageAfter['name']);        
+        $this->assertEquals($countImgs, $ImageAfter['position']);        
+        $this->assertEquals($res0->data->productId, $ImageAfter['product_id']);        
+        $this->assertEquals(null, $ImageAfter['page_id']);
+
+        $resGet = $this->get('api/products?token=' . $this->token);
+        $resG = $resGet->getData();
+        $this->assertTrue( $resG->success );    
+        //print_r( $resG->data );
+
+        foreach($resG->data as $product){
+            //dump( $product->id );
+            $this->clear_imgs($res0->data->productId);
+        }
+
+
+
+
+        
+    }
+
+    
+    
+
+
 
 }
