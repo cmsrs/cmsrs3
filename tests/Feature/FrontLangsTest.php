@@ -11,7 +11,6 @@ use App\Config;
 use App\Data\Demo;
 use Illuminate\Support\Str;
 
-
 class FrontLangsTest extends Base
 {
     use RefreshDatabase;
@@ -19,7 +18,7 @@ class FrontLangsTest extends Base
     private $testData;
     private $testDataMenu;
     private $menuId;
-    private $menuObj;    
+    private $menuObj;
     private $titleEn = 'eeeeeeeeeeeeeeeennnnnnnnnnnnnnnnn';
     private $titlePl = 'pppppppppppppppplllllllllllllllll';
     private $langs;
@@ -28,8 +27,8 @@ class FrontLangsTest extends Base
 
     public function setUp(): void
     {
-        putenv('LANGS="pl,en"');   
-        putenv('API_SECRET=""');   
+        putenv('LANGS="pl,en"');
+        putenv('API_SECRET=""');
         parent::setUp();
         $this->createUser();
         $this->langs = (new Config)->arrGetLangs();
@@ -47,12 +46,12 @@ class FrontLangsTest extends Base
         parent::tearDown();
     }
 
-    private  function setTestData()
+    private function setTestData()
     {
         $menu = (new Menu)->wrapCreate($this->testDataMenu);
 
         $this->menuObj = $menu;
-        $this->menuId = $menu->id;        
+        $this->menuId = $menu->id;
         $this->assertNotEmpty($this->menuId);
 
         $this->testData =
@@ -80,11 +79,10 @@ class FrontLangsTest extends Base
     {
         ini_set('memory_limit', '1028M');
 
-        $p = (new Demo)->pagesAndMenu( true );
+        $p = (new Demo)->pagesAndMenu(true);
 
-        $this->checkAllPagesByLang($p, 'pl' );        
-        $this->checkAllPagesByLang($p, 'en' );
-
+        $this->checkAllPagesByLang($p, 'pl');
+        $this->checkAllPagesByLang($p, 'en');
     }
 
 
@@ -92,16 +90,15 @@ class FrontLangsTest extends Base
     /** @test */
     public function it_will_check_set_up()
     {
-      $this->setTestData();
-      $response = $this->get('api/pages?token='.$this->token );
-      $res = $response->getData();
-      $this->assertTrue( $res->success );
-      $this->assertEquals( count($res->data), 1);
+        $this->setTestData();
+        $response = $this->get('api/pages?token='.$this->token);
+        $res = $response->getData();
+        $this->assertTrue($res->success);
+        $this->assertEquals(count($res->data), 1);
 
-      $this->assertEquals(2, count($this->langs));
-      $this->assertEquals('pl', $this->langs[0]);
-      $this->assertEquals('en', $this->langs[1]);
-
+        $this->assertEquals(2, count($this->langs));
+        $this->assertEquals('pl', $this->langs[0]);
+        $this->assertEquals('en', $this->langs[1]);
     }
 
     /** @test */
@@ -130,20 +127,20 @@ class FrontLangsTest extends Base
         $response = $this->post('api/pages?token='.$this->token, $testData2);
   
         $res = $response->getData();
-        $this->assertTrue( $res->success );      
+        $this->assertTrue($res->success);
 
         $response1 = $this->get('/');
-        $response1->assertStatus(200);          
-        $this->assertNotEmpty( strpos( $response1->getContent() ,  $this->titlePl ));
+        $response1->assertStatus(200);
+        $this->assertNotEmpty(strpos($response1->getContent(), $this->titlePl));
 
         $response2 = $this->get('/en');
-        $response2->assertStatus(200);          
-        $this->assertNotEmpty( strpos( $response2->getContent() ,  $this->titleEn ));        
-        $this->assertEmpty( strpos( $response2->getContent() ,  $this->titlePl ));                
+        $response2->assertStatus(200);
+        $this->assertNotEmpty(strpos($response2->getContent(), $this->titleEn));
+        $this->assertEmpty(strpos($response2->getContent(), $this->titlePl));
 
         $response3 = $this->get('/pl');
-        $response3->assertStatus(404);          
-        $this->assertEmpty( strpos( $response3->getContent() ,  $this->titlePl ));        
+        $response3->assertStatus(404);
+        $this->assertEmpty(strpos($response3->getContent(), $this->titlePl));
     }
 
 
@@ -156,18 +153,18 @@ class FrontLangsTest extends Base
         $this->assertNotEmpty($p0);
 
 
-        foreach($this->langs as $lang){
-            $url =  $p0->getUrl($lang); 
+        foreach ($this->langs as $lang) {
+            $url =  $p0->getUrl($lang);
             $this->assertNotEmpty($url);
             $response1 = $this->get($url);
-            $response1->assertStatus(200);    
+            $response1->assertStatus(200);
         }
     }
 
     /** @test */
     public function it_will_get_cms_page()
     {
-        $this->setTestData();      
+        $this->setTestData();
 
         $menuName = $this->testDataMenu['name']['en'];
         $menuSlug = Str::slug($menuName);
@@ -197,24 +194,23 @@ class FrontLangsTest extends Base
         $response = $this->post('api/pages?token='.$this->token, $testData2);
   
         $res = $response->getData();
-        $this->assertTrue( $res->success );      
+        $this->assertTrue($res->success);
 
         $p = Page::query()->where('menu_id', $this->menuId)->get(); //->toArray();
-        $this->assertEquals(2, $p->count()  );
+        $this->assertEquals(2, $p->count());
 
         $i = 0;
-        foreach( $p as $pp){
-            $url0 = $pp->getUrl('en');            
+        foreach ($p as $pp) {
+            $url0 = $pp->getUrl('en');
             $response = $this->get($url0);
             $response->assertStatus(200);
             $i++;
         }
-        $this->assertEquals(2, $i );        
+        $this->assertEquals(2, $i);
 
         
         $responseB = $this->get('/'.$menuSlug);
         $responseB->assertStatus(404);
-
     }
 
     /** @test */
@@ -233,14 +229,13 @@ class FrontLangsTest extends Base
         ];
 
         $p = (new Page)->wrapCreate($pPrivacy);
-        $this->assertNotEmpty($p->id );
+        $this->assertNotEmpty($p->id);
 
-        foreach($this->langs as $lang){
-            $url =  $p->getUrl($lang); 
+        foreach ($this->langs as $lang) {
+            $url =  $p->getUrl($lang);
             $this->assertNotEmpty($url);
             $response1 = $this->get($url);
-            $response1->assertStatus(200);    
+            $response1->assertStatus(200);
         }
-   }
-
+    }
 }

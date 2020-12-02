@@ -29,7 +29,6 @@ class ContentTest extends Base
         $numOfLangs = count((new Translate)->getArrLangs());
         $this->assertEquals(2, $numOfLangs);
         $this->numOfLangs = $numOfLangs;
-        
     }
 
     protected function tearDown(): void
@@ -42,7 +41,7 @@ class ContentTest extends Base
     /*********************/
 
     /** @test */
-    public function  get_arr_langs()
+    public function get_arr_langs()
     {
         $content = new Content;
         $arrLangs = $content->getArrLangs();
@@ -51,24 +50,23 @@ class ContentTest extends Base
 
         $arrLangTest = ['en'];
         $content->setArrLangs($arrLangTest);
-        $arrLangs2 = $content->getArrLangs();        
+        $arrLangs2 = $content->getArrLangs();
         $this->assertSame($arrLangTest, $arrLangs2);
     }
 
 
     /***********************/
     /**Content on the Page**/
-    /***********************/    
+    /***********************/
 
     /** @test */
     public function page_content_wrap_create_ok_1()
     {
         $data1p = $this->getPageTestData();
         $p = (new Page)->wrapCreate($data1p);
-        $this->assertNotEmpty( $p->id );
+        $this->assertNotEmpty($p->id);
 
-        $this->assertEquals( 2, Content::query()->where('page_id', $p->id )->count() );
-        
+        $this->assertEquals(2, Content::query()->where('page_id', $p->id)->count());
     }
 
     /** @test */
@@ -83,15 +81,15 @@ class ContentTest extends Base
         $content->setArrLangs(['pl']);
 
         $objPage = new Page;
-        $objPage->setTranslate( $translate );
-        $objPage->setContent( $content );
+        $objPage->setTranslate($translate);
+        $objPage->setContent($content);
 
 
 
         $page = $objPage->wrapCreate($data, $translate, $content);
-        $this->assertNotEmpty( $page->id );        
+        $this->assertNotEmpty($page->id);
 
-        $this->assertEquals( 1, Content::query()->where('page_id', $page->id )->count() );
+        $this->assertEquals(1, Content::query()->where('page_id', $page->id)->count());
     }
 
     /** @test */
@@ -101,8 +99,7 @@ class ContentTest extends Base
         unset($data1p['content']);
 
         $p = (new Page)->wrapCreate($data1p);
-        $this->assertEquals( $this->numOfLangs, Content::query()->where('page_id', $p->id )->count() );
-        
+        $this->assertEquals($this->numOfLangs, Content::query()->where('page_id', $p->id)->count());
     }
 
     /** @test */
@@ -112,7 +109,7 @@ class ContentTest extends Base
         $data1p['content'] = [];
 
         $p = (new Page)->wrapCreate($data1p);
-        $this->assertEquals( $this->numOfLangs, Content::query()->where('page_id', $p->id )->count() );        
+        $this->assertEquals($this->numOfLangs, Content::query()->where('page_id', $p->id)->count());
     }
 
     /** @test */
@@ -122,7 +119,7 @@ class ContentTest extends Base
         $data1p['content'] = ['es' => 'fake'];
 
         $p = (new Page)->wrapCreate($data1p);
-        $this->assertEquals( $this->numOfLangs, Content::query()->where('page_id', $p->id )->where('column', 'content')->whereNull('value')->count() );
+        $this->assertEquals($this->numOfLangs, Content::query()->where('page_id', $p->id)->where('column', 'content')->whereNull('value')->count());
     }
 
     /** @test */
@@ -135,10 +132,7 @@ class ContentTest extends Base
  
         //$this->expectException(\Exception::class);
         $p = (new Page)->wrapCreate($data1p);
-        $this->assertEquals( $this->numOfLangs, Content::query()->where('page_id', $p->id )->where('column', 'content')->whereNull('value')->count() );        
-        $this->assertEquals( $this->numOfLangs, Translate::query()->where('page_id', $p->id )->where('column', 'description')->whereNull('value')->count() );                
+        $this->assertEquals($this->numOfLangs, Content::query()->where('page_id', $p->id)->where('column', 'content')->whereNull('value')->count());
+        $this->assertEquals($this->numOfLangs, Translate::query()->where('page_id', $p->id)->where('column', 'description')->whereNull('value')->count());
     }
-
-    
-    
 }

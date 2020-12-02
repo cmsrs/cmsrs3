@@ -5,10 +5,8 @@ namespace Tests\Feature;
 use App\User;
 use Illuminate\Support\Facades\Hash;
 
-
 class UserTest extends Base
 {
-
     protected $testData;
 
     public function setUp(): void
@@ -31,12 +29,11 @@ class UserTest extends Base
 
     private function it_will_create_user_client()
     {
-
         $data =  $this->testData;
-        $this->assertTrue( true );
+        $this->assertTrue(true);
         $password = Hash::make($data['password']);
 
-        User::where('email',  $data['email'])->delete();
+        User::where('email', $data['email'])->delete();
 
         $return = User::create([
             'name' => $data['name'],
@@ -53,10 +50,10 @@ class UserTest extends Base
     /** @test */
     public function it_will_get_all_user_clients_docs()
     {
-        $response = $this->get('api/users/clients?token='.$this->token );
+        $response = $this->get('api/users/clients?token='.$this->token);
         $res = $response->getData();
-        $this->assertTrue( $res->success );
-        $this->assertEquals( count($res->data), 1);
+        $this->assertTrue($res->success);
+        $this->assertEquals(count($res->data), 1);
         $data = (array)$res->data[0];
         $this->assertSame($data['name'], $this->testData['name']);
         $this->assertSame($data['email'], $this->testData['email']);
@@ -69,5 +66,4 @@ class UserTest extends Base
     {
         parent::tearDown();
     }
-
 }

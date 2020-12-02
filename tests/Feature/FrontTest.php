@@ -10,7 +10,6 @@ use App\Menu;
 use App\Data\Demo;
 use Illuminate\Support\Str;
 
-
 class FrontTest extends Base
 {
     use RefreshDatabase;
@@ -18,13 +17,13 @@ class FrontTest extends Base
     private $testData;
     private $testDataMenu;
     private $menuId;
-    private $menuObj;    
+    private $menuObj;
 
 
     public function setUp(): void
     {
-        putenv('LANGS="en"');    
-        putenv('API_SECRET=""');  
+        putenv('LANGS="en"');
+        putenv('API_SECRET=""');
         parent::setUp();
         $this->createUser();
 
@@ -40,12 +39,12 @@ class FrontTest extends Base
         parent::tearDown();
     }
 
-    private  function setTestData()
+    private function setTestData()
     {
         $menu = (new Menu)->wrapCreate($this->testDataMenu);
 
         $this->menuObj = $menu;
-        $this->menuId = $menu->id;        
+        $this->menuId = $menu->id;
         $this->assertNotEmpty($this->menuId);
 
         $this->testData =
@@ -73,19 +72,19 @@ class FrontTest extends Base
     {
         ini_set('memory_limit', '1028M');
 
-        $p = (new Demo)->pagesAndMenu( true );
+        $p = (new Demo)->pagesAndMenu(true);
 
-        $this->checkAllPagesByLang($p, 'en' );
+        $this->checkAllPagesByLang($p, 'en');
     }
 
     /** @test */
     public function it_will_check_set_up()
     {
-      $this->setTestData();
-      $response = $this->get('api/pages?token='.$this->token );
-      $res = $response->getData();
-      $this->assertTrue( $res->success );
-      $this->assertEquals( count($res->data), 1);
+        $this->setTestData();
+        $response = $this->get('api/pages?token='.$this->token);
+        $res = $response->getData();
+        $this->assertTrue($res->success);
+        $this->assertEquals(count($res->data), 1);
     }
 
     /** @test */
@@ -111,10 +110,10 @@ class FrontTest extends Base
         $response = $this->post('api/pages?token='.$this->token, $testData2);
   
         $res = $response->getData();
-        $this->assertTrue( $res->success );      
+        $this->assertTrue($res->success);
 
         $response = $this->get('/');
-        $response->assertStatus(200);          
+        $response->assertStatus(200);
     }
 
 
@@ -141,7 +140,7 @@ class FrontTest extends Base
     /** @test */
     public function it_will_get_cms_page()
     {
-        $this->setTestData();      
+        $this->setTestData();
         $title = $this->testData['title']['en'];
         $pageSlug = Str::slug($title);
 
@@ -173,24 +172,23 @@ class FrontTest extends Base
         $response = $this->post('api/pages?token='.$this->token, $testData2);
   
         $res = $response->getData();
-        $this->assertTrue( $res->success );      
+        $this->assertTrue($res->success);
 
         $p = Page::query()->where('menu_id', $this->menuId)->get(); //->toArray();
-        $this->assertEquals(2, $p->count()  );
+        $this->assertEquals(2, $p->count());
 
         $i = 0;
-        foreach( $p as $pp){
-            $url0 = $pp->getUrl('en');            
+        foreach ($p as $pp) {
+            $url0 = $pp->getUrl('en');
             $response = $this->get($url0);
             $response->assertStatus(200);
             $i++;
         }
-        $this->assertEquals(2, $i );        
+        $this->assertEquals(2, $i);
 
         
         $responseB = $this->get('/'.$menuSlug);
         $responseB->assertStatus(404);
-
     }
 
     /** @test */
@@ -209,13 +207,12 @@ class FrontTest extends Base
         ];
 
         $p = (new Page)->wrapCreate($pPrivacy);
-        $this->assertNotEmpty($p->id );
+        $this->assertNotEmpty($p->id);
 
         $lang = 'en';
-        $url =  $p->getUrl($lang); 
+        $url =  $p->getUrl($lang);
         $this->assertNotEmpty($url);
         $response1 = $this->get($url);
-        $response1->assertStatus(200);    
-   }
-    
+        $response1->assertStatus(200);
+    }
 }

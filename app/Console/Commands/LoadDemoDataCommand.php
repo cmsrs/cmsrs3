@@ -48,7 +48,6 @@ class LoadDemoDataCommand extends Command
         $this->translate->setArrLangs($this->langs);
         $this->content = new Content;
         $this->content->setArrLangs($this->langs);
-
     }
 
 
@@ -71,21 +70,21 @@ class LoadDemoDataCommand extends Command
         /*---------------------*/
         /*--- comments --------*/
         /*---------------------*/
-        Comment::create( ['page_id' => $p['p2']->id,  'content' => 'First test comment - test1' ] );
-        Comment::create( ['page_id' => $p['p2']->id,  'content' => 'Second test comment - test2' ] );
+        Comment::create(['page_id' => $p['p2']->id,  'content' => 'First test comment - test1' ]);
+        Comment::create(['page_id' => $p['p2']->id,  'content' => 'Second test comment - test2' ]);
 
 
         /*---------------------*/
         /*--- products --------*/
-        /*---------------------*/        
+        /*---------------------*/
 
         $objDemoData->product($p);
 
         /*---------------------*/
         /*--- contacts --------*/
-        /*---------------------*/        
+        /*---------------------*/
         (new Contact)->wrapCreate(['email' => 'tt@cmsrs.pl', 'message' => 'test contact message1'  ]);
-        (new Contact)->wrapCreate(['email' => 'tt2@cmsrs.pl', 'message' => 'test contact message2'  ]);        
+        (new Contact)->wrapCreate(['email' => 'tt2@cmsrs.pl', 'message' => 'test contact message2'  ]);
            
         /*---------------------*/
         /* ---users -----------*/
@@ -97,7 +96,7 @@ class LoadDemoDataCommand extends Command
         //     'name'     => 'adm',
         //     'role' => User::$role['admin']
         // ]);
-        // $user->password = 'cmsrs123';      
+        // $user->password = 'cmsrs123';
         // $user->save();
 
         $user2 = new User([
@@ -105,8 +104,7 @@ class LoadDemoDataCommand extends Command
             'name'     => 'client',
             'role' => User::$role['client']
         ]);
-        $user2->password = 'cmsrs456';      
-        $user2->save();        
+        $user2->password = 'cmsrs456';
+        $user2->save();
     }
-
 }

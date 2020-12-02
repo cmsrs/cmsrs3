@@ -4,7 +4,6 @@ namespace App;
 
 class Content extends Base
 {
-
     protected $fillable = [
         'lang',
         'column',
@@ -16,13 +15,13 @@ class Content extends Base
         'page_id' => 'integer'
     ];
 
-    public function wrapCreate( $data, $create = true)
+    public function wrapCreate($data, $create = true)
     {
-        if( !empty($data['page_id'])  ){
+        if (!empty($data['page_id'])) {
             $columns = [
-                'content' => false 
+                'content' => false
             ];
-            $this->genericCreateTranslate( $data, 'page_id', $columns, $create);
+            $this->genericCreateTranslate($data, 'page_id', $columns, $create);
         }
 
         return true;
@@ -30,13 +29,11 @@ class Content extends Base
 
     public function updateRow($row)
     {
-        if( !empty($row['page_id'])  ){
-            $obj = Content::where( 'page_id', $row['page_id'] )->where( 'column', $row['column'] )->where('lang', $row['lang'] )->first();
+        if (!empty($row['page_id'])) {
+            $obj = Content::where('page_id', $row['page_id'])->where('column', $row['column'])->where('lang', $row['lang'])->first();
         }
 
-        $this->wrapTranslateUpdate( $obj, $row );
+        $this->wrapTranslateUpdate($obj, $row);
         return true;
     }
-    
-    
 }

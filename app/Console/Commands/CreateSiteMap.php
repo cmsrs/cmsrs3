@@ -40,16 +40,16 @@ class CreateSiteMap extends Command
     {
         $appUrl = env('APP_URL');
         $langs = (new Page)->getArrLangs();
-        $pages = Page::where('after_login', '=', 0)->where( 'published', '=', 1 )->get();
+        $pages = Page::where('after_login', '=', 0)->where('published', '=', 1)->get();
 
         $strUrls = '';
-        foreach($langs as $lang){
-            foreach($pages as $page){
+        foreach ($langs as $lang) {
+            foreach ($pages as $page) {
                 $strUrls .= $appUrl.$page->getUrl($lang)."\n";
-            }    
+            }
         }
 
         $siteMapPath = public_path().'/sitemap.txt';
-        file_put_contents($siteMapPath,  $strUrls);
+        file_put_contents($siteMapPath, $strUrls);
     }
 }

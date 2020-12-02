@@ -13,17 +13,17 @@ class Page extends Base
     const PREFIX_IN_URL = 'in'; //(in) independent
 
     private $translate;
-    private $content;    
+    private $content;
     public $pageFields;
     private $langs;
 
     protected $fillable = [
-        'published', 
-        'commented', 
-        'after_login', 
-        'position', 
-        'type', 
-        'menu_id', 
+        'published',
+        'commented',
+        'after_login',
+        'position',
+        'type',
+        'menu_id',
         'page_id'
     ];
 
@@ -35,9 +35,9 @@ class Page extends Base
     protected $casts = [
           'published' => 'integer',
           'commented' => 'integer',
-          'after_login' => 'integer',          
+          'after_login' => 'integer',
           'position' => 'integer',
-          'menu_id' => 'integer', 
+          'menu_id' => 'integer',
           'page_id' => 'integer'
     ];
 
@@ -46,103 +46,103 @@ class Page extends Base
         parent::__construct($attributes);
 
         $this->pageFields = [
-          'id', 
-          'published', 
-          'commented', 
-          'after_login', 
-          'position', 
-          'type',  
-          'menu_id', 
+          'id',
+          'published',
+          'commented',
+          'after_login',
+          'position',
+          'type',
+          'menu_id',
           'page_id'
       ];
   
-        $this->translate = new Translate;  
-        $this->content = new Content;       
+        $this->translate = new Translate;
+        $this->content = new Content;
         $this->langs = $this->getArrLangs();
     }
 
     public function menu()
     {
-      return $this->hasOne('App\Menu', 'id', 'menu_id');
-    }        
+        return $this->hasOne('App\Menu', 'id', 'menu_id');
+    }
 
     public function translates()
     {
-      return $this->hasMany('App\Translate');
+        return $this->hasMany('App\Translate');
     }
 
 
     public function contents()
     {
-      return $this->hasMany('App\Content');
+        return $this->hasMany('App\Content');
     }
 
     public function images()
     {
-      return $this->hasMany('App\Image')->orderBy('position');
+        return $this->hasMany('App\Image')->orderBy('position');
     }
 
-    public function setTranslate( $objTranslate )
+    public function setTranslate($objTranslate)
     {
-        if(!empty($objTranslate)){
+        if (!empty($objTranslate)) {
             $this->translate = $objTranslate;
         }
-    }      
-
-    public function setContent( $objContent )
-    {    
-        if( !empty($objContent) ){
-            $this->content = $objContent;
-        }
-    }  
-
-
-    static public function getPageBySlug($menus, $menuSlug, $pageSlug, $lang)    
-    {
-      $pageOut = null;    
-      foreach ($menus as $menu) {
-        if($menuSlug == $menu->getSlugByLang($lang)){
-          foreach ($menu->pagesPublished  as $page){
-            if( $pageSlug == $page->getSlugByLang($lang) ){
-              $pageOut = $page;
-              break;
-            }
-          }
-        }
-      }
-      return $pageOut;
     }
 
-    static public function checkIsDuplicateTitleByMenu($data, $id = '')
+    public function setContent($objContent)
     {
-      $menuId = empty($data['menu_id']) ? 0 : $data['menu_id'];
+        if (!empty($objContent)) {
+            $this->content = $objContent;
+        }
+    }
 
-      $out = ['success' => true ];
-      $pages = (new Page)->getAllPagesWithImages();
-      foreach($pages as $page){
-        $mId = empty($page['menu_id']) ? 0 : $page['menu_id'];        
-        if($page['id']  == $id ){
-          continue;
-        }
-        if($mId !=  $menuId){
-          continue;
-        }
 
-        foreach($page['title'] as $lang => $title ){
-          if( empty($data['title']) || empty($data['title'][$lang])){
-            throw new \Exception("page title is empty - but is require");
-          }
-          $titleIn = Str::slug($data['title'][$lang], "-");
-          $t = Str::slug($title, "-");
-          if($titleIn == $t ){
-            $out['success'] = false;
-            $out['error'] = "Duplicate title: $title ($lang)";
-            break;
-          }
+    public static function getPageBySlug($menus, $menuSlug, $pageSlug, $lang)
+    {
+        $pageOut = null;
+        foreach ($menus as $menu) {
+            if ($menuSlug == $menu->getSlugByLang($lang)) {
+                foreach ($menu->pagesPublished  as $page) {
+                    if ($pageSlug == $page->getSlugByLang($lang)) {
+                        $pageOut = $page;
+                        break;
+                    }
+                }
+            }
         }
-      }
+        return $pageOut;
+    }
+
+    public static function checkIsDuplicateTitleByMenu($data, $id = '')
+    {
+        $menuId = empty($data['menu_id']) ? 0 : $data['menu_id'];
+
+        $out = ['success' => true ];
+        $pages = (new Page)->getAllPagesWithImages();
+        foreach ($pages as $page) {
+            $mId = empty($page['menu_id']) ? 0 : $page['menu_id'];
+            if ($page['id']  == $id) {
+                continue;
+            }
+            if ($mId !=  $menuId) {
+                continue;
+            }
+
+            foreach ($page['title'] as $lang => $title) {
+                if (empty($data['title']) || empty($data['title'][$lang])) {
+                    throw new \Exception("page title is empty - but is require");
+                }
+                $titleIn = Str::slug($data['title'][$lang], "-");
+                $t = Str::slug($title, "-");
+                if ($titleIn == $t) {
+                    $out['success'] = false;
+                    $out['error'] = "Duplicate title: $title ($lang)";
+                    break;
+                }
+            }
+        }
     
-      return $out;
+        return $out;
     }
   
 
@@ -150,7 +150,7 @@ class Page extends Base
     public function getSlugByLang($lang)
     {
         $column = 'title';
-        $name = $this->translatesByColumnAndLang( $column, $lang );
+        $name = $this->translatesByColumnAndLang($column, $lang);
 
         // if( empty($name) ){
         //   throw new \Exception("I cant create slug for page column: $column for lang: $lang, because value is empty");
@@ -161,41 +161,41 @@ class Page extends Base
 
     public function getAllTranslate()
     {
-      $pageId =$this->id;
+        $pageId =$this->id;
 
-      $isCache = env( 'CACHE_ENABLE', false );
-      if($isCache){
-        $ret = cache()->remember( 'pagetranslatepageid_'.$pageId  , Carbon::now()->addYear(1), function() use($pageId) {
-          return $this->getTranslateMerge( $pageId );
-        });  
-      }else{
-        $ret = $this->getTranslateMerge( $pageId );
-      }
+        $isCache = env('CACHE_ENABLE', false);
+        if ($isCache) {
+            $ret = cache()->remember('pagetranslatepageid_'.$pageId, Carbon::now()->addYear(1), function () use ($pageId) {
+                return $this->getTranslateMerge($pageId);
+            });
+        } else {
+            $ret = $this->getTranslateMerge($pageId);
+        }
 
-      return $ret;
-    }  
+        return $ret;
+    }
     
-    public function getTranslateMerge( $pageId )
+    public function getTranslateMerge($pageId)
     {
-      $translates = $this->translates()->where('page_id', $pageId )->get(['lang', 'column', 'value'])->toArray();
-      $contents = $this->contents()->where('page_id', $pageId )->get(['lang', 'column', 'value'])->toArray();
-      $ret = array_merge($translates, $contents);
-      return $ret;
+        $translates = $this->translates()->where('page_id', $pageId)->get(['lang', 'column', 'value'])->toArray();
+        $contents = $this->contents()->where('page_id', $pageId)->get(['lang', 'column', 'value'])->toArray();
+        $ret = array_merge($translates, $contents);
+        return $ret;
     }
 
 
-    static public function CreatePage($data)
+    public static function CreatePage($data)
     {
-      $menuId = empty($data['menu_id']) ? null : $data['menu_id'];
-      $data['position'] = Page::getNextPositionByMenuId($menuId);  
-      $data = Page::validateMainPage($data);
-      $data = Page::validateParentPublished($data);
+        $menuId = empty($data['menu_id']) ? null : $data['menu_id'];
+        $data['position'] = Page::getNextPositionByMenuId($menuId);
+        $data = Page::validateMainPage($data);
+        $data = Page::validateParentPublished($data);
 
-      $page = Page::create( $data );
-      if( empty($page->id)){
-        throw new \Exception("I cant get page id");
-      }
-      return $page;
+        $page = Page::create($data);
+        if (empty($page->id)) {
+            throw new \Exception("I cant get page id");
+        }
+        return $page;
     }
 
     /**
@@ -204,367 +204,362 @@ class Page extends Base
      */
     public function wrapCreate($data)
     {
-      $page = Page::CreatePage($data);
-      $this->createTranslate([ 'page_id' => $page->id, 'data' => $data ]);
+        $page = Page::CreatePage($data);
+        $this->createTranslate([ 'page_id' => $page->id, 'data' => $data ]);
 
-      if( !empty($data['images']) && is_array($data['images']) ){
-        $objImage = new Image;
-        $objImage->setTranslate($this->translate);
-        $objImage->createImages($data['images'], 'page', $page->id);
-      }
+        if (!empty($data['images']) && is_array($data['images'])) {
+            $objImage = new Image;
+            $objImage->setTranslate($this->translate);
+            $objImage->createImages($data['images'], 'page', $page->id);
+        }
 
-      return $page;
+        return $page;
     }
     
-    public function createTranslate( $dd, $create = true ){
-        $this->translate->wrapCreate( $dd, $create );      
-        $this->content->wrapCreate( $dd, $create );
+    public function createTranslate($dd, $create = true)
+    {
+        $this->translate->wrapCreate($dd, $create);
+        $this->content->wrapCreate($dd, $create);
     }
 
-    public function wrapUpdate($data) 
+    public function wrapUpdate($data)
     {
-      $this->update($data); 
-      $this->createTranslate( [ 'page_id' => $this->id, 'data' => $data ], false );
-      return true;
-    }    
+        $this->update($data);
+        $this->createTranslate([ 'page_id' => $this->id, 'data' => $data ], false);
+        return true;
+    }
     
-    static public function getFooterPages( $lang )
+    public static function getFooterPages($lang)
     {
-      $privacyPolicy = Page::getFirstPageByType('privacy_policy' );
-      $contact = Page::getFirstPageByType('contact' );    
+        $privacyPolicy = Page::getFirstPageByType('privacy_policy');
+        $contact = Page::getFirstPageByType('contact');
 
-      $out = [];
-      $policyUrl = null;
-      $policyTitle = null;
-      if(!empty($privacyPolicy)){
-          $policyUrl = $privacyPolicy->getUrl($lang);
-          $policyTitle = $privacyPolicy->translatesByColumnAndLang('title', $lang);
-      }
+        $out = [];
+        $policyUrl = null;
+        $policyTitle = null;
+        if (!empty($privacyPolicy)) {
+            $policyUrl = $privacyPolicy->getUrl($lang);
+            $policyTitle = $privacyPolicy->translatesByColumnAndLang('title', $lang);
+        }
 
-      $contactUrl = null;
-      $contactTitle = null;
-      if(!empty($contact)){
-          $contactUrl = $contact->getUrl($lang);
-          $contactTitle = $contact->translatesByColumnAndLang('title', $lang);
-      }
+        $contactUrl = null;
+        $contactTitle = null;
+        if (!empty($contact)) {
+            $contactUrl = $contact->getUrl($lang);
+            $contactTitle = $contact->translatesByColumnAndLang('title', $lang);
+        }
 
-      $out['policyUrl'] = $policyUrl;
-      $out['policyTitle'] =  $policyTitle;
-      $out['contactUrl'] =  $contactUrl;
-      $out['contactTitle'] =  $contactTitle;
+        $out['policyUrl'] = $policyUrl;
+        $out['policyTitle'] =  $policyTitle;
+        $out['contactUrl'] =  $contactUrl;
+        $out['contactTitle'] =  $contactTitle;
     
-      return $out;
-  }
+        return $out;
+    }
 
     public function getUrl($lang)
-    {      
-      if( 'main_page' == $this->type ){
-        return $this->getMainUrl($lang);
-      }elseif('login' == $this->type){
-        return $this->getTypeUrl($lang);
-      }elseif( 'privacy_policy' == $this->type ){
-        return $this->getIndependentUrl($lang);
-      }
-      return $this->getCmsUrl($lang);
+    {
+        if ('main_page' == $this->type) {
+            return $this->getMainUrl($lang);
+        } elseif ('login' == $this->type) {
+            return $this->getTypeUrl($lang);
+        } elseif ('privacy_policy' == $this->type) {
+            return $this->getIndependentUrl($lang);
+        }
+        return $this->getCmsUrl($lang);
     }
 
     private function getTypeUrl($lang)
     {
-      $url = "/".$this->type;
-      $langs = Config::arrGetLangsEnv();
-      if(1 < count($langs)){
-        $url = "/".$lang.$url;
-      }
+        $url = "/".$this->type;
+        $langs = Config::arrGetLangsEnv();
+        if (1 < count($langs)) {
+            $url = "/".$lang.$url;
+        }
 
-      return $url;
+        return $url;
     }
     
     private function getCmsUrl($lang)
-    {   
-      $pageId = $this->id;
-      $isCache = env( 'CACHE_ENABLE', false );
-      if($isCache){
-        $menuSlug = cache()->remember( 'menusluglang_'.$lang.'_'.$pageId  , Carbon::now()->addYear(1), function() use($lang) {
-          return $this->menu()->get()->first()->getSlugByLang($lang);
-        });
-      }else{
-        $menuSlug = $this->menu()->get()->first()->getSlugByLang($lang);
-      }
-      $url = "/".Page::PREFIX_CMS_URL."/".$menuSlug."/".$this->getSlugByLang($lang);
+    {
+        $pageId = $this->id;
+        $isCache = env('CACHE_ENABLE', false);
+        if ($isCache) {
+            $menuSlug = cache()->remember('menusluglang_'.$lang.'_'.$pageId, Carbon::now()->addYear(1), function () use ($lang) {
+                return $this->menu()->get()->first()->getSlugByLang($lang);
+            });
+        } else {
+            $menuSlug = $this->menu()->get()->first()->getSlugByLang($lang);
+        }
+        $url = "/".Page::PREFIX_CMS_URL."/".$menuSlug."/".$this->getSlugByLang($lang);
 
-      $langs = Config::arrGetLangsEnv();
-      if(1 < count($langs)){        
-        $url = "/".$lang.$url;
-      }
+        $langs = Config::arrGetLangsEnv();
+        if (1 < count($langs)) {
+            $url = "/".$lang.$url;
+        }
 
-      return $url;
+        return $url;
     }
 
     private function getMainUrl($lang)
     {
-      $langs = Config::arrGetLangsEnv();
-      array_shift($langs); //after this langs will be changed. It has rest of langs without first one.
+        $langs = Config::arrGetLangsEnv();
+        array_shift($langs); //after this langs will be changed. It has rest of langs without first one.
 
-      if( empty($langs) ){
-        $url = "/";
-      }else{
-        $url = in_array($lang, $langs) ? "/".$lang : "/";
-      }
-      return $url; 
-    }    
+        if (empty($langs)) {
+            $url = "/";
+        } else {
+            $url = in_array($lang, $langs) ? "/".$lang : "/";
+        }
+        return $url;
+    }
 
     private function getIndependentUrl($lang)
     {
-      $url = "/".Page::PREFIX_IN_URL."/".$this->getSlugByLang($lang);
-      $langs = Config::arrGetLangsEnv();
-      if(1 < count($langs)){
-        $url = "/".$lang.$url;
-      }
+        $url = "/".Page::PREFIX_IN_URL."/".$this->getSlugByLang($lang);
+        $langs = Config::arrGetLangsEnv();
+        if (1 < count($langs)) {
+            $url = "/".$lang.$url;
+        }
 
-      return $url;
+        return $url;
     }
 
     public function unpublishedChildren()
     {
-      $pages = Page::where('page_id', '=', $this->id)->get();
-      foreach($pages as $page){
-        $page->published = 0;
-        $page->update();
-      }
+        $pages = Page::where('page_id', '=', $this->id)->get();
+        foreach ($pages as $page) {
+            $page->published = 0;
+            $page->update();
+        }
     }
 
-    public function checkAuth(){
-      if($this->after_login && !(Auth::check())){
-        return false;
-      }
-      return true;
-    }  
+    public function checkAuth()
+    {
+        if ($this->after_login && !(Auth::check())) {
+            return false;
+        }
+        return true;
+    }
     
-    static public function getFirstPageByType($type)
+    public static function getFirstPageByType($type)
     {
-      $isCache = env( 'CACHE_ENABLE', false );
-      if($isCache){
-        $ret = cache()->remember( 'pagebytype_'.$type  , Carbon::now()->addYear(1), function() use($type) {
-          return  Page::where('type', '=', $type)->where( 'published', '=', 1 )->get()->first();        
-        });
-      }else{
-        $ret = Page::where('type', '=', $type)->where( 'published', '=', 1 )->get()->first();        
-      }
-
-      return $ret;
-    }
-
-    static public function getMainPage()
-    {
-      return Page::getFirstPageByType('main_page');
-    }
-
-    static public function validateMainPage( $data, $create = true )
-    {
-      if( isSet($data['type']) && ($data['type'] == 'main_page') ){
-        if($create){
-          $p = Page::getMainPage();
-          if($p){
-            throw new \Exception("Two main page not allowed");  
-          }  
+        $isCache = env('CACHE_ENABLE', false);
+        if ($isCache) {
+            $ret = cache()->remember('pagebytype_'.$type, Carbon::now()->addYear(1), function () use ($type) {
+                return  Page::where('type', '=', $type)->where('published', '=', 1)->get()->first();
+            });
+        } else {
+            $ret = Page::where('type', '=', $type)->where('published', '=', 1)->get()->first();
         }
 
-        $data['menu_id'] = null;
-        $data['page_id'] = null;
-      }
-      return $data;
+        return $ret;
+    }
+
+    public static function getMainPage()
+    {
+        return Page::getFirstPageByType('main_page');
+    }
+
+    public static function validateMainPage($data, $create = true)
+    {
+        if (isset($data['type']) && ($data['type'] == 'main_page')) {
+            if ($create) {
+                $p = Page::getMainPage();
+                if ($p) {
+                    throw new \Exception("Two main page not allowed");
+                }
+            }
+
+            $data['menu_id'] = null;
+            $data['page_id'] = null;
+        }
+        return $data;
     }
 
     /**
      * if parent page.published == 0 then child this page.published = 0
      */
-    static public function validateParentPublished($data)
+    public static function validateParentPublished($data)
     {
-      if( !empty($data['page_id']) ){
-        $p = Page::findOrFail($data['page_id']);
-        if(0 == $p->published){
-          $data['published'] = 0;
+        if (!empty($data['page_id'])) {
+            $p = Page::findOrFail($data['page_id']);
+            if (0 == $p->published) {
+                $data['published'] = 0;
+            }
         }
-      }
-      return $data;
+        return $data;
     }
     
 
     
     public function arrImages($lang)
     {
-      $out = [];
-      foreach($this->images as $image){
-        $item = Image::getAllImage($image, false);        
-        $item['id'] = $image->id;
-        $item['alt'] = Image::getAltImg($image);
-        $item['altlang'] = !empty($item['alt'][$lang]) ? $item['alt'][$lang] : ''; //it neeeds to javascript - to modal window in gallery
-        $out[] = $item;
-      }
-      return $out;
+        $out = [];
+        foreach ($this->images as $image) {
+            $item = Image::getAllImage($image, false);
+            $item['id'] = $image->id;
+            $item['alt'] = Image::getAltImg($image);
+            $item['altlang'] = !empty($item['alt'][$lang]) ? $item['alt'][$lang] : ''; //it neeeds to javascript - to modal window in gallery
+            $out[] = $item;
+        }
+        return $out;
     }
 
-    public function getPageWithImages( $lang )
+    public function getPageWithImages($lang)
     {
-      $langs = $this->getArrLangs();
+        $langs = $this->getArrLangs();
 
-      if(!in_array($lang, $langs)){
-        throw new \Exception("Problem with langs - lang: $lang no exist");
-      }
+        if (!in_array($lang, $langs)) {
+            throw new \Exception("Problem with langs - lang: $lang no exist");
+        }
 
-      $p['id'] =$this->id; 
-      $p['type'] =$this->type;
-      $p['images'] = $this->arrImages($lang);
-      return $p;
+        $p['id'] =$this->id;
+        $p['type'] =$this->type;
+        $p['images'] = $this->arrImages($lang);
+        return $p;
     }
 
     private function getPageDataFormat($page)
     {
-      $out = [];
-      foreach($this->pageFields as $field ){
-        $out[$field] = $page[$field];
-      }
-      foreach($page['translates'] as $translate){
-        $out[$translate['column']][$translate['lang']] = $translate['value'];
-      }
-      foreach($page['contents'] as $translate){
-        $out[$translate['column']][$translate['lang']] = $translate['value'];
-      }
-      return $out;
+        $out = [];
+        foreach ($this->pageFields as $field) {
+            $out[$field] = $page[$field];
+        }
+        foreach ($page['translates'] as $translate) {
+            $out[$translate['column']][$translate['lang']] = $translate['value'];
+        }
+        foreach ($page['contents'] as $translate) {
+            $out[$translate['column']][$translate['lang']] = $translate['value'];
+        }
+        return $out;
     }
 
 
     public function getAllPagesWithImagesOneItem()
     {
+        $page = $this->where('id', $this->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->get($this->pageFields)->first()->toArray();
+        $formatPage = $this->getPageDataFormat($page);
 
-      $page = $this->where('id', $this->id)->with(['translates', 'contents'])->orderBy('position', 'asc' )->get($this->pageFields)->first()->toArray();
-      $formatPage = $this->getPageDataFormat($page);
-
-      return $formatPage;
+        return $formatPage;
     }
 
-    public function getAllPagesWithImages( $type = null )
+    public function getAllPagesWithImages($type = null)
     {
-
-      if( $type ){
-          $pages = Page::with(['translates', 'contents'])->where('type', $type )->orderBy('position', 'asc' )->get($this->pageFields)->toArray();
-
-      }else{
-          $pages = Page::with(['translates', 'contents'])->orderBy('position', 'asc' )->get($this->pageFields)->toArray();
-      }
+        if ($type) {
+            $pages = Page::with(['translates', 'contents'])->where('type', $type)->orderBy('position', 'asc')->get($this->pageFields)->toArray();
+        } else {
+            $pages = Page::with(['translates', 'contents'])->orderBy('position', 'asc')->get($this->pageFields)->toArray();
+        }
 
 
-      $i = 0;
-      $out = [];
-      foreach ($pages as $page) {
-        $out[$i] = $this->getPageDataFormat($page);
-        $out[$i]['images'] = Image::getImagesAndThumbsByTypeAndRefId( 'page', $page['id']);
-        $i++;
-      }
+        $i = 0;
+        $out = [];
+        foreach ($pages as $page) {
+            $out[$i] = $this->getPageDataFormat($page);
+            $out[$i]['images'] = Image::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
+            $i++;
+        }
 
-      return $out;
+        return $out;
     }
 
     public function delete()
     {
-
-        foreach($this->images()->get() as $img ){
-          $img->delete();
+        foreach ($this->images()->get() as $img) {
+            $img->delete();
         }
 
         return parent::delete();
     }
 
 
-    static public function getNextPositionByMenuId( $menuId )
+    public static function getNextPositionByMenuId($menuId)
     {
-
-      if( empty($menuId) ){
-        $page = Page::query()
-                  ->whereNull( 'menu_id'  )
+        if (empty($menuId)) {
+            $page = Page::query()
+                  ->whereNull('menu_id')
                   ->orderBy('position', 'desc')
                   ->first()
                   ;
-      }else{
-        $page = Page::query()
-                  ->where( 'menu_id', '=', $menuId )
+        } else {
+            $page = Page::query()
+                  ->where('menu_id', '=', $menuId)
                   ->orderBy('position', 'desc')
                   ->first()
                   ;
-      }
+        }
 
-      if( !$page ){
-        return 1;
-      }
-      return  $page->position+1;
+        if (!$page) {
+            return 1;
+        }
+        return  $page->position+1;
     }
 
-    static public function getPagesByMenuId($menuId, $pageId)
+    public static function getPagesByMenuId($menuId, $pageId)
     {
-      $page = [];
-      if( empty($menuId) ){
-        $page = Page::query()
-                  ->whereNull( 'menu_id'  )
+        $page = [];
+        if (empty($menuId)) {
+            $page = Page::query()
+                  ->whereNull('menu_id')
                   ->orderBy('position', 'asc')
                   ->get()
                   ;
-      }elseif( !empty($menuId) && empty($pageId) ) {
-        $page = Page::query()
-                  ->where( 'menu_id', '=', $menuId )
-                  ->whereNull( 'page_id'  )                  
+        } elseif (!empty($menuId) && empty($pageId)) {
+            $page = Page::query()
+                  ->where('menu_id', '=', $menuId)
+                  ->whereNull('page_id')
                   ->orderBy('position', 'asc')
                   ->get()
                   ;
-      }elseif(!empty($menuId) && !empty($pageId)){
-        $page = Page::query()
-                  ->where( 'menu_id', '=', $menuId )
-                  ->where( 'page_id', '=', $pageId )                  
+        } elseif (!empty($menuId) && !empty($pageId)) {
+            $page = Page::query()
+                  ->where('menu_id', '=', $menuId)
+                  ->where('page_id', '=', $pageId)
                   ->orderBy('position', 'asc')
                   ->get()
                   ;
-      }
-      return $page;
+        }
+        return $page;
     }
 
 
-    static public function swapPosition($direction, $id)
+    public static function swapPosition($direction, $id)
     {
+        $page = Page::find($id);
+        if (!$page) {
+            return false;
+        }
+        $menuId = $page->menu_id;
+        $pageId = $page->page_id;
+        $pages = Page::getPagesByMenuId($menuId, $pageId);
 
-      $page = Page::find($id);
-      if( !$page ){
-          return false;
-      }
-      $menuId = $page->menu_id;
-      $pageId = $page->page_id;
-      $pages = Page::getPagesByMenuId($menuId, $pageId);
 
+        $countPages = count($pages);
+        if ($countPages < 2) {
+            return false;
+        }
 
-      $countPages = count($pages);
-      if($countPages < 2){
-        return false;
-      }
+        foreach ($pages as $key => $p) {
+            if (($p->id == $id)) {
+                if ($direction === "up") {
+                    $swapKey = ($key === 0) ?  $countPages - 1 : $key - 1;
+                }
 
-      foreach ($pages as $key => $p) {
+                if ($direction === "down") {
+                    $swapKey = ($key === ($countPages - 1)) ? 0 : $key + 1;
+                }
 
-        if( ($p->id == $id)  ){
-          if( $direction === "up" ){
-            $swapKey = ( $key === 0 ) ?  $countPages - 1 : $key - 1;
-          }
+                $positionKey = $p->position;
 
-          if( $direction === "down" ){
-            $swapKey = ( $key === ($countPages - 1) ) ? 0 : $key + 1;
-          }
+                Page::where('id', $p->id)->update([ 'position' => $pages[$swapKey]->position ]);
 
-          $positionKey = $p->position;
-
-          Page::where( 'id', $p->id)->update([ 'position' => $pages[$swapKey]->position ]);
-
-          Page::where( 'id', $pages[$swapKey]->id )->update( ['position' => $positionKey ]  );
-          //$obj2 = Page::find($pages[$swapKey]->id);          
+                Page::where('id', $pages[$swapKey]->id)->update(['position' => $positionKey ]);
+                //$obj2 = Page::find($pages[$swapKey]->id);
           //$obj2->position = 44;  //$positionKey;
           //$obj2->save();
+            }
         }
-      }
-      return true;
+        return true;
     }
 }

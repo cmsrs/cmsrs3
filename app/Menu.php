@@ -5,7 +5,6 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
-
 class Menu extends Base
 {
     private $translate;
@@ -27,64 +26,62 @@ class Menu extends Base
     {
         parent::__construct($attributes);
 
-        $this->translate = new Translate;  
+        $this->translate = new Translate;
     }
 
 
-    public function setTranslate( $objTranslate )
+    public function setTranslate($objTranslate)
     {
-        if( !empty($objTranslate) ){
+        if (!empty($objTranslate)) {
             $this->translate = $objTranslate;
         }
     }
 
 
-    private function  getMenuObj()
+    private function getMenuObj()
     {
-
         $menuObj = new Menu;
         $menuObj->setTranslate($this->translate);
         return $menuObj;
     }
     
 
-    static public function CreateMenu($data)
+    public static function CreateMenu($data)
     {
+        $data['position'] = Menu::getNextPosition();
 
-      $data['position'] = Menu::getNextPosition();
+        $menu = Menu::create($data);
+        if (empty($menu->id)) {
+            throw new \Exception("I cant get menu id");
+        }
 
-      $menu = Menu::create( $data );
-      if( empty($menu->id)){
-        throw new \Exception("I cant get menu id");
-      }
-
-      return $menu;
+        return $menu;
     }
 
-    public function wrapUpdate($data) 
+    public function wrapUpdate($data)
     {
-      $this->update($data); 
-      $this->translate->wrapCreate( [ 'menu_id' => $this->id, 'data' => $data ], false );
-      return true;
-    }    
+        $this->update($data);
+        $this->translate->wrapCreate([ 'menu_id' => $this->id, 'data' => $data ], false);
+        return true;
+    }
 
 
     /**
      * use also in script to load demo (test) data
      * php artisan command:load-demo-data
      */
-    public function wrapCreate($data) 
+    public function wrapCreate($data)
     {
-      $menu = Menu::CreateMenu($data);
-      $this->translate->wrapCreate( [ 'menu_id' => $menu->id, 'data' => $data ], true );
+        $menu = Menu::CreateMenu($data);
+        $this->translate->wrapCreate([ 'menu_id' => $menu->id, 'data' => $data ], true);
 
-      return $menu;
+        return $menu;
     }
     
     public function getSlugByLang($lang)
     {
         $column = 'name';
-        $name = $this->translatesByColumnAndLang( $column, $lang );
+        $name = $this->translatesByColumnAndLang($column, $lang);
 
         return Str::slug($name, "-");
     }
@@ -92,154 +89,151 @@ class Menu extends Base
     public function getAllTranslate()
     {
         $menuId = $this->id;
-        $isCache = env( 'CACHE_ENABLE', false );
-        if($isCache){        
-          $ret = cache()->remember( 'menutranslatemenuid_'.$menuId  , Carbon::now()->addYear(1), function() use($menuId) {
-            return  $this->translates()->where('menu_id', $menuId )->get(['lang', 'column', 'value'])->toArray();
-          });
-        }else{
-          $ret = $this->translates()->where('menu_id', $menuId )->get(['lang', 'column', 'value'])->toArray();
+        $isCache = env('CACHE_ENABLE', false);
+        if ($isCache) {
+            $ret = cache()->remember('menutranslatemenuid_'.$menuId, Carbon::now()->addYear(1), function () use ($menuId) {
+                return  $this->translates()->where('menu_id', $menuId)->get(['lang', 'column', 'value'])->toArray();
+            });
+        } else {
+            $ret = $this->translates()->where('menu_id', $menuId)->get(['lang', 'column', 'value'])->toArray();
         }
         return $ret;
     }
 
     public function pages()
     {
-      return $this->hasMany('App\Page');
+        return $this->hasMany('App\Page');
     }
 
     public function translates()
     {
-      return $this->hasMany('App\Translate');
+        return $this->hasMany('App\Translate');
     }
 
     public function pagesPublished()
     {
-      $pages = $this->pages()->where( 'published', '=', 1 )->orderBy('position', 'asc');
-      return $pages;
+        $pages = $this->pages()->where('published', '=', 1)->orderBy('position', 'asc');
+        return $pages;
     }
 
     public function pagesPublishedAndAccess()
     {
-      if (Auth::check()) {
-        $pages = $this->pages()->where( 'published', '=', 1 )->orderBy('position', 'asc');
-      }else{
-        $pages =  $this->pages()->where( 'published', '=', 1 )->where( 'after_login', '=', 0 )->orderBy('position', 'asc');
-      }
+        if (Auth::check()) {
+            $pages = $this->pages()->where('published', '=', 1)->orderBy('position', 'asc');
+        } else {
+            $pages =  $this->pages()->where('published', '=', 1)->where('after_login', '=', 0)->orderBy('position', 'asc');
+        }
 
-      return $pages;
+        return $pages;
     }
 
     public function pagesPublishedTree($pagesByMenu)
     {
-      $tree = array();
-      foreach($pagesByMenu as $page){
-        if(empty($page->page_id)){
-          $tree[$page->id] = $page;
+        $tree = array();
+        foreach ($pagesByMenu as $page) {
+            if (empty($page->page_id)) {
+                $tree[$page->id] = $page;
+            }
         }
-      }
 
 
-      foreach($pagesByMenu as $page){
-        if(!empty($page->page_id)){
-          $children = empty($tree[$page->page_id]['children']) ? [] : $tree[$page->page_id]['children'];
-          array_push($children, $page);
-          if( !empty($tree[$page->page_id]) ){
-            $tree[$page->page_id]->setAttribute('children', $children);
-          }
-
+        foreach ($pagesByMenu as $page) {
+            if (!empty($page->page_id)) {
+                $children = empty($tree[$page->page_id]['children']) ? [] : $tree[$page->page_id]['children'];
+                array_push($children, $page);
+                if (!empty($tree[$page->page_id])) {
+                    $tree[$page->page_id]->setAttribute('children', $children);
+                }
+            }
         }
-      }
 
-      return $tree;
+        return $tree;
     }
 
-    static public function getAllMenus()
+    public static function getAllMenus()
     {
+        $menus =  Menu::with('translates')->orderBy('position', 'asc')->get()->toArray();
 
-      $menus =  Menu::with('translates')->orderBy('position', 'asc')->get()->toArray();
-
-      $out = [];
-      $i = 0;
-      foreach($menus as $menu){
-        $out[$i]['id'] = $menu['id'];
-        $out[$i]['position'] = $menu['position'];
-        foreach($menu['translates'] as $translate){
-          $out[$i][$translate['column']][$translate['lang']] = $translate['value'];
+        $out = [];
+        $i = 0;
+        foreach ($menus as $menu) {
+            $out[$i]['id'] = $menu['id'];
+            $out[$i]['position'] = $menu['position'];
+            foreach ($menu['translates'] as $translate) {
+                $out[$i][$translate['column']][$translate['lang']] = $translate['value'];
+            }
+            $i++;
         }
-        $i++;
-      }
 
-      return $out;
+        return $out;
     }
 
-    static public function checkIsDuplicateName($data, $id = '')
+    public static function checkIsDuplicateName($data, $id = '')
     {
-      $out = ['success' => true ];
-      $menus = Menu::getAllMenus();
-      foreach($menus as $menu){
-        if($menu['id']  == $id ){
-          continue;
+        $out = ['success' => true ];
+        $menus = Menu::getAllMenus();
+        foreach ($menus as $menu) {
+            if ($menu['id']  == $id) {
+                continue;
+            }
+            foreach ($menu['name'] as $lang => $name) {
+                if (empty($data['name']) || empty($data['name'][$lang])) {
+                    throw new \Exception("menu name is empty - but is require");
+                }
+                $nameIn = Str::slug($data['name'][$lang], "-");
+                $n = Str::slug($name, "-");
+                if ($nameIn == $n) {
+                    $out['success'] = false;
+                    $out['error'] = "Duplicate menu: $name ($lang)";
+                    break;
+                }
+            }
         }
-        foreach($menu['name'] as $lang => $name ){
-          if( empty($data['name']) || empty($data['name'][$lang])){
-            throw new \Exception("menu name is empty - but is require");
-          }
-          $nameIn = Str::slug($data['name'][$lang], "-");
-          $n = Str::slug($name, "-");
-          if($nameIn == $n ){
-            $out['success'] = false;
-            $out['error'] = "Duplicate menu: $name ($lang)";
-            break;
-          }
-        }
-      }
-      return $out;
+        return $out;
     }
 
-    static public function getNextPosition()
+    public static function getNextPosition()
     {
-      $menu = Menu::query()
+        $menu = Menu::query()
                 ->orderBy('position', 'desc')
                 ->first()
                 ;
 
-      if( !$menu ){
-        return 1;
-      }
-      return  $menu->position+1;
+        if (!$menu) {
+            return 1;
+        }
+        return  $menu->position+1;
     }
 
-    static public function swapPosition($direction, $id)
+    public static function swapPosition($direction, $id)
     {
-      $menus = Menu::query()
+        $menus = Menu::query()
                 ->orderBy('position', 'asc')
                 ->get()
                 ;
 
-      $countMenus = count($menus);
-      if($countMenus < 2){
-        return false;
-      }
-
-      foreach ($menus as $key => $menu) {
-        if( ($menu->id == $id)  ){
-
-          if( $direction === "up" ){
-            $swapKey = ( $key === 0 ) ?  $countMenus - 1 : $key - 1;
-          }
-
-          if( $direction === "down" ){
-            $swapKey = ( $key === ($countMenus - 1) ) ? 0 : $key + 1;
-          }
-
-          $positionKey = $menu->position;
-          $menu->position = $menus[$swapKey]->position;
-          $menu->save();
-          $menus[$swapKey]->position = $positionKey;
-          $menus[$swapKey]->save();
+        $countMenus = count($menus);
+        if ($countMenus < 2) {
+            return false;
         }
-      }
-      return true;
+
+        foreach ($menus as $key => $menu) {
+            if (($menu->id == $id)) {
+                if ($direction === "up") {
+                    $swapKey = ($key === 0) ?  $countMenus - 1 : $key - 1;
+                }
+
+                if ($direction === "down") {
+                    $swapKey = ($key === ($countMenus - 1)) ? 0 : $key + 1;
+                }
+
+                $positionKey = $menu->position;
+                $menu->position = $menus[$swapKey]->position;
+                $menu->save();
+                $menus[$swapKey]->position = $positionKey;
+                $menus[$swapKey]->save();
+            }
+        }
+        return true;
     }
 }

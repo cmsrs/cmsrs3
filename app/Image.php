@@ -6,7 +6,6 @@ use Carbon\Carbon;
 
 class Image extends Base
 {
-
     private $translate;
 
     const IMAGE_DIR = 'images';
@@ -27,13 +26,13 @@ class Image extends Base
     ];
 
     protected $fillable = [
-        'name', 
-        'position', 
-        'page_id', 
+        'name',
+        'position',
+        'page_id',
         'product_id'
     ];
 
-    static private  $type = [
+    private static $type = [
         'page' => 'page_id',
         'product' => 'product_id'
     ];
@@ -48,41 +47,41 @@ class Image extends Base
     {
         parent::__construct($attributes);
 
-        $this->translate = new Translate;  
+        $this->translate = new Translate;
     }
 
     public function translates()
     {
         return $this->hasMany('App\Translate');
-    }    
+    }
 
-    public function setTranslate( $objTranslate )
+    public function setTranslate($objTranslate)
     {
-        if( !empty($objTranslate) ){
+        if (!empty($objTranslate)) {
             $this->translate = $objTranslate;
         }
     }
 
     public function getAllTranslate()
     {
-      $imageId = $this->id;
-      $isCache = env( 'CACHE_ENABLE', false );
-      if($isCache){
-        $ret = cache()->remember( 'imagetranslate_'.$imageId  , Carbon::now()->addYear(1), function() use($imageId) {
-          return $this->translates()->where('image_id', $imageId )->get(['lang', 'column', 'value'])->toArray();
-        });
-      }else{
-        $ret = $this->translates()->where('image_id', $imageId )->get(['lang', 'column', 'value'])->toArray();
-      }
+        $imageId = $this->id;
+        $isCache = env('CACHE_ENABLE', false);
+        if ($isCache) {
+            $ret = cache()->remember('imagetranslate_'.$imageId, Carbon::now()->addYear(1), function () use ($imageId) {
+                return $this->translates()->where('image_id', $imageId)->get(['lang', 'column', 'value'])->toArray();
+            });
+        } else {
+            $ret = $this->translates()->where('image_id', $imageId)->get(['lang', 'column', 'value'])->toArray();
+        }
 
-      return $ret;
-    }    
+        return $ret;
+    }
 
     /**
     * TODO - mmove function to helper
     * fix for another language
-    */  
-    static  public function filter($string, $delimiter = '-' )
+    */
+    public static function filter($string, $delimiter = '-')
     {
         $to_replace   = array('ą', 'ę', 'ó', 'ś', 'ć', 'ń', 'ł', 'ż', 'ź', 'Ą', 'Ę', 'Ó', 'Ś', 'Ć', 'Ń', 'Ł', 'Ż', 'Ź', '%20',' ');
         $replace_with = array('a', 'e', 'o', 's', 'c', 'n', 'l', 'z', 'z', 'A', 'E', 'O', 'S', 'C', 'N', 'L', 'Z', 'Z', $delimiter, $delimiter );
@@ -91,36 +90,37 @@ class Image extends Base
 
         $string = str_replace($to_replace, $replace_with, $string);
         $string = str_replace($filter, '', $string);
-        return   strtolower( trim(  $string) );
-    } 
+        return   strtolower(trim($string));
+    }
 
     public function delete()
     {
-      $this->deleteImg();
-      return parent::delete();
+        $this->deleteImg();
+        return parent::delete();
     }
 
     private function deleteImg()
     {
-      $allImg = self::getAllImage($this);
-      foreach ($allImg as $key => $path) {
-        if( file_exists($path) ){
-            unlink($path);
+        $allImg = self::getAllImage($this);
+        foreach ($allImg as $key => $path) {
+            if (file_exists($path)) {
+                unlink($path);
+            }
         }
-      }
     }
 
-    public function getHtmlImage( $type = self::IMAGE_THUMB_TYPE_MEDIUM ){
-      $img = self::getAllImage($this, false);
-      return $img[$type];
+    public function getHtmlImage($type = self::IMAGE_THUMB_TYPE_MEDIUM)
+    {
+        $img = self::getAllImage($this, false);
+        return $img[$type];
     }
 
     public function getRefId()
     {
-        if($this->page_id){
+        if ($this->page_id) {
             return $this->page_id;
         }
-        if($this->product_id){
+        if ($this->product_id) {
             return $this->product_id;
         }
         return null;
@@ -128,10 +128,10 @@ class Image extends Base
 
     public function getRefType()
     {
-        if($this->page_id){
+        if ($this->page_id) {
             return 'page';
         }
-        if($this->product_id){
+        if ($this->product_id) {
             return 'product';
         }
         return null;
@@ -140,234 +140,232 @@ class Image extends Base
     /**
     *  return all thumbs and main img
     */
-    public  static  function getAllImage($img, $isAbs = true){
-      $out = [];
-      $objImg = Image::find($img->id);
-      if(empty($objImg)){
-        return false;
-      }
-      $imgDir = Image::getImageDir( $objImg->getRefType(),  $objImg->getRefId(), $img->id, $isAbs );
-      $fileName = pathinfo($img->name, PATHINFO_FILENAME );
-      $fileExt = pathinfo($img->name, PATHINFO_EXTENSION );
+    public static function getAllImage($img, $isAbs = true)
+    {
+        $out = [];
+        $objImg = Image::find($img->id);
+        if (empty($objImg)) {
+            return false;
+        }
+        $imgDir = Image::getImageDir($objImg->getRefType(), $objImg->getRefId(), $img->id, $isAbs);
+        $fileName = pathinfo($img->name, PATHINFO_FILENAME);
+        $fileExt = pathinfo($img->name, PATHINFO_EXTENSION);
 
-      $out[self::IMAGE_ORG] = $imgDir.'/'.$img->name;
-      foreach (self::$thumbs as $imgName => $dimention) {
-        $out[$imgName] = $imgDir.'/'.$fileName.'-'.$imgName.'.'.$fileExt;
-      }
+        $out[self::IMAGE_ORG] = $imgDir.'/'.$img->name;
+        foreach (self::$thumbs as $imgName => $dimention) {
+            $out[$imgName] = $imgDir.'/'.$fileName.'-'.$imgName.'.'.$fileExt;
+        }
 
-      return $out;
+        return $out;
     }
 
-    static public function getImageDir( $type, $refId, $imageId, $isAbs = true )
+    public static function getImageDir($type, $refId, $imageId, $isAbs = true)
     {
-        if( empty(  Image::$type[$type]) ){
+        if (empty(Image::$type[$type])) {
             throw new \Exception("I can't get image type");
         }
 
         $url = Image::IMAGE_DIR.'/'. $type .'/'.$refId.'/'.$imageId;
 
-        if($isAbs){
+        if ($isAbs) {
             return public_path($url);
         }
 
         return '/'.$url;
     }
 
-    static public function createImagesAndUpdateAlt($images, $type,  $refId){
-      $imagesCreate = [];
-      $imagesUpdate = [];
+    public static function createImagesAndUpdateAlt($images, $type, $refId)
+    {
+        $imagesCreate = [];
+        $imagesUpdate = [];
 
-      foreach($images as $image){
-        if(!empty($image['id'])){
-          $imagesUpdate[] = $image;
-        }else{
-          $imagesCreate[] = $image;
-        }
-      }
-
-      //the order is important - first update then create
-      if($imagesUpdate){
-        (new Image)->updateImages($imagesUpdate);
-      }
-      if($imagesCreate){
-        (new Image)->createImages($imagesCreate, $type,  $refId);
-      }
-
-      return true;    
-    }
-
-    public function updateImages($images){
-      foreach($images as $image){
-        $this->translate->wrapCreate( [ 'image_id' => $image['id'], 'data' => $image ], false );    
-      }
-    }
-
-    public function createImages($images, $type,  $refId ){
-
-      $out = [];
-
-      foreach ($images as $key => $image) {
-        $name = self::filter($image['name']);
-        $alt = !empty($image['alt']) ? $image['alt'] : null;
-
-        $data = $image['data'];
-
-        if( empty( $strRefId = Image::$type[$type]) ){
-            throw new \Exception("I can't get image type in createImages");
+        foreach ($images as $image) {
+            if (!empty($image['id'])) {
+                $imagesUpdate[] = $image;
+            } else {
+                $imagesCreate[] = $image;
+            }
         }
 
-        $dbData = [
+        //the order is important - first update then create
+        if ($imagesUpdate) {
+            (new Image)->updateImages($imagesUpdate);
+        }
+        if ($imagesCreate) {
+            (new Image)->createImages($imagesCreate, $type, $refId);
+        }
+
+        return true;
+    }
+
+    public function updateImages($images)
+    {
+        foreach ($images as $image) {
+            $this->translate->wrapCreate([ 'image_id' => $image['id'], 'data' => $image ], false);
+        }
+    }
+
+    public function createImages($images, $type, $refId)
+    {
+        $out = [];
+
+        foreach ($images as $key => $image) {
+            $name = self::filter($image['name']);
+            $alt = !empty($image['alt']) ? $image['alt'] : null;
+
+            $data = $image['data'];
+
+            if (empty($strRefId = Image::$type[$type])) {
+                throw new \Exception("I can't get image type in createImages");
+            }
+
+            $dbData = [
             'name' => $name,
-            'position' => Image::getNextPositionByTypeAndRefId( $type,  $refId ),
+            'position' => Image::getNextPositionByTypeAndRefId($type, $refId),
             $strRefId => $refId
         ];
-        $image = Image::create($dbData);
+            $image = Image::create($dbData);
 
-        if( empty($image->id) ){
-          throw new \Exception("I can't get image id");
+            if (empty($image->id)) {
+                throw new \Exception("I can't get image id");
+            }
+
+            $this->translate->wrapCreate([ 'image_id' => $image->id, 'data' => ['alt' => $alt ] ]);
+
+            $out[$key] = $image;
+
+            $dirImg = Image::getImageDir($type, $refId, $image->id);
+            if (!file_exists($dirImg)) {
+                mkdir($dirImg, 0777, true);
+            }
+            \LibImage::make($data)->save($dirImg.'/'.$name);
+
+            $fileName = pathinfo($name, PATHINFO_FILENAME);
+            $fileExt = pathinfo($name, PATHINFO_EXTENSION);
+
+            foreach (self::$thumbs as $thumbName => $dimension) {
+                $fileThumb = $dirImg.'/'.$fileName.'-'.$thumbName.'.'.$fileExt;
+                \LibImage::make($data)->resize($dimension['x'], $dimension['y'])->save($fileThumb);
+            }
         }
-
-        $this->translate->wrapCreate( [ 'image_id' => $image->id, 'data' => ['alt' => $alt ] ] );  
-
-        $out[$key] = $image;
-
-        $dirImg = Image::getImageDir( $type,  $refId, $image->id );
-        if (!file_exists($dirImg)) {
-          mkdir($dirImg, 0777, true);
-        }
-        \LibImage::make($data)->save($dirImg.'/'.$name);
-
-        $fileName = pathinfo($name, PATHINFO_FILENAME );
-        $fileExt = pathinfo($name, PATHINFO_EXTENSION );
-
-        foreach (self::$thumbs as $thumbName => $dimension) {
-          $fileThumb = $dirImg.'/'.$fileName.'-'.$thumbName.'.'.$fileExt;
-          \LibImage::make($data)->resize($dimension['x'], $dimension['y'])->save($fileThumb);
-
-        }
-
-      }
-      return $out;
+        return $out;
     }
 
-    static public function getNextPositionByTypeAndRefId( $type,  $refId )
+    public static function getNextPositionByTypeAndRefId($type, $refId)
     {
-      if( empty( $strRefId = Image::$type[$type]) ){
-           throw new \Exception("I can't get image type in getNextPositionByTypeAndRefId");
-      }
+        if (empty($strRefId = Image::$type[$type])) {
+            throw new \Exception("I can't get image type in getNextPositionByTypeAndRefId");
+        }
 
-      if( empty($refId) ){
-        $image = Image::query()
-                  ->whereNull( $strRefId  )
+        if (empty($refId)) {
+            $image = Image::query()
+                  ->whereNull($strRefId)
                   ->orderBy('position', 'desc')
                   ->first()
                   ;
-      }else{
-        $image = Image::query()
-                  ->where( $strRefId, '=', $refId )
+        } else {
+            $image = Image::query()
+                  ->where($strRefId, '=', $refId)
                   ->orderBy('position', 'desc')
                   ->first()
                   ;
-      }
-
-      if( !$image ){
-        return 1;
-      }
-      return  $image->position+1;
-    }
-
-
-    static public function getImagesAndThumbsByTypeAndRefId(  $type, $refId = null)
-    {
-      $images  = Image::getImagesByTypeAndRefId(  $type, $refId);
-
-      foreach($images  as $k => $img){
-        $images[$k]['alt'] = Image::getAltImg($img);
-        $images[$k]['fs']  = Image::getAllImage($img, false);
-        unset($img['translates']);
-      }
-
-      return $images;
-    }
-
-    static public function getAltImg( $objImg )
-    {
-      $out = [];          
-      $translates = $objImg->translates->toArray();
-      foreach($translates as $translate){
-        if($translate['column'] == 'alt' ){
-          $out[$translate['lang']] = $translate['value'];
         }
-      }
-      return $out;
+
+        if (!$image) {
+            return 1;
+        }
+        return  $image->position+1;
     }
 
-    static public function getImagesByTypeAndRefId(  $type, $refId = null)
-    {
 
-      if( empty( $strRefId = Image::$type[$type]) ){
+    public static function getImagesAndThumbsByTypeAndRefId($type, $refId = null)
+    {
+        $images  = Image::getImagesByTypeAndRefId($type, $refId);
+
+        foreach ($images  as $k => $img) {
+            $images[$k]['alt'] = Image::getAltImg($img);
+            $images[$k]['fs']  = Image::getAllImage($img, false);
+            unset($img['translates']);
+        }
+
+        return $images;
+    }
+
+    public static function getAltImg($objImg)
+    {
+        $out = [];
+        $translates = $objImg->translates->toArray();
+        foreach ($translates as $translate) {
+            if ($translate['column'] == 'alt') {
+                $out[$translate['lang']] = $translate['value'];
+            }
+        }
+        return $out;
+    }
+
+    public static function getImagesByTypeAndRefId($type, $refId = null)
+    {
+        if (empty($strRefId = Image::$type[$type])) {
             throw new \Exception("I can't get image type in getImagesByTypeAndRefId");
-      }
+        }
 
-      $image = [];
-      if( empty($refId) ){
-        $image = Image::with(['translates'])
-                  ->whereNull( $strRefId  )
+        $image = [];
+        if (empty($refId)) {
+            $image = Image::with(['translates'])
+                  ->whereNull($strRefId)
                   ->orderBy('position', 'asc')
                   ->get()
                   ;
-      }else{
-        $image = Image::with(['translates'])
-                  ->where( $strRefId, '=', $refId )
+        } else {
+            $image = Image::with(['translates'])
+                  ->where($strRefId, '=', $refId)
                   ->orderBy('position', 'asc')
                   ->get()
                   ;
-      }
-      return $image;
+        }
+        return $image;
     }
 
-    static public function swapPosition($direction, $id)
+    public static function swapPosition($direction, $id)
     {
-
-      $image = Image::find($id);
-      if( !$image ){
-          return false;
-      }
-
-      $t = 'page';
-      $refId = null;
-      foreach(Image::$type as $type => $key ){
-        if( !empty($image->{$key}) ){
-          $t = $type;
-          $refId = $image->{$key};
+        $image = Image::find($id);
+        if (!$image) {
+            return false;
         }
-      }
 
-      $images = Image::getImagesByTypeAndRefId( $t, $refId);
-
-      $countImages = count($images);
-      if($countImages < 2){
-        return false;
-      }
-
-      foreach ($images as $key => $img) {
-
-        if( ($img->id == $id)  ){
-          if( $direction === "up" ){
-            $swapKey = ( $key === 0 ) ?  $countImages - 1 : $key - 1;
-          }
-
-          if( $direction === "down" ){
-            $swapKey = ( $key === ($countImages - 1) ) ? 0 : $key + 1;
-          }
-
-          $positionKey = $img->position;
-          $img->position = $images[$swapKey]->position;
-          $img->save();
-          $images[$swapKey]->position = $positionKey;
-          $images[$swapKey]->save();
+        $t = 'page';
+        $refId = null;
+        foreach (Image::$type as $type => $key) {
+            if (!empty($image->{$key})) {
+                $t = $type;
+                $refId = $image->{$key};
+            }
         }
-      }
-      return true;
+
+        $images = Image::getImagesByTypeAndRefId($t, $refId);
+
+        $countImages = count($images);
+        if ($countImages < 2) {
+            return false;
+        }
+
+        foreach ($images as $key => $img) {
+            if (($img->id == $id)) {
+                if ($direction === "up") {
+                    $swapKey = ($key === 0) ?  $countImages - 1 : $key - 1;
+                }
+
+                if ($direction === "down") {
+                    $swapKey = ($key === ($countImages - 1)) ? 0 : $key + 1;
+                }
+
+                $positionKey = $img->position;
+                $img->position = $images[$swapKey]->position;
+                $img->save();
+                $images[$swapKey]->position = $positionKey;
+                $images[$swapKey]->save();
+            }
+        }
+        return true;
     }
 }

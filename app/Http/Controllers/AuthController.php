@@ -5,10 +5,10 @@ use Illuminate\Http\Request;
 use App\User;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use Validator, DB; //, Hash; //Mail;
+use Validator;
+use DB; //, Hash; //Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Mail\Message;
-
 
 class AuthController extends Controller
 {
@@ -29,7 +29,7 @@ class AuthController extends Controller
         ];
 
         $validator = Validator::make($credentials, $rules);
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json(['success'=> false, 'error'=> $validator->messages()], 401);
         }
 
@@ -37,7 +37,8 @@ class AuthController extends Controller
         return $this->getTokenByCredentials($credentials);
     }
 
-    private function getTokenByCredentials($credentials){
+    private function getTokenByCredentials($credentials)
+    {
         try {
             // attempt to verify the credentials and create a token for the user
             if (!$token = JWTAuth::attempt($credentials)) {
@@ -49,7 +50,7 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', '=', $credentials['email'])->firstOrFail();
-        if($user->role != User::$role['admin'] ){
+        if ($user->role != User::$role['admin']) {
             return response()->json(['success' => false, 'error' => 'No access.'], 401);
         }
 
@@ -65,7 +66,8 @@ class AuthController extends Controller
      *
      * @param Request $request
      */
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         $this->validate($request, ['token' => 'required']);
 
         try {
@@ -86,40 +88,38 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $demoStatus = env('DEMO_STATUS', false);
-        if($demoStatus){
+        if ($demoStatus) {
             echo "Not permission";
-        }else{
-              if(  '127.0.0.1' !== $request->ip() ||  ($request->input('secret') !== $_ENV['RS_SECRET'])  ){
+        } else {
+            if ('127.0.0.1' !== $request->ip() ||  ($request->input('secret') !== $_ENV['RS_SECRET'])) {
                 return response()->json(['success'=> false, 'error'=> 'no access'  ]);
-              }
+            }
       
-              $credentials = $request->only('name', 'email', 'password');
+            $credentials = $request->only('name', 'email', 'password');
       
-              $rules = [
+            $rules = [
                   'name' => 'max:255',
                   'email' => 'required|email|max:255|unique:users'
               ];
-              $validator = Validator::make($credentials, $rules);
-              if($validator->fails()) {
-                  return response()->json(['success'=> false, 'error'=> $validator->messages()]);
-              }
-              $name = $request->name;
-              $email = $request->email;
-              $password = $request->password;
+            $validator = Validator::make($credentials, $rules);
+            if ($validator->fails()) {
+                return response()->json(['success'=> false, 'error'=> $validator->messages()]);
+            }
+            $name = $request->name;
+            $email = $request->email;
+            $password = $request->password;
       
       
-              $user = new User([
+            $user = new User([
                   'email'    => $email,
                   'name'     => $name,
                   'role' => User::$role['admin']
               ]);
       
-              $user->password = $password;      
-              $user->save();
+            $user->password = $password;
+            $user->save();
       
-              return $this->getTokenByCredentials($credentials);      
+            return $this->getTokenByCredentials($credentials);
         }
-
     }
-
 }

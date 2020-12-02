@@ -12,16 +12,15 @@ class Contact extends Model
     ];
 
     public function getAllData()
-    {        
+    {
         $out = [];
         $contacts = Contact::All();
-        foreach($contacts as $contact){
-
+        foreach ($contacts as $contact) {
             $item = [];
-            $item['id'] = $contact->id;            
+            $item['id'] = $contact->id;
             $item['email'] = $contact->email;
             $item['message'] = $contact->message;
-            $item['created_at_format'] = $contact->created_at->format( 'Y-m-d H:i:s' );
+            $item['created_at_format'] = $contact->created_at->format('Y-m-d H:i:s');
             $out[] = $item;
         }
         return $out;
@@ -34,6 +33,4 @@ class Contact extends Model
     {
         return $this->create($data);
     }
-
 }
-

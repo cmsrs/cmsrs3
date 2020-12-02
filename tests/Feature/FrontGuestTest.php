@@ -9,10 +9,8 @@ use App\Page;
 use App\Menu;
 use Illuminate\Support\Str;
 
-
 class FrontGuestTest extends TestCase
 {
-
     public function setUp(): void
     {
         putenv('LANGS="en"');
@@ -39,17 +37,17 @@ class FrontGuestTest extends TestCase
         $this->assertNotEmpty($p->id);
 
         $lang = 'en';
-		$page = Page::getFirstPageByType('login' );
-        $pageTitle = $page->translatesByColumnAndLang( 'title', $lang );
-        $pageShortTitle = $page->translatesByColumnAndLang( 'short_title', $lang );
+        $page = Page::getFirstPageByType('login');
+        $pageTitle = $page->translatesByColumnAndLang('title', $lang);
+        $pageShortTitle = $page->translatesByColumnAndLang('short_title', $lang);
         $this->assertNotEmpty($pageTitle);
-        $this->assertNotEmpty($pageShortTitle);                        
+        $this->assertNotEmpty($pageShortTitle);
 
-		$urlLogin = $page->getUrl($lang);
-		$response = $this->get($urlLogin);
-		$response->assertStatus(200);            
-		
-        $pos = strpos( $response->getContent(), $pageTitle );
+        $urlLogin = $page->getUrl($lang);
+        $response = $this->get($urlLogin);
+        $response->assertStatus(200);
+        
+        $pos = strpos($response->getContent(), $pageTitle);
         $this->assertNotEmpty($pos, $pageTitle);
     }
 
@@ -68,7 +66,6 @@ class FrontGuestTest extends TestCase
 
         $response = $this->get('/pll');
         $response->assertStatus(404);
-
     }
 
     /** @test */
@@ -93,7 +90,7 @@ class FrontGuestTest extends TestCase
         (new Page)->wrapCreate($testData2);
 
         $response = $this->get('/');
-        $response->assertStatus(401);        
+        $response->assertStatus(401);
     }
 
 
@@ -120,10 +117,10 @@ class FrontGuestTest extends TestCase
         (new Page)->wrapCreate($testData2);
 
         $response = $this->get('/');
-        $response->assertStatus(200);        
+        $response->assertStatus(200);
     }
 
-    /** @test */    
+    /** @test */
     public function get_footer_links_2()
     {
         $testData2 =
@@ -153,7 +150,7 @@ class FrontGuestTest extends TestCase
         ];
 
 
-        $mContact = (new Menu)->wrapCreate(['name' =>  ['en' =>'Contact']]);        
+        $mContact = (new Menu)->wrapCreate(['name' =>  ['en' =>'Contact']]);
         $pContact = [
             'title'     =>  ['en' =>'Contact form'],
             'short_title' =>  ['en' =>'Contact'],
@@ -168,30 +165,30 @@ class FrontGuestTest extends TestCase
         ];
         
         (new Page)->wrapCreate($testData2);
-        (new Page)->wrapCreate($pPrivacy);                
+        (new Page)->wrapCreate($pPrivacy);
         (new Page)->wrapCreate($pContact);
 
 
         $footerPages = Page::getFooterPages('en');
 
         $this->assertNotEmpty($footerPages['policyUrl']);
-        $this->assertNotEmpty($footerPages['policyTitle']);        
+        $this->assertNotEmpty($footerPages['policyTitle']);
         $this->assertNotEmpty($footerPages['contactUrl']);
-        $this->assertNotEmpty($footerPages['contactTitle']);        
+        $this->assertNotEmpty($footerPages['contactTitle']);
 
 
-        $response = $this->get( $footerPages['policyUrl'] );
+        $response = $this->get($footerPages['policyUrl']);
         $response->assertStatus(200);
 
-        $response2 = $this->get( $footerPages['contactUrl'] );
+        $response2 = $this->get($footerPages['contactUrl']);
         $response2->assertStatus(200);
-
     }
 
 
 
     /** @test */
-    public function it_will_link_0(){
+    public function it_will_link_0()
+    {
         $testDataMenu = ['name' =>  ['en' => 'About']];
         $m1 = (new Menu)->wrapCreate($testDataMenu);
         
@@ -223,28 +220,28 @@ class FrontGuestTest extends TestCase
 
         
         $p1 = (new Page)->wrapCreate($data1p);
-        $p2 = (new Page)->wrapCreate($data2p);        
+        $p2 = (new Page)->wrapCreate($data2p);
 
         $page1Slug = $p1->getSlugByLang('en'); //Str::slug($data1p['title']['en']);
-        $page2Slug = $p2->getSlugByLang('en'); //Str::slug($data2p['title']['en']);        
+        $page2Slug = $p2->getSlugByLang('en'); //Str::slug($data2p['title']['en']);
 
-        $url1 = $p1->getUrl('en');        
+        $url1 = $p1->getUrl('en');
 
-        $this->assertSame('/'.Page::PREFIX_CMS_URL.'/'.$m1->getSlugByLang('en').'/'.$page1Slug, $url1);    
+        $this->assertSame('/'.Page::PREFIX_CMS_URL.'/'.$m1->getSlugByLang('en').'/'.$page1Slug, $url1);
 
-        $response1 = $this->get($url1 );
-        $response1->assertStatus(200);            
+        $response1 = $this->get($url1);
+        $response1->assertStatus(200);
 
-        $url2 = $p2->getUrl('en');        
-        $this->assertSame('/'.Page::PREFIX_CMS_URL.'/'.$m1->getSlugByLang('en').'/'.$page2Slug, $url2);    
+        $url2 = $p2->getUrl('en');
+        $this->assertSame('/'.Page::PREFIX_CMS_URL.'/'.$m1->getSlugByLang('en').'/'.$page2Slug, $url2);
         $response2 = $this->get($url2);
-        $response2->assertStatus(200);            
-
+        $response2->assertStatus(200);
     }
 
 
     /** @test */
-    public function it_will_link_forbid(){
+    public function it_will_link_forbid()
+    {
         $testDataMenu = ['name' =>  ['en' => 'About']];
         $m1 = (new Menu)->wrapCreate($testDataMenu);
         
@@ -281,10 +278,10 @@ class FrontGuestTest extends TestCase
         $p2 = (new Page)->wrapCreate($data2p);
 
 
-        $response1 = $this->get($p1->getUrl('en'));        
-        $response1->assertStatus(401);            
-        $response2 = $this->get($p2->getUrl('en'));        
-        $response2->assertStatus(401);            
+        $response1 = $this->get($p1->getUrl('en'));
+        $response1->assertStatus(401);
+        $response2 = $this->get($p2->getUrl('en'));
+        $response2->assertStatus(401);
     }
 
     /** @test */
@@ -328,14 +325,13 @@ class FrontGuestTest extends TestCase
         $p2 = (new Page)->wrapCreate($data2p);
 
         $page1Slug = Str::slug($data1p['title']['en']);
-        $page2Slug = Str::slug($data2p['title']['en']);        
+        $page2Slug = Str::slug($data2p['title']['en']);
 
-        $response1 = $this->get($p1->getUrl('en')  ) ;        
-        $response1->assertStatus(401);      
+        $response1 = $this->get($p1->getUrl('en')) ;
+        $response1->assertStatus(401);
 
-        $response1 = $this->get($p2->getUrl('en')  ) ;        
-        $response1->assertStatus(404);      
-
+        $response1 = $this->get($p2->getUrl('en')) ;
+        $response1->assertStatus(404);
     }
 
     /** @test */
@@ -379,14 +375,13 @@ class FrontGuestTest extends TestCase
         $p2 = (new Page)->wrapCreate($data2p);
 
         $page1Slug = Str::slug($data1p['title']['en']);
-        $page2Slug = Str::slug($data2p['title']['en']);        
+        $page2Slug = Str::slug($data2p['title']['en']);
 
 
-        $response1 = $this->get($p1->getUrl('en'));        
+        $response1 = $this->get($p1->getUrl('en'));
         $response1->assertStatus(200);
 
-        $response2 = $this->get($p2->getUrl('en'));        
+        $response2 = $this->get($p2->getUrl('en'));
         $response2->assertStatus(404);
-        
-    }    
+    }
 }

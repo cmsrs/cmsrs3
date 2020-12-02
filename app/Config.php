@@ -10,58 +10,58 @@ class Config extends Model
 
     private $langs;
 
-    function __construct() {
-      $this->langs = empty(env('LANGS')) ? '' : env('LANGS');
+    public function __construct()
+    {
+        $this->langs = empty(env('LANGS')) ? '' : env('LANGS');
     }
     
-    public function setLangs( $langs )
+    public function setLangs($langs)
     {
-      $this->langs = $langs;
+        $this->langs = $langs;
     }
 
     public function getLangs()
     {
-      return $this->langs;
+        return $this->langs;
     }
 
-    static public function getPageTypes()
+    public static function getPageTypes()
     {
-      $pageTypes = '';
-      if( env('PAGE_TYPES') ){
-        $pageTypes = env('PAGE_TYPES');
-      }else{
-        $pageTypes = Config::PAGE_TYPES_STR_DEFAULT;
-      }
+        $pageTypes = '';
+        if (env('PAGE_TYPES')) {
+            $pageTypes = env('PAGE_TYPES');
+        } else {
+            $pageTypes = Config::PAGE_TYPES_STR_DEFAULT;
+        }
 
-      return $pageTypes;
+        return $pageTypes;
     }
 
-    static public function arrGetPageTypes()
+    public static function arrGetPageTypes()
     {
-      $strPageTypes = Config::getPageTypes();
-      return explode(',',$strPageTypes);
+        $strPageTypes = Config::getPageTypes();
+        return explode(',', $strPageTypes);
     }
 
     public function getLangsFromEnv()
     {
-      $langs = '';
-      if( $this->getLangs() ){
-        $langs = $this->getLangs();
-      }else{
-        throw new \Exception("You must set at least one language in the .env file");
-      }
-      return $langs;
+        $langs = '';
+        if ($this->getLangs()) {
+            $langs = $this->getLangs();
+        } else {
+            throw new \Exception("You must set at least one language in the .env file");
+        }
+        return $langs;
     }
 
     public function arrGetLangs()
     {
-      $strLangs = Config::getLangsFromEnv();
-      return explode(',',$strLangs);
+        $strLangs = Config::getLangsFromEnv();
+        return explode(',', $strLangs);
     }
 
-    static public function arrGetLangsEnv()
+    public static function arrGetLangsEnv()
     {
-      return explode(',',env('LANGS', '') );
+        return explode(',', env('LANGS', ''));
     }
-    
 }

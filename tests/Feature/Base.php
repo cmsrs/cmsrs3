@@ -13,174 +13,170 @@ use App\Content;
 
 class Base extends TestCase
 {
+    protected $token;
 
-  protected $token;
 
-
-  public function createUser()
-  {
-
-      $user = new User([
+    public function createUser()
+    {
+        $user = new User([
            'email'    => 'test@email.com',
            'name'     => 'test testowy',
           'role' => User::$role['admin']
        ]);
 
-      $user->password = 'cmsrs';
+        $user->password = 'cmsrs';
 
-      User::where('email',  'test@email.com')->delete();
-      $user->save();
-
-
-      $this->token = $this->getTestToken();
-  }
+        User::where('email', 'test@email.com')->delete();
+        $user->save();
 
 
-
-  public function setUp(): void
-  {
-      parent::setUp();
+        $this->token = $this->getTestToken();
+    }
 
 
-  }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+    }
 
     protected function tearDown(): void
     {
         parent::tearDown();
-
     }
 
 
-    public function getAllUrlRelatedToMenus( $lang )
+    public function getAllUrlRelatedToMenus($lang)
     {
-      //cms link
-      //see in: resources/views/includes/header.blade.php
-      //this function only use in tests - maybe it will use in code in the future
-      $url = [];
-      $menus = Menu::All();
-      $f0 = false;
-      $f1 = false;      
-      $f2 = false;            
-      //print_r($menus->toArray());
-      foreach ($menus as $menu) { 
-        $pagesPublishedAndAccess = $menu->pagesPublishedAndAccess()->get();
-        if( 1 == $pagesPublishedAndAccess->count() ){ 
-          $f0 = true;
-          $url[] = $pagesPublishedAndAccess->first()->getUrl($lang);
-        }else{
-          foreach ($menu->pagesPublishedTree($pagesPublishedAndAccess) as $page) {
-                $url[] = $page->getUrl($lang);
-                $f1 = true;
-                if( !empty($page['children']) && !empty($page->published) ){
-                    foreach ($page['children'] as $p) {
-                        $f2 = true;                      
-                        $url[] = $p->getUrl($lang);
+        //cms link
+        //see in: resources/views/includes/header.blade.php
+        //this function only use in tests - maybe it will use in code in the future
+        $url = [];
+        $menus = Menu::All();
+        $f0 = false;
+        $f1 = false;
+        $f2 = false;
+        //print_r($menus->toArray());
+        foreach ($menus as $menu) {
+            $pagesPublishedAndAccess = $menu->pagesPublishedAndAccess()->get();
+            if (1 == $pagesPublishedAndAccess->count()) {
+                $f0 = true;
+                $url[] = $pagesPublishedAndAccess->first()->getUrl($lang);
+            } else {
+                foreach ($menu->pagesPublishedTree($pagesPublishedAndAccess) as $page) {
+                    $url[] = $page->getUrl($lang);
+                    $f1 = true;
+                    if (!empty($page['children']) && !empty($page->published)) {
+                        foreach ($page['children'] as $p) {
+                            $f2 = true;
+                            $url[] = $p->getUrl($lang);
+                        }
                     }
                 }
-          }
+            }
         }
-      }
-      $this->assertTrue($f0);
-      $this->assertTrue($f1);
-      $this->assertTrue($f2);
+        $this->assertTrue($f0);
+        $this->assertTrue($f1);
+        $this->assertTrue($f2);
 
-      return $url;
+        return $url;
     }
 
-    public function checkAllPagesByLang( $p, $lang )
+    public function checkAllPagesByLang($p, $lang)
     {
-
         $numOfInPages = count($p);
         $this->assertNotEmpty($numOfInPages);
 
         $urlIn = [];
-        foreach($p as $page){
-            $pageTitle = $page->translatesByColumnAndLang( 'title', $lang );
-            $pageShortTitle = $page->translatesByColumnAndLang( 'short_title', $lang );
+        foreach ($p as $page) {
+            $pageTitle = $page->translatesByColumnAndLang('title', $lang);
+            $pageShortTitle = $page->translatesByColumnAndLang('short_title', $lang);
             $this->assertNotEmpty($pageTitle);
-            $this->assertNotEmpty($pageShortTitle);                        
+            $this->assertNotEmpty($pageShortTitle);
 
             $itemUrlIn = $page->getUrl($lang);
 
             $response = $this->get($itemUrlIn);
 
-            if( 'login' ==  $page->type ) {
+            if ('login' ==  $page->type) {
                 $response->assertStatus(302);   //redirect to home page, because user is log in
-                $pos = strpos( $response->getContent(), 'home' );
+                $pos = strpos($response->getContent(), 'home');
                 $this->assertNotEmpty($pos, $pageTitle);
-            }else{
-                $response->assertStatus(200);                   
-                $pos = strpos( $response->getContent(), $pageTitle );
+            } else {
+                $response->assertStatus(200);
+                $pos = strpos($response->getContent(), $pageTitle);
                 $this->assertNotEmpty($pos, $pageTitle);
             }
-            $urlIn[] = $itemUrlIn; 
+            $urlIn[] = $itemUrlIn;
         }
         
         //All Url Related To Menus
-        $url = $this->getAllUrlRelatedToMenus( $lang );
-        foreach( $url as $u){
+        $url = $this->getAllUrlRelatedToMenus($lang);
+        foreach ($url as $u) {
             $response = $this->get($u);
-            $response->assertStatus(200);          
+            $response->assertStatus(200);
         }
 
         //independent
-        $urlPolicy = Page::getFirstPageByType('privacy_policy' )->getUrl($lang);
+        $urlPolicy = Page::getFirstPageByType('privacy_policy')->getUrl($lang);
         $response2 = $this->get($urlPolicy);
-        $response2->assertStatus(200);    
+        $response2->assertStatus(200);
         $url[] = $urlPolicy;
 
         //main page
-        $urlMainPage = Page::getFirstPageByType('main_page' )->getUrl($lang);
+        $urlMainPage = Page::getFirstPageByType('main_page')->getUrl($lang);
         $response3 = $this->get($urlMainPage);
-        $response3->assertStatus(200);            
+        $response3->assertStatus(200);
         $url[] = $urlMainPage;
 
         //login
-        $urlLogin = Page::getFirstPageByType('login' )->getUrl($lang);
+        $urlLogin = Page::getFirstPageByType('login')->getUrl($lang);
         $response3 = $this->get($urlLogin);
-        $response3->assertStatus(302);            
+        $response3->assertStatus(302);
         $url[] = $urlLogin;
 
         $this->assertEquals($numOfInPages, count($url));
 
-        foreach($url as $uu){
+        foreach ($url as $uu) {
             $isInTable = in_array($uu, $urlIn);
             $this->assertTrue($isInTable);
-        }        
+        }
     }
 
 
 
-  public function getTestToken()
-  {
-    $response = $this->post('api/login', [
+    public function getTestToken()
+    {
+        $response = $this->post('api/login', [
         'email'    => 'test@email.com',
         'password' => 'cmsrs'
     ])->getData();
 
-    return $response->data->token;
-  }
+        return $response->data->token;
+    }
 
-  public function getFixturePath($file){
-    $path = getcwd().'/tests/Feature/fixture/';
-    $path = $path.$file;
-    $this->assertFileExists($path);
+    public function getFixturePath($file)
+    {
+        $path = getcwd().'/tests/Feature/fixture/';
+        $path = $path.$file;
+        $this->assertFileExists($path);
 
-    return $path;
-  }
-  public function getFixtureBase64($file){
-    $path = $this->getFixturePath($file);
-    $type = pathinfo($path, PATHINFO_EXTENSION);
-    $data = file_get_contents($path);
-    $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-    return $base64;
-  }
+        return $path;
+    }
+    public function getFixtureBase64($file)
+    {
+        $path = $this->getFixturePath($file);
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        return $base64;
+    }
 
 
-  protected function dateToTestParent( $menuId )
-  {
-    $this->assertNotEmpty($menuId);
-    $testData1 =
+    protected function dateToTestParent($menuId)
+    {
+        $this->assertNotEmpty($menuId);
+        $testData1 =
     [
          'title'     => ["en" => 'test p1'],
          'short_title' => ["en" => 'p11'],
@@ -189,10 +185,10 @@ class Base extends TestCase
          'content' => ["en" => 'ppp1'],
          'menu_id' =>  $menuId
     ];
-    $response1 = $this->post('api/pages?token='.$this->token, $testData1);
-    $this->assertTrue( $response1->getData()->success );
+        $response1 = $this->post('api/pages?token='.$this->token, $testData1);
+        $this->assertTrue($response1->getData()->success);
 
-    $testData2 =
+        $testData2 =
     [
          'title' =>  ["en" =>PageTest::STR_PARENT_TWO],
          'short_title' => ["en" =>'p22'],
@@ -201,27 +197,27 @@ class Base extends TestCase
          'content' => ["en" =>'parent page ppp2'],
          'menu_id' =>  $menuId
     ];
-    $response2 = $this->post('api/pages?token='.$this->token, $testData2);
-    $this->assertTrue( $response2->getData()->success );    
+        $response2 = $this->post('api/pages?token='.$this->token, $testData2);
+        $this->assertTrue($response2->getData()->success);
 
-    //check pages:
-    $res = $this->get('api/pages?token='.$this->token );
-    $r = $res->getData();
-    $this->assertTrue( $r->success );
+        //check pages:
+        $res = $this->get('api/pages?token='.$this->token);
+        $r = $res->getData();
+        $this->assertTrue($r->success);
 
-    //find parenent page    
-    $parentId = null;
-    $pages = Page::all();
-    foreach($pages as $p){
-        $title = Page::find($p->id)->translatesByColumnAndLang( 'title', 'en' );
-        if(PageTest::STR_PARENT_TWO == $title){
-            $parentId = $p->id;
+        //find parenent page
+        $parentId = null;
+        $pages = Page::all();
+        foreach ($pages as $p) {
+            $title = Page::find($p->id)->translatesByColumnAndLang('title', 'en');
+            if (PageTest::STR_PARENT_TWO == $title) {
+                $parentId = $p->id;
+            }
         }
-    }
 
-    $this->assertNotEmpty($parentId);
+        $this->assertNotEmpty($parentId);
     
-    $testData3 =
+        $testData3 =
     [
          'title'     => ["en" => PageTest::STR_CHILD_ONE],
          'short_title' => ["en" =>'p33'],
@@ -231,10 +227,10 @@ class Base extends TestCase
          'page_id' => $parentId,
          'menu_id' =>  $menuId
     ];
-    $response3 = $this->post('api/pages?token='.$this->token, $testData3);
-    $this->assertTrue( $response3->getData()->success );        
+        $response3 = $this->post('api/pages?token='.$this->token, $testData3);
+        $this->assertTrue($response3->getData()->success);
 
-    $testData4 =
+        $testData4 =
     [
          'title'     => ["en" =>PageTest::STR_CHILD_TWO],
          'short_title' => ["en" =>'p44'],
@@ -244,10 +240,10 @@ class Base extends TestCase
          'page_id' => $parentId,
          'menu_id' =>  $menuId
     ];
-    $response4 = $this->post('api/pages?token='.$this->token, $testData4);
-    $this->assertTrue( $response4->getData()->success );        
+        $response4 = $this->post('api/pages?token='.$this->token, $testData4);
+        $this->assertTrue($response4->getData()->success);
 
-    $testData5 =
+        $testData5 =
     [
          'title'     => ["en" => PageTest::STR_PARENT_TREE ], // 'p5',
          'short_title' => ["en" =>'p55'],
@@ -256,19 +252,19 @@ class Base extends TestCase
          'content' => ["en" =>'pppppppp5'],
          'menu_id' =>  $menuId
     ];
-    $response5 = $this->post('api/pages?token='.$this->token, $testData5);
-    $this->assertTrue( $response5->getData()->success );            
+        $response5 = $this->post('api/pages?token='.$this->token, $testData5);
+        $this->assertTrue($response5->getData()->success);
 
-    return $parentId;
-  }
+        return $parentId;
+    }
 
 
-  protected function getPageTestData()
-  {
-      $m = (new Menu)->wrapCreate(['name' => ['en' => 'About cmsRS', 'pl' => 'O cmsRS' ] ]);
-      $this->assertNotEmpty( $m->id );        
+    protected function getPageTestData()
+    {
+        $m = (new Menu)->wrapCreate(['name' => ['en' => 'About cmsRS', 'pl' => 'O cmsRS' ] ]);
+        $this->assertNotEmpty($m->id);
 
-      $data1p = [
+        $data1p = [
           'title'     =>  ['en' => 'About me', 'pl' => 'O mnie', 'es' => 'Fake' ],//require
           'short_title' => ['en' =>'About me', 'pl' => 'O mnie', 'es' => 'Fake'],//require
           'description' => ['en' =>'Description... Needed for google', 'pplll' => 'Opis... potrzebne dla googla', 'es' => 'Fake'],//not require
@@ -283,6 +279,5 @@ class Base extends TestCase
             ]
         ];
         return  $data1p;
-  }
-
+    }
 }

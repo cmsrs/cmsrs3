@@ -9,7 +9,6 @@ use Illuminate\Console\Command;
 use App\Page;
 use App\Menu;
 
-
 class Migration extends Command
 {
     /**
@@ -45,15 +44,15 @@ class Migration extends Command
      */
     public function handle()
     {
-        $this->mainPage();        
+        $this->mainPage();
         $this->privacyPage();
         $this->loginPage();
         $menus = $this->getOldMenuData();
-        foreach($menus as $oldMenuId => $m){
-            $newMenu = (new Menu)->wrapCreate(['name' => $m]);            
+        foreach ($menus as $oldMenuId => $m) {
+            $newMenu = (new Menu)->wrapCreate(['name' => $m]);
             $pages = $this->getOldPagesByMenuId($oldMenuId);
-            foreach($pages as $oldPageId => $p){
-              $newPage = $this->createPagesForMenu( $newMenu->id, $p, $oldPageId );
+            foreach ($pages as $oldPageId => $p) {
+                $newPage = $this->createPagesForMenu($newMenu->id, $p, $oldPageId);
             }
         }
     }
@@ -70,30 +69,30 @@ class Migration extends Command
         $images = DB::connection('mysql2')->select($sql);
 
         $out = [];
-        foreach($images as $img){
+        foreach ($images as $img) {
             $out[$img->id]['alt'][$img->lang] = $img->value;
             $out[$img->id]['name'] = $img->name;
 
             $imgPath = $this->imgOldPath.$oldPageId."/".$img->name;
-            if( !file_exists($imgPath) ){
-              die("obrazek: $imgPath nie istnieje");
+            if (!file_exists($imgPath)) {
+                die("obrazek: $imgPath nie istnieje");
             }
             $out[$img->id]['data'] = $this->getImgData($imgPath); //wrog for performance
-        } 
+        }
 
         return $out;
     }
 
     private function getImgData($img)
     {
-      $type = pathinfo($img, PATHINFO_EXTENSION);
-      $data = file_get_contents($img);
-      $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        $type = pathinfo($img, PATHINFO_EXTENSION);
+        $data = file_get_contents($img);
+        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
   
-      return $base64;
+        return $base64;
     }
 
-    private function createPagesForMenu( $newMenuId, $oldData, $oldPageId )
+    private function createPagesForMenu($newMenuId, $oldData, $oldPageId)
     {
         $dataP = [
             'title'     => $oldData['page_title'],
@@ -107,8 +106,8 @@ class Migration extends Command
             //'images' => $this->getOldImagesByPageId($oldPageId) //comment this if you dont want images
         ];
 
-        return (new Page)->wrapCreate($dataP);    
-    } 
+        return (new Page)->wrapCreate($dataP);
+    }
 
     
 
@@ -126,16 +125,14 @@ class Migration extends Command
         $pages = DB::connection('mysql2')->select($sql);
 
         $out = [];
-        foreach($pages as $p){
+        foreach ($pages as $p) {
             $out[$p->id][$p->key][$p->lang] = $p->value;
-        } 
-        foreach($pages as $pp){
+        }
+        foreach ($pages as $pp) {
             $out[$pp->id]['content'][$pp->c_lang] = $pp->content;
         }
         
         return $out;
-
-
     }
 
 
@@ -144,9 +141,9 @@ class Migration extends Command
         $menus = DB::connection('mysql2')->select("select m.id, t.lang, t.value  from core_menus as m  left join core_translates as t on (t.menu_id = m.id )   where m.published = 1 and t.key = 'label' order by m.position;");
 
         $out = [];
-        foreach($menus as $m){
+        foreach ($menus as $m) {
             $out[$m->id][$m->lang] = $m->value;
-        }      
+        }
         return $out;
     }
     
@@ -155,23 +152,23 @@ class Migration extends Command
     {
         $mainPage =
         [
-            'title'     =>[ 
-                "en" =>  'Multilingual CMS system with online store module, Laravel and React Redux, checkers online, tic-tac-toe online game, ball line online game, Robert  Szczepanski - home page - cmsRS', 
+            'title'     =>[
+                "en" =>  'Multilingual CMS system with online store module, Laravel and React Redux, checkers online, tic-tac-toe online game, ball line online game, Robert  Szczepanski - home page - cmsRS',
                 "pl" =>  'Wielojęzyczny CMS z modułem sklepu internetowego, Laravel i React Redux, gra w warcaby, gra w kółko i krzyżyk, gra w kulki, Robert Szczepański - strona prywatna - cmsRS'
             ],
-            'short_title' =>[ 
-                "en" =>  'cmsRS main page', 
+            'short_title' =>[
+                "en" =>  'cmsRS main page',
                 "pl" =>  'cmsRS strona glowna'
             ],
-            'description' =>[ 
-                "en" =>  'download multilingual cms with online store module, base on Laravel and React Redux, tic-tac-toe game, checkers online,  ball lines game. Home page of Robert Szczepanski', 
-                "pl" =>  'pobierz wilojęzyczny cms z modulem sklepu internetowego oparty o Laravel i React Redux, gra w kółko i krzyżyk, warcaby, gra w kulki. Prywatna strona Roberta Szczepańskiego' 
+            'description' =>[
+                "en" =>  'download multilingual cms with online store module, base on Laravel and React Redux, tic-tac-toe game, checkers online,  ball lines game. Home page of Robert Szczepanski',
+                "pl" =>  'pobierz wilojęzyczny cms z modulem sklepu internetowego oparty o Laravel i React Redux, gra w kółko i krzyżyk, warcaby, gra w kulki. Prywatna strona Roberta Szczepańskiego'
             ],
             'published' => 1,
             'commented' => 0,
             'after_login' => 0,
             'type' => 'main_page', //!!
-            'content' => [ 
+            'content' => [
                 'en' => '
             <div>
 
@@ -280,7 +277,7 @@ class Migration extends Command
               <hr>        
             </div> <!-- /container -->
           
-            </div>'          
+            </div>'
         
         
         ],
@@ -296,8 +293,8 @@ class Migration extends Command
         $pPrivacy = [
             'title'     => [ "en" =>'Privacy policy', "pl" => "Polityka prywatności" ],
             'short_title' => [ "en" =>'Privacy policy', "pl" => "Polityka prywatności"],
-            'description' => [ 
-                "en" =>'Polityka prywatności, Polityka cookies, Polityka użycia plików cookies w naszym serwisie oraz opis zarządzania ustawieniami cookies w przeglądarce', 
+            'description' => [
+                "en" =>'Polityka prywatności, Polityka cookies, Polityka użycia plików cookies w naszym serwisie oraz opis zarządzania ustawieniami cookies w przeglądarce',
                 "pl" => 'Polityka prywatności, Polityka cookies, Polityka użycia plików cookies w naszym serwisie oraz opis zarządzania ustawieniami cookies w przeglądarce'
             ],
             'published' => 1,
@@ -307,17 +304,17 @@ class Migration extends Command
             'images' => [
             ]
         ];
-        (new Page)->wrapCreate($pPrivacy);    
-    }   
+        (new Page)->wrapCreate($pPrivacy);
+    }
 
     private function getPrivacyPolicy()
-    {    
+    {
         return '<p>POLITYKA COOKIES<br /> <br />Zgodnie z wymaganiami dotyczącymi serwisów internetowych, informuje Państwa, że dla zapewnienia lepszego działania serwisu używam mechanizmu plików cookies.<br /><br />1. Pliki cookies (tzw. "ciasteczka”) stanowią dane informatyczne, w szczególności pliki tekstowe, które są zapisywane i przechowywane w urządzeniu końcowym Użytkownika Serwisu ( na komputerze, smartfonie, tablecie itp.) i przeznaczone są do korzystania ze stron internetowych Serwisu. Cookies zazwyczaj zawierają nazwę strony internetowej, z której pochodzą, czas przechowywania plików cookies na urządzeniu końcowym oraz unikalny numer, służący do identyfikacji przeglądarki, z jakiej następuje połączenie ze stroną internetową.<br /> <br />2.Pliki cookies wykorzystywane są w celu:<br /><br />a) dostosowania zawartości stron internetowych Serwisu do preferencji Użytkownika oraz optymalizacji korzystania ze stron internetowych; w szczególności pliki te pozwalają rozpoznać urządzenie końcowe Użytkownika Serwisu i odpowiednio wyświetlić stronę internetową, dostosowaną do jego indywidualnych potrzeb;<br /><br />b) tworzenia statystyk, które pomagają zrozumieć, w jaki sposób Użytkownicy Serwisu korzystają ze stron internetowych, co umożliwia ulepszanie ich struktury i zawartości;<br /> <br />c) utrzymanie sesji Użytkownika Serwisu (po zalogowaniu), dzięki której Użytkownik nie musi na każdej podstronie Serwisu ponownie wpisywać loginu i hasła (o ile funkcja logowań ie jest dostępna w Serwisie).<br />  <br />3. W ramach Serwisu stosowane są dwa zasadnicze rodzaje plików cookies:<br /> <br />a) "sesyjne" (session cookies), które są plikami tymczasowymi, które przechowywane są w urządzeniu końcowym Użytkownika do czasu wylogowania, opuszczenia strony internetowej lub wyłączenia oprogramowania (przeglądarki internetowej) i które są niezbędne do działania Serwisu oraz korzystania z usług dostępnych w ramach Serwisu;<br /> <br />b) "stałe" (persistent cookies),które przechowywane są w urządzeniu końcowym Użytkownika przez czas określony w parametrach plików cookies lub do czasu ich usunięcia przez Użytkownika.<br /> <br />4. W ramach Serwisu pliki cookies mogą być wykorzystywane w celu:<br /> <br />a) zbierania informacji o sposobie korzystania przez Użytkownika ze stron internetowych Serwisu (np.: informacji na temat obszarów, które odwiedza Użytkownik, czasu jaki na nich spędza oraz problemów jakie na nich napotyka), co pozwala poprawiać działanie stron internetowych Serwisu,<br /> <br />b) zapamiętania wybranych przez Użytkownika ustawień by zapewnić personalizację interfejsu Użytkownika (np. w zakresie wybranego języka lub regionu, z którego pochodzi Użytkownik, rozmiaru czcionki, wyglądu strony internetowej) oraz by dostarczyć Użytkownikowi bardziej spersonalizowane treści i usługi;<br /> <br />5. W wielu przypadkach przeglądark i internetowe domyślnie dopuszczają przechowywanie plików cookies w urządzeniu końcowym Użytkownika. Użytkownicy Serwisu mogą dokonać w każdym czasie zmiany ustawień dotyczących plików cookies w swoich przeglądarkach internetowych. Zmiana ustawień może w szczególności polegać na blokowaniu automatycznej obsługi plików cookies bądź na informowaniu o każdorazowym zamieszczeniu plików cookies w urządzeniu końcowym Użytkownika Serwisu. Szczegółowe informacje o możliwości i sposobach obsługi plików cookies dostępne są w ustawieniach przeglądarki internetowej.<br /> <br />6. Informuje, że ograniczenia stosowania plików cookies mogą wpłynąć na niektóre funkcjonalności dostępne na stronach internetowych Serwisu, co może negatywnie wpłynąć na wygodę korzystania z Serwisu lub doprowadzić do zablokowania niektórych funkcjonalności.</p>';
     }
 
 
     private function loginPage()
-    {    
+    {
         $pLogin = [
             'title'     => [ "en" =>'Log into cmsRS system', "pl" => "Logowanie do systemu cmsRS" ],
             'short_title' => [ "en" =>'Login', "pl" => "Logowanie"],
@@ -330,5 +327,4 @@ class Migration extends Command
         ];
         (new Page)->wrapCreate($pLogin);
     }
-
 }

@@ -9,7 +9,7 @@ class ContactTest extends Base
 {
     use RefreshDatabase;
     public $content1;
-    public $content2;    
+    public $content2;
 
     public function setUp(): void
     {
@@ -26,7 +26,6 @@ class ContactTest extends Base
             'email' => 'ja@cmsrs.pl',
             'message' => 'test2'
         );
-
     }
 
     protected function tearDown(): void
@@ -34,10 +33,9 @@ class ContactTest extends Base
         parent::tearDown();
         $this->content1 = null;
         $this->content2 = null;
-
     }
 
-    public  function setTestData()
+    public function setTestData()
     {
         $response1 = $this->post('api/contact/en', $this->content1);
         $this->assertTrue($response1->getData()->success);
@@ -45,7 +43,7 @@ class ContactTest extends Base
         $response2 = $this->post('api/contact/en', $this->content2);
         $this->assertTrue($response2->getData()->success);
 
-        $this->assertEquals(2, Contact::All()->count() );
+        $this->assertEquals(2, Contact::All()->count());
     }
 
     /** @test */
@@ -53,19 +51,19 @@ class ContactTest extends Base
     {
         $this->setTestData();
         
-        $response = $this->get('api/contacts?token='.$this->token );
+        $response = $this->get('api/contacts?token='.$this->token);
         $res = $response->getData();
-        $this->assertTrue( $res->success );
-        $this->assertEquals(2, count($res->data));   
+        $this->assertTrue($res->success);
+        $this->assertEquals(2, count($res->data));
 
         
         $this->assertEquals($this->content1['email'], $res->data[0]->email);
-        $this->assertEquals($this->content2['email'], $res->data[1]->email); 
+        $this->assertEquals($this->content2['email'], $res->data[1]->email);
         
         $this->assertNotEmpty($res->data[0]->created_at_format);
-        $this->assertNotEmpty($res->data[1]->created_at_format);        
+        $this->assertNotEmpty($res->data[1]->created_at_format);
 
-        $this->assertNotEmpty($res->data[0]->id);        
+        $this->assertNotEmpty($res->data[0]->id);
         $this->assertNotEmpty($res->data[1]->id);
     }
 
@@ -74,10 +72,10 @@ class ContactTest extends Base
     {
         $this->setTestData();
         
-        $response = $this->get('api/contacts?token='.$this->token );
+        $response = $this->get('api/contacts?token='.$this->token);
         $res = $response->getData();
-        $this->assertTrue( $res->success );
-        $this->assertEquals(2, count($res->data));        
+        $this->assertTrue($res->success);
+        $this->assertEquals(2, count($res->data));
 
         $id = $res->data[0]->id;
         $this->assertNotEmpty($res->data[0]->id);
@@ -85,19 +83,18 @@ class ContactTest extends Base
         $response0 = $this->delete('api/contacts/'.$id.'?token='.$this->token);
         $res0 = $response0->getData();
 
-        $this->assertTrue( $res0->success );
+        $this->assertTrue($res0->success);
   
-        $this->assertEquals(1, Contact::All()->count() );
+        $this->assertEquals(1, Contact::All()->count());
     }
 
     /** @test */
     public function it_will_create_contact_by_wrap_create()
     {
         $ret = (new Contact)->wrapCreate($this->content1);
-        $this->assertEquals(1, Contact::All()->count() );
+        $this->assertEquals(1, Contact::All()->count());
 
         $d = Contact::All()->first()->toArray();
-        $this->assertEquals($d['email'], $this->content1['email'] );        
+        $this->assertEquals($d['email'], $this->content1['email']);
     }
-
 }

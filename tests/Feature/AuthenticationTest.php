@@ -9,7 +9,6 @@ use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
 {
-
     use RefreshDatabase;
 
 
@@ -30,19 +29,18 @@ class AuthenticationTest extends TestCase
         $user->password = 'cmsrs';
 
         $user->save();
-
     }
 
-    private function privilege_action( $token ){
-
-        $response = $this->get('api/menus?token='.$token );
+    private function privilege_action($token)
+    {
+        $response = $this->get('api/menus?token='.$token);
         return $response;
     }
 
 
-    private function logout_action( $token )
+    private function logout_action($token)
     {
-        $response = $this->get('api/logout?token='.$token ); //->getData();
+        $response = $this->get('api/logout?token='.$token); //->getData();
 
         return $response;
     }
@@ -51,14 +49,14 @@ class AuthenticationTest extends TestCase
     /** @skip */
     public function it_will_register_a_user()
     {
-        if( empty($_ENV['RS_SECRET']) ){
+        if (empty($_ENV['RS_SECRET'])) {
             return true;
         }
 
         $secret = $_ENV['RS_SECRET'];
 
         $response = $this->post('api/register', [
-            'secret' => $secret,            
+            'secret' => $secret,
             'email'    => 'test2@email.com',
             'name'     => 'iii',
             'password' => 'cmsrs'
@@ -68,16 +66,15 @@ class AuthenticationTest extends TestCase
         $response = $response->getData();
 
 
-        $this->assertStringStartsWith(  'eyJ0eXA',   $response->data->token );
-        $this->assertTrue( $response->success  );
+        $this->assertStringStartsWith('eyJ0eXA', $response->data->token);
+        $this->assertTrue($response->success);
 
 
-        $privilege =   $this->privilege_action( $response->data->token );
-        $this->assertNotEmpty( $privilege->getData()->testrs );
-        $logout =   $this->logout_action( $response->data->token  );
-        $this->assertTrue( $logout->getData()->success );
-        $privilegeAfterLogout =    $this->privilege_action( $response->data->token );
-
+        $privilege =   $this->privilege_action($response->data->token);
+        $this->assertNotEmpty($privilege->getData()->testrs);
+        $logout =   $this->logout_action($response->data->token);
+        $this->assertTrue($logout->getData()->success);
+        $privilegeAfterLogout =    $this->privilege_action($response->data->token);
     }
 
     /** @test */
@@ -89,20 +86,20 @@ class AuthenticationTest extends TestCase
         ];
 
 
-        $response = $this->post('api/login', $d ); //->getData();
+        $response = $this->post('api/login', $d); //->getData();
 
         $response = $response->getData();
 
-        $this->assertStringStartsWith(  'eyJ0eXA',   $response->data->token );
-        $this->assertTrue( $response->success  );
+        $this->assertStringStartsWith('eyJ0eXA', $response->data->token);
+        $this->assertTrue($response->success);
 
-        $privilege =   $this->privilege_action( $response->data->token );
+        $privilege =   $this->privilege_action($response->data->token);
         $this->assertTrue($privilege->getData()->success);
 
-        $logout =   $this->logout_action( $response->data->token  );
+        $logout =   $this->logout_action($response->data->token);
 
-        $this->assertTrue( $logout->getData()->success );
-        $privilegeAfterLogout =    $this->privilege_action( $response->data->token );
+        $this->assertTrue($logout->getData()->success);
+        $privilegeAfterLogout =    $this->privilege_action($response->data->token);
     }
 
     /** @test */
@@ -114,15 +111,15 @@ class AuthenticationTest extends TestCase
             'role' => User::$role['client']
         ]);
     
-       $user->password = 'cmsrs456';    
-       $user->save();
+        $user->password = 'cmsrs456';
+        $user->save();
 
-       $response = $this->post('api/login', [
+        $response = $this->post('api/login', [
         'email'    => 'client@email.com',
         'password' => 'cmsrs456'
         ])->getData();
 
-        $this->assertFalse($response->success);    
+        $this->assertFalse($response->success);
     }
 
     /** @test */
@@ -133,7 +130,6 @@ class AuthenticationTest extends TestCase
             'password' => 'wrongpass'
         ])->getData();
 
-        $this->assertNotEmpty(  $response->error );
-
+        $this->assertNotEmpty($response->error);
     }
 }

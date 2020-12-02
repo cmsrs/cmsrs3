@@ -14,6 +14,4 @@ class Comment extends Model
     protected $casts = [
         'page_id' => 'integer',
     ];
-    
-
 }

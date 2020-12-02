@@ -56,7 +56,7 @@ class CommentTest extends Base
             'menu_id' => $this->menuId
         ];
 
-        $objPage = (new Page)->wrapCreate($this->testPage);        
+        $objPage = (new Page)->wrapCreate($this->testPage);
 
         $res = $this->get('api/pages/type/' . $type . '?token=' . $this->token);
 
@@ -75,7 +75,6 @@ class CommentTest extends Base
     /** @test */
     public function it_will_deny_create_comment_fake_page()
     {
-
         $content = array(
             'content' => 'test comment - test123 - fake page'
         );
@@ -87,7 +86,6 @@ class CommentTest extends Base
     /** @test */
     public function it_will_deny_create_comment_page_not_commented()
     {
-
         $content = array(
             'content' => 'test comment - test123 - deny'
         );
@@ -105,7 +103,6 @@ class CommentTest extends Base
     /** @test */
     public function it_will_create_comment_docs()
     {
-
         $content = array(
             'content' => 'test comment - test123'
         );
@@ -119,7 +116,6 @@ class CommentTest extends Base
     /** @test */
     public function it_will_get_comment_docs()
     {
-
         $content1 = array(
             'content' => '111 test comment - test123'
         );
@@ -138,7 +134,7 @@ class CommentTest extends Base
         $this->assertTrue($r2->success);
 
 
-        $response = $this->get('api/comments/' . $this->pageId );
+        $response = $this->get('api/comments/' . $this->pageId);
         $res = $response->getData();
 
         $this->assertTrue($res->success);
@@ -146,8 +142,5 @@ class CommentTest extends Base
 
         $this->assertEquals(2, count($res->data));
         $this->assertEquals($content2['content'], $res->data[1]->content);
-
     }
-
-
 }
