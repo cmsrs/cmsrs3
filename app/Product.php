@@ -16,8 +16,8 @@ class Product extends Model
     ];
 
     protected $casts = [
-      'price' => 'integer',
-      'page_id' => 'integer'
+        'price' => 'integer',
+        'page_id' => 'integer'
     ];
 
     public function images()

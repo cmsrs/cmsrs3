@@ -63,10 +63,10 @@ class FrontController extends Controller
 
 
         return view('index', [
-      'menus' => $this->menus,
-      'page' => $page,
-      'lang' => $lang,
-      'langs' => $this->langs
+            'menus' => $this->menus,
+            'page' => $page,
+            'lang' => $lang,
+            'langs' => $this->langs
     ]);
     }
 
@@ -116,13 +116,13 @@ class FrontController extends Controller
         }
 
         $data = [
-      'menus' => $this->menus,
-      'page' => $pageOut,
-      'products' => $products,
-      'lang' => $lang,
-      'langs' => $this->langs,
-      're_public' => env('GOOGLE_RECAPTCHA_PUBLIC', ''),
-      'view' => $view
+            'menus' => $this->menus,
+            'page' => $pageOut,
+            'products' => $products,
+            'lang' => $lang,
+            'langs' => $this->langs,
+            're_public' => env('GOOGLE_RECAPTCHA_PUBLIC', ''),
+            'view' => $view
     ];
 
         if ($manyLangs) {
@@ -161,11 +161,11 @@ class FrontController extends Controller
         $this->validatePage($pageOut);
 
         $data = [
-      'menus' => $this->menus,
-      'page' => $pageOut,
-      'products' => $products,
-      'lang' => $lang,
-      'langs' => $this->langs,
+            'menus' => $this->menus,
+            'page' => $pageOut,
+            'products' => $products,
+            'lang' => $lang,
+            'langs' => $this->langs,
     ];
 
         if ($manyLangs) {

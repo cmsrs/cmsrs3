@@ -19,9 +19,9 @@ class Base extends TestCase
     public function createUser()
     {
         $user = new User([
-           'email'    => 'test@email.com',
-           'name'     => 'test testowy',
-          'role' => User::$role['admin']
+            'email'    => 'test@email.com',
+            'name'     => 'test testowy',
+            'role' => User::$role['admin']
        ]);
 
         $user->password = 'cmsrs';

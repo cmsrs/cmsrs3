@@ -28,17 +28,17 @@ class Page extends Base
     ];
 
     public $requiredColumn = [
-      'title',
-      'short_title'
+        'title',
+        'short_title'
     ];
 
     protected $casts = [
-          'published' => 'integer',
-          'commented' => 'integer',
-          'after_login' => 'integer',
-          'position' => 'integer',
-          'menu_id' => 'integer',
-          'page_id' => 'integer'
+        'published' => 'integer',
+        'commented' => 'integer',
+        'after_login' => 'integer',
+        'position' => 'integer',
+        'menu_id' => 'integer',
+        'page_id' => 'integer'
     ];
 
     public function __construct(array $attributes = array())
@@ -556,8 +556,8 @@ class Page extends Base
 
                 Page::where('id', $pages[$swapKey]->id)->update(['position' => $positionKey ]);
                 //$obj2 = Page::find($pages[$swapKey]->id);
-          //$obj2->position = 44;  //$positionKey;
-          //$obj2->save();
+                //$obj2->position = 44;  //$positionKey;
+                //$obj2->save();
             }
         }
         return true;

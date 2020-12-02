@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Log;
 class ImageController extends Controller
 {
     private $validationRules = [
-      'name' => 'max:255'
-  ];
+        'name' => 'max:255'
+    ];
 
     public function getItemByTypeAndRefId(Request $request, $type, $refId)
     {

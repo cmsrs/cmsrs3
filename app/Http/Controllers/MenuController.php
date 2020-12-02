@@ -19,8 +19,8 @@ class MenuController extends Controller
     }
   
     private $validationRules = [
-      'position' => 'numeric'
-  ];
+        'position' => 'numeric'
+    ];
 
 
     public function index()

@@ -143,9 +143,9 @@ class PageTest extends Base
     public function it_will_wrong_add_page()
     {
         $testData2 =
-      [
+        [
            'title'     => ['en' =>  ''],
-      ];
+        ];
 
         $response = $this->post('api/pages?token='.$this->token, $testData2);
         $this->assertFalse($response->getData()->success);
@@ -161,10 +161,10 @@ class PageTest extends Base
     {
         $this->setTestData();
         $testData2 =
-      [
+        [
            'title'     => ['en' =>  ''],
 
-      ];
+        ];
 
         $id = $this->objPage->id;
         $response = $this->put('api/pages/'.$id.'?token='.$this->token, $testData2);
@@ -247,18 +247,18 @@ class PageTest extends Base
     {
         $this->setTestData();
         $testData =
-      [
+        [
            'title'     =>  ['en' => 'test unpublished'],
            'short_title' =>  ['en' =>'unpuplish'],
            'published' => 0,
            'type' => 'cms',
            'content' =>  ['en' =>'pppppppp'],
            'menu_id' => $this->menuId
-      ];
+        ];
         $p = (new Page)->wrapCreate($testData);
 
         $testDataChild =
-      [
+        [
            'title'     =>  ['en' =>'test child'],
            'short_title' => ['en' =>'child unpuplish parent'],
            'published' => 1,
@@ -266,7 +266,7 @@ class PageTest extends Base
            'content' => ['en' =>'pppppppp2'],
            'page_id' => $p->id,
            'menu_id' => $this->menuId
-      ];
+        ];
         $pChild = (new Page)->wrapCreate($testDataChild);
 
         $this->assertNotEquals($testDataChild['published'], $pChild->published);
@@ -280,14 +280,14 @@ class PageTest extends Base
         $this->setTestData();
         $parentId = $this->dateToTestParent($this->menuId);
         $testData2 =
-      [
+        [
            'title' =>  ['en' =>PageTest::STR_PARENT_TWO],
            'short_title' => ['en' =>'p22'],
            'published' => 0, //this change
            'type' => 'cms',
            'content' => ['en' =>'parent page ppp2'],
            'menu_id' =>  $this->menuId
-      ];
+        ];
   
         $responseUpdate = $this->put('api/pages/'.$parentId.'?token='.$this->token, $testData2);
 
@@ -315,7 +315,7 @@ class PageTest extends Base
         $this->setTestData();
         $parentId = $this->dateToTestParent($this->menuId);
         $testData2 =
-      [
+        [
           'title'     =>  ['en' =>'test p2xx'],
           'short_title' =>  ['en' =>'p22'],
           'description' =>  ['en' =>'test1234'],
@@ -326,7 +326,7 @@ class PageTest extends Base
           'content' =>  ['en' =>'aaa ffdfds'],
           'menu_id' => $this->menuId, //it must be null for type main_page
           'page_id' => $parentId, //it must be null for type main_page
-      ];
+        ];
 
         $response = $this->post('api/pages?token='.$this->token, $testData2);
 
@@ -351,7 +351,7 @@ class PageTest extends Base
 
 
         $testData2Update =
-      [
+        [
           'title'     => ['en' =>'Update'],
           'short_title' => ['en' =>'Update'],
           'description' => ['en' =>'test1234'],
@@ -362,7 +362,7 @@ class PageTest extends Base
           'content' => ['en' =>'aaa ffdfds1111'],
           'menu_id' => $this->menuId, //it must be null for type main_page
           'page_id' => $parentId, //it must be null for type main_page
-      ];
+        ];
 
         $responseUpdate = $this->put('api/pages/'.$page->id.'?token='.$this->token, $testData2Update);
 
@@ -388,7 +388,7 @@ class PageTest extends Base
         $this->assertEquals($testData2Update['content']['en'], $pageU->content->en);
       
         $testData3 =
-      [
+        [
           'title'     =>  ['en' =>'second main page - wrong!'],
           'short_title' => ['en' =>'p33'],
           'description' => ['en' =>'tes333'],
@@ -399,7 +399,7 @@ class PageTest extends Base
           'content' => ['en' =>'aaa ffdfds'],
           'menu_id' => null,
           'page_id' => null
-      ];
+        ];
         $response3 = $this->post('api/pages?token='.$this->token, $testData3);
 
         $res3 = $response3->getData();
@@ -412,7 +412,7 @@ class PageTest extends Base
     {
         $this->setTestData();
         $testData2 =
-      [
+        [
            'title'     =>  ['en' =>'test p2'],
            'short_title' => ['en' => 'p22'],
            'description' => ['en' => 'ttt'],
@@ -423,7 +423,7 @@ class PageTest extends Base
            'content' => ['en' => '2sdafsfsdaf asdfasdf'],
            'page_id' =>  null,
            'menu_id' =>  $this->menuId
-      ];
+        ];
 
         $response = $this->post('api/pages?token='.$this->token, $testData2);
         $res = $response->getData();
@@ -617,14 +617,14 @@ class PageTest extends Base
     {
         $this->setTestData();
         $testData3 =
-      [
+        [
            'title'     => [ 'en' => 'test p3'],
            'short_title' => [ 'en' => 'p33'],
            'published' => 0,
            'type' => 'cms',
            'content' => [ 'en' => 'lerem ipsum ..'],
            'menu_id' =>  $this->menuId
-      ];
+        ];
 
         $response = $this->post('api/pages?token='.$this->token, $testData3);
         $this->assertTrue($response->getData()->success);
@@ -638,14 +638,14 @@ class PageTest extends Base
     {
         $this->setTestData();
         $testData3 =
-      [
+        [
            'title'     => [ 'en' => 'test p3'],
            'short_title' => [ 'en' => 'p33'],
            'published' => 0,
            'type' => 'cms',
            'content' => [ 'en' => 'sdafsfsdaf asdfasdf'],
            'menu_id' =>  $this->menuId
-      ];
+        ];
 
         $response = $this->post('api/pages?token='.$this->token, $testData3);
         $this->assertTrue($response->getData()->success);

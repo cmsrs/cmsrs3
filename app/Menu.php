@@ -18,7 +18,7 @@ class Menu extends Base
     ];
 
     public $requiredColumn = [
-      'name'
+        'name'
     ];
     
 

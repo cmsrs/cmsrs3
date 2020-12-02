@@ -11,11 +11,11 @@ use Illuminate\Support\Facades\Log;
 class ProductController extends Controller
 {
     private $validationRules = [
-      'name' => 'max:255|required',
-      'sku' => 'max:128|required|unique:products',
-      'price' => 'integer|required',
-      'description' => 'max:1280'
-  ];
+        'name' => 'max:255|required',
+        'sku' => 'max:128|required|unique:products',
+        'price' => 'integer|required',
+        'description' => 'max:1280'
+    ];
 
     public function index()
     {

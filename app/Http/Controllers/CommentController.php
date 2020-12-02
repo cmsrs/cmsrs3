@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Log;
 class CommentController extends Controller
 {
     private $validationRules = [
-      'content' => 'max:1280|required'
-  ];
+        'content' => 'max:1280|required'
+    ];
 
     public function create(Request $request, $pageId)
     {

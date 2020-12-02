@@ -25,9 +25,9 @@ class PageController extends Controller
     }
 
     private $validationRules = [
-      'published' => 'boolean',
-      'commented' => 'boolean',
-      'after_login' => 'boolean',
+        'published' => 'boolean',
+        'commented' => 'boolean',
+        'after_login' => 'boolean',
   ];
   
     public function oneItem(Request $request, $id, $lang)

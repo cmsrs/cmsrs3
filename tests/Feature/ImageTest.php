@@ -387,17 +387,17 @@ class ImageTest extends Base
         $alt2 = ['en' => null];
 
         $existChangeAltImg = [
-        ['id' => $existChangeAltImg[0]->id, 'alt' => $alt1],
-        ['id' => $existChangeAltImg[1]->id, 'alt' => $alt2]
-      ];
+            ['id' => $existChangeAltImg[0]->id, 'alt' => $alt1],
+            ['id' => $existChangeAltImg[1]->id, 'alt' => $alt2]
+        ];
 
         $name3 = 'phpunittest2.jpg';
         $file3 = $this->getFixtureBase64($name3);
 
         $newImages = [
-        ['name' => $name3, 'data' => $file3 ],
-        ['name' => $name3, 'data' => $file3 ]
-      ];
+            ['name' => $name3, 'data' => $file3 ],
+            ['name' => $name3, 'data' => $file3 ]
+        ];
 
         $images = array_merge($existChangeAltImg, $newImages);
         $this->assertEquals(count($images), 4);
