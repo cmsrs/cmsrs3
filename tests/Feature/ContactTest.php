@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Contact;
-//use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ContactTest extends Base
@@ -40,9 +39,7 @@ class ContactTest extends Base
 
     public  function setTestData()
     {
-
         $response1 = $this->post('api/contact/en', $this->content1);
-        //dd($response1);
         $this->assertTrue($response1->getData()->success);
 
         $response2 = $this->post('api/contact/en', $this->content2);
@@ -58,7 +55,6 @@ class ContactTest extends Base
         
         $response = $this->get('api/contacts?token='.$this->token );
         $res = $response->getData();
-        //print_r($res);
         $this->assertTrue( $res->success );
         $this->assertEquals(2, count($res->data));   
 
@@ -88,7 +84,6 @@ class ContactTest extends Base
 
         $response0 = $this->delete('api/contacts/'.$id.'?token='.$this->token);
         $res0 = $response0->getData();
-        //print_r($res0);
 
         $this->assertTrue( $res0->success );
   
@@ -104,7 +99,5 @@ class ContactTest extends Base
         $d = Contact::All()->first()->toArray();
         $this->assertEquals($d['email'], $this->content1['email'] );        
     }
-
-
 
 }

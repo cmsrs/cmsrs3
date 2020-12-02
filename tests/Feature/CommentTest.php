@@ -1,13 +1,10 @@
 <?php
-
 namespace Tests\Feature;
 
 use App\Page;
 use App\Menu;
-//use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-//use Tests\TestCase;
 
 class CommentTest extends Base
 {
@@ -20,7 +17,6 @@ class CommentTest extends Base
     private $testPage;
     private $testMenu;
     private $menuId;
-    //private $menuObj;
 
     private $pageId;
 
@@ -60,14 +56,11 @@ class CommentTest extends Base
             'menu_id' => $this->menuId
         ];
 
-        //$page = new Page($this->testPage);
-        //$page->save();
         $objPage = (new Page)->wrapCreate($this->testPage);        
 
         $res = $this->get('api/pages/type/' . $type . '?token=' . $this->token);
 
         $data = $res->getData();
-        //dd($data);
         $this->pageId = $data->data[0]->id;
 
         $this->assertEquals($this->pageId, $objPage->id);
@@ -105,7 +98,6 @@ class CommentTest extends Base
 
 
         $response = $this->post('api/comments/' . $objPage->id, $content);
-        //dd($response);
         $response->assertStatus(404);
     }
 
@@ -118,12 +110,9 @@ class CommentTest extends Base
             'content' => 'test comment - test123'
         );
 
-        //print_r($content);
-
         $response = $this->post('api/comments/' . $this->pageId, $content);
 
         $res = $response->getData();
-        //print_r($res);        
         $this->assertTrue($res->success);
     }
 
@@ -150,10 +139,7 @@ class CommentTest extends Base
 
 
         $response = $this->get('api/comments/' . $this->pageId );
-
-
         $res = $response->getData();
-        //print_r($res);
 
         $this->assertTrue($res->success);
         $this->assertTrue(is_array($res->data));

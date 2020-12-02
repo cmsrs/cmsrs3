@@ -25,14 +25,11 @@ class ConfigTest extends Base
     public function it_will_get_config_docs()
     {
         $response = $this->get('api/config?token='.$this->token );
-        //dd($response);        
 
         $res = $response->getData();
-        //print_r($res);
 
         $this->assertTrue($res->success);
 
-        //dd($res->data);
         $this->assertNotEmpty($res->data);
 
         /***************/
@@ -67,7 +64,6 @@ class ConfigTest extends Base
         $this->assertTrue( is_array($res->data->langs) );        
         $this->assertEquals(1,  count($res->data->langs) );                
         $this->assertEquals( 'en',  ($res->data->langs[0]) );                
-        //$this->assertEquals( 'pl',  ($res->data->langs[1]) );                                
 
         /***************/
         /*******cache **/

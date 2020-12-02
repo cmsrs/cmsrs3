@@ -4,18 +4,14 @@ namespace Tests\Feature;
 
 use App\Menu;
 use App\Page;
-//use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
-//use Tests\TestCase;
 
 class MenuTest extends Base
 {
-    //use DatabaseMigrations;
     use RefreshDatabase;
 
-    //private $token;
     private $testData;
 
     private $objMenu;
@@ -25,7 +21,6 @@ class MenuTest extends Base
         putenv('LANGS="en"');     
         putenv('API_SECRET=""');               
         parent::setUp();
-        //putenv("LANGS=en,pl");      
         
         $this->createUser();
 
@@ -33,14 +28,8 @@ class MenuTest extends Base
         $this->testData =
         [
              'name'     => ['en' => 'test menu1']
-             //'position' => 4
         ];
-
-        
-        // $menu = new Menu($this->testData);
-        // $menu->save();
-        // $this->objMenu = $menu;
-        
+                
     }  
 
     protected function tearDown(): void
@@ -89,16 +78,9 @@ class MenuTest extends Base
 
       $response2 = $this->post('api/menus?token='.$this->token, $testData1);
 
-      //dd($response2);
       $res2 = $response2->getData();
       $this->assertFalse( $res2->success );   
       $this->assertNotEmpty($res2->error);
-      //$this->assertNotEmpty($res2->error->{"name.en"}[0]);
-
-
-
-      //$this->assertTrue( $res2->success );      
-
     }
 
     /** @test */
@@ -125,15 +107,12 @@ class MenuTest extends Base
       $this->assertFalse( $res->success );
     }
 
-    
-
     /** @test */
     public function it_will_wron_add()
     {
       $testData2 =
       [
            'name'     => ['en' =>  ''],
-           //'position' => 3
       ];
 
       $response = $this->post('api/menus?token='.$this->token, $testData2);
@@ -150,7 +129,6 @@ class MenuTest extends Base
       $testData2 =
       [
            'name'     => ['en' =>  ''],
-           //'position' => 3
       ];
 
       $id = $this->objMenu->id;
@@ -163,10 +141,6 @@ class MenuTest extends Base
     
 
     /** @test */
-    // public function it_will_get_slug()
-    // {
-
-    /** @test */
     public function it_will_get_slug()
     {
       $this->setTestData();
@@ -175,7 +149,6 @@ class MenuTest extends Base
       $id = $resAll->data[0]->id;
 
       $slug = Menu::find($id)->getSlugByLang('en');
-      //dd($slug);
       $this->assertEquals($slug,  Str::slug($this->testData['name']['en'], "-")    );
     }
 
@@ -184,7 +157,6 @@ class MenuTest extends Base
     {
       $this->setTestData();
       $parentId = $this->dateToTestParent( $this->objMenu->id );
-      //dd(Page::all()->toArray());
 
       $publishedAndAccess = $this->objMenu->pagesPublishedAndAccess()->get(); //->toArray();
       $tree = $this->objMenu->pagesPublishedTree($publishedAndAccess);
@@ -205,16 +177,13 @@ class MenuTest extends Base
       $testData2 =
       [
            'name'     => ['en' => 'test menu2'],
-           //'position' => 2
       ];
       $response2 = $this->post('api/menus?token='.$this->token, $testData2);
-      //dd($response2);
       $this->assertTrue( $response2->getData()->success );        
 
       $testData3 =
       [
            'name'     => ['en' => 'test menu3'],
-           //'position' => 3
       ];
       $response3 = $this->post('api/menus?token='.$this->token, $testData3);
       $this->assertTrue( $response3->getData()->success );        
@@ -224,25 +193,21 @@ class MenuTest extends Base
       $this->assertTrue( $res->success );      
       $this->assertEquals( count($res->data), 3);
 
-      //dd($res->data);
       $this->assertEquals( $res->data[0]->position, 1 );      
       $this->assertEquals( $res->data[1]->position, 2 );      
       $this->assertEquals( $res->data[2]->position, 3 );
 
       $name = Menu::find( $res->data[2]->id )->translatesByColumnAndLang( 'name', 'en' );
       $this->assertNotEmpty($name);
-      //$name = $res->data[2]->name;
       $this->assertEquals( $name, $testData3['name']['en'] );
 
       $res = $this->get('api/menus/position/up/'.$res->data[2]->id.'?token='.$this->token );
       $res22a = $res->getData();
-      //print_r($res22a);
       $this->assertTrue( $res22a->success );
 
 
       $response = $this->get('api/menus?token='.$this->token );
       $res1 = $response->getData();
-      //dd($res1->data);
 
       $name2 = Menu::find( $res1->data[2]->id )->translatesByColumnAndLang( 'name', 'en' );      
       $this->assertEquals( $name2, $testData2['name']['en'] );
@@ -259,12 +224,10 @@ class MenuTest extends Base
       $res2 = $response->getData();
 
       $this->assertNotEquals(  Menu::find($res2->data[2]->id)->translatesByColumnAndLang( 'name', 'en' ), $name1 );
-      //dd($res2->data);
       
       $this->assertEquals(  Menu::find($res2->data[0]->id)->translatesByColumnAndLang( 'name', 'en' ), $name1);
       $this->assertEquals(  Menu::find($res2->data[0]->id)->translatesByColumnAndLang( 'name', 'en' ), 'test menu2');
       $this->assertEquals( $res2->data[0]->position, 1);      
-      //var_dump($res0); die('--');
     }
 
 
@@ -278,10 +241,7 @@ class MenuTest extends Base
       $this->assertTrue( $res->success );
       $this->assertEquals( count($res->data), 1);
 
-      //dd($res->data);
       $data = (array)$res->data[0];
-      //var_dump($data); dd('--');
-      //$this->testData['id'] = 1;
 
       $this->assertEquals(Menu::find($data['id'])->translatesByColumnAndLang( 'name', 'en' ), $data['name']->en);
       $this->assertSame(Menu::find($data['id'])->translatesByColumnAndLang( 'name', 'en' ), $this->testData['name']['en']);
@@ -300,16 +260,12 @@ class MenuTest extends Base
       $testData2 =
       [
            'name'     => ['en' =>  'test menu2'],
-           //'position' => 3
       ];
 
-      //print_r($testData2);
       $response = $this->post('api/menus?token='.$this->token, $testData2);
 
-      //var_dump($response); die('----');
 
       $res = $response->getData();
-      //print_r($res);
       $this->assertTrue( $res->success );
 
 
@@ -317,22 +273,17 @@ class MenuTest extends Base
       $response2 = $this->get('api/menus?token='.$this->token );
 
       $res2 = $response2->getData();
-      //print_r($res2);
 
       $this->assertTrue( $res2->success );
       $this->assertEquals( count($res2->data), 2);
 
       $data = (array)$res2->data[0];
-      //unset($data['id']);
       $this->assertSame( Menu::find( $data['id'])->translatesByColumnAndLang( 'name', 'en' ) , $data['name']->en );
       $this->assertSame( Menu::find( $data['id'])->translatesByColumnAndLang( 'name', 'en' ) , $this->testData['name']['en']);
       $data2 = (array)$res2->data[1];
 
-      //unset($data2['id']);
       $testData2['position'] = $data['position'] + 1;
 
-      //print_r($data2);
-      //print_r($testData2);
 
       $this->assertSame($data2['position'], $testData2['position']);
 
@@ -346,12 +297,9 @@ class MenuTest extends Base
 
       $response22 = $this->post('api/menus?token='.$this->token, $testData22);
 
-      //var_dump($response22); die('========');
-
 
       $res22 = $response22->getData();
       $this->assertTrue( $res22->success );
-
 
       //wrong lang
       $testData44 =
@@ -384,18 +332,12 @@ class MenuTest extends Base
     public function it_will_update_menu_docs()
     {
       $this->setTestData();
-      //dd('00000000000');
       $responseAll = $this->get('api/menus?token='.$this->token );
       $resAll = $responseAll->getData();
       $id = $resAll->data[0]->id;
 
-      //print_r($resAll->data[0]);
-      //$id = 1;
-
-      //$this->testData
 
       $slug = Menu::find($id)->getSlugByLang('en');
-      //dd($slug);
       $this->assertEquals($slug,  Str::slug($this->testData['name']['en'], "-")    );
 
 
@@ -403,25 +345,14 @@ class MenuTest extends Base
       [
             'id' => $id,
             'name' =>  ['en' => 'test menu3  żółta żółć'],
-            //'position' => $resAll->data[0]->position //? - is it pass postition by edit menu ?? TODO
       ];
-      //print_r($testData3);
 
-      //dd('++++++++++++11+++');
       $response0 = $this->put('api/menus/'.$id.'?token='.$this->token, $testData3);
-      //dd($response0);
-      //print_r($response0->getData());
       $this->assertTrue( $response0->getData()->success ); 
-      //$response0 = $this->put('api/menus/1?token='.$this->token, $testData3);
 
       $slugAfter = Menu::find($id)->getSlugByLang('en');
       $this->assertNotEquals($slug, $slugAfter);
       $this->assertEquals($slugAfter,  Str::slug($testData3['name']['en'], "-")  );
-
-
-
-      //die('==');
-      //var_dump($response0);
 
       $res0 = $response0->getData();
       $this->assertTrue( $res0->success );
@@ -432,15 +363,10 @@ class MenuTest extends Base
       $this->assertTrue( $res->success );
       $this->assertEquals( count($res->data), 1);
       $data = (array)$res->data[0];
-      //unset($data['id']);
-
-      //dd($testData3);
-      //dd($data);
 
       $this->assertSame($data['id'], $testData3['id']);
       $this->assertSame($data['name']->en, $testData3['name']['en']);      
       $this->assertNotEmpty($data['position']);
-      //$this->assertEmpty($testData3['position']);   
       $this->assertFalse(isSet($testData3['position']));
 
       //wrond data
@@ -451,12 +377,8 @@ class MenuTest extends Base
             'position' => '3d33'
       ];
       $response33 = $this->put('api/menus/'.$id.'?token='.$this->token, $testData33);
-      //dd($response33);
       $res33 = $response33->getData();
       $this->assertFalse( $res33->success );
-      //$this->assertEmpty( $res33->error );
-
-
     }
 
     /** @test */
@@ -471,12 +393,10 @@ class MenuTest extends Base
 
       $response0 = $this->delete('api/menus/'.$id.'?token='.$this->token);
       $res0 = $response0->getData();
-      //print_r($res0);
       $this->assertTrue( $res0->success );
 
       $responseAllAfter = $this->get('api/menus?token='.$this->token );
       $resAllAfter = $responseAllAfter->getData();
-      //var_dump($resAllAfter);
       $this->assertEmpty($resAllAfter->data);
 
 
@@ -486,12 +406,9 @@ class MenuTest extends Base
       $this->setTestData();
       //fake id - obluga bledow
       $responseFake = $this->delete('api/menus/rs_I_eW23423fsd?token='.$this->token);
-      //var_dump($responseFake);
       $resFake = $responseFake->getData();
       $this->assertFalse( $resFake->success );
       $this->assertNotEmpty( $resFake->error );
-
-
     }
 
 

@@ -7,19 +7,13 @@ use App\Menu;
 use App\Image;
 use App\Translate;
 use App\Content;
-
-
-//use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
-//use Tests\TestCase;
 
 class TranslateTest extends Base
 {
-    //use DatabaseMigrations;
     use RefreshDatabase;
-
 
     public function setUp(): void
     {
@@ -231,17 +225,12 @@ class TranslateTest extends Base
         $this->assertEquals( $numOfLangs, Translate::query()->where('page_id', $p->id )->where('column', 'short_title' )->count() );
 
         $d = Translate::query()->where('page_id', $p->id )->get()->toArray();
-        //dd($d);
-
 
         $this->assertEquals( $numOfLangs, Translate::query()->where('page_id', $p->id )->where('column', 'description' )->whereNull('value' )->count() );
         $this->assertEquals( $numOfLangs, Content::query()->where('page_id', $p->id )->where('column', 'content' )->whereNull('value' )->count() );        
 
         $this->assertEquals( 3*$numOfLangs, Translate::query()->whereNotNull('image_id')->where('column', 'alt' )->whereNull('value' )->count());
     }
-
-
-
 
     /** @test */
     public function page_translate_wrap_create_wrong_1()

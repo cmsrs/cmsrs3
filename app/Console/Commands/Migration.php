@@ -49,23 +49,13 @@ class Migration extends Command
         $this->privacyPage();
         $this->loginPage();
         $menus = $this->getOldMenuData();
-        //dump($menus);
         foreach($menus as $oldMenuId => $m){
-            //dump($oldMenuId);
             $newMenu = (new Menu)->wrapCreate(['name' => $m]);            
             $pages = $this->getOldPagesByMenuId($oldMenuId);
             foreach($pages as $oldPageId => $p){
               $newPage = $this->createPagesForMenu( $newMenu->id, $p, $oldPageId );
             }
         }
-
-        
-
-        //dd($menus);
-
-
-        //die('_______test12334_______');
-        //
     }
 
     private function getOldImagesByPageId($oldPageId)
@@ -340,8 +330,5 @@ class Migration extends Command
         ];
         (new Page)->wrapCreate($pLogin);
     }
-
-
-
 
 }

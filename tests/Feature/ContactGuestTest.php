@@ -26,12 +26,10 @@ class ContactGuestTest  extends TestCase
             'email' => 'test@example.com',
             'message' => 'test message - test123'
         );
-        //print_r($content);
 
         $response = $this->post('api/contact/pl', $content);
         $res = $response->getData();
 
-        //print_r($res);
 
         $this->assertTrue($res->success);
         $msgPl = $res->message;
@@ -79,7 +77,6 @@ class ContactGuestTest  extends TestCase
 
         $response = $this->post('api/contact/pl', $content);
 
-        //dd($response);
         $res = $response->getData();
         $this->assertFalse($res->success);                
         $this->assertNotEmpty($res->error);                        
@@ -96,7 +93,6 @@ class ContactGuestTest  extends TestCase
 
         $response = $this->post('api/contact/pl', $content);
 
-        //dd($response);
         $res = $response->getData();
         $this->assertFalse($res->success);                
         $this->assertNotEmpty($res->error);                        
@@ -113,7 +109,6 @@ class ContactGuestTest  extends TestCase
 
         $response = $this->post('api/contact/pl', $content);
 
-        //dd($response);
         $res = $response->getData();
         $this->assertFalse($res->success);        
         $this->assertNotEmpty($res->error);                
@@ -129,7 +124,6 @@ class ContactGuestTest  extends TestCase
 
         $response = $this->post('api/contact/en', $content);
 
-        //dd($response);
         $res = $response->getData();
         $this->assertFalse($res->success);        
         $this->assertNotEmpty($res->error);                        

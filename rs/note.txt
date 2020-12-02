@@ -88,6 +88,7 @@ uwagi:
 - mozna kod przeleciec jakims parserem (do czyszczenia formatowania sladni)
 - wywalic komentarze w kodzie
 - zbiorowy upload image - todo
+- Image::filter zamienic na: Str::slug($name, "_"); - to przemyslania  - pomocne to moze byc  winnych jezykach poza polskim
 
 
 + backup bazy danych kodu zrobic zrobic (kod jest na githubvie - tylko to z gitingnora zrobilem)

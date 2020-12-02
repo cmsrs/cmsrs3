@@ -2,8 +2,6 @@
 
 namespace App;
 
-//use Illuminate\Database\Eloquent\Model;
-
 class Content extends Base
 {
 
@@ -37,13 +35,6 @@ class Content extends Base
         }
 
         $this->wrapTranslateUpdate( $obj, $row );
-
-        // if($obj){
-        //     $obj->update([ 'value' => $row['value']] );
-        // }else{
-        //     $this->createRow( $row );
-        // }
-
         return true;
     }
     

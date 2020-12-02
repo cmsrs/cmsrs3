@@ -1,9 +1,7 @@
 <?php
-
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
 
 
 class Product extends Model
@@ -42,11 +40,6 @@ class Product extends Model
             $this->translate = $objTranslate;
         }
     }    
-
-    // static public function  getProductObj()
-    // {
-    //     return $this->setTranslate($this->translate);
-    // }    
 
     /**
      * use also in script to load demo (test) data
@@ -92,9 +85,6 @@ class Product extends Model
         foreach($this->images()->get() as $img){
           $img->delete();
         }
-
         return parent::delete();
-    }
-    
-
+    }    
 }

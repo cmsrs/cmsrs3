@@ -1,10 +1,7 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-
 use App\User;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -80,16 +77,6 @@ class AuthController extends Controller
         }
     }
 
-    // protected function respondWithToken($token)
-    // {
-    //     return response()->json([
-    //         'access_token' => $token,
-    //         'token_type'   => 'bearer',
-    //         'expires_in'   => auth()->factory()->getTTL() * 60
-    //     ]);
-    // }
-
-
     /**
      * API Register
      *
@@ -120,25 +107,15 @@ class AuthController extends Controller
               $email = $request->email;
               $password = $request->password;
       
-              //$user = User::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password)]);
-              //bcrypt($password)
-      
-              //$user = User::create(['name' => $name, 'email' => $email, 'password' => bcrypt($password),  'role' => User::$role['admin'] ]);
-      
-              //dd('+++++++++++');
-      
       
               $user = new User([
                   'email'    => $email,
                   'name'     => $name,
-                  //'password' => 'cmsrs',
                   'role' => User::$role['admin']
               ]);
       
               $user->password = $password;      
               $user->save();
-            
-              //$user = User::create(['name' => $name, 'email' => $email, 'password' => $password,  'role' => User::$role['admin'] ]);
       
               return $this->getTokenByCredentials($credentials);      
         }

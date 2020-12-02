@@ -45,12 +45,10 @@ class GetConfig extends Command
             "password": "'.$admPass.'"
         }\'';
 
-        //dd($cmdLogin);
         
         $out = [];
         exec( $cmdLogin, $out  );
         
-        //print_r($out );
         
         $res1 = json_decode($out[0]);
         

@@ -27,14 +27,9 @@ class PageController extends Controller
   }
 
   private $validationRules = [
-      //'title' => 'max:255|required',      
-      //'short_title' => 'max:128',
-      //'description' => 'max:1027',
       'published' => 'boolean',
       'commented' => 'boolean',
       'after_login' => 'boolean',
-      //'position'=> 'numeric',
-      //'type' => 'in:cms,gallery,shop,contact,main_page'
   ];
   
   public function oneItem(Request $request, $id, $lang)
@@ -79,12 +74,6 @@ class PageController extends Controller
 
   public function getPagesByType(Request $request, $type)
   {
-
-      //      $validator = Validator::make( ['type' => $type] , [
-      //          'type' => $this->validationRules['type'],
-      //      ]);
-      //      $tmp = $validator->fails();
-
       $pages = (new Page)->getAllPagesWithImages($type);
 
       return response()->json(['success' => true, 'data'=> $pages], 200);
@@ -100,10 +89,7 @@ class PageController extends Controller
 
   public function create(Request $request)
   {
-
-    //$pageFields = Page::$pageFields;
     $data = $request->only('title', 'short_title', 'description', 'published', 'commented', 'after_login',  'type', 'content', 'menu_id', 'page_id', 'images');    
-    //$data = $request->only( ...$pageFields, 'title', 'short_title', 'description', 'content');
     $validator = Validator::make($data, $this->validationRules);
     if($validator->fails()) {
         return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
@@ -133,8 +119,6 @@ class PageController extends Controller
         return response()->json(['success'=> false, 'error'=> 'Page not find'], 200);
       }
 
-      //$pageFields = Page::$pageFields;
-      //$data = $request->only( ...$pageFields );
       $data = $request->only('title', 'short_title', 'description', 'published', 'commented', 'after_login',  'type', 'content', 'menu_id', 'page_id', 'images'); //'position',
       $validator = Validator::make($data, $this->validationRules);
       if($validator->fails()) {
@@ -152,14 +136,12 @@ class PageController extends Controller
         if( empty($data['published']) ){
           $page->unpublishedChildren();
         }
-        //$res = $page->update($data);
         $res = $page->wrapUpdate($data);
         if( !empty($data['images']) && is_array($data['images']) ){
           Image::createImagesAndUpdateAlt($data['images'], 'page', $page->id);
         }
       } catch (\Exception $e) {
           Log::error('page update ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()  ); //.' for: '.var_export($data, true )
-          //Log::error('page update ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile() .' for: '.var_export($data, true ));          
           return response()->json(['success'=> false, 'error'=> 'Update page problem - exeption'], 200);
       }
 

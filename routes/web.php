@@ -21,7 +21,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/', 'FrontController@index');
 if(1 == count($langs)){    
-    //Route::get('/c/{pageSlug}', 'FrontController@getPageForMenu');
     Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');    
     Route::get('/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}', 'FrontController@getPage');
     Route::get('/'.Page::PREFIX_IN_URL.'/{pageSlug}', 'FrontController@getSeparatePage');    

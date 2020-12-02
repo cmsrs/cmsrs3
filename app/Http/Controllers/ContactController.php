@@ -19,8 +19,6 @@ class ContactController extends Controller
 
   private $validationRules = [
       'email'=> 'required|regex:/^[a-zA-Z0-9\.\-_]+\@[a-zA-Z0-9\.\-_]+\.[a-z]{2,4}$/D',
-
-      //'token' => 'required',
       'message' => 'max:500|required'
   ];
 
@@ -90,9 +88,7 @@ class ContactController extends Controller
 
   public function index()
   {
-      //$contact = Contact::All();
       $contact = (new Contact)->getAllData();
-      //var_dump( $menus  );
 
       return response()->json(['success' => true, 'data'=> $contact], 200);
   }

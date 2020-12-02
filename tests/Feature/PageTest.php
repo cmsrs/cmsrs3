@@ -1,20 +1,15 @@
 <?php
-
 namespace Tests\Feature;
 
 use App\Page;
 use App\Menu;
 use App\User;
-
-//use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
-//use Tests\TestCase;
 
 class PageTest extends Base
 {
-    //use DatabaseMigrations;
     use RefreshDatabase;
 
     const STR_PARENT_TWO = 'parent2 p2';
@@ -48,7 +43,6 @@ class PageTest extends Base
             'published' => 1,
             'commented' => 1,
             'after_login' => 0,
-            //'position' => 7,
             'type' => 'cms',
             'content' =>  ['en' => 'content test133445'],
             'menu_id' => null,
@@ -59,7 +53,6 @@ class PageTest extends Base
         $this->testDataMenu =
         [
              'name'     => ['en' => $this->strTestMenuName],
-             //'position' => 77
         ];
 
     }
@@ -74,9 +67,6 @@ class PageTest extends Base
       $this->objPage = (new Page)->wrapCreate($this->testData);
 
       $menu = (new Menu)->wrapCreate($this->testDataMenu);
-      //$save = $menu->save();
-      //$this->assertTrue($save);
-
 
       $this->menuObj = $menu->all()->first();
       $this->menuId = $this->menuObj->id;
@@ -90,7 +80,6 @@ class PageTest extends Base
       $this->assertNotEmpty($p1->id);
 
       $response = $this->post('api/pages?token='.$this->token, $this->testData);
-      //dd($response->getData()->success);
       $res = $response->getData();
       $this->assertFalse( $res->success );
       $this->assertNotEmpty($res->error);
@@ -111,7 +100,6 @@ class PageTest extends Base
       $this->assertNotEmpty($p1->id);
 
       $response = $this->post('api/pages?token='.$this->token, $this->testData);
-      //dd($response->getData()->success);
       $res = $response->getData();
       $this->assertFalse( $res->success );
       $this->assertNotEmpty($res->error);
@@ -119,7 +107,6 @@ class PageTest extends Base
 
       $this->testData['menu_id'] = $menu2->id;
       $response = $this->post('api/pages?token='.$this->token, $this->testData);
-      //dd($response->getData()->success);
       $res = $response->getData();
       $this->assertTrue( $res->success );
       $this->assertEquals(2, Page::All()->count() );
@@ -159,14 +146,11 @@ class PageTest extends Base
       $testData2 =
       [
            'title'     => ['en' =>  ''],
-           //'position' => 3
       ];
 
       $response = $this->post('api/pages?token='.$this->token, $testData2);
       $this->assertFalse( $response->getData()->success );
       $this->assertNotEmpty($response->getData()->error);
-      //dd($response->getData()->error);
-      //$this->assertEquals(2 , $response->getData()->error->count());            
       $this->assertEquals(1 , count($response->getData()->error->{"title.en"}));
       $this->assertNotEmpty($response->getData()->error->{"title.en"}[0]);
       $this->assertEquals(1 , count($response->getData()->error->{"short_title.en"}));
@@ -187,21 +171,14 @@ class PageTest extends Base
       $response = $this->put('api/pages/'.$id.'?token='.$this->token, $testData2);      
       $this->assertFalse( $response->getData()->success );
       $this->assertNotEmpty($response->getData()->error);
-      //$this->assertEquals(2 , count($response->getData()->error));                  
       $this->assertEquals(1 , count($response->getData()->error->{"title.en"}));
       $this->assertNotEmpty($response->getData()->error->{"title.en"}[0]);
       $this->assertEquals(1 , count($response->getData()->error->{"short_title.en"}));
       $this->assertNotEmpty($response->getData()->error->{"short_title.en"}[0]);
-
     }
-
-
-
 
     private function comparePageFields($compareWith, $data)
     {
-        //dump($compareWith);
-        //dump($data);
         $this->assertNotEmpty($data->id);              
         $this->assertNotEmpty($data->position);                      
 
@@ -236,7 +213,6 @@ class PageTest extends Base
       
       $response = $this->get('api/pages/'.$this->objPage->id.'?token='.$this->token );
 
-      //dd($response);
       $res = $response->getData();
       $this->assertTrue( $res->success );
       $this->assertNotEmpty($res->data);
@@ -348,12 +324,10 @@ class PageTest extends Base
           'published' => 1,
           'commented' => 0,
           'after_login' => 1,
-          //'position' => 3,
           'type' => 'main_page',
           'content' =>  ['en' =>'aaa ffdfds'],
           'menu_id' => $this->menuId, //it must be null for type main_page
           'page_id' => $parentId, //it must be null for type main_page
-          //'images' => []
       ];
 
       $response = $this->post('api/pages?token='.$this->token, $testData2);
@@ -386,20 +360,16 @@ class PageTest extends Base
           'published' => 1,
           'commented' => 1,
           'after_login' => 1,
-          //'position' => 3,
           'type' => 'main_page',
           'content' => ['en' =>'aaa ffdfds1111'],
           'menu_id' => $this->menuId, //it must be null for type main_page
           'page_id' => $parentId, //it must be null for type main_page
-          //'images' => []
       ];
 
       $responseUpdate = $this->put('api/pages/'.$page->id.'?token='.$this->token, $testData2Update);
-      //dd($responseUpdate);
 
       $resUpdate = $responseUpdate->getData();
       $this->assertTrue( $resUpdate->success ); 
-      //dd($resUpdate);    
 
       $response2Update = $this->get('api/pages?token='.$this->token );
       $res2Update = $response2Update->getData();
@@ -412,7 +382,6 @@ class PageTest extends Base
         }
       }
 
-      //dump($pageU);
       $this->assertNotEmpty($pageU);
       $this->assertEquals('main_page', $pageU->type);      
       $this->assertEquals(null, $pageU->menu_id);
@@ -428,20 +397,15 @@ class PageTest extends Base
           'published' => 0,
           'commented' => 0,
           'after_login' => 1,
-          //'position' => 3,
           'type' => 'main_page',
           'content' => ['en' =>'aaa ffdfds'],
           'menu_id' => null,
           'page_id' => null
-          //'images' => []
       ];
       $response3 = $this->post('api/pages?token='.$this->token, $testData3);
-      //dd($response3);
 
       $res3 = $response3->getData();
-      $this->assertFalse( $res3->success );      
-
-
+      $this->assertFalse( $res3->success );
     }
 
 
@@ -491,9 +455,6 @@ class PageTest extends Base
       $this->assertTrue( $res2->success );
       $this->assertEquals( count($res2->data), 3);    
 
-      
-      //dd($res2->data);
-      //dd($testData2);
       $this->assertEquals($res2->data[1]->title->en, $testData2['title']['en']);      
       $this->assertEquals($res2->data[1]->after_login, $testData2['after_login']);
       $this->assertEquals($res2->data[1]->content->en, $testData2['content']['en']);      
@@ -515,10 +476,8 @@ class PageTest extends Base
     {
       $this->setTestData();
       $this->assertNotEmpty($this->menuId);
-      //dd($this->menuId);
       $parentId = $this->dateToTestParent( $this->menuId );
       $this->assertNotEmpty($parentId);
-      //$pages = Page::All()->toArray();
 
       $response2 = $this->get('api/pages?token='.$this->token );
       $res2 = $response2->getData();
@@ -526,15 +485,6 @@ class PageTest extends Base
       
       $testItem = $res2->data[3];
       
-      //dump($parentId);
-      //dd($res2->data);
-
-
-      // 'published' => 'integer',
-      // 'commented' => 'integer',
-      // 'position' => 'integer',
-      // 'menu_id' => 'integer', 
-      // 'page_id' => 'integer'
       $this->assertIsInt($testItem->id); 
       $this->assertIsInt($testItem->published); 
       $this->assertIsInt($testItem->commented); 
@@ -591,8 +541,6 @@ class PageTest extends Base
       $parentId = $this->dateToTestParent( $this->menuId );
 
       $pages = Page::query()->where('page_id', $parentId)->orderBy('position', 'asc' )->get()->toArray();
-      //print_r($pages);
-
 
       $this->assertEquals(count($pages), 2);
 
@@ -606,13 +554,11 @@ class PageTest extends Base
       $this->assertEquals( Page::find($pages[1]['id'] )->translatesByColumnAndLang( 'title', 'en' )  , PageTest::STR_CHILD_TWO );      
 
       $res2a = $this->get('api/pages/position/up/'.$pages[0]['id'].'?token='.$this->token );
-      //dd($res2a);
 
       $res22a = $res2a->getData();
       $this->assertTrue( $res22a->success );
 
       $pages22 = Page::query()->where('page_id', $parentId)->orderBy('position', 'asc' )->get()->toArray();
-      //print_r($pages22);
 
       $positionAfter1 = $pages22[0]['position'];
       $positionAfter2 = $pages22[1]['position'];
@@ -623,13 +569,10 @@ class PageTest extends Base
       $this->assertEquals($positionBefore1, $positionAfter1);
       $this->assertEquals($positionBefore2, $positionAfter2);      
 
-      //$this->assertTrue( $positionAfter1 < $positionAfter2 );
 
       $this->assertEquals(PageTest::STR_CHILD_TWO, Page::find($pages22[0]['id'])->translatesByColumnAndLang( 'title', 'en' )   );
       $this->assertEquals(PageTest::STR_CHILD_ONE, Page::find($pages22[1]['id'])->translatesByColumnAndLang( 'title', 'en' )  );       
 
-      //$this->assertEquals($pages22[0]['position'], $beforePostion1);      
-      //$this->assertEquals($pages22[1]['position'], $beforePostion0);            
     }
 
     /** @test */
@@ -639,12 +582,9 @@ class PageTest extends Base
       $parentId = $this->dateToTestParent( $this->menuId );
 
       $pages = Page::query()->where('page_id', null )->where('menu_id', $this->menuId)->orderBy('position', 'asc' )->get()->toArray();
-      //print_r(Page::all()->toArray());
-      //print_r($pages);
 
       $this->assertEquals(count($pages), 3);
 
-      // $this->assertEquals($pages[0]['page_id'], $parentId);
       $this->assertEquals( Page::find($pages[1]['id'])->translatesByColumnAndLang( 'title', 'en' ), PageTest::STR_PARENT_TWO);      
       $this->assertEquals( Page::find($pages[2]['id'])->translatesByColumnAndLang( 'title', 'en' ), PageTest::STR_PARENT_TREE);       
 
@@ -659,29 +599,17 @@ class PageTest extends Base
       $this->assertTrue($positionBefore1 < $positionBefore2);
 
       $res2a = $this->get('api/pages/position/down/'.$pages[1]['id'].'?token='.$this->token );
-      //dd('---');
 
       $res22a = $res2a->getData();
       $this->assertTrue( $res22a->success );
 
       $pages22 = Page::query()->where('page_id', null )->where('menu_id', $this->menuId)->orderBy('position', 'asc' )->get()->toArray();
-      //print_r(Page::all()->toArray());
-
-      //print_r($pages22);      
-      //$this->assertSame( $pages, $pages22 );
 
       $positionAfter1 = $pages22[1]['position'];
       $positionAfter2 = $pages22[2]['position'];      
 
       $this->assertNotEmpty($positionAfter1);
-      $this->assertNotEmpty($positionAfter2);      
-
-      //$this->assertEquals($positionBefore1, $positionAfter1);
-      //$this->assertEquals($positionBefore2, $positionAfter2);      
-
-      //$this->assertTrue( $positionAfter1 < $positionAfter2 );
-      //$this->assertTrue($positionBefore1 > $positionAfter1);      
-
+      $this->assertNotEmpty($positionAfter2);
 
       $this->assertEquals(PageTest::STR_PARENT_TREE, Page::find($pages22[1]['id'])->translatesByColumnAndLang( 'title', 'en' )   );
       $this->assertEquals(PageTest::STR_PARENT_TWO,  Page::find($pages22[2]['id'])->translatesByColumnAndLang( 'title', 'en' )  );       
@@ -696,7 +624,6 @@ class PageTest extends Base
            'title'     => [ 'en' => 'test p3'],
            'short_title' => [ 'en' => 'p33'],
            'published' => 0,
-           //'position' => 3,
            'type' => 'cms',
            'content' => [ 'en' => 'lerem ipsum ..'],
            'menu_id' =>  $this->menuId
@@ -705,7 +632,6 @@ class PageTest extends Base
       $response = $this->post('api/pages?token='.$this->token, $testData3);
       $this->assertTrue( $response->getData()->success );        
 
-      //dd($this->menuObj->pages->count());
       $this->assertEquals(1, $this->menuObj->pages->count());
       $this->assertEquals(0, $this->menuObj->pagesPublished->count() );
     }
@@ -719,7 +645,6 @@ class PageTest extends Base
            'title'     => [ 'en' => 'test p3'],
            'short_title' => [ 'en' => 'p33'],
            'published' => 0,
-           //'position' => 3,
            'type' => 'cms',
            'content' => [ 'en' => 'sdafsfsdaf asdfasdf'],
            'menu_id' =>  $this->menuId
@@ -733,7 +658,6 @@ class PageTest extends Base
            'title'     => [ 'en' => 'test p2222'],
            'short_title' => [ 'en' => 'p22222'],
            'published' => 1,
-           //'position' => 3,
            'type' => 'cms',
            'content' => [ 'en' => 'sdafsfsdaf asdfasdf'],
            'menu_id' =>  $this->menuId
@@ -747,12 +671,10 @@ class PageTest extends Base
       $this->assertTrue( $res2->success );
       $this->assertEquals( count($res2->data), 3);
 
-      //var_dump($this->menuObj);
 
       $this->assertEquals(2, count($this->menuObj->pages));
       $this->assertEquals(1, count($this->menuObj->pagesPublished));  //tylko jedno jest z published ===1 dla 'menu_id' =>  $this->menuId
       $this->assertNotEmpty( $this->menuObj->pagesPublished[0]->id );
-      //dd($this->menuObj->pagesPublished[0]->id);
       $this->assertEquals( Page::find( $this->menuObj->pagesPublished[0]->id)->translatesByColumnAndLang( 'title', 'en' ) , $testData2['title']['en'] );
     }
 
@@ -766,7 +688,6 @@ class PageTest extends Base
            'title'     => [ 'en' => 'test p2' ],
            'short_title' => [ 'en' => 'p22' ],
            'published' => 0,
-           //'position' => 3,
            'type' => 'cms',
            //'content' => null
            'menu_id' => null
@@ -785,16 +706,12 @@ class PageTest extends Base
       $data = (array)$res2->data;
       $this->assertEquals(  $res2->data[1]->position, 2);
 
-      //print_r($data);
-
-
       // menu_id is defined
       $testDataWithMenu =
       [
            'title'     => [ 'en' => 'test p2'],
            'short_title' => [ 'en' => 'p22'],
            'published' => 0,
-           //'position' => 3,
            'type' => 'cms',
            'menu_id' => $this->menuId
       ];
@@ -805,7 +722,6 @@ class PageTest extends Base
            'title'     => [ 'en' => 'BB'],
            'short_title' => [ 'en' => 'BB p22'],
            'published' => 0,
-           //'position' => 3,
            'type' => 'cms',
            'menu_id' => $this->menuId
       ];
@@ -826,16 +742,12 @@ class PageTest extends Base
       $this->assertEquals( count($res22->data), 4);
       $data22 = (array)$res22->data;
 
-      //print_r($data22); //przed!!!
-
       $tmpArr = [];
       foreach ($data22 as $key => $page) {
         if( $page->menu_id == $this->menuId ){
           $tmpArr[] = $page;
         }
       }
-
-      //dd($tmpArr);
 
       $this->assertEquals(count($tmpArr), 2);
 
@@ -850,12 +762,7 @@ class PageTest extends Base
       $res1a = $this->get('api/pages/position/down/'.$tmpArr[1]->id.'?token='.$this->token );
 
 
-      //exit;
-      //dd($res1a);
-
-
       $res22a = $res1a->getData();
-      //print_r($res22a);
       $this->assertTrue( $res22a->success );
 
       $res22firstData = Page::all();
@@ -870,15 +777,14 @@ class PageTest extends Base
       print_r($res22first->data); //po!!!
       exit;
       */
-      //wybieramy dany rekord
+
+      //chose one record
       $item = [];
       foreach($res22firstData as $page){
         if($page->id == $tmpArr[1]->id){
           $item = $page;
         }
       }
-      //dd($item);
-
 
       $this->assertNotEmpty($item->position);      
       $this->assertNotEquals($item->position,  $positionBefore);
@@ -889,16 +795,6 @@ class PageTest extends Base
       $res22b = $res2b->getData();
       $this->assertTrue( $res22b->success );
 
-/*
-      $response22c = $this->get('api/pages?token='.$this->token );
-      $res22c = $response22c->getData();
-
-
-      $this->assertTrue( $res22c->success );
-      $this->assertEquals( count($res22c->data), 4);
-      $data22c = (array)$res22c->data;
-*/
-
       $data22c = Page::all();
       $tmpArr2 = [];
       foreach ($data22c as $key => $pageC) {
@@ -906,9 +802,6 @@ class PageTest extends Base
           $tmpArr2[] = $pageC;
         }
       }
-
-      //dump($tmpArr[0]);      
-      //dump($tmpArr2[0]);
 
       $this->assertSame($tmpArr[0]->title->en,  Page::find($tmpArr2[0]->id)->translatesByColumnAndLang( 'title', 'en' )    );
     }
@@ -926,12 +819,10 @@ class PageTest extends Base
            'published' => 0,
            'commented' => 0,
            'after_login' => 0,
-           //'position' => 3,
            'type' => 'contact',
            'content' =>   [ 'en' =>  'aaa ffdfds'],
            'menu_id' => null,
            'page_id' => null,           
-           //'images' => []
       ];
 
       $response = $this->post('api/pages?token='.$this->token, $testData2);
@@ -946,33 +837,10 @@ class PageTest extends Base
       $this->assertEquals( count($res2->data), 2);
       $data = $res2->data[0];
 
-      //unset($data['id']);
-      //unset($data['images']);
-
-      //dump($data); die('==');
-      //dd($data);
       $this->comparePageFields($this->testData, $data);
-
-      // foreach( $data as $k => $v  ){
-      //   $this->assertEquals( $v, $this->testData[$k]);
-      // }
-
-
-      //$this->assertSame($data, $this->testData);
 
       $data2 = $res2->data[1];
       $this->comparePageFields($testData2, $data2);
-
-
-      // unset($data2['id']);
-      // unset($data2['images']);
-      // $testData2['position'] = $this->testData['position'] + 1;
-      // foreach( $data2 as $k => $v  ){
-      //   $this->assertEquals( $v, $testData2[$k]);
-      // }
-
-
-      //$this->assertSame($data2, $testData2); //wrong order
 
       //min data
       $testData22 =
@@ -983,16 +851,8 @@ class PageTest extends Base
       ];
 
       $response22 = $this->post('api/pages?token='.$this->token, $testData22);
-
-
-      //var_dump($response22); die('==11===');
-
-
       $res22 = $response22->getData();
       $this->assertTrue( $res22->success );
-      //$this->assertNotEmpty( $res22->error );
-
-      //var_dump($response2);
     }
 
     /** @test */
@@ -1004,7 +864,6 @@ class PageTest extends Base
                 'title' => [ 'en' =>  'test p2'],
                 'short_title' => [ 'en' =>  'p22'],
                 'published' => 0,
-                //'position' => 3,
                 'type' => 'shop',
                 'content' => [ 'en' => 'aaa ffdfds'],
                 'menu_id' => null,
@@ -1020,10 +879,7 @@ class PageTest extends Base
         $res = $this->get('api/pages/type/'.$type.'?token=' . $this->token);
 
         $data =  $res->getData();
-        //print_r($data);
         $this->assertTrue($data->success);
-        //dd(count($data->data));
-        //dd($data->data[0]->type);
 
         $this->assertEquals(1,count($data->data));
         $this->assertEquals( $type, $data->data[0]->type );
@@ -1031,10 +887,8 @@ class PageTest extends Base
         $typeErr = 'sasdasd';
         $res = $this->get('api/pages/type/'.$typeErr.'?token=' . $this->token);
         $data =  $res->getData();
-        //print_r($data);
         $this->assertTrue($data->success);
         $this->assertEmpty(count($data->data));
-        //dd($data);
 
     }
 
@@ -1050,7 +904,6 @@ class PageTest extends Base
            'published' => 0,
            'commented' => 0,
            'after_login' => 0,
-           //'position' => 3,
            'type' => 'cms',
            'content' =>   [ 'en' =>  'sdafsfsdaf asdfasdf' ],
            'page_id' =>  null,
@@ -1076,7 +929,6 @@ class PageTest extends Base
       $response2 = $this->get('api/pages?token='.$this->token );
 
       $res2 = $response2->getData();
-      //var_dump($res2); die('===1==1==1==');
 
       $this->assertTrue( $res2->success );
       $this->assertEquals( count($res2->data), 2);
@@ -1110,11 +962,7 @@ class PageTest extends Base
 
       $this->assertNotEmpty($id);
 
-      //Page::find($id)->slug;
-
       $slug = Page::find($id)->getSlugByLang('en');
-      //dd($slug);
-      //str_slug($value, "-");
       $this->assertEquals($slug,  Str::slug($this->testData['title']['en'], "-")    );
 
 
@@ -1127,9 +975,7 @@ class PageTest extends Base
             'published' => 1,
             'commented' => 0,
             'after_login' => 0,
-            //'position' => 3,
             'type' => 'cms',
-            //'menu_id' => null
             'content' => ['en' => 'gg'],
             'menu_id' => null,
             'page_id' => null,
@@ -1137,18 +983,10 @@ class PageTest extends Base
       ];
 
       $response0 = $this->put('api/pages/'.$id.'?token='.$this->token, $testData3);
-      //$response0 = $this->put('api/menus/1?token='.$this->token, $testData3);
-
-
 
       $slugAfter = Page::find($id)->getSlugByLang('en');
       $this->assertNotEquals($slug, $slugAfter);
       $this->assertEquals($slugAfter,  Str::slug($testData3['title']['en'], "-")  );
-      //var_dump($slugAfter);
-
-
-      //
-      //var_dump($response0);die('==');
 
       $res0 = $response0->getData();
       $this->assertTrue( $res0->success );
@@ -1159,17 +997,9 @@ class PageTest extends Base
       $this->assertTrue( $res->success );
       $this->assertEquals( count($res->data), 1);
       $data = $res->data[0];
-      //unset($data['id']);
-      //print_r($data);
 
       $this->comparePageFields($testData3, $data);
 
-      // $testData3['position'] = $data['position'];
-      // foreach ($data as $key => $v) {
-      //   $this->assertEquals( $v,  $testData3[$key] );
-      // }
-
-      //$this->assertSame($data, $testData3);
 
       //wrond data
       $testData33 =
@@ -1181,10 +1011,8 @@ class PageTest extends Base
             'position' => '3d33'
       ];
       $response33 = $this->put('api/pages/'.$id.'?token='.$this->token, $testData33);
-      //var_dump($response33);
       $res33 = $response33->getData();
       $this->assertTrue( $res33->success );
-      //$this->assertNotEmpty( $res33->error );
     }
 
     /** @test **/
@@ -1211,8 +1039,6 @@ class PageTest extends Base
             'published' => 1,
             'commented' => 0,
             'after_login' => 0,
-
-            //'position' => 3,
             'content' => ['en' =>  null],
             'type' => 'cms',
             'page_id' => null,
@@ -1222,10 +1048,6 @@ class PageTest extends Base
       ];
 
       $responseFake = $this->put('api/pages/'.$id.'?token='.$this->token, $testData3);
-      //dd($responseFake);
-      //$response0 = $this->put('api/menus/1?token='.$this->token, $testData3);
-      //
-      //var_dump($response0);die('==');
 
       $resFake = $responseFake->getData();
       $this->assertFalse( $resFake->success );
@@ -1234,7 +1056,6 @@ class PageTest extends Base
 
       $testData3['menu_id'] = $this->menuId;    
       $response0 = $this->put('api/pages/'.$id.'?token='.$this->token, $testData3);
-      //dd($response0);
 
       $res0 = $response0->getData();
       $this->assertTrue( $res0->success );
@@ -1249,21 +1070,7 @@ class PageTest extends Base
       $allTranslate = Page::find($id)->getAllTranslate();
       $this->assertEquals(4, count($allTranslate));
 
-      //unset($data['id']);
-      //var_dump($data);
-
-      //dump($data);
-      //dump($testData3);
-      //dd('----------');
       $this->comparePageFields($testData3, $data);
-
-
-      // $testData3['position'] = $data['position'];
-      // foreach ($data as $key => $value) {
-      //   $this->assertEquals( $value,  $testData3[$key] );
-      // }
-
-      //$this->assertSame($data, $testData3);
     }
 
     /** @test */
@@ -1274,7 +1081,6 @@ class PageTest extends Base
 
         $testData =
         [
-              //'id' => $id,
               'title' => ['en' =>  'test p3333'],            
               'short_title' => ['en' => 'p3333'],
               'description' => ['en' =>  null],
@@ -1305,16 +1111,12 @@ class PageTest extends Base
         $this->comparePageFields($testData, $data);
     }
 
-
-
-
     /** @test */
     public function it_will_delete_page()
     {
       $this->setTestData();
       $responseAll = $this->get('api/pages?token='.$this->token );
       $resAll = $responseAll->getData();
-      //var_dump($resAll);
       $this->assertNotEmpty($resAll->data);
       $id = $resAll->data[0]->id;
       $this->assertNotEmpty($id);
@@ -1325,7 +1127,6 @@ class PageTest extends Base
 
       $responseAllAfter = $this->get('api/pages?token='.$this->token );
       $resAllAfter = $responseAllAfter->getData();
-      //var_dump($resAllAfter);
       $this->assertEmpty($resAllAfter->data);
 
 
@@ -1334,7 +1135,6 @@ class PageTest extends Base
     public function it_will_delete_page_fake(){
       //fake id - obluga bledow
       $responseFake = $this->delete('api/pages/rs_I_eW23423fsd?token='.$this->token);
-      //var_dump($responseFake);
       $resFake = $responseFake->getData();
       $this->assertFalse( $resFake->success );
       $this->assertNotEmpty( $resFake->error );

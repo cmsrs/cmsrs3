@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
 {
-    //use DatabaseMigrations;
+
     use RefreshDatabase;
 
 
@@ -19,29 +19,23 @@ class AuthenticationTest extends TestCase
         putenv('LANGS="en"');
         putenv('API_SECRET=""');
         parent::setUp();
-        //$this->createUser();
+
 
         $user = new User([
              'email'    => 'test@email.com',
              'name'     => 'test testowy',
-             //'password' => 'cmsrs',
              'role' => User::$role['admin']
          ]);
 
         $user->password = 'cmsrs';
 
-
         $user->save();
-        //dump($user);
-        //dd('_________');
-
 
     }
 
     private function privilege_action( $token ){
 
         $response = $this->get('api/menus?token='.$token );
-        //print_r( $response->getData()  );
         return $response;
     }
 
@@ -50,17 +44,13 @@ class AuthenticationTest extends TestCase
     {
         $response = $this->get('api/logout?token='.$token ); //->getData();
 
-        //$this->assertTrue( $response->success  );
-        //print_r( $response  );
         return $response;
-
     }
 
 
     /** @skip */
     public function it_will_register_a_user()
     {
-        //print_r($_ENV['RS_SECRET']); die('============');
         if( empty($_ENV['RS_SECRET']) ){
             return true;
         }
@@ -74,13 +64,8 @@ class AuthenticationTest extends TestCase
             'password' => 'cmsrs'
         ]);
 
-        //var_dump( $response  );
-        //dd('==');
 
         $response = $response->getData();
-
-        //var_dump($response);
-        //die('=====');
 
 
         $this->assertStringStartsWith(  'eyJ0eXA',   $response->data->token );
@@ -92,16 +77,7 @@ class AuthenticationTest extends TestCase
         $logout =   $this->logout_action( $response->data->token  );
         $this->assertTrue( $logout->getData()->success );
         $privilegeAfterLogout =    $this->privilege_action( $response->data->token );
-        //var_dump($privilegeAfterLogout);
 
-
-/*
-        $response->assertJsonStructure([
-            'access_token',
-            'token_type',
-            'expires_in'
-        ]);
-        */
     }
 
     /** @test */
@@ -112,14 +88,10 @@ class AuthenticationTest extends TestCase
             'password' => 'cmsrs'
         ];
 
-        //print_r($d);
 
         $response = $this->post('api/login', $d ); //->getData();
 
-        //dd ($response->getContent());
         $response = $response->getData();
-        //print_r ($response);
-        //echo "<pre>"; print_r($response);  echo "</pre>";
 
         $this->assertStringStartsWith(  'eyJ0eXA',   $response->data->token );
         $this->assertTrue( $response->success  );
@@ -127,25 +99,10 @@ class AuthenticationTest extends TestCase
         $privilege =   $this->privilege_action( $response->data->token );
         $this->assertTrue($privilege->getData()->success);
 
-        //$this->assertNotEmpty( $privilege->getData()->testrs );
         $logout =   $this->logout_action( $response->data->token  );
-
-        //print_r($logout->getData());
 
         $this->assertTrue( $logout->getData()->success );
         $privilegeAfterLogout =    $this->privilege_action( $response->data->token );
-        //var_dump($privilegeAfterLogout);
-
-
-
-
-/*
-        $response->assertJsonStructure([
-            'access_token',
-            'token_type',
-            'expires_in'
-        ]);
-        */
     }
 
     /** @test */
@@ -154,7 +111,6 @@ class AuthenticationTest extends TestCase
         $user = new User([
             'email'    => 'client@email.com',
             'name'     => 'client test',
-            //'password' => 'cmsrs',
             'role' => User::$role['client']
         ]);
     
@@ -169,9 +125,6 @@ class AuthenticationTest extends TestCase
         $this->assertFalse($response->success);    
     }
 
-
-
-
     /** @test */
     public function it_will_not_log_an_invalid_user_in()
     {
@@ -182,10 +135,5 @@ class AuthenticationTest extends TestCase
 
         $this->assertNotEmpty(  $response->error );
 
-/*
-        $response->assertJsonStructure([
-            'error',
-        ]);
-        */
     }
 }

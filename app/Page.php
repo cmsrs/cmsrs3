@@ -18,15 +18,11 @@ class Page extends Base
     private $langs;
 
     protected $fillable = [
-        //'title', 
-        //'short_title', 
-        //'description', 
         'published', 
         'commented', 
         'after_login', 
         'position', 
         'type', 
-        //'content', 
         'menu_id', 
         'page_id'
     ];
@@ -60,22 +56,11 @@ class Page extends Base
           'page_id'
       ];
   
-        //$this->
-        //dd('______cojest__');
         $this->translate = new Translate;  
         $this->content = new Content;       
-        // $tt = $this->getArrLangs();
-        // dd($tt);
         $this->langs = $this->getArrLangs();
     }
 
-    // public function  getPageObj()
-    // {
-    //     $this->setTranslate($this->translate);
-    //     $this->setContent($this->content);
-    //     return $this;
-    // }
-    
 
     public function setTranslate( $objTranslate )
     {
@@ -102,11 +87,6 @@ class Page extends Base
     }
 
 
-    // public function translatesByColumnAndLang( $column, $lang )
-    // {
-    //   return $this->translates()->where( 'column', $column )->where('lang', $lang)->first()->value;
-    // }
-
     public function contents()
     {
       return $this->hasMany('App\Content');
@@ -132,29 +112,6 @@ class Page extends Base
       }
       return $pageOut;
     }
-
-    /*
-    static public function checkIsDuplicateName($data, $id = '')
-    {
-      $out = ['success' => true ];
-      $menus = Menu::getAllMenus();
-      foreach($menus as $menu){
-        if($menu['id']  == $id ){
-          continue;
-        }
-        foreach($menu['name'] as $lang => $name ){
-          $nameIn = Str::slug($data['name'][$lang], "-");
-          $n = Str::slug($name, "-");
-          if($nameIn == $n ){
-            $out['success'] = false;
-            $out['error'] = "Duplicate menu: $name ($lang)";
-            break;
-          }
-        }
-      }
-      return $out;
-    }
-    */
 
     static public function checkIsDuplicateTitleByMenu($data, $id = '')
     {
@@ -183,7 +140,6 @@ class Page extends Base
             break;
           }
         }
-
       }
     
       return $out;
@@ -193,7 +149,6 @@ class Page extends Base
 
     public function getSlugByLang($lang)
     {
-        //
         $column = 'title';
         $name = $this->translatesByColumnAndLang( $column, $lang );
 
@@ -274,36 +229,13 @@ class Page extends Base
 
     public function wrapUpdate($data) 
     {
-      //dd('_______');
       $this->update($data); 
-      //dd('________jestem____');
       $this->createTranslate( [ 'page_id' => $this->id, 'data' => $data ], false );
-      //dd('---t111-');
       return true;
     }    
-
-
-    /*
-    public function setLangs($arrLang){
-        $this->translate->setArrLangs($arrLang);
-        $this->content->setArrLangs($arrLang);      
-    }
-
-    public function getArrLangs(){
-        $langT = $this->translate->setArrLangs();
-        $langC = $this->content->setArrLangs();      
-
-        if( count($langT) != count($langC)){ //it should be the same!
-          throw new \Exception("Wrond langs.. not the same langs: translate and content");
-        }
-        return $langC; 
-    }
-    */
     
     static public function getFooterPages( $lang )
     {
-      //$privacyPolicy = Page::getFirstPageByType('privacy_policy' );
-
       $privacyPolicy = Page::getFirstPageByType('privacy_policy' );
       $contact = Page::getFirstPageByType('contact' );    
 
@@ -366,10 +298,8 @@ class Page extends Base
       }
       $url = "/".Page::PREFIX_CMS_URL."/".$menuSlug."/".$this->getSlugByLang($lang);
 
-      //var_dump( count($this->langs)); exit;
       $langs = Config::arrGetLangsEnv();
       if(1 < count($langs)){        
-      //if(1 < count($this->langs)){ //problem with cached
         $url = "/".$lang.$url;
       }
 
@@ -409,8 +339,6 @@ class Page extends Base
       }
     }
 
-
-    //test this function - in frontGuestTest
     public function checkAuth(){
       if($this->after_login && !(Auth::check())){
         return false;
@@ -492,7 +420,6 @@ class Page extends Base
 
       $p['id'] =$this->id; 
       $p['type'] =$this->type;
-      //$p['title'] =$this->title; 
       $p['images'] = $this->arrImages($lang);
       return $p;
     }
@@ -526,29 +453,16 @@ class Page extends Base
     {
 
       if( $type ){
-          //'title', 'short_title',        'content',
           $pages = Page::with(['translates', 'contents'])->where('type', $type )->orderBy('position', 'asc' )->get($this->pageFields)->toArray();
 
       }else{
-          //'title', 'short_title', 'description', 'content',
           $pages = Page::with(['translates', 'contents'])->orderBy('position', 'asc' )->get($this->pageFields)->toArray();
       }
-
 
 
       $i = 0;
       $out = [];
       foreach ($pages as $page) {
-        // foreach($this->pageFields as $field ){
-        //   $out[$i][$field] = $page[$field];
-        // }
-        // foreach($page['translates'] as $translate){
-        //   $out[$i][$translate['column']][$translate['lang']] = $translate['value'];
-        // }
-        // foreach($page['contents'] as $translate){
-        //   $out[$i][$translate['column']][$translate['lang']] = $translate['value'];
-        // }
-
         $out[$i] = $this->getPageDataFormat($page);
         $out[$i]['images'] = Image::getImagesAndThumbsByTypeAndRefId( 'page', $page['id']);
         $i++;
@@ -636,10 +550,6 @@ class Page extends Base
         return false;
       }
 
-      //print_r($pages->toArray());
-
-      //dump($pages[1]->position, $direction, $id);
-
       foreach ($pages as $key => $p) {
 
         if( ($p->id == $id)  ){
@@ -653,11 +563,7 @@ class Page extends Base
 
           $positionKey = $p->position;
 
-
-          //echo "-----".$p->id.'+++++++++'.$pages[$swapKey]->id."\n";
           Page::where( 'id', $p->id)->update([ 'position' => $pages[$swapKey]->position ]);
-          //$obj1->position = 88; //$pages[$swapKey]->position;
-          //$obj1->save();
 
           Page::where( 'id', $pages[$swapKey]->id )->update( ['position' => $positionKey ]  );
           //$obj2 = Page::find($pages[$swapKey]->id);          
@@ -665,14 +571,6 @@ class Page extends Base
           //$obj2->save();
         }
       }
-      //$pages->fresh();      
-      //dd(Page::all());
-      //$out =  Page::getPagesByMenuId($menuId, $pageId);
-      //print_r($out->toArray());
-
-
-      //dump($pages[1]->position);
-      //dd('==');
       return true;
     }
 }

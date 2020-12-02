@@ -1,11 +1,8 @@
 <?php
-
 namespace App;
-
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
-//use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
 
@@ -14,7 +11,6 @@ class Menu extends Base
     private $translate;
 
     protected $fillable = [
-        //'name', 
         'position'
     ];
 
@@ -52,12 +48,6 @@ class Menu extends Base
     }
     
 
-    // public function  getMenuObj()
-    // {
-    //     $this->setTranslate($this->translate);
-    // }
-    
-
     static public function CreateMenu($data)
     {
 
@@ -73,11 +63,8 @@ class Menu extends Base
 
     public function wrapUpdate($data) 
     {
-      //dd('_______');
       $this->update($data); 
-      //dd('________jestem____');
       $this->translate->wrapCreate( [ 'menu_id' => $this->id, 'data' => $data ], false );
-      //dd('---t111-');
       return true;
     }    
 
@@ -89,11 +76,6 @@ class Menu extends Base
     public function wrapCreate($data) 
     {
       $menu = Menu::CreateMenu($data);
-
-      //, $objTranslate = null 
-      //$translate = $objTranslate ?? (new Translate);
-      //dd();
-
       $this->translate->wrapCreate( [ 'menu_id' => $menu->id, 'data' => $data ], true );
 
       return $menu;
@@ -103,10 +85,6 @@ class Menu extends Base
     {
         $column = 'name';
         $name = $this->translatesByColumnAndLang( $column, $lang );
-
-        // if( empty($name) ){
-        //   throw new \Exception("I cant create slug for menu, column $column for lang: $lang, because value is empty");
-        // }
 
         return Str::slug($name, "-");
     }
@@ -124,35 +102,6 @@ class Menu extends Base
         }
         return $ret;
     }
-
-    /**
-     * use in admin area
-     */
-    // public function getAllTranslateMenus()
-    // {
-    //   return  $this->translates()->get();
-    // }
-
-
-
-    /*
-    public function setNameAttribute($value)
-    {
-        $this->attributes['name'] = $value;
-        $this->attributes['slug'] = Str::slug($value, "-");
-    }
-    */
-    /*
-    public function getSlug()
-    {
-      return $this->slug;
-    }
-
-    public function getUrl()
-    {
-      return '/c/'.$this->slug;
-    }
-    */
 
     public function pages()
     {
@@ -181,34 +130,26 @@ class Menu extends Base
       return $pages;
     }
 
-    //in: $arrPagesPublishedAndAccess
     public function pagesPublishedTree($pagesByMenu)
     {
       $tree = array();
-      //$pagesByMenu = $this->pagesPublishedAndAccess()->get()->toArray();
       foreach($pagesByMenu as $page){
         if(empty($page->page_id)){
-          //dump($page->page_id);
           $tree[$page->id] = $page;
         }
       }
-
-      //dd('--');
 
 
       foreach($pagesByMenu as $page){
         if(!empty($page->page_id)){
           $children = empty($tree[$page->page_id]['children']) ? [] : $tree[$page->page_id]['children'];
           array_push($children, $page);
-          //dd($tree[$page->page_id]);
           if( !empty($tree[$page->page_id]) ){
             $tree[$page->page_id]->setAttribute('children', $children);
           }
 
         }
       }
-
-      //dd('--');
 
       return $tree;
     }
@@ -282,7 +223,6 @@ class Menu extends Base
       }
 
       foreach ($menus as $key => $menu) {
-        //dump($menu->id);
         if( ($menu->id == $id)  ){
 
           if( $direction === "up" ){
@@ -302,5 +242,4 @@ class Menu extends Base
       }
       return true;
     }
-
 }

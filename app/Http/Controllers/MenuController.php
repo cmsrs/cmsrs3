@@ -1,10 +1,8 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-//use JWTAuth;
 
 use App\Config;
 use App\Menu;
@@ -22,7 +20,6 @@ class MenuController extends Controller
   }
   
   private $validationRules = [
-      //'name' => 'max:255|required',
       'position' => 'numeric'
   ];
 
@@ -30,7 +27,6 @@ class MenuController extends Controller
   public function index()
   {
       $menus = Menu::getAllMenus();
-      //var_dump( $menus  );
 
       return response()->json(['success' => true, 'data'=> $menus], 200);
   }
@@ -78,7 +74,6 @@ class MenuController extends Controller
       }
 
       $data = $request->only('name');
-      //, 'position'
 
       $validator = Validator::make($data, $this->validationRules);
       if($validator->fails()) {
@@ -92,7 +87,6 @@ class MenuController extends Controller
       }
   
       try{
-        //dd( $data );
         $res = $menu->wrapUpdate($data);
       } catch (\Exception $e) {
           Log::error('menu update ex: '.$e->getMessage() );
@@ -115,12 +109,10 @@ class MenuController extends Controller
       }
 
       $res = $menu->delete();
-      //var_dump($res);
       if(empty($res)){
         return response()->json(['success'=> false, 'error'=> 'Update delete problem'], 200);
       }
 
       return response()->json(['success'=> true], 200);
   }
-
 }

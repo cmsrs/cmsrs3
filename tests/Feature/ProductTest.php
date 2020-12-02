@@ -7,10 +7,8 @@ use App\Menu;
 use App\Image;
 use App\Product;
 use App\Translate;
-//use App\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-//use Tests\TestCase;
 
 class ProductTest extends Base
 {
@@ -23,7 +21,6 @@ class ProductTest extends Base
     private $testPage;
     private $testMenu;
     private $menuId;
-    //private $menuObj;
 
     private $pageId;
 
@@ -40,33 +37,12 @@ class ProductTest extends Base
         $this->testMenu =
             [
                 'name'     => ['en' => 'books'],
-                //'position' => 77
             ];
-
-        // $menu = new Menu($this->testMenu);
-        // $save = $menu->save();
-        // $this->assertTrue($save);
-        // $menuObj = $menu->all()->first();
-        // $this->menuId = $menuObj->id;
-
-
-        // $page = new Page($this->testPage);
-        // $page->save();
-
-        // $type = 'shop';
-        // $res = $this->get('api/pages/type/' . $type . '?token=' . $this->token);
-
-        // $data = $res->getData();
-        // $this->pageId = $data->data[0]->id;
-        // $this->assertNotEmpty($this->pageId);
 
 
         $this->name1 = 'phpunittest1.jpg';
-        //$file1 = $this->getFixtureBase64($this->name1);
 
         $this->name2 = 'phpunittest2.jpg';
-        //$file2 = $this->getFixtureBase64($this->name2);
-
     }
 
     protected function tearDown(): void
@@ -103,7 +79,6 @@ class ProductTest extends Base
         $this->assertTrue($data->success);
 
         $this->pageId = $data->data[0]->id;
-        //dd($this->pageId);
         $this->assertNotEmpty($this->pageId);
         $this->assertEquals($p->id, $this->pageId);
 
@@ -113,7 +88,6 @@ class ProductTest extends Base
             'sku' => 'AN/34534',
             'price' => 123,
             'description' => 'opis ksiazki',
-            //'photo' => null,
             'page_id' => $this->pageId,
             'images' => [
                 ['name' => $this->name1, 'data' => $this->getFixtureBase64($this->name1),  'alt' => ['en' =>  self::STR_DESC_IMG1 ] ],
@@ -145,11 +119,9 @@ class ProductTest extends Base
 
         $this->assertNotEmpty($res0->data->productId);
 
-        //print_r($this->testData);
         $response = $this->post('api/products?token=' . $this->token, $this->testData);
 
         $res = $response->getData();
-        //print_r($res);
 
         $this->assertFalse($res->success);
         $this->assertNotEmpty($res->error);
@@ -162,34 +134,19 @@ class ProductTest extends Base
     public function it_will_read_product_docs()
     {
         $this->setTestData();
-        //dd($this->pageId);
-        //dd($this->testData);
-
-        //print_r($this->testData);
         $res0 = $this->post('api/products?token=' . $this->token, $this->testData);
-        //dd('______________');
         $res = $res0->getData();
-        //print_r($res);
 
         $this->assertTrue($res->success);
 
-        //dump($res0);   die('88888888888888888');
 
         $response22 = $this->get('api/products?token='.$this->token );
-        //var_dump($response22); die('===');
 
         $res22 = $response22->getData();
-        //print_r($res22);
-
-        //dump($res22->data);
-        //dump($res->data->productId);
-        //dd($res->data);
 
         $this->assertTrue( $res22->success );
         $this->assertEquals( count($res22->data), 1);
         $this->assertEquals($res->data->productId, $res22->data[0]->id);
-
-        //dump($res22->data);
 
         $products = Product::all()->toArray();
         $this->assertEquals(1, count($products));
@@ -213,7 +170,6 @@ class ProductTest extends Base
 
         $this->assertEquals( null,  $res22->data[0]->images[1]->alt->en );                
 
-        //$this->removeImgDir($res->data->productId, 'product' );//remove file
         $this->clear_imgs($res->data->productId);
     }
 
@@ -249,16 +205,10 @@ class ProductTest extends Base
 
         $imagesTab = array_merge($arrOldImage, [$imagesNew]);
 
-        //array_shift($images);
         $this->testData['images'] = $imagesTab;
 
-        //var_dump($this->testData); die('++');
-
-        //print_r($this->testData);
         $response33 = $this->put('api/products/'.$productId.'?token='.$this->token, $this->testData);
-        //var_dump($response33); die('===========');
         $res33 = $response33->getData();
-        //print_r($res33);
 
         $this->assertTrue( $res33->success );
 
@@ -276,7 +226,6 @@ class ProductTest extends Base
         $this->assertEquals($res222->data[0]->images[1]->alt->en, 'alt2');        
         $this->assertEquals($res222->data[0]->images[2]->alt->en, null);                
 
-        //$this->removeImgDir($res->data->productId, 'product' ); //remove file
         $this->clear_imgs($res->data->productId);
     }
 
@@ -305,9 +254,7 @@ class ProductTest extends Base
   
   
         $response33 = $this->delete('api/products/'.$productId.'?token='.$this->token);    
-        //dd($response33);
         $res33 = $response33->getData();
-        //print_r($res33);
 
         $this->assertTrue( $res33->success );
 
@@ -324,12 +271,6 @@ class ProductTest extends Base
         $this->assertFileExists($testFileDirname);
         $this->assertFileNotExists($testFile);
 
-        //$imgDir = Image::getAbsRefDir( $res->data->productId, 'product' ).'/1/';
-        //$this->assertFileExists($imgDir);
-        //$this->assertTrue($this->is_dir_empty($imgDir));
-        //dd($imgDir);
-
-        //$this->removeImgDir($res->data->productId, 'product' ); //remove file
     }
 
     private function clear_imgs($productId){
@@ -353,7 +294,6 @@ class ProductTest extends Base
         
         $resprod = $this->get('api/products?token=' . $this->token);
         $res2prod = $resprod->getData();
-        //dd($res2prod->data);
         $this->assertEquals($res2prod->data[0]->images[0]->name,'phpunittest1.jpg');
 
         $response2 = $this->get('api/images/product/'.$productId.'?token='.$this->token);
@@ -399,7 +339,7 @@ class ProductTest extends Base
 
 
     /**
-     * I found bug in the change position impage in product, therefore i create lots of tests data
+     * I found bug in the change position image in product, therefore I create lots of tests data
      */
     /** @test */
     public function it_will_get_change_position_product_images_for_lots_of_items()
@@ -470,16 +410,12 @@ class ProductTest extends Base
         $this->assertNotEmpty($countImgs);
 
         $countAllImages = Image::count();
-        //dd($countAllImages);
         $allImgsBefore = Image::where('product_id',  $res0->data->productId)->get()->toArray();
-
-        //dd($allImgsBefore);
 
         $this->assertEquals($countImgs, count($allImgsBefore) );
 
         $lastImage = $allImgsBefore[$countImgs-1];
 
-        //$this->assertEquals($countAllImages, $lastImage['id']);
         $this->assertEquals($this->name2, $lastImage['name']);        
         $this->assertEquals($countImgs, $lastImage['position']);
         $this->assertEquals($res0->data->productId, $lastImage['product_id']);
@@ -509,20 +445,12 @@ class ProductTest extends Base
             $resSwap = $this->get('api/images/position/down/'.$lastImage['id'].'?token='.$this->token);        
             $res = $resSwap->getData();
             $this->assertTrue( $res->success );    
-
         //}
 
-        //->sortBy('position')
         $allImgsAfter = Image::where('product_id',  $res0->data->productId)->orderBy('position')->get()->toArray();
-        //dd($allImgsAfter);
         
 
-        //$allImgsAfterReset = array_values($allImgsAfter); //reset array keys
-        //dd($allImgsAfter);
-        //print_r($allImgsAfterReset);
-
         $ImageAfter = $allImgsAfter[$countImgs-1];
-        //$this->assertEquals($countAllImages, $ImageAfter['id']);
         $this->assertEquals($this->name2, $ImageAfter['name']);        
         $this->assertEquals($countImgs, $ImageAfter['position']);        
         $this->assertEquals($res0->data->productId, $ImageAfter['product_id']);        
@@ -531,22 +459,9 @@ class ProductTest extends Base
         $resGet = $this->get('api/products?token=' . $this->token);
         $resG = $resGet->getData();
         $this->assertTrue( $resG->success );    
-        //print_r( $resG->data );
 
         foreach($resG->data as $product){
-            //dump( $product->id );
             $this->clear_imgs($res0->data->productId);
-        }
-
-
-
-
-        
+        }        
     }
-
-    
-    
-
-
-
 }

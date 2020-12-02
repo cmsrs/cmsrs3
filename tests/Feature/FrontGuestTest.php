@@ -20,8 +20,6 @@ class FrontGuestTest extends TestCase
         parent::setUp();
     }
 
-
-    //use DatabaseMigrations;
     use RefreshDatabase;
 
     /** @test */
@@ -53,14 +51,12 @@ class FrontGuestTest extends TestCase
 		
         $pos = strpos( $response->getContent(), $pageTitle );
         $this->assertNotEmpty($pos, $pageTitle);
-
     }
 
 
     /** @test */
     public function it_will_get_as_guest_forbiden()
     {
-        //$this->assertTrue( true );
         $response = $this->get('/pl/cms/test/dsas');
         $response->assertStatus(404);
 
@@ -78,10 +74,8 @@ class FrontGuestTest extends TestCase
     /** @test */
     public function it_will_get_main_page_as_guest_forbiden()
     {
-        //$this->assertTrue( true );
         $response = $this->get('/');
         $response->assertStatus(404);
-
         
         $testData2 =
         [
@@ -91,12 +85,10 @@ class FrontGuestTest extends TestCase
             'published' => 1,
             'commented' => 0,
             'after_login' => 1,
-            //'position' => 3,
             'type' => 'main_page',
             'content' => 'main page',
             'menu_id' => null,
             'page_id' => null
-            //'images' => []
         ];
         (new Page)->wrapCreate($testData2);
 
@@ -108,7 +100,6 @@ class FrontGuestTest extends TestCase
     /** @test */
     public function it_will_get_main_page_as_guest_normal()
     {
-        //$this->assertTrue( true );
         $response = $this->get('/');
         $response->assertStatus(404);
 
@@ -121,12 +112,10 @@ class FrontGuestTest extends TestCase
             'published' => 1,
             'commented' => 0,
             'after_login' => 0,
-            //'position' => 3,
             'type' => 'main_page',
             'content' =>['en' => 'main page'],
             'menu_id' => null,
             'page_id' => null
-            //'images' => []
         ];
         (new Page)->wrapCreate($testData2);
 
@@ -145,15 +134,11 @@ class FrontGuestTest extends TestCase
             'published' => 1,
             'commented' => 0,
             'after_login' => 0,
-            //'position' => 3,
             'type' => 'main_page',
             'content' =>  ['en' =>'main page'],
             'menu_id' => null,
             'page_id' => null
-            //'images' => []
         ];
-
-
         
         $pPrivacy = [
             'title'     =>  ['en' =>'Privacy policy'],
@@ -186,38 +171,19 @@ class FrontGuestTest extends TestCase
         (new Page)->wrapCreate($pPrivacy);                
         (new Page)->wrapCreate($pContact);
 
-        //$pArr = Page::all()->toArray();
-        //dump($pArr);
-        //die('ggg');
 
         $footerPages = Page::getFooterPages('en');
-        //dd($footerPages);
-        
-        //$p = $footerPages['privacy_policy'];
-        //$url = $p->getSeparateUrl();
-        //$url = $p->getUrl();        
-        //dd($url);
-        //$url2 = $footerPages['privacy_policy']->getUrl();
 
         $this->assertNotEmpty($footerPages['policyUrl']);
         $this->assertNotEmpty($footerPages['policyTitle']);        
         $this->assertNotEmpty($footerPages['contactUrl']);
         $this->assertNotEmpty($footerPages['contactTitle']);        
 
-        //$this->assertSame($url, $url2);
-        //dd($footerPages);
 
         $response = $this->get( $footerPages['policyUrl'] );
-        //dd($response);        
-
-
         $response->assertStatus(200);
-        //dd($footerPages['policyUrl'] );        
 
         $response2 = $this->get( $footerPages['contactUrl'] );
-        //dd($footerPages['contactUrl']);
-
-
         $response2->assertStatus(200);
 
     }
@@ -262,21 +228,13 @@ class FrontGuestTest extends TestCase
         $page1Slug = $p1->getSlugByLang('en'); //Str::slug($data1p['title']['en']);
         $page2Slug = $p2->getSlugByLang('en'); //Str::slug($data2p['title']['en']);        
 
-        // $menuName = $testDataMenu['name'];
-        // $menuSlug = Str::slug($menuName);
-        //$url1 = $p1->getUrl($m1->slug);
         $url1 = $p1->getUrl('en');        
 
         $this->assertSame('/'.Page::PREFIX_CMS_URL.'/'.$m1->getSlugByLang('en').'/'.$page1Slug, $url1);    
 
-        //$response1 = $this->get('/c/'.$menuSlug.'/'.$page1Slug);
-        //dump($url1);
         $response1 = $this->get($url1 );
-        //dd($response1);
         $response1->assertStatus(200);            
 
-        //$response2 = $this->get('/c/'.$menuSlug.'/'.$page2Slug);
-        //$url2 = $p2->getUrl($m1->slug);
         $url2 = $p2->getUrl('en');        
         $this->assertSame('/'.Page::PREFIX_CMS_URL.'/'.$m1->getSlugByLang('en').'/'.$page2Slug, $url2);    
         $response2 = $this->get($url2);
@@ -323,17 +281,8 @@ class FrontGuestTest extends TestCase
         $p2 = (new Page)->wrapCreate($data2p);
 
 
-        // $page1Slug = Str::slug($data1p['title']);
-        // $page2Slug = Str::slug($data2p['title']);        
-
-        // $menuName = $testDataMenu['name'];
-        // $menuSlug = Str::slug($menuName);
-
-
-        //$response1 = $this->get($p1->getUrl($m1->slug));
         $response1 = $this->get($p1->getUrl('en'));        
         $response1->assertStatus(401);            
-        //$response2 = $this->get($p2->getUrl($m1->slug));
         $response2 = $this->get($p2->getUrl('en'));        
         $response2->assertStatus(401);            
     }
@@ -381,20 +330,12 @@ class FrontGuestTest extends TestCase
         $page1Slug = Str::slug($data1p['title']['en']);
         $page2Slug = Str::slug($data2p['title']['en']);        
 
-
-        //$response1 = $this->get($m1->getUrl()  ) ;
         $response1 = $this->get($p1->getUrl('en')  ) ;        
         $response1->assertStatus(401);      
 
         $response1 = $this->get($p2->getUrl('en')  ) ;        
         $response1->assertStatus(404);      
 
-
-        //$response11 = $this->get('/c/'.$menuSlug.'/'.$page1Slug);
-        //$response11->assertStatus(404);            
-
-        //$response2 = $this->get('/c/'.$menuSlug.'/'.$page2Slug);
-        //$response2->assertStatus(404);            
     }
 
     /** @test */
@@ -441,18 +382,11 @@ class FrontGuestTest extends TestCase
         $page2Slug = Str::slug($data2p['title']['en']);        
 
 
-        //$response1 = $this->get($m1->getUrl());
         $response1 = $this->get($p1->getUrl('en'));        
         $response1->assertStatus(200);
 
         $response2 = $this->get($p2->getUrl('en'));        
         $response2->assertStatus(404);
-
-        //$//response11 = $this->get('/c/'.$menuSlug.'/'.$page1Slug);
-        //$response11->assertStatus(404);            
-
-        //$response2 = $this->get('/c/'.$menuSlug.'/'.$page2Slug);
-        //$response2->assertStatus(404);            
         
     }    
 }

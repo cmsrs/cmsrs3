@@ -1,8 +1,6 @@
 <?php
-
 namespace App;
 
-//use Illuminate\Database\Eloquent\Model;
 
 class Translate extends Base
 {
@@ -24,7 +22,6 @@ class Translate extends Base
 
     public function wrapCreate( $data, $create = true)
     {
-        //dd($create);
         if( !empty($data['menu_id'])  ){
             $requiredColumn = (new Menu)->requiredColumn;
             $columns = ['name' => in_array('name', $requiredColumn) ? true : false ];   

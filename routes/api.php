@@ -25,14 +25,11 @@ if($demoStatus){
         $apiSecret = env('API_SECRET', '' );
         if($apiSecret){
             $apiSecret = $apiSecret.'/';
-        }        
-        
+        }            
         Route::get($apiSecret.'logout', 'AuthController@logout');
         Route::get($apiSecret.'menus', 'MenuController@index');
-        //Route::get('menus/position/{direction}/{id}', 'MenuController@position');
 
         Route::get($apiSecret.'pages', 'PageController@index');
-        //Route::get('pages/position/{direction}/{id}', 'PageController@position');
         Route::get($apiSecret.'pages/type/{type}', 'PageController@getPagesByType');
 
         Route::get($apiSecret.'images/{type}/{pageId}', 'ImageController@getItemByTypeAndRefId'); //getItemByPageId

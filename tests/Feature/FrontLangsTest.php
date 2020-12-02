@@ -39,7 +39,6 @@ class FrontLangsTest extends Base
         $this->testDataMenu =
         [
              'name'     =>  ['pl' => 'test men7 zółć',  'en' => 'menu test' ],
-             //'position' => 1
         ];
     }
 
@@ -153,20 +152,12 @@ class FrontLangsTest extends Base
     {
         $this->setTestData();
 
-        // $title = $this->testData['title']['en'];
-        // $pageSlug = Str::slug($title);
-        // $menuName = $this->testDataMenu['name']['en'];
-        // $menuSlug = Str::slug($menuName);
-
         $p0 = Page::query()->where('menu_id', $this->menuId)->get()->first();
         $this->assertNotEmpty($p0);
 
-        //$this->assertEquals(1, $p0->count());
-        //$url = $p0->getUrl();
 
         foreach($this->langs as $lang){
             $url =  $p0->getUrl($lang); 
-            //dump($url);
             $this->assertNotEmpty($url);
             $response1 = $this->get($url);
             $response1->assertStatus(200);    
@@ -177,8 +168,6 @@ class FrontLangsTest extends Base
     public function it_will_get_cms_page()
     {
         $this->setTestData();      
-        //$title = $this->testData['title']['en'];
-        //$pageSlug = Str::slug($title);
 
         $menuName = $this->testDataMenu['name']['en'];
         $menuSlug = Str::slug($menuName);
@@ -190,9 +179,6 @@ class FrontLangsTest extends Base
         // $response = $this->get('/c/'.$menuSlug.'/'.$pageSlug);
         // $response->assertStatus(404);
         
-        // $response1 = $this->get('/'.$menuSlug);
-        // $response1->assertStatus(200);
-
 
         $testData2 =
         [
@@ -202,12 +188,10 @@ class FrontLangsTest extends Base
             'published' => 1,
             'commented' => 0,
             'after_login' => 1,
-            //'position' => 3,
             'type' => 'cms',
             'content' =>  ['en' =>'main page', 'pl' =>'str gl'],
             'menu_id' => $this->menuId,
             'page_id' => null
-            //'images' => []
         ];
   
         $response = $this->post('api/pages?token='.$this->token, $testData2);
@@ -218,10 +202,8 @@ class FrontLangsTest extends Base
         $p = Page::query()->where('menu_id', $this->menuId)->get(); //->toArray();
         $this->assertEquals(2, $p->count()  );
 
-        //dd($this->menuObj->slug);
         $i = 0;
         foreach( $p as $pp){
-            //$url0 = $pp->getUrl($this->menuObj->slug);
             $url0 = $pp->getUrl('en');            
             $response = $this->get($url0);
             $response->assertStatus(200);
@@ -255,15 +237,10 @@ class FrontLangsTest extends Base
 
         foreach($this->langs as $lang){
             $url =  $p->getUrl($lang); 
-            //dump($url);
             $this->assertNotEmpty($url);
             $response1 = $this->get($url);
             $response1->assertStatus(200);    
         }
    }
-
-
-
-
 
 }

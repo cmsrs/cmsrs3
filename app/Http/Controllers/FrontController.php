@@ -29,7 +29,7 @@ class FrontController extends Controller
     }
     
 
-    $this->menus = $menus;  //Menu::all()->sortBy('position'); //TODO cached
+    $this->menus = $menus;
     $this->langs = (new Config)->arrGetLangs();
   }
 
@@ -43,13 +43,6 @@ class FrontController extends Controller
       abort(401);        
     }
   }
-
-  // public function showLoginForm()
-  // {
-  //     die('__ddddddddddddd___');
-  //     //dd('_xxxx_sdss__');
-  //     return view('auth.login');
-  // }
 
 
   public function index($lang = null)
@@ -67,25 +60,19 @@ class FrontController extends Controller
 
     $page = Page::getMainPage();
     $this->validatePage($page);
-    //$footerPages = Page::getFooterPages($lang);    
 
 
     return view('index', [ 
       'menus' => $this->menus, 
       'page' => $page, 
       'lang' => $lang, 
-      'langs' => $this->langs,
-      //'footerPages' => $footerPages  
+      'langs' => $this->langs
     ] );
   }
 
   public function getPageLangs($lang, $menuSlug, $pageSlug )
   {
-    //dd('++++++++++++');
     $data = $this->getPage($menuSlug, $pageSlug, $lang );
-    //pp::setLocale($lang);
-    //$ll = App::getLocale($lang);
-    //dd($ll);
     return view($data['view'], $data);
   }
 
@@ -99,8 +86,6 @@ class FrontController extends Controller
       $manyLangs = true;
     }
     App::setLocale($lang);
-
-    //$footerPages = Page::getFooterPages($lang);        
 
 
     $products = null;
@@ -137,10 +122,8 @@ class FrontController extends Controller
       'products' => $products, 
       'lang' => $lang, 
       'langs' => $this->langs,
-      //'type' => $pageOut->type, 
       're_public' => env('GOOGLE_RECAPTCHA_PUBLIC', ''),
       'view' => $view
-      //'footerPages' => $footerPages
     ];
 
     if($manyLangs){
@@ -176,7 +159,6 @@ class FrontController extends Controller
       }
     }
 
-    //$footerPages = Page::getFooterPages($lang);
     $this->validatePage($pageOut);
 
     $data = [ 
@@ -185,7 +167,6 @@ class FrontController extends Controller
       'products' => $products, 
       'lang' => $lang, 
       'langs' => $this->langs,
-      //'footerPages' => $footerPages
     ];
 
     if($manyLangs){

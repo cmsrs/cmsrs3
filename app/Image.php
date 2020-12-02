@@ -2,7 +2,6 @@
 
 namespace App;
 
-//use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
 
@@ -30,7 +29,6 @@ class Image extends Base
 
     protected $fillable = [
         'name', 
-        //'alt', 
         'position', 
         'page_id', 
         'product_id'
@@ -78,7 +76,8 @@ class Image extends Base
 
     /**
     * TODO - mmove function to helper
-    */
+    * maybe it is good idea to replace this function to: Str::slug($name, "_");
+    */  
     static  public function filter($string, $delimiter = '-' )
     {
         $to_replace   = array('ą', 'ę', 'ó', 'ś', 'ć', 'ń', 'ł', 'ż', 'ź', 'Ą', 'Ę', 'Ó', 'Ś', 'Ć', 'Ń', 'Ł', 'Ż', 'Ź', '%20',' ');
@@ -89,7 +88,7 @@ class Image extends Base
         $string = str_replace($to_replace, $replace_with, $string);
         $string = str_replace($filter, '', $string);
         return   strtolower( trim(  $string) );
-    }
+    } 
 
     public function translates()
     {
@@ -200,22 +199,14 @@ class Image extends Base
 
     public function updateImages($images){
       foreach($images as $image){
-        //$objImage = Image::findOrFail($image['id']);
-        //$objImage->update([ 'id' => $image['id'],  'alt' => $image['alt']]); //TODO
-        //$this->createTranslate( [ 'image_id' => $this->id, 'data' => $image['alt'] ], false );
-
-        //dump([ 'image_id' => $image['id'], 'data' => $image ]);
-        //dd('_____jestem____');
         $this->translate->wrapCreate( [ 'image_id' => $image['id'], 'data' => $image ], false );    
       }
     }
 
     public function createImages($images, $type,  $refId ){
-      //var_dump($images);
 
       $out = [];
 
-      // \Illuminate\Support\Facades\Log::error('custom: '.var_export($images, true ) );
       foreach ($images as $key => $image) {
         $name = self::filter($image['name']);
         $alt = !empty($image['alt']) ? $image['alt'] : null;
@@ -228,7 +219,6 @@ class Image extends Base
 
         $dbData = [
             'name' => $name,
-            //'alt' => $alt,
             'position' => Image::getNextPositionByTypeAndRefId( $type,  $refId ),
             $strRefId => $refId
         ];
@@ -262,7 +252,6 @@ class Image extends Base
     }
 
     static public function getNextPositionByTypeAndRefId( $type,  $refId )
-    //static public function getNextPositionByPageId( $pageId )
     {
       if( empty( $strRefId = Image::$type[$type]) ){
            throw new \Exception("I can't get image type in getNextPositionByTypeAndRefId");
@@ -289,7 +278,6 @@ class Image extends Base
     }
 
 
-    //static public function getImagesAndThumbsByPageId($pageId = null)
     static public function getImagesAndThumbsByTypeAndRefId(  $type, $refId = null)
     {
       $images  = Image::getImagesByTypeAndRefId(  $type, $refId);
@@ -299,7 +287,6 @@ class Image extends Base
         $images[$k]['fs']  = Image::getAllImage($img, false);
         unset($img['translates']);
       }
-      //dd( $images->toArray() );
 
       return $images;
     }
@@ -316,15 +303,12 @@ class Image extends Base
       return $out;
     }
 
-    //static public function getImagesByPageId($pageId = null)
     static public function getImagesByTypeAndRefId(  $type, $refId = null)
     {
 
       if( empty( $strRefId = Image::$type[$type]) ){
             throw new \Exception("I can't get image type in getImagesByTypeAndRefId");
       }
-
-      //echo "type=".$type;
 
       $image = [];
       if( empty($refId) ){
@@ -387,5 +371,4 @@ class Image extends Base
       }
       return true;
     }
-
 }

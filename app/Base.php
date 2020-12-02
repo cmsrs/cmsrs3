@@ -44,11 +44,6 @@ class Base extends Model
                     }else{
                         $this->updateRow( $row );
                     }
-                    //}
-                    // }else{
-                    //     $strCreateOrUpdate = $create ? "create" : "update";
-                    //     throw new \Exception( var_export( isSet($data[$column][$lang]), true ) . "Translation problem (no data for $strCreateOrUpdate), for: column: $column lang: $lang, var= ". var_export($data, true ));                        
-                    // }
                 }
             }                
         }
@@ -58,7 +53,6 @@ class Base extends Model
     public function getAllTranslateByColumn()
     {
         $data = $this->getAllTranslate();
-        //dd($data);
 
         $out = [];
         foreach($data as $d){
@@ -68,10 +62,6 @@ class Base extends Model
         return $out;
     }    
     
-
-    /**
-     * TODO - cache
-     */
     public function translatesByColumnAndLang( $column, $lang )
     {
 
@@ -81,35 +71,15 @@ class Base extends Model
         if( isSet($data[$column]) && isSet($data[$column][$lang]) ){
             $value = $data[$column][$lang];
         }
-        //dd('======++=='.$value);        
 
         return $value;
     }    
 
-/*    
-    public function translatesByColumn( $column )
-    {
-      $data = $this->getAllTranslateByColumn();
-      //dd($data);
-
-      $values = [];
-      if( isSet($data[$column]) ){
-        $values = $data[$column];
-      }
-
-      return $values;
-    } 
-*/       
     
     protected function wrapTranslateUpdate( $obj, $row )
     {
         if($obj){
             $obj->update([ 'value' => $row['value']] );
-            // if(empty($row['value'])){
-            //     $obj->delete();
-            // }else{
-            //     $obj->update([ 'value' => $row['value']] );
-            // }
         }else{
             $this->createRow( $row );
         }

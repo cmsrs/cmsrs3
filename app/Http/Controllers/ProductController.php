@@ -21,13 +21,7 @@ class ProductController extends Controller
 
   public function index()
   {
-
         $products = Product::getAllProductsWithImages();
-
-        //   $products = Product::query()->orderBy('id', 'asc' )->get()->toArray();
-        //   foreach ($products as $key => $product) {
-        //       $products[$key]['images'] = Image::getImagesAndThumbsByTypeAndRefId( 'product', $product['id']);
-        //   }
 
         return response()->json(['success' => true, 'data'=> $products], 200);
   }
@@ -52,8 +46,8 @@ class ProductController extends Controller
         try{
             $product = (new Product)->wrapCreate($data);
         } catch (\Exception $e) {
-        Log::error('product add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile() ); //.' for: '.var_export($data, true )
-        return response()->json(['success'=> false, 'error'=> 'Add product problem, details in the log file.'], 200); //.$e->getMessage()
+            Log::error('product add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile() ); //.' for: '.var_export($data, true )
+            return response()->json(['success'=> false, 'error'=> 'Add product problem, details in the log file.'], 200); //.$e->getMessage()
         }
 
         return response()->json(['success'=> true, 'data' => ['productId' => $product->id, 'data' => $data] ]);

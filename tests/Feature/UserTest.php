@@ -36,9 +36,6 @@ class UserTest extends Base
         $this->assertTrue( true );
         $password = Hash::make($data['password']);
 
-        //echo "pass==".$password;
-        //die('-------------');
-
         User::where('email',  $data['email'])->delete();
 
         $return = User::create([
@@ -58,8 +55,6 @@ class UserTest extends Base
     {
         $response = $this->get('api/users/clients?token='.$this->token );
         $res = $response->getData();
-        //print_r($res);
-
         $this->assertTrue( $res->success );
         $this->assertEquals( count($res->data), 1);
         $data = (array)$res->data[0];
@@ -70,17 +65,9 @@ class UserTest extends Base
         $this->assertNotEmpty($data['updated_at']);
     }
 
-
-
-
     protected function tearDown(): void
     {
         parent::tearDown();
     }
-
-
-
-
-
 
 }

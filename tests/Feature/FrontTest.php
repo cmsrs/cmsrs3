@@ -91,7 +91,6 @@ class FrontTest extends Base
     /** @test */
     public function it_will_get_main_page()
     {
-        //$this->assertTrue( true );
         $response = $this->get('/');
         $response->assertStatus(404);
 
@@ -103,12 +102,10 @@ class FrontTest extends Base
             'published' => 1,
             'commented' => 0,
             'after_login' => 1,
-            //'position' => 3,
             'type' => 'main_page',
             'content' =>  ['en' =>'main page'],
             'menu_id' => null,
             'page_id' => null
-            //'images' => []
         ];
   
         $response = $this->post('api/pages?token='.$this->token, $testData2);
@@ -133,13 +130,9 @@ class FrontTest extends Base
 
         $p0 = Page::query()->where('menu_id', $this->menuId)->get()->first();
         $this->assertNotEmpty($p0);
-        //$this->assertEquals(1, $p0->count());
 
-        //$url = $p0->getUrl();
         $url =  $p0->getUrl('en');
 
-        //$response = $this->get('/c/'.$menuSlug.'/'.$pageSlug);
-        //$response->assertStatus(404);
         
         $response1 = $this->get($url);
         $response1->assertStatus(200);
@@ -162,9 +155,6 @@ class FrontTest extends Base
         // $response = $this->get('/c/'.$menuSlug.'/'.$pageSlug);
         // $response->assertStatus(404);
         
-        // $response1 = $this->get('/'.$menuSlug);
-        // $response1->assertStatus(200);
-
 
         $testData2 =
         [
@@ -174,12 +164,10 @@ class FrontTest extends Base
             'published' => 1,
             'commented' => 0,
             'after_login' => 1,
-            //'position' => 3,
             'type' => 'cms',
             'content' =>  ['en' =>'main page'],
             'menu_id' => $this->menuId,
             'page_id' => null
-            //'images' => []
         ];
   
         $response = $this->post('api/pages?token='.$this->token, $testData2);
@@ -190,10 +178,8 @@ class FrontTest extends Base
         $p = Page::query()->where('menu_id', $this->menuId)->get(); //->toArray();
         $this->assertEquals(2, $p->count()  );
 
-        //dd($this->menuObj->slug);
         $i = 0;
         foreach( $p as $pp){
-            //$url0 = $pp->getUrl($this->menuObj->slug);
             $url0 = $pp->getUrl('en');            
             $response = $this->get($url0);
             $response->assertStatus(200);
@@ -227,7 +213,6 @@ class FrontTest extends Base
 
         $lang = 'en';
         $url =  $p->getUrl($lang); 
-        //dump($url);
         $this->assertNotEmpty($url);
         $response1 = $this->get($url);
         $response1->assertStatus(200);    
