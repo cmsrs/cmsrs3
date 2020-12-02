@@ -61,21 +61,6 @@ class Page extends Base
         $this->langs = $this->getArrLangs();
     }
 
-
-    public function setTranslate( $objTranslate )
-    {
-        if(!empty($objTranslate)){
-            $this->translate = $objTranslate;
-        }
-    }      
-
-    public function setContent( $objContent )
-    {    
-        if( !empty($objContent) ){
-            $this->content = $objContent;
-        }
-    }  
-
     public function menu()
     {
       return $this->hasOne('App\Menu', 'id', 'menu_id');
@@ -95,7 +80,22 @@ class Page extends Base
     public function images()
     {
       return $this->hasMany('App\Image')->orderBy('position');
-    }   
+    }
+
+    public function setTranslate( $objTranslate )
+    {
+        if(!empty($objTranslate)){
+            $this->translate = $objTranslate;
+        }
+    }      
+
+    public function setContent( $objContent )
+    {    
+        if( !empty($objContent) ){
+            $this->content = $objContent;
+        }
+    }  
+
 
     static public function getPageBySlug($menus, $menuSlug, $pageSlug, $lang)    
     {
@@ -183,12 +183,6 @@ class Page extends Base
       return $ret;
     }
 
-
-    public function setTitleAttribute($value)
-    {
-        $this->attributes['title'] = $value;
-        $this->attributes['slug'] = Str::slug($value, "-");
-    }
 
     static public function CreatePage($data)
     {

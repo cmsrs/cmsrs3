@@ -4,7 +4,6 @@ namespace App;
 
 use Carbon\Carbon;
 
-
 class Image extends Base
 {
 
@@ -52,6 +51,11 @@ class Image extends Base
         $this->translate = new Translate;  
     }
 
+    public function translates()
+    {
+        return $this->hasMany('App\Translate');
+    }    
+
     public function setTranslate( $objTranslate )
     {
         if( !empty($objTranslate) ){
@@ -76,7 +80,7 @@ class Image extends Base
 
     /**
     * TODO - mmove function to helper
-    * maybe it is good idea to replace this function to: Str::slug($name, "_");
+    * fix for another language
     */  
     static  public function filter($string, $delimiter = '-' )
     {
@@ -89,11 +93,6 @@ class Image extends Base
         $string = str_replace($filter, '', $string);
         return   strtolower( trim(  $string) );
     } 
-
-    public function translates()
-    {
-        return $this->hasMany('App\Translate');
-    }
 
     public function delete()
     {
