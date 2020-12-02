@@ -1,7 +1,7 @@
 UWAGA!!!
 
 
-- przy zmianie linkow trzeba aktualizowac sitmape - wywolujac skrypt
++ przy zmianie linkow trzeba aktualizowac sitmape - wywolujac skrypt (patrz: .go_clear_cache_and_update_sitempa.sh)
 
 
 
@@ -17,7 +17,7 @@ todo
 + strony dostepne tylko po zalogowaniu
 
 
-- nie intuicyjnie dziala add/edit w panelu administracyjnym
++ nie intuicyjnie dziala add/edit w panelu administracyjnym
 + pokazanie w panelu, ktore srony sa odpublikowane
 
 
@@ -53,7 +53,7 @@ todo
 + widomosci w panelu adm z formularza contact form
 +-(mozna poprawic - nie wszystkie zapytania sie cachuja)   cache - wydajnosc strony
 +-(podepnij do googla)    sitemap.xml - zrobione z automatu
-- cross w laravelu (po stronie servera) - bezpieczenstow
+- cross w laravelu (po stronie servera) - bezpieczenstow - do przemyslenia i testow
 + podepnij google analytics
 + linki googla przepisac
 + przekierowanie na www
@@ -64,7 +64,7 @@ todo
 + inny url do admina - bezpieczenstow
 + pokazanie w panelu strony, ktore sa odpublikowane (na jakis wyszazony kolor)
 (?)  - select w parent page powinien pokazywac short_title a nie title (to jest nietrafiony pomysl bo w projektach nie widomo co wybrac - jest 2x opis np)
-- edycja i dodawanie - malo intuicyjne w panelu administracyjnym - do przemyslenia (przy kasowaniu obrazkow przechodzi na strone glowna)
++ edycja i dodawanie - malo intuicyjne w panelu administracyjnym - do przemyslenia (przy kasowaniu obrazkow przechodzi na strone glowna)
 + dla page.type == project (or privacy - moze niemkoniecznie) - tylko jeden jezyk
 
 
@@ -73,9 +73,9 @@ bledy (o niskiej waznosci):
 - 2x mozna dodac formularz kontaktowy - moze do poprawy
 - tlumaczenie bledow przy logowaniu na polski
 - tranzakcje db - jesli nie uda sie dodac strony to nalezy usunac takze tlumaczenia powiazane z ta strona
-- obsluzyc przypadek unikatowych tytulow ston dla danego menu (chociaz short_title jest takie same w projektach)
-- obsluzyc przypadek unikatowych tytulow menu
-- kolejnosc obrazkow dla produktu - nie zawsze dzialala -do  poprawy
++ obsluzyc przypadek unikatowych tytulow ston dla danego menu (chociaz short_title jest takie same w projektach -wiec nie jest uniq)
++ obsluzyc przypadek unikatowych tytulow menu
+- kolejnosc obrazkow dla produktu - nie zawsze dzialala -do  poprawy (nie wiem co jest problemem)
 
 
 uwagi:
@@ -118,3 +118,4 @@ uwagi:
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>      
 -->
+
