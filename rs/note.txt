@@ -95,6 +95,19 @@ uwagi:
 
 
 
++ aktualizacja laravela
+lokalnie na serwerze:
+0. sprawdz wersje laravela: $php artian list
+1. wstaw odpowiednie wersje w composer.json  nie zapomnij zaktualizowac takze wersji php-a w tym pliku
+2. comoser update 
+3. utworzy sie plik composer.lock
+4. przeslij te dwa pliki na serwer
+
+pozniej na serwerze:
+0. sprawdz wersje laravela: $php artian list
+1. $git pull - pobiora sie nowe pliki composer.json i comploser.lock
+2. $php_ver  ~/script/php_ver/composer install  (przy update - nie dalo sie wykonac polecenia poniewaz byl 'Kill' przy wykonaniau komendy)
+
 
 
 
