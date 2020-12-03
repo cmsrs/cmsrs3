@@ -260,7 +260,8 @@ class ImageTest extends Base
 
             if ($imagesFs) {
                 foreach ($imagesFs as $imgFs) {
-                    $this->assertFileNotExists($imgFs);
+                    //$this->assertFileNotExists($imgFs);
+                    $this->assertFileDoesNotExist($imgFs);
                 }
             }
         }
@@ -298,11 +299,11 @@ class ImageTest extends Base
         $translateAfter = Translate::query()->where('image_id', $imgToDel->id)->where('column', 'alt')->get()->toArray();
         $this->assertEmpty($translateAfter);
 
-        $this->assertFileNotExists($file);
+        $this->assertFileDoesNotExist($file);
 
         foreach (Image::$thumbs as $thumbName => $dimension) {
             $fileThumb = $imgDir.'/'.$fileName.'-'.$thumbName.'.'.$fileExt;
-            $this->assertFileNotExists($fileThumb);
+            $this->assertFileDoesNotExist($fileThumb);
         }
 
 

@@ -268,7 +268,8 @@ class ProductTest extends Base
 
         $testFileDirname = pathinfo($testFile, PATHINFO_DIRNAME);
         $this->assertFileExists($testFileDirname);
-        $this->assertFileNotExists($testFile);
+        //$this->assertFileNotExists($testFile);
+        $this->assertFileDoesNotExist($testFile);
     }
 
     private function clear_imgs($productId)
