@@ -80,12 +80,6 @@ DB_DATABASE=cmsrs_testing
 LANGS="en"
 ```
 
-remove this line from the .env.testing:
-
-```bash
-API_SECRET=""
-```
-
 * run tests: 
 
 It is recommended to run tests on a clean instance (without images)
