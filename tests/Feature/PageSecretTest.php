@@ -23,7 +23,8 @@ class PageSecretTest extends Base
 
     public function setUp(): void
     {
-        $this->apiSecret = 'v2345';
+        $this->apiSecret = '8761';        
+        putenv('LANGS="en"');                
         putenv('API_SECRET="'.$this->apiSecret.'"');
         parent::setUp();
 
@@ -82,9 +83,9 @@ class PageSecretTest extends Base
           'menu_id' => null, //it must be null for type main_page
           'page_id' => null, //it must be null for type main_page
       ];
-
+        $alipUrl = 'api/'.$this->apiSecret.'/pages?token='.$this->token;
         $this->assertNotEmpty($this->apiSecret);
-        $response = $this->post('api/'.$this->apiSecret.'/pages?token='.$this->token, $testData2);
+        $response = $this->post($alipUrl, $testData2);
 
         $res = $response->getData();
         $this->assertTrue($res->success);

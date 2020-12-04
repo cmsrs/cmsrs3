@@ -77,6 +77,7 @@ change in file .env.testing:
 
 ```bash
 DB_DATABASE=cmsrs_testing
+LANGS="en"
 ```
 
 * run tests: 
