@@ -1,55 +1,54 @@
 # INSALLATION
 
 * download
-> 
-> ```bash
-> git clone https://github.com/cmsrs/cmsrs3.git
-> cd cmsrs3
-> ```
->
-* set database config in file .env
-> 
-> create user and database
-> ```bash
-> ./go_create_user_and_db.sh
-> ```
-> 
-> change file .env:
-> 
-> ```bash
-> cp .env.cmsrs .env
-> ```
->
+ 
+```bash
+git clone https://github.com/cmsrs/cmsrs3.git
+cd cmsrs3
+```
+
+* create user and database
+
+```bash
+./go_create_user_and_db.sh
+```
+ 
+* change file .env:
+ 
+```bash
+cp .env.cmsrs .env
+```
+
 * install dependency
-> 
-> ```bash
-> composer install
-> ```
->
+
+```bash
+composer install
+```
+
 * laravel and jwt config (create tokens):
->
-> ```bash
-> php artisan key:generate && php artisan jwt:secret
-> ```
-> 
+
+```bash
+php artisan key:generate && php artisan jwt:secret
+```
+ 
 * create database tables and create admin user (email: adm@cmsrs.pl, pass: cmsrs123) 
->
-> ```bash
-> php artisan migrate  && php artisan db:seed
-> ```
-> 
+
+```bash
+php artisan migrate  && php artisan db:seed
+```
+ 
 * set permission 
-> 
-> ```bash
-> ./go_privilege.sh
-> ```
-> 
+ 
+```bash
+./go_privilege.sh
+```
+ 
 * start server
-> 
-> ```bash
-> php artisan serve
-> ```
-> 
+ 
+```bash
+php artisan serve
+```
+ 
 # RUN TESTS
 
 * prepare testing:
