@@ -78,6 +78,10 @@ bledy (o niskiej waznosci):
 - kolejnosc obrazkow dla produktu - nie zawsze dzialala -do  poprawy (nie wiem co jest problemem)
 
 
+critical
+- !!!!contact musli byc podpiety pod menu (mozna obsluzyc ten przypadek) 
+
+
 uwagi:
 + zrzuty bez ladowania vue - stworzyc nowy tym np clear (bez vue)
 - zmienic nazwe privacy na independent (chodzi o typ page) - moze niech ta nazwa zostanie - w koncu tylko te prawnicze glupoty nie sa powiazane z menu
