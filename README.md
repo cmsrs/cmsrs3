@@ -1,3 +1,18 @@
+# QUICK INSTALLATION
+
+* download
+ 
+```bash
+git clone https://github.com/cmsrs/cmsrs3.git
+cd cmsrs3
+```
+
+* run script 
+
+```bash
+./go_install.sh
+```
+
 # INSALLATION
 
 * download
@@ -49,21 +64,6 @@ php artisan migrate  && php artisan db:seed
 php artisan serve
 ```
 
-# QUICK INSTALLATION
-
-* download
- 
-```bash
-git clone https://github.com/cmsrs/cmsrs3.git
-cd cmsrs3
-```
-
-* run script 
-
-```bash
-./go_install.sh
-```
- 
 # RUN TESTS
 
 * prepare testing:
@@ -120,7 +120,6 @@ GOOGLE_RECAPTCHA_PUBLIC
 CACHE_ENABLE=true
 ```
 
-
 # TROUBLESHOOTING
 
 * logs:
@@ -128,7 +127,6 @@ CACHE_ENABLE=true
 ```bash
 tail -f -n0 storage/logs/*
 ```
-
 
 # CLI COMMANDS 
 
@@ -138,13 +136,11 @@ tail -f -n0 storage/logs/*
 ./go_clear_and_load_demo.sh
 ```
 
-
 * create sitemap: 
 
 ```bash
 php artisan command:create-site-map
 ```
-
 
 # MANAGMENT
 
@@ -185,4 +181,3 @@ http://www.cmsrs.pl/en/cms/cmsrs/cmsrs-video-tutorial
 React source code:
 
 https://github.com/cmsrs/cmsrs3-react
-
