@@ -49,7 +49,7 @@ php artisan migrate  && php artisan db:seed
 php artisan serve
 ```
 
-# QUICK INSTALLATIOM
+# QUICK INSTALLATION
 
 * download
  
