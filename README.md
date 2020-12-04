@@ -48,6 +48,21 @@ php artisan migrate  && php artisan db:seed
 ```bash
 php artisan serve
 ```
+
+# QUICK INSTALLATIOM
+
+* download
+ 
+```bash
+git clone https://github.com/cmsrs/cmsrs3.git
+cd cmsrs3
+```
+
+* run script 
+
+```bash
+./go_install.sh
+```
  
 # RUN TESTS
 
@@ -147,10 +162,6 @@ php artisan command:create-site-map
     
 * add pages
    
-* upload images
-
-* go to the main page and see the front page
-
 ===
 
 Demo:
