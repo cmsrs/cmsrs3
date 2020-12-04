@@ -7,36 +7,23 @@
 > cd cmsrs3
 > ```
 >
-* install dependency
-> 
-> ```bash
-> composer install
-> ```
->
 * set database config in file .env
 > 
 > create user and database
 > ```bash
-> sudo mysql --default-character-set=utf8 -e  "CREATE USER 'cmsrs'@'localhost' IDENTIFIED BY 'secret102*';"
-> sudo mysql --default-character-set=utf8 -e  "GRANT ALL PRIVILEGES ON *.* TO 'cmsrs'@'localhost' WITH GRANT OPTION;"
-> sudo mysql --default-character-set=utf8 -e  "CREATE DATABASE cmsrs3g CHARACTER SET utf8 COLLATE utf8_general_ci;"
+> ./go_create_user_and_db.sh
 > ```
 > 
-> ```bash
-> cp .env.example .env
-> ```
->
-> change in file .env:
+> change file .env:
 > 
 > ```bash
-> APP_NAME=cmsRS
-> APP_URL=http://127.0.0.1:8000
-> DB_DATABASE=cmsrs3g
-> DB_USERNAME=cmsrs
-> DB_PASSWORD="secret102*"
+> cp .env.cmsrs .env
+> ```
 >
-> ADM_EMAIL="adm@cmsrs.pl"
-> ADM_PASS="cmsrs123"
+* install dependency
+> 
+> ```bash
+> composer install
 > ```
 >
 * laravel and jwt config (create tokens):
@@ -68,14 +55,14 @@
 * prepare testing:
 
 ```bash
-sudo mysql --default-character-set=utf8 -e  "CREATE DATABASE cmsrs3g_testing CHARACTER SET utf8 COLLATE utf8_general_ci;"
+./go_create_test_db.sh
 cp .env .env.testing 
 ```
  
 change in file .env.testing:
 
 ```bash
-DB_DATABASE=cmsrs3g_testing
+DB_DATABASE=cmsrs_testing
 ```
 
 * run tests: 
@@ -100,7 +87,7 @@ You have to add at least one lang (it is require)
 
 * add api secret, example:
 ```bash
-API_SECRET="v3"
+API_SECRET=""
 ```
 
 It must be the same like in the admin config file.
@@ -154,6 +141,8 @@ php artisan command:create-site-map
     username: adm@cmsrs.pl
 
     password: cmsrs123
+
+* create main page (page type: main_page)
 
 * add menu
     
