@@ -1,0 +1,5 @@
+sudo mysql --default-character-set=utf8 -e  "DROP USER IF EXISTS 'rs'@'localhost';"
+sudo mysql --default-character-set=utf8 -e  "DROP DATABASE IF EXISTS cmsrs;"
+sudo mysql --default-character-set=utf8 -e  "CREATE USER 'rs'@'localhost' IDENTIFIED BY 'secret102*';"
+sudo mysql --default-character-set=utf8 -e  "GRANT ALL PRIVILEGES ON *.* TO 'rs'@'localhost' WITH GRANT OPTION;"
+sudo mysql --default-character-set=utf8 -e  "CREATE DATABASE cmsrs CHARACTER SET utf8 COLLATE utf8_general_ci;"
