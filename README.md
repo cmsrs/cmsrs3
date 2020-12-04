@@ -135,7 +135,7 @@ tail -f -n0 storage/logs/*
 * load test (demo) data: 
 
 ```bash
-php artisan command:load-demo-data
+./go_clear_and_load_demo.sh
 ```
 
 
