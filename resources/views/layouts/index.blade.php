@@ -8,7 +8,7 @@
 @include('includes.header')
 
 
-<main role="main">
+<main role="main" class="pt-5 mb-5">
 @yield('content')
 </main><!-- /.container -->
 
