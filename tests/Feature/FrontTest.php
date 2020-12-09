@@ -39,6 +39,9 @@ class FrontTest extends Base
         parent::tearDown();
     }
 
+
+
+
     private function setTestData()
     {
         $menu = (new Menu)->wrapCreate($this->testDataMenu);
@@ -61,6 +64,45 @@ class FrontTest extends Base
         (new Page)->wrapCreate($this->testData);
     }
     
+    /** @test */
+    public function it_will_show_contact_on_the_main_page()
+    {
+        $this->testData =
+        [
+            'title' =>  ['en' => 'contact'],
+            'short_title' =>  ['en' => 'contact'],
+            'published' => 1,
+            'type' => 'contact',
+            'content' => null,
+            'menu_id' => null //!!!! - contact not related to menu
+        ];
+
+        (new Page)->wrapCreate($this->testData);
+
+        $count = Page::All()->count();
+        $this->assertEquals(1, $count);
+
+
+        $testMainPage =
+        [
+            'title'     =>  ['en' =>'cmsRS'],
+            'short_title' =>  ['en' =>'cmsRS'],
+            'description' =>  ['en' =>'cmsRS'],
+            'published' => 1,
+            'commented' => 0,
+            'after_login' => 0,
+            'type' => 'main_page',
+            'content' =>  ['en' =>'main page'],
+            'menu_id' => null,
+            'page_id' => null
+        ];
+        (new Page)->wrapCreate($testMainPage);
+        $this->assertEquals(2, Page::All()->count());
+
+
+        $response = $this->get('/');
+        $response->assertStatus(200);
+    }
 
 
     /**

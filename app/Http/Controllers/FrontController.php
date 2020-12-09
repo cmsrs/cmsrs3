@@ -99,22 +99,12 @@ class FrontController extends Controller
             $pageOut = Page::getPageBySlug($menus, $menuSlug, $pageSlug, $lang);
         }
 
-
         $this->validatePage($pageOut);
 
         if ('shop' === $pageOut->type) {
             $products = Product::getProductsWithImagesByPage($pageOut->id);
         }
-
     
-        if ($pageOut->type == 'projects') {
-            $view = 'projects';
-        } elseif ($pageOut->type == 'clear') {
-            $view = 'clear';
-        } else {
-            $view = 'cms';
-        }
-
         $data = [
             'menus' => $this->menus,
             'page' => $pageOut,
@@ -122,8 +112,8 @@ class FrontController extends Controller
             'lang' => $lang,
             'langs' => $this->langs,
             're_public' => env('GOOGLE_RECAPTCHA_PUBLIC', ''),
-            'view' => $view
-    ];
+            'view' => $pageOut->getViewNameByType()
+        ];
 
         if ($manyLangs) {
             return $data;
@@ -157,7 +147,6 @@ class FrontController extends Controller
                 break;
             }
         }
-
         $this->validatePage($pageOut);
 
         $data = [
@@ -166,7 +155,9 @@ class FrontController extends Controller
             'products' => $products,
             'lang' => $lang,
             'langs' => $this->langs,
-    ];
+            're_public' => env('GOOGLE_RECAPTCHA_PUBLIC', ''),
+            'view' => $pageOut->getViewNameByType()
+        ];
 
         if ($manyLangs) {
             return $data;

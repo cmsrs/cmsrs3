@@ -257,15 +257,30 @@ class Page extends Base
         return $out;
     }
 
+    public function getViewNameByType()
+    {
+        if ($this->type == 'projects') {
+            $view = 'projects';
+        } elseif ($this->type == 'clear') {
+            $view = 'clear';
+        } elseif ($this->type == 'privacy_policy') {
+            $view = 'in';
+        } else {
+            $view = 'cms';
+        }
+        return $view;
+    }
+
     public function getUrl($lang)
     {
         if ('main_page' == $this->type) {
             return $this->getMainUrl($lang);
         } elseif ('login' == $this->type) {
             return $this->getTypeUrl($lang);
-        } elseif ('privacy_policy' == $this->type) {
-            return $this->getIndependentUrl($lang);
-        }
+        } 
+        //elseif ('privacy_policy' == $this->type) {
+        //    return $this->getIndependentUrl($lang);
+        //}
         return $this->getCmsUrl($lang);
     }
 
@@ -279,20 +294,38 @@ class Page extends Base
 
         return $url;
     }
+
+    private function getMenuSlugByLang($lang)
+    {
+        $munu = $this->menu()->get()->first();
+        if( empty($munu) ){
+            return null;
+        }
+        return $munu->getSlugByLang($lang);    
+    }
     
-    private function getCmsUrl($lang)
+    private function getMenuSlugByLangCache($lang)
     {
         $pageId = $this->id;
         $isCache = env('CACHE_ENABLE', false);
         if ($isCache) {
             $menuSlug = cache()->remember('menusluglang_'.$lang.'_'.$pageId, Carbon::now()->addYear(1), function () use ($lang) {
-                return $this->menu()->get()->first()->getSlugByLang($lang);
+                return $this->getMenuSlugByLang($lang);
             });
         } else {
-            $menuSlug = $this->menu()->get()->first()->getSlugByLang($lang);
+            $menuSlug = $this->getMenuSlugByLang($lang);
         }
-        $url = "/".Page::PREFIX_CMS_URL."/".$menuSlug."/".$this->getSlugByLang($lang);
+        return $menuSlug;
+    }
+    
+    private function getCmsUrl($lang)
+    {
+        $menuSlug = $this->getMenuSlugByLangCache($lang);
+        if(empty($menuSlug)){
+            return $this->getIndependentUrl($lang);
+        }
 
+        $url = "/".Page::PREFIX_CMS_URL."/".$menuSlug."/".$this->getSlugByLang($lang);
         $langs = Config::arrGetLangsEnv();
         if (1 < count($langs)) {
             $url = "/".$lang.$url;

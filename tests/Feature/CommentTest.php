@@ -24,6 +24,7 @@ class CommentTest extends Base
     {
         putenv('LANGS="en"');
         putenv('API_SECRET=""');
+        putenv('CACHE_ENABLE=false');
         parent::setUp();
         $this->createUser();
 

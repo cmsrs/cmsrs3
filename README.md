@@ -78,6 +78,7 @@ change in file .env.testing:
 ```bash
 DB_DATABASE=cmsrs_testing
 LANGS="en"
+CACHE_ENABLE=false
 ```
 
 * run tests: 

@@ -79,7 +79,7 @@ bledy (o niskiej waznosci):
 
 
 critical
-- !!!!contact musli byc podpiety pod menu (mozna obsluzyc ten przypadek) 
++ !!!!contact nie musli byc podpiety pod menu (mozna obsluzyc ten przypadek) - bedzie inny url - to samo sie tyczy wszsytkich stron nie podpierych pod menu 
 
 
 uwagi:
@@ -93,6 +93,10 @@ uwagi:
 + wywalic komentarze w kodzie
 - zbiorowy upload image - todo
 - Image::filter trzeba poprawic dla innych jezykow poza polskim 
+- mechanizm cachowania zrobic lepszy - moze w panelu adm. wlacaac i wylaczac cache i - i tam od razu go czyscic
+a nie jak to jest do tej pory:
+1. zmiana w pluku .env
+2. uruchomienie skryptu: ./go_clear_cache_and_sitemap.sh
 
 
 + backup bazy danych kodu zrobic zrobic (kod jest na githubvie - tylko to z gitingnora zrobilem)
