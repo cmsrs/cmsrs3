@@ -124,8 +124,9 @@ class FrontController extends Controller
 
     public function getSeparatePageLangs($lang, $pageSlug)
     {
+        //die('____sss___');
         $data = $this->getSeparatePage($pageSlug, $lang);
-        return view('in', $data);
+        return view($data['view'], $data);
     }
 
     public function getSeparatePage($pageSlug, $lang = null)
@@ -159,10 +160,12 @@ class FrontController extends Controller
             'view' => $pageOut->getViewNameByType()
         ];
 
+        //dd( $data['view'] );
+
         if ($manyLangs) {
             return $data;
         }
     
-        return view('in', $data);
+        return view($data['view'], $data);
     }
 }
