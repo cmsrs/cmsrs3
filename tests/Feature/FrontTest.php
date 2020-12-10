@@ -6,6 +6,7 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use App\Page;
+use App\Config;
 use App\Menu;
 use App\Data\Demo;
 use Illuminate\Support\Str;
@@ -39,9 +40,6 @@ class FrontTest extends Base
         parent::tearDown();
     }
 
-
-
-
     private function setTestData()
     {
         $menu = (new Menu)->wrapCreate($this->testDataMenu);
@@ -63,6 +61,60 @@ class FrontTest extends Base
 
         (new Page)->wrapCreate($this->testData);
     }
+
+    /** @test */
+    public function it_will_get_all_pages_one_lang_by_type()
+    {
+        $langs = Config::arrGetLangsEnv();
+        $this->assertEquals(1, count($langs) );
+
+        $testDataMenu =
+        [
+            'name' =>  ['en' => 'menu test' ],
+        ];
+
+        $menu = (new Menu)->wrapCreate($testDataMenu);
+        $this->assertNotEmpty($menu->id);
+
+        $pageTypes = Config::arrGetPageTypes();
+        $this->assertTrue(9 <= count($pageTypes));
+        foreach ($pageTypes as $page_type) {
+            $data = [
+                'title'     => ['en' => $page_type.' en'],
+                'short_title' => ['en' =>$page_type],
+                'description' => ['en' =>'Description... Needed for google'],
+                'published' => 1,
+                'commented' => 1,
+                'type' => $page_type,
+                'content' => ['en' =>'test'],
+                'menu_id' => null
+            ];
+            $p = (new Page)->wrapCreate($data);
+
+            $data['menu_id'] = $menu->id;
+            if('main_page' !== $page_type){
+                $p = (new Page)->wrapCreate($data);
+            }
+        }
+        $pages = Page::All();
+
+        $this->assertEquals(2*count($pageTypes) - 1, count($pages) );
+        $in = false;        
+        foreach($pages as $page){
+
+            foreach($langs as $lang){
+                $url = $page->getUrl($lang);
+                $response = $this->get($url);
+    
+                $status = ('login' === $page->type) ? 302 : 200;
+                $response->assertStatus($status);    
+                $in = true;        
+            }            
+
+        }
+        $this->assertTrue($in);
+    }
+
     
     /** @test */
     public function it_will_show_contact_on_the_main_page()
