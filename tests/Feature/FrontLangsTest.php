@@ -263,11 +263,21 @@ class FrontLangsTest extends Base
 
             $p = (new Page)->wrapCreate($data);
 
+            $data['menu_id'] = $menu->id;
+            if('main_page' !== $page_type){
+                $p = (new Page)->wrapCreate($data);
+            }
+
+        }
+
+        $pages = Page::All();
+        foreach($pages as $page){
+
             foreach($langs as $lang){
-                $url = $p->getUrl($lang);
+                $url = $page->getUrl($lang);
                 $response = $this->get($url);
     
-                $status = ('login' === $page_type) ? 302 : 200;
+                $status = ('login' === $page->type) ? 302 : 200;
                 $response->assertStatus($status);    
             }            
 

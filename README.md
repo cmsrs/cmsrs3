@@ -3,8 +3,7 @@
 * download
  
 ```bash
-git clone https://github.com/cmsrs/cmsrs3.git
-cd cmsrs3
+git clone https://github.com/cmsrs/cmsrs3.git && cd cmsrs3
 ```
 
 * run script 
