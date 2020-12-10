@@ -238,4 +238,43 @@ class FrontLangsTest extends Base
             $response1->assertStatus(200);
         }
     }
+
+    /** @test */
+    public function it_will_get_all_pages_by_type()
+    {
+        $menu = (new Menu)->wrapCreate($this->testDataMenu);
+        $this->assertNotEmpty($menu->id);
+        $langs = Config::arrGetLangsEnv();
+        $this->assertEquals(2, count($langs) );
+        
+        $pageTypes = Config::arrGetPageTypes();
+        $this->assertTrue(9 <= count($pageTypes));
+        foreach ($pageTypes as $page_type) {
+            $data = [
+                'title'     => ['en' => 'titile '.$page_type.' en',  'pl' => 'titile '.$page_type.' pl' ],
+                'short_title' => ['en' =>$page_type.' en',  'pl' => $page_type.' pl'],
+                'description' => ['en' =>'Description... Needed for google en',  'pl' => $page_type.' pl'],
+                'published' => 1,
+                'commented' => 1,
+                'type' => $page_type,
+                'content' => ['en' =>'test en',  'pl' => $page_type.' pl'],
+                'menu_id' => null
+            ];
+
+            $p = (new Page)->wrapCreate($data);
+
+            foreach($langs as $lang){
+                $url = $p->getUrl($lang);
+                $response = $this->get($url);
+    
+                $status = ('login' === $page_type) ? 302 : 200;
+                $response->assertStatus($status);    
+            }            
+
+        }
+
+    }
+
+
+
 }

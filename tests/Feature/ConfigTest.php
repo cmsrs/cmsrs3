@@ -52,8 +52,14 @@ class ConfigTest extends Base
                 'content' => ['en' =>'test'],
                 'menu_id' => null
             ];
-            (new Page)->wrapCreate($data);
+            $p = (new Page)->wrapCreate($data);
             $in = true;
+
+            $url = $p->getUrl('en');
+            $response = $this->get($url);
+
+            $status = ('login' === $page_type) ? 302 : 200;
+            $response->assertStatus($status);
         }
         $this->assertTrue($in);
         $pagesNum = Page::all()->count();

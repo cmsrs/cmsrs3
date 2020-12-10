@@ -99,6 +99,7 @@ class FrontController extends Controller
             $pageOut = Page::getPageBySlug($menus, $menuSlug, $pageSlug, $lang);
         }
 
+        
         $this->validatePage($pageOut);
 
         if ('shop' === $pageOut->type) {
@@ -124,7 +125,6 @@ class FrontController extends Controller
 
     public function getSeparatePageLangs($lang, $pageSlug)
     {
-        //die('____sss___');
         $data = $this->getSeparatePage($pageSlug, $lang);
         return view($data['view'], $data);
     }
@@ -149,6 +149,10 @@ class FrontController extends Controller
             }
         }
         $this->validatePage($pageOut);
+
+        if ('shop' === $pageOut->type) {
+            $products = Product::getProductsWithImagesByPage($pageOut->id);
+        }
 
         $data = [
             'menus' => $this->menus,
