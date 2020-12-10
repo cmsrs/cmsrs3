@@ -100,6 +100,7 @@ a nie jak to jest do tej pory:
 
 
 + backup bazy danych kodu zrobic zrobic (kod jest na githubvie - tylko to z gitingnora zrobilem)
+- moze nalezaloby dla roznych typow zeby uzytkonwik w panelu ne mogl podpiac strony do menu i page_id - jest aktualnie main_page a moze jeszcze nalezy dodac np login (i rejestracje jesli bylaby w przyszlosci)
 
 
 
