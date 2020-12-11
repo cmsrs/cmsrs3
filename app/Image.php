@@ -258,18 +258,19 @@ class Image extends Base
         }
 
         if (empty($refId)) {
-            $image = Image::query()
-                  ->whereNull($strRefId)
-                  ->orderBy('position', 'desc')
-                  ->first()
-                  ;
-        } else {
-            $image = Image::query()
-                  ->where($strRefId, '=', $refId)
-                  ->orderBy('position', 'desc')
-                  ->first()
-                  ;
+            throw new \Exception("Image (next pos): refId must be defined");
+            // $image = Image::query()
+            //       ->whereNull($strRefId)
+            //       ->orderBy('position', 'desc')
+            //       ->first()
+            //       ;
         }
+        $image = Image::query()
+                ->where($strRefId, '=', $refId)
+                ->orderBy('position', 'desc')
+                ->first()
+                ;
+
 
         if (!$image) {
             return 1;
@@ -311,18 +312,19 @@ class Image extends Base
 
         $image = [];
         if (empty($refId)) {
-            $image = Image::with(['translates'])
-                  ->whereNull($strRefId)
-                  ->orderBy('position', 'asc')
-                  ->get()
-                  ;
-        } else {
-            $image = Image::with(['translates'])
-                  ->where($strRefId, '=', $refId)
-                  ->orderBy('position', 'asc')
-                  ->get()
-                  ;
+            throw new \Exception("Image: refId must be defined");
+            // $image = Image::with(['translates'])
+            //       ->whereNull($strRefId)
+            //       ->orderBy('position', 'asc')
+            //       ->get()
+            //       ;
         }
+        $image = Image::with(['translates'])
+                ->where($strRefId, '=', $refId)
+                ->orderBy('position', 'asc')
+                ->get()
+                ;
+        
         return $image;
     }
 

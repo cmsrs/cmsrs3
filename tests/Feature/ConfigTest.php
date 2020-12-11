@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use App\Page;
 use App\Menu;
-//use App\User;
+use App\Config;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -77,4 +77,21 @@ class ConfigTest extends Base
         /***************/
         $this->assertEquals(false, $res->data->cache_enable);
     }
+
+    /** @test */
+    public function it_will_get_exeption_no_langs()
+    {
+        $config = (new Config);
+
+        // $langs = $config->getLangs();        
+        // $this->assertEquals("en", $langs);
+
+        $langs = $config->getLangsFromEnv();
+        $this->assertEquals("en", $langs);
+
+        $config->setLangs("");
+        $this->expectException(\Exception::class);        
+        $langs = $config->getLangsFromEnv();
+    }
+    
 }

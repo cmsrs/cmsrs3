@@ -33,12 +33,12 @@ class Product extends Model
     }
 
 
-    public function setTranslate($objTranslate)
-    {
-        if (!empty($objTranslate)) {
-            $this->translate = $objTranslate;
-        }
-    }
+    // public function setTranslate($objTranslate)
+    // {
+    //     if (!empty($objTranslate)) {
+    //         $this->translate = $objTranslate;
+    //     }
+    // }
 
     /**
      * use also in script to load demo (test) data
