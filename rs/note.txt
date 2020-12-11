@@ -101,6 +101,7 @@ a nie jak to jest do tej pory:
 
 + backup bazy danych kodu zrobic zrobic (kod jest na githubvie - tylko to z gitingnora zrobilem)
 + logowanie mozna takze podpiac do menu - moze to dziwne ale bedzie dzialc - sprawdzalem - nie jest to blad 
+- brak zmiany pozycji w panelu dla stron nie powiazanych z menu - kod w laravelu zostal zrobiony a w panelu sie tto nie pojawia - ale i tak tego nie wykorzystuje w wersji produkcyjnej - moze kiedys w przyszlosci sie to przyda.
 
 
 
