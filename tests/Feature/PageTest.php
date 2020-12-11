@@ -71,6 +71,40 @@ class PageTest extends Base
         $this->menuId = $this->menuObj->id;
     }
 
+
+    /** @test */
+    public function it_will_check_position_page_not_related_to_menu()
+    {
+        $p1 = (new Page)->wrapCreate($this->testData);
+        $this->testData['title'] =  ['en' => 'uniq'];
+        $this->testData['type'] = 'clear';
+        $p2 = (new Page)->wrapCreate($this->testData);
+
+        $this->assertEquals(2, Page::All()->count());
+        $page1 = Page::query()
+        ->orderBy('position', 'asc')
+        ->first()
+        ->toArray()
+        ;
+
+        $this->assertEquals('cms' , $page1['type']);
+        
+        $res2a = $this->get('api/pages/position/up/'.$page1['id'].'?token='.$this->token);
+        $res22a = $res2a->getData();
+        $this->assertTrue($res22a->success);
+
+
+        $this->assertEquals(2, Page::All()->count());
+        $page11 = Page::query()
+        ->orderBy('position', 'asc')
+        ->first()
+        ->toArray()
+        ;
+
+        $this->assertEquals('clear' , $page11['type']);
+    }
+
+
     /** @test */
     public function it_will_check_uniq_title_by_empty_menu_add_page()
     {
@@ -571,6 +605,10 @@ class PageTest extends Base
         $this->assertEquals(PageTest::STR_CHILD_TWO, Page::find($pages22[0]['id'])->translatesByColumnAndLang('title', 'en'));
         $this->assertEquals(PageTest::STR_CHILD_ONE, Page::find($pages22[1]['id'])->translatesByColumnAndLang('title', 'en'));
     }
+
+
+
+    
 
     /** @test */
     public function it_will_add_test_page_id_check_position_parent()
