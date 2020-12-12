@@ -44,6 +44,25 @@ class FrontController extends Controller
         }
     }
 
+    private function getData($pageOut, $lang)
+    {
+        $products = null;        
+        if ('shop' === $pageOut->type) {
+            $products = Product::getProductsWithImagesByPage($pageOut->id);
+        }
+
+        $data = [
+            'menus' => $this->menus,
+            'page' => $pageOut,
+            'products' => $products,
+            'lang' => $lang,
+            'langs' => $this->langs,
+            're_public' => env('GOOGLE_RECAPTCHA_PUBLIC', ''),
+            'view' => $pageOut->getViewNameByType()
+        ];
+
+        return $data;
+    }
 
     public function index($lang = null)
     {
@@ -87,7 +106,6 @@ class FrontController extends Controller
         App::setLocale($lang);
 
 
-        $products = null;
         $menus = $this->menus;
 
         $isCache = env('CACHE_ENABLE', false);
@@ -98,23 +116,9 @@ class FrontController extends Controller
         } else {
             $pageOut = Page::getPageBySlug($menus, $menuSlug, $pageSlug, $lang);
         }
-
         
         $this->validatePage($pageOut);
-
-        if ('shop' === $pageOut->type) {
-            $products = Product::getProductsWithImagesByPage($pageOut->id);
-        }
-    
-        $data = [
-            'menus' => $this->menus,
-            'page' => $pageOut,
-            'products' => $products,
-            'lang' => $lang,
-            'langs' => $this->langs,
-            're_public' => env('GOOGLE_RECAPTCHA_PUBLIC', ''),
-            'view' => $pageOut->getViewNameByType()
-        ];
+        $data = $this->getData($pageOut, $lang);
 
         if ($manyLangs) {
             return $data;
@@ -129,6 +133,7 @@ class FrontController extends Controller
         return view($data['view'], $data);
     }
 
+
     public function getSeparatePage($pageSlug, $lang = null)
     {
         if (empty($lang)) {
@@ -139,7 +144,7 @@ class FrontController extends Controller
         }
         App::setLocale($lang);
     
-        $products = null;
+
         $pageOut = null;
         $pages = Page::all();
         foreach ($pages as $page) {
@@ -150,20 +155,7 @@ class FrontController extends Controller
         }
         $this->validatePage($pageOut);
 
-        if ('shop' === $pageOut->type) {
-            $products = Product::getProductsWithImagesByPage($pageOut->id);
-        }
-
-        $data = [
-            'menus' => $this->menus,
-            'page' => $pageOut,
-            'products' => $products,
-            'lang' => $lang,
-            'langs' => $this->langs,
-            're_public' => env('GOOGLE_RECAPTCHA_PUBLIC', ''),
-            'view' => $pageOut->getViewNameByType()
-        ];
-
+        $data = $this->getData($pageOut, $lang);
         //dd( $data['view'] );
 
         if ($manyLangs) {

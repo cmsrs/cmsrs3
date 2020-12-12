@@ -265,6 +265,9 @@ class Page extends Base
             $view = 'clear';
         } elseif ($this->type == 'privacy_policy') {
             $view = 'in';
+        } elseif ($this->type == 'gallery') {
+            $view = 'gallery';
+
         } else {
             $view = 'cms';
         }
