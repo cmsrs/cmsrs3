@@ -1,11 +1,3 @@
-var LOAD_NUM = 18;
-//var LOAD_NUM = 9;
-var modal = document.getElementById("myModal");
-var modalImg = document.getElementById("img01");
-var captionText = document.getElementById("caption");
-var currentImgId = '';
-
-
 new Vue({
         el: "#app",
         data: {
@@ -50,42 +42,12 @@ new Vue({
                 }
 
                 //---gallery---
-                axios.get('/api/page/'+this.page_id+'/'+this.lang).then( function (response){
-                        self.page = response.data.data;
-                        self.images = self.page.images.slice(0, LOAD_NUM);
-                });
-
-
+                // axios.get('/api/page/'+this.page_id+'/'+this.lang).then( function (response){
+                //         self.page = response.data.data;
+                //         self.images = self.page.images.slice(0, LOAD_NUM);
+                // });
         },
-        mounted () {
-                this.scroll()
-        },              
         methods: {
-                clickImg: function(imgId, org, altlang){
-                        modal.style.display = "block";
-                        modalImg.src = org;
-                        currentImgId = imgId;
-                        captionText.innerHTML = altlang;
-                },
-
-                scroll: function() {
-                        window.onscroll = () => {
-                                let bottomOfWindow = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop) + window.innerHeight === document.documentElement.offsetHeight
-                        
-                                if (bottomOfWindow) {
-
-                                        if(this.images.length < this.page.images.length) {
-                                                var toAppend = this.page.images.slice(
-                                                this.images.length,
-                                                LOAD_NUM + this.images.length
-                                                );
-                                                this.images = this.images.concat(toAppend);
-                                        }                                                                
-
-                                }
-                        }
-                },
-
                 addToCart: function(product) {
                         this.total += product.price;
                         var found = false;
@@ -208,39 +170,3 @@ new Vue({
                 
         }
 });
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() { 
-        modal.style.display = "none";
-}
-document.addEventListener('keydown', (event) => {        
-        if (event.key === 'Escape') {
-                //if esc key was not pressed in combination with ctrl or alt or shift
-                const isNotCombinedKey = !(event.ctrlKey || event.altKey || event.shiftKey);
-                if (isNotCombinedKey) {
-                        modal.style.display = "none";
-                }
-        }
-});
-function plusSlides(direct){
-        for (var i = 0; i < imagesGlobal.length; i++) {
-                if( imagesGlobal[i].id === currentImgId ){
-                        var index = i + direct;
-                        if(index < 0){
-                                index = imagesGlobal.length -1;
-                        }
-                        if(index > imagesGlobal.length - 1){
-                                index = 0;
-                        }
-                        if(imagesGlobal[index]){
-                                modalImg.src = imagesGlobal[index].org;
-                                currentImgId = imagesGlobal[index].id;
-                                captionText.innerHTML = imagesGlobal[index].altlang;   
-                                break;        
-                        }                
-                }
-        }
-}
