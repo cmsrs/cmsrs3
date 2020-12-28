@@ -142,6 +142,7 @@ body {
   width: 700px;
   height: 600px;
 }
+
 @media(max-width: 1200px) {
   main.pt-5 {
     padding-top: 0.7rem !important;
@@ -160,6 +161,7 @@ body {
 }
 
 @media(max-width: 960px) {
+  
   .video-el{
       width: 700px;
       height: 600px;
@@ -170,6 +172,11 @@ body {
 }
 
 @media(max-width: 730px) {
+  .dropdown-menu {
+    max-height: 280px;
+    overflow-y: auto;
+  }
+
   .video-el{
       width: 500px;
       height: 400px;
