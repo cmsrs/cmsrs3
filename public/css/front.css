@@ -177,16 +177,21 @@ body {
   }
 }
 
-@media(max-width: 730px) {
-  #fixed-bottom{
-    z-index: -1000 !important;
-  }
-  .dropdown-menu {
-    max-height: 280px;
-    overflow-y: auto;
-    z-index: 1000 !important;
-  }
 
+
+@media(max-width: 730px) {
+   /*
+  #fixed-bottom{
+    display: none;
+    z-index: -1500 !important;
+  }
+    */
+
+  .dropdown-menu {
+    max-height: 200px;
+    overflow-y: auto;
+    /*z-index: 1600 !important;*/
+  }
   .video-el{
       width: 500px;
       height: 400px;
