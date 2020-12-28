@@ -1,5 +1,5 @@
 <?php $footerPages = App\Page::getFooterPages($lang);      ?>
-<div class="navbar fixed-bottom">
+<div   id="fixed-bottom" class="navbar fixed-bottom">
     <span class="pull-left">
         <a style="color:grey;"  href="{{ $footerPages['policyUrl'] }}">{{ $footerPages['policyTitle'] }}</a>
     </span>
