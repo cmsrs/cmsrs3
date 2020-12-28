@@ -143,10 +143,11 @@ body {
   height: 600px;
 }
 
+/*
 #fixed-bottom {
      z-index: -1000;
 }
-
+*/
 
 @media(max-width: 1200px) {
   main.pt-5 {
@@ -177,9 +178,13 @@ body {
 }
 
 @media(max-width: 730px) {
+  #fixed-bottom{
+    z-index: -1000 !important;
+  }
   .dropdown-menu {
     max-height: 280px;
     overflow-y: auto;
+    z-index: 1000 !important;
   }
 
   .video-el{
