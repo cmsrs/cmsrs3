@@ -2,6 +2,10 @@
     <img src="http://www.cmsrs.pl/images/cms/logo_cmsrs.png"><br/>
     Multilingual CMS system with online store module 
 </p>
+</br>
+</br>
+</br>
+
 
 
 # QUICK INSTALLATION
