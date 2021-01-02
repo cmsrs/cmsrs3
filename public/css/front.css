@@ -131,7 +131,7 @@ body {
 }
 
 /** games and video **/
-#square-size, #square-size-checkers, #square-size-ten{
+#square-size, #square-size-checkers, #square-size-ten, #square-size-six{
   left : -1000px;
   position : absolute;
   width : 70px !important;
@@ -207,6 +207,12 @@ body {
       width : 58px !important;
       height : 58px !important;
   }
+
+  #square-size-six {
+      width : 60px !important;
+      height : 60px !important;
+  }
+
   #square-size-ten {
       width : 45px !important;
       height : 45px !important;
@@ -223,6 +229,11 @@ body {
       width : 43px !important;
       height : 43px !important;
   }
+  #square-size-six {
+      width : 45px !important;
+      height : 45px !important;
+  }
+
   #square-size-ten {
       width : 39px !important;
       height : 39px !important;
@@ -247,6 +258,11 @@ body {
       width : 37px !important;
       height : 37px !important;
   }
+  #square-size-six {
+      width : 40px !important;
+      height : 40px !important;
+  }
+
   #square-size-ten {
       width : 29px !important;
       height : 29px !important;
