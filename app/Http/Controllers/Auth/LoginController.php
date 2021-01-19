@@ -38,7 +38,6 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        //dd('___');
         $this->middleware('guest')->except('logout');
         $this->langs = (new Config)->arrGetLangs();
         $this->menus = Menu::all()->sortBy('position'); //TODO cached
@@ -63,7 +62,8 @@ class LoginController extends Controller
             'page' => $page, 
             'lang' => $lang, 
             'langs' => $this->langs,
-            //'footerPages' => $footerPages
+            'page_title' => $page->translatesByColumnAndLang( 'title', $lang ) ?? config('app.name', 'cmsRS'),
+            'seo_description' =>  $page->translatesByColumnAndLang( 'description', $lang ) ?? config('app.name', 'cmsRS')
         ];      
 
         return view('auth.login', $data);

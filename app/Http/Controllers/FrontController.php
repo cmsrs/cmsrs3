@@ -28,7 +28,6 @@ class FrontController extends Controller
             $menus = Menu::all()->sortBy('position');
         }
     
-
         $this->menus = $menus;
         $this->langs = (new Config)->arrGetLangs();
     }
@@ -48,12 +47,16 @@ class FrontController extends Controller
     {
         $products = null;        
         if ('shop' === $pageOut->type) {
-            $products = Product::getProductsWithImagesByPage($pageOut->id);
+            $products = (new Product)->getProductsWithImagesByPage($pageOut->id);
         }
 
         $data = [
             'menus' => $this->menus,
             'page' => $pageOut,
+            'h1' => $pageOut->translatesByColumnAndLang( 'title', $lang ),
+            'page_title' => $pageOut->translatesByColumnAndLang( 'title', $lang ) ?? config('app.name', 'cmsRS'),
+            'seo_description' =>  $pageOut->translatesByColumnAndLang( 'description', $lang ) ?? config('app.name', 'cmsRS'),
+
             'products' => $products,
             'lang' => $lang,
             'langs' => $this->langs,
@@ -80,22 +83,24 @@ class FrontController extends Controller
         $page = Page::getMainPage();
         $this->validatePage($page);
 
-
         return view('index', [
             'menus' => $this->menus,
             'page' => $page,
+            'page_title' => $page->translatesByColumnAndLang( 'title', $lang ) ?? config('app.name', 'cmsRS'),
+            'seo_description' =>  $page->translatesByColumnAndLang( 'description', $lang ) ?? config('app.name', 'cmsRS'),
+
             'lang' => $lang,
             'langs' => $this->langs
-    ]);
+        ]);
     }
 
-    public function getPageLangs($lang, $menuSlug, $pageSlug)
+    public function getPageLangs($lang, $menuSlug, $pageSlug, $productSlug = null)
     {
-        $data = $this->getPage($menuSlug, $pageSlug, $lang);
+        $data = $this->getPage($menuSlug, $pageSlug, $productSlug, $lang);
         return view($data['view'], $data);
     }
 
-    public function getPage($menuSlug, $pageSlug, $lang = null)
+    public function getPage($menuSlug, $pageSlug, $productSlug = null, $lang = null)
     {
         if (empty($lang)) {
             $manyLangs = false;
@@ -104,7 +109,6 @@ class FrontController extends Controller
             $manyLangs = true;
         }
         App::setLocale($lang);
-
 
         $menus = $this->menus;
 
@@ -119,6 +123,18 @@ class FrontController extends Controller
         
         $this->validatePage($pageOut);
         $data = $this->getData($pageOut, $lang);
+
+        if($productSlug){
+            $product = (new Product)->getProductBySlug($productSlug, $lang);
+            if(empty($product)){
+                abort(404);
+            }
+            $data['product'] = $product;
+            $data['h1'] = $product['product_name'][$lang];
+            $data['page_title'] = $product['product_name'][$lang] ?? config('app.name', 'cmsRS');
+            $data['seo_description'] =  $product['product_description'][$lang] ?? config('app.name', 'cmsRS');
+
+        }
 
         if ($manyLangs) {
             return $data;
@@ -142,8 +158,7 @@ class FrontController extends Controller
         } else {
             $manyLangs = true;
         }
-        App::setLocale($lang);
-    
+        App::setLocale($lang);    
 
         $pageOut = null;
         $pages = Page::all();
@@ -156,7 +171,6 @@ class FrontController extends Controller
         $this->validatePage($pageOut);
 
         $data = $this->getData($pageOut, $lang);
-        //dd( $data['view'] );
 
         if ($manyLangs) {
             return $data;
@@ -164,4 +178,5 @@ class FrontController extends Controller
     
         return view($data['view'], $data);
     }
+
 }

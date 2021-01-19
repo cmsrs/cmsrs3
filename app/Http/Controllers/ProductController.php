@@ -5,21 +5,33 @@ use Illuminate\Http\Request;
 
 use App\Product;
 use App\Image;
+use App\Config;
 use Validator;
 use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
     private $validationRules = [
-        'name' => 'max:255|required',
+        //'name' => 'max:255|required',
         'sku' => 'max:128|required|unique:products',
-        'price' => 'integer|required',
-        'description' => 'max:1280'
+        'price' => 'integer|required'
+        //'description' => 'max:1280'
     ];
+
+    public function __construct()
+    {
+        $this->validationRules['type'] = 'in:'.Config::getPageTypes();
+
+        $langs = (new Config)->arrGetLangs();
+        foreach ($langs as $lang) {
+            $this->validationRules['product_name.'.$lang] = 'max:255|required';  //|unique:translates
+            $this->validationRules['product_description.'.$lang] = 'max:1280';
+        }
+    }
 
     public function index()
     {
-        $products = Product::getAllProductsWithImages();
+        $products = (new Product)->getAllProductsWithImages();
 
         return response()->json(['success' => true, 'data'=> $products], 200);
     }
@@ -27,10 +39,10 @@ class ProductController extends Controller
     public function create(Request $request)
     {
         $data = $request->only(
-            'name',
+            'product_name',
             'sku',
             'price',
-            'description',
+            'product_description',
             'page_id',
             'images'
         );
@@ -40,9 +52,17 @@ class ProductController extends Controller
             return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
         }
 
+        //check unique
+        $valid = (new Product)->checkIsDuplicateName($data);
+        if (empty($valid['success'])) {
+            return response()->json($valid, 200);
+        }        
+
         try {
             $product = (new Product)->wrapCreate($data);
         } catch (\Exception $e) {
+            dd($e);
+
             Log::error('product add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); //.' for: '.var_export($data, true )
             return response()->json(['success'=> false, 'error'=> 'Add product problem, details in the log file.'], 200); //.$e->getMessage()
         }
@@ -59,10 +79,10 @@ class ProductController extends Controller
         }
 
         $data = $request->only(
-            'name',
+            'product_name',
             'sku',
             'price',
-            'description',
+            'product_description',
             'page_id',
             'images'
         );
@@ -73,8 +93,14 @@ class ProductController extends Controller
             return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
         }
 
+        //check unique
+        $valid = (new Product)->checkIsDuplicateName($data, $product->id);
+        if (empty($valid['success'])) {
+            return response()->json($valid, 200);
+        }        
+
         try {
-            $res = $product->update($data);
+            $res = $product->wrapUpdate($data);
             if (!empty($data['images']) && is_array($data['images'])) {
                 Image::createImagesAndUpdateAlt($data['images'], 'product', $product->id);
             }

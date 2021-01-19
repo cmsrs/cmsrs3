@@ -46,9 +46,9 @@ class MenuTest extends Base
     {
         $nameEn = 'test menu1';
         $testData1 =
-      [
+        [
            'name'     => ['en' => $nameEn],
-      ];
+        ];
 
         $objMenu1 = (new Menu)->wrapCreate($testData1);
         $this->assertNotEmpty($objMenu1->id);
@@ -56,14 +56,15 @@ class MenuTest extends Base
 
         $ttt = 'ttt';
         $testData =
-      [
+        [
            'title'     =>  ['en' => $nameEn],
            'short_title' =>  ['en' =>$ttt],
            'published' => 0,
            'type' => 'cms',
            'content' =>  ['en' =>'pppppppp'],
            'menu_id' => $objMenu1->id
-      ];
+        ];
+        
         $response = $this->post('api/pages?token='.$this->token, $testData);
         $res = $response->getData();
         $this->assertTrue($res->success);

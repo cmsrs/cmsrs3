@@ -2,16 +2,20 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
     private $translate;
+    private $content;
+
+    public $productFields;
 
     protected $fillable = [
-        'name',
+        //'name',
         'sku',
         'price',
-        'description',
+        //'description',
         'page_id'
     ];
 
@@ -20,17 +24,67 @@ class Product extends Model
         'page_id' => 'integer'
     ];
 
+    public function page()
+    {
+        return $this->hasOne('App\Page', 'id', 'page_id');
+    }
+
     public function images()
     {
         return $this->hasMany('App\Image');
     }
+
+    public function translates()
+    {
+        return $this->hasMany('App\Translate');
+    } 
+
+    public function contents()
+    {
+        return $this->hasMany('App\Content');
+    }        
 
     public function __construct(array $attributes = array())
     {
         parent::__construct($attributes);
 
         $this->translate = new Translate;
+        $this->content = new Content;
+
+        $this->productFields = [
+            'id',
+            //'name',
+            'sku',
+            'price',
+            'page_id'
+        ];  
     }
+
+    public function checkIsDuplicateName($data, $id = '')
+    {
+        $out = ['success' => true ];
+        $products = $this->getAllProductsWithImages();
+        foreach ($products as $product) {
+            if ($product['id']  == $id) {
+                continue;
+            }
+            foreach ($product['product_name'] as $lang => $name) {
+                if (empty($data['product_name']) || empty($data['product_name'][$lang])) {
+                    throw new \Exception("product_name is empty - but is require");
+                }
+                $nameIn = Str::slug($data['product_name'][$lang], "-");
+                $n = Str::slug($name, "-");
+
+                if ($nameIn == $n) {
+                    $out['success'] = false;
+                    $out['error'] = "Duplicate product name: $name ($lang)";
+                    break;
+                }
+            }
+        }
+        return $out;
+    }
+
 
 
     // public function setTranslate($objTranslate)
@@ -47,9 +101,11 @@ class Product extends Model
     public function wrapCreate($data)
     {
         $product = Product::create($data);
+
         if (empty($product->id)) {
             throw new \Exception("I cant get product id");
         }
+        $this->createTranslate([ 'product_id' => $product->id, 'data' => $data ]);
   
         if (!empty($data['images']) && is_array($data['images'])) {
             $objImage = new Image;
@@ -59,24 +115,100 @@ class Product extends Model
         return $product;
     }
 
-    public static function getAllProductsWithImages()
-    {
-        $products = Product::query()->orderBy('id', 'asc')->get()->toArray();
 
-        foreach ($products as $key => $product) {
-            $products[$key]['images'] = Image::getImagesAndThumbsByTypeAndRefId('product', $product['id']);
-        }
-        return $products;
+    public function createTranslate($dd, $create = true)
+    {
+        $this->translate->wrapCreate($dd, $create);
+        $this->content->wrapCreate($dd, $create);        
     }
 
-    public static function getProductsWithImagesByPage($pageId)
+    public function wrapUpdate($data)
     {
-        $products = Product::query()->where('page_id', $pageId)->orderBy('id', 'asc')->get()->toArray();
+        $res = $this->update($data);
+        $this->createTranslate([ 'product_id' => $this->id, 'data' => $data ], false);
+        return $res;
+    }
 
-        foreach ($products as $key => $product) {
-            $products[$key]['images'] = Image::getImagesAndThumbsByTypeAndRefId('product', $product['id']);
+    private function getProductDataFormat($product)
+    {
+        $out = [];
+        foreach ($this->productFields as $field) {
+            $out[$field] = $product[$field];
         }
-        return $products;
+        foreach ($product['translates'] as $translate) {
+            $out[$translate['column']][$translate['lang']] = $translate['value'];
+        }
+        foreach ($product['contents'] as $translate) {
+            $out[$translate['column']][$translate['lang']] = $translate['value'];
+        }
+        return $out;
+    }
+
+
+    public function getProductBySlug($productSlug, $lang)
+    {
+        $productOut = null;
+        $products = $this->getAllProductsWithImages();
+        foreach($products as $product){
+            if($productSlug ==  Str::slug($product['product_name'][$lang], '-')){
+                $productOut = $product;
+                break;
+            }            
+        }
+
+        return $productOut;
+    }
+
+    private function getProductDataByProductArr( $product )
+    {
+        $arrProduct = $product->toArray();
+
+        $out = [];
+        $out = $this->getProductDataFormat($arrProduct);
+
+        $langs = Config::arrGetLangsEnv();
+        foreach($langs as $lang){
+            $urlCategory = $product->page()->get()->first()->getUrl($lang);
+            $out['url_category'][$lang] = $urlCategory;
+            $out['url_product'][$lang] = $urlCategory.'/'.Str::slug($out['product_name'][$lang], '-');
+        }
+
+        $out['images'] = Image::getImagesAndThumbsByTypeAndRefId('product', $arrProduct['id']);
+        return $out;
+    }
+
+    public function getAllProductsWithImages()
+    {
+        $products = Product::with(['translates', 'contents'])->orderBy('id', 'asc')->get();  //->toArray();
+
+        $i = 0;
+        $out = [];
+        foreach ($products as $product) {
+            $out[$i] = $this->getProductDataByProductArr( $product );
+            $i++;
+        }
+        return $out;
+    }
+
+    public function getProductDataByProductId( $productId )
+    {
+        $product = Product::with(['translates', 'contents'])->where('id', $productId)->orderBy('id', 'asc')->get()->first();
+        $out = $this->getProductDataByProductArr( $product );
+
+        return $out;
+    }
+
+    public function getProductsWithImagesByPage($pageId)
+    {
+        $products = Product::with(['translates', 'contents'])->where('page_id', $pageId)->orderBy('id', 'asc')->get(); //->toArray();
+
+        $i = 0;
+        $out = [];
+        foreach ($products as $key => $product) {
+            $out[$i] = $this->getProductDataByProductArr( $product );
+            $i++;
+        }
+        return $out;
     }
 
     public function delete()

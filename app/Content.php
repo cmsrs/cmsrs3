@@ -8,11 +8,13 @@ class Content extends Base
         'lang',
         'column',
         'value',
-        'page_id'
+        'page_id',
+        'product_id'
     ];
 
     protected $casts = [
-        'page_id' => 'integer'
+        'page_id' => 'integer',
+        'product_id' => 'integer'
     ];
 
     public function wrapCreate($data, $create = true)
@@ -22,7 +24,13 @@ class Content extends Base
                 'content' => false
             ];
             $this->genericCreateTranslate($data, 'page_id', $columns, $create);
+        }elseif (!empty($data['product_id'])) {
+            $columns = [
+                'product_description' => false
+            ];
+            $this->genericCreateTranslate($data, 'product_id', $columns, $create);
         }
+
 
         return true;
     }
@@ -31,7 +39,10 @@ class Content extends Base
     {
         if (!empty($row['page_id'])) {
             $obj = Content::where('page_id', $row['page_id'])->where('column', $row['column'])->where('lang', $row['lang'])->first();
+        }elseif (!empty($row['product_id'])) {
+            $obj = Content::where('product_id', $row['product_id'])->where('column', $row['column'])->where('lang', $row['lang'])->first();
         }
+
 
         $this->wrapTranslateUpdate($obj, $row);
         return true;

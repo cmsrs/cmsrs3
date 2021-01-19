@@ -1,7 +1,7 @@
 @extends('layouts.default')
 @section('content')
 
-  <h1 class="mb-4 mt-3">{{$page->translatesByColumnAndLang( 'title', $lang )}}</h1>
+  <h1 class="mb-4 mt-3">{{$h1}}</h1>
 
   <div id="app">
 
@@ -48,40 +48,67 @@
       <button type="submit" class="btn btn-primary" v-on:click="contact( $event )">{{ __('Submit') }}</button>
     </form>
 
-
-
   @elseif($page->type  === 'shop')
 
       <div class="container">
         <div class="row">
           <div class="col">
-            @foreach($products as $product)
-            <div class="container">
-              <div class="row">
-                <div class="col">
-                @if( !empty($product['images']) &&  !empty($product['images'][0]) )
-                  <img class="m-3" src="{{$product['images'][0]->getHtmlImage()}}" alt="{{$product['images'][0]->alt[$lang]}}" />
-                @endif
-                </div>
-                <div class="col">
-                  <ul class="list-unstyled">
-                    <li>{{ __('Name') }}: {{$product['name']}}</li>
-                    <li>Sku: {{$product['sku']}}</li>
-                    <li>{{ __('Price') }}: ${{$product['price']}}</li>
-                  <!--  <li>{{$product['description']}}</li> -->
-                  </ul>
-                  <?php
-                    $id =  $product['id'];
-                    $name = $product['name'];
-                    $price = $product['price'];
-                  ?>
-
-                  <button v-on:click="addToCart({ id: {{$id}}, name: '{{$name}}', price: {{$price}} })" class="add-to-cart btn">{{ __('Add to Cart') }}</button>
+            @if( !empty($product) )
+              <div class="container">
+                <div class="row">
+                  <div class="col">
+                  {{ __('Category') }}: <a href="{{$page->getUrl($lang)}}">{{$page->translatesByColumnAndLang( 'title', $lang )}}</a>
+                  <br>
+                  @if( !empty($product['images']) &&  !empty($product['images'][0]) )
+                      <img class="m-3" src="{{$product['images'][0]->getHtmlImage()}}" alt="{{$product['images'][0]->alt[$lang]}}" />
+                  @endif
+                  </div>
+                  <div class="col">
+                    <ul class="list-unstyled">
+                      <li>{{ __('Name') }}: {{$product['product_name'][$lang] }}</li>
+                      <li>Sku: {{$product['sku']}}</li>
+                      <li>{{ __('Price') }}: ${{$product['price']}}</li>
+                      <li>{{$product['product_description'][$lang] }}</li>
+                    </ul>
+                    <?php
+                      $id =  $product['id'];
+                      $name = $product['product_name'][$lang];
+                      $price = $product['price'];
+                    ?>
+                    <button v-on:click="addToCart({ id: {{$id}}, name: '{{$name}}', price: {{$price}} })" class="add-to-cart btn">{{ __('Add to Cart') }}</button>
+                  </div>
                 </div>
               </div>
-            </div>
-            <br><br>
-            @endforeach
+            @else
+              @foreach($products as $product)
+              <div class="container">
+                <div class="row">
+                  <div class="col">
+                  @if( !empty($product['images']) &&  !empty($product['images'][0]) )
+                    <a href="{{$product['url_product'][$lang] }}">
+                      <img class="m-3" src="{{$product['images'][0]->getHtmlImage()}}" alt="{{$product['images'][0]->alt[$lang]}}" />
+                    </a>
+                  @endif
+                  </div>
+                  <div class="col">
+                    <ul class="list-unstyled">
+                      <li>{{ __('Name') }}: <a href="{{$product['url_product'][$lang] }}">{{$product['product_name'][$lang] }}</a></li>
+                      <li>Sku: {{$product['sku']}}</li>
+                      <li>{{ __('Price') }}: ${{$product['price']}}</li>
+                      <li>{{$product['product_description'][$lang] }}</li>
+                    </ul>
+                    <?php
+                      $id =  $product['id'];
+                      $name = $product['product_name'][$lang];
+                      $price = $product['price'];
+                    ?>
+                    <button v-on:click="addToCart({ id: {{$id}}, name: '{{$name}}', price: {{$price}} })" class="add-to-cart btn">{{ __('Add to Cart') }}</button>
+                  </div>
+                </div>
+              </div>
+              @endforeach
+              <br><br>
+            @endif
 
           </div>
           <div class="col">
@@ -111,13 +138,13 @@
   @endif
 
   @if ( $page->commented )
-    <h5 class="mb-2 mt-3">Add comment: </h5>
+    <h5 class="mb-2 mt-3">{{ __('Add comment') }}: </h5>
     <form  method="get">
-      <textarea v-model="comment" placeholder="add comment" rows="4" cols="60"></textarea>
+      <textarea v-model="comment" placeholder="{{ __('add comment') }}" rows="4" cols="60"></textarea>
       <p>
-      <button v-on:click="addComment( $event )" class="add-to-cart btn">Add comment</button>
+      <button v-on:click="addComment( $event )" class="add-to-cart btn">{{ __('Add comment') }}</button>
     </form>
-    <h5 class="mb-2 mt-3">Comments: </h5>
+    <h5 class="mb-2 mt-3">{{ __('Comments') }}: </h5>
     <li v-for="item in comments" :key="item.content"  style="list-style: none;" class="ml-3 mb-2 mt-2">
       @{{ item.content }}
     </li>

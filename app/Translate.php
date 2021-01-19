@@ -9,13 +9,15 @@ class Translate extends Base
         'value',
         'page_id',
         'menu_id',
-        'image_id'
+        'image_id',
+        'product_id'
     ];
 
     protected $casts = [
         'page_id' => 'integer',
         'menu_id' => 'integer',
-        'image_id' => 'integer'
+        'image_id' => 'integer',
+        'product_id' => 'integer',        
     ];
 
     public function wrapCreate($data, $create = true)
@@ -35,6 +37,11 @@ class Translate extends Base
         } elseif (!empty($data['image_id'])) {
             $columns = ['alt' => false];
             $this->genericCreateTranslate($data, 'image_id', $columns, $create);
+        } elseif (!empty($data['product_id'])) {
+            $columns = [
+                'product_name' => true                
+            ];
+            $this->genericCreateTranslate($data, 'product_id', $columns, $create);
         }
 
         return true;
@@ -48,6 +55,8 @@ class Translate extends Base
             $obj = Translate::where('page_id', $row['page_id'])->where('column', $row['column'])->where('lang', $row['lang'])->first();
         } elseif (!empty($row['image_id'])) {
             $obj = Translate::where('image_id', $row['image_id'])->where('column', $row['column'])->where('lang', $row['lang'])->first();
+        } elseif (!empty($row['product_id'])) {
+            $obj = Translate::where('product_id', $row['product_id'])->where('column', $row['column'])->where('lang', $row['lang'])->first();
         }
 
         $this->wrapTranslateUpdate($obj, $row);

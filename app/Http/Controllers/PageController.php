@@ -103,7 +103,7 @@ class PageController extends Controller
             $page =  (new Page)->wrapCreate($data);
         } catch (\Exception $e) {
             Log::error('page add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); //.' for: '.var_export($data, true )
-      return response()->json(['success'=> false, 'error'=> 'Add page problem, details in the log file.'], 200); //.$e->getMessage()
+            return response()->json(['success'=> false, 'error'=> 'Add page problem, details in the log file.'], 200); //.$e->getMessage()
         }
 
         return response()->json(['success'=> true, 'data' => ['pageId' => $page->id, 'data' => $data] ]);
@@ -121,7 +121,7 @@ class PageController extends Controller
         $validator = Validator::make($data, $this->validationRules);
         if ($validator->fails()) {
             return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
-        }
+        }        
 
         //check unique
         $valid = Page::checkIsDuplicateTitleByMenu($data, $page->id);

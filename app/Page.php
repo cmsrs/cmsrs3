@@ -10,6 +10,7 @@ use Carbon\Carbon;
 class Page extends Base
 {
     const PREFIX_CMS_URL = 'cms';
+    //const PREFIX_SHOP_URL = 'shop';    
     const PREFIX_IN_URL = 'in'; //(in) independent
 
     private $translate;

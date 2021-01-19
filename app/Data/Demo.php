@@ -323,20 +323,20 @@ class Demo
     public function product($p)
     {
         $products1 = [
-            'name' => 'PHP3',
+            'product_name' => [ 'en' => 'PHP3 db app', 'pl' => 'PHP3 aplikacje bazodanowe' ] ,
             'sku' => '1/23/4',
             'price' => 11,
-            'description' => 'Php book',
+            'product_description' => ['en' =>  'Php3 book description',   'pl' => 'Php3 opis ksiazki' ],
             'page_id' => $p['p5']->id,
             'images' =>   [
                 ['name' => 'php.jpg', 'data' => $this->getTestPhoto('books/php3.jpg'), 'alt' => [ "en" =>'php3 front', "pl" =>'php3 front' ]]
             ]
         ];
         $products2 = [
-            'name' => 'PHP5',
+            'product_name' => [ 'en' => 'PHP5','pl' => 'PHP5' ],
             'sku' => '1/234/4',
             'price' => 30,
-            'description' => 'Php5 book',
+            'product_description' =>  [ 'en' => 'Php5 book', 'pl' =>  'Ksiazka o PHP5' ],
             'page_id' => $p['p5']->id,
             'images' =>   [
                 ['name' => 'php5.jpg', 'data' => $this->getTestPhoto('books/php5.jpg'), 'alt' => [ "en" =>'php5 front', "pl" =>'php5 front' ]],
@@ -344,10 +344,10 @@ class Demo
             ]
         ];
         $products3 = [
-            'name' => 'Java',
+            'product_name' => [ 'en' =>  'Java db app', 'pl' => 'Java aplikacje bazodanowe' ],
             'sku' => '3/13/4',
             'price' => 23,
-            'description' => 'Java book',
+            'product_description' =>  [ 'en' => 'Java book','pl' => 'Książka o Javie' ],
             'page_id' => $p['p6']->id,
             'images' =>   [
                 ['name' => 'java.jpg', 'data' => $this->getTestPhoto('books/java.jpg'), 'alt' => [ "en" =>'java front',"pl" =>'java front'  ]],
@@ -355,10 +355,10 @@ class Demo
             ]
         ];
         $products4 = [
-            'name' => 'English',
+            'product_name' => [  'en' => 'English',  'pl' => 'Angielski'] ,
             'sku' => 'A/3/3/4',
             'price' => 28,
-            'description' => 'English book',
+            'product_description' => [  'en' => 'English book', 'pl' => 'Ksiązka do nauki angielskiego' ],
             'page_id' => $p['p7']->id,
             'images' =>   [
                 ['name' => 'english.jpg', 'data' => $this->getTestPhoto('books/english.jpg'), 'alt' => [ "en" =>'english front', "pl" =>'english front' ]],

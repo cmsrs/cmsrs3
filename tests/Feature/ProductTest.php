@@ -7,8 +7,10 @@ use App\Menu;
 use App\Image;
 use App\Product;
 use App\Translate;
+use App\Content;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 
 class ProductTest extends Base
 {
@@ -25,6 +27,8 @@ class ProductTest extends Base
     private $pageId;
 
     const STR_DESC_IMG1 = 'description img1 - product image';
+    const STR_PRODUCT_DESCRIPION_EN = 'book desc';
+    const STR_PRODUCT_NAME_EN = 'php3 db app';    
 
     public function setUp(): void
     {
@@ -82,12 +86,11 @@ class ProductTest extends Base
         $this->assertNotEmpty($this->pageId);
         $this->assertEquals($p->id, $this->pageId);
 
-
         $this->testData = [
-            'name' =>  'php3 aplikacje bazodanowe',
+            'product_name' => [ 'en' =>  self::STR_PRODUCT_NAME_EN ],
             'sku' => 'AN/34534',
             'price' => 123,
-            'description' => 'opis ksiazki',
+            'product_description' =>  [ 'en'  =>  self::STR_PRODUCT_DESCRIPION_EN ] ,
             'page_id' => $this->pageId,
             'images' => [
                 ['name' => $this->name1, 'data' => $this->getFixtureBase64($this->name1),  'alt' => ['en' =>  self::STR_DESC_IMG1 ] ],
@@ -95,6 +98,79 @@ class ProductTest extends Base
             ]
         ];
     }
+
+    /** @test */
+    public function it_will_get_products_with_images_by_page()
+    {
+        $this->setTestData();
+
+        $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
+
+        $res0 = $response0->getData();
+        $this->assertTrue($res0->success);        
+        
+        //$this->pageId
+        $products = (new Product)->getProductsWithImagesByPage($this->pageId);
+        $this->assertEquals(1, count($products));
+        $this->assertEquals($this->pageId, $products[0]['page_id']);
+        $this->assertEquals(self::STR_PRODUCT_NAME_EN, $products[0]['product_name']['en']);
+    }
+
+    /** @test */
+    public function it_will_get_product_data_by_product_id()
+    {
+        $this->setTestData();
+
+        $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
+
+        $res0 = $response0->getData();
+        $this->assertTrue($res0->success);        
+
+        $productId = $res0->data->productId;
+        $this->assertNotEmpty($productId);
+
+        $data = (new Product)->getProductDataByProductId( $productId );
+        $this->assertEquals($productId, $data['id']);
+        $this->assertEquals(self::STR_PRODUCT_NAME_EN, $data['product_name']['en']);
+
+        $urlCategory = $data['url_category']['en'];
+        $urlProduct = $data['url_product']['en'];
+
+        $response = $this->get($urlCategory);
+        $response->assertStatus(200);
+        
+        $response = $this->get($urlProduct);
+        $response->assertStatus(200);
+
+        //co z tytulem i opisem strony!!!!
+        //$pos = strpos($response->getContent(), $pageTitle);
+        //$this->assertNotEmpty($pos, $pageTitle);
+
+        //dd($data);
+    }
+
+    /** @test */    
+    public function it_will_get_product_by_slug()
+    {
+        $this->setTestData();
+
+        $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
+
+        $res0 = $response0->getData();
+        $this->assertTrue($res0->success);        
+
+        $productId = $res0->data->productId;
+        $this->assertNotEmpty($productId);
+
+        $lang = 'en';
+        $slugProductName = Str::slug(self::STR_PRODUCT_NAME_EN, '-');
+        $product = (new Product)->getProductBySlug($slugProductName, $lang);
+        $this->assertEquals($productId, $product['id']);
+
+        $product2 = (new Product)->getProductBySlug('fake', $lang);
+        $this->assertEquals(null, $product2);
+    }
+
 
     /** @test */
     public function it_will_check_fixtures_get_pages_by_type()
@@ -108,15 +184,94 @@ class ProductTest extends Base
     }
 
     /** @test */
+    public function it_will_check_uniq_product_name_add_action()
+    {
+        $this->setTestData();
+        $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
+
+        $res0 = $response0->getData();
+        $this->assertTrue($res0->success);        
+
+        $this->testData['sku'] = 'uniq2';
+        $response1 = $this->post('api/products?token=' . $this->token, $this->testData);
+
+        $res1 = $response1->getData();
+
+        $this->assertFalse($res1->success);
+        $this->assertNotEmpty($res1->error);      
+        $this->assertTrue(strpos($res1->error, 'Duplicate product name') === 0);
+    }    
+
+    /** @test */
+    public function it_will_check_uniq_product_name_update_action()
+    {
+        $this->setTestData();
+        $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
+
+        $res0 = $response0->getData();
+        $this->assertTrue($res0->success);        
+
+        $this->testData['sku'] = 'uniq1';
+        $this->testData['product_name']['en'] = 'product name uniq en';
+        $response1 = $this->post('api/products?token=' . $this->token, $this->testData);
+
+        $res1 = $response1->getData();
+        $this->assertTrue($res1->success);
+
+        $productId = $res1->data->productId;
+        $this->assertNotEmpty($productId);
+
+        $this->testData['sku'] = 'uniq2';
+        $this->testData['product_name']['en'] = self::STR_PRODUCT_NAME_EN;
+        $response2 = $this->put('api/products/'.$productId.'?token='.$this->token, $this->testData);    
+
+        $res2 = $response2->getData();
+
+        $this->assertFalse($res2->success);
+        $this->assertNotEmpty($res2->error);      
+        $this->assertTrue(strpos($res2->error, 'Duplicate product name') === 0);
+    }    
+
+
+    /** @test */
     public function it_will_create_product()
     {
         $this->setTestData();
         $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
 
         $res0 = $response0->getData();
-        $this->assertTrue($res0->success);
-
+        $this->assertTrue($res0->success);        
         $this->assertNotEmpty($res0->data->productId);
+
+        $products = Product::all()->toArray();
+        $this->assertEquals(count($products), 1);
+        $this->assertEquals( $products[0]['id'] , $res0->data->productId);
+
+        //Translate::query()->where('page_id', $p->id)->get()->toArray();
+        $trans = Content::query()->where('product_id', $res0->data->productId)->get()->toArray();
+        $this->assertEquals(count($trans), 1);        
+
+        $this->assertNotEmpty($this->testData['product_description']['en']);
+        $this->assertEquals( self::STR_PRODUCT_DESCRIPION_EN, $this->testData['product_description']['en']);                
+
+        $this->assertEquals('en', $trans[0]['lang']);
+        $this->assertEquals('product_description', $trans[0]['column']);        
+        $this->assertEquals($res0->data->productId, $trans[0]['product_id']);                
+        $this->assertEquals(self::STR_PRODUCT_DESCRIPION_EN, $trans[0]['value']);                
+
+        $trans2 = Translate::query()->where('product_id', $res0->data->productId)->get()->toArray();
+        $this->assertEquals(count($trans2), 1);        
+
+        $this->assertNotEmpty($this->testData['product_name']['en']);
+        $this->assertEquals(self::STR_PRODUCT_NAME_EN, $this->testData['product_name']['en']);
+
+        //$this->assertEquals( self::STR_PRODUCT_DESCRIPION_EN, $this->testData['product_description']['en']);                
+
+        $this->assertEquals('en', $trans2[0]['lang']);
+        $this->assertEquals('product_name', $trans2[0]['column']);        
+        $this->assertEquals($res0->data->productId, $trans2[0]['product_id']);                
+        $this->assertEquals($this->testData['product_name']['en'], $trans2[0]['value']);                
+
 
         $response = $this->post('api/products?token=' . $this->token, $this->testData);
 
@@ -134,17 +289,29 @@ class ProductTest extends Base
     {
         $this->setTestData();
         $res0 = $this->post('api/products?token=' . $this->token, $this->testData);
+        //dd($res0);
         $res = $res0->getData();
+        
 
         $this->assertTrue($res->success);
 
 
         $response22 = $this->get('api/products?token='.$this->token);
+        //dd($response22);
 
         $res22 = $response22->getData();
 
+        //dd($res22);
+
         $this->assertTrue($res22->success);
         $this->assertEquals(count($res22->data), 1);
+
+        $this->assertTrue(  isSet($res22->data[0]->product_description));
+        $this->assertEquals( self::STR_PRODUCT_DESCRIPION_EN, $res22->data[0]->product_description->en );
+
+        $this->assertTrue(  isSet($res22->data[0]->product_name));        
+        $this->assertEquals( self::STR_PRODUCT_NAME_EN, $res22->data[0]->product_name->en );        
+
         $this->assertEquals($res->data->productId, $res22->data[0]->id);
 
         $products = Product::all()->toArray();
@@ -195,10 +362,13 @@ class ProductTest extends Base
             $i++;
         }
 
-        $this->assertEquals($res22->data[0]->name, $this->testData['name']);
+        $this->assertEquals($res22->data[0]->product_name->en, $this->testData['product_name']['en']);
 
         $newName = 'PHP7';
-        $this->testData['name'] = $newName;
+        $this->testData['product_name']['en'] = $newName;
+        $newDesc = 'PHP7 - desc';
+        $this->testData['product_description']['en'] = $newDesc;
+
 
         $imagesNew = $this->testData['images'][1];
 
@@ -217,7 +387,8 @@ class ProductTest extends Base
 
         $this->assertEquals(count($res222->data), 1);
         $this->assertEquals($productId2, $productId);
-        $this->assertEquals($res222->data[0]->name, $newName);
+        $this->assertEquals($res222->data[0]->product_name->en, $newName);
+        $this->assertEquals($res222->data[0]->product_description->en, $newDesc);        
 
         $this->assertEquals(count($res222->data[0]->images), 3);
 
@@ -240,6 +411,9 @@ class ProductTest extends Base
         $res22 = $response22->getData();
         $productId = $res22->data[0]->id;
 
+        $this->assertEquals(1, Content::query()->where('product_id', $productId)->count() );
+        $this->assertEquals(1, Translate::query()->where('product_id', $productId)->count() );
+
         $testFile = public_path($res22->data[0]->images[0]->fs->medium);
         $this->assertFileExists($testFile);
 
@@ -256,6 +430,9 @@ class ProductTest extends Base
         $res33 = $response33->getData();
 
         $this->assertTrue($res33->success);
+
+        $this->assertEquals(0, Content::query()->where('product_id', $productId)->count() );
+        $this->assertEquals(0, Translate::query()->where('product_id', $productId)->count() );
 
         $translateAfter = Translate::query()->whereNotNull('image_id')->where('column', 'alt')->get()->toArray();
         $this->assertEmpty($translateAfter);
@@ -348,12 +525,15 @@ class ProductTest extends Base
 
         //it must be 2 product in this test!!!
         $this->testData['sku'] = '11';
+        $this->testData['product_name']['en'] = 'name11';        
         $r0 = $this->post('api/products?token=' . $this->token, $this->testData);
         $this->assertTrue($r0->getData()->success);
         $this->testData['sku'] = '22';
+        $this->testData['product_name']['en'] = 'name22';                
         $r1 = $this->post('api/products?token=' . $this->token, $this->testData);
         $this->assertTrue($r1->getData()->success);
         $this->testData['sku'] = '33';
+        $this->testData['product_name']['en'] = 'name33';                
         $r1 = $this->post('api/products?token=' . $this->token, $this->testData);
         $this->assertTrue($r1->getData()->success);
 
@@ -378,10 +558,10 @@ class ProductTest extends Base
 
         $altEnLastImage = 'last image';
         $testData = [
-            'name' =>  'php3 aplikacje bazodanowe',
+            'product_name' =>  ['en' => 'php3 aplikacje bazodanowe'],
             'sku' => 'AN/34534_xx',
             'price' => 123,
-            'description' => 'opis ksiazki',
+            'product_description' => ['en' =>'opis ksiazki'],
             //'photo' => null,
             'page_id' => $this->pageId,
             'images' => [
