@@ -275,7 +275,7 @@ class Page extends Base
         return $view;
     }
 
-    public function getUrl($lang)
+    public function getUrl($lang, $urlParam = null)
     {
         if ('main_page' == $this->type) {
             return $this->getMainUrl($lang);
@@ -285,7 +285,7 @@ class Page extends Base
         //elseif ('privacy_policy' == $this->type) {
         //    return $this->getIndependentUrl($lang);
         //}
-        return $this->getCmsUrl($lang);
+        return $this->getCmsUrl($lang, $urlParam);
     }
 
     private function getTypeUrl($lang)
@@ -322,7 +322,7 @@ class Page extends Base
         return $menuSlug;
     }
     
-    private function getCmsUrl($lang)
+    private function getCmsUrl($lang, $urlParam = null)
     {
         $menuSlug = $this->getMenuSlugByLangCache($lang);
         if(empty($menuSlug)){
@@ -330,6 +330,9 @@ class Page extends Base
         }
 
         $url = "/".Page::PREFIX_CMS_URL."/".$menuSlug."/".$this->getSlugByLang($lang);
+        if($urlParam){
+            $url = $url."/".Str::slug($urlParam, '-');
+        }
         $langs = Config::arrGetLangsEnv();
         if (1 < count($langs)) {
             $url = "/".$lang.$url;

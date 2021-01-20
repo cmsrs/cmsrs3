@@ -28,7 +28,6 @@ class FrontTest extends Base
         parent::setUp();
         $this->createUser();
 
-
         $this->testDataMenu =
         [
              'name'     =>  ['en' => 'test men7 zółć'],
@@ -166,9 +165,13 @@ class FrontTest extends Base
     {
         ini_set('memory_limit', '1028M');
 
-        $p = (new Demo)->pagesAndMenu(true);
+        $objDemo = new Demo;
+        $p = $objDemo->pagesAndMenu(true);
 
         $this->checkAllPagesByLang($p, 'en');
+
+        $products = $objDemo->product($p, true);
+        $this->checkProductsPagesByLang($products, 'en');
     }
 
     /** @test */

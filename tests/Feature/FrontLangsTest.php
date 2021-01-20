@@ -79,13 +79,17 @@ class FrontLangsTest extends Base
     {
         ini_set('memory_limit', '1028M');
 
-        $p = (new Demo)->pagesAndMenu(true);
+        $objDemo = new Demo;
+        $p = $objDemo->pagesAndMenu(true);
 
         $this->checkAllPagesByLang($p, 'pl');
         $this->checkAllPagesByLang($p, 'en');
+
+        $products = $objDemo->product($p, true);
+
+        $this->checkProductsPagesByLang($products, 'en');
+        $this->checkProductsPagesByLang($products, 'pl');        
     }
-
-
 
     /** @test */
     public function it_will_check_set_up()

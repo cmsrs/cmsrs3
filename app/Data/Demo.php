@@ -90,6 +90,40 @@ class Demo
         return ['about_me' => $img, 'poland' => $images, 'greece' => $imagesGrec  ];
     }
 
+    private function getProductImg($unitTest)
+    {
+        $out = [];
+        if (!$unitTest) {
+            $out = [
+                'product1' =>   [
+                    ['name' => 'php.jpg', 'data' => $this->getTestPhoto('books/php3.jpg'), 'alt' => [ "en" =>'php3 front', "pl" =>'php3 front' ]]
+                ],
+                'product2' =>   [
+                    ['name' => 'php5.jpg', 'data' => $this->getTestPhoto('books/php5.jpg'), 'alt' => [ "en" =>'php5 front', "pl" =>'php5 front' ]],
+                    ['name' => 'php5_back.jpg', 'data' => $this->getTestPhoto('books/php5_back.jpg'), 'alt' => [ "en" =>'php5 back', "pl" =>'php5 back' ]],
+                ],
+                'product3' =>   [
+                    ['name' => 'java.jpg', 'data' => $this->getTestPhoto('books/java.jpg'), 'alt' => [ "en" =>'java front',"pl" =>'java front'  ]],
+                    ['name' => 'java_back.jpg', 'data' => $this->getTestPhoto('books/java_back.jpg'), 'alt' => [ "en" =>'java back', "pl" => 'java back' ]],
+                ],
+                'product4' =>   [
+                    ['name' => 'english.jpg', 'data' => $this->getTestPhoto('books/english.jpg'), 'alt' => [ "en" =>'english front', "pl" =>'english front' ]],
+                    ['name' => 'english_back.jpg', 'data' => $this->getTestPhoto('books/english_back.jpg'), 'alt' => [ "en" =>'english back', "pl" =>'english back' ]]
+                ]
+            ];
+        } else {
+            $out = [
+                'product1' =>   $this->imgUnit1(),
+                'product2' =>   $this->imgUnit2(),
+                'product3' =>   $this->imgUnit2(),
+                'product4' =>   $this->imgUnit2()
+            ];
+        }            
+
+        return $out;
+    }
+
+
     public function pagesAndMenu($unitTest = false)
     {
         $images = $this->getTestImg($unitTest);
@@ -320,56 +354,50 @@ class Demo
         return $p;
     }
 
-    public function product($p)
+    public function product($p, $unitTest = false)
     {
-        $products1 = [
+        $images = $this->getProductImg($unitTest);
+
+        $products = [];
+        $products['product1'] = [
             'product_name' => [ 'en' => 'PHP3 db app', 'pl' => 'PHP3 aplikacje bazodanowe' ] ,
             'sku' => '1/23/4',
             'price' => 11,
             'product_description' => ['en' =>  'Php3 book description',   'pl' => 'Php3 opis ksiazki' ],
             'page_id' => $p['p5']->id,
-            'images' =>   [
-                ['name' => 'php.jpg', 'data' => $this->getTestPhoto('books/php3.jpg'), 'alt' => [ "en" =>'php3 front', "pl" =>'php3 front' ]]
-            ]
+            'images' =>  $images['product1']
         ];
-        $products2 = [
+        $products['product2'] = [
             'product_name' => [ 'en' => 'PHP5','pl' => 'PHP5' ],
             'sku' => '1/234/4',
             'price' => 30,
             'product_description' =>  [ 'en' => 'Php5 book', 'pl' =>  'Ksiazka o PHP5' ],
             'page_id' => $p['p5']->id,
-            'images' =>   [
-                ['name' => 'php5.jpg', 'data' => $this->getTestPhoto('books/php5.jpg'), 'alt' => [ "en" =>'php5 front', "pl" =>'php5 front' ]],
-                ['name' => 'php5_back.jpg', 'data' => $this->getTestPhoto('books/php5_back.jpg'), 'alt' => [ "en" =>'php5 back', "pl" =>'php5 back' ]],
-            ]
+            'images' =>  $images['product2']
         ];
-        $products3 = [
+        $products['product3'] = [
             'product_name' => [ 'en' =>  'Java db app', 'pl' => 'Java aplikacje bazodanowe' ],
             'sku' => '3/13/4',
             'price' => 23,
             'product_description' =>  [ 'en' => 'Java book','pl' => 'Książka o Javie' ],
             'page_id' => $p['p6']->id,
-            'images' =>   [
-                ['name' => 'java.jpg', 'data' => $this->getTestPhoto('books/java.jpg'), 'alt' => [ "en" =>'java front',"pl" =>'java front'  ]],
-                ['name' => 'java_back.jpg', 'data' => $this->getTestPhoto('books/java_back.jpg'), 'alt' => [ "en" =>'java back', "pl" => 'java back' ]],
-            ]
+            'images' =>   $images['product3']
         ];
-        $products4 = [
+        $products['product4'] = [
             'product_name' => [  'en' => 'English',  'pl' => 'Angielski'] ,
             'sku' => 'A/3/3/4',
             'price' => 28,
             'product_description' => [  'en' => 'English book', 'pl' => 'Ksiązka do nauki angielskiego' ],
             'page_id' => $p['p7']->id,
-            'images' =>   [
-                ['name' => 'english.jpg', 'data' => $this->getTestPhoto('books/english.jpg'), 'alt' => [ "en" =>'english front', "pl" =>'english front' ]],
-                ['name' => 'english_back.jpg', 'data' => $this->getTestPhoto('books/english_back.jpg'), 'alt' => [ "en" =>'english back', "pl" =>'english back' ]]
-            ]
+            'images' =>  $images['product4']
         ];
 
-        $this->getProductObj()->wrapCreate($products1);
-        $this->getProductObj()->wrapCreate($products2);
-        $this->getProductObj()->wrapCreate($products3);
-        $this->getProductObj()->wrapCreate($products4);
+        $this->getProductObj()->wrapCreate($products['product1']);
+        $this->getProductObj()->wrapCreate($products['product2']);
+        $this->getProductObj()->wrapCreate($products['product3']);
+        $this->getProductObj()->wrapCreate($products['product4']);
+
+        return $products;
     }
 
     private function getTestPhoto($imgPath)

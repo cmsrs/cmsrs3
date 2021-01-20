@@ -7,6 +7,7 @@ use Tests\TestCase;
 use App\User;
 use App\Page;
 use App\Menu;
+use App\Product;
 
 use App\Translate;
 use App\Content;
@@ -80,6 +81,23 @@ class Base extends TestCase
         $this->assertTrue($f2);
 
         return $url;
+    }
+
+    public function checkProductsPagesByLang($products, $lang)
+    {
+        $productsDb = (new Product)->getAllProductsWithImages();
+        //dd($countProducts);
+        $this->assertNotEmpty( count($productsDb));
+        $this->assertEquals(count($productsDb), count($products));
+
+        foreach($productsDb as $product ){
+            $productName = $product['product_name'][$lang];
+
+            $objProduct = Product::find($product['id']);
+            $url = $objProduct->getProductUrl( $lang, $productName);
+            $response = $this->get($url);
+            $response->assertStatus(200);
+        }
     }
 
     public function checkAllPagesByLang($p, $lang)

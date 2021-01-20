@@ -56,7 +56,6 @@ class FrontController extends Controller
             'h1' => $pageOut->translatesByColumnAndLang( 'title', $lang ),
             'page_title' => $pageOut->translatesByColumnAndLang( 'title', $lang ) ?? config('app.name', 'cmsRS'),
             'seo_description' =>  $pageOut->translatesByColumnAndLang( 'description', $lang ) ?? config('app.name', 'cmsRS'),
-
             'products' => $products,
             'lang' => $lang,
             'langs' => $this->langs,
@@ -88,7 +87,6 @@ class FrontController extends Controller
             'page' => $page,
             'page_title' => $page->translatesByColumnAndLang( 'title', $lang ) ?? config('app.name', 'cmsRS'),
             'seo_description' =>  $page->translatesByColumnAndLang( 'description', $lang ) ?? config('app.name', 'cmsRS'),
-
             'lang' => $lang,
             'langs' => $this->langs
         ]);
@@ -131,9 +129,9 @@ class FrontController extends Controller
             }
             $data['product'] = $product;
             $data['h1'] = $product['product_name'][$lang];
+            $data['product_name'] = $product['product_name'];            
             $data['page_title'] = $product['product_name'][$lang] ?? config('app.name', 'cmsRS');
             $data['seo_description'] =  $product['product_description'][$lang] ?? config('app.name', 'cmsRS');
-
         }
 
         if ($manyLangs) {

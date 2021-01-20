@@ -159,7 +159,17 @@ class Product extends Model
         return $productOut;
     }
 
-    private function getProductDataByProductArr( $product )
+    public function getCategoryUrl($lang)
+    {
+        return $this->page()->get()->first()->getUrl($lang);
+    }
+
+    public function getProductUrl($lang, $productName)
+    {
+        return $this->page()->get()->first()->getUrl($lang, $productName);
+    }    
+
+    public function getProductDataByProductArr( $product )
     {
         $arrProduct = $product->toArray();
 
@@ -168,9 +178,8 @@ class Product extends Model
 
         $langs = Config::arrGetLangsEnv();
         foreach($langs as $lang){
-            $urlCategory = $product->page()->get()->first()->getUrl($lang);
-            $out['url_category'][$lang] = $urlCategory;
-            $out['url_product'][$lang] = $urlCategory.'/'.Str::slug($out['product_name'][$lang], '-');
+            $out['url_category'][$lang] = $product->getCategoryUrl($lang);
+            $out['url_product'][$lang] = $product->getProductUrl($lang, $out['product_name'][$lang]);
         }
 
         $out['images'] = Image::getImagesAndThumbsByTypeAndRefId('product', $arrProduct['id']);
