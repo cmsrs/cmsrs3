@@ -234,12 +234,14 @@ class ProductTest extends Base
 
 
     /** @test */
-    public function it_will_create_product()
+    public function it_will_create_product_docs()
     {
         $this->setTestData();
+
         $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
 
         $res0 = $response0->getData();
+
         $this->assertTrue($res0->success);        
         $this->assertNotEmpty($res0->data->productId);
 
