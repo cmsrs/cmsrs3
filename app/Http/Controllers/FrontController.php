@@ -123,10 +123,15 @@ class FrontController extends Controller
         $data = $this->getData($pageOut, $lang);
 
         if($productSlug){
-            $product = (new Product)->getProductBySlug($productSlug, $lang);
+            $objProduct = new Product;
+            $product = $objProduct->getProductBySlug($productSlug, $lang);
             if(empty($product)){
                 abort(404);
             }
+            $urls = $product->getProductUrls($product);        
+            $data['url_category'] = $urls['url_category'];
+            //$data['url_product'] = $urls['url_product'];
+            $product = $objProduct->getProductDataByProductArr( $product );
             $data['product'] = $product;
             $data['h1'] = $product['product_name'][$lang];
             $data['product_name'] = $product['product_name'];            

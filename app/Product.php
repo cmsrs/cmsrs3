@@ -3,6 +3,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class Product extends Model
 {
@@ -148,12 +149,13 @@ class Product extends Model
     public function getProductBySlug($productSlug, $lang)
     {
         $productOut = null;
-        $products = $this->getAllProductsWithImages();
+        $products = $this->getAllProductsWithTranslates();
         foreach($products as $product){
-            if($productSlug ==  Str::slug($product['product_name'][$lang], '-')){
+            $arrProduct = $this->getProductDataFormat($product);
+            if($productSlug ==  Str::slug($arrProduct['product_name'][$lang], '-')){
                 $productOut = $product;
                 break;
-            }            
+            }
         }
 
         return $productOut;
@@ -169,27 +171,51 @@ class Product extends Model
         return $this->page()->get()->first()->getUrl($lang, $productName);
     }    
 
+    public function getProductUrls($productWithTranslate)
+    {
+        $out = array();
+        //$arrProduct = $this->toArray();
+        $arrProduct = $this->getProductDataFormat($productWithTranslate);
+        $langs = Config::arrGetLangsEnv();
+
+        foreach($langs as $lang){
+            $out['url_category'][$lang] = $this->getCategoryUrl($lang);
+            $out['url_product'][$lang] = $this->getProductUrl($lang, $arrProduct['product_name'][$lang]);
+        }
+        return $out;
+    }
+
+    private function getProductNameDefaultLang($arrProductFormat)
+    {
+        $lang = Config::getDefaultLang();
+        return $arrProductFormat['product_name'][$lang];
+    }
+
     public function getProductDataByProductArr( $product )
     {
         $arrProduct = $product->toArray();
 
         $out = [];
         $out = $this->getProductDataFormat($arrProduct);
-
-        $langs = Config::arrGetLangsEnv();
-        foreach($langs as $lang){
-            $out['url_category'][$lang] = $product->getCategoryUrl($lang);
-            $out['url_product'][$lang] = $product->getProductUrl($lang, $out['product_name'][$lang]);
-        }
+        $out['product_name_default_lang'] = $this->getProductNameDefaultLang($out);
 
         $out['images'] = Image::getImagesAndThumbsByTypeAndRefId('product', $arrProduct['id']);
         return $out;
     }
 
+    private function getAllProductsWithTranslates()
+    {
+        return Product::with(['translates', 'contents'])->orderBy('id', 'asc')->get();
+    }
+
     public function getAllProductsWithImages()
     {
-        $products = Product::with(['translates', 'contents'])->orderBy('id', 'asc')->get();  //->toArray();
+        $products = $this->getAllProductsWithTranslates();
+        return $this->getAllProductsWithImagesArr($products);
+    }
 
+    public function getAllProductsWithImagesArr($products)
+    {
         $i = 0;
         $out = [];
         foreach ($products as $product) {
@@ -199,6 +225,8 @@ class Product extends Model
         return $out;
     }
 
+    /*
+    //dont use
     public function getProductDataByProductId( $productId )
     {
         $product = Product::with(['translates', 'contents'])->where('id', $productId)->orderBy('id', 'asc')->get()->first();
@@ -206,6 +234,7 @@ class Product extends Model
 
         return $out;
     }
+    */
 
     public function getProductsWithImagesByPage($pageId)
     {
@@ -214,7 +243,8 @@ class Product extends Model
         $i = 0;
         $out = [];
         foreach ($products as $key => $product) {
-            $out[$i] = $this->getProductDataByProductArr( $product );
+            $urls =  $product->getProductUrls($product);
+            $out[$i] =  array_merge( $this->getProductDataByProductArr( $product ), $urls);
             $i++;
         }
         return $out;

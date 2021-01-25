@@ -64,4 +64,14 @@ class Config extends Model
     {
         return explode(',', env('LANGS', ''));
     }
+
+    public static function getDefaultLang()
+    {
+        $langs = Config::arrGetLangsEnv();
+        if(empty($langs) || empty($langs[0]) ){
+            throw new \Exception("You must set at least one language in the .env file (deflang)");
+        }
+        return $langs[0];
+    }
+    
 }

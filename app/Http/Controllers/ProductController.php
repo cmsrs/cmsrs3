@@ -61,7 +61,6 @@ class ProductController extends Controller
         try {
             $product = (new Product)->wrapCreate($data);
         } catch (\Exception $e) {
-            dd($e);
 
             Log::error('product add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); //.' for: '.var_export($data, true )
             return response()->json(['success'=> false, 'error'=> 'Add product problem, details in the log file.'], 200); //.$e->getMessage()

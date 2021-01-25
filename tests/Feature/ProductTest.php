@@ -100,23 +100,26 @@ class ProductTest extends Base
     }
 
     /** @test */
-    public function it_will_get_products_with_images_by_page()
+    public function it_will_create_product_with_images_by_page()
     {
         $this->setTestData();
 
         $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
 
         $res0 = $response0->getData();
+
         $this->assertTrue($res0->success);        
         
-        //$this->pageId
         $products = (new Product)->getProductsWithImagesByPage($this->pageId);
         $this->assertEquals(1, count($products));
         $this->assertEquals($this->pageId, $products[0]['page_id']);
         $this->assertEquals(self::STR_PRODUCT_NAME_EN, $products[0]['product_name']['en']);
+
+        //dd($res0->data->data);
     }
 
     /** @test */
+    /*
     public function it_will_get_product_data_by_product_id()
     {
         $this->setTestData();
@@ -142,12 +145,20 @@ class ProductTest extends Base
         $response = $this->get($urlProduct);
         $response->assertStatus(200);
 
-        //co z tytulem i opisem strony!!!!
         //$pos = strpos($response->getContent(), $pageTitle);
         //$this->assertNotEmpty($pos, $pageTitle);
 
-        //dd($data);
+
+        $this->testData['product_name']['en'] = 'test uniq';
+        $this->testData['sku'] = 'AN/34534_qwe';
+        $this->testData['page_id'] = strval($this->testData['page_id']);
+
+        var_dump($this->testData['page_id']);
+        $response1 = $this->post('api/products?token=' . $this->token, $this->testData);
+        $res1 = $response1->getData();
+        $this->assertTrue($res1->success);        
     }
+    */
 
     /** @test */    
     public function it_will_get_product_by_slug()
@@ -155,6 +166,7 @@ class ProductTest extends Base
         $this->setTestData();
 
         $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
+        //dd($response0);
 
         $res0 = $response0->getData();
         $this->assertTrue($res0->success);        
@@ -166,6 +178,18 @@ class ProductTest extends Base
         $slugProductName = Str::slug(self::STR_PRODUCT_NAME_EN, '-');
         $product = (new Product)->getProductBySlug($slugProductName, $lang);
         $this->assertEquals($productId, $product['id']);
+
+        $urls = $product->getProductUrls($product);  
+        $this->assertNotEmpty($urls);
+
+        $urlCategory = $urls['url_category']['en'];
+        $urlProduct = $urls['url_product']['en'];
+
+        $response = $this->get($urlCategory);
+        $response->assertStatus(200);
+        
+        $response = $this->get($urlProduct);
+        $response->assertStatus(200);
 
         $product2 = (new Product)->getProductBySlug('fake', $lang);
         $this->assertEquals(null, $product2);
@@ -303,8 +327,6 @@ class ProductTest extends Base
 
         $res22 = $response22->getData();
 
-        //dd($res22);
-
         $this->assertTrue($res22->success);
         $this->assertEquals(count($res22->data), 1);
 
@@ -313,6 +335,8 @@ class ProductTest extends Base
 
         $this->assertTrue(  isSet($res22->data[0]->product_name));        
         $this->assertEquals( self::STR_PRODUCT_NAME_EN, $res22->data[0]->product_name->en );        
+
+        $this->assertEquals( self::STR_PRODUCT_NAME_EN, $res22->data[0]->product_name_default_lang );
 
         $this->assertEquals($res->data->productId, $res22->data[0]->id);
 
