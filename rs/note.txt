@@ -119,6 +119,10 @@ pozniej na serwerze:
 2. $php_ver  ~/script/php_ver/composer install  (przy update - nie dalo sie wykonac polecenia poniewaz byl 'Kill' przy wykonaniau komendy)
 
 
+210126
+
+bledy:
+- nie dodaja sie strony z produktami do sitemapy - do poprawy
 
 
 
