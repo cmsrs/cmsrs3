@@ -188,8 +188,9 @@ body {
     */
 
   .dropdown-menu {
+    height: auto;
     max-height: 200px;
-    overflow-y: auto;
+    overflow-y: scroll !important;
     /*z-index: 1600 !important;*/
   }
   .video-el{
@@ -221,6 +222,14 @@ body {
 }
 
 @media(max-width: 600px) {
+  .dropdown-menu {
+
+    height: auto;
+    max-height: 200px;
+    overflow-y: scroll !important;
+    /*z-index: 1600 !important;*/
+  }
+
   #square-size {
       width : 35px !important;
       height : 35px !important;
@@ -250,6 +259,14 @@ body {
 
 
 @media(max-width: 360px) {
+  .dropdown-menu {
+
+    height: auto;
+    max-height: 200px;
+    overflow-y: scroll !important;
+    /*z-index: 1600 !important;*/
+  }
+
   #square-size {
       width : 32px !important;
       height : 32px !important;
