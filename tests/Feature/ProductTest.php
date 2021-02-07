@@ -92,6 +92,7 @@ class ProductTest extends Base
             'price' => 123,
             'product_description' =>  [ 'en'  =>  self::STR_PRODUCT_DESCRIPION_EN ] ,
             'page_id' => $this->pageId,
+            'published' => 1,
             'images' => [
                 ['name' => $this->name1, 'data' => $this->getFixtureBase64($this->name1),  'alt' => ['en' =>  self::STR_DESC_IMG1 ] ],
                 ['name' => $this->name2, 'data' => $this->getFixtureBase64($this->name2)]
@@ -113,10 +114,85 @@ class ProductTest extends Base
         $products = (new Product)->getProductsWithImagesByPage($this->pageId);
         $this->assertEquals(1, count($products));
         $this->assertEquals($this->pageId, $products[0]['page_id']);
+        $this->assertEquals(1, $products[0]['published']);
         $this->assertEquals(self::STR_PRODUCT_NAME_EN, $products[0]['product_name']['en']);
 
-        //dd($res0->data->data);
+        // $urls = (new Product)->getProductsUrl();
+        // $this->assertEquals(1, count($urls));
+        // $this->assertNotEmpty($urls[0]['en']);
+        // $response = $this->get($urls[0]['en']);
+        // $response->assertStatus(200);
     }
+
+
+    /** @test */
+    public function it_will_unpublish_product()
+    {
+        $this->setTestData();
+
+        $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
+
+        $res0 = $response0->getData();
+
+        $this->assertTrue($res0->success);        
+
+        $urls = (new Product)->getProductsUrl();
+        $this->assertEquals(1, count($urls));
+        $prodUrl = $urls[0]['en'];
+        $this->assertNotEmpty($prodUrl);
+        $response = $this->get($prodUrl);
+        $response->assertStatus(200);
+
+        $response22 = $this->get('api/products?token='.$this->token);
+        $res22 = $response22->getData();
+        $productId = $res22->data[0]->id;
+
+
+        $this->testData['published'] = 0;
+        $response2 = $this->put('api/products/'.$productId.'?token='.$this->token, $this->testData);    
+        $res2 = $response2->getData();
+        $this->assertTrue($res2->success);
+
+        $products = Product::all()->toArray();
+        $this->assertEquals(0, $products[0]['published']);
+        $urls2 = (new Product)->getProductsUrl();
+        $this->assertEmpty($urls2);
+        //dd($urls);
+
+        $response2 = $this->get($prodUrl);
+        $response2->assertStatus(404);
+    }
+
+    /** @test */
+    public function it_will_unpublish_page()
+    {
+        $this->setTestData();
+
+        $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
+
+        $res0 = $response0->getData();
+
+        $this->assertTrue($res0->success);        
+
+        $urls = (new Product)->getProductsUrl();
+        $this->assertEquals(1, count($urls));
+        $prodUrl = $urls[0]['en'];        
+        $this->assertNotEmpty($prodUrl);
+
+        // $response = $this->get($prodUrl);
+        // $response->assertStatus(200);
+
+        $page = Page::all()->first();
+        $page->published = 0;
+        $page->save();
+
+        //$page2 = Page::all()->toArray();
+        //dd($page2);
+
+        $response2 = $this->get($prodUrl);
+        $response2->assertStatus(404);
+    }
+
 
     /** @test */
     /*
@@ -262,9 +338,11 @@ class ProductTest extends Base
     {
         $this->setTestData();
 
+        $this->testData['published'] = 0;
         $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
 
         $res0 = $response0->getData();
+        //dd($res0);
 
         $this->assertTrue($res0->success);        
         $this->assertNotEmpty($res0->data->productId);
@@ -272,6 +350,11 @@ class ProductTest extends Base
         $products = Product::all()->toArray();
         $this->assertEquals(count($products), 1);
         $this->assertEquals( $products[0]['id'] , $res0->data->productId);
+        //dd($products);
+        $this->assertEquals( 0, $products[0]['published']); 
+        $this->assertEquals( 0,  $res0->data->data->published);
+        $this->assertEquals(    $products[0]['published'] , $res0->data->data->published);
+
 
         //Translate::query()->where('page_id', $p->id)->get()->toArray();
         $trans = Content::query()->where('product_id', $res0->data->productId)->get()->toArray();
@@ -332,6 +415,8 @@ class ProductTest extends Base
 
         $this->assertTrue(  isSet($res22->data[0]->product_description));
         $this->assertEquals( self::STR_PRODUCT_DESCRIPION_EN, $res22->data[0]->product_description->en );
+
+        $this->assertEquals( 1, $res22->data[0]->published );        
 
         $this->assertTrue(  isSet($res22->data[0]->product_name));        
         $this->assertEquals( self::STR_PRODUCT_NAME_EN, $res22->data[0]->product_name->en );        

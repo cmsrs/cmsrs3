@@ -13,14 +13,14 @@ class Product extends Model
     public $productFields;
 
     protected $fillable = [
-        //'name',
         'sku',
         'price',
-        //'description',
+        'published',
         'page_id'
     ];
 
     protected $casts = [
+        'published' => 'integer',
         'price' => 'integer',
         'page_id' => 'integer'
     ];
@@ -54,7 +54,7 @@ class Product extends Model
 
         $this->productFields = [
             'id',
-            //'name',
+            'published',
             'sku',
             'price',
             'page_id'
@@ -235,6 +235,28 @@ class Product extends Model
         return $out;
     }
     */
+
+    /**
+     * It is needed for sitemap
+     */
+    public function getProductsUrl()
+    {
+        $urls = [];
+        $products = Product::with(['translates', 'contents', 'page' ])->where('published', '=', 1)->orderBy('id', 'asc')->get();
+        $i = 0;
+        foreach ($products as $key => $product) {
+            if($product['page']->published && $product->published){
+                $arrProduct = $this->getProductDataFormat($product);
+                $langs = Config::arrGetLangsEnv();        
+                foreach($langs as $lang){
+                    $urls[$i][$lang] = $product->getProductUrl($lang, $arrProduct['product_name'][$lang]);
+                }
+                $i++;
+            }
+        }        
+        return $urls;
+    }
+
 
     public function getProductsWithImagesByPage($pageId)
     {

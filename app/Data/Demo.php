@@ -363,6 +363,7 @@ class Demo
             'product_name' => [ 'en' => 'PHP3 db app', 'pl' => 'PHP3 aplikacje bazodanowe' ] ,
             'sku' => '1/23/4',
             'price' => 11,
+            'published' => 1,
             'product_description' => ['en' =>  'Php3 book description',   'pl' => 'Php3 opis ksiazki' ],
             'page_id' => $p['p5']->id,
             'images' =>  $images['product1']
@@ -371,6 +372,7 @@ class Demo
             'product_name' => [ 'en' => 'PHP5','pl' => 'PHP5' ],
             'sku' => '1/234/4',
             'price' => 30,
+            'published' => 1,            
             'product_description' =>  [ 'en' => 'Php5 book', 'pl' =>  'Ksiazka o PHP5' ],
             'page_id' => $p['p5']->id,
             'images' =>  $images['product2']
@@ -379,6 +381,7 @@ class Demo
             'product_name' => [ 'en' =>  'Java db app', 'pl' => 'Java aplikacje bazodanowe' ],
             'sku' => '3/13/4',
             'price' => 23,
+            'published' => 1,            
             'product_description' =>  [ 'en' => 'Java book','pl' => 'Książka o Javie' ],
             'page_id' => $p['p6']->id,
             'images' =>   $images['product3']
@@ -387,6 +390,7 @@ class Demo
             'product_name' => [  'en' => 'English',  'pl' => 'Angielski'] ,
             'sku' => 'A/3/3/4',
             'price' => 28,
+            'published' => 1,            
             'product_description' => [  'en' => 'English book', 'pl' => 'Ksiązka do nauki angielskiego' ],
             'page_id' => $p['p7']->id,
             'images' =>  $images['product4']

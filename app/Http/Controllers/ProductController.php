@@ -21,6 +21,7 @@ class ProductController extends Controller
     public function __construct()
     {
         $this->validationRules['type'] = 'in:'.Config::getPageTypes();
+        $this->validationRules['published'] = 'boolean';
 
         $langs = (new Config)->arrGetLangs();
         foreach ($langs as $lang) {
@@ -40,6 +41,7 @@ class ProductController extends Controller
     {
         $data = $request->only(
             'product_name',
+            'published',
             'sku',
             'price',
             'product_description',
@@ -79,6 +81,7 @@ class ProductController extends Controller
 
         $data = $request->only(
             'product_name',
+            'published',
             'sku',
             'price',
             'product_description',

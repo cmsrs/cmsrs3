@@ -118,7 +118,7 @@ class FrontController extends Controller
         } else {
             $pageOut = Page::getPageBySlug($menus, $menuSlug, $pageSlug, $lang);
         }
-        
+     
         $this->validatePage($pageOut);
         $data = $this->getData($pageOut, $lang);
 
@@ -128,6 +128,10 @@ class FrontController extends Controller
             if(empty($product)){
                 abort(404);
             }
+            if(empty($product->published)){
+                abort(404);
+            }
+
             $urls = $product->getProductUrls($product);        
             $data['url_category'] = $urls['url_category'];
             //$data['url_product'] = $urls['url_product'];

@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Page;
+use App\Product;
 
 class CreateSiteMap extends Command
 {
@@ -41,11 +42,15 @@ class CreateSiteMap extends Command
         $appUrl = env('APP_URL');
         $langs = (new Page)->getArrLangs();
         $pages = Page::where('after_login', '=', 0)->where('published', '=', 1)->get();
+        $prodUrls = (new Product)->getProductsUrl();
 
         $strUrls = '';
         foreach ($langs as $lang) {
             foreach ($pages as $page) {
                 $strUrls .= $appUrl.$page->getUrl($lang)."\n";
+            }
+            foreach ($prodUrls as $prodUrl){
+                $strUrls .= $appUrl.$prodUrl[$lang]."\n";
             }
         }
 
