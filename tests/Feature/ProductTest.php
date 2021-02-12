@@ -106,10 +106,18 @@ class ProductTest extends Base
         $this->setTestData();
 
         $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
-
         $res0 = $response0->getData();
-
         $this->assertTrue($res0->success);        
+
+        $this->testData['sku'] = 'uniq2';
+        $this->testData['published'] = 0;
+        $this->testData['product_name']['en'] = 'product name uniq en2';
+        $response1 = $this->post('api/products?token=' . $this->token, $this->testData);
+        $res1 = $response1->getData();
+        $this->assertTrue($res1->success);
+
+        $countProd = Product::all()->count();
+        $this->assertEquals(2, $countProd);
         
         $products = (new Product)->getProductsWithImagesByPage($this->pageId);
         $this->assertEquals(1, count($products));

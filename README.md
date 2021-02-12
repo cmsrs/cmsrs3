@@ -147,7 +147,7 @@ tail -f -n0 storage/logs/*
 ./go_clear_and_load_demo.sh
 ```
 
-* create sitemap: 
+* create sitemap (it is recommended to put this command in the crontab file): 
 
 ```bash
 php artisan command:create-site-map

@@ -260,7 +260,7 @@ class Product extends Model
 
     public function getProductsWithImagesByPage($pageId)
     {
-        $products = Product::with(['translates', 'contents'])->where('page_id', $pageId)->orderBy('id', 'asc')->get(); //->toArray();
+        $products = Product::with(['translates', 'contents'])->where('page_id', $pageId)->orderBy('id', 'asc')->where('published', '=', 1)->get(); //->toArray();
 
         $i = 0;
         $out = [];
