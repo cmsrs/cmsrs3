@@ -18,6 +18,8 @@ use App\Page;
 $langs = (new Config)->arrGetLangs();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home/basket', 'HomeController@basket')->name('basket');
+Route::get('/home/orders', 'HomeController@orders')->name('orders');
 
 Route::get('/', 'FrontController@index');
 if(1 == count($langs)){    

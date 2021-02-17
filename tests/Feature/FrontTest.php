@@ -62,6 +62,24 @@ class FrontTest extends Base
     }
 
     /** @test */
+    public function it_will_get_directly_to_page()
+    {
+        $response1 = $this->get('/home');
+        $response1->assertStatus(200);
+
+        $response2 = $this->get('home/orders');
+        $response2->assertStatus(200);        
+
+        $response3 = $this->get('home/basket');
+        $response3->assertStatus(200);        
+
+
+        $response3b = $this->get('home/basketbb');
+        $response3b->assertStatus(404);        
+    }
+
+
+    /** @test */
     public function it_will_get_all_pages_one_lang_by_type()
     {
         $langs = Config::arrGetLangsEnv();

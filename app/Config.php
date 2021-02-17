@@ -73,5 +73,21 @@ class Config extends Model
         }
         return $langs[0];
     }
+
+    public static function saveLangToSession($lang)
+    {
+        if( request()->hasSession() ){ //it dont session in tests
+            request()->session()->put('lang', $lang);
+        }
+    }
+
+    public static function getLangFromSession()
+    {
+        $lang = Config::getDefaultLang();
+        if( request()->hasSession() ){ //it dont session in tests
+            $lang = request()->session()->get('lang');
+        }
+        return $lang;
+    }
     
 }

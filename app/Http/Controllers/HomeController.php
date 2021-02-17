@@ -25,4 +25,16 @@ class HomeController extends Controller
     {
         return view('home');
     }
+
+    public function basket()
+    {
+        return view('basket');        
+    }
+
+    public function orders()
+    {
+        return view('orders');
+    }
+
+
 }

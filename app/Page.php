@@ -277,6 +277,8 @@ class Page extends Base
 
     public function getUrl($lang, $urlParam = null)
     {
+        Config::saveLangToSession($lang);
+
         if ('main_page' == $this->type) {
             return $this->getMainUrl($lang);
         } elseif ('login' == $this->type) {

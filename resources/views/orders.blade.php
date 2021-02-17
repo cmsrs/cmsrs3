@@ -16,9 +16,7 @@
                         </div>
                     @endif
 
-                    <a class="nav-link" href="{{ route('basket') }}">{{ __('Basket') }}<span class="sr-only">(current)</span></a>
-                    <a class="nav-link" href="{{ route('orders') }}">{{ __('Orders') }}<span class="sr-only">(current)</span></a>                    
-
+                    You are logged in! - orders
                 </div>
             </div>
         </div>

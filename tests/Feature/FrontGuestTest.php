@@ -51,6 +51,26 @@ class FrontGuestTest extends TestCase
         $this->assertNotEmpty($pos, $pageTitle);
     }
 
+    /** @test */
+    public function it_will_redirect_to_login()
+    {
+        $response1 = $this->get('/home');
+        $response1->assertStatus(302);
+        $response1->assertRedirect('/login');
+
+        $response2 = $this->get('home/orders');
+        $response2->assertStatus(302);        
+        $response2->assertRedirect('/login');
+
+        $response3 = $this->get('home/basket');
+        $response3->assertStatus(302);        
+        $response3->assertRedirect('/login');
+
+
+        $response3b = $this->get('home/basketbb');
+        $response3b->assertStatus(404);        
+    }
+
 
     /** @test */
     public function it_will_get_as_guest_forbiden()
