@@ -46,7 +46,7 @@ class FrontLangsTest extends Base
         parent::tearDown();
     }
 
-    private function setTestData()
+    private function setTestData( $pageType = 'cms')
     {
         $menu = (new Menu)->wrapCreate($this->testDataMenu);
 
@@ -60,15 +60,57 @@ class FrontLangsTest extends Base
             'short_title' =>  ['en' => 'page1', 'pl' => 'strona testowa' ],
             'published' => 1,
             'position' => 7,
-            'type' => 'cms',
+            'type' => $pageType,
             'content' =>  ['en' => 'content test133445', 'pl' => 'strona testowa' ],
             'menu_id' => $this->menuId
         ];
 
         (new Page)->wrapCreate($this->testData);
     }
-    
 
+    /** @test */
+    public function it_will_change_lang()
+    {
+        $this->setTestData('shop');
+        $pages = Page::all()->toArray();
+        $this->assertEquals(1, count($pages));
+
+        $this->assertNotEmpty($pages[0]['id']);        
+        $pageId = $pages[0]['id'];
+
+        $response1 = $this->get('/changelang/en/'.$pageId);
+        $response1->assertStatus(302);
+        $response1->assertRedirect('/en/cms/menu-test/page-1-test-test-slug');
+
+        $response2 = $this->get('/changelang/pl/'.$pageId);
+        $response2->assertStatus(302);
+        $response2->assertRedirect('/pl/cms/test-men7-zolc/strona-testowa');
+
+
+        $productTestData = [
+            'product_name' => [ 'en' =>  'STR_PRODUCT_NAME_EN', 'pl' =>  'STR_PRODUCT_NAME_PL' ],
+            'sku' => 'AN/34534',
+            'price' => 123,
+            'product_description' =>  [ 'en'  => 'STR_PRODUCT_DESCRIPION_EN',  'pl'  => 'STR_PRODUCT_DESCRIPION_PL' ],
+            'page_id' => $pageId,
+            'published' => 1,
+        ];
+
+        $response0 = $this->post('api/products?token=' . $this->token, $productTestData);
+        $res0 = $response0->getData();
+        $this->assertTrue($res0->success);        
+
+        $productNameSlug = Str::slug( $productTestData['product_name']['en'], '-' );
+
+        $response11 = $this->get('/changelang/en/'.$pageId.'/'.$productNameSlug );
+        $response11->assertStatus(302);
+        $response11->assertRedirect('/en/cms/menu-test/page-1-test-test-slug/'.$productNameSlug);
+
+        $productNameSlugPl = Str::slug( $productTestData['product_name']['pl'], '-' );
+        $response22 = $this->get('/changelang/pl/'.$pageId.'/'.$productNameSlugPl  );
+        $response22->assertStatus(302);
+        $response22->assertRedirect('/pl/cms/test-men7-zolc/strona-testowa/'.$productNameSlugPl );
+    }
 
     /**
      * maybe it will be usefull for sitemap
