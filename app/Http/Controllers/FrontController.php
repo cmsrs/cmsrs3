@@ -66,6 +66,17 @@ class FrontController extends Controller
         return $data;
     }
 
+    public function changeLang($lang, $pageId, $productSlug = null)
+    {
+        $page = Page::find($pageId);
+        if( empty($page) ){
+            abort(404);
+        }
+        $url = $page->getUrl($lang, $productSlug );
+        Config::saveLangToSession($lang);
+        return redirect($url);
+    }
+
     public function index($lang = null)
     {
         if ((count($this->langs) > 1) && $lang == $this->langs[0]) {
@@ -122,7 +133,7 @@ class FrontController extends Controller
         $this->validatePage($pageOut);
         $data = $this->getData($pageOut, $lang);
 
-        if($productSlug){
+        if($productSlug){ //product page
             $objProduct = new Product;
             $product = $objProduct->getProductBySlug($productSlug, $lang);
             if(empty($product)){
@@ -138,7 +149,8 @@ class FrontController extends Controller
             $product = $objProduct->getProductDataByProductArr( $product );
             $data['product'] = $product;
             $data['h1'] = $product['product_name'][$lang];
-            $data['product_name'] = $product['product_name'];            
+            $data['product_name'] = $product['product_name'];
+            $data['product_name_slug'] = $product['product_name_slug'];
             $data['page_title'] = $product['product_name'][$lang] ?? config('app.name', 'cmsRS');
             $data['seo_description'] =  $product['product_description'][$lang] ?? config('app.name', 'cmsRS');
         }

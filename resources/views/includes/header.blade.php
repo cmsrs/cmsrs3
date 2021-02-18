@@ -9,8 +9,7 @@
     $urlMainPage = $mainPage->getUrl($lang);  
   }
 ?>
-<?php $productName = !empty($product_name) ? $product_name : null ?>
-
+<?php $productNameSlug = !empty($product_name_slug) ? $product_name_slug : null ?>
 
 <nav class="navbar navbar-expand-md navbar-dark  {{ $bg }} fixed-top lead">
     <a class="navbar-brand" href="{{ url($urlMainPage) }}">
@@ -68,8 +67,7 @@
             <?php foreach($langs as $ll){  ?>
               <?php $classActive = ($ll == $lang) ? 'active' : ''; ?>
               <li class="nav-item {{ $classActive }}">
-                  <a class="nav-link" href="{{ $page->getUrl($ll, ($productName ? $productName[$ll] : null) ) }}"><img src="/images/cms/{{ $ll }}.png" alt="{{ $ll }}" /> {{ strtoupper($ll) }}</a>
-              </li>
+                  <a class="changelang nav-link" href="{{ route('changelang', ['lang' => $ll, 'pageId' => $page->id, 'productSlug' => ($productNameSlug ? $productNameSlug[$ll]  : null)] ) }}"><img src="/images/cms/{{ $ll }}.png" alt="{{ $ll }}" /> {{ strtoupper($ll) }}</a></li>
             <?php } ?>
           <?php } ?>          
        </ul>

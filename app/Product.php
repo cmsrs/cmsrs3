@@ -138,6 +138,9 @@ class Product extends Model
         }
         foreach ($product['translates'] as $translate) {
             $out[$translate['column']][$translate['lang']] = $translate['value'];
+            if( 'product_name' == $translate['column']){
+                $out['product_name_slug'][$translate['lang']] = Str::slug($translate['value'], '-');
+            }
         }
         foreach ($product['contents'] as $translate) {
             $out[$translate['column']][$translate['lang']] = $translate['value'];
@@ -168,7 +171,7 @@ class Product extends Model
 
     public function getProductUrl($lang, $productName)
     {
-        return $this->page()->get()->first()->getUrl($lang, $productName);
+        return $this->page()->get()->first()->getUrl($lang, Str::slug($productName, '-') );
     }    
 
     public function getProductUrls($productWithTranslate)

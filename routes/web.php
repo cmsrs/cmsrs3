@@ -20,6 +20,7 @@ $langs = (new Config)->arrGetLangs();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/home/basket', 'HomeController@basket')->name('basket');
 Route::get('/home/orders', 'HomeController@orders')->name('orders');
+Route::get('/changelang/{lang}/{pageId}/{productSlug?}', 'FrontController@changeLang')->name('changelang');
 
 Route::get('/', 'FrontController@index');
 if(1 == count($langs)){    

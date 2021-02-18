@@ -276,9 +276,7 @@ class Page extends Base
     }
 
     public function getUrl($lang, $urlParam = null)
-    {
-        Config::saveLangToSession($lang);
-
+    {        
         if ('main_page' == $this->type) {
             return $this->getMainUrl($lang);
         } elseif ('login' == $this->type) {
@@ -333,7 +331,8 @@ class Page extends Base
 
         $url = "/".Page::PREFIX_CMS_URL."/".$menuSlug."/".$this->getSlugByLang($lang);
         if($urlParam){
-            $url = $url."/".Str::slug($urlParam, '-');
+            //$url = $url."/".Str::slug($urlParam, '-');
+            $url = $url."/".$urlParam;            
         }
         $langs = Config::arrGetLangsEnv();
         if (1 < count($langs)) {
