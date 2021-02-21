@@ -82,10 +82,13 @@ class Config extends Model
     }
 
     public static function getLangFromSession()
-    {
-        $lang = Config::getDefaultLang();
+    {        
+        $lang = null;
         if( request()->hasSession() ){ //it dont session in tests
             $lang = request()->session()->get('lang');
+        }
+        if( empty($lang) ){
+            $lang = Config::getDefaultLang();
         }
         return $lang;
     }

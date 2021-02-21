@@ -18,7 +18,9 @@ class Authenticate extends Middleware
         $langs = (new Config)->arrGetLangs();
         $lang = Config::getLangFromSession();
         if (! $request->expectsJson()) {
-            return  (1 === count($langs)) ?  '/login' :   '/'.$lang.'/login';   //route('login');
+            $appUrl = env('APP_URL');
+            $urlRedirect = (1 === count($langs)) ?  $appUrl.'/login' :   $appUrl.'/'.$lang.'/login';   //route('login');
+            return $urlRedirect;
         }
     }
 }
