@@ -94,7 +94,9 @@ new Vue({
                         localStorage.setItem('cart', JSON.stringify(this.cart));                        
                 },
                 pay: function(){
-                        alert('TODO payment=$'+this.total);
+                        //alert('TODO payment=$'+this.total);
+                        //window.location.href = 'http://127.0.0.1:8000/home/basket';
+                        window.location.pathname = "/home/basket";                        
                 },
                 addComment: function( event){
                         let pageId = this.page_id;
