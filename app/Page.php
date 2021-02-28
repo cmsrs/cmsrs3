@@ -268,7 +268,8 @@ class Page extends Base
             $view = 'in';
         } elseif ($this->type == 'gallery') {
             $view = 'gallery';
-
+        } elseif ($this->type == 'shop') {
+            $view = 'shop';
         } else {
             $view = 'cms';
         }
