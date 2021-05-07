@@ -7,20 +7,19 @@ new Vue({
                 results: [],
                 comment: '',
                 comments: [],
-                page_id: '',
-                lang: '',                                
+                //page_id: '',
+                //lang: '',                                
                 page : {},
                 images: []
 
 
         },
-        created() {             
-                let self = this;
-                const el = document.querySelector('#page_id');
-                this.page_id = el.dataset.pageId;
-
-                const el2 = document.querySelector('#lang');
-                this.lang = el2.dataset.lang;
+        created() {        
+                //let self = this;
+                //const el = document.querySelector('#page_id');
+                //this.page_id = el ? el.dataset.pageId : '';
+                //const el2 = document.querySelector('#lang');
+                //this.lang = el2 ?  el2.dataset.lang : '';
 
 
                 //----shop----
@@ -80,6 +79,17 @@ new Vue({
                         //alert('TODO payment=$'+this.total);
                         //window.location.href = 'http://127.0.0.1:8000/home/basket';
                         window.location.pathname = "/home/basket";                        
+                },
+                tobank: function(){
+                        alert('toBank');
+                        axios.post(
+                                '/home/api/tobank',
+                                {cart: this.cart},
+                                {
+                                  headers: {
+                                    'Accept': 'application/json'
+                                  }
+                                });                        
                 }
                 
         }

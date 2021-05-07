@@ -11,6 +11,7 @@ use App\Product;
 
 use App\Translate;
 use App\Content;
+use Illuminate\Support\Facades\Auth;
 
 class Base extends TestCase
 {
@@ -34,6 +35,23 @@ class Base extends TestCase
         $this->token = $this->getTestToken();
     }
 
+    public function createClientUser()
+    {
+        $user = new User([
+            'email'    => 'client@email.com',
+            'name'     => 'client testowy',
+            'role' => User::$role['client']
+       ]);
+
+        $user->password = 'client1234';
+
+        User::where('email', 'client@email.com')->delete();
+        $user->save();
+
+        Auth::login($user);
+        $this->assertTrue(Auth::check());
+        $this->assertAuthenticated();
+    }
 
 
     public function setUp(): void
@@ -166,9 +184,9 @@ class Base extends TestCase
     public function getTestToken()
     {
         $response = $this->post('api/login', [
-        'email'    => 'test@email.com',
-        'password' => 'cmsrs'
-    ])->getData();
+            'email'    => 'test@email.com',
+            'password' => 'cmsrs'
+        ])->getData();
 
         return $response->data->token;
     }
@@ -195,26 +213,26 @@ class Base extends TestCase
     {
         $this->assertNotEmpty($menuId);
         $testData1 =
-    [
-         'title'     => ["en" => 'test p1'],
-         'short_title' => ["en" => 'p11'],
-         'published' => 1,
-         'type' => 'cms',
-         'content' => ["en" => 'ppp1'],
-         'menu_id' =>  $menuId
-    ];
+        [
+            'title'     => ["en" => 'test p1'],
+            'short_title' => ["en" => 'p11'],
+            'published' => 1,
+            'type' => 'cms',
+            'content' => ["en" => 'ppp1'],
+            'menu_id' =>  $menuId
+        ];
         $response1 = $this->post('api/pages?token='.$this->token, $testData1);
         $this->assertTrue($response1->getData()->success);
 
         $testData2 =
-    [
-         'title' =>  ["en" =>PageTest::STR_PARENT_TWO],
-         'short_title' => ["en" =>'p22'],
-         'published' => 1,
-         'type' => 'cms',
-         'content' => ["en" =>'parent page ppp2'],
-         'menu_id' =>  $menuId
-    ];
+        [
+            'title' =>  ["en" =>PageTest::STR_PARENT_TWO],
+            'short_title' => ["en" =>'p22'],
+            'published' => 1,
+            'type' => 'cms',
+            'content' => ["en" =>'parent page ppp2'],
+            'menu_id' =>  $menuId
+        ];
         $response2 = $this->post('api/pages?token='.$this->token, $testData2);
         $this->assertTrue($response2->getData()->success);
 
@@ -236,40 +254,40 @@ class Base extends TestCase
         $this->assertNotEmpty($parentId);
     
         $testData3 =
-    [
-         'title'     => ["en" => PageTest::STR_CHILD_ONE],
-         'short_title' => ["en" =>'p33'],
-         'published' => 1,
-         'type' => 'cms',
-         'content' => ["en" =>'child page ppp1'],
-         'page_id' => $parentId,
-         'menu_id' =>  $menuId
-    ];
+        [
+            'title'     => ["en" => PageTest::STR_CHILD_ONE],
+            'short_title' => ["en" =>'p33'],
+            'published' => 1,
+            'type' => 'cms',
+            'content' => ["en" =>'child page ppp1'],
+            'page_id' => $parentId,
+            'menu_id' =>  $menuId
+        ];
         $response3 = $this->post('api/pages?token='.$this->token, $testData3);
         $this->assertTrue($response3->getData()->success);
 
         $testData4 =
-    [
-         'title'     => ["en" =>PageTest::STR_CHILD_TWO],
-         'short_title' => ["en" =>'p44'],
-         'published' => 1,
-         'type' => 'cms',
-         'content' => ["en" => 'child page ppp2'],
-         'page_id' => $parentId,
-         'menu_id' =>  $menuId
-    ];
+        [
+            'title'     => ["en" =>PageTest::STR_CHILD_TWO],
+            'short_title' => ["en" =>'p44'],
+            'published' => 1,
+            'type' => 'cms',
+            'content' => ["en" => 'child page ppp2'],
+            'page_id' => $parentId,
+            'menu_id' =>  $menuId
+        ];
         $response4 = $this->post('api/pages?token='.$this->token, $testData4);
         $this->assertTrue($response4->getData()->success);
 
         $testData5 =
-    [
-         'title'     => ["en" => PageTest::STR_PARENT_TREE ], // 'p5',
-         'short_title' => ["en" =>'p55'],
-         'published' => 1,
-         'type' => 'cms',
-         'content' => ["en" =>'pppppppp5'],
-         'menu_id' =>  $menuId
-    ];
+        [
+            'title'     => ["en" => PageTest::STR_PARENT_TREE ], // 'p5',
+            'short_title' => ["en" =>'p55'],
+            'published' => 1,
+            'type' => 'cms',
+            'content' => ["en" =>'pppppppp5'],
+            'menu_id' =>  $menuId
+        ];
         $response5 = $this->post('api/pages?token='.$this->token, $testData5);
         $this->assertTrue($response5->getData()->success);
 

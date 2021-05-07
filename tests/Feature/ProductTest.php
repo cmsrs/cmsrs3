@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Page;
+use App\User;
 use App\Menu;
 use App\Image;
 use App\Product;
@@ -11,6 +12,7 @@ use App\Content;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class ProductTest extends Base
 {
@@ -99,6 +101,80 @@ class ProductTest extends Base
             ]
         ];
     }
+
+
+    /**
+     * it is not test admin
+     * it tests home/api/tobank
+     */
+    /** @test */
+    public function it_will_post_to_bank()
+    {
+        $price1 = 112;
+        $price2 = 321;        
+
+        $this->setTestData();
+        //it must be 2 product in this test!!!
+        $this->testData['sku'] = '11';
+        $this->testData['price'] = $price1;
+        $this->testData['product_name']['en'] = 'name11';        
+        $r0 = $this->post('api/products?token=' . $this->token, $this->testData);
+        $this->assertTrue($r0->getData()->success);
+        $this->testData['sku'] = '22';
+        $this->testData['price'] = $price2;
+        $this->testData['product_name']['en'] = 'name22';                
+        $r1 = $this->post('api/products?token=' . $this->token, $this->testData);
+        $this->assertTrue($r1->getData()->success);
+
+        $products = Product::all()->toArray();
+        //dd($products);
+
+
+        /*
+        name and price is not important in this post
+        */        
+        $json = 
+        '{
+            "cart": [
+                {
+                    "id": 1,
+                    "name": "PHP3 aplikacje bazodanowe",
+                    "price": 11,
+                    "qty": 10
+                },
+                {
+                    "id": 2,
+                    "name": "PHP5",
+                    "price": 30,
+                    "qty": 5
+                }
+            ]
+        }';
+
+        $obj = json_decode($json);
+        $this->assertEquals(2, count($obj->cart));
+
+
+        $this->assertAuthenticated();
+        $token = User::getTokenForClient();
+        $this->assertNotEmpty($token);
+
+        $user = Auth::user();    
+        $this->assertTrue(Auth::check()); //I dont understand why becayse we dont use this: //Auth::login($user);
+
+        //dd($user);
+        
+
+        //$response = $this->post('home/api/tobank?token='.$token, $obj );
+        $response = $this->post('home/api/tobank?token='.$token, ["cart" => $obj->cart] );
+        $res = $response->getData();
+        dd($res);
+        //$this->assertFalse($res->success);
+        //$this->assertNotEmpty($res->error);
+        //$this->assertEquals(1, Page::All()->count());
+    }
+
+
 
     /** @test */
     public function it_will_create_product_with_images_by_page()

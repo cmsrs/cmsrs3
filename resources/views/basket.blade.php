@@ -15,11 +15,37 @@
                             {{ session('status') }}
                         </div>
                     @endif
+                    <div id="app">
 
-                    You are logged in! - basker
+                        <div class="col mp-3">
+                            {{ __('SHOPPING CART') }}:
+                            <ul>
+                            <li class="mt-2" v-for="item in cart" v-bind:key="item.id">              
+                                <div>@{{ item.name }}</div>
+                                <span>$@{{ item.price  }} x @{{ item.qty }}</span>
+                                <button class="btn" v-on:click="increment(item)">+</button>
+                                <button class="btn" v-on:click="decrement(item)">-</button>
+                            </li>
+                            </ul>
+
+                            <div v-if="cart.length">
+                                <div class="cart-total">{{ __('Total') }}: $@{{ total }}</div>
+                                <br/><br/>
+                                <button class="btn" v-on:click="tobank()">{{ __('Go to bank') }}</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+<script type="application/javascript" src="/js/lib/vue.js"></script>
+<script type="application/javascript" src="/js/lib/axios.js"></script>
+<script type="application/javascript" src="/js/shop.js"></script>
 @endsection

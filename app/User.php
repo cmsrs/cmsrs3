@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 //use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -79,4 +80,46 @@ class User extends Authenticatable implements JWTSubject
             // }
         }
     }
+
+    static public function getTokenForClient()
+    {
+        $user = Auth::user();
+        if( empty($user) ){
+            throw new \Exception("User not auth");
+        }
+
+        return $user->getTokenClient();
+    }
+
+    public function getTokenClient()
+    {
+        $appKey = env('APP_KEY');
+        if( empty($appKey) ){
+            throw new \Exception("empty APP_KEY in config file");
+        }
+                
+        return sha1($this->email."_".$this->id."_".$appKey);
+    }
+
+    public function checkClientByToken($token)
+    {
+        $expectedToken = $this->getTokenClient();
+        if($expectedToken ==  $token){
+            return true;
+        }
+        return false;
+    }
+
+    static public function  checkApiClientByToken($token)
+    {
+        $user = Auth::user();
+        if( empty($user) ){
+            throw new \Exception("User not auth - for check");
+        }
+        if( !$user->checkClientByToken($token) ){
+            throw new \Exception("User not valid - check");
+        }
+        return true;
+    }
+
 }
