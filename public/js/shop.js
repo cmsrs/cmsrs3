@@ -81,9 +81,12 @@ new Vue({
                         window.location.pathname = "/home/basket";                        
                 },
                 tobank: function(){
-                        alert('toBank');
+                        const el = document.querySelector('#token');
+                        const token = el ? el.dataset.token : '';
+                        //alert('token' + token);
+
                         axios.post(
-                                '/home/api/tobank',
+                                '/home/api/tobank?token='+token,
                                 {cart: this.cart},
                                 {
                                   headers: {

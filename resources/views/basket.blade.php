@@ -17,6 +17,7 @@
                     @endif
                     <div id="app">
 
+                        <div id="token" data-token="{{$token}}"></div>
                         <div class="col mp-3">
                             {{ __('SHOPPING CART') }}:
                             <ul>

@@ -162,16 +162,8 @@ class ProductTest extends Base
         $user = Auth::user();    
         $this->assertTrue(Auth::check()); //I dont understand why becayse we dont use this: //Auth::login($user);
 
-        //dd($user);
-        
-
-        //$response = $this->post('home/api/tobank?token='.$token, $obj );
         $response = $this->post('home/api/tobank?token='.$token, ["cart" => $obj->cart] );
-        $res = $response->getData();
-        dd($res);
-        //$this->assertFalse($res->success);
-        //$this->assertNotEmpty($res->error);
-        //$this->assertEquals(1, Page::All()->count());
+        $response->assertStatus(302);
     }
 
 

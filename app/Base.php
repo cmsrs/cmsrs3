@@ -91,4 +91,18 @@ class Base extends Model
             throw new \Exception("problem with save into translate table");
         }
     }
+
+    public static function reIndexArr($arr)
+    {
+        $out = [];
+        foreach($arr as $item){
+            $arrItem = (array) $item;
+            if( empty($arrItem['id']) ){
+                throw new \Exception("not found key id in arr");
+            }
+
+            $out[$arrItem['id']] = $arrItem; 
+        }
+        return $out;
+    }
 }

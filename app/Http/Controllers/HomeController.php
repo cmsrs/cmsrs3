@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Product;
+use App\Base;
+use App\Integration\Payu;
 
 class HomeController extends Controller
 {
@@ -29,7 +32,11 @@ class HomeController extends Controller
 
     public function basket()
     {
-        return view('basket');        
+        $token = User::getTokenForClient();
+
+        return view('basket', [
+            'token' => $token
+        ]);
     }
 
     public function orders()
@@ -43,11 +50,24 @@ class HomeController extends Controller
 
         $data = $request->only('cart');
 
-        dump($data);
-        
-        dd('_____tobank_______'.$request->token);
-        //return view('orders');
-    }
+        if( empty($data['cart']) || !is_array($data['cart']) ){
+            throw new \Exception("Wrong data from post");            
+        }
 
+        $arrCart = Base::reIndexArr($data['cart']);        
+
+        $productsDataAndTotalAmount = Product::getDataToPayment( $arrCart );
+
+        $payu = new Payu;
+        $data = $payu->dataToSend( $productsDataAndTotalAmount );  
+        
+        //dd($data);
+        $redirectUri = $payu->getOrder($data);
+        if( empty($redirectUri) ){
+            throw new \Exception("Somthing wrong with payu - i cant obtain the redirectUri");
+        }
+        //dd($redirectUri);
+        return redirect($redirectUri);
+    }
 
 }

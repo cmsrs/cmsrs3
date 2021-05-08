@@ -61,6 +61,47 @@ class Product extends Model
         ];  
     }
 
+    static private function getDefaultProductName($productTranslates)
+    {
+        $lang = Config::getDefaultLang();
+
+        $defaultProductName = '';
+
+
+        foreach ($productTranslates as $translate) {
+            if( ('product_name' == $translate['column']) && ($translate['lang']  == $lang) ){
+                $defaultProductName = $translate['value'];
+                break;
+            }            
+        }
+        //dump($lang);
+        //dd($productTranslates);
+
+        return $defaultProductName;
+    }
+
+    static public function getDataToPayment( $arrCart )
+    {
+        $ids = array_keys($arrCart);
+        $arrProducts = Product::with(['translates'])->whereIn('id', $ids)->orderBy('id', 'asc')->get()->toArray();
+    
+        $out = [];
+        $totalAmount = 0;
+        foreach($arrProducts as $arrProduct){
+
+            $itemIn = $arrCart[$arrProduct['id']];
+            $out["products"][] = [
+                "name" => Product::getDefaultProductName($arrProduct['translates']),
+                "unitPrice" => $arrProduct['price'],
+                "quantity" => $itemIn['qty']
+            ];
+            $totalAmount += $arrProduct['price'] * $itemIn['qty'];
+        }
+        $out['totalAmount'] =  $totalAmount;
+
+        return  $out;
+    }
+
     public function checkIsDuplicateName($data, $id = '')
     {
         $out = ['success' => true ];
