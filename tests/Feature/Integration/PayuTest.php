@@ -2,18 +2,16 @@
 
 namespace Tests\Feature\Integration;
 
-//use Tests\TestCase;
 use Tests\Feature\Base;
 use App\Integration\Payu;
-// use App\User;
-// use App\Page;
-// use App\Menu;
-// use App\Product;
-// use App\Translate;
-// use App\Content;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 
 class PayuTest extends  Base //TestCase
 {
+    use RefreshDatabase;
+
     private $payu;
 
     public function setUp(): void

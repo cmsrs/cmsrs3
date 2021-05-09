@@ -7,6 +7,7 @@ use App\User;
 use App\Product;
 use App\Base;
 use App\Integration\Payu;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
@@ -60,8 +61,10 @@ class HomeController extends Controller
 
         $payu = new Payu;
         $data = $payu->dataToSend( $productsDataAndTotalAmount );  
-        
+
+        Log::debug(' data sended to payu: '.var_export($data, true ) );        
         //dd($data);
+
         $redirectUri = $payu->getOrder($data);
         if( empty($redirectUri) ){
             throw new \Exception("Somthing wrong with payu - i cant obtain the redirectUri");

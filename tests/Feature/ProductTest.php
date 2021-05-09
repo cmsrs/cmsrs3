@@ -110,23 +110,31 @@ class ProductTest extends Base
     /** @test */
     public function it_will_post_to_bank()
     {
-        $price1 = 112;
-        $price2 = 321;        
+        $price1 = 11200;
+        $price2 = 32100;        
 
         $this->setTestData();
         //it must be 2 product in this test!!!
-        $this->testData['sku'] = '11';
-        $this->testData['price'] = $price1;
-        $this->testData['product_name']['en'] = 'name11';        
-        $r0 = $this->post('api/products?token=' . $this->token, $this->testData);
+        $testData1 = $this->testData;
+        $testData2 = $this->testData;        
+
+        $testData1['sku'] = '11';
+        $testData1['price'] = $price1;
+        $testData1['product_name']['en'] = 'name11';        
+        $r0 = $this->post('api/products?token=' . $this->token, $testData1);
         $this->assertTrue($r0->getData()->success);
-        $this->testData['sku'] = '22';
-        $this->testData['price'] = $price2;
-        $this->testData['product_name']['en'] = 'name22';                
-        $r1 = $this->post('api/products?token=' . $this->token, $this->testData);
+        $testData2['sku'] = '22';
+        $testData2['price'] = $price2;
+        $testData2['product_name']['en'] = 'name22';                
+        $r1 = $this->post('api/products?token=' . $this->token, $testData2);
         $this->assertTrue($r1->getData()->success);
 
         $products = Product::all()->toArray();
+        $this->assertEquals( 2, count($products));
+
+
+        $id1 = $products[0]['id'];
+        $id2 = $products[1]['id'];        
         //dd($products);
 
 
@@ -137,15 +145,15 @@ class ProductTest extends Base
         '{
             "cart": [
                 {
-                    "id": 1,
-                    "name": "PHP3 aplikacje bazodanowe",
-                    "price": 11,
+                    "id": '.$id1.',
+                    "name": "PHP3 aplikacje bazodanowe - xxxxxxxxxxxxxxxxxxxxxxxyyyyyyyyyyyyyy",
+                    "price": 119999999999999999999,
                     "qty": 10
                 },
                 {
-                    "id": 2,
-                    "name": "PHP5",
-                    "price": 30,
+                    "id": '.$id2.',
+                    "name": "PHP5 nott imporstentttttttttttt",
+                    "price": 30999999999999,
                     "qty": 5
                 }
             ]
@@ -163,6 +171,9 @@ class ProductTest extends Base
         $this->assertTrue(Auth::check()); //I dont understand why becayse we dont use this: //Auth::login($user);
 
         $response = $this->post('home/api/tobank?token='.$token, ["cart" => $obj->cart] );
+        //dd( $response->getData() );
+
+
         $response->assertStatus(302);
     }
 
