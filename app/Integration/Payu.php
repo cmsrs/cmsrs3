@@ -31,7 +31,8 @@ class Payu extends Model
     public function getAccessToken()
     {
         try{
-            $response = $this->client->post('/pl/standard/user/oauth/authorize');
+            //$response = $this->client->post(env('PAYU_URL').'/pl/standard/user/oauth/authorize');
+            $response = $this->client->post('/pl/standard/user/oauth/authorize');            
             $token = (object) json_decode($response->getBody(), true);    
         } catch (\Exception $e) {
             $strErr = 'Caught exception --payu auth--: '.  $e->getMessage();
@@ -51,16 +52,19 @@ class Payu extends Model
         $lang = Config::getDefaultLang();
 
         $data = [
-            "notifyUrl" => "https://your.eshop.com/notify",
-            'customerIp' =>  '127.0.0.1', //$_SERVER['REMOTE_ADDR'],
+            //"notifyUrl" =>  "http://demo.cmsrs.pl/home/orders", //"https://your.eshop.com/notify",
+            "notifyUrl" =>   env('NOTIFY_URL'),  //"http://demo.cmsrs.pl/home", //"https://your.eshop.com/notify",                
+            'customerIp' =>   env('CUSTOMER_IP'), //  '127.0.0.1', //$_SERVER['REMOTE_ADDR'],
             'currencyCode' => 'PLN',
             'description' => env('APP_NAME'),
             'merchantPosId' => env('PAYU_POS_ID'),            
             'buyer' => [
                 "email"=>  $user->email, //"john.doe@example.com",
-                //"phone"=> "654111654",
-                //"firstName"=> "John",
-                //"lastName"=> "Doe",
+
+                "phone"=> "654111654",
+                "firstName"=> "Testrs",
+                "lastName"=> "Testowyrs",
+
                 "language"=> $lang
             ],
             /*
@@ -91,6 +95,7 @@ class Payu extends Model
         $redirectUri = null;
 
         try{            
+            //$response = $this->client->post(env('PAYU_URL').'/api/v2_1/orders/', [            
             $response = $this->client->post('/api/v2_1/orders/', [
                 'headers' => [
                     'Authorization' => 'Bearer '.$accessToken

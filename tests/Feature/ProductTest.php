@@ -171,10 +171,13 @@ class ProductTest extends Base
         $this->assertTrue(Auth::check()); //I dont understand why becayse we dont use this: //Auth::login($user);
 
         $response = $this->post('home/api/tobank?token='.$token, ["cart" => $obj->cart] );
+        $response->assertStatus(200);
         //dd( $response->getData() );
 
-
-        $response->assertStatus(302);
+        $res1 = $response->getData();
+        $this->assertTrue($res1->success);        
+        $this->assertNotEmpty($res1->data);                
+        //dd($res1->data);                        
     }
 
 

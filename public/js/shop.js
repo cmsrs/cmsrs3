@@ -92,7 +92,18 @@ new Vue({
                                   headers: {
                                     'Accept': 'application/json'
                                   }
-                                });                        
+                                }).then(function (response) {
+
+                                        if(response.data.success){
+                                                window.location = response.data.data; // full URI to redirect to
+                                        }else{
+                                                alert(response.data.error);
+                                        }
+                                                                                
+                                }).catch(function (error) {
+                                        alert('Error - try later');
+                                });                                                        
+                                
                 }
                 
         }

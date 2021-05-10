@@ -13,6 +13,9 @@ class Config extends Model
     public function __construct()
     {
         $this->langs = empty(env('LANGS')) ? '' : env('LANGS');
+        //dd(env('LANGS'));
+        //dd($this->langs);
+        //dd('_____________s____');
     }
     
     public function setLangs($langs)
@@ -62,7 +65,9 @@ class Config extends Model
 
     public static function arrGetLangsEnv()
     {
-        return explode(',', env('LANGS', ''));
+        $langs = explode(',', env('LANGS', ''));
+        //dd($langs);
+        return $langs;
     }
 
     public static function getDefaultLang()
@@ -77,17 +82,26 @@ class Config extends Model
     public static function saveLangToSession($lang)
     {
         if( request()->hasSession() ){ //it dont session in tests
+            //dd('_____change_lanfg____');
             request()->session()->put('lang', $lang);
         }
     }
 
+    /**
+     * this function not wokking properly - for example i homeController
+     */
     public static function getLangFromSession()
     {        
         $lang = null;
+        //$ss = request()->session();
+        //dd($ss);        
         if( request()->hasSession() ){ //it dont session in tests
+
+            //dd('____________opk___');
             $lang = request()->session()->get('lang');
         }
         if( empty($lang) ){
+            //dd('____________wrong___');            
             $lang = Config::getDefaultLang();
         }
         return $lang;

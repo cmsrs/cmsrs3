@@ -20,8 +20,9 @@
     "add comment" : "dodaj komentarz",
     "Comments" : "Komentarz",
 
-    "Category" : "Kategoria"
-
-
-
+    "Category" : "Kategoria",
+    "Go to bank" : "Płatność",
+    "Basket" : "Koszyk",    
+    "Orders" : "Zamówienia",
+    "Log out" : "Wyloguj"
 }

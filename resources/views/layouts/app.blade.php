@@ -52,7 +52,7 @@
                         @else
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" >
                                         @csrf
-                                        <input type="submit" value="Log out" style="background:none; border-width:0px; cursor: pointer;" />
+                                        <input type="submit" value="{{ __('Log out') }}" style="background:none; border-width:0px; cursor: pointer;" />
                             </form>
                         @endguest
                     </ul>

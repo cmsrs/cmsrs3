@@ -6,8 +6,11 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Product;
 use App\Base;
+use App\Config;
 use App\Integration\Payu;
 use Illuminate\Support\Facades\Log;
+//use App;
+use Illuminate\Support\Facades\App;
 
 class HomeController extends Controller
 {
@@ -18,6 +21,9 @@ class HomeController extends Controller
      */
     public function __construct()
     {
+        $lang = Config::getLangFromSession();  //not workking proper
+        App::setLocale($lang);
+
         $this->middleware('auth');
     }
 
@@ -28,6 +34,8 @@ class HomeController extends Controller
      */
     public function index()
     {
+        //App::setLocale('pl');   
+
         return view('home');
     }
 
@@ -67,10 +75,13 @@ class HomeController extends Controller
 
         $redirectUri = $payu->getOrder($data);
         if( empty($redirectUri) ){
-            throw new \Exception("Somthing wrong with payu - i cant obtain the redirectUri");
+            //throw new \Exception("Somthing wrong with payu - i cant obtain the redirectUri");
+            Log::debug("Somthing wrong with payu - i cant obtain the redirectUri");            
+            return response()->json(['success'=> false, 'error'=> 'Somthing wrong with payu - try later.'], 200); 
         }
-        //dd($redirectUri);
-        return redirect($redirectUri);
+        Log::debug('payu redirect url: '.$redirectUri );
+        return response()->json(['success' => true, 'data'=> $redirectUri], 200);
+        //return redirect($redirectUri);
     }
 
 }
