@@ -23,14 +23,14 @@
                             <ul>
                             <li class="mt-2" v-for="item in cart" v-bind:key="item.id">              
                                 <div>@{{ item.name }}</div>
-                                <span>$@{{ item.price  }} x @{{ item.qty }}</span>
+                                <span>@{{ item.price / 100 }} zł x @{{ item.qty }}</span>
                                 <button class="btn" v-on:click="increment(item)">+</button>
                                 <button class="btn" v-on:click="decrement(item)">-</button>
                             </li>
                             </ul>
 
                             <div v-if="cart.length">
-                                <div class="cart-total">{{ __('Total') }}: $@{{ total }}</div>
+                                <div class="cart-total">{{ __('Total') }}: @{{ total_sanit }} zł</div>
                                 <br/><br/>
                                 <button class="btn" v-on:click="tobank()">{{ __('Go to bank') }}</button>
                             </div>

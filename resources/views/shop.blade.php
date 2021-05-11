@@ -25,7 +25,7 @@
                     <ul class="list-unstyled">
                       <li>{{ __('Name') }}: {{$product['product_name'][$lang] }}</li>
                       <li>Sku: {{$product['sku']}}</li>
-                      <li>{{ __('Price') }}: ${{$product['price']}}</li>
+                      <li>{{ __('Price') }}: {{$product['price'] / 100}} zł</li>
                       <li>{{$product['product_description'][$lang] }}</li>
                     </ul>
                     <?php
@@ -52,7 +52,7 @@
                     <ul class="list-unstyled">
                       <li>{{ __('Name') }}: <a href="{{$product['url_product'][$lang] }}">{{$product['product_name'][$lang] }}</a></li>
                       <li>Sku: {{$product['sku']}}</li>
-                      <li>{{ __('Price') }}: ${{$product['price']}}</li>
+                      <li>{{ __('Price') }}: {{$product['price'] / 100}} zł</li>
                       <li>{{$product['product_description'][$lang] }}</li>
                     </ul>
                     <?php
@@ -77,14 +77,14 @@
             <ul>
               <li class="mt-2" v-for="item in cart" v-bind:key="item.id">              
                 <div>@{{ item.name }}</div>
-                <span>$@{{ item.price  }} x @{{ item.qty }}</span>
+                <span>@{{ item.price /100 }} zł x @{{ item.qty }}</span>
                 <button class="btn" v-on:click="increment(item)">+</button>
                 <button class="btn" v-on:click="decrement(item)">-</button>
               </li>
             </ul>
 
             <div v-if="cart.length">
-              <div class="cart-total">{{ __('Total') }}: $@{{ total }}</div>
+              <div class="cart-total">{{ __('Total') }}: @{{ total_sanit }} zł</div>
               <br/><br/>
               <button class="btn" v-on:click="pay()">{{ __('Pay') }}</button>
             </div>

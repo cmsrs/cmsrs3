@@ -2,6 +2,7 @@ new Vue({
         el: "#app",
         data: {
                 total: 0,
+                total_sanit: 0,
                 cart: [],               
                 products: [],
                 results: [],
@@ -28,10 +29,12 @@ new Vue({
                 for (var i = 0; i < this.cart.length; i++) {
                         this.total += this.cart[i].qty * this.cart[i].price;
                 }
+                this.total_sanit = this.total / 100;
         },
         methods: {
                 addToCart: function(product) {
                         this.total += product.price;
+                        this.total_sanit = this.total / 100;
                         var found = false;
                         for (var i = 0; i < this.cart.length; i++) {
                                 if (this.cart[i].id === product.id) {
@@ -44,6 +47,7 @@ new Vue({
                                         id: product.id,
                                         name: product.name,
                                         price: product.price,
+                                        //price_sanit: product.price / 100,                                        
                                         qty: 1
                                 });
                         }
@@ -56,6 +60,7 @@ new Vue({
                                 }
                         }
                         this.total += item.price;
+                        this.total_sanit = this.total / 100;
                         localStorage.setItem('cart', JSON.stringify(this.cart));                        
                 },
                 decrement: function(item) {
@@ -73,6 +78,7 @@ new Vue({
                         }
 
                         this.total -= item.price;
+                        this.total_sanit = this.total / 100;
                         localStorage.setItem('cart', JSON.stringify(this.cart));                        
                 },
                 pay: function(){

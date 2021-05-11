@@ -1,3 +1,11 @@
+Bug
+
+210510
+-(na pierwszy rzut okla to nie wyglada jak blad - aktualnie bierze defaultowy lang z plki konf - pierwsza wartosc)  
+Problem z sesia odczytujaca wartosc lang z sessi
+zmiana jezykow z panelu klienta (brak obslugi sessi w panelu klienta) - jesli zmeiniam jezyk na stronie frontowej w panelu zawsze pozostaje jezyk defaultowy
+
+
 UWAGA!!!
 
 

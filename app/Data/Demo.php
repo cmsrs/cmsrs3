@@ -152,10 +152,17 @@ class Demo
                     Login to the admin panel: <a href=\"$admUrl\">$admUrl</a>
                     <br>
                     <br>
-                    user: adm@cmsrs.pl
+                    admin: adm@cmsrs.pl
                     <br>
                     pass: cmsrs123
                     <br>
+
+                    <br>
+                    client: client@cmsrs.pl
+                    <br>
+                    pass: cmsrs456
+                    <br>
+
                     <br>
                     More information: <a title='cmsRS' href='http://www.cmsrs.pl' >http://www.cmsrs.pl</a>
                 </p>
@@ -170,10 +177,18 @@ class Demo
                     Login do panelu administracyjnego: <a href=\"$admUrl\">$admUrl</a>
                     <br>
                     <br>
-                    użytkownik: adm@cmsrs.pl
+                    admin: adm@cmsrs.pl
                     <br>
                     hasło: cmsrs123
                     <br>
+
+                    <br>
+                    klient: client@cmsrs.pl
+                    <br>
+                    hasło: cmsrs456
+                    <br>
+
+
                     <br>
                     Więcej informacji: <a title='cmsRS' href='http://www.cmsrs.pl' >http://www.cmsrs.pl</a>
                 </p>
@@ -362,7 +377,7 @@ class Demo
         $products['product1'] = [
             'product_name' => [ 'en' => 'PHP3 db app', 'pl' => 'PHP3 aplikacje bazodanowe' ] ,
             'sku' => '1/23/4',
-            'price' => 11,
+            'price' => 1100,
             'published' => 1,
             'product_description' => ['en' =>  'Php3 book description',   'pl' => 'Php3 opis ksiazki' ],
             'page_id' => $p['p5']->id,
@@ -371,7 +386,7 @@ class Demo
         $products['product2'] = [
             'product_name' => [ 'en' => 'PHP5','pl' => 'PHP5' ],
             'sku' => '1/234/4',
-            'price' => 30,
+            'price' => 3000,
             'published' => 1,            
             'product_description' =>  [ 'en' => 'Php5 book', 'pl' =>  'Ksiazka o PHP5' ],
             'page_id' => $p['p5']->id,
@@ -380,7 +395,7 @@ class Demo
         $products['product3'] = [
             'product_name' => [ 'en' =>  'Java db app', 'pl' => 'Java aplikacje bazodanowe' ],
             'sku' => '3/13/4',
-            'price' => 23,
+            'price' => 2300,
             'published' => 1,            
             'product_description' =>  [ 'en' => 'Java book','pl' => 'Książka o Javie' ],
             'page_id' => $p['p6']->id,
@@ -389,7 +404,7 @@ class Demo
         $products['product4'] = [
             'product_name' => [  'en' => 'English',  'pl' => 'Angielski'] ,
             'sku' => 'A/3/3/4',
-            'price' => 28,
+            'price' => 2800,
             'published' => 1,            
             'product_description' => [  'en' => 'English book', 'pl' => 'Ksiązka do nauki angielskiego' ],
             'page_id' => $p['p7']->id,
