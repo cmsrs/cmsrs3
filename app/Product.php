@@ -4,6 +4,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class Product extends Model
 {
@@ -80,8 +81,13 @@ class Product extends Model
         return $defaultProductName;
     }
 
-    static public function getDataToPayment( $arrCart )
+    static public function getDataToPayment( $arrCart, &$baskets )
     {
+        $user = Auth::user();
+        if( empty($user) ){
+            throw new \Exception("User not auth - this exception is impossible");
+        }
+
         $ids = array_keys($arrCart);
         $arrProducts = Product::with(['translates'])->whereIn('id', $ids)->orderBy('id', 'asc')->get()->toArray();
     
@@ -95,6 +101,12 @@ class Product extends Model
                 "unitPrice" => $arrProduct['price'],
                 "quantity" => $itemIn['qty']
             ];
+            $baskets[] = [
+                "qty" => $itemIn['qty'],                
+                "user_id" => $user->id,
+                "product_id" => $arrProduct['id']
+            ];
+
             $totalAmount += $arrProduct['price'] * $itemIn['qty'];
         }
         $out['totalAmount'] =  $totalAmount;

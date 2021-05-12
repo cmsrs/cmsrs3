@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Page;
+use App\Basket;
+use App\Order;
 use App\User;
 use App\Menu;
 use App\Image;
@@ -102,13 +104,106 @@ class ProductTest extends Base
         ];
     }
 
+    /**
+     * it is not test admin
+     */
+    /** @test */
+    public function it_will_save_to_basket()
+    {
+        $ids = $this->setAddTwoProducts();
+        $id1 = $ids['id1'];
+        $id2 = $ids['id2'];        
+
+        $user = Auth::user();    
+
+        $baskets = [
+            0 => [
+              "qty" => 10,
+              "user_id" => $user->id,
+              "product_id" => $id1
+            ],
+            1 => [
+              "qty" => 5,
+              "user_id" => $user->id,
+              "product_id" => $id2
+            ]
+        ];
+
+        $objBaskets = Basket::inBasketByUserId($user->id);
+        $this->assertEmpty($objBaskets);
+
+        Basket::deleteBasketByObjBaskets($objBaskets);
+
+        Basket::saveBaskets($baskets);
+        $objBaskets2 = Basket::inBasketByUserId($user->id);
+        $this->assertNotEmpty($objBaskets2);
+
+        Basket::deleteBasketByObjBaskets($objBaskets2);
+
+        $objBaskets3 = Basket::inBasketByUserId($user->id);        
+        $this->assertEmpty($objBaskets3);        
+
+        $isNewOrders = Order::moveDataFromBasketToOrderForUser();
+        $this->assertFalse($isNewOrders);        
+        $objOrders = Order::inOrdersByUserId($user->id);
+        $this->assertEmpty($objOrders);        
+        //dd($basket);
+    }
 
     /**
      * it is not test admin
-     * it tests home/api/tobank
      */
     /** @test */
-    public function it_will_post_to_bank()
+    public function it_will_save_to_order()
+    {
+        $ids = $this->setAddTwoProducts();
+        $id1 = $ids['id1'];
+        $id2 = $ids['id2'];        
+
+        $user = Auth::user();    
+
+        $baskets = [
+            0 => [
+              "qty" => 10,
+              "user_id" => $user->id,
+              "product_id" => $id1
+            ],
+            1 => [
+              "qty" => 5,
+              "user_id" => $user->id,
+              "product_id" => $id2
+            ]
+        ];
+
+        Basket::deleteBasketAndAddNewData($user->id, $baskets);        
+        $objBaskets4 = Basket::inBasketByUserId($user->id);
+        $this->assertNotEmpty($objBaskets4);
+
+        $isNewOrders2 = Order::moveDataFromBasketToOrderForUser();
+        $this->assertTrue($isNewOrders2);        
+
+        $objBaskets5 = Basket::inBasketByUserId($user->id);
+        $this->assertEmpty($objBaskets5);
+
+        $objOrders2 = Order::inOrdersByUserId($user->id);
+        $this->assertNotEmpty($objOrders2);
+
+        $b = $objBaskets4->toArray();
+        $o = $objOrders2->toArray();
+
+        $count = 2;
+        $this->assertEquals($count, count($b));
+        $this->assertEquals($count, count($o));
+
+        for($i =0; $i<$count; $i++){
+            $this->assertEquals($b[$i]["qty"], $o[$i]["qty"]);
+            $this->assertEquals($b[$i]["user_id"], $o[$i]["user_id"]);
+            $this->assertEquals($b[$i]["product_id"], $o[$i]["product_id"]);        
+        }
+    }
+
+
+    private function setAddTwoProducts()
     {
         $price1 = 11200;
         $price2 = 32100;        
@@ -135,7 +230,25 @@ class ProductTest extends Base
 
         $id1 = $products[0]['id'];
         $id2 = $products[1]['id'];        
+
+        return ['id1' =>$id1, 'id2' =>$id2 ];
+    }
+      
+
+
+
+    /**
+     * it is not test admin
+     * it tests home/api/tobank
+     */
+    /** @test */
+    public function it_will_post_to_bank()
+    {
         //dd($products);
+
+        $ids = $this->setAddTwoProducts();
+        $id1 = $ids['id1'];
+        $id2 = $ids['id2'];        
 
 
         /*
@@ -169,7 +282,7 @@ class ProductTest extends Base
 
         $user = Auth::user();    
         $this->assertTrue(Auth::check()); //I dont understand why becayse we dont use this: //Auth::login($user);
-
+        
         $response = $this->post('home/api/tobank?token='.$token, ["cart" => $obj->cart] );
         $response->assertStatus(200);
         //dd( $response->getData() );
@@ -178,6 +291,24 @@ class ProductTest extends Base
         $this->assertTrue($res1->success);        
         $this->assertNotEmpty($res1->data);                
         //dd($res1->data);                        
+
+        $user = Auth::user();            
+        $objBaskets4 = Basket::inBasketByUserId($user->id);
+        $this->assertNotEmpty($objBaskets4);
+
+        $baskets4 = $objBaskets4->toArray();
+
+        //dump($baskets4);
+        //dump($obj->cart);
+        //dd('____00__');
+
+        $i = 0;
+        foreach($obj->cart as $cart ){
+            $this->assertEquals($baskets4[$i]['product_id'], $cart->id  );
+            $this->assertEquals($baskets4[$i]['qty'], $cart->qty  );            
+            $i++;
+        }
+
     }
 
 

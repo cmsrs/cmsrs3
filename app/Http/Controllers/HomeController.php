@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Product;
+use App\Basket;
+use App\Order;
 use App\Base;
 use App\Config;
 use App\Integration\Payu;
 use Illuminate\Support\Facades\Log;
 //use App;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -50,6 +53,10 @@ class HomeController extends Controller
 
     public function orders()
     {
+        $user = Auth::user();    
+        $objOrders = Order::inOrdersByUserId($user->id);        
+        //dump($objOrders->toArray() );
+
         return view('orders');
     }
 
@@ -65,7 +72,11 @@ class HomeController extends Controller
 
         $arrCart = Base::reIndexArr($data['cart']);        
 
-        $productsDataAndTotalAmount = Product::getDataToPayment( $arrCart );
+        $baskets = [];
+        $productsDataAndTotalAmount = Product::getDataToPayment( $arrCart, $baskets );
+
+        $user = Auth::user();    
+        Basket::deleteBasketAndAddNewData($user->id, $baskets);        
 
         $payu = new Payu;
         $data = $payu->dataToSend( $productsDataAndTotalAmount );  

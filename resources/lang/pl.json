@@ -24,5 +24,10 @@
     "Go to bank" : "Płatność",
     "Basket" : "Koszyk",    
     "Orders" : "Zamówienia",
-    "Log out" : "Wyloguj"
+    "Log out" : "Wyloguj",
+
+
+    "Thank you for purchasing products in our store." : "Dziękuję za zakup produktów w naszym sklepie.",
+    "Your:" : "Twoje:"
+
 }

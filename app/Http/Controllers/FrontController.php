@@ -9,6 +9,7 @@ use App\Page;
 use App\Product;
 use App\Menu;
 use App\Config;
+use App\Order;
 use Carbon\Carbon;
 use App;
 
@@ -90,10 +91,14 @@ class FrontController extends Controller
         }
         App::setLocale($lang);
 
+        //todo - http_reffer - i dont know how to obtain this value - it should be from payu
+        $isNewOrders = Order::moveDataFromBasketToOrderForUser();
+
         $page = Page::getMainPage();
         $this->validatePage($page);
 
         return view('index', [
+            'is_new_orders' => $isNewOrders,
             'menus' => $this->menus,
             'page' => $page,
             'page_title' => $page->translatesByColumnAndLang( 'title', $lang ) ?? config('app.name', 'cmsRS'),
