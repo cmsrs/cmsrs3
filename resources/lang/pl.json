@@ -28,6 +28,10 @@
 
 
     "Thank you for purchasing products in our store." : "Dziękuję za zakup produktów w naszym sklepie.",
-    "Your:" : "Twoje:"
+    "Your:" : "Twoje:",
+    "No orders" : "Brak zamówień",
+    "Your basket" : "Twój koszyk",
+    "Your completed orders" : "Twoje zrealizowane zamówienia"
+
 
 }

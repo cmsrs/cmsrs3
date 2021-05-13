@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+//use App\Base;
 use App\Page;
 use App\Basket;
 use App\Order;
@@ -33,6 +34,8 @@ class ProductTest extends Base
     const STR_DESC_IMG1 = 'description img1 - product image';
     const STR_PRODUCT_DESCRIPION_EN = 'book desc';
     const STR_PRODUCT_NAME_EN = 'php3 db app';    
+
+    const STR_PRODUCT_NAME_EN_1 = 'name11';
 
     public function setUp(): void
     {
@@ -203,10 +206,8 @@ class ProductTest extends Base
     }
 
 
-    private function setAddTwoProducts()
+    private function setAddTwoProducts($price1 = 11200, $price2 = 32100)
     {
-        $price1 = 11200;
-        $price2 = 32100;        
 
         $this->setTestData();
         //it must be 2 product in this test!!!
@@ -215,7 +216,7 @@ class ProductTest extends Base
 
         $testData1['sku'] = '11';
         $testData1['price'] = $price1;
-        $testData1['product_name']['en'] = 'name11';        
+        $testData1['product_name']['en'] =  self::STR_PRODUCT_NAME_EN_1;  // 'name11';        
         $r0 = $this->post('api/products?token=' . $this->token, $testData1);
         $this->assertTrue($r0->getData()->success);
         $testData2['sku'] = '22';
@@ -235,6 +236,88 @@ class ProductTest extends Base
     }
       
 
+
+    /**
+     * it is not test admin
+     * it tests home/api/tobank
+     */
+    /** @test */
+    public function it_will_get_products_and_total_amount()
+    {
+        //dd($products);
+
+        $price1 = 11200;
+        $price2 = 32100;        
+
+        $qty1 = 10;
+        $qty2 = 5;        
+
+                
+        $ids = $this->setAddTwoProducts($price1, $price2);
+        $id1 = $ids['id1'];
+        $id2 = $ids['id2'];        
+
+
+
+        /*
+        name and price is not important in this post
+        */        
+        $json = 
+        '{
+            "cart": [
+                {
+                    "id": '.$id1.',
+                    "name": "PHP3 aplikacje bazodanowe - xxxxxxxxxxxxxxxxxxxxxxxyyyyyyyyyyyyyy",
+                    "price": 119999999999999999999,
+                    "qty": '.$qty1.'
+                },
+                {
+                    "id": '.$id2.',
+                    "name": "PHP5 nott imporstentttttttttttt",
+                    "price": 30999999999999,
+                    "qty": '.$qty2.'
+                }
+            ]
+        }';
+
+        $obj = json_decode($json);
+        $this->assertEquals(2, count($obj->cart));
+
+        $arrCart = \App\Base::reIndexArr($obj->cart);        
+
+        //dd($arrCart);
+        //dd('________ffff_____');        
+
+        $baskets = [];
+        $orders = '';
+        $data  = Product::getDataToPayment( $arrCart, $baskets, $orders );
+        $this->assertEquals(2, count($baskets));        
+        $this->assertEmpty( $orders );
+
+
+        $this->assertEquals(2, count($data['products']));
+        $this->assertEquals(  ($price1 * $qty1 + $price2 * $qty2) , $data['totalAmount']);
+
+
+        $this->assertNotEmpty( $data['products'][0]['name'] );
+        $this->assertEquals( self::STR_PRODUCT_NAME_EN_1, $data['products'][0]['name'] );
+        $this->assertEquals( $qty1, $data['products'][0]['quantity'] );        
+        $this->assertEquals( $price1, $data['products'][0]['unitPrice'] );                
+
+        $this->assertNotEmpty( $data['products'][1]['name'] );
+        $this->assertEquals( $qty2, $data['products'][1]['quantity'] );        
+        $this->assertEquals( $price2, $data['products'][1]['unitPrice'] );                
+
+        $baskets2 = false;
+        $orders2 = [];
+        Product::getDataToPayment( $arrCart, $baskets2, $orders2);
+        $this->assertEmpty( $baskets2 );
+        $this->assertEquals(2, count($orders2));
+        foreach($orders2 as $order2){
+            $this->assertNotEmpty( $order2['product_url'] );
+            $this->assertNotEmpty( $order2['product_img'] );
+        }
+    }
 
 
     /**

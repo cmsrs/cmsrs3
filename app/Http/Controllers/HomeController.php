@@ -47,17 +47,28 @@ class HomeController extends Controller
         $token = User::getTokenForClient();
 
         return view('basket', [
-            'token' => $token
+            'token' => $token,
+            //'tab' => 'basket'
         ]);
     }
 
     public function orders()
     {
         $user = Auth::user();    
-        $objOrders = Order::inOrdersByUserId($user->id);        
-        //dump($objOrders->toArray() );
+        $arrOrders = Order::inOrdersByUserId($user->id)->toArray();        
+        $orders = [];
+        if( !empty($arrOrders) ){
+            $arrOrdersReindex = Base::reIndexArr($arrOrders, 'product_id');
+            $baskets = false;
+            Product::getDataToPayment( $arrOrdersReindex, $baskets, $orders);    
+        }
 
-        return view('orders');
+        //$orders = [];
+
+        return view('orders', [
+            'orders' => $orders,
+            //'tab' => 'order'
+        ]);
     }
 
     public function tobank(Request $request)
@@ -69,6 +80,12 @@ class HomeController extends Controller
         if( empty($data['cart']) || !is_array($data['cart']) ){
             throw new \Exception("Wrong data from post");            
         }
+
+        $demoStatus = env('DEMO_STATUS', false);
+        if( $demoStatus ){
+            return response()->json(['success'=> false, 'error'=> 'No access (set DEMO_STATUS on false)'], 200); 
+        }
+
 
         $arrCart = Base::reIndexArr($data['cart']);        
 
@@ -82,7 +99,6 @@ class HomeController extends Controller
         $data = $payu->dataToSend( $productsDataAndTotalAmount );  
 
         Log::debug(' data sended to payu: '.var_export($data, true ) );        
-        //dd($data);
 
         $redirectUri = $payu->getOrder($data);
         if( empty($redirectUri) ){

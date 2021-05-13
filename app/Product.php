@@ -62,9 +62,9 @@ class Product extends Model
         ];  
     }
 
-    static private function getDefaultProductName($productTranslates)
+    static private function getDefaultProductName($productTranslates, $lang)
     {
-        $lang = Config::getDefaultLang();
+        //$lang = Config::getDefaultLang();
 
         $defaultProductName = '';
 
@@ -81,7 +81,13 @@ class Product extends Model
         return $defaultProductName;
     }
 
-    static public function getDataToPayment( $arrCart, &$baskets )
+
+    /**
+     * this function is similar to: getDataToPayment
+     * 
+     */
+    /*
+    static public function getDataToOrders( $arrCart )
     {
         $user = Auth::user();
         if( empty($user) ){
@@ -108,6 +114,64 @@ class Product extends Model
             ];
 
             $totalAmount += $arrProduct['price'] * $itemIn['qty'];
+        }
+        $out['totalAmount'] =  $totalAmount;
+
+        return  $out;
+    }
+    */
+
+
+    static public function getDataToPayment( $arrCart, &$baskets, &$orders = false )
+    {
+        $user = Auth::user();
+        if( empty($user) ){
+            throw new \Exception("User not auth - this exception is impossible");
+        }
+
+        $ids = array_keys($arrCart);
+        $arrProducts = Product::with(['translates'])->whereIn('id', $ids)->orderBy('id', 'asc')->get(); //->toArray();
+    
+        $out = [];
+        $totalAmount = 0;
+        $lang = Config::getDefaultLang();
+        foreach($arrProducts as $product){
+
+            $itemIn = $arrCart[$product->id];
+            if( empty($itemIn['qty']) ){
+                throw new \Exception("qty empty - something wrong");
+            }
+
+            $productName = Product::getDefaultProductName( $product->translates, $lang );
+            $qty = $itemIn['qty'];            
+
+            $out["products"][] = [
+                "name" =>  $productName,
+                "unitPrice" => $product->price,
+                "quantity" => $qty
+            ];
+
+            if( is_array($baskets) ){
+                $baskets[] = [
+                    "qty" => $qty,
+                    "user_id" => $user->id,
+                    "product_id" => $product->id
+                ];
+            }
+
+            if( is_array($orders) ){
+                $productImage = Image::getImagesAndThumbsByTypeAndRefId('product', $product->id)->toArray();
+                $orders[] = [
+                    "name" =>  $productName,
+                    "unitPrice" => $product->price,
+                    "qty" => $qty,
+                    "product_id" => $product->id,
+                    "product_url" => $product->getProductUrl($lang, $productName),
+                    "product_img" =>  empty($productImage[0]) ? '' : $productImage[0]['fs']['small']
+                ];
+            }
+
+            $totalAmount += $product->price * $qty;
         }
         $out['totalAmount'] =  $totalAmount;
 

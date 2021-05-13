@@ -3,6 +3,11 @@
 
 @if( $page->translatesByColumnAndLang( 'content', $lang ) )
   @if( $is_new_orders )
+    <script>
+      //alert('new order');
+      localStorage.clear();
+    </script>
+
     <div class="container">
       <div class="alert alert-success text-center" role="alert">
       {{ __('Thank you for purchasing products in our store.') }}
@@ -13,5 +18,7 @@
   @endif  
   {!! $page->translatesByColumnAndLang( 'content', $lang ) !!}
 @endif
+
+
 
 @stop

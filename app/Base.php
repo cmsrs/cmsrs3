@@ -92,16 +92,16 @@ class Base extends Model
         }
     }
 
-    public static function reIndexArr($arr)
+    public static function reIndexArr($arr, $key = 'id')
     {
         $out = [];
         foreach($arr as $item){
             $arrItem = (array) $item;
-            if( empty($arrItem['id']) ){
+            if( empty($arrItem[$key]) ){
                 throw new \Exception("not found key id in arr");
             }
 
-            $out[$arrItem['id']] = $arrItem; 
+            $out[$arrItem[$key]] = $arrItem; 
         }
         return $out;
     }
