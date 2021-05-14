@@ -29,11 +29,18 @@ class Order extends Model
 
         if($objBaskets->count()){
             foreach($objBaskets as $objBasket){
-                $objOrder = new Order;
-                $objOrder->qty = $objBasket->qty;
-                $objOrder->user_id = $objBasket->user_id;
-                $objOrder->product_id = $objBasket->product_id;    
-                $objOrder->save();
+                $objOrder = Order::where('user_id', '=', $objBasket->user_id)->where('product_id', '=', $objBasket->product_id)->first();
+
+                if( empty($objOrder) ){
+                    $objOrder = new Order;
+                    $objOrder->qty = $objBasket->qty;
+                    $objOrder->user_id = $objBasket->user_id;
+                    $objOrder->product_id = $objBasket->product_id;        
+                }else{
+                    $objOrder->qty = $objOrder->qty + $objBasket->qty;
+                }
+
+                $objOrder->save();                
                 $objBasket->delete();
             }
             return true;

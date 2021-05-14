@@ -206,6 +206,99 @@ class ProductTest extends Base
     }
 
 
+
+    /**
+     * it is not test admin
+     */
+    /** @test */
+    public function it_will_save_two_times_to_order()
+    {
+        $ids = $this->setAddTwoProducts();
+        $id1 = $ids['id1'];
+        $id2 = $ids['id2'];        
+
+        $user = Auth::user();    
+
+        $qty0a = 10;
+        $baskets = [
+            0 => [
+              "qty" => $qty0a,
+              "user_id" => $user->id,
+              "product_id" => $id1
+            ],
+            // 1 => [
+            //   "qty" => 5,
+            //   "user_id" => $user->id,
+            //   "product_id" => $id2
+            // ]
+        ];
+
+        //first time
+        Basket::deleteBasketAndAddNewData($user->id, $baskets);        
+        $objBaskets4 = Basket::inBasketByUserId($user->id);
+        $this->assertNotEmpty($objBaskets4);
+
+        $isNewOrders2 = Order::moveDataFromBasketToOrderForUser();
+        $this->assertTrue($isNewOrders2);        
+
+        $objBaskets5 = Basket::inBasketByUserId($user->id);
+        $this->assertEmpty($objBaskets5);
+
+        $objOrders2 = Order::inOrdersByUserId($user->id);
+        $this->assertNotEmpty($objOrders2);
+
+        $b = $objBaskets4->toArray();
+        $o = $objOrders2->toArray();
+
+        $count = 1;
+        $this->assertEquals($count, count($b));
+        $this->assertEquals($count, count($o));
+
+        for($i =0; $i<$count; $i++){
+            $this->assertEquals($b[$i]["qty"], $o[$i]["qty"]);
+            $this->assertEquals($b[$i]["user_id"], $o[$i]["user_id"]);
+            $this->assertEquals($b[$i]["product_id"], $o[$i]["product_id"]);        
+        }
+
+        //second time
+        $qty0b = 22;        
+        $qty1 = 7;
+        $baskets[0]['qty'] = $qty0b;
+        $baskets[1] = [
+              "qty" => $qty1,
+              "user_id" => $user->id,
+              "product_id" => $id2
+        ];
+
+        Basket::deleteBasketAndAddNewData($user->id, $baskets);        
+        $objBaskets4 = Basket::inBasketByUserId($user->id);
+        $this->assertNotEmpty($objBaskets4);
+
+        $isNewOrders2 = Order::moveDataFromBasketToOrderForUser();
+        $this->assertTrue($isNewOrders2);        
+
+        $objBaskets5 = Basket::inBasketByUserId($user->id);
+        $this->assertEmpty($objBaskets5);
+
+        $objOrders2 = Order::inOrdersByUserId($user->id);
+        $this->assertNotEmpty($objOrders2);
+
+        $b2 = $objBaskets4->toArray();
+        $o2 = $objOrders2->toArray();
+
+        $count = 2;
+        $this->assertEquals($count, count($b2));
+        $this->assertEquals($count, count($o2));
+
+        $this->assertEquals($qty0a + $qty0b, $o2[0]["qty"]);
+        $this->assertEquals($user->id, $o2[0]["user_id"]);
+        $this->assertEquals($id1, $o2[0]["product_id"]);        
+
+        $this->assertEquals($qty1, $o2[1]["qty"]);
+        $this->assertEquals($user->id, $o2[1]["user_id"]);
+        $this->assertEquals($id2, $o2[1]["product_id"]);        
+    }
+
     private function setAddTwoProducts($price1 = 11200, $price2 = 32100)
     {
 
