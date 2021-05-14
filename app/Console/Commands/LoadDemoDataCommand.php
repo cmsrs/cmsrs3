@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Page;
+use App\Order;
 use App\Menu;
 use App\User;
 use App\Comment;
@@ -78,7 +79,7 @@ class LoadDemoDataCommand extends Command
         /*--- products --------*/
         /*---------------------*/
 
-        $objDemoData->product($p);
+        $products = $objDemoData->product($p);
 
         /*---------------------*/
         /*--- contacts --------*/
@@ -99,12 +100,32 @@ class LoadDemoDataCommand extends Command
         // $user->password = 'cmsrs123';
         // $user->save();
 
+        $emailClient = 'client@cmsrs.pl';
         $user2 = new User([
-            'email'    => 'client@cmsrs.pl',
+            'email'    => $emailClient,
             'name'     => 'client',
             'role' => User::$role['client']
         ]);
         $user2->password = 'cmsrs456';
         $user2->save();
+
+        /*---------------------*/
+        /* ---orders-----------*/
+        /*---------------------*/
+        $uu =  User::where('email', '=', $emailClient)->first();
+        $order1 = [
+            'qty' => 2,
+            'user_id' => $uu->id, 
+            'product_id' =>  $products[0]->id
+        ];
+
+        $order2 = [
+            'qty' => 7,
+            'user_id' => $uu->id, 
+            'product_id' =>  $products[2]->id
+        ];
+
+        Order::create($order1);
+        Order::create($order2);
     }
 }

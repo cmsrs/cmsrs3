@@ -411,12 +411,14 @@ class Demo
             'images' =>  $images['product4']
         ];
 
-        $this->getProductObj()->wrapCreate($products['product1']);
-        $this->getProductObj()->wrapCreate($products['product2']);
-        $this->getProductObj()->wrapCreate($products['product3']);
-        $this->getProductObj()->wrapCreate($products['product4']);
+        $out = [];
+        $out[] = $this->getProductObj()->wrapCreate($products['product1']);
+        $out[] = $this->getProductObj()->wrapCreate($products['product2']);
+        $out[] = $this->getProductObj()->wrapCreate($products['product3']);
+        $out[] = $this->getProductObj()->wrapCreate($products['product4']);
 
-        return $products;
+        return $out;
+        //return $products;
     }
 
     private function getTestPhoto($imgPath)
