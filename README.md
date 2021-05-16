@@ -134,7 +134,7 @@ CACHE_ENABLE=true
 * payu integration:
 
 ```bash
-# PAYU_URL=https://merch-prod.snd.payu.com #sandbox
+#https://merch-prod.snd.payu.com - sandbox
 PAYU_URL=https://merch-prod.snd.payu.com
 PAYU_POS_ID=123
 PAYU_MD5=xxx
