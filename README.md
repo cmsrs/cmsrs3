@@ -131,7 +131,7 @@ GOOGLE_RECAPTCHA_PUBLIC
 CACHE_ENABLE=true
 ```
 
-* payu integration:
+* PayU integration:
 
 ```bash
 #https://merch-prod.snd.payu.com - sandbox
