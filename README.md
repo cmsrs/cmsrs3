@@ -131,6 +131,17 @@ GOOGLE_RECAPTCHA_PUBLIC
 CACHE_ENABLE=true
 ```
 
+* payu integration:
+
+```bash
+# PAYU_URL=https://merch-prod.snd.payu.com #sandbox
+PAYU_URL=https://merch-prod.snd.payu.com
+PAYU_POS_ID=123
+PAYU_MD5=xxx
+PAYU_CLIENT_ID=123
+PAYU_CLIENT_SECRET=zzz
+```
+
 # TROUBLESHOOTING
 
 * logs:

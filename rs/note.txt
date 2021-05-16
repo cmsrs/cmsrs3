@@ -11,6 +11,10 @@ czyli pierwszy ustawiony w konfigu
 to utworzy sie orders! ( nie wiem jak zrobic dodatkowa walidacje - http_refferer? - z payu musi byc wejscie)
 moze trzeba ustawic w payu dodatkowe api dot. czy platnosc zostala zrealizowana
 
+new future:
+- w panelu adm. moznabyloby zrobic zestawienie orderow jakie wykonal dany uzytkownik
+
+
 
 
 
