@@ -4,9 +4,12 @@ Bug
 -(na pierwszy rzut okla to nie wyglada jak blad - aktualnie bierze defaultowy lang z plki konf - pierwsza wartosc)  
 Problem z sesia odczytujaca wartosc lang z sessi
 zmiana jezykow z panelu klienta (brak obslugi sessi w panelu klienta) - jesli zmeiniam jezyk na stronie frontowej w panelu zawsze pozostaje jezyk defaultowy
+czyli pierwszy ustawiony w konfigu
+
 
 - !!!!!!!!blad krytyczny!!!!!! - jak ktos zlozy zamownienie wejdzie na payu - ale zrezygnuje (zalozy sie rekord w basket), a pozniej wejdzie na strone glowna 
 to utworzy sie orders! ( nie wiem jak zrobic dodatkowa walidacje - http_refferer? - z payu musi byc wejscie)
+moze trzeba ustawic w payu dodatkowe api dot. czy platnosc zostala zrealizowana
 
 
 
