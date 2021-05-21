@@ -164,7 +164,7 @@ class Demo
                     <br>
 
                     <br>
-                    More information: <a title='cmsRS' href='http://www.cmsrs.pl' >http://www.cmsrs.pl</a>
+                    More information: <a title='cmsRS' href='https://www.cmsrs.pl' >https://www.cmsrs.pl</a>
                 </p>
             </div>
             ", "pl" => "
@@ -190,7 +190,7 @@ class Demo
 
 
                     <br>
-                    Więcej informacji: <a title='cmsRS' href='http://www.cmsrs.pl' >http://www.cmsrs.pl</a>
+                    Więcej informacji: <a title='cmsRS' href='https://www.cmsrs.pl' >https://www.cmsrs.pl</a>
                 </p>
             </div>
             " ],
