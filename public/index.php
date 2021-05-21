@@ -2,7 +2,7 @@
 
 //I dont't want do this in .htaccess because i have problem with my open source version 
 if( 'cmsrs.pl' ==  strtolower(  $_SERVER['SERVER_NAME'])  ){
-    header('Location: http://www.cmsrs.pl'.$_SERVER["REQUEST_URI"]); exit();
+    header('Location: https://www.cmsrs.pl'.$_SERVER["REQUEST_URI"]); exit();
 }
 
 

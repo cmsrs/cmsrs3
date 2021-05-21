@@ -116,6 +116,10 @@
 #--------------------------
 
 
+  # Added to Force HTTPS - delete this lines if you have not got https
+  RewriteCond %{HTTP_HOST} ^(www\.)?cmsrs\.pl [NC]
+  RewriteCond %{SERVER_PORT} 80
+  RewriteRule ^(.*)$ https://www.cmsrs.pl/$1 [R,L]
 
 
     # Handle Authorization Header
