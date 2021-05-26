@@ -5,12 +5,21 @@
    @includeIf('includes.mysite')
 </head>
 <body>
-@include('includes.header')
 
+   <div id="appall" >
+      <div id="page_id" data-page-id="{{$page->id}}"></div>  
+      <div id="lang" data-lang="{{$lang}}"></div>    
 
-<main role="main" class="pt-5 mb-5">
-@yield('content')
-</main><!-- /.container -->
+      @include('includes.header')
+
+      <main role="main" class="pt-5 mb-5">
+      @yield('content')
+      </main><!-- /.container -->
+   </div>
+
+<script type="application/javascript" src="/js/lib/vue.js"></script>
+<script type="application/javascript" src="/js/lib/axios.js"></script>
+<script type="application/javascript" src="/js/cmsrs.js"></script>  
 
 
 @include('includes.footer')

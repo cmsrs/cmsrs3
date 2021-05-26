@@ -5,8 +5,6 @@
 
   <div id="app">
 
-  <div id="page_id" data-page-id="{{$page->id}}"></div>  
-  <div id="lang" data-lang="{{$lang}}"></div>    
 
       <div class="container">
         <div class="row">
@@ -96,8 +94,11 @@
 
   </div> <!-- div app -->  
   
+<!--  
   <script src="/js/lib/vue.js"></script>
   <script src="/js/lib/axios.js"></script>
   <script src="/js/shop.js"></script>  
+-->  
+
 
 @stop

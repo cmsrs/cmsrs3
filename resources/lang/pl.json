@@ -32,7 +32,8 @@
     "No orders" : "Brak zamówień",
     "Your basket" : "Twój koszyk",
     "Your completed orders" : "Twoje zrealizowane zamówienia",
-    "ORDERS" : "ZAMÓWIENIA"
+    "ORDERS" : "ZAMÓWIENIA",
+    "There are no products in the cart" : "Brak produktów w koszyku"
 
 
 }

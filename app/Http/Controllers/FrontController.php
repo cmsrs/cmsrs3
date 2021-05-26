@@ -104,7 +104,8 @@ class FrontController extends Controller
             'page_title' => $page->translatesByColumnAndLang( 'title', $lang ) ?? config('app.name', 'cmsRS'),
             'seo_description' =>  $page->translatesByColumnAndLang( 'description', $lang ) ?? config('app.name', 'cmsRS'),
             'lang' => $lang,
-            'langs' => $this->langs
+            'langs' => $this->langs,
+            'view' => 'index'
         ]);
     }
 

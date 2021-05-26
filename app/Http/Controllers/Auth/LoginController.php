@@ -58,6 +58,7 @@ class LoginController extends Controller
         //$footerPages = Page::getFooterPages($lang);
 
         $data = [ 
+            'view' => 'login',
             'menus' => $this->menus,  
             'page' => $page, 
             'lang' => $lang, 

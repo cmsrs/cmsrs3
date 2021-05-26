@@ -25,10 +25,13 @@
 </div>      
 
 
+<!--
 <script>
     var imagesGlobal = JSON.parse('<?php echo json_encode($page->arrImages($lang)) ?>');    
 </script>
+-->
+<!--
 <script src="/js/gallery.js"></script>
-
+-->
 
 @stop

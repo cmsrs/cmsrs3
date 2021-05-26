@@ -5,8 +5,6 @@
 
   <div id="app">
 
-  <div id="page_id" data-page-id="{{$page->id}}"></div>  
-  <div id="lang" data-lang="{{$lang}}"></div>    
   @if ( $page->type  === 'cms')
 
       @if( $page->images)
@@ -69,16 +67,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>      
   -->
 
-  
+<!--  
   <script src="/js/lib/vue.js"></script>
   <script src="/js/lib/axios.js"></script>
   <script src="/js/cmsrs.js"></script>
+-->  
 
-  @if( ($page->type == 'contact') &&  $re_public )
-    <script src="https://www.google.com/recaptcha/api.js?render={{ $re_public }}"></script>
-    <script>
-        var rePublic = '{{ $re_public }}';
-    </script>
-  @endif      
   
 @stop
