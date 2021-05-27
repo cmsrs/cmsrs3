@@ -146,7 +146,15 @@ class Demo
                 'product1' =>   $this->imgUnit1(),
                 'product2' =>   $this->imgUnit2(),
                 'product3' =>   $this->imgUnit2(),
-                'product4' =>   $this->imgUnit2()
+                'product4' =>   $this->imgUnit2(),
+                'product5' =>   $this->imgUnit2(),
+                'product6' =>   $this->imgUnit2(),
+                'product7' =>   $this->imgUnit2(),
+                'product8' =>   $this->imgUnit2(),
+                'product9' =>   $this->imgUnit2(),
+                'product10' =>   $this->imgUnit2(),
+                'product11' =>   $this->imgUnit2(),
+                'product12' =>   $this->imgUnit2(),                                                                                                                                
             ];
         }            
 
@@ -391,7 +399,7 @@ class Demo
             'content' => [ "en" =>$this->getDummyTest(),  "pl" =>$this->getDummyTestPl()],
             'menu_id' => $m4->id
         ];
-        $p['p9'] = $this->getPageObj()->wrapCreate($dataM4b);        
+        $p['p8c'] = $this->getPageObj()->wrapCreate($dataM4b);        
 
 
 
@@ -409,7 +417,7 @@ class Demo
             'images' => [
             ]
         ];
-        $p['p8'] =  $this->getPageObj()->wrapCreate($pContact);
+        $p['pContact'] =  $this->getPageObj()->wrapCreate($pContact);
 
 
         $pPrivacy = [
