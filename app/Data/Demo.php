@@ -109,7 +109,37 @@ class Demo
                 'product4' =>   [
                     ['name' => 'english.jpg', 'data' => $this->getTestPhoto('books/english.jpg'), 'alt' => [ "en" =>'english front', "pl" =>'english front' ]],
                     ['name' => 'english_back.jpg', 'data' => $this->getTestPhoto('books/english_back.jpg'), 'alt' => [ "en" =>'english back', "pl" =>'english back' ]]
-                ]
+                ],
+
+
+                'product5' =>   [
+                    ['name' => 'eng1.jpg', 'data' => $this->getTestPhoto('books/eng1.jpg'), 'alt' => [ "en" =>'english1 front', "pl" =>'english1 front' ]]
+                ],
+                'product6' =>   [
+                    ['name' => 'eng2.jpg', 'data' => $this->getTestPhoto('books/eng2.jpg'), 'alt' => [ "en" =>'english2 front', "pl" =>'english2 front' ]]            
+                ],
+                'product7' =>   [
+                    ['name' => 'eng3.jpg', 'data' => $this->getTestPhoto('books/eng3.jpg'), 'alt' => [ "en" =>'english3 front', "pl" =>'english3 front' ]]
+                ],
+                'product8' =>   [
+                    ['name' => 'eng4.jpg', 'data' => $this->getTestPhoto('books/eng4.jpg'), 'alt' => [ "en" =>'english4 front', "pl" =>'english4 front' ]]
+                ],
+                'product9' =>   [
+                    ['name' => 'eng5.jpg', 'data' => $this->getTestPhoto('books/eng5.jpg'), 'alt' => [ "en" =>'english5 front', "pl" =>'english5 front' ]]
+                ],
+
+                'product10' =>   [
+                    ['name' => 'eng5.jpg', 'data' => $this->getTestPhoto('books/php5_frameworks.jpg'), 'alt' => [ "en" =>'php5 frameworks', "pl" =>'php5 frameworks' ]]
+                ],
+
+                'product11' =>   [
+                    ['name' => 'pm.jpg', 'data' => $this->getTestPhoto('books/pm.jpg'), 'alt' => [ "en" =>'programme manager', "pl" =>'kierownik programistów' ]]
+                ],
+
+                'product12' =>   [
+                    ['name' => 'sox.jpg', 'data' => $this->getTestPhoto('clothes/sox.jpg'), 'alt' => [ "en" =>'sox', "pl" =>'skarpety' ]]
+                ],
+
             ];
         } else {
             $out = [
@@ -271,15 +301,15 @@ class Demo
         ];
         $p['p44'] = $this->getPageObj()->wrapCreate($data44p);
 
-        $m3 = $this->getMenuObj()->wrapCreate(['name' => ["en" => 'Shop', "pl" => "Sklep" ] ]);
+        $m3 = $this->getMenuObj()->wrapCreate(['name' => ["en" => 'Books', "pl" => "Książki" ] ]);
         $data4p = [
             'title'     => [ "en" =>'IT books', "pl" => "Książki IT" ],
             'short_title' => [ "en" =>'IT books', "pl" => "Książki IT" ],
             'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla' ],
             'published' => 1,
             'commented' => 0,
-            'type' => 'cms',
-            'content' => [ "en" =>$this->getDummyTest(),  "pl" =>$this->getDummyTestPl()],
+            'type' => 'shop',
+            //'content' => [ "en" =>$this->getDummyTest(),  "pl" =>$this->getDummyTestPl()],
             'menu_id' => $m3->id
         ];
         $p['p4'] = $this->getPageObj()->wrapCreate($data4p);
@@ -321,6 +351,48 @@ class Demo
             'menu_id' => $m3->id
         ];
         $p['p7'] = $this->getPageObj()->wrapCreate($data7p);
+
+        $m4 = $this->getMenuObj()->wrapCreate(['name' => ["en" => 'Clothes', "pl" => "Ubrania" ] ]);
+        $dataM4a = [
+            'title'     => [ "en" =>'Man', "pl" => "Mężczyzna" ],
+            'short_title' => [ "en" =>'Man', "pl" => "Mężczyzna" ],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla' ],
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'cms',
+            'content' => [ "en" =>$this->getDummyTest(),  "pl" =>$this->getDummyTestPl()],
+            'menu_id' => $m4->id
+        ];
+        //kobieta
+        //woman 
+        $p['p8'] = $this->getPageObj()->wrapCreate($dataM4a);        
+
+
+        $data8p = [
+            'title'     => [ "en" =>'Sox', "pl" =>'Skarpery' ],
+            'short_title' => [ "en" =>'Sox', "pl" =>'Skarpery'   ],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla' ],
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'shop',
+            'content' => '',
+            'page_id' => $p['p8']->id,
+            'menu_id' => $m4->id
+        ];
+        $p['p8b'] = $this->getPageObj()->wrapCreate($data8p);
+
+        $dataM4b = [
+            'title'     => [ "en" =>'Woman', "pl" => "Kobieta" ],
+            'short_title' => [ "en" =>'Woman', "pl" => "Kobieta" ],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla' ],
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'cms',
+            'content' => [ "en" =>$this->getDummyTest(),  "pl" =>$this->getDummyTestPl()],
+            'menu_id' => $m4->id
+        ];
+        $p['p9'] = $this->getPageObj()->wrapCreate($dataM4b);        
+
 
 
         $mContact = $this->getMenuObj()->wrapCreate(['name' => ["en"  => 'Contact me', "pl"=> "Kontakt"] ]);
@@ -411,11 +483,101 @@ class Demo
             'images' =>  $images['product4']
         ];
 
+        $products['product5'] = [
+            'product_name' => [  'en' => 'eng1',  'pl' => 'ang1'] ,
+            'sku' => 'A/1',
+            'price' => 1100,
+            'published' => 1,            
+            'product_description' => [  'en' => 'English book', 'pl' => 'Ksiązka do nauki angielskiego' ],
+            'page_id' => $p['p7']->id,
+            'images' =>  $images['product5']
+        ];
+
+        $products['product6'] = [
+            'product_name' => [  'en' => 'eng2',  'pl' => 'ang2'] ,
+            'sku' => 'A/2',
+            'price' => 2200,
+            'published' => 1,            
+            'product_description' => [  'en' => 'English book', 'pl' => 'Ksiązka do nauki angielskiego' ],
+            'page_id' => $p['p7']->id,
+            'images' =>  $images['product6']
+        ];
+        $products['product7'] = [
+            'product_name' => [  'en' => 'eng3',  'pl' => 'ang3'] ,
+            'sku' => 'A/3',
+            'price' => 3300,
+            'published' => 1,            
+            'product_description' => [  'en' => 'English book', 'pl' => 'Ksiązka do nauki angielskiego' ],
+            'page_id' => $p['p7']->id,
+            'images' =>  $images['product7']
+        ];
+        $products['product8'] = [
+            'product_name' => [  'en' => 'eng4',  'pl' => 'ang4'] ,
+            'sku' => 'A/4',
+            'price' => 4400,
+            'published' => 1,            
+            'product_description' => [  'en' => 'English book', 'pl' => 'Ksiązka do nauki angielskiego' ],
+            'page_id' => $p['p7']->id,
+            'images' =>  $images['product8']
+        ];
+        $products['product9'] = [
+            'product_name' => [  'en' => 'eng5',  'pl' => 'ang5'] ,
+            'sku' => 'A/5',
+            'price' => 5500,
+            'published' => 1,            
+            'product_description' => [  'en' => 'English book', 'pl' => 'Ksiązka do nauki angielskiego' ],
+            'page_id' => $p['p7']->id,
+            'images' =>  $images['product9']
+        ];
+
+
+        $products['product10'] = [
+            'product_name' => [ 'en' => 'PHP5 frameworks','pl' => 'PHP5 frameworks' ],
+            'sku' => '1/234/778',
+            'price' => 56000,
+            'published' => 1,            
+            'product_description' =>  [ 'en' => 'Php5 book frameworks', 'pl' =>  'Ksiazka o PHP5 frameworks' ],
+            'page_id' => $p['p5']->id,
+            'images' =>  $images['product10']
+        ];
+
+        $products['product11'] = [
+            'product_name' => [ 'en' => 'programme managers','pl' => 'kierownik programistów' ],
+            'sku' => '1/234/18',
+            'price' => 5700,
+            'published' => 1,            
+            'product_description' =>  [ 'en' => 'programme managers', 'pl' =>  'kierownik programistów' ],
+            'page_id' => $p['p4']->id, //$p['p4']
+            'images' =>  $images['product11']
+        ];
+
+        $products['product12'] = [
+            'product_name' => [ 'en' => 'sox','pl' => 'skarpety' ],
+            'sku' => '1/234/100',
+            'price' => 500,
+            'published' => 1,            
+            'product_description' =>  [ 'en' => 'sox', 'pl' =>  'skarpety' ],
+            'page_id' => $p['p8b']->id, //$p['p4']
+            'images' =>  $images['product12']
+        ];
+
+
+
         $out = [];
         $out[] = $this->getProductObj()->wrapCreate($products['product1']);
         $out[] = $this->getProductObj()->wrapCreate($products['product2']);
         $out[] = $this->getProductObj()->wrapCreate($products['product3']);
         $out[] = $this->getProductObj()->wrapCreate($products['product4']);
+
+        $out[] = $this->getProductObj()->wrapCreate($products['product5']);
+        $out[] = $this->getProductObj()->wrapCreate($products['product6']);
+        $out[] = $this->getProductObj()->wrapCreate($products['product7']);
+        $out[] = $this->getProductObj()->wrapCreate($products['product8']);                                
+        $out[] = $this->getProductObj()->wrapCreate($products['product9']);                                        
+
+        $out[] = $this->getProductObj()->wrapCreate($products['product10']);
+        $out[] = $this->getProductObj()->wrapCreate($products['product11']);
+        $out[] = $this->getProductObj()->wrapCreate($products['product12']);        
 
         return $out;
         //return $products;
