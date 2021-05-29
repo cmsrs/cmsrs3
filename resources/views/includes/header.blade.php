@@ -48,8 +48,8 @@
       <ul class="nav navbar-nav ml-auto" >
       <?php if(  env('IS_SHOP', false) ){ ?>
         <li class="nav-item mr-4 cursor-pointer" v-on:click="toglebasket()">
-          <i style="font-size:40px;color:red" class="fa">&#xf07a;</i>
-          @{{ cart_length ? cart_length : '' }}        
+          <i style="font-size:40px;color:#ff5050" class="fa">&#xf07a;</i>
+          <span style="color:#ff5050">@{{ cart_length ? cart_length : '' }}</span>
         </li>
         
         <div class="p-4 mr-3" id="appbasket" style="display: none" >
