@@ -2,6 +2,7 @@
 <?php $bg = env('DEMO_STATUS') ?  'bg-dark' : 'bg-secondary'; ?>
 <?php //$bg = 'bg-secondary'; ?>
 <?php $pLogin = App\Page::getFirstPageByType('login');  ?>
+<?php $pRegister = App\Page::getFirstPageByType('register');  ?>
 <?php 
   $mainPage = App\Page::getFirstPageByType('main_page');  
   $urlMainPage = '/';
@@ -79,8 +80,8 @@
                   <a class="nav-link" href="{{ $pLogin->getUrl($lang) }}">{{ $pLogin->translatesByColumnAndLang( 'short_title', $lang ) }}</a>
               </li>
               @if (Route::has('register'))
-                  <li class="nav-item">
-                      <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                  <li class="nav-item  {{$loginStyle}}">
+                      <a class="nav-link" href="{{ $pRegister->getUrl($lang) }}">{{ $pRegister->translatesByColumnAndLang( 'short_title', $lang ) }}</a>
                   </li>
               @endif
         @else

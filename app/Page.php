@@ -270,6 +270,10 @@ class Page extends Base
             $view = 'gallery';
         } elseif ($this->type == 'shop') {
             $view = 'shop';
+        } elseif ($this->type == 'checkout') {
+            $view = 'checkout';
+        } elseif ($this->type == 'register') {
+            $view = 'register';
         } else {
             $view = 'cms';
         }
@@ -280,7 +284,7 @@ class Page extends Base
     {        
         if ('main_page' == $this->type) {
             return $this->getMainUrl($lang);
-        } elseif ('login' == $this->type) {
+        } elseif ( ('login' == $this->type) || ('checkout' == $this->type) || ('register' == $this->type) ) {
             return $this->getTypeUrl($lang);
         } 
         //elseif ('privacy_policy' == $this->type) {

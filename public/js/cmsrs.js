@@ -24,16 +24,18 @@ new Vue({
         created() {             
                 let self = this;
                 const el = document.querySelector('#page_id');
-                this.page_id = el.dataset.pageId;
+                this.page_id = el ? el.dataset.pageId : '';
 
                 const el2 = document.querySelector('#lang');
-                this.lang = el2.dataset.lang;
+                this.lang = el2 ? el2.dataset.lang : '';
 
                 //-----comments----
                 //TODO - no comments in page
-                axios.get('/api/comments/'+this.page_id).then( function (response){
-                        self.comments = response.data.data;
-                });
+                if(this.page_id){
+                        axios.get('/api/comments/'+this.page_id).then( function (response){
+                                self.comments = response.data.data;
+                        });        
+                }
 
                 //---gallery---
                 // axios.get('/api/page/'+this.page_id+'/'+this.lang).then( function (response){

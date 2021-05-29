@@ -33,6 +33,9 @@ class FrontController extends Controller
         $this->langs = (new Config)->arrGetLangs();
     }
 
+
+
+
     private function validatePage($page)
     {
         if (empty($page)) {
@@ -65,6 +68,26 @@ class FrontController extends Controller
         ];
 
         return $data;
+    }
+
+    public function checkout( $lang = null )
+    {
+        if (empty($lang)) {
+            $lang = $this->langs[0];
+        }
+        if (!in_array($lang, $this->langs)) {
+            abort(404);
+        }
+        App::setLocale($lang);
+
+        $page = Page::getFirstPageByType('checkout');
+        if(!$page){
+            abort(404);
+            //die('if you want this page you have to add page in type checkout');
+        }
+        $data = $this->getData($page, $lang);
+
+        return view('checkout', $data);
     }
 
     public function changeLang($lang, $pageId, $productSlug = null)

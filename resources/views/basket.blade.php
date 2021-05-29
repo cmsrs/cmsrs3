@@ -22,7 +22,7 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                    <div id="app">
+                    <div id="appall">
 
                         <div id="token" data-token="{{$token}}"></div>
                         <div class="col mp-3">
@@ -55,5 +55,5 @@
 
 <script type="application/javascript" src="/js/lib/vue.js"></script>
 <script type="application/javascript" src="/js/lib/axios.js"></script>
-<script type="application/javascript" src="/js/shop.js"></script>
+<script type="application/javascript" src="/js/cmsrs.js"></script>
 @endsection

@@ -7,6 +7,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Page;
+use App\Config;
+use App\Menu;
+use App;
+
 
 class RegisterController extends Controller
 {
@@ -39,6 +44,8 @@ class RegisterController extends Controller
     {
         //abort(404); //TODO 
         $this->middleware('guest');
+        $this->langs = (new Config)->arrGetLangs();
+        $this->menus = Menu::all()->sortBy('position'); //TODO cached
     }
 
     /**
@@ -64,18 +71,50 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        abort(404);
-
         $demoStatus = env('DEMO_STATUS', false);
         if($demoStatus){
-            echo "Not permission";
-            die();
+            abort(404);            
+            exit;
         }
 
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'role' => User::$role['client'],
+            'password' => $data['password']   //Hash::make($data['password']),
         ]);
+
     }
+
+    /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showRegistrationForm($lang = null)
+    {
+        $page = Page::getFirstPageByType('register');
+        if(!$page){
+            die('if you want this page you have to add page in type login');
+        }
+
+        if(empty($lang)){
+            $lang = $this->langs[0];
+        }
+
+        App::setLocale($lang);      
+
+        $data = [ 
+            'view' => 'register',
+            'menus' => $this->menus,  
+            'page' => $page, 
+            'lang' => $lang, 
+            'langs' => $this->langs,
+            'page_title' => $page->translatesByColumnAndLang( 'title', $lang ) ?? config('app.name', 'cmsRS'),
+            'seo_description' =>  $page->translatesByColumnAndLang( 'description', $lang ) ?? config('app.name', 'cmsRS')
+        ];      
+
+        return view('auth.register', $data);
+    }
+
 }

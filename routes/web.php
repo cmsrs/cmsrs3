@@ -16,6 +16,13 @@ use App\Page;
 */
 
 
+$demoStatus = env('DEMO_STATUS', false);
+if($demoStatus){
+    Auth::routes(['register' => false, 'reset' => false]);
+}else{
+    Auth::routes(['register' => true, 'reset' => true]);
+}
+
 
 $langs = Config::arrGetLangsEnv();
 //dd( count($langs));
@@ -29,19 +36,28 @@ $langs = Config::arrGetLangsEnv();
     Route::get('/changelang/{lang}/{pageId}/{productSlug?}', 'FrontController@changeLang')->name('changelang');
 //});
 
+
+
     Route::get('/', 'FrontController@index');
     if( empty($langs)  || (1 == count($langs)) ){    
+        Route::get('/checkout', 'FrontController@checkout')->name('checkout');
         Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');    
+        Route::get('/register', 'Auth\RegisterController@showRegistrationForm')->name('register');            
         Route::get('/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}/{productSlug?}', 'FrontController@getPage');
         Route::get('/'.Page::PREFIX_IN_URL.'/{pageSlug}', 'FrontController@getSeparatePage');    
     }else{
+        Route::get('/{lang}/checkout', 'FrontController@checkout');
         Route::get('/{lang}', 'FrontController@index');
-        Route::get('/{lang}/login', 'Auth\LoginController@showLoginForm')->name('login');    
+        Route::get('/{lang}/login', 'Auth\LoginController@showLoginForm'); //->name('login');    
+        Route::get('/{lang}/register', 'Auth\RegisterController@showRegistrationForm'); // ->name('register');                    
         Route::get('/{lang}/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}/{productSlug?}', 'FrontController@getPageLangs');
         Route::get('/{lang}/'.Page::PREFIX_IN_URL.'/{pageSlug}', 'FrontController@getSeparatePageLangs');
     }
 
 
-    Auth::routes(['register' => false, 'reset' => false]);
+    
+
+
+
 
 
