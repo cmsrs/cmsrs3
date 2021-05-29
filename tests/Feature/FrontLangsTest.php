@@ -323,7 +323,7 @@ class FrontLangsTest extends Base
                 $url = $page->getUrl($lang);
                 $response = $this->get($url);
     
-                $status = ('login' === $page->type) ? 302 : 200;
+                $status = (  ('login' === $page->type) ||   ('register' === $page->type)   )     ? 302 : 200;
                 $response->assertStatus($status);    
             }            
 

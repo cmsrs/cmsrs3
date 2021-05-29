@@ -445,7 +445,33 @@ class Demo
             ]
         ];
         $p['p10'] = $this->getPageObj()->wrapCreate($pLogin);
+
+        $pRegister = [
+            'title'     => [ "en" =>'register', "pl" => "rejestracja" ],
+            'short_title' => [ "en" =>'register', "pl" => "rejestracja"],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla'  ],
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'register',
+            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            'images' => [
+            ]
+        ];
+        $p['p11'] = $this->getPageObj()->wrapCreate($pRegister);
         
+        $pCheckout = [
+            'title'     => [ "en" =>'checkout', "pl" => "kasa" ],
+            'short_title' => [ "en" =>'checkout', "pl" => "kasa"],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla'  ],
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'checkout',
+            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            'images' => [
+            ]
+        ];
+        $p['p12'] = $this->getPageObj()->wrapCreate($pCheckout);
+
         return $p;
     }
 
@@ -560,11 +586,11 @@ class Demo
         ];
 
         $products['product12'] = [
-            'product_name' => [ 'en' => 'sox','pl' => 'skarpety' ],
+            'product_name' => [ 'en' => 'sportline socks','pl' => 'skarpety sportowe' ],
             'sku' => '1/234/100',
             'price' => 500,
             'published' => 1,            
-            'product_description' =>  [ 'en' => 'sox', 'pl' =>  'skarpety' ],
+            'product_description' =>  [ 'en' => 'socks', 'pl' =>  'skarpety' ],
             'page_id' => $p['p8b']->id, //$p['p4']
             'images' =>  $images['product12']
         ];

@@ -79,7 +79,7 @@
               <li class="nav-item {{$loginStyle}}">
                   <a class="nav-link" href="{{ $pLogin->getUrl($lang) }}">{{ $pLogin->translatesByColumnAndLang( 'short_title', $lang ) }}</a>
               </li>
-              @if (Route::has('register'))
+              @if (Route::has('register') && $pRegister )
                   <li class="nav-item  {{$loginStyle}}">
                       <a class="nav-link" href="{{ $pRegister->getUrl($lang) }}">{{ $pRegister->translatesByColumnAndLang( 'short_title', $lang ) }}</a>
                   </li>

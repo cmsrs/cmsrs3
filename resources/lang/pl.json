@@ -33,7 +33,11 @@
     "Your basket" : "Twój koszyk",
     "Your completed orders" : "Twoje zrealizowane zamówienia",
     "ORDERS" : "ZAMÓWIENIA",
-    "There are no products in the cart" : "Brak produktów w koszyku"
+    "There are no products in the cart" : "Brak produktów w koszyku",
+
+    "Forgot Your Password?" : "Zapomniałeś hasła?",
+    "Register" : "Rejestracja",
+    "Confirm Password" : "Powtórz hasło"
 
 
 }
