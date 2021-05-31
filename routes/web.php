@@ -30,8 +30,8 @@ $langs = Config::arrGetLangsEnv();
 
 //Route::group(['middleware' => ['web']], function () {
     Route::get('/home', 'HomeController@index')->name('home');
-    Route::get('/home/basket', 'HomeController@basket')->name('basket');
-    Route::get('/home/orders', 'HomeController@orders')->name('orders');
+    //Route::get('/home/basket', 'HomeController@basket')->name('basket');
+    //Route::get('/home/orders', 'HomeController@orders')->name('orders');
     Route::post('/home/api/tobank', 'HomeController@tobank')->name('tobank');
     Route::get('/changelang/{lang}/{pageId}/{productSlug?}', 'FrontController@changeLang')->name('changelang');
 //});
@@ -41,23 +41,17 @@ $langs = Config::arrGetLangsEnv();
     Route::get('/', 'FrontController@index');
     if( empty($langs)  || (1 == count($langs)) ){    
         Route::get('/checkout', 'FrontController@checkout')->name('checkout');
+        Route::get('/home', 'HomeController@index')->name('home');
         Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');    
         Route::get('/register', 'Auth\RegisterController@showRegistrationForm')->name('register');            
         Route::get('/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}/{productSlug?}', 'FrontController@getPage');
         Route::get('/'.Page::PREFIX_IN_URL.'/{pageSlug}', 'FrontController@getSeparatePage');    
     }else{
         Route::get('/{lang}/checkout', 'FrontController@checkout');
+        Route::get('/{lang}/home', 'HomeController@index');        
         Route::get('/{lang}', 'FrontController@index');
         Route::get('/{lang}/login', 'Auth\LoginController@showLoginForm'); //->name('login');    
         Route::get('/{lang}/register', 'Auth\RegisterController@showRegistrationForm'); // ->name('register');                    
         Route::get('/{lang}/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}/{productSlug?}', 'FrontController@getPageLangs');
         Route::get('/{lang}/'.Page::PREFIX_IN_URL.'/{pageSlug}', 'FrontController@getSeparatePageLangs');
     }
-
-
-    
-
-
-
-
-

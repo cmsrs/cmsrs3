@@ -58,13 +58,13 @@ class FrontGuestTest extends TestCase
         $response1->assertStatus(302);
         $response1->assertRedirect('/login');
 
-        $response2 = $this->get('home/orders');
-        $response2->assertStatus(302);        
-        $response2->assertRedirect('/login');
+        //$response2 = $this->get('home/orders');
+        //$response2->assertStatus(302);        
+        //$response2->assertRedirect('/login');
 
-        $response3 = $this->get('home/basket');
-        $response3->assertStatus(302);        
-        $response3->assertRedirect('/login');
+        //$response3 = $this->get('home/basket');
+        //$response3->assertStatus(302);        
+        //$response3->assertRedirect('/login');
 
 
         $response3b = $this->get('home/basketbb');

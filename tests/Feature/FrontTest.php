@@ -64,14 +64,31 @@ class FrontTest extends Base
     /** @test */
     public function it_will_get_directly_to_page()
     {
+
+        $testData =
+        [
+            'title' =>  ['en' => 'home'],
+            'short_title' =>  ['en' => 'home'],
+            'published' => 1,
+            'type' => 'home',
+            'content' => null,
+            'menu_id' => null //!!!! - contact not related to menu
+        ];
+
+        (new Page)->wrapCreate($testData);
+
+        $count = Page::All()->count();
+        $this->assertEquals(1, $count);
+
+
         $response1 = $this->get('/home');
         $response1->assertStatus(200);
 
         $response2 = $this->get('home/orders');
-        $response2->assertStatus(200);        
+        $response2->assertStatus(404);        
 
         $response3 = $this->get('home/basket');
-        $response3->assertStatus(200);        
+        $response3->assertStatus(404);        
 
 
         $response3b = $this->get('home/basketbb');

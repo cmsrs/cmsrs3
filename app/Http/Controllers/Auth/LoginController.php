@@ -29,7 +29,8 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/en/home';
+    protected $lang;    
 
     /**
      * Create a new controller instance.
@@ -39,8 +40,18 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-        $this->langs = (new Config)->arrGetLangs();
+        //$this->langs = (new Config)->arrGetLangs();
         $this->menus = Menu::all()->sortBy('position'); //TODO cached
+
+        //$locale = App::getLocale();
+        //dd($locale);
+        //dump('____________________'.$this->lang);
+        $this->langs = (new Config)->arrGetLangs();
+
+        $pHome = App\Page::getFirstPageByType('home');
+        if( $pHome ){
+            $this->redirectTo = $pHome->getUrl($this->langs[0]);
+        }
     }
     
     public function showLoginForm($lang = null)

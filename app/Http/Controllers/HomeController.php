@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Menu;
+use App\Page;
 use App\Product;
 use App\Basket;
 use App\Order;
@@ -14,9 +16,13 @@ use Illuminate\Support\Facades\Log;
 //use App;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+//use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
+    private $menus;
+    private $langs;
+
     /**
      * Create a new controller instance.
      *
@@ -24,10 +30,12 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $lang = Config::getLangFromSession();  //not workking proper
-        App::setLocale($lang);
+        //$lang = Config::getLangFromSession();  //not workking proper
+        //App::setLocale($lang);
 
         $this->middleware('auth');
+        $this->menus =  Menu::getMenu(); //$menus;
+        $this->langs = (new Config)->arrGetLangs();
     }
 
     /**
@@ -35,13 +43,37 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index($lang = null)
     {
-        //App::setLocale('pl');   
+        $page = Page::getFirstPageByType('home');
+        if(!$page){
+            Log::error('if you want this page you have to add page in type home');
+            abort(404);
+        }
 
-        return view('home');
+        if(empty($lang)){
+            $lang = $this->langs[0];
+        }
+        App::setLocale($lang);
+
+        $token = User::getTokenForClient();
+
+        $data = [
+            'token' => $token,            
+            'menus' => $this->menus,
+            'page' => $page,
+            'h1' => $page->translatesByColumnAndLang( 'title', $lang ),
+            'page_title' => $page->translatesByColumnAndLang( 'title', $lang ) ?? config('app.name', 'cmsRS'),
+            'seo_description' =>  $page->translatesByColumnAndLang( 'description', $lang ) ?? config('app.name', 'cmsRS'),
+            'lang' => $lang,
+            'langs' => $this->langs,
+            'view' => $page->getViewNameByType()
+        ];
+
+        return view('home', $data);
     }
 
+    /*
     public function basket()
     {
         $token = User::getTokenForClient();
@@ -70,6 +102,7 @@ class HomeController extends Controller
             //'tab' => 'order'
         ]);
     }
+    */
 
     public function tobank(Request $request)
     {

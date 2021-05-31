@@ -37,6 +37,20 @@ class Menu extends Base
         }
     }
 
+    public static function getMenu()
+    {
+        $isCache = env('CACHE_ENABLE', false);
+        if ($isCache) {
+            $menus = cache()->remember('menus', Carbon::now()->addYear(1), function () {
+                return Menu::all()->sortBy('position');
+            });
+        } else {
+            $menus = Menu::all()->sortBy('position');
+        }
+
+        return $menus;
+    }
+
 
     private function getMenuObj()
     {

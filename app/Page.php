@@ -258,6 +258,9 @@ class Page extends Base
         return $out;
     }
 
+
+    
+
     public function getViewNameByType()
     {
         if ($this->type == 'projects') {
@@ -274,6 +277,8 @@ class Page extends Base
             $view = 'checkout';
         } elseif ($this->type == 'register') {
             $view = 'register';
+        } elseif ($this->type == 'home') {
+            $view = 'home';
         } else {
             $view = 'cms';
         }
@@ -284,7 +289,7 @@ class Page extends Base
     {        
         if ('main_page' == $this->type) {
             return $this->getMainUrl($lang);
-        } elseif ( ('login' == $this->type) || ('checkout' == $this->type) || ('register' == $this->type) ) {
+        } elseif ( ('login' == $this->type) || ('checkout' == $this->type) || ('register' == $this->type) || ('home' == $this->type) ) {
             return $this->getTypeUrl($lang);
         } 
         //elseif ('privacy_policy' == $this->type) {

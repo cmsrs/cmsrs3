@@ -1,7 +1,8 @@
 Bug
 
 210510
--(na pierwszy rzut okla to nie wyglada jak blad - aktualnie bierze defaultowy lang z plki konf - pierwsza wartosc)  
++ naprawione - ale nie przez sesje ale na podstawie url-i
+  (na pierwszy rzut okla to nie wyglada jak blad - aktualnie bierze defaultowy lang z plki konf - pierwsza wartosc)  
 Problem z sesia odczytujaca wartosc lang z sessi
 zmiana jezykow z panelu klienta (brak obslugi sessi w panelu klienta) - jesli zmeiniam jezyk na stronie frontowej w panelu zawsze pozostaje jezyk defaultowy
 czyli pierwszy ustawiony w konfigu
@@ -11,11 +12,20 @@ czyli pierwszy ustawiony w konfigu
 to utworzy sie orders! ( nie wiem jak zrobic dodatkowa walidacje - http_refferer? - z payu musi byc wejscie)
 moze trzeba ustawic w payu dodatkowe api dot. czy platnosc zostala zrealizowana
 
+
+- !!!!!!!!blad krytyczny!!!!!! - trzeba bybloby jakos oprogramowac przypadek koszyka w przypadku zmiany nazwy produktu lub jego kwoty (bo w localstorage beda stare dane)
+todo - do przemyslenia.
+
+- !!!!!!!!!!blad krytyczny!!!!!! - weryfikacja maila przy zlozeniu zamowienia (checkout) ?? - todo - do przemyslenia.
+- !!!!!!!!!!blad krytyczny!!!!!! - weryfikacja maila rejestracja ?? - todo - do przemyslenia.
+
+
+- po logowaniu / rejestracji / przypomnij haslo - przechodzimy na /home  w jezyku defaultowym - a jezyk powinien byc brany z sessi
+
+
 new future:
 - w panelu adm. moznabyloby zrobic zestawienie orderow jakie wykonal dany uzytkownik
-
-
-
+- wyszukiwarka produktow ??
 
 
 UWAGA!!!

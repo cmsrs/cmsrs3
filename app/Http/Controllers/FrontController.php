@@ -19,21 +19,10 @@ class FrontController extends Controller
     private $langs;
 
     public function __construct()
-    {
-        $isCache = env('CACHE_ENABLE', false);
-        if ($isCache) {
-            $menus = cache()->remember('menus', Carbon::now()->addYear(1), function () {
-                return Menu::all()->sortBy('position');
-            });
-        } else {
-            $menus = Menu::all()->sortBy('position');
-        }
-    
-        $this->menus = $menus;
+    {    
+        $this->menus =  Menu::getMenu(); //$menus;
         $this->langs = (new Config)->arrGetLangs();
     }
-
-
 
 
     private function validatePage($page)

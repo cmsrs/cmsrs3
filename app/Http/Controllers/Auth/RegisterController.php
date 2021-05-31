@@ -33,7 +33,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/en/home';
 
     /**
      * Create a new controller instance.
@@ -46,6 +46,15 @@ class RegisterController extends Controller
         $this->middleware('guest');
         $this->langs = (new Config)->arrGetLangs();
         $this->menus = Menu::all()->sortBy('position'); //TODO cached
+
+        //$this->langs = (new Config)->arrGetLangs();
+
+        $pHome = App\Page::getFirstPageByType('home');
+        if( $pHome ){
+            $this->redirectTo = $pHome->getUrl($this->langs[0]);
+        }
+
+
     }
 
     /**

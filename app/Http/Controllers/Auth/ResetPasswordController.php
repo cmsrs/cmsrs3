@@ -25,7 +25,7 @@ class ResetPasswordController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/en/home';
 
     /**
      * Create a new controller instance.
@@ -41,5 +41,12 @@ class ResetPasswordController extends Controller
         }
 
         $this->middleware('guest');
+
+        $this->langs = (new Config)->arrGetLangs();
+        $pHome = App\Page::getFirstPageByType('home');
+        if( $pHome ){
+            $this->redirectTo = $pHome->getUrl($this->langs[0]);
+        }
+
     }
 }

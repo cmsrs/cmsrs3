@@ -3,6 +3,7 @@
 <?php //$bg = 'bg-secondary'; ?>
 <?php $pLogin = App\Page::getFirstPageByType('login');  ?>
 <?php $pRegister = App\Page::getFirstPageByType('register');  ?>
+<?php $pHome = App\Page::getFirstPageByType('home');  ?>
 <?php 
   $mainPage = App\Page::getFirstPageByType('main_page');  
   $urlMainPage = '/';
@@ -85,18 +86,24 @@
                   </li>
               @endif
         @else
+              @if ( $pHome )
               <li class="nav-item active {{$loginStyle}}">
-                  <a class="nav-link" href="{{ route('home') }}">{{ __('Home') }}<span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="{{ $pHome->getUrl($lang) }}">{{ $pHome->translatesByColumnAndLang( 'short_title', $lang ) }}</a>
               </li>
+              @endif
+              <form id="logout-form" action="{{ route('logout') }}" method="POST" >
+                                        @csrf
+                                        <input type="submit" value="{{ __('Log out') }}"  class="nav-link" style="background:none; border-width:0px; cursor: pointer;" />
+              </form>
         @endguest
       <?php } ?>
-          <?php if( $manyLangs ) { ?>
-            <?php foreach($langs as $ll){  ?>
-              <?php $classActive = ($ll == $lang) ? 'active' : ''; ?>
-              <li class="nav-item {{ $classActive }}">
-                  <a class="changelang nav-link" href="{{ route('changelang', ['lang' => $ll, 'pageId' => $page->id, 'productSlug' => ($productNameSlug ? $productNameSlug[$ll]  : null)] ) }}"><img src="/images/cms/{{ $ll }}.png" alt="{{ $ll }}" /> {{ strtoupper($ll) }}</a></li>
-            <?php } ?>
-          <?php } ?>          
+      <?php if( $manyLangs ) { ?>
+        <?php foreach($langs as $ll){  ?>
+          <?php $classActive = ($ll == $lang) ? 'active' : ''; ?>
+          <li class="nav-item {{ $classActive }}">
+              <a class="changelang nav-link" href="{{ route('changelang', ['lang' => $ll, 'pageId' => $page->id, 'productSlug' => ($productNameSlug ? $productNameSlug[$ll]  : null)] ) }}"><img src="/images/cms/{{ $ll }}.png" alt="{{ $ll }}" /> {{ strtoupper($ll) }}</a></li>
+        <?php } ?>
+      <?php } ?>          
        </ul>
 
   </div>

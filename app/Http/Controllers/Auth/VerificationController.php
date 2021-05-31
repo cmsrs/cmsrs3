@@ -25,7 +25,7 @@ class VerificationController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/en/home';
 
     /**
      * Create a new controller instance.
@@ -43,5 +43,12 @@ class VerificationController extends Controller
         $this->middleware('auth');
         $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
+
+        $this->langs = (new Config)->arrGetLangs();
+        $pHome = App\Page::getFirstPageByType('home');
+        if( $pHome ){
+            $this->redirectTo = $pHome->getUrl($this->langs[0]);
+        }
+
     }
 }
