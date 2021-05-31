@@ -97,6 +97,35 @@ class Page extends Base
         }
     }
 
+    public function getDataToView( $dataIn )   //($pageOut, $lang)
+    {
+        $lang = $dataIn['lang'];
+        if( empty($lang) ){
+            throw new \Exception("Now lang in dataIn");
+        }
+
+        $products = null;        
+        if ('shop' === $this->type) {
+            $products = (new Product)->getProductsWithImagesByPage($this->id);
+        }
+
+        $data = [
+            'menus' =>  isSet($dataIn['menus']) ? $dataIn['menus'] : null,
+            'page' => $this,
+            'h1' => $this->translatesByColumnAndLang( 'title', $lang ),
+            'page_title' => $this->translatesByColumnAndLang( 'title', $lang ) ?? config('app.name', 'cmsRS'),
+            'seo_description' =>  $this->translatesByColumnAndLang( 'description', $lang ) ?? config('app.name', 'cmsRS'),
+            'products' => $products,
+            'lang' => $lang,
+            'langs' => $dataIn['langs'],
+            're_public' => env('GOOGLE_RECAPTCHA_PUBLIC', ''),
+            'view' => $this->getViewNameByType()
+        ];
+
+        return  array_merge($data, $dataIn);
+    }
+
+
 
     public static function getPageBySlug($menus, $menuSlug, $pageSlug, $lang)
     {

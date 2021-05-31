@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Log;
 use App\Page;
 use App\Config;
 use App\Menu;
@@ -104,7 +105,8 @@ class RegisterController extends Controller
     {
         $page = Page::getFirstPageByType('register');
         if(!$page){
-            die('if you want this page you have to add page in type login');
+            Log::error('if you want this page you have to add page in type login');
+            abort(404);
         }
 
         if(empty($lang)){
@@ -113,6 +115,7 @@ class RegisterController extends Controller
 
         App::setLocale($lang);      
 
+        /*
         $data = [ 
             'view' => 'register',
             'menus' => $this->menus,  
@@ -121,7 +124,16 @@ class RegisterController extends Controller
             'langs' => $this->langs,
             'page_title' => $page->translatesByColumnAndLang( 'title', $lang ) ?? config('app.name', 'cmsRS'),
             'seo_description' =>  $page->translatesByColumnAndLang( 'description', $lang ) ?? config('app.name', 'cmsRS')
-        ];      
+        ];
+        */      
+
+        $data = $page->getDataToView( [
+            'view' => 'register',
+            'lang' => $lang,
+            'langs' => $this->langs,
+            'menus' => $this->menus
+        ]);
+
 
         return view('auth.register', $data);
     }

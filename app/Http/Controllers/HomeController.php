@@ -58,6 +58,7 @@ class HomeController extends Controller
 
         $token = User::getTokenForClient();
 
+        /*
         $data = [
             'token' => $token,            
             'menus' => $this->menus,
@@ -69,6 +70,15 @@ class HomeController extends Controller
             'langs' => $this->langs,
             'view' => $page->getViewNameByType()
         ];
+        */
+
+        $data = $page->getDataToView( [
+            'token' => $token,
+            'lang' => $lang,
+            'langs' => $this->langs,
+            'menus' => $this->menus
+        ]);
+        
 
         return view('home', $data);
     }

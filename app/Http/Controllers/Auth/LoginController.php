@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Log;
 use App\Page;
 use App\Config;
 use App\Menu;
@@ -31,6 +32,7 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/en/home';
     protected $lang;    
+    protected $langs;        
 
     /**
      * Create a new controller instance.
@@ -58,7 +60,8 @@ class LoginController extends Controller
     {
         $page = Page::getFirstPageByType('login');
         if(!$page){
-            die('if you want this page you have to add page in type login');
+            Log::error('if you want this page you have to add page in type login');
+            abort(404);
         }
 
         if(empty($lang)){
@@ -68,16 +71,25 @@ class LoginController extends Controller
       
         //$footerPages = Page::getFooterPages($lang);
 
+        /*
         $data = [ 
+            'menus' => $this->menus,              
             'view' => 'login',
-            'menus' => $this->menus,  
             'page' => $page, 
             'lang' => $lang, 
             'langs' => $this->langs,
             'page_title' => $page->translatesByColumnAndLang( 'title', $lang ) ?? config('app.name', 'cmsRS'),
             'seo_description' =>  $page->translatesByColumnAndLang( 'description', $lang ) ?? config('app.name', 'cmsRS')
-        ];      
+        ];
+        */      
 
+        $data = $page->getDataToView( [
+            'view' => 'login',
+            'lang' => $lang,
+            'langs' => $this->langs,
+            'menus' => $this->menus
+        ]);
+        
         return view('auth.login', $data);
     }
 

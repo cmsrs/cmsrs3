@@ -36,28 +36,6 @@ class FrontController extends Controller
         }
     }
 
-    private function getData($pageOut, $lang)
-    {
-        $products = null;        
-        if ('shop' === $pageOut->type) {
-            $products = (new Product)->getProductsWithImagesByPage($pageOut->id);
-        }
-
-        $data = [
-            'menus' => $this->menus,
-            'page' => $pageOut,
-            'h1' => $pageOut->translatesByColumnAndLang( 'title', $lang ),
-            'page_title' => $pageOut->translatesByColumnAndLang( 'title', $lang ) ?? config('app.name', 'cmsRS'),
-            'seo_description' =>  $pageOut->translatesByColumnAndLang( 'description', $lang ) ?? config('app.name', 'cmsRS'),
-            'products' => $products,
-            'lang' => $lang,
-            'langs' => $this->langs,
-            're_public' => env('GOOGLE_RECAPTCHA_PUBLIC', ''),
-            'view' => $pageOut->getViewNameByType()
-        ];
-
-        return $data;
-    }
 
     public function checkout( $lang = null )
     {
@@ -71,10 +49,15 @@ class FrontController extends Controller
 
         $page = Page::getFirstPageByType('checkout');
         if(!$page){
+            Log::error('if you want this page you have to add page in type checkout');            
             abort(404);
-            //die('if you want this page you have to add page in type checkout');
         }
-        $data = $this->getData($page, $lang);
+        //$data = $this->getData($page, $lang);
+        $data = $page->getDataToView( [
+            'lang' => $lang,
+            'langs' => $this->langs,
+            'menus' => $this->menus
+        ] );
 
         return view('checkout', $data);
     }
@@ -109,16 +92,16 @@ class FrontController extends Controller
         $page = Page::getMainPage();
         $this->validatePage($page);
 
-        return view('index', [
+
+        $data = $page->getDataToView( [
+            'view' => 'index',
             'is_new_orders' => $isNewOrders,
-            'menus' => $this->menus,
-            'page' => $page,
-            'page_title' => $page->translatesByColumnAndLang( 'title', $lang ) ?? config('app.name', 'cmsRS'),
-            'seo_description' =>  $page->translatesByColumnAndLang( 'description', $lang ) ?? config('app.name', 'cmsRS'),
             'lang' => $lang,
             'langs' => $this->langs,
-            'view' => 'index'
-        ]);
+            'menus' => $this->menus
+        ] );
+
+        return view('index', $data);
     }
 
     public function getPageLangs($lang, $menuSlug, $pageSlug, $productSlug = null)
@@ -149,7 +132,14 @@ class FrontController extends Controller
         }
      
         $this->validatePage($pageOut);
-        $data = $this->getData($pageOut, $lang);
+
+        //$data = $this->getData($pageOut, $lang);
+        $data = $pageOut->getDataToView( [
+            'lang' => $lang,
+            'langs' => $this->langs,
+            'menus' => $this->menus
+        ]);
+
 
         if($productSlug){ //product page
             $objProduct = new Product;
@@ -207,7 +197,14 @@ class FrontController extends Controller
         }
         $this->validatePage($pageOut);
 
-        $data = $this->getData($pageOut, $lang);
+        //$data = $this->getData($pageOut, $lang);
+
+        $data = $pageOut->getDataToView( [
+            'lang' => $lang,
+            'langs' => $this->langs,
+            'menus' => $this->menus
+        ] );
+
 
         if ($manyLangs) {
             return $data;
