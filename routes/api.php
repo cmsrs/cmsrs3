@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
 
 $demoStatus = env('DEMO_STATUS', false);
 
+Route::get('productsGetNameAndPrice/{lang}', 'ProductController@getNameAndPrice');
+
 if($demoStatus){
     Route::post('login', 'AuthController@login');
     Route::get('comments/{pageId}', 'CommentController@index');

@@ -125,7 +125,7 @@ new Vue({
                 },
 
 
-                /* shop */
+                /* shop - start*/
                 toglebasket: function(){
                         //if(this.total_sanit){
                                 document.getElementById("appbasket").style.display = (document.getElementById("appbasket").style.display === 'none') ? 'block' : 'none';

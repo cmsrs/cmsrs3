@@ -109,6 +109,46 @@ class ProductTest extends Base
 
     /**
      * it is not test admin
+     * this api is use in backet (it is usefull when name and price will be changing)
+     */
+    /** @test */
+    public function it_will_get_name_and_price_by_lang()
+    {
+        /* prepare data - start */
+        $this->setTestData();        
+        $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
+        $res0 = $response0->getData();
+        $this->assertTrue($res0->success);        
+
+        $this->testData['sku'] = 'uniq2';
+        $this->testData['published'] = 1;
+        $this->testData['product_name']['en'] = 'product name uniq en2';
+        $response1 = $this->post('api/products?token=' . $this->token, $this->testData);
+        //dd($response1 );
+        $res1 = $response1->getData();
+        $this->assertTrue($res1->success);
+
+        $countProd = Product::all()->count();
+        $this->assertEquals(2, $countProd);
+        /* prepare data - stop */
+
+        $lang = 'en';
+        $response = $this->get('api/productsGetNameAndPrice/'.$lang);
+        $data = $response->getData();
+        $this->assertTrue($data->success);
+        $this->assertEquals(2, count($data->data));
+
+        //dd($data->data);
+        $this->assertNotEmpty($data->data[0]->price);
+        $this->assertNotEmpty($data->data[0]->product_name);
+        $this->assertNotEmpty($data->data[0]->url_product);
+        $this->assertNotEmpty($data->data[0]->url_image);
+    }
+
+
+
+    /**
+     * it is not test admin
      */
     /** @test */
     public function it_will_save_to_basket()

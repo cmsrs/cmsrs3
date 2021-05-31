@@ -328,21 +328,65 @@ class Product extends Model
         return Product::with(['translates', 'contents'])->orderBy('id', 'asc')->get();
     }
 
-    public function getAllProductsWithImages()
+    public function getAllProductsWithImages( $withUrls = false )
     {
         $products = $this->getAllProductsWithTranslates();
-        return $this->getAllProductsWithImagesArr($products);
+        return $this->getAllProductsWithImagesArr($products, $withUrls);
     }
 
-    public function getAllProductsWithImagesArr($products)
+    public function getAllProductsWithImagesArr($products, $withUrls = false)
     {
         $i = 0;
         $out = [];
         foreach ($products as $product) {
             $out[$i] = $this->getProductDataByProductArr( $product );
+
+            if($withUrls){
+                $urls = $product->getProductUrls($product);
+                $out[$i] = array_merge($out[$i], $urls);    
+            }
             $i++;
         }
         return $out;
+    }
+    
+
+    /**
+     * function use on the frontend
+     * it should be cached
+     */
+    public function getAllProductsWithImagesByLang($lang)
+    {
+        $products = $this->getAllProductsWithImages( true );
+
+        $out = [];
+        $i = 0;
+        foreach($products as $product){
+            if( !empty($product['published']) ){
+                $out[$i]["price"] = $product["price"];
+                $out[$i]["product_name"] = $product["product_name"][$lang];
+                $out[$i]["url_product"] = $product["url_product"][$lang];
+                if( !empty($product["images"]) && !empty($img = $product["images"]->first()) ){
+                    $out[$i]["url_image"] =  $img->fs["small"];
+                }
+                $i++;
+            }
+        }
+        return $out;
+    }
+
+    public function getAllProductsWithImagesByLangCache($lang)
+    {
+        $isCache = env('CACHE_ENABLE', false);
+        if ($isCache) {
+            $products = cache()->remember('products_name_price_'.$lang , Carbon::now()->addYear(1), function () {
+                return (new Product)->getAllProductsWithImagesByLang($lang);
+            });
+        } else {
+            $products = (new Product)->getAllProductsWithImagesByLang($lang);
+        }
+
+        return $products;    
     }
 
     /*
