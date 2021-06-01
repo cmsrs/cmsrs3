@@ -130,19 +130,41 @@ class ProductTest extends Base
 
         $countProd = Product::all()->count();
         $this->assertEquals(2, $countProd);
+
+        $productArr = Product::all()->toArray();
+        //dd($productArr);
+
+        $pId1 = $productArr[0]['id'];
+        $pId2 = $productArr[1]['id'];        
+        $arrIds = [$pId1, $pId2];
         /* prepare data - stop */
 
         $lang = 'en';
         $response = $this->get('api/productsGetNameAndPrice/'.$lang);
+
+        //dd($response);
         $data = $response->getData();
         $this->assertTrue($data->success);
-        $this->assertEquals(2, count($data->data));
 
-        //dd($data->data);
-        $this->assertNotEmpty($data->data[0]->price);
-        $this->assertNotEmpty($data->data[0]->product_name);
-        $this->assertNotEmpty($data->data[0]->url_product);
-        $this->assertNotEmpty($data->data[0]->url_image);
+        $dd = (array)$data->data;
+        $this->assertEquals( count($arrIds) , count( $dd )  );
+
+        foreach($arrIds as $pId){
+            $this->assertNotEmpty($data->data->$pId->price);
+            $this->assertNotEmpty($data->data->$pId->name);
+            $this->assertNotEmpty($data->data->$pId->url_product);
+            $this->assertNotEmpty($data->data->$pId->url_image);
+            //$this->assertNotEmpty($data->data->$pId->product_id);            
+            //$this->assertEquals($data->data->$pId->product_id, $pId);
+        }
+
+        $lang = '';
+        $response = $this->get('api/productsGetNameAndPrice/'.$lang);        
+        $data2 = $response->getData();
+        $this->assertTrue($data2->success);
+        $this->assertEquals($data, $data2 );
+
+        //dd($response);
     }
 
 

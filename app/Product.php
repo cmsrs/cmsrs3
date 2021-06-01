@@ -359,17 +359,18 @@ class Product extends Model
     {
         $products = $this->getAllProductsWithImages( true );
 
+        //dd($products);
         $out = [];
-        $i = 0;
         foreach($products as $product){
             if( !empty($product['published']) ){
-                $out[$i]["price"] = $product["price"];
-                $out[$i]["product_name"] = $product["product_name"][$lang];
-                $out[$i]["url_product"] = $product["url_product"][$lang];
+                $productId = $product["id"];
+                //$out[$productId]["product_id"] = $productId;
+                $out[$productId]["price"] = $product["price"];
+                $out[$productId]["name"] = $product["product_name"][$lang];
+                $out[$productId]["url_product"] = $product["url_product"][$lang];
                 if( !empty($product["images"]) && !empty($img = $product["images"]->first()) ){
-                    $out[$i]["url_image"] =  $img->fs["small"];
+                    $out[$productId]["url_image"] =  $img->fs["small"];
                 }
-                $i++;
             }
         }
         return $out;

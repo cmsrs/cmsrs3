@@ -134,8 +134,12 @@ class ProductController extends Controller
         return response()->json(['success'=> true], 200);
     }
 
-    public function getNameAndPrice(Request $request, $lang)
+    public function getNameAndPrice(Request $request, $lang = '')
     {
+        if( empty($lang) ){
+            $lang = Config::getDefaultLang();
+        }
+
         $products = (new Product)->getAllProductsWithImagesByLangCache($lang);
         return response()->json(['success'=> true, 'data' => $products]);
     }

@@ -4,6 +4,7 @@ new Vue({
                 total: 0,
                 cart: [],               
                 cart_length: 0,
+                name_and_price: [],
                 products: [],
                 results: [],
                 comment: '',
@@ -44,13 +45,32 @@ new Vue({
                 // });
 
                 //----shop----
-                this.cart = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : [];
-                this.total = 0;
-                for (var i = 0; i < this.cart.length; i++) {
-                        this.total += this.cart[i].qty * this.cart[i].price;
-                }
-                this.total_sanit = this.total / 100;                
-                this.cart_length = this.cart.length;
+                self.name_and_price = [];
+                axios.get('/api/productsGetNameAndPrice/'+this.lang).then( function (response){
+                        self.name_and_price = response.data.data;
+                        const storageCart = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : [];
+                        self.total = 0;
+                        self.cart = [];
+                        for (var i = 0; i < storageCart.length; i++) {
+                                const productId = storageCart[i].id;
+                                const dbNameAndPrice = self.name_and_price[productId] ? self.name_and_price[productId] : '';
+
+
+                                if(dbNameAndPrice){
+                                        self.cart.push({
+                                                id: productId,
+                                                qty: storageCart[i].qty,
+                                                name: dbNameAndPrice.name,
+                                                price: dbNameAndPrice.price,
+                                                url_product : dbNameAndPrice.url_product,
+                                                url_image : dbNameAndPrice.url_image,
+                                        });        
+                                        self.total += storageCart[i].qty * dbNameAndPrice.price;
+                                }
+                        }
+                        self.total_sanit = self.total / 100;                
+                        self.cart_length = self.cart.length;        
+                });
         },
 
         methods: {
@@ -143,13 +163,17 @@ new Vue({
                                 }
                         }
                         if (!found) {
-                                this.cart.push({
-                                        id: product.id,
-                                        name: product.name,
-                                        price: product.price,
-                                        //price_sanit: product.price / 100,                                        
-                                        qty: 1
-                                });
+                                const dbNameAndPrice = this.name_and_price[product.id] ? this.name_and_price[product.id] : '';
+                                if(dbNameAndPrice){
+                                        this.cart.push({
+                                                id: product.id,
+                                                name: dbNameAndPrice.name,
+                                                price: dbNameAndPrice.price,
+                                                qty: 1,
+                                                url_product : dbNameAndPrice.url_product,
+                                                url_image : dbNameAndPrice.url_image
+                                        });        
+                                }
                         }
                         this.cart_length = this.cart.length;
                         localStorage.setItem('cart', JSON.stringify(this.cart));
