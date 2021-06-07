@@ -211,7 +211,7 @@ new Vue({
                 pay: function(){
                         //alert('TODO payment=$'+this.total);
                         //window.location.href = 'http://127.0.0.1:8000/home/basket';
-                        window.location.pathname = "/home/basket";                        
+                        window.location.pathname =  "/" + this.lang + "/checkout";  //todo - change if one lang.
                 },
                 tobank: function(){
                         const el = document.querySelector('#token');

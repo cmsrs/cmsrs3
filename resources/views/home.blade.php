@@ -27,9 +27,7 @@
                     </div>
             </div>    
 
-            <div class="border mt-3 p-3">
-
-                <div id="token" data-token="{{$token}}"></div>
+            <div class="border mt-3 p-3">                
                 <div class="col">
                     {{ __('SHOPPING CART') }}:
                     <ul>
@@ -44,7 +42,7 @@
                     <div v-if="cart.length">
                         <div class="cart-total">{{ __('Total') }}: @{{ total_sanit }} zł</div>
                         <br/><br/>
-                        <button class="btn" v-on:click="tobank()">{{ __('Go to bank') }}</button>
+                        <button class="ml-4 btn" v-on:click="pay()">{{ __('Pay') }}</button>
                     </div>
                 </div>
 

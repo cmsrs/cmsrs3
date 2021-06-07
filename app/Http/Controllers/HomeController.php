@@ -55,8 +55,7 @@ class HomeController extends Controller
             $lang = $this->langs[0];
         }
         App::setLocale($lang);
-
-        $token = User::getTokenForClient();
+        
 
         /*
         $data = [
@@ -73,7 +72,7 @@ class HomeController extends Controller
         */
 
         $data = $page->getDataToView( [
-            'token' => $token,
+            //'token' => $token,
             'lang' => $lang,
             'langs' => $this->langs,
             'menus' => $this->menus

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 use App\Page;
+use App\User;
 use App\Product;
 use App\Menu;
 use App\Config;
@@ -52,8 +53,11 @@ class FrontController extends Controller
             Log::error('if you want this page you have to add page in type checkout');            
             abort(404);
         }
-        //$data = $this->getData($page, $lang);
+
+        $token =  '123todo'; // User::getTokenForClient(); //todo - when user not auth
+
         $data = $page->getDataToView( [
+            'token' => $token,
             'lang' => $lang,
             'langs' => $this->langs,
             'menus' => $this->menus

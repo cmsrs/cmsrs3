@@ -12,7 +12,9 @@
       <div class="alert alert-success text-center" role="alert">
       {{ __('Thank you for purchasing products in our store.') }}
       <br>
-      {{ __('Your:') }} <a href="{{ route('orders') }}">{{ __('Orders') }}</a>
+
+      <?php $pHome = App\Page::getFirstPageByType('home');  ?>
+      {{ __('Your:') }} <a class="nav-link" href="{{ $pHome->getUrl($lang) }}">{{ __('Orders') }}</a>
       </div>
     </div>
   @endif  
