@@ -434,8 +434,8 @@ class Demo
         $p['p9'] = $this->getPageObj()->wrapCreate($pPrivacy);
 
         $pLogin = [
-            'title'     => [ "en" =>'login', "pl" => "logowanie" ],
-            'short_title' => [ "en" =>'login', "pl" => "logowanie"],
+            'title'     => [ "en" =>'Login', "pl" => "Logowanie" ],
+            'short_title' => [ "en" =>'Login', "pl" => "Logowanie"],
             'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla'  ],
             'published' => 1,
             'commented' => 0,
@@ -447,8 +447,8 @@ class Demo
         $p['p10'] = $this->getPageObj()->wrapCreate($pLogin);
 
         $pRegister = [
-            'title'     => [ "en" =>'register', "pl" => "rejestracja" ],
-            'short_title' => [ "en" =>'register', "pl" => "rejestracja"],
+            'title'     => [ "en" =>'Register', "pl" => "Rejestracja" ],
+            'short_title' => [ "en" =>'Register', "pl" => "Rejestracja"],
             'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla'  ],
             'published' => 1,
             'commented' => 0,
@@ -460,8 +460,8 @@ class Demo
         $p['p11'] = $this->getPageObj()->wrapCreate($pRegister);
         
         $pCheckout = [
-            'title'     => [ "en" =>'checkout', "pl" => "kasa" ],
-            'short_title' => [ "en" =>'checkout', "pl" => "kasa"],
+            'title'     => [ "en" =>'Checkout', "pl" => "Kasa" ],
+            'short_title' => [ "en" =>'Checkout', "pl" => "Kasa"],
             'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla'  ],
             'published' => 1,
             'commented' => 0,
