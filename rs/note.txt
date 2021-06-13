@@ -1,5 +1,8 @@
 Bug
 
+
+
+
 - na telefonie nie dziala dynamieczne doladowywanie zdjec w galerii
 
 
