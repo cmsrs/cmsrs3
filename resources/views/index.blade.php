@@ -11,10 +11,12 @@
     <div class="container">
       <div class="alert alert-success text-center" role="alert">
       {{ __('Thank you for purchasing products in our store.') }}
-      <br>
 
-      <?php $pHome = App\Page::getFirstPageByType('home');  ?>
-      {{ __('Your:') }} <a class="nav-link" href="{{ $pHome->getUrl($lang) }}">{{ __('Orders') }}</a>
+      @if (Auth::check())
+      <br>
+        <?php $pHome = App\Page::getFirstPageByType('home');  ?>
+        {{ __('Your:') }} <a class="nav-link" href="{{ $pHome->getUrl($lang) }}">{{ __('Orders') }}</a>
+      @endif
       </div>
     </div>
   @endif  

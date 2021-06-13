@@ -13,7 +13,7 @@ class AlterUniqIndexToTables extends Migration
      */
     public function up()
     {
-        DB::statement('ALTER TABLE `baskets` ADD UNIQUE `unique_baskets_index` (`user_id`, `product_id`)');
+        DB::statement('ALTER TABLE `baskets` ADD UNIQUE `unique_baskets_index` (`user_id`, `product_id`)'); //it will be delete in futher migration
         DB::statement('ALTER TABLE `orders`  ADD UNIQUE `unique_orders_index` (`user_id`, `product_id`)');
     }
 

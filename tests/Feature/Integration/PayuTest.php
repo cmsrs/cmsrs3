@@ -69,7 +69,24 @@ class PayuTest extends  Base //TestCase
         ];
 
 
-        $data = $this->payu->dataToSend( $additionalData );
+
+        $buyerData = [
+            "email" => "client@cmsrs.pl",
+            "first_name" => "Jan",
+            "last_name" => "Kowalski",
+            //"address" => "kolejowa 1 m 2",
+            //"country" => "Polska",
+            //"city" => "Warszawa",
+            "telephone" => "1234567123",
+            //"postcode" => "03-456",
+            //"user_id" => 1,
+            //"session_id" => "KVyHIQKatIsilQqwBmwxzVToKLlEgNQnb6WdK75V"
+        ];
+          
+
+
+
+        $data = $this->payu->dataToSend( $additionalData, $buyerData );
         //dd($data);                
                 
         $redirectUri = $this->payu->getOrder($data);

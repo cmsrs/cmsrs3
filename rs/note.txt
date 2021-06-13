@@ -1,5 +1,8 @@
 Bug
 
+- na telefonie nie dziala dynamieczne doladowywanie zdjec w galerii
+
+
 210510
 + naprawione - ale nie przez sesje ale na podstawie url-i
   (na pierwszy rzut okla to nie wyglada jak blad - aktualnie bierze defaultowy lang z plki konf - pierwsza wartosc)  
@@ -22,6 +25,8 @@ todo - do przemyslenia.
 
 - po logowaniu / rejestracji / przypomnij haslo - przechodzimy na /home  w jezyku defaultowym - a jezyk powinien byc brany z sessi
 
+
++ obsluzyc przypadek gdy cena produktu sie zmieni - do zastanowienia ( - zapsis tej ceny w baskecie -)
 
 new future:
 - w panelu adm. moznabyloby zrobic zestawienie orderow jakie wykonal dany uzytkownik

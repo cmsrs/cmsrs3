@@ -55,7 +55,6 @@ new Vue({
                                 const productId = storageCart[i].id;
                                 const dbNameAndPrice = self.name_and_price[productId] ? self.name_and_price[productId] : '';
 
-
                                 if(dbNameAndPrice){
                                         self.cart.push({
                                                 id: productId,
@@ -70,6 +69,7 @@ new Vue({
                         }
                         self.total_sanit = self.total / 100;                
                         self.cart_length = self.cart.length;        
+                        self.saveCartToPost(self.cart);
                 });
         },
 
@@ -176,6 +176,8 @@ new Vue({
                                 }
                         }
                         this.cart_length = this.cart.length;
+
+                        this.saveCartToPost(this.cart);
                         localStorage.setItem('cart', JSON.stringify(this.cart));
                 },
                 increment: function(item) {
@@ -187,6 +189,8 @@ new Vue({
                         this.total += item.price;
                         this.total_sanit = this.total / 100;                        
                         this.cart_length = this.cart.length;
+
+                        this.saveCartToPost(this.cart);
                         localStorage.setItem('cart', JSON.stringify(this.cart));                        
                 },
                 decrement: function(item) {
@@ -206,20 +210,47 @@ new Vue({
                         this.total -= item.price;
                         this.total_sanit = this.total / 100;
                         this.cart_length = this.cart.length;                        
+
+                        this.saveCartToPost(this.cart);
                         localStorage.setItem('cart', JSON.stringify(this.cart));                        
                 },
+                saveCartToPost: function(cart) {
+
+                        if( document.getElementById("basket-storage") ){
+                                document.getElementById("basket-storage").innerHTML = "";
+                                for (var i = 0; i < cart.length; i++) {
+        
+                                        var inputId = document.createElement("INPUT");
+                                        inputId.type = "hidden";
+                                        inputId.name = "products["+i+"][id]";
+                                        inputId.value = cart[i].id;
+        
+                                        var inputQty = document.createElement("INPUT");
+                                        inputQty.type = "hidden";
+                                        inputQty.name = "products["+i+"][qty]";
+                                        inputQty.value = cart[i].qty;
+        
+                                        $("#basket-storage").append(inputId);
+                                        $("#basket-storage").append(inputQty);                                                
+                                }        
+                        }
+
+                },
+
                 pay: function(){
                         //alert('TODO payment=$'+this.total);
                         //window.location.href = 'http://127.0.0.1:8000/home/basket';
                         window.location.pathname =  "/" + this.lang + "/checkout";  //todo - change if one lang.
-                },
+                }
+                /*
                 tobank: function(){
                         const el = document.querySelector('#token');
                         const token = el ? el.dataset.token : '';
                         //alert('token' + token);
 
                         axios.post(
-                                '/home/api/tobank?token='+token,
+                                //'/home/api/tobank?token='+token,
+                                '/home/api/checkout',
                                 {cart: this.cart},
                                 {
                                   headers: {
@@ -236,7 +267,8 @@ new Vue({
                                 }).catch(function (error) {
                                         alert('Error - try later');
                                 });                                                                                        
-                }                
+                } 
+                */               
                 
         }
 });

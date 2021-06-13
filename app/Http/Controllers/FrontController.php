@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 use App\Page;
+use App\Basket;
+use App\Base;
+use App\Checkout;
 use App\User;
 use App\Product;
 use App\Menu;
@@ -13,6 +16,8 @@ use App\Config;
 use App\Order;
 use Carbon\Carbon;
 use App;
+use Illuminate\Support\Facades\Auth;
+use App\Integration\Payu;
 
 class FrontController extends Controller
 {
@@ -38,7 +43,7 @@ class FrontController extends Controller
     }
 
 
-    public function checkout( $lang = null )
+    public function checkout(Request $request, $lang = null )
     {
         if (empty($lang)) {
             $lang = $this->langs[0];
@@ -66,6 +71,87 @@ class FrontController extends Controller
         return view('checkout', $data);
     }
 
+    public function postCheckout(Request $request)
+    {
+        $lang = $request->input('lang');
+        if (!in_array($lang, $this->langs)) {
+            abort(404);
+        }
+        App::setLocale($lang);
+
+        $request->validate([
+            'email' => 'required|email',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'address' => 'required',
+            'country' => 'required',
+            'city' => 'required',
+            'telephone' => 'required',
+            'postcode' => 'required'            
+        ]);     
+
+        $data = $request->only(
+            'products',
+            'email',
+            'first_name',
+            'last_name',
+            'address',
+            'country',
+            'city',
+            'telephone',
+            'postcode'
+        );
+        if(empty($data['products']) || !is_array($data['products']) ){
+            //abort(500);            
+            throw new \Exception('No products in post - checkout');
+        }
+
+        $baskets = $data['products'];
+        unset($data['products']);
+    
+        $checkout = $data;
+        $checkout['user_id'] = Auth::check() ? Auth::user()->id : null;
+        $checkout['session_id'] = session()->getId();
+
+        $objCheckout = Checkout::create($checkout);
+        if (empty($objCheckout->id)) {
+            throw new \Exception("I cant get objCheckout id - problem with save chcekout");
+        }  
+        
+        $reindexBaskets = Base::reIndexArr($baskets);
+        $baskets = [];
+        $productsDataAndTotalAmount = Product::getDataToPayment( $reindexBaskets, $baskets );
+
+        if( empty($baskets) ){
+            //abort(500);            
+            throw new \Exception('No data in basket (not found data in db)');
+        }
+
+        foreach($baskets as $basket){
+            $basket['checkout_id'] = $objCheckout->id;
+            Basket::create($basket);
+        }
+
+        
+        //redirect to payU
+        $payu = new Payu;
+
+        //dd($checkout);
+        $data = $payu->dataToSend( $productsDataAndTotalAmount, $checkout );  
+
+        Log::debug(' data sended to payu: '.var_export($data, true ) );        
+
+        $redirectUri = $payu->getOrder($data);
+        if( empty($redirectUri) ){
+            //throw new \Exception("Somthing wrong with payu - i cant obtain the redirectUri");
+            Log::debug("Somthing wrong with payu - i cant obtain the redirectUri");            
+            return response()->json(['success'=> false, 'error'=> 'Somthing wrong with payu - try later.'], 200); 
+        }
+        Log::debug('payu redirect url: '.$redirectUri );
+        return redirect($redirectUri);
+    }
+
+
     public function changeLang($lang, $pageId, $productSlug = null)
     {
         $page = Page::find($pageId);
@@ -91,7 +177,7 @@ class FrontController extends Controller
         App::setLocale($lang);
 
         //todo - http_reffer - i dont know how to obtain this value - it should be from payu
-        $isNewOrders = Order::moveDataFromBasketToOrderForUser();
+        $isNewOrders =  Order::copyDataFromBasketToOrderForUser(); //false; //Order::moveDataFromBasketToOrderForUser();
 
         $page = Page::getMainPage();
         $this->validatePage($page);

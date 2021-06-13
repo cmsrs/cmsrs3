@@ -8,15 +8,18 @@ class Basket extends Model
 {
     protected $fillable = [
         'qty',
-        'user_id',
+        'price',        
+        'checkout_id',
         'product_id'
     ];
 
     protected $casts = [
-        'user_id' => 'integer',
+        'price' => 'integer',
+        'checkout_id' => 'integer',
         'product_id' => 'integer'
     ];
 
+    /*
     static public function inBasketByUserId($userId)
     {
         return Basket::where('user_id', '=', $userId)->get(); //->toArray();
@@ -44,6 +47,7 @@ class Basket extends Model
         Basket::saveBaskets($baskets);
 
     }
+    */
 
     
 }

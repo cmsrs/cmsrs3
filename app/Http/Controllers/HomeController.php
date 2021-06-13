@@ -55,24 +55,20 @@ class HomeController extends Controller
             $lang = $this->langs[0];
         }
         App::setLocale($lang);
-        
 
-        /*
-        $data = [
-            'token' => $token,            
-            'menus' => $this->menus,
-            'page' => $page,
-            'h1' => $page->translatesByColumnAndLang( 'title', $lang ),
-            'page_title' => $page->translatesByColumnAndLang( 'title', $lang ) ?? config('app.name', 'cmsRS'),
-            'seo_description' =>  $page->translatesByColumnAndLang( 'description', $lang ) ?? config('app.name', 'cmsRS'),
-            'lang' => $lang,
-            'langs' => $this->langs,
-            'view' => $page->getViewNameByType()
-        ];
-        */
+        $user = Auth::user();    
+        $arrOrders = Order::inOrdersByUserId($user->id)->toArray();        
+        $orders = [];
+        if( !empty($arrOrders) ){
+            $arrOrdersReindex = Base::reIndexArr($arrOrders, 'product_id');
+            $baskets = false;
+            Product::getDataToPayment( $arrOrdersReindex, $baskets, $orders);    
+        }
+
 
         $data = $page->getDataToView( [
             //'token' => $token,
+            'orders' => $orders,            
             'lang' => $lang,
             'langs' => $this->langs,
             'menus' => $this->menus
@@ -113,6 +109,7 @@ class HomeController extends Controller
     }
     */
 
+    /*
     public function tobank(Request $request)
     {
         User::checkApiClientByToken($request->token);
@@ -152,5 +149,6 @@ class HomeController extends Controller
         return response()->json(['success' => true, 'data'=> $redirectUri], 200);
         //return redirect($redirectUri);
     }
+    */
 
 }

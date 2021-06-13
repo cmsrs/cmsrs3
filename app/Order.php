@@ -17,41 +17,85 @@ class Order extends Model
         'product_id' => 'integer'
     ];
 
-    static public function moveDataFromBasketToOrderForUser()
+    static public function copyDataFromBasketToOrderForUser()
     {
-        $user = Auth::user();            
-
-        if(empty($user)){
+        $checkout = Checkout::findActiveOrder();
+        if(empty($checkout)){
             return false;
         }
 
-        $objBaskets = Basket::inBasketByUserId($user->id);
+        $checkout->is_pay = 1;
+        $checkout->save();        
+
+        $user = Auth::user();            
+        if(empty($user)){
+            return true;
+        }
+
+        /**
+        * copy basket to orders form login users
+        */
+        $objBaskets =  $checkout->baskets;
+        $objOrders = Order::where('user_id', '=', $user->id)->get();  //->toArray();
 
         if($objBaskets->count()){
             foreach($objBaskets as $objBasket){
-                $objOrder = Order::where('user_id', '=', $objBasket->user_id)->where('product_id', '=', $objBasket->product_id)->first();
+                $arrBasket = $objBasket->toArray();
+                $arrBasket['user_id'] = $user->id;
 
-                if( empty($objOrder) ){
-                    $objOrder = new Order;
-                    $objOrder->qty = $objBasket->qty;
-                    $objOrder->user_id = $objBasket->user_id;
-                    $objOrder->product_id = $objBasket->product_id;        
-                }else{
-                    $objOrder->qty = $objOrder->qty + $objBasket->qty;
+                unset($arrBasket['created_at']);
+                unset($arrBasket['updated_at']);
+                $productId = $arrBasket['product_id'];
+
+                //find order by product_id
+                $objOrderByProductId = null;
+                foreach($objOrders as $objOrder){
+                    if($objOrder->product_id ==  $productId){
+                        $objOrderByProductId = $objOrder;
+                        break;
+                    }
                 }
 
-                $objOrder->save();                
-                $objBasket->delete();
+                if( empty($objOrderByProductId) ){
+                    Order::create($arrBasket);
+                }else{
+                    $objOrderByProductId->qty = $objOrderByProductId->qty + $arrBasket['qty'];
+                    $objOrderByProductId->save();
+                }
             }
-            return true;
         }
-    
-        return false;
-    }
+
+        return true;
+
+/*
+        $orders = [];
+        if($objBaskets->count()){
+            foreach($objBaskets as $objBasket){
+                $arrBasket = $objBasket->toArray();
+                $arrBasket['user_id'] = $user->id;
+
+                unset($arrBasket['created_at']);
+                unset($arrBasket['updated_at']);
+                $productId = $arrBasket['product_id'];
+
+                if( empty($orders[$productId]) ){
+                    $orders[$productId] = $arrBasket;
+                }else{
+                    $orders[$productId]['qty'] += $arrBasket['qty'];
+                }
+            }
+            Order::where('user_id', '=', $user->id)->delete();
+            foreach($orders as $order){
+                Order::create($order);
+            }
+        }    
+*/
+        
+    }   
 
     static public function inOrdersByUserId($userId)
     {
-        return Order::where('user_id', '=', $userId)->get(); //->toArray();
+            return Order::where('user_id', '=', $userId)->get(); //->toArray();
     }
     
     

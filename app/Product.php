@@ -124,10 +124,12 @@ class Product extends Model
 
     static public function getDataToPayment( $arrCart, &$baskets, &$orders = false )
     {
+        /*
         $user = Auth::user();
         if( empty($user) ){
             throw new \Exception("User not auth - this exception is impossible");
         }
+        */
 
         $ids = array_keys($arrCart);
         $arrProducts = Product::with(['translates'])->whereIn('id', $ids)->orderBy('id', 'asc')->get(); //->toArray();
@@ -154,11 +156,13 @@ class Product extends Model
             if( is_array($baskets) ){
                 $baskets[] = [
                     "qty" => $qty,
-                    "user_id" => $user->id,
-                    "product_id" => $product->id
+                    //"user_id" => $user->id,
+                    "price" => $product->price,
+                    "product_id" => $product->id,
+                    //"checkout_id" => $checkoutId
                 ];
             }
-
+            
             if( is_array($orders) ){
                 $productImage = Image::getImagesAndThumbsByTypeAndRefId('product', $product->id)->toArray();
                 $orders[] = [
@@ -170,7 +174,7 @@ class Product extends Model
                     "product_img" =>  empty($productImage[0]) ? '' : $productImage[0]['fs']['small']
                 ];
             }
-
+            
             $totalAmount += $product->price * $qty;
         }
         $out['totalAmount'] =  $totalAmount;

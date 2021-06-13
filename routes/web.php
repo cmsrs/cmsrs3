@@ -16,6 +16,13 @@ use App\Page;
 */
 
 
+
+
+
+
+
+
+
 $demoStatus = env('DEMO_STATUS', false);
 if($demoStatus){
     Auth::routes(['register' => false, 'reset' => false]);
@@ -32,7 +39,11 @@ $langs = Config::arrGetLangsEnv();
     Route::get('/home', 'HomeController@index')->name('home');
     //Route::get('/home/basket', 'HomeController@basket')->name('basket');
     //Route::get('/home/orders', 'HomeController@orders')->name('orders');
-    Route::post('/home/api/tobank', 'HomeController@tobank')->name('tobank');
+
+    //depreciate - /home/api/tobank!
+    //Route::post('/home/api/tobank', 'HomeController@tobank')->name('tobank');
+    Route::post('/post/checkout', 'FrontController@postCheckout');
+
     Route::get('/changelang/{lang}/{pageId}/{productSlug?}', 'FrontController@changeLang')->name('changelang');
 //});
 

@@ -183,6 +183,12 @@ class Base extends TestCase
         $response3->assertStatus(200);
         $url[] = $urlCheckout;
 
+        //home
+        $urlHome = Page::getFirstPageByType('home')->getUrl($lang);
+        $response3 = $this->get($urlHome);
+        $response3->assertStatus(200);
+        $url[] = $urlHome;
+
 
         $this->assertEquals($numOfInPages, count($url));
 

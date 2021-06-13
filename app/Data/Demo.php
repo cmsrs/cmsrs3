@@ -472,6 +472,19 @@ class Demo
         ];
         $p['p12'] = $this->getPageObj()->wrapCreate($pCheckout);
 
+        $pHome = [
+            'title'     => [ "en" =>'Home', "pl" => "Pulpit" ],
+            'short_title' => [ "en" =>'Home', "pl" => "Pulpit"],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla'  ],
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'home',
+            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            'images' => [
+            ]
+        ];
+        $p['p13'] = $this->getPageObj()->wrapCreate($pHome);
+
         return $p;
     }
 

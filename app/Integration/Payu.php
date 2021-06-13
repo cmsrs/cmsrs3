@@ -43,12 +43,14 @@ class Payu extends Model
         return $token->access_token; 
     }
 
-    public function dataToSend( $additionalData )
+    public function dataToSend( $additionalData, $checkoutData )
     {
+        //dd( $objCheckout->toArray()  );
+
         $user = Auth::user();
-        if( empty($user) ){
-            throw new \Exception('no user auth' );
-        }
+        // if( empty($user) ){
+        //     throw new \Exception('no user auth' );
+        // }
         $lang = Config::getDefaultLang();
 
         $data = [
@@ -59,13 +61,12 @@ class Payu extends Model
             'description' => env('APP_NAME'),
             'merchantPosId' => env('PAYU_POS_ID'),            
             'buyer' => [
-                "email"=>  $user->email, //"john.doe@example.com",
+                "email"=>  !empty($user) ? $user->email :  $checkoutData['email'] , //"john.doe@example.com",
+                "phone"=> $checkoutData['telephone'],
+                "firstName"=> $checkoutData['first_name'],
+                "lastName"=> $checkoutData['last_name'],
 
-                "phone"=> "654111654",
-                "firstName"=> "Testrs",
-                "lastName"=> "Testowyrs",
-
-                "language"=> $lang
+                "language"=> 'pl' //$lang
             ],
             /*
             "products" => [

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 //use App\Base;
 use App\Page;
+use App\Checkout;
 use App\Basket;
 use App\Order;
 use App\User;
@@ -107,6 +108,167 @@ class ProductTest extends Base
         ];
     }
 
+
+    /**
+     * it is not test admin
+     * proccess of buying productcs
+    */
+    /** @test */
+    public function it_will_save_checkout()
+    {
+        $price1 = 11200; 
+        $price2 = 32100;
+        $ids = $this->setAddTwoProducts($price1, $price2);
+        $id1 = $ids['id1'];
+        $id2 = $ids['id2'];        
+
+        $user = Auth::user();    
+        $this->assertNotEmpty($user->id);
+
+        $qty0a = 2;
+        $qty1a = 5;
+        $firstName = 'Jan';
+        $data =
+        Array
+        (
+            '_token' => 'gTXqPBuPTbTz1yKecuMiaX8j5ynB1LiO4ul01PwZ',
+            'products' => Array
+                (
+                    0 => Array
+                        (
+                            'id' => $id1,
+                            'qty' => $qty0a
+                        ),
+        
+                    1 => Array
+                        (
+                            'id' => $id2,
+                            'qty' => $qty1a
+                        ),
+                    2 => Array //fake
+                        (
+                            'id' => 10003,
+                            'qty' => 44
+                        )
+                ),
+        
+            'lang' => 'en',
+            'email' => 'client@cmsrs.pl',
+            'first_name' => $firstName,
+            'last_name' => 'Kowalski',
+            'address' => 'kolejowa 1 m 2',
+            'country' => 'Polska',
+            'city' => 'Warszawa',
+            'telephone' => '1234567123',
+            'postcode' => '03-456'
+        );
+
+        $pCheckout = [
+            'title'     => [ "en" =>'Checkout', "pl" => "Kasa" ],
+            'short_title' => [ "en" =>'Checkout', "pl" => "Kasa"],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla'  ],
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'checkout',
+            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            'images' => [
+            ]
+        ];
+
+        $c0 = Checkout::all()->count();
+        $this->assertEquals(0, $c0);
+
+        $p = (new Page)->wrapCreate($pCheckout);
+        $this->assertNotEmpty($p->id);
+        
+        $response0 = $this->post('/post/checkout', $data);
+        $response0->assertStatus(302);  
+        //dd($response0);
+
+        $c1 = Checkout::all()->count();
+        $this->assertEquals(1, $c1);
+
+        $ch = Checkout::first(); //->toArray();
+
+        $this->assertEquals(0, $ch->is_pay);
+        $this->assertEquals($user->id, $ch->user_id);
+        $this->assertEquals($firstName, $ch->first_name);
+        $this->assertNotEmpty($ch->session_id);
+        $sessionId = session()->getId();
+        $this->assertEquals($sessionId, $ch->session_id);
+
+        $this->assertEquals(2, $ch->baskets->count() );
+        foreach($ch->baskets as $basket){
+            $b =  $basket->toArray();
+            $this->assertTrue( in_array( $b['product_id'], $ids ) ); 
+            if( $b['product_id'] == $ids['id1'] ){
+                $this->assertEquals($price1, $b['price']);
+            }
+            if( $b['product_id'] == $ids['id2'] ){
+                $this->assertEquals($price2, $b['price']);
+            }
+
+        }
+
+        $o0 = Order::all()->count();
+        $this->assertEquals(0, $o0);
+        $isCopy0 =  Order::copyDataFromBasketToOrderForUser();
+        $this->assertTrue($isCopy0);
+
+
+        $o1count = Order::all()->count();
+        $this->assertEquals(2, $o1count);
+
+        //print_r(Order::all()->toArray());
+
+        $ch1 = Checkout::first(); //->toArray();
+        $this->assertEquals(1, $ch1->is_pay);        
+
+        /**
+         * second process payment
+         */
+        $qty1b = 32;
+        $data['products'] = [
+            [
+                'id' => $id2,
+                'qty' => $qty1b
+            ]
+        ];
+        $response1 = $this->post('/post/checkout', $data);
+        $response1->assertStatus(302);          
+        $this->assertEquals(2, Checkout::all()->count());
+
+        
+        $ch = Checkout::findActiveOrder();
+        $this->assertNotEmpty($ch);
+        $this->assertEquals(0, $ch->is_pay);
+
+        $ret1 =  Order::copyDataFromBasketToOrderForUser();
+        $this->assertTrue($ret1);
+        $ch2 = Checkout::findActiveOrder();
+        $this->assertEmpty($ch2);
+
+        $ret1b = Order::copyDataFromBasketToOrderForUser();
+        $this->assertFalse($ret1b);        
+
+        $o2count = Order::all()->count();
+        $this->assertEquals($o2count, $o1count);
+        
+        $arrOrders = Order::all()->toArray();
+        $this->assertEquals($o2count, count($arrOrders) );
+
+        //print_r($arrOrders);
+        foreach($arrOrders as $o){
+            $this->assertTrue( in_array( $o['product_id'], $ids ) ); 
+            if( $o['product_id'] == $ids['id1'] ){
+                $this->assertEquals($qty0a, $o['qty']);
+            }
+            if( $o['product_id'] == $ids['id2'] ){
+                $this->assertEquals( ($qty1a + $qty1b), $o['qty'] );
+            }
+        }
+    }
+
     /**
      * it is not test admin
      * this api is use in backet (it is usefull when name and price will be changing)
@@ -173,6 +335,7 @@ class ProductTest extends Base
      * it is not test admin
      */
     /** @test */
+    /*
     public function it_will_save_to_basket()
     {
         $ids = $this->setAddTwoProducts();
@@ -214,11 +377,13 @@ class ProductTest extends Base
         $this->assertEmpty($objOrders);        
         //dd($basket);
     }
+    */
 
     /**
      * it is not test admin
      */
     /** @test */
+    /*
     public function it_will_save_to_order()
     {
         $ids = $this->setAddTwoProducts();
@@ -266,6 +431,7 @@ class ProductTest extends Base
             $this->assertEquals($b[$i]["product_id"], $o[$i]["product_id"]);        
         }
     }
+    */
 
 
 
@@ -273,6 +439,7 @@ class ProductTest extends Base
      * it is not test admin
      */
     /** @test */
+    /*
     public function it_will_save_two_times_to_order()
     {
         $ids = $this->setAddTwoProducts();
@@ -360,6 +527,7 @@ class ProductTest extends Base
         $this->assertEquals($user->id, $o2[1]["user_id"]);
         $this->assertEquals($id2, $o2[1]["product_id"]);        
     }
+    */
 
     private function setAddTwoProducts($price1 = 11200, $price2 = 32100)
     {
@@ -480,6 +648,7 @@ class ProductTest extends Base
      * it tests home/api/tobank
      */
     /** @test */
+    /*
     public function it_will_post_to_bank()
     {
         //dd($products);
@@ -488,10 +657,8 @@ class ProductTest extends Base
         $id1 = $ids['id1'];
         $id2 = $ids['id2'];        
 
-
-        /*
-        name and price is not important in this post
-        */        
+        
+        //name and price is not important in this post                
         $json = 
         '{
             "cart": [
@@ -548,7 +715,7 @@ class ProductTest extends Base
         }
 
     }
-
+    */
 
 
     /** @test */

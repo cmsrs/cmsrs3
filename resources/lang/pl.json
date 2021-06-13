@@ -37,7 +37,16 @@
 
     "Forgot Your Password?" : "Zapomniałeś hasła?",
     "Register" : "Rejestracja",
-    "Confirm Password" : "Powtórz hasło"
+    "Confirm Password" : "Powtórz hasło",
+
+
+    "First name" : "Imię",
+    "Last name" : "Nazwisko",
+    "Address" : "Adres",
+    "Country" : "Państwo",
+    "City" : "Miasto",
+    "Telephone" : "Telefon",
+    "Postcode" : "Kod pocztowy"
 
 
 }

@@ -14,7 +14,7 @@ class CreateCommentsTable extends Migration
     public function up()
     {
         Schema::create('comments', function (Blueprint $table) {
-            $table->id();
+            $table->id(); //todo - maybe it should be consistent from another tables
             $table->text('content')->nullable();
             $table->unsignedBigInteger('page_id')->nullable();
             $table->foreign('page_id')->nullable()->references('id')->on('pages')->onDelete('cascade');
