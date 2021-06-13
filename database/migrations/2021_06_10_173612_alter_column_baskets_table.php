@@ -16,10 +16,9 @@ class AlterColumnBasketsTable extends Migration
         if (Schema::hasColumn('baskets', 'user_id')){
 
             Schema::table('baskets', function (Blueprint $table) {
-
                 $table->dropForeign('baskets_user_id_foreign');
+                $table->dropIndex('unique_baskets_index');
                 $table->dropColumn('user_id');
-
             });
         }     
 
