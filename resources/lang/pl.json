@@ -46,7 +46,23 @@
     "Country" : "Państwo",
     "City" : "Miasto",
     "Telephone" : "Telefon",
-    "Postcode" : "Kod pocztowy"
+    "Postcode" : "Kod pocztowy",
+
+    "Cash on delivery" : "Płatność za pobraniem",
+    "Bank transfer" : "Przelew bankowy",
+    "PayU payment" : "Płatność PayU",
+    "Pickup in person" : "Odbiór osobisty",
+    "DPD courier" : "Kurier DPD",
+    "Parcel lockers" : "Paczkomaty",
+    
+    "Deliver" : "Dostawa",
+    "Payment" : "Płatość",
+    "Products price" : "Cena produktów",
+
+    "Thank you for purchasing products from our store" : "Dziękujemy za zakup produktów w naszym sklepie",
+    "Order number" :  "Nr zlecenia",
+    "Amount to pay" : "Kwota do zapłaty",
+    "Bank account number" : "Nr konta bankowego"
 
 
 }

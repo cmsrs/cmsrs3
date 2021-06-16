@@ -2,6 +2,8 @@ new Vue({
         el: "#appall",
         data: {
                 total: 0,
+                deliver_price: 0,
+                total_add_deliver_sanit: 0,
                 cart: [],               
                 cart_length: 0,
                 name_and_price: [],
@@ -70,6 +72,8 @@ new Vue({
                         self.total_sanit = self.total / 100;                
                         self.cart_length = self.cart.length;        
                         self.saveCartToPost(self.cart);
+                        const deliver_price =   parseInt($("#deliver-old-price").val(), 10 );
+                        self.total_add_deliver_sanit = self.calculateTotalAddDeliverSanit(self.total, deliver_price);
                 });
         },
 
@@ -179,6 +183,9 @@ new Vue({
 
                         this.saveCartToPost(this.cart);
                         localStorage.setItem('cart', JSON.stringify(this.cart));
+                        //this.total_add_deliver_sanit = (this.total + this.deliver_price)/100;
+
+                        this.total_add_deliver_sanit = this.calculateTotalAddDeliverSanit(this.total, this.deliver_price);
                 },
                 increment: function(item) {
                         for (var i = 0; i < this.cart.length; i++) {
@@ -192,6 +199,8 @@ new Vue({
 
                         this.saveCartToPost(this.cart);
                         localStorage.setItem('cart', JSON.stringify(this.cart));                        
+                        //this.total_add_deliver_sanit = (this.total + this.deliver_price)/100;
+                        this.total_add_deliver_sanit = this.calculateTotalAddDeliverSanit(this.total, this.deliver_price);
                 },
                 decrement: function(item) {
                         var indexToDel = false;
@@ -212,7 +221,9 @@ new Vue({
                         this.cart_length = this.cart.length;                        
 
                         this.saveCartToPost(this.cart);
-                        localStorage.setItem('cart', JSON.stringify(this.cart));                        
+                        localStorage.setItem('cart', JSON.stringify(this.cart)); 
+                        //this.total_add_deliver_sanit = (this.total + this.deliver_price)/100;
+                        this.total_add_deliver_sanit = this.calculateTotalAddDeliverSanit(this.total, this.deliver_price);
                 },
                 saveCartToPost: function(cart) {
 
@@ -241,7 +252,18 @@ new Vue({
                         //alert('TODO payment=$'+this.total);
                         //window.location.href = 'http://127.0.0.1:8000/home/basket';
                         window.location.pathname =  "/" + this.lang + "/checkout";  //todo - change if one lang.
+                },
+                deliver: function( deliver ){
+                        //this.deliver_price =  parseInt( deliver, 10 );
+                        this.deliver_price =  parseInt( deliver, 10 );
+                        this.total_add_deliver_sanit = this.calculateTotalAddDeliverSanit(this.total, this.deliver_price);
+                },
+
+                calculateTotalAddDeliverSanit: function(total, deliver_price){
+                        return (total + deliver_price)/100;
                 }
+
+
                 /*
                 tobank: function(){
                         const el = document.querySelector('#token');

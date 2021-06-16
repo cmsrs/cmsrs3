@@ -878,15 +878,20 @@ class PageTest extends Base
 
         //min data
         $testData22 =
-      [
+        [
            'title'     => [ 'en' => 'test p2 uniq'],
            'short_title'     => [ 'en' => 'p2'],
            'position' => '3a12'
-      ];
+        ];
 
         $response22 = $this->post('api/pages?token='.$this->token, $testData22);
+        //dd($response22);
         $res22 = $response22->getData();
         $this->assertTrue($res22->success);
+
+        $pages = Page::all()->toArray();
+        $lastPage = $pages[count($pages) - 1];
+        $this->assertEquals('cms', $lastPage['type'] ); //cms - it is default value
     }
 
     /** @test */

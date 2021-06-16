@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 //use App\Base;
 use App\Page;
+use App\Deliver;
+use App\Payment;
 use App\Checkout;
 use App\Basket;
 use App\Order;
@@ -125,6 +127,20 @@ class ProductTest extends Base
         $user = Auth::user();    
         $this->assertNotEmpty($user->id);
 
+
+        $pShoppingSuccess = [
+            'title'     => [ "en" =>'Shopping Success', "pl" => "Twoje zakupy" ],
+            'short_title' => [ "en" =>'Shopping Success', "pl" => "Twoje zakupy"],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla'  ],
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'shoppingsuccess',
+            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            'images' => [
+            ]
+        ];
+        (new Page)->wrapCreate($pShoppingSuccess);
+
         $qty0a = 2;
         $qty1a = 5;
         $firstName = 'Jan';
@@ -160,7 +176,9 @@ class ProductTest extends Base
             'country' => 'Polska',
             'city' => 'Warszawa',
             'telephone' => '1234567123',
-            'postcode' => '03-456'
+            'postcode' => '03-456',
+            'deliver' => Deliver::KEY_DPD_COURIER,
+            'payment' => Payment::KEY_CASH
         );
 
         $pCheckout = [
@@ -175,15 +193,32 @@ class ProductTest extends Base
             ]
         ];
 
+        $pShoppingsuccess = [
+            'title'     => [ "en" =>'CheckoutSS', "pl" => "KasaSS" ],
+            'short_title' => [ "en" =>'CheckoutSS', "pl" => "KasaSS"],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla'  ],
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'shoppingsuccess',
+            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            'images' => [
+            ]
+        ];
+
+
         $c0 = Checkout::all()->count();
         $this->assertEquals(0, $c0);
 
         $p = (new Page)->wrapCreate($pCheckout);
         $this->assertNotEmpty($p->id);
+        $p2 = (new Page)->wrapCreate($pShoppingsuccess);
+        $this->assertNotEmpty($p2->id);
+
         
         $response0 = $this->post('/post/checkout', $data);
-        $response0->assertStatus(302);  
         //dd($response0);
+        $response0->assertStatus(302);  
+
 
         $c1 = Checkout::all()->count();
         $this->assertEquals(1, $c1);
@@ -193,6 +228,14 @@ class ProductTest extends Base
         $this->assertEquals(0, $ch->is_pay);
         $this->assertEquals($user->id, $ch->user_id);
         $this->assertEquals($firstName, $ch->first_name);
+
+
+        $this->assertNotEmpty($ch->price_total);
+        $this->assertNotEmpty($ch->price_deliver);
+        $this->assertNotEmpty($ch->price_total_add_deliver);
+        $this->assertEquals($ch->price_total + $ch->price_deliver, $ch->price_total_add_deliver);
+
+
         $this->assertNotEmpty($ch->session_id);
         $sessionId = session()->getId();
         $this->assertEquals($sessionId, $ch->session_id);
@@ -242,6 +285,15 @@ class ProductTest extends Base
         $ch = Checkout::findActiveOrder();
         $this->assertNotEmpty($ch);
         $this->assertEquals(0, $ch->is_pay);
+
+        
+        //pShoppingSuccess
+        $pSuc = Page::getFirstPageByType('shoppingsuccess');
+        $this->assertNotEmpty($pSuc);
+        $urlShoppingSuccess = $pSuc->getUrl('en');
+        $response3 = $this->get($urlShoppingSuccess);
+        $response3->assertStatus(200); //because there is checkout_id in session therefore is 200 status
+
 
         $ret1 =  Order::copyDataFromBasketToOrderForUser();
         $this->assertTrue($ret1);

@@ -308,6 +308,8 @@ class Page extends Base
             $view = 'register';
         } elseif ($this->type == 'home') {
             $view = 'home';
+        } elseif ($this->type == 'shoppingsuccess') {
+            $view = 'shoppingsuccess';
         } else {
             $view = 'cms';
         }
@@ -318,7 +320,7 @@ class Page extends Base
     {        
         if ('main_page' == $this->type) {
             return $this->getMainUrl($lang);
-        } elseif ( ('login' == $this->type) || ('checkout' == $this->type) || ('register' == $this->type) || ('home' == $this->type) ) {
+        } elseif ( ('login' == $this->type) || ('checkout' == $this->type) || ('register' == $this->type) || ('home' == $this->type) || ($this->type == 'shoppingsuccess')  ) {
             return $this->getTypeUrl($lang);
         } 
         //elseif ('privacy_policy' == $this->type) {

@@ -485,6 +485,21 @@ class Demo
         ];
         $p['p13'] = $this->getPageObj()->wrapCreate($pHome);
 
+
+        $pShoppingSuccess = [
+            'title'     => [ "en" =>'Shopping Success', "pl" => "Twoje zakupy" ],
+            'short_title' => [ "en" =>'Shopping Success', "pl" => "Twoje zakupy"],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla'  ],
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'shoppingsuccess',
+            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            'images' => [
+            ]
+        ];
+        $p['p14'] = $this->getPageObj()->wrapCreate($pShoppingSuccess);
+
+
         return $p;
     }
 

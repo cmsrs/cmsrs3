@@ -14,6 +14,8 @@ use App\Product;
 use App\Menu;
 use App\Config;
 use App\Order;
+use App\Deliver;
+use App\Payment;
 use Carbon\Carbon;
 use App;
 use Illuminate\Support\Facades\Auth;
@@ -42,6 +44,42 @@ class FrontController extends Controller
         }
     }
 
+    public function shoppingsuccess(Request $request, $lang = null )
+    {
+        if (empty($lang)) {
+            $lang = $this->langs[0];
+        }
+        if (!in_array($lang, $this->langs)) {
+            abort(404);
+        }
+        App::setLocale($lang);
+
+        $page = Page::getFirstPageByType('shoppingsuccess');
+        if(!$page){
+            Log::error('if you want this page you have to add page in type shoppingsuccess');
+            abort(404);
+        }
+
+        if( $request->session()->has('checkout_id')){
+            $checkoutId = $request->session()->get('checkout_id');
+            $objCheckout = Checkout::find($checkoutId);
+            $request->session()->forget('checkout_id');
+            $request->session()->flush();    
+        }
+        if( empty($objCheckout) ){
+            abort(404);
+        }
+
+        $data = $page->getDataToView( [
+            'checkout' => $objCheckout,
+            'lang' => $lang,
+            'langs' => $this->langs,
+            'menus' => $this->menus
+        ]);
+
+        return view('shoppingsuccess', $data);
+    }
+
 
     public function checkout(Request $request, $lang = null )
     {
@@ -59,10 +97,15 @@ class FrontController extends Controller
             abort(404);
         }
 
-        $token =  '123todo'; // User::getTokenForClient(); //todo - when user not auth
+        $payments = Payment::getPayment();
+        $delivers = Deliver::getDeliver();        
+
+        //$token =  '123todo'; // User::getTokenForClient(); //todo - when user not auth
 
         $data = $page->getDataToView( [
-            'token' => $token,
+            //'token' => $token,
+            'payments' => $payments,
+            'delivers' => $delivers,
             'lang' => $lang,
             'langs' => $this->langs,
             'menus' => $this->menus
@@ -80,6 +123,7 @@ class FrontController extends Controller
         App::setLocale($lang);
 
         $request->validate([
+            'products' => 'required',
             'email' => 'required|email',
             'first_name' => 'required',
             'last_name' => 'required',
@@ -87,7 +131,9 @@ class FrontController extends Controller
             'country' => 'required',
             'city' => 'required',
             'telephone' => 'required',
-            'postcode' => 'required'            
+            'postcode' => 'required',
+            'deliver' => 'required',
+            'payment' => 'required',
         ]);     
 
         $data = $request->only(
@@ -99,56 +145,85 @@ class FrontController extends Controller
             'country',
             'city',
             'telephone',
-            'postcode'
+            'postcode',
+            'deliver',
+            'payment'
         );
         if(empty($data['products']) || !is_array($data['products']) ){
             //abort(500);            
             throw new \Exception('No products in post - checkout');
         }
+        $payment = Payment::getPayment( $data['payment'] );        
+        if( empty($payment) ){
+            throw new \Exception('Payment problem - checkout');
+        }
+
+        $deliver = Deliver::getDeliver( $data['deliver'] );
+        if( empty($deliver) ){
+            throw new \Exception('Deliver problem - checkout');
+        }
+
 
         $baskets = $data['products'];
+        $reindexBaskets = Base::reIndexArr($baskets);
+        $baskets = [];
+        $productsDataAndTotalAmount = Product::getDataToPayment( $reindexBaskets, $baskets );
+        if( empty($baskets) ){
+            //abort(500);            
+            throw new \Exception('No data in basket (not found data in db)');
+        }
+
         unset($data['products']);
-    
         $checkout = $data;
         $checkout['user_id'] = Auth::check() ? Auth::user()->id : null;
         $checkout['session_id'] = session()->getId();
+        $checkout['price_total'] =  $productsDataAndTotalAmount['totalAmount'];
+        $checkout['price_deliver'] = $deliver['price'];
+        $checkout['price_total_add_deliver'] = $checkout['price_total'] + $checkout['price_deliver'];
+
 
         $objCheckout = Checkout::create($checkout);
         if (empty($objCheckout->id)) {
             throw new \Exception("I cant get objCheckout id - problem with save chcekout");
         }  
         
-        $reindexBaskets = Base::reIndexArr($baskets);
-        $baskets = [];
-        $productsDataAndTotalAmount = Product::getDataToPayment( $reindexBaskets, $baskets );
-
-        if( empty($baskets) ){
-            //abort(500);            
-            throw new \Exception('No data in basket (not found data in db)');
-        }
-
         foreach($baskets as $basket){
             $basket['checkout_id'] = $objCheckout->id;
             Basket::create($basket);
         }
 
         
-        //redirect to payU
-        $payu = new Payu;
+        if( Payment::KEY_PAYU  == $data['payment'] ){
+            //redirect to payU
+            $payu = new Payu;
 
-        //dd($checkout);
-        $data = $payu->dataToSend( $productsDataAndTotalAmount, $checkout );  
+            //dd($checkout);
+            $data = $payu->dataToSend( $productsDataAndTotalAmount, $checkout );  
 
-        Log::debug(' data sended to payu: '.var_export($data, true ) );        
+            Log::debug(' data sended to payu: '.var_export($data, true ) );        
 
-        $redirectUri = $payu->getOrder($data);
-        if( empty($redirectUri) ){
-            //throw new \Exception("Somthing wrong with payu - i cant obtain the redirectUri");
-            Log::debug("Somthing wrong with payu - i cant obtain the redirectUri");            
-            return response()->json(['success'=> false, 'error'=> 'Somthing wrong with payu - try later.'], 200); 
+            $redirectUri = $payu->getOrder($data);
+            if( empty($redirectUri) ){
+                //throw new \Exception("Somthing wrong with payu - i cant obtain the redirectUri");
+                Log::debug("Somthing wrong with payu - i cant obtain the redirectUri");            
+                return response()->json(['success'=> false, 'error'=> 'Somthing wrong with payu - try later.'], 200); 
+            }
+            Log::debug('payu redirect url: '.$redirectUri );
+            return redirect($redirectUri);
+
+        }else{
+            $pShoppingSuccess = Page::getFirstPageByType('shoppingsuccess'); 
+            if( empty($pShoppingSuccess) ){
+                throw new \Exception("you should add page type = shoppingsuccess");
+            }
+
+            $urlShoppingSuccess = $pShoppingSuccess->getUrl($lang);       
+            //$request->session()->flash('status', 'Task was successful!');            
+            //$request->session()->keep(['checkout_id' => $objCheckout->id]);            
+            $request->session()->flash('checkout_id', $objCheckout->id);            
+            return redirect($urlShoppingSuccess);
         }
-        Log::debug('payu redirect url: '.$redirectUri );
-        return redirect($redirectUri);
+
     }
 
 
@@ -177,7 +252,8 @@ class FrontController extends Controller
         App::setLocale($lang);
 
         //todo - http_reffer - i dont know how to obtain this value - it should be from payu
-        $isNewOrders =  Order::copyDataFromBasketToOrderForUser(); //false; //Order::moveDataFromBasketToOrderForUser();
+        //it make sance only for payU - it my opinion
+        $isNewOrders = false; //Order::copyDataFromBasketToOrderForUser();  
 
         $page = Page::getMainPage();
         $this->validatePage($page);

@@ -324,6 +324,10 @@ class FrontLangsTest extends Base
                 $response = $this->get($url);
     
                 $status = (  ('login' === $page->type) ||   ('register' === $page->type)   )     ? 302 : 200;
+                if ('shoppingsuccess' ==  $page->type){
+                    $status =404;
+                }
+
                 $response->assertStatus($status);    
             }            
 

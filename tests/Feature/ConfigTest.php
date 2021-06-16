@@ -29,6 +29,9 @@ class ConfigTest extends Base
 
         $res = $response->getData();
 
+        //dd($res);
+
+
         $this->assertTrue($res->success);
 
         $this->assertNotEmpty($res->data);
@@ -60,6 +63,10 @@ class ConfigTest extends Base
             $response = $this->get($url);
 
             $status = ( ('login' === $page_type) ||  ('register' === $page_type )   ) ? 302 : 200; //I don't understand - todo (why register??)
+            if ('shoppingsuccess' ==  $page_type){
+                $status = 404;
+            }
+
             //dump($page_type);
             $response->assertStatus($status);
         }

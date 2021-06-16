@@ -17,7 +17,10 @@ class Checkout extends Model
         'telephone',
         'postcode',
         'is_pay',
-        'session_id'
+        'session_id',
+        'price_total',
+        'price_deliver',
+        'price_total_add_deliver'
     ];
 
     public function baskets()
@@ -30,9 +33,12 @@ class Checkout extends Model
         $user = Auth::user();            
         $sessionId = session()->getId();        
         if(empty($user)){
-            return Checkout::where('session_id', '=', $sessionId)->where( 'is_pay', '=', 0)->first();
+            //where('session_id', '=', $sessionId)->
+            //return Checkout::where( 'is_pay', '=', 0)->first();
+            return false;
         }
-        return Checkout::where('user_id', '=', $user->id)->where('session_id', '=', $sessionId)->where( 'is_pay', '=', 0)->first();
+        //where('session_id', '=', $sessionId)->
+        return Checkout::where('user_id', '=', $user->id)->where( 'is_pay', '=', 0)->first();
     }
     
 }

@@ -138,6 +138,8 @@ class Base extends TestCase
                 $response->assertStatus(302);   //redirect to home page, because user is log in
                 $pos = strpos($response->getContent(), 'home');
                 $this->assertNotEmpty($pos, $pageTitle);
+            }elseif ('shoppingsuccess' ==  $page->type){
+                $response->assertStatus(404);
             } else {
                 $response->assertStatus(200);
                 $pos = strpos($response->getContent(), $pageTitle);
@@ -189,6 +191,12 @@ class Base extends TestCase
         $response3->assertStatus(200);
         $url[] = $urlHome;
 
+        //pShoppingSuccess
+        $urlShoppingSuccess = Page::getFirstPageByType('shoppingsuccess')->getUrl($lang);
+        $response3 = $this->get($urlShoppingSuccess);
+        $response3->assertStatus(404); //because there is no checkout_id in session
+        $url[] = $urlShoppingSuccess;
+        
 
         $this->assertEquals($numOfInPages, count($url));
 

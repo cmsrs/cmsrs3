@@ -30,6 +30,11 @@ class CreateCheckoutsTable extends Migration
             $table->string('session_id');
             $table->boolean('is_pay')->default(0);
 
+            $table->integer('price_deliver')->nullable();
+            $table->integer('price_total')->nullable();
+            $table->integer('price_total_add_deliver')->nullable();
+            
+
             $table->timestamps();
         });
     }
