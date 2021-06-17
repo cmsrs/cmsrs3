@@ -28,17 +28,59 @@ class Checkout extends Model
         return $this->hasMany('App\Basket');
     } 
     
+
     static public function findActiveOrder()
     {
+        $orders = self::findActiveOrders();
+        return $orders->first();
+
+        // $user = Auth::user();            
+        // $sessionId = session()->getId();        
+        // if(empty($user)){
+        //     //where('session_id', '=', $sessionId)->
+        //     //return Checkout::where( 'is_pay', '=', 0)->first();
+        //     return false;
+        // }
+        // //where('session_id', '=', $sessionId)->
+        // return Checkout::where('user_id', '=', $user->id)->where( 'is_pay', '=', 0)->first();
+    }
+
+    static public function findActiveOrders()
+    {
         $user = Auth::user();            
-        $sessionId = session()->getId();        
         if(empty($user)){
-            //where('session_id', '=', $sessionId)->
-            //return Checkout::where( 'is_pay', '=', 0)->first();
             return false;
         }
         //where('session_id', '=', $sessionId)->
-        return Checkout::where('user_id', '=', $user->id)->where( 'is_pay', '=', 0)->first();
+        return Checkout::where('user_id', '=', $user->id)->where( 'is_pay', '=', 0);
     }
-    
+
+
+    static public function printCheckouts( $checkouts, $lang )
+    {
+        $out = [];
+        $i = 0;
+        foreach($checkouts as $checkout){
+
+            $out[$i]['id'] = $checkout->id;
+            $out[$i]['price_total'] = $checkout->price_total /100;
+            $out[$i]['price_deliver'] = $checkout->price_deliver /100;
+            $out[$i]['price_total_add_deliver'] = $checkout->price_total_add_deliver / 100;
+
+            $j = 0;
+            foreach($checkout->baskets as $basket){
+                //todo - sql in foreach :(
+                $product = Product::with(['translates'])->where('id', $basket['product_id'])->first();
+                $productName = Product::getDefaultProductName( $product->translates, $lang );
+                $out[$i]['baskets'][$j]['qty'] = $basket->qty;
+                $out[$i]['baskets'][$j]['price'] = $basket->price /100;
+                $out[$i]['baskets'][$j]['product_id'] = $basket['product_id'];
+                $out[$i]['baskets'][$j]['product_name'] = $productName;
+                $out[$i]['baskets'][$j]['product_url'] = $product->getProductUrl($lang, $productName);
+                $j++;
+            }
+            $i++;
+        }
+        return $out;
+    }
 }

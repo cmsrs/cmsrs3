@@ -62,7 +62,7 @@ class Product extends Model
         ];  
     }
 
-    static private function getDefaultProductName($productTranslates, $lang)
+    static public function getDefaultProductName($productTranslates, $lang)
     {
         //$lang = Config::getDefaultLang();
 

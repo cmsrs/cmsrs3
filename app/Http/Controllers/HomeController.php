@@ -8,6 +8,7 @@ use App\Menu;
 use App\Page;
 use App\Product;
 use App\Basket;
+use App\Checkout;
 use App\Order;
 use App\Base;
 use App\Config;
@@ -65,9 +66,11 @@ class HomeController extends Controller
             Product::getDataToPayment( $arrOrdersReindex, $baskets, $orders);    
         }
 
+        $objCheckouts = Checkout::findActiveOrders()->get();
+        $checkouts = Checkout::printCheckouts( $objCheckouts, $lang );
 
         $data = $page->getDataToView( [
-            //'token' => $token,
+            'checkouts' => $checkouts,
             'orders' => $orders,            
             'lang' => $lang,
             'langs' => $this->langs,

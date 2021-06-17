@@ -27,9 +27,24 @@
                     </div>
             </div>    
 
+            <div class="border mt-3 p-3 mb-4">
+                {{ __('TO PAY') }}:            
+                <ul  class="mt-3 list-group">
+                    <?php foreach($checkouts as $checkout){ ?>
+                        <li class="ml-4" >{{  __('Order number') }} : {{ $checkout['id'] }}. {{  __('Amount to pay') }}  <strong> {{ $checkout['price_total_add_deliver'] }} zł</strong>  = {{ $checkout['price_total']  }} zł + {{  __('deliver') }} : {{ $checkout['price_deliver'] }} zł</li>
+                        <ul>
+                        <?php foreach($checkout['baskets'] as $basket){ ?>
+                            <li class="ml-4" ><a href="{{ $basket['product_url'] }}"> {{ $basket['product_name'] }}</a> {{ $basket['qty'] }} x {{ $basket['price'] }} zł </li>
+                        <?php } ?>
+                        </ul>
+                    <?php } ?>
+                </ul>
+            </div>
+
             <div class="border mt-3 p-3">                
+                {{ __('SHOPPING CART') }}:            
                 <div class="col">
-                    {{ __('SHOPPING CART') }}:
+
                     <ul>
                     <li class="mt-2" v-for="item in cart" v-bind:key="item.id">              
                         <div>@{{ item.name }}</div>
