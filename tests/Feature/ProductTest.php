@@ -112,6 +112,149 @@ class ProductTest extends Base
 
 
     /**
+     * api admin
+     * it should be 2 tests - todo - get and update
+     */
+    /** @test */
+    public function it_will_get_and_update_checkouts_docs()
+    {
+        /*** set data - fixture */
+
+        $price1 = 11200; 
+        $price2 = 32100;
+        $ids = $this->setAddTwoProducts($price1, $price2);
+        $id1 = $ids['id1'];
+        $id2 = $ids['id2'];        
+
+        $qty0a = 2;
+        $qty1a = 5;
+        $firstName = 'Jan';
+        $data =
+        Array
+        (
+            '_token' => 'gTXqPBuPTbTz1yKecuMiaX8j5ynB1LiO4ul01PwZ',
+            'products' => Array
+                (
+                    0 => Array
+                        (
+                            'id' => $id1,
+                            'qty' => $qty0a
+                        ),
+        
+                    1 => Array
+                        (
+                            'id' => $id2,
+                            'qty' => $qty1a
+                        ),
+                    2 => Array //fake
+                        (
+                            'id' => 10003,
+                            'qty' => 44
+                        )
+                ),
+        
+            'lang' => 'en',
+            'email' => 'client@cmsrs.pl',
+            'first_name' => $firstName,
+            'last_name' => 'Kowalski',
+            'address' => 'kolejowa 1 m 2',
+            'country' => 'Polska',
+            'city' => 'Warszawa',
+            'telephone' => '1234567123',
+            'postcode' => '03-456',
+            'deliver' => Deliver::KEY_DPD_COURIER,
+            'payment' => Payment::KEY_CASH
+        );
+
+        $pCheckout = [
+            'title'     => [ "en" =>'Checkout', "pl" => "Kasa" ],
+            'short_title' => [ "en" =>'Checkout', "pl" => "Kasa"],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla'  ],
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'checkout',
+            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            'images' => [
+            ]
+        ];
+
+        $pShoppingsuccess = [
+            'title'     => [ "en" =>'CheckoutSS', "pl" => "KasaSS" ],
+            'short_title' => [ "en" =>'CheckoutSS', "pl" => "KasaSS"],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla'  ],
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'shoppingsuccess',
+            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            'images' => [
+            ]
+        ];
+        
+
+        $p = (new Page)->wrapCreate($pCheckout);
+        $this->assertNotEmpty($p->id);
+
+        $p2 = (new Page)->wrapCreate($pShoppingsuccess);
+        $this->assertNotEmpty($p2->id);        
+
+        $response0 = $this->post('/post/checkout', $data);
+        //dd($response0);
+        $response0->assertStatus(302);  
+
+        $c1 = Checkout::all()->count();
+        $this->assertEquals(1, $c1);
+
+
+        $ch = Checkout::first();
+        $this->assertEquals(0, $ch->is_pay);
+        $this->assertNotEmpty($ch->id);        
+
+        /*** start testing */
+
+        $response = $this->get('api/checkouts?token='.$this->token);
+        //dd($response);
+
+        $res = $response->getData();
+        $this->assertTrue($res->success);        
+        $this->assertEquals($c1, count($res->data));
+
+
+        $this->assertEquals( $ch->id, $res->data[0]->id );
+        $this->assertEquals( Auth::user()->id, $res->data[0]->user_id );
+        $this->assertNotEmpty( $res->data[0]->email );
+        $this->assertNotEmpty($res->data[0]->first_name  );
+        $this->assertNotEmpty($res->data[0]->last_name  );
+        $this->assertNotEmpty($res->data[0]->address  );
+        $this->assertNotEmpty($res->data[0]->country  );
+        $this->assertNotEmpty($res->data[0]->city  );
+        $this->assertNotEmpty($res->data[0]->telephone  );
+        $this->assertNotEmpty($res->data[0]->postcode  );
+        $this->assertEquals(0,  $res->data[0]->is_pay  );
+        $this->assertNotEmpty($res->data[0]->created_at  );
+
+        $this->assertNotEmpty($res->data[0]->baskets  );
+        $this->assertTrue(  is_array( $res->data[0]->baskets ) );
+
+
+        $dataUpdate = [
+            'is_pay' => 1
+        ];
+
+        $response2 = $this->put('api/checkouts/'.$ch->id.'?token='.$this->token, $dataUpdate);
+        $res2 = $response2->getData();
+
+        $this->assertTrue($res2->success);
+
+        $response3= $this->get('api/checkouts?token='.$this->token);
+        $res3 = $response3->getData();
+        $this->assertTrue($res3->success);        
+        $this->assertEquals($c1, count($res3->data));
+
+        $this->assertEquals($ch->id, $res3->data[0]->id);
+        $this->assertEquals( $dataUpdate['is_pay'],  $res3->data[0]->is_pay );
+    }
+
+    /**
      * it is not test admin
      * proccess of buying productcs
     */
@@ -126,7 +269,6 @@ class ProductTest extends Base
 
         $user = Auth::user();    
         $this->assertNotEmpty($user->id);
-
 
         $pShoppingSuccess = [
             'title'     => [ "en" =>'Shopping Success', "pl" => "Twoje zakupy" ],
@@ -222,6 +364,12 @@ class ProductTest extends Base
 
         $c1 = Checkout::all()->count();
         $this->assertEquals(1, $c1);
+
+
+
+
+
+
 
         $ch = Checkout::first(); //->toArray();
 

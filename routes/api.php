@@ -22,7 +22,7 @@ if($demoStatus){
     Route::post('login', 'AuthController@login');
     Route::get('comments/{pageId}', 'CommentController@index');
     Route::get('page/{id}/{lang}', 'PageController@oneItem');
-
+    
     Route::group(['middleware' => ['jwt.auth']], function() {
         $apiSecret = env('API_SECRET', '' );
         if($apiSecret){
@@ -43,6 +43,7 @@ if($demoStatus){
         Route::get($apiSecret.'products', 'ProductController@index');
 
         Route::get($apiSecret.'contacts', 'ContactController@index');            
+        Route::get($apiSecret.'checkouts', 'CheckoutController@index');                
     });
 }else{
     #Route::post('register', 'AuthController@register');
@@ -92,5 +93,8 @@ if($demoStatus){
         Route::delete($apiSecret.'contacts/{id}', 'ContactController@delete');            
 
         Route::get($apiSecret.'config', 'ConfigController@index');
+
+        Route::get($apiSecret.'checkouts', 'CheckoutController@index');        
+        Route::put($apiSecret.'checkouts/{id}', 'CheckoutController@update');        
     });
 }

@@ -67,6 +67,18 @@ class Checkout extends Model
             $out[$i]['price_deliver'] = $checkout->price_deliver /100;
             $out[$i]['price_total_add_deliver'] = $checkout->price_total_add_deliver / 100;
 
+            $out[$i]['user_id'] =  $checkout->user_id;
+            $out[$i]['email'] =  $checkout->email;
+            $out[$i]['first_name'] =  $checkout->first_name;
+            $out[$i]['last_name'] =  $checkout->last_name;
+            $out[$i]['address'] =  $checkout->address;
+            $out[$i]['country'] =  $checkout->country;
+            $out[$i]['city'] =  $checkout->city;
+            $out[$i]['telephone'] =  $checkout->telephone;
+            $out[$i]['postcode'] =  $checkout->postcode;
+            $out[$i]['is_pay'] =  $checkout->is_pay;
+            $out[$i]['created_at'] =  $checkout->created_at;
+
             $j = 0;
             foreach($checkout->baskets as $basket){
                 //todo - sql in foreach :(
