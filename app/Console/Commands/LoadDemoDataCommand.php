@@ -112,6 +112,7 @@ class LoadDemoDataCommand extends Command
         /*---------------------*/
         /* ---orders-----------*/
         /*---------------------*/
+        /*
         $uu =  User::where('email', '=', $emailClient)->first();
         $order1 = [
             'qty' => 2,
@@ -127,5 +128,6 @@ class LoadDemoDataCommand extends Command
 
         Order::create($order1);
         Order::create($order2);
+        */
     }
 }
