@@ -23,6 +23,11 @@ class Checkout extends Model
         'price_total_add_deliver'
     ];
 
+    protected $casts = [
+        'is_pay' => 'boolean'
+    ];
+    
+
     public function baskets()
     {
         return $this->hasMany('App\Basket');

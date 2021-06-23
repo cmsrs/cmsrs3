@@ -445,6 +445,9 @@ class ProductTest extends Base
         $p2 = (new Page)->wrapCreate($pShoppingsuccess);
         $this->assertNotEmpty($p2->id);
 
+        $c100 = Checkout::all()->count();
+        $this->assertEquals(0, $c100);
+
         
         $response0 = $this->post('/post/checkout', $data);
         //dd($response0);
@@ -453,12 +456,6 @@ class ProductTest extends Base
 
         $c1 = Checkout::all()->count();
         $this->assertEquals(1, $c1);
-
-
-
-
-
-
 
         $ch = Checkout::first(); //->toArray();
 

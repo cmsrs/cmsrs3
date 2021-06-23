@@ -25,9 +25,15 @@ class Order extends Model
         // }
 
         //$checkout->is_pay = 1;
-        //$checkout->save();        
+        //$checkout->save();    
+        
+        $userId = $checkout->user_id;
+        if( empty($userId) ){
+            return true;
+        }
 
-        $user = Auth::user();            
+        $user = User::find($userId);
+        //$user = Auth::user();            
         if(empty($user)){
             return true;
         }
