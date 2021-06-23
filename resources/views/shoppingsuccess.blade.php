@@ -1,9 +1,6 @@
 @extends('layouts.default')
 @section('content')
 
-<script>
-      localStorage.clear();
-</script>
 
 <h1 class="mb-4 mt-3">{{$h1}}</h1>
 

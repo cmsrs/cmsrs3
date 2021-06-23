@@ -64,7 +64,7 @@ class FrontController extends Controller
             $checkoutId = $request->session()->get('checkout_id');
             $objCheckout = Checkout::find($checkoutId);
             $request->session()->forget('checkout_id');
-            $request->session()->flush();    
+            //$request->session()->flush();    
         }
         if( empty($objCheckout) ){
             abort(404);

@@ -40,6 +40,13 @@
       @endif      
    <?php } ?>
 
+   <?php if( 'shoppingsuccess' == $view ){ ?>
+      <script>
+         localStorage.removeItem('cart');
+         //localStorage.clear();
+      </script>
+   <?php } ?>
+
 
    @include('includes.footer')
 </body>
