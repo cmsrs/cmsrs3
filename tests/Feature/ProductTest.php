@@ -236,14 +236,67 @@ class ProductTest extends Base
         $this->assertTrue(  is_array( $res->data[0]->baskets ) );
 
 
+        $orders = Order::all()->toArray();
+        $this->assertEmpty($orders);
+
         $dataUpdate = [
             'is_pay' => 1
         ];
 
+
         $response2 = $this->put('api/checkouts/'.$ch->id.'?token='.$this->token, $dataUpdate);
+        //dd($response2);
         $res2 = $response2->getData();
 
         $this->assertTrue($res2->success);
+
+
+        $orders = Order::all()->toArray();
+        $this->assertNotEmpty($orders);
+
+        $this->assertEquals(2,  count($orders) );
+
+
+        //the same !!!
+        foreach($orders as $o){
+
+            $this->assertTrue( in_array( $o['product_id'], $ids ) ); 
+            if( $o['product_id'] == $ids['id1'] ){
+                $this->assertEquals($qty0a, $o['qty']);
+            }elseif( $o['product_id'] == $ids['id2'] ){
+                $this->assertEquals($qty1a, $o['qty']);
+            }else{
+                $this->assertTrue(false); //this case is imposible
+            }
+        }
+
+
+        //second time update
+        $response2b = $this->put('api/checkouts/'.$ch->id.'?token='.$this->token, $dataUpdate);
+        //dd($response2);
+        $res2b = $response2b->getData();
+        $this->assertTrue($res2b->success);
+
+
+        $orders = Order::all()->toArray();
+        $this->assertNotEmpty($orders);
+
+        $this->assertEquals(2,  count($orders) );
+
+        //the same !!!
+        foreach($orders as $o){
+
+            $this->assertTrue( in_array( $o['product_id'], $ids ) ); 
+            if( $o['product_id'] == $ids['id1'] ){
+                $this->assertEquals($qty0a, $o['qty']);
+            }elseif( $o['product_id'] == $ids['id2'] ){
+                $this->assertEquals($qty1a, $o['qty']);
+            }else{
+                $this->assertTrue(false); //this case is imposible
+            }
+        }
+
+
 
         $response3= $this->get('api/checkouts?token='.$this->token);
         $res3 = $response3->getData();
@@ -252,6 +305,42 @@ class ProductTest extends Base
 
         $this->assertEquals($ch->id, $res3->data[0]->id);
         $this->assertEquals( $dataUpdate['is_pay'],  $res3->data[0]->is_pay );
+
+
+        $response0Next = $this->post('/post/checkout', $data);
+        $response0->assertStatus(302);  
+
+        $c2 = Checkout::all()->count();
+        $this->assertEquals(2, $c2);
+        $chLast = Checkout::all()->reverse()->first();
+
+        $this->assertNotEquals($ch->id, $chLast->id);
+        //dd($chLast);
+
+        $response2c = $this->put('api/checkouts/'.$chLast->id.'?token='.$this->token, $dataUpdate);
+        //dd($response2);
+        $res2c = $response2c->getData();
+        $this->assertTrue($res2c->success);
+
+
+        $orders = Order::all()->toArray();
+        $this->assertNotEmpty($orders);
+
+        $this->assertEquals(2,  count($orders) );
+
+        //NOT the same !!!
+        foreach($orders as $o){
+
+            $this->assertTrue( in_array( $o['product_id'], $ids ) ); 
+            if( $o['product_id'] == $ids['id1'] ){
+                $this->assertEquals( 2 * $qty0a, $o['qty']); //2x
+            }elseif( $o['product_id'] == $ids['id2'] ){
+                $this->assertEquals( 2 * $qty1a, $o['qty']); //2x
+            }else{
+                $this->assertTrue(false); //this case is imposible
+            }
+        }
+
     }
 
     /**
@@ -401,19 +490,21 @@ class ProductTest extends Base
 
         }
 
+        /*
         $o0 = Order::all()->count();
         $this->assertEquals(0, $o0);
-        $isCopy0 =  Order::copyDataFromBasketToOrderForUser();
+        $isCopy0 =  Order::copyDataFromBasketToOrderForUser($ch);
         $this->assertTrue($isCopy0);
 
 
         $o1count = Order::all()->count();
         $this->assertEquals(2, $o1count);
+        */        
 
         //print_r(Order::all()->toArray());
 
         $ch1 = Checkout::first(); //->toArray();
-        $this->assertEquals(1, $ch1->is_pay);        
+        $this->assertEquals(0, $ch1->is_pay);        
 
         /**
          * second process payment
@@ -443,6 +534,7 @@ class ProductTest extends Base
         $response3->assertStatus(200); //because there is checkout_id in session therefore is 200 status
 
 
+        /*
         $ret1 =  Order::copyDataFromBasketToOrderForUser();
         $this->assertTrue($ret1);
         $ch2 = Checkout::findActiveOrder();
@@ -467,6 +559,7 @@ class ProductTest extends Base
                 $this->assertEquals( ($qty1a + $qty1b), $o['qty'] );
             }
         }
+        */
     }
 
     /**

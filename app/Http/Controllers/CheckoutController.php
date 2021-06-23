@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Config;
 use App\Checkout;
+use App\Order;
 use Illuminate\Support\Facades\Log;
 use Validator;
 
@@ -36,7 +37,8 @@ class CheckoutController extends Controller
         if ($validator->fails()) {
             return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
         }
-  
+        $beforeIsPay = $checkout->is_pay;
+
         try {
             $res = $checkout->update($data);            
         } catch (\Exception $e) {
@@ -46,6 +48,10 @@ class CheckoutController extends Controller
 
         if (empty($res)) {
             return response()->json(['success'=> false, 'error'=> 'Update checkout problem'], 200);
+        }
+
+        if( empty($beforeIsPay) && !empty($data['is_pay']) ){
+            Order::copyDataFromBasketToOrderForUser($checkout);
         }
 
         return response()->json(['success'=> true], 200);

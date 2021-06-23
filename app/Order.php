@@ -17,15 +17,15 @@ class Order extends Model
         'product_id' => 'integer'
     ];
 
-    static public function copyDataFromBasketToOrderForUser()
+    static public function copyDataFromBasketToOrderForUser($checkout)
     {
-        $checkout = Checkout::findActiveOrder();
-        if(empty($checkout)){
-            return false;
-        }
+        // $checkout = Checkout::findActiveOrder();
+        // if(empty($checkout)){
+        //     return false;
+        // }
 
-        $checkout->is_pay = 1;
-        $checkout->save();        
+        //$checkout->is_pay = 1;
+        //$checkout->save();        
 
         $user = Auth::user();            
         if(empty($user)){
