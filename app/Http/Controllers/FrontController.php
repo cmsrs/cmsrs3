@@ -44,6 +44,40 @@ class FrontController extends Controller
         }
     }
 
+    public function search(Request $request, $lang = null )
+    {
+
+        if (empty($lang)) {
+            $lang = $this->langs[0];
+        }
+        if (!in_array($lang, $this->langs)) {
+            abort(404);
+        }
+        App::setLocale($lang);
+
+        $page = Page::getFirstPageByType('search');
+        if(!$page){
+            Log::error('if you want this page you have to add page in type search');
+            abort(404);
+        }
+        $urlSearch = $page->getUrl($lang);
+        //dd($urlSearch);
+
+        $key = $request->input('key');
+        $products = (new Product)->wrapSearchProducts( $lang, $key);        
+
+        $data = $page->getDataToView( [
+            'key' => $key,
+            'url_search' =>  $urlSearch,
+            'products' => $products,
+            'lang' => $lang,
+            'langs' => $this->langs,
+            'menus' => $this->menus
+        ]);        
+
+        return view('search', $data);        
+    }
+
     public function shoppingsuccess(Request $request, $lang = null )
     {
         if (empty($lang)) {
@@ -258,8 +292,14 @@ class FrontController extends Controller
         $page = Page::getMainPage();
         $this->validatePage($page);
 
+        // $pSearch = App\Page::getFirstPageByType('search');
+        // $urlSearch = null;
+        // if($pSearch){
+        //     $urlSearch = $pSearch->getUrl($lang);
+        // }
 
         $data = $page->getDataToView( [
+            //'url_search' =>  $urlSearch,
             'view' => 'index',
             'is_new_orders' => $isNewOrders,
             'lang' => $lang,
@@ -269,6 +309,9 @@ class FrontController extends Controller
 
         return view('index', $data);
     }
+
+
+
 
     public function getPageLangs($lang, $menuSlug, $pageSlug, $productSlug = null)
     {

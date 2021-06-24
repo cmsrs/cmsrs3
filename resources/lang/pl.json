@@ -64,7 +64,11 @@
     "Order number" :  "Nr zlecenia",
     "Amount to pay" : "Kwota do zapłaty",
     "Bank account number" : "Nr konta bankowego",
-    "TO PAY" : "DO ZAPŁATY"
+    "TO PAY" : "DO ZAPŁATY",
+
+    "Not products found" : "Nie znaleziono produktów",
+    "Search products" : "Szukaj produktów",
+    "Search" : "Szukaj"
 
 
 }

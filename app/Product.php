@@ -2,6 +2,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -61,6 +62,29 @@ class Product extends Model
             'price',
             'page_id'
         ];  
+    }
+
+
+    static public function searchProducts( $lang, $key)
+    {
+        return DB::select("select distinct product_id from translates where (`product_id` is not null) and (`lang` = :lang) and (`column` = 'product_name') and (`value` like  :key )", ['lang' => $lang, 'key' => '%'.$key.'%' ]);
+    }
+
+    static public function objToArray( $obj )
+    {
+        $out = [];
+        foreach( $obj as $o ){
+            $out[] = $o->product_id;
+        }
+
+        return $out;
+    }
+
+    public function wrapSearchProducts( $lang, $key)
+    {
+        $objProducts = Product::searchProducts( $lang, $key);
+        $arrProducts = Product::objToArray( $objProducts );
+        return $this->getProductsWithImagesByIds($arrProducts);
     }
 
     static public function getDefaultProductName($productTranslates, $lang)
@@ -427,11 +451,32 @@ class Product extends Model
         return $urls;
     }
 
+    /**
+     * it is needed to search
+     */
+    public function getProductsWithImagesByIds($ids)
+    {
+        $products = Product::with(['translates', 'contents'])->whereIn('id', $ids)->orderBy('id', 'asc')->where('published', '=', 1)->get(); 
+        return $this->dataToRender($products);
+    }
+
 
     public function getProductsWithImagesByPage($pageId)
     {
         $products = Product::with(['translates', 'contents'])->where('page_id', $pageId)->orderBy('id', 'asc')->where('published', '=', 1)->get(); //->toArray();
+        return $this->dataToRender($products);
+        // $i = 0;
+        // $out = [];
+        // foreach ($products as $key => $product) {
+        //     $urls =  $product->getProductUrls($product);
+        //     $out[$i] =  array_merge( $this->getProductDataByProductArr( $product ), $urls);
+        //     $i++;
+        // }
+        // return $out;
+    }
 
+    private function dataToRender($products)
+    {
         $i = 0;
         $out = [];
         foreach ($products as $key => $product) {

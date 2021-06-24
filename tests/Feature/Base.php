@@ -196,6 +196,12 @@ class Base extends TestCase
         $response3 = $this->get($urlShoppingSuccess);
         $response3->assertStatus(404); //because there is no checkout_id in session
         $url[] = $urlShoppingSuccess;
+
+        //pSearch
+        $urlSearch = Page::getFirstPageByType('search')->getUrl($lang);
+        $response3 = $this->get($urlSearch);
+        $response3->assertStatus(200);
+        $url[] = $urlSearch;
         
 
         $this->assertEquals($numOfInPages, count($url));

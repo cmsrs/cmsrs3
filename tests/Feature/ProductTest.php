@@ -110,6 +110,26 @@ class ProductTest extends Base
         ];
     }
 
+    /** @test */
+    public function it_will_search_products()
+    {
+        $price1 = 11200; 
+        $price2 = 32100;
+        $ids = $this->setAddTwoProducts($price1, $price2);
+
+        $key = self::STR_PRODUCT_NAME_EN_1;
+        $lang = 'en';
+
+        $objProducts = Product::searchProducts( $lang, $key);
+        $arrProducts = Product::objToArray( $objProducts );
+
+        $this->assertEquals(1, count($arrProducts));
+        $this->assertNotEmpty($arrProducts[0]);
+
+        $products = (new Product)->wrapSearchProducts( $lang, $key);
+        $this->assertEquals(1,count($products));
+        //dd($products);
+    }
 
     /**
      * api admin

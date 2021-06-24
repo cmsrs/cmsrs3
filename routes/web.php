@@ -52,6 +52,7 @@ $langs = Config::arrGetLangsEnv();
     Route::get('/', 'FrontController@index');
     if( empty($langs)  || (1 == count($langs)) ){    
         Route::get('/shoppingsuccess', 'FrontController@shoppingsuccess');        
+        Route::get('/search', 'FrontController@search');                
         Route::get('/checkout', 'FrontController@checkout')->name('checkout');
         Route::get('/home', 'HomeController@index')->name('home');
         Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');    
@@ -60,6 +61,7 @@ $langs = Config::arrGetLangsEnv();
         Route::get('/'.Page::PREFIX_IN_URL.'/{pageSlug}', 'FrontController@getSeparatePage');    
     }else{
         Route::get('/{lang}/shoppingsuccess', 'FrontController@shoppingsuccess');
+        Route::get('/{lang}/search', 'FrontController@search');
         Route::get('/{lang}/checkout', 'FrontController@checkout');
         Route::get('/{lang}/home', 'HomeController@index');        
         Route::get('/{lang}', 'FrontController@index');

@@ -183,6 +183,16 @@ class Demo
             'content' => [ "en" => "
             <div class='container pt-5 starter-template  mt-4 mb-4'>
                 <h1>cmsRS demo version</h1>
+
+                <form  class='mt-4 mb-4' action='/en/search' method='get' >
+                    <div class='mt-4 mb-4 input-group'>
+                        <input type='search' name='key' value='' class='form-control rounded' placeholder='Search products' aria-label='Search'
+                        aria-describedby='search-addon' />
+                        <button type='submit' class='btn btn-outline-primary'>Search</button>
+                    </div>                
+                </form>
+                
+
                 <p class='lead'>The demo version was created for demonstration purposes.<p>
                     <div class='alert alert-danger' role='alert'>Saving, updating, deleting a single record has been disabled.</div>
                     <br><br>
@@ -208,6 +218,16 @@ class Demo
             ", "pl" => "
             <div class='container pt-5 starter-template  mt-4 mb-4'>
                 <h1>cmsRS wersja demo</h1>
+
+                <form  class='mt-4 mb-4' action='/pl/search' method='get' >
+                    <div class='mt-4 mb-4 input-group'>
+                        <input type='search' name='key' value='' class='form-control rounded' placeholder='Wyszukiwarka produktów' aria-label='Search'
+                        aria-describedby='search-addon' />
+                        <button type='submit' class='btn btn-outline-primary'>Szukaj</button>
+                    </div>                
+                </form>
+
+
                 <p class='lead'>Wersja demo została stworzona tylko dla celów demonstarcyjnych.<p>
                     <div class='alert alert-danger' role='alert'>Zapisywanie, aktualizacja i kasowanie rekordu zostały zabronione.</div>
                     <br><br>
@@ -498,6 +518,20 @@ class Demo
             ]
         ];
         $p['p14'] = $this->getPageObj()->wrapCreate($pShoppingSuccess);
+
+        $pSearch = [
+            'title'     => [ "en" =>'Search product', "pl" => "Wyszukiwarka produktów" ],
+            'short_title' => [ "en" =>'Search product', "pl" => "Wyszukiwarka produktów"],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla'  ],
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'search',
+            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            'images' => [
+            ]
+        ];
+        $p['p15'] = $this->getPageObj()->wrapCreate($pSearch);
+
 
 
         return $p;
