@@ -10,6 +10,9 @@ new future:
 Bug
 
 - na telefonie nie dziala dynamieczne doladowywanie zdjec w galerii
+- #uwaga!!! - ja wlacze  cache w .env to jest probvlem z wywwolaniem:  GET http://demo.cmsrs.pl/api/productsGetNameAndPrice/en
+# trzeba zbadac - patrz demo
+
 
 
 210510
