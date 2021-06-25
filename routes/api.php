@@ -93,6 +93,8 @@ if($demoStatus){
         Route::delete($apiSecret.'contacts/{id}', 'ContactController@delete');            
 
         Route::get($apiSecret.'config', 'ConfigController@index');
+        Route::get($apiSecret.'config/clearcache', 'ConfigController@clearCache');
+        Route::get($apiSecret.'config/createsitemap', 'ConfigController@createSiteMap');                
 
         Route::get($apiSecret.'checkouts', 'CheckoutController@index');        
         Route::put($apiSecret.'checkouts/{id}', 'CheckoutController@update');        

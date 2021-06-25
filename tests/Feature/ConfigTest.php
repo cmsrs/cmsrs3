@@ -102,5 +102,22 @@ class ConfigTest extends Base
         $this->expectException(\Exception::class);        
         $langs = $config->getLangsFromEnv();
     }
+
+    /** @test */
+    public function it_will_clear_cache()    
+    {
+        $response = $this->get('api/config/clearcache?token='.$this->token);
+        $res = $response->getData();
+        $this->assertTrue($res->success);
+    }
+
+
+    /** @test */
+    public function it_will_create_sitemap()    
+    {
+        $response = $this->get('api/config/createsitemap?token='.$this->token);
+        $res = $response->getData();
+        $this->assertTrue($res->success);        
+    }
     
 }
