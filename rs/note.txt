@@ -1,3 +1,12 @@
+new future:
+
+- sprawdzenie jak dzila sklep dla wiekszej ilosci produktow
+- rejestracja przy checkout (do przemyslenia)
+- wdrozyc system wysylki maili
+- strona forget pass
+- w zakladce setting mozna dodac parametry np. koszt wysylki (lub moze walute)
+
+
 Bug
 
 - na telefonie nie dziala dynamieczne doladowywanie zdjec w galerii
@@ -11,16 +20,16 @@ zmiana jezykow z panelu klienta (brak obslugi sessi w panelu klienta) - jesli zm
 czyli pierwszy ustawiony w konfigu
 
 
-- !!!!!!!!blad krytyczny!!!!!! - jak ktos zlozy zamownienie wejdzie na payu - ale zrezygnuje (zalozy sie rekord w basket), a pozniej wejdzie na strone glowna 
++-  !!!!!!!!blad krytyczny!!!!!! - jak ktos zlozy zamownienie wejdzie na payu - ale zrezygnuje (zalozy sie rekord w basket), a pozniej wejdzie na strone glowna 
 to utworzy sie orders! ( nie wiem jak zrobic dodatkowa walidacje - http_refferer? - z payu musi byc wejscie)
-moze trzeba ustawic w payu dodatkowe api dot. czy platnosc zostala zrealizowana
+!!!moze trzeba ustawic w payu dodatkowe api dot. czy platnosc zostala zrealizowana
 
 
-- !!!!!!!!blad krytyczny!!!!!! - trzeba bybloby jakos oprogramowac przypadek koszyka w przypadku zmiany nazwy produktu lub jego kwoty (bo w localstorage beda stare dane)
++(zrobione)  !!!!!!!!blad krytyczny!!!!!! - trzeba bybloby jakos oprogramowac przypadek koszyka w przypadku zmiany nazwy produktu lub jego kwoty (bo w localstorage beda stare dane)
 todo - do przemyslenia.
 
 - !!!!!!!!!!blad krytyczny!!!!!! - weryfikacja maila przy zlozeniu zamowienia (checkout) ?? - todo - do przemyslenia.
-- !!!!!!!!!!blad krytyczny!!!!!! - weryfikacja maila rejestracja ?? - todo - do przemyslenia.
+- !!!!!!!!!!blad krytyczny!!!!!! - weryfikacja maila rejestracja ?? - todo - do przemyslenia. (aktualnie wylaczona)
 
 
 - po logowaniu / rejestracji / przypomnij haslo - przechodzimy na /home  w jezyku defaultowym - a jezyk powinien byc brany z sessi
@@ -29,8 +38,8 @@ todo - do przemyslenia.
 + obsluzyc przypadek gdy cena produktu sie zmieni - do zastanowienia ( - zapsis tej ceny w baskecie -)
 
 new future:
-- w panelu adm. moznabyloby zrobic zestawienie orderow jakie wykonal dany uzytkownik
-- wyszukiwarka produktow ??
++ w panelu adm. moznabyloby zrobic zestawienie orderow jakie wykonal dany uzytkownik
++ wyszukiwarka produktow  (bardzo prosta aktualnie)
 
 
 UWAGA!!!
