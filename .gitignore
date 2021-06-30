@@ -24,4 +24,5 @@ stats/
 /public/images/mysite/
 /public/sitemap.txt
 /resources/views/includes/mysite.blade.php
+/resources/views/includes/mysitefooter.blade.php
 /storage/debugbar/
