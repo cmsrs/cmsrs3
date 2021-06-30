@@ -7,8 +7,6 @@
 <body>
 
    <div id="appall" >
-      <div id="page_id" data-page-id="{{$page->id}}"></div>  
-      <div id="lang" data-lang="{{$lang}}"></div>    
 
       @include('includes.header')
 
@@ -23,5 +21,6 @@
 
 
 @include('includes.footer')
+@includeIf('includes.mysitefooter')
 </body>
 </html>

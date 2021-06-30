@@ -13,6 +13,13 @@
 ?>
 <?php $productNameSlug = !empty($product_name_slug) ? $product_name_slug : null ?>
 
+<div id="page_id" data-page-id="{{$page ? $page->id : ''}}"></div>  
+<div id="lang" data-lang="{{$lang ?  $lang : ''}}"></div>    
+<div id="is_shop" data-is-shop="{{ env('IS_SHOP'), 0 }}"></div>          
+<div id="commented" data-commented="{{ $page ? $page->commented : '' }}"></div>          
+
+
+
 <nav class="navbar navbar-expand-md navbar-dark  {{ $bg }} fixed-top lead">
     <a class="navbar-brand" href="{{ url($urlMainPage) }}">
         <img id="logo_cmsrs" src="/images/cms/logo_cmsrs.png" alt="{{ config('app.name', 'cmsRS') }}" />        
