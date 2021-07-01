@@ -44,7 +44,6 @@ new Vue({
                 //-----comments----
                 //TODO - no comments in page
                 if(this.page_id && this.commented ){
-                        alert('get_api_coment');
                         axios.get('/api/comments/'+this.page_id).then( function (response){
                                 self.comments = response.data.data;
                         });        
