@@ -409,7 +409,7 @@ class Product extends Model
     {
         $isCache = env('CACHE_ENABLE', false);
         if ($isCache) {
-            $products = cache()->remember('products_name_price_'.$lang , Carbon::now()->addYear(1), function () {
+            $products = cache()->remember('products_name_price_'.$lang , Carbon::now()->addYear(1), function () use ($lang)  {
                 return (new Product)->getAllProductsWithImagesByLang($lang);
             });
         } else {
