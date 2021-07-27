@@ -6,16 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Config extends Model
 {
-    const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,login,projects,clear,checkout,register,home,shoppingsuccess,search'; //default values
+    const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,login,projects,clear,checkout,register,home,shoppingsuccess,search,forgot'; //default values
 
     private $langs;
 
     public function __construct()
     {
         $this->langs = empty(env('LANGS')) ? '' : env('LANGS');
-        //dd(env('LANGS'));
-        //dd($this->langs);
-        //dd('_____________s____');
+        //dump($this->langs);
+        //dd('____sss_____');
     }
     
     public function setLangs($langs)

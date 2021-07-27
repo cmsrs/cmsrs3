@@ -68,7 +68,9 @@
 
     "Not products found" : "Nie znaleziono produktów",
     "Search products" : "Szukaj produktów",
-    "Search" : "Szukaj"
+    "Search" : "Szukaj",
 
+    "Reset Password" : "Resetuj hasło",
+    "Send Password Reset Link" : "Wyślij link do zmiany hasła"
 
 }

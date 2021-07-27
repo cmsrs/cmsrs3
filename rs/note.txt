@@ -1,18 +1,17 @@
-new future:
 
-- sprawdzenie jak dzila sklep dla wiekszej ilosci produktow
+in Future:
 - rejestracja przy checkout (do przemyslenia)
-- wdrozyc system wysylki maili
-- strona forget pass
 - w zakladce setting mozna dodac parametry np. koszt wysylki (lub moze walute)
 
+- wdrozyc system wysylki maili (przy rejestracji i przypomnij haslo) - funkcjonalność framweorku
+- rejestracja uzytkownika - wymagany mail z url-em aktywacyjnym - funkcjonalność framweorku
+
+- sprawdzenie jak dzila sklep dla wiekszej ilosci produktow - problem wydajnosciowy
 
 Bug
-
-- na telefonie nie dziala dynamieczne doladowywanie zdjec w galerii
-- #uwaga!!! - ja wlacze  cache w .env to jest probvlem z wywwolaniem:  GET http://demo.cmsrs.pl/api/productsGetNameAndPrice/en
-# trzeba zbadac - patrz demo
-
+- na telefonie nie dziala dynamieczne doladowywanie zdjec w galerii (ten sam problem moze dotyczyc strony z produktami)
++ (poprawione) #uwaga!!! - ja wlacze  cache w .env to jest probvlem z wywwolaniem:  GET http://demo.cmsrs.pl/api/productsGetNameAndPrice/en
+# trzeba zbadac - patrz demo (aktualnie dziala)
 
 
 210510
@@ -43,6 +42,7 @@ todo - do przemyslenia.
 new future:
 + w panelu adm. moznabyloby zrobic zestawienie orderow jakie wykonal dany uzytkownik
 + wyszukiwarka produktow  (bardzo prosta aktualnie)
++ strona forget pass
 
 
 UWAGA!!!

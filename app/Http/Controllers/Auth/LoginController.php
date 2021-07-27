@@ -68,23 +68,12 @@ class LoginController extends Controller
             $lang = $this->langs[0];
         }
         App::setLocale($lang);
+
+        $pForgot = Page::getFirstPageByType('forgot');
       
-        //$footerPages = Page::getFooterPages($lang);
-
-        /*
-        $data = [ 
-            'menus' => $this->menus,              
-            'view' => 'login',
-            'page' => $page, 
-            'lang' => $lang, 
-            'langs' => $this->langs,
-            'page_title' => $page->translatesByColumnAndLang( 'title', $lang ) ?? config('app.name', 'cmsRS'),
-            'seo_description' =>  $page->translatesByColumnAndLang( 'description', $lang ) ?? config('app.name', 'cmsRS')
-        ];
-        */      
-
         $data = $page->getDataToView( [
             'view' => 'login',
+            'pforgot' => $pForgot,
             'lang' => $lang,
             'langs' => $this->langs,
             'menus' => $this->menus

@@ -134,7 +134,7 @@ class Base extends TestCase
 
             $response = $this->get($itemUrlIn);
 
-            if (('login' ==  $page->type) ||  ('register' ==  $page->type) ) { //todo why register ??
+            if (('login' ==  $page->type) ||  ('register' ==  $page->type) ||  ('forgot' ==  $page->type)  ) { //todo why register and forgot ??
                 $response->assertStatus(302);   //redirect to home page, because user is log in
                 $pos = strpos($response->getContent(), 'home');
                 $this->assertNotEmpty($pos, $pageTitle);
@@ -203,6 +203,12 @@ class Base extends TestCase
         $response3->assertStatus(200);
         $url[] = $urlSearch;
         
+        //pForgot
+        $urlForgot = Page::getFirstPageByType('forgot')->getUrl($lang);
+        $response3 = $this->get($urlForgot);
+        $response3->assertStatus(302); // why 302 ??
+        $url[] = $urlForgot;
+
 
         $this->assertEquals($numOfInPages, count($url));
 

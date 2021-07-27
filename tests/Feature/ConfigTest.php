@@ -62,7 +62,7 @@ class ConfigTest extends Base
             //dump($url);
             $response = $this->get($url);
 
-            $status = ( ('login' === $page_type) ||  ('register' === $page_type )   ) ? 302 : 200; //I don't understand - todo (why register??)
+            $status = ( ('login' === $page_type) ||  ('register' === $page_type ) ||  ('forgot' === $page_type )  ) ? 302 : 200; //I don't understand - todo (why register and forgot??)
             if ('shoppingsuccess' ==  $page_type){
                 $status = 404;
             }

@@ -312,6 +312,8 @@ class Page extends Base
             $view = 'shoppingsuccess';
         } elseif ($this->type == 'search') {
             $view = 'search';
+        } elseif ($this->type == 'forgot') {
+            $view = 'forgot';
         } else {
             $view = 'cms';
         }
@@ -322,7 +324,7 @@ class Page extends Base
     {        
         if ('main_page' == $this->type) {
             return $this->getMainUrl($lang);
-        } elseif ( ('login' == $this->type) || ('checkout' == $this->type) || ('register' == $this->type) || ('home' == $this->type) || ($this->type == 'shoppingsuccess') ||  ($this->type == 'search')  ) {
+        } elseif ( ('login' == $this->type) || ('checkout' == $this->type) || ('register' == $this->type) || ('home' == $this->type) || ($this->type == 'shoppingsuccess') ||  ($this->type == 'search') ||  ($this->type == 'forgot')  ) {
             return $this->getTypeUrl($lang);
         } 
         //elseif ('privacy_policy' == $this->type) {

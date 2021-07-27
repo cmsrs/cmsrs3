@@ -317,16 +317,22 @@ class FrontLangsTest extends Base
         }
 
         $pages = Page::All();
+
+        //dd($pages->toArray() );
         foreach($pages as $page){
 
             foreach($langs as $lang){
                 $url = $page->getUrl($lang);
                 $response = $this->get($url);
     
-                $status = (  ('login' === $page->type) ||   ('register' === $page->type)   )     ? 302 : 200;
+
+
+                $status = (  ('login' === $page->type) ||   ('register' === $page->type) ||   ('forgot' === $page->type)  )     ? 302 : 200;
                 if ('shoppingsuccess' ==  $page->type){
                     $status =404;
                 }
+
+                //echo " url=".$url." s=".$response->status()."\n";
 
                 $response->assertStatus($status);    
             }            

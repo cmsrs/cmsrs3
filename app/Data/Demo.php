@@ -532,6 +532,18 @@ class Demo
         ];
         $p['p15'] = $this->getPageObj()->wrapCreate($pSearch);
 
+        $pForgot = [
+            'title'     => [ "en" =>'Forgot password', "pl" => "Przypomnij hasło" ],
+            'short_title' => [ "en" =>'Forgot password', "pl" => "Przypomnij hasło"],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla'  ],
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'forgot',
+            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            'images' => [
+            ]
+        ];
+        $p['p16'] = $this->getPageObj()->wrapCreate($pForgot);
 
 
         return $p;
