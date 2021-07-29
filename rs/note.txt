@@ -1,3 +1,8 @@
+Bug
+- (!!!!krytyczny!!!!)  na telefonie nie dziala dynamieczne doladowywanie zdjec w galerii (ten sam problem moze dotyczyc strony z produktami)
++ (poprawione) #uwaga!!! - ja wlacze  cache w .env to jest probvlem z wywwolaniem:  GET http://demo.cmsrs.pl/api/productsGetNameAndPrice/en
+# trzeba zbadac - patrz demo (aktualnie dziala)
+
 
 in Future:
 - rejestracja przy checkout (do przemyslenia)
@@ -7,11 +12,6 @@ in Future:
 - rejestracja uzytkownika - wymagany mail z url-em aktywacyjnym - funkcjonalność framweorku
 
 - sprawdzenie jak dzila sklep dla wiekszej ilosci produktow - problem wydajnosciowy
-
-Bug
-- na telefonie nie dziala dynamieczne doladowywanie zdjec w galerii (ten sam problem moze dotyczyc strony z produktami)
-+ (poprawione) #uwaga!!! - ja wlacze  cache w .env to jest probvlem z wywwolaniem:  GET http://demo.cmsrs.pl/api/productsGetNameAndPrice/en
-# trzeba zbadac - patrz demo (aktualnie dziala)
 
 
 210510
