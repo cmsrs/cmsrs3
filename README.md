@@ -1,6 +1,6 @@
 <p align="center">
     <img src="http://www.cmsrs.pl/images/cms/logo_cmsrs.png"><br/>
-    Multilingual CMS system with online store module 
+    Multilingual CMS system with online shop module 
 </p>
 </br>
 </br>
