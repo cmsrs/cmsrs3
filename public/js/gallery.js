@@ -33,10 +33,13 @@ function showModal()
         }        
 }
 
-window.onscroll = () => {
-        let bottomOfWindow = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop) + window.innerHeight === document.documentElement.offsetHeight
+function scrollImg() {
+
+        //let bottomOfWindow = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop) + window.innerHeight === document.documentElement.offsetHeight
+        let  bottomOfWindow =  ((window.innerHeight + window.scrollY) >= document.body.offsetHeight);
 
         if (bottomOfWindow) {
+
                 if(images.length < imagesGlobal.length) {
                         var toAppend = imagesGlobal.slice(
                                 images.length,
@@ -48,6 +51,12 @@ window.onscroll = () => {
         }
 }
 
+//document.getElementById(document.body).on('touchmove', scrollImg); // for mobile
+//$(window).on('scroll', scrollImg); 
+
+window.onscroll = scrollImg; 
+//document.body.addEventListener('touchmove', scrollImg, false);
+window.addEventListener('touchmove', scrollImg, false);
 
 document.addEventListener('DOMContentLoaded', (event) => {        
         images = imagesGlobal.slice(0, LOAD_NUM);
