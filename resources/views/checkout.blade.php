@@ -14,16 +14,14 @@
               <li class="mt-2" v-for="item in cart" v-bind:key="item.id">              
               <div class="container">
 
-
-
-                  <div class="row">
-                    <div class="col"> 
+                  <div class="row mt-3">
+                    <div class="col-sm"> 
                       <a v-bind:href="item.url_product" ><img v-bind:src="item.url_image"  v-bind:alt="item.name" ></a>                                
                     </div>
-                    <div class="col"> 
+                    <div class="col-sm"> 
                       <div><a v-bind:href="item.url_product" >@{{ item.name }}</a></div>                    
                     </div>            
-                    <div class="col"> 
+                    <div class="col-sm"> 
                       <span>@{{ item.price / 100 }} zł x @{{ item.qty }}</span>
                       <button class="btn" v-on:click="increment(item)">+</button>
                       <button class="btn" v-on:click="decrement(item)">-</button>
@@ -57,7 +55,7 @@
 
       <div class="container">
         <div class="row">   
-        <div class="col-8">
+        <div class="col-sm-8">
 
 
           <!-- email -->
@@ -162,7 +160,7 @@
 
         </div><!-- div col fields -->    
 
-        <div class="col-4">   
+        <div class="col-sm-4">   
 
           <div class="mt-4"> 
             <h4>{{ __('Deliver') }}</h4>
