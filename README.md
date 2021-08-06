@@ -182,24 +182,25 @@ php artisan command:create-site-map
    
 ===
 
-Demo:
+# Demo:
 
 http://demo.cmsrs.pl
 
 ===
 
-More information:
-
-https://www.cmsrs.pl/en/cms/cmsrs/about-cmsrs
-
-===
-
-Tutorial:
+# Tutorial:
 
 https://www.cmsrs.pl/en/cms/cmsrs/cmsrs-video-tutorial
 
 ===
 
-React source code:
+# More information:
+
+https://www.cmsrs.pl/en/cms/cmsrs/about-cmsrs
+
+
+===
+
+# React source code:
 
 https://github.com/cmsrs/cmsrs3-react
