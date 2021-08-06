@@ -33,7 +33,7 @@
 
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
 
-      <ul class="navbar-nav mr-auto">
+      <ul class="nav-main-rs  navbar-nav mr-auto">
           <?php foreach ($menus as $menu) { ?>
             <?php $pagesPublishedAndAccess = $menu->pagesPublishedAndAccess()->get(); ?>    
             <li class="nav-item dropdown">
@@ -58,7 +58,7 @@
 
   </div>
 
-    <ul class="m-0 p-0">
+    <ul class="list-unstyled  m-0 p-0">
       <?php if(  env('IS_SHOP', false) ){ ?>
         <li class="nav-item ml-1  mr-4 cursor-pointer" v-on:click="toglebasket()">
           <i style="font-size:40px;color:#ff5050" class="fa">&#xf07a;</i>

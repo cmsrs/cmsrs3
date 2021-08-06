@@ -158,11 +158,32 @@ body {
 }
 /** basket - stop **/
 
+/*
 nav.lead{
     font-size: 1.1rem;
     font-weight: 400;  
 }
+*/
+
+.nav-main-rs{
+    margin-left: 100px;
+}
  
+
+@media(max-width: 1250px) {
+  .nav-main-rs{
+    margin-left: 1px;
+  }
+ 
+  nav.lead{
+    font-size: 0.70rem;
+    font-weight: 400;  
+  }
+  #logo_cmsrs{
+    height: 20px;
+  }
+
+}
 
 
 @media(max-width: 1200px) {
@@ -173,13 +194,6 @@ nav.lead{
     padding-top: 0.7rem !important;
   }
 
-  nav.lead{
-    font-size: 0.70rem;
-    font-weight: 400;  
-  }
-  #logo_cmsrs{
-    height: 20px;
-  }
 }
 
 @media(max-width: 960px) {
