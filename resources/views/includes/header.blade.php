@@ -24,6 +24,9 @@
     <a class="navbar-brand" href="{{ url($urlMainPage) }}">
         <img id="logo_cmsrs" src="/images/cms/logo_cmsrs.png" alt="{{ config('app.name', 'cmsRS') }}" />        
     </a>
+
+
+
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -52,10 +55,12 @@
             </li>
           <?php } ?>
       </ul>
-          
-      <ul class="nav navbar-nav ml-auto" >
+
+  </div>
+
+    <ul class="m-0 p-0">
       <?php if(  env('IS_SHOP', false) ){ ?>
-        <li class="nav-item mr-4 cursor-pointer" v-on:click="toglebasket()">
+        <li class="nav-item ml-1  mr-4 cursor-pointer" v-on:click="toglebasket()">
           <i style="font-size:40px;color:#ff5050" class="fa">&#xf07a;</i>
           <span style="color:#ff5050">@{{ cart_length ? cart_length : '' }}</span>
         </li>
@@ -79,7 +84,10 @@
         </div>
           
       <?php } ?>
+    </ul>
 
+
+    <ul class="nav navbar-nav ml-auto" >
       <!-- Authentication Links -->
       <?php if($pLogin){ ?>
         <?php $loginStyle = $manyLangs ? 'mr-4' : ''; ?>          
@@ -105,13 +113,15 @@
         @endguest
       <?php } ?>
       <?php if( $manyLangs ) { ?>
+        <li class="d-flex flex-row">
         <?php foreach($langs as $ll){  ?>
           <?php $classActive = ($ll == $lang) ? 'active' : ''; ?>
-          <li class="nav-item {{ $classActive }}">
-              <a class="changelang nav-link" href="{{ route('changelang', ['lang' => $ll, 'pageId' => $page->id, 'productSlug' => ($productNameSlug ? $productNameSlug[$ll]  : null)] ) }}"><img src="/images/cms/{{ $ll }}.png" alt="{{ $ll }}" /> {{ strtoupper($ll) }}</a></li>
+          <div class="ml-2  nav-item {{ $classActive }}">
+              <a class="changelang nav-link" href="{{ route('changelang', ['lang' => $ll, 'pageId' => $page->id, 'productSlug' => ($productNameSlug ? $productNameSlug[$ll]  : null)] ) }}"><img src="/images/cms/{{ $ll }}.png" alt="{{ $ll }}" /> {{ strtoupper($ll) }}</a></div>
         <?php } ?>
+        </li>
       <?php } ?>          
-       </ul>
+     </ul>
 
-  </div>
+
 </nav>

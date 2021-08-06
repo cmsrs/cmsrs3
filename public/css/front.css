@@ -149,7 +149,7 @@ body {
 
 /** basket - start **/
 #appbasket{
-  margin-top: 60px;
+  margin-top: 24px;
   position : absolute;
   /*min-width: 343px;*/
   background-color: #c4d0d8;
@@ -158,6 +158,11 @@ body {
 }
 /** basket - stop **/
 
+nav.lead{
+    font-size: 1.1rem;
+    font-weight: 400;  
+}
+ 
 
 
 @media(max-width: 1200px) {
@@ -169,11 +174,11 @@ body {
   }
 
   nav.lead{
-    font-size: 0.8rem;
+    font-size: 0.70rem;
     font-weight: 400;  
   }
   #logo_cmsrs{
-    height: 30px;
+    height: 20px;
   }
 }
 
@@ -188,6 +193,17 @@ body {
   }
 }
 
+@media(max-width: 800px) {
+
+  nav.lead{
+    font-size: 0.63rem;
+    font-weight: 400;  
+  }
+  #logo_cmsrs{
+    height: 20px;
+  }
+
+}
 
 
 @media(max-width: 730px) {
