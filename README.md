@@ -180,27 +180,18 @@ php artisan command:create-site-map
     
 * add pages
    
-===
-
-# Demo:
+# DEMO
 
 http://demo.cmsrs.pl
 
-===
-
-# Tutorial:
+# TUTORIALS
 
 https://www.cmsrs.pl/en/cms/cmsrs/cmsrs-video-tutorial
 
-===
-
-# More information:
+# MORE INFORMATION
 
 https://www.cmsrs.pl/en/cms/cmsrs/about-cmsrs
 
-
-===
-
-# React source code:
+# REACT SOURCE CODE
 
 https://github.com/cmsrs/cmsrs3-react
