@@ -14,6 +14,10 @@ in Future:
 - sprawdzenie jak dzila sklep dla wiekszej ilosci produktow - problem wydajnosciowy
 - sprawdzenie czy produkty doladowywuja sie dynamicznie - tak jak ma to miejsce w galerii zdjec
 
+css to fix:
+- widok produktu - mobile - poprawic
+- zbyt mala czcionka na urzadzeniach mobilnyc - moze wczesniej nalezy dac kwadracik z kreskami - dla wiekszej rozdzielczosci - dla tableata
+
 
 210510
 + naprawione - ale nie przez sesje ale na podstawie url-i
