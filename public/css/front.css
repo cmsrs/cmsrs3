@@ -186,7 +186,7 @@ nav.lead{
 }
 
 
-@media(max-width: 1200px) {
+@media(max-width: 1250px) {
   main.pt-5 {
     padding-top: 0.7rem !important;
   }
