@@ -20,7 +20,7 @@
 
 
 
-<nav class="navbar navbar-expand-md navbar-dark  {{ $bg }} fixed-top lead">
+<nav class="navbar navbar-expand-lg navbar-dark  {{ $bg }} fixed-top lead">
     <a class="navbar-brand" href="{{ url($urlMainPage) }}">
         <img id="logo_cmsrs" src="/images/cms/logo_cmsrs.png" alt="{{ config('app.name', 'cmsRS') }}" />        
     </a>
