@@ -168,6 +168,10 @@ nav.lead{
 .nav-main-rs{
     margin-left: 100px;
 }
+
+table.table  th{
+    font-weight: 100;
+}
  
 
 @media(max-width: 1250px) {
