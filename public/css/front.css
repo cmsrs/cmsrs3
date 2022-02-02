@@ -213,10 +213,12 @@ table.table  th{
 
 @media(max-width: 800px) {
 
+/*
   nav.lead{
     font-size: 0.63rem;
     font-weight: 400;  
   }
+*/
   #logo_cmsrs{
     height: 20px;
   }
