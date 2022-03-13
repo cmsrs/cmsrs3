@@ -134,14 +134,6 @@ body {
   }
 }
 
-/** games and video **/
-#square-size, #square-size-checkers, #square-size-ten, #square-size-six{
-  left : -1000px;
-  position : absolute;
-  width : 70px !important;
-  height : 70px !important;
-}
-
 .video-el{
   width: 700px;
   height: 600px;
@@ -245,24 +237,6 @@ table.table  th{
   video{
       width: 500px;
   }
-  #square-size {
-      width : 50px !important;
-      height : 50px !important;
-  }
-  #square-size-checkers {
-      width : 58px !important;
-      height : 58px !important;
-  }
-
-  #square-size-six {
-      width : 60px !important;
-      height : 60px !important;
-  }
-
-  #square-size-ten {
-      width : 45px !important;
-      height : 45px !important;
-  }
 
 }
 
@@ -273,24 +247,6 @@ table.table  th{
     max-height: 200px;
     overflow-y: scroll !important;
     /*z-index: 1600 !important;*/
-  }
-
-  #square-size {
-      width : 35px !important;
-      height : 35px !important;
-  }
-  #square-size-checkers {
-      width : 43px !important;
-      height : 43px !important;
-  }
-  #square-size-six {
-      width : 45px !important;
-      height : 45px !important;
-  }
-
-  #square-size-ten {
-      width : 39px !important;
-      height : 39px !important;
   }
 
   .video-el{
@@ -310,24 +266,6 @@ table.table  th{
     max-height: 200px;
     overflow-y: scroll !important;
     /*z-index: 1600 !important;*/
-  }
-
-  #square-size {
-      width : 32px !important;
-      height : 32px !important;
-  }
-  #square-size-checkers {
-      width : 37px !important;
-      height : 37px !important;
-  }
-  #square-size-six {
-      width : 40px !important;
-      height : 40px !important;
-  }
-
-  #square-size-ten {
-      width : 29px !important;
-      height : 29px !important;
   }
 
   .video-el{
