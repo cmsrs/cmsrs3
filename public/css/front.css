@@ -251,6 +251,10 @@ table.table  th{
     /*z-index: 1600 !important;*/
   }
 
+    h1 {
+        font-size: 1.9rem   !important;
+    }
+
   .video-el{
       width: 250px;
       height: 200px;
@@ -269,6 +273,11 @@ table.table  th{
     overflow-y: scroll !important;
     /*z-index: 1600 !important;*/
   }
+
+    h1 {
+        font-size: 1.8rem !important;
+    }
+
 
   .video-el{
       width: 250px;
