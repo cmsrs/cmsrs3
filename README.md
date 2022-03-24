@@ -85,6 +85,7 @@ cp .env .env.testing
 change in file .env.testing:
 
 ```bash
+APP_ENV=testing
 DB_DATABASE=cmsrs_testing
 LANGS="en"
 CACHE_ENABLE=false
