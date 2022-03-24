@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use App\Config;
+
 
 class ResetPasswordController extends Controller
 {
@@ -43,7 +45,7 @@ class ResetPasswordController extends Controller
         $this->middleware('guest');
 
         $this->langs = (new Config)->arrGetLangs();
-        $pHome = App\Page::getFirstPageByType('home');
+        $pHome = \App\Page::getFirstPageByType('home');
         if( $pHome ){
             $this->redirectTo = $pHome->getUrl($this->langs[0]);
         }
