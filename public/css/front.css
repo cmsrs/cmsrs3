@@ -7,6 +7,12 @@ body {
   text-align: center;
 }
 
+
+.a-google-play img{
+  width: 210px;
+  height: 70px;
+}
+
 /**-- GALLERY --**/
 
  /* Style the Image Used to Trigger the Modal */
