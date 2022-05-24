@@ -83,6 +83,22 @@ class Page extends Base
         return $this->hasMany('App\Image')->orderBy('position');
     }
 
+    /**
+     * TODO
+     * cached
+     */
+    static public function getContentInnerPageById( $pageId, $lang = null )
+    {
+        $page = Page::findOrFail($pageId);
+        if( empty($lang) ){
+            $lang = Config::getDefaultLang();
+        }
+        
+        $contents = $page->contents->pluck('value', 'lang')->toArray() ;
+
+        return  empty($contents[$lang]) ? '' : $contents[$lang];
+    }
+
     public function setTranslate($objTranslate)
     {
         if (!empty($objTranslate)) {
@@ -248,7 +264,11 @@ class Page extends Base
     
     public function createTranslate($dd, $create = true)
     {
-        $this->translate->wrapCreate($dd, $create);
+        $pageType = isSet($dd['data']['type']) ? $dd['data']['type'] : null;
+        if( $pageType != 'inner' ){
+            $this->translate->wrapCreate($dd, $create);
+        }
+
         $this->content->wrapCreate($dd, $create);
     }
 
@@ -321,8 +341,10 @@ class Page extends Base
     }
 
     public function getUrl($lang, $urlParam = null)
-    {        
-        if ('main_page' == $this->type) {
+    {  
+        if( 'inner' == $this->type ){
+            return false;
+        }elseif ('main_page' == $this->type) {
             return $this->getMainUrl($lang);
         } elseif ( ('login' == $this->type) || ('checkout' == $this->type) || ('register' == $this->type) || ('home' == $this->type) || ($this->type == 'shoppingsuccess') ||  ($this->type == 'search') ||  ($this->type == 'forgot')  ) {
             return $this->getTypeUrl($lang);

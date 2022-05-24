@@ -71,6 +71,24 @@ class PageTest extends Base
         $this->menuId = $this->menuObj->id;
     }
 
+    /** @test */
+    public function it_will_save_inner_type_page()
+    {
+        $testData =
+        [
+            'type' => 'inner',
+            'content' =>  ['en' => 'content test4333 inner'],
+        ];
+
+        $objPage = (new Page)->wrapCreate($testData);
+        $this->assertNotEmpty($objPage->id);
+
+        $content = $objPage->contents->first();
+        $this->assertEquals( $testData['content']['en'],  $content->value);        
+
+        $contentValue = Page::getContentInnerPageById( $objPage->id );
+        $this->assertEquals( $testData['content']['en'],  $contentValue);
+    }
 
     /** @test */
     public function it_will_check_position_page_not_related_to_menu()

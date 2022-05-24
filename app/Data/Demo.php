@@ -546,6 +546,11 @@ class Demo
         $p['p16'] = $this->getPageObj()->wrapCreate($pForgot);
 
 
+        $pInner = [
+            'content' => [ "en" => 'inner test en', "pl" => 'inner test pl' ],
+        ];
+        $p['p17'] = $this->getPageObj()->wrapCreate($pInner);
+
         return $p;
     }
 
