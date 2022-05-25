@@ -207,7 +207,7 @@ class FrontTest extends Base
         $objDemo = new Demo;
         $p = $objDemo->pagesAndMenu(true);
 
-        $this->checkAllPagesByLang($p, 'en');
+        $this->checkAllPagesByLang($p, 'en', true);
 
         $products = $objDemo->product($p, true);
         $this->checkProductsPagesByLang($products, 'en');

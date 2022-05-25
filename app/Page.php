@@ -264,11 +264,7 @@ class Page extends Base
     
     public function createTranslate($dd, $create = true)
     {
-        $pageType = isSet($dd['data']['type']) ? $dd['data']['type'] : null;
-        if( $pageType != 'inner' ){
-            $this->translate->wrapCreate($dd, $create);
-        }
-
+        $this->translate->wrapCreate($dd, $create);
         $this->content->wrapCreate($dd, $create);
     }
 

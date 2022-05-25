@@ -118,12 +118,11 @@ class Base extends TestCase
         }
     }
 
-    public function checkAllPagesByLang($p, $lang)
+    public function checkAllPagesByLang($p, $lang, $onlyOneLang = false)
     {
-        $numOfInPages = count($p);
-        $this->assertNotEmpty($numOfInPages);
-
         $urlIn = [];
+        $numOfInPages = 0;
+        $numOfInAfterLoginPages = 0;
         foreach ($p as $page) {
             $pageTitle = $page->translatesByColumnAndLang('title', $lang);
             $pageShortTitle = $page->translatesByColumnAndLang('short_title', $lang);
@@ -131,6 +130,16 @@ class Base extends TestCase
             $this->assertNotEmpty($pageShortTitle);
 
             $itemUrlIn = $page->getUrl($lang);
+
+            if($page->after_login){
+                $numOfInAfterLoginPages++;
+            }
+            
+            if($page->type == 'inner'){
+                $this->assertEmpty($itemUrlIn);
+                continue;
+            }
+            
 
             $response = $this->get($itemUrlIn);
 
@@ -146,7 +155,10 @@ class Base extends TestCase
                 $this->assertNotEmpty($pos, $pageTitle);
             }
             $urlIn[] = $itemUrlIn;
+            $numOfInPages++;
         }
+
+        //dd('________________');
         
         //All Url Related To Menus
         $url = $this->getAllUrlRelatedToMenus($lang);
@@ -215,6 +227,23 @@ class Base extends TestCase
         foreach ($url as $uu) {
             $isInTable = in_array($uu, $urlIn);
             $this->assertTrue($isInTable);
+        }
+
+        //I am lazy so i test sitemap for one lang
+        if($onlyOneLang){
+            $sitemapFile = public_path('/sitemap.txt');
+
+            if (file_exists($sitemapFile)) {
+                unlink($sitemapFile);
+            }
+            $this->assertFileDoesNotExist($sitemapFile);
+    
+            $this->artisan('command:create-site-map');
+            $this->assertFileExists($sitemapFile);
+    
+            $fileContent = file($sitemapFile);
+    
+            $this->assertEquals($numOfInPages - $numOfInAfterLoginPages, count($fileContent));
         }
     }
 

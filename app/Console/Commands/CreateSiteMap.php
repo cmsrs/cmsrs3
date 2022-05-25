@@ -41,7 +41,7 @@ class CreateSiteMap extends Command
     {
         $appUrl = env('APP_URL');
         $langs = (new Page)->getArrLangs();
-        $pages = Page::where('after_login', '=', 0)->where('published', '=', 1)->get();
+        $pages = Page::where('after_login', '=', 0)->where('published', '=', 1)->where('type', '!=', 'inner')->get();
         $prodUrls = (new Product)->getProductsUrl();
 
         $strUrls = '';

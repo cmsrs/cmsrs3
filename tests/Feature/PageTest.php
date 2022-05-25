@@ -76,6 +76,8 @@ class PageTest extends Base
     {
         $testData =
         [
+            'title' =>  ['en' => 'inner title'],
+            'short_title' =>  ['en' => 'inner short_title'],
             'type' => 'inner',
             'content' =>  ['en' => 'content test4333 inner'],
         ];

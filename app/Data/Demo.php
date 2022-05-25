@@ -547,9 +547,14 @@ class Demo
 
 
         $pInner = [
+            'title' => [ "en" => 'inner title en', "pl" => 'inner title pl' ],
+            'short_title'=> [ "en" => 'inner shor_title en', "pl" => 'inner short_title pl' ],
             'content' => [ "en" => 'inner test en', "pl" => 'inner test pl' ],
+            'published' => 1,
+            'type' => 'inner'
         ];
-        $p['p17'] = $this->getPageObj()->wrapCreate($pInner);
+        $p17 = $this->getPageObj()->wrapCreate($pInner);
+        $p['p17'] = $p17;
 
         return $p;
     }
