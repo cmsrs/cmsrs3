@@ -83,16 +83,27 @@ class Page extends Base
         return $this->hasMany('App\Image')->orderBy('position');
     }
 
-    /**
-     * TODO
-     * cached
-     */
-    static public function getContentInnerPageById( $pageId, $lang = null )
+    public function getContentInnerPageById( $pageId, $lang = null )
     {
-        $page = Page::findOrFail($pageId);
         if( empty($lang) ){
             $lang = Config::getDefaultLang();
         }
+
+        $isCache = env('CACHE_ENABLE', false);
+        if ($isCache) {
+            $ret = cache()->remember('pageinner_'.$pageId.'_'.$lang, Carbon::now()->addYear(1), function () use ($pageId, $lang) {
+                return $this->getContentInnerPageByPageIdAndLang($pageId, $lang);
+            });
+        } else {
+            $ret = $this->getContentInnerPageByPageIdAndLang($pageId, $lang);
+        }
+
+        return $ret;
+    }
+
+    private function getContentInnerPageByPageIdAndLang($pageId, $lang)
+    {
+        $page = Page::findOrFail($pageId);
         
         $contents = $page->contents->pluck('value', 'lang')->toArray() ;
 
