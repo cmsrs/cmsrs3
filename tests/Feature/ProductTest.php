@@ -1129,6 +1129,49 @@ class ProductTest extends Base
 
 
     /** @test */
+    public function it_will_unpublish_one_page_in_menu_product()
+    {
+        $this->setTestData();
+        //$this->setTestData2();
+
+        $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
+
+        $res0 = $response0->getData();
+
+        $this->assertTrue($res0->success);        
+
+        $urls = (new Product)->getProductsUrl();
+
+        //dd($urls);
+        $this->assertEquals(1, count($urls));
+        $prodUrl = $urls[0]['en'];
+        $this->assertNotEmpty($prodUrl);
+        $response = $this->get($prodUrl);
+        $response->assertStatus(200);
+
+        $response22 = $this->get('api/products?token='.$this->token);
+        $res22 = $response22->getData();
+        $productId = $res22->data[0]->id;
+
+
+        $this->testData['published'] = 0;
+        $response2 = $this->put('api/products/'.$productId.'?token='.$this->token, $this->testData);    
+        $res2 = $response2->getData();
+        $this->assertTrue($res2->success);
+
+        $products = Product::all()->toArray();
+        $this->assertEquals(0, $products[0]['published']);
+        $urls2 = (new Product)->getProductsUrl();
+        $this->assertEmpty($urls2);
+        //dd($urls);
+
+        $response2 = $this->get($prodUrl);
+        $response2->assertStatus(404);
+    }
+
+
+
+    /** @test */
     public function it_will_unpublish_product()
     {
         $this->setTestData();
@@ -1241,6 +1284,53 @@ class ProductTest extends Base
         $this->assertTrue($res1->success);        
     }
     */
+
+
+    /**
+     * similar function to: it_will_get_product_by_slug
+     * except one page belongs to menu
+     */
+    /** @test */    
+    public function it_will_get_one_product_in_menu_by_slug()
+    {
+        $this->setTestData();
+        //$this->setTestData2();        
+
+        $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
+        //dd($response0);
+
+        $res0 = $response0->getData();
+        $this->assertTrue($res0->success);        
+
+        $productId = $res0->data->productId;
+        $this->assertNotEmpty($productId);
+
+        $lang = 'en';
+        $slugProductName = Str::slug(self::STR_PRODUCT_NAME_EN, '-');
+        //dump($slugProductName);
+        $product = (new Product)->getProductBySlug($slugProductName, $lang);
+
+        $this->assertNotEmpty($product);
+
+        $this->assertEquals($productId, $product['id']);
+
+        $urls = $product->getProductUrls($product);  
+
+        //dump($urls);
+        $this->assertNotEmpty($urls);
+
+        $urlCategory = $urls['url_category']['en'];
+        $urlProduct = $urls['url_product']['en'];
+
+        $response = $this->get($urlCategory);
+        $response->assertStatus(200);
+        
+        $response = $this->get($urlProduct);
+        $response->assertStatus(200);        
+
+        $product2 = (new Product)->getProductBySlug('fake', $lang);
+        $this->assertEquals(null, $product2);
+    }
 
     /** @test */    
     public function it_will_get_product_by_slug()

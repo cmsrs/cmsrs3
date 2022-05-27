@@ -423,7 +423,7 @@ class Page extends Base
         }
 
         $countPages = $this->getNumPagesBelongsToThisMenu();
-        if(1 == $countPages){
+        if( (1 == $countPages) &&   ('shop' != $this->type  )  ){
             $url = "/".Page::PREFIX_CMS_ONE_PAGE_IN_MENU_URL."/".$menuSlug;
         }else{
             $url = "/".Page::PREFIX_CMS_URL."/".$menuSlug."/".$this->getSlugByLang($lang);
