@@ -393,7 +393,8 @@ class Page extends Base
         if( empty($menu) ){
             return null;
         }
-        return $menu->pagesPublished->count();
+        //return $menu->pagesPublished->count();
+        return $menu->pagesPublishedAndAccess->count();        
     }
 
     public function getNumPagesBelongsToThisMenuCache()
