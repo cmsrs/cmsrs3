@@ -59,6 +59,7 @@ $langs = Config::arrGetLangsEnv();
         Route::get('/register', 'Auth\RegisterController@showRegistrationForm')->name('register');            
         Route::get('/forgot', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('forgot');
 
+        Route::get('/'.Page::PREFIX_CMS_ONE_PAGE_IN_MENU_URL.'/{menuSlug}', 'FrontController@getPage');
         Route::get('/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}/{productSlug?}', 'FrontController@getPage');
         Route::get('/'.Page::PREFIX_IN_URL.'/{pageSlug}', 'FrontController@getSeparatePage');    
     }else{
@@ -71,6 +72,7 @@ $langs = Config::arrGetLangsEnv();
         Route::get('/{lang}/register', 'Auth\RegisterController@showRegistrationForm'); // ->name('register');                    
         Route::get('/{lang}/forgot', 'Auth\ForgotPasswordController@showLinkRequestForm');
 
+        Route::get('/{lang}/'.Page::PREFIX_CMS_ONE_PAGE_IN_MENU_URL.'/{menuSlug}', 'FrontController@getPageLangs');        
         Route::get('/{lang}/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}/{productSlug?}', 'FrontController@getPageLangs');
         Route::get('/{lang}/'.Page::PREFIX_IN_URL.'/{pageSlug}', 'FrontController@getSeparatePageLangs');
     }

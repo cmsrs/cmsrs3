@@ -88,10 +88,7 @@ class PageTest extends Base
         $content = $objPage->contents->first();
         $this->assertEquals( $testData['content']['en'],  $content->value);        
 
-
-
-
-        $contentValue = (new Page)->getContentInnerPageById( $objPage->id );
+        $contentValue = (new Page)->getContentInnerPageByIdCache( $objPage->id );
         $this->assertEquals( $testData['content']['en'],  $contentValue);
     }
 

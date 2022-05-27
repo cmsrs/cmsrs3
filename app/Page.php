@@ -10,6 +10,7 @@ use Carbon\Carbon;
 class Page extends Base
 {
     const PREFIX_CMS_URL = 'cms';
+    const PREFIX_CMS_ONE_PAGE_IN_MENU_URL = 'o';    
     //const PREFIX_SHOP_URL = 'shop';    
     const PREFIX_IN_URL = 'in'; //(in) independent
 
@@ -83,7 +84,7 @@ class Page extends Base
         return $this->hasMany('App\Image')->orderBy('position');
     }
 
-    public function getContentInnerPageById( $pageId, $lang = null )
+    public function getContentInnerPageByIdCache( $pageId, $lang = null )
     {
         if( empty($lang) ){
             $lang = Config::getDefaultLang();
@@ -159,6 +160,10 @@ class Page extends Base
         $pageOut = null;
         foreach ($menus as $menu) {
             if ($menuSlug == $menu->getSlugByLang($lang)) {
+                if(1 == $menu->pagesPublished->count()){ //it is the case for pageSlug = null, 1 page in menu
+                    $pageOut =  $menu->pagesPublished->first();
+                    break;
+                }
                 foreach ($menu->pagesPublished  as $page) {
                     if ($pageSlug == $page->getSlugByLang($lang)) {
                         $pageOut = $page;
@@ -348,7 +353,7 @@ class Page extends Base
     }
 
     public function getUrl($lang, $urlParam = null)
-    {  
+    {
         if( 'inner' == $this->type ){
             return false;
         }elseif ('main_page' == $this->type) {
@@ -375,12 +380,26 @@ class Page extends Base
 
     private function getMenuSlugByLang($lang)
     {
-        $munu = $this->menu()->get()->first();
-        if( empty($munu) ){
+        $menu = $this->menu()->get()->first();
+        if( empty($menu) ){
             return null;
         }
-        return $munu->getSlugByLang($lang);    
+        return $menu->getSlugByLang($lang);    
     }
+
+    /**
+     * todo
+     * cached
+     */
+    public function getNumPagesBelongsToThisMenu()
+    {
+        $menu = $this->menu()->get()->first();
+        if( empty($menu) ){
+            return null;
+        }
+        return $menu->pagesPublished->count();
+    }
+
     
     private function getMenuSlugByLangCache($lang)
     {
@@ -403,7 +422,12 @@ class Page extends Base
             return $this->getIndependentUrl($lang);
         }
 
-        $url = "/".Page::PREFIX_CMS_URL."/".$menuSlug."/".$this->getSlugByLang($lang);
+        $countPages = $this->getNumPagesBelongsToThisMenu();
+        if(1 == $countPages){
+            $url = "/".Page::PREFIX_CMS_ONE_PAGE_IN_MENU_URL."/".$menuSlug;
+        }else{
+            $url = "/".Page::PREFIX_CMS_URL."/".$menuSlug."/".$this->getSlugByLang($lang);
+        }
         if($urlParam){
             //$url = $url."/".Str::slug($urlParam, '-');
             $url = $url."/".$urlParam;            

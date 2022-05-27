@@ -310,16 +310,13 @@ class FrontController extends Controller
         return view('index', $data);
     }
 
-
-
-
-    public function getPageLangs($lang, $menuSlug, $pageSlug, $productSlug = null)
+    public function getPageLangs($lang, $menuSlug, $pageSlug = null, $productSlug = null)
     {
         $data = $this->getPage($menuSlug, $pageSlug, $productSlug, $lang);
         return view($data['view'], $data);
     }
 
-    public function getPage($menuSlug, $pageSlug, $productSlug = null, $lang = null)
+    public function getPage($menuSlug, $pageSlug = null, $productSlug = null, $lang = null)
     {
         if (empty($lang)) {
             $manyLangs = false;

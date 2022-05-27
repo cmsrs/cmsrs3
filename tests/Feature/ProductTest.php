@@ -28,6 +28,7 @@ class ProductTest extends Base
     private $name2;
 
     private $testData;
+    private $testData2;
     private $testPage;
     private $testMenu;
     private $menuId;
@@ -109,6 +110,72 @@ class ProductTest extends Base
             ]
         ];
     }
+
+    /**
+     * the same menu as setTestData
+     */
+    private function setTestData2()
+    {
+        //$menu = (new Menu)->wrapCreate($this->testMenu);
+
+        //$this->menuObj = $menu; //$menu->all()->first();
+        //$this->menuId = $menu->id;  // $this->menuObj->id;
+        //$this->assertNotEmpty($this->menuId);
+
+        $testPage =
+        [
+            'title' => ['en' => 'programmer2' ],
+            'short_title' => ['en' => 'page2' ],
+            'published' => 1,
+            'position' => 7,
+            'type' => 'shop',
+            'content' => ['en' => 'content test13344522' ],
+            'menu_id' => $this->menuId
+        ];
+        
+        $p = (new Page)->wrapCreate($testPage);
+        $this->assertNotEmpty($p->id);
+
+        $type = 'shop';
+        $res = $this->get('api/pages/type/' . $type . '?token=' . $this->token);
+
+        $data = $res->getData();
+
+        
+        $this->assertTrue($data->success);
+        $pageId = null;
+        foreach($data->data as $item){
+            if($item->title->en == $testPage['title']['en']){
+                $pageId  = $item->id;
+                break;
+            }
+        }
+        $this->assertNotEmpty($pageId);
+
+        //$data->data[1]
+        //$pageId = $data->data[1]->id; //!!
+
+
+
+        //$this->assertNotEmpty($this->pageId);
+        //$this->assertEquals($p->id, $this->pageId);
+
+        $this->testData2 = [
+            'product_name' => [ 'en' =>  self::STR_PRODUCT_NAME_EN.' 2' ],
+            'sku' => 'AN/34534_22',
+            'price' => 123,
+            'product_description' =>  [ 'en'  =>  self::STR_PRODUCT_DESCRIPION_EN.' 2' ] ,
+            'page_id' => $pageId,
+            'published' => 1,
+            'images' => [
+                ['name' => $this->name1, 'data' => $this->getFixtureBase64($this->name1),  'alt' => ['en' =>  self::STR_DESC_IMG1 ] ],
+                ['name' => $this->name2, 'data' => $this->getFixtureBase64($this->name2)]
+            ]
+        ];
+    }
+
+
+
 
     /** @test */
     public function it_will_search_products()
@@ -1065,6 +1132,7 @@ class ProductTest extends Base
     public function it_will_unpublish_product()
     {
         $this->setTestData();
+        $this->setTestData2();
 
         $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
 
@@ -1073,6 +1141,8 @@ class ProductTest extends Base
         $this->assertTrue($res0->success);        
 
         $urls = (new Product)->getProductsUrl();
+
+        //dd($urls);
         $this->assertEquals(1, count($urls));
         $prodUrl = $urls[0]['en'];
         $this->assertNotEmpty($prodUrl);
@@ -1176,6 +1246,7 @@ class ProductTest extends Base
     public function it_will_get_product_by_slug()
     {
         $this->setTestData();
+        $this->setTestData2();        
 
         $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
         //dd($response0);
@@ -1188,7 +1259,11 @@ class ProductTest extends Base
 
         $lang = 'en';
         $slugProductName = Str::slug(self::STR_PRODUCT_NAME_EN, '-');
+        //dump($slugProductName);
         $product = (new Product)->getProductBySlug($slugProductName, $lang);
+
+        $this->assertNotEmpty($product);
+
         $this->assertEquals($productId, $product['id']);
 
         $urls = $product->getProductUrls($product);  
@@ -1201,7 +1276,7 @@ class ProductTest extends Base
         $response->assertStatus(200);
         
         $response = $this->get($urlProduct);
-        $response->assertStatus(200);
+        $response->assertStatus(200);        
 
         $product2 = (new Product)->getProductBySlug('fake', $lang);
         $this->assertEquals(null, $product2);

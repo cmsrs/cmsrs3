@@ -68,12 +68,33 @@ class FrontLangsTest extends Base
         (new Page)->wrapCreate($this->testData);
     }
 
+    /**
+     * this function need $this->menuId so before excecute this function run for ex. setTestData
+     */
+    private function setTestData2( $menu, $pageType = 'cms')
+    {
+        $this->testData =
+        [
+            'title' =>  ['en' => 'page 2 test test slug', 'pl' => 'strona 2 testowa' ],
+            'short_title' =>  ['en' => 'page2', 'pl' => 'strona 2 testowa' ],
+            'published' => 1,
+            'position' => 7,
+            'type' => $pageType,
+            'content' =>  ['en' => 'content test133445 2', 'pl' => 'strona testowa 2' ],
+            'menu_id' => $this->menuId
+        ];
+
+        (new Page)->wrapCreate($this->testData);
+    }
+
     /** @test */
     public function it_will_change_lang()
     {
         $this->setTestData('shop');
+        $this->setTestData2('shop');        
         $pages = Page::all()->toArray();
-        $this->assertEquals(1, count($pages));
+
+        $this->assertEquals(2, count($pages));
 
         $this->assertNotEmpty($pages[0]['id']);        
         $pageId = $pages[0]['id'];
