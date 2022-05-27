@@ -352,8 +352,8 @@ class FrontGuestTest extends TestCase
 
         $url2 = $p2->getUrl('en');
         $response1 = $this->get($p2->getUrl('en'));
-        //$response1->assertStatus(404);
-        $response1->assertStatus(401); //moze powinno byc 
+        $response1->assertStatus(404);
+        //$response1->assertStatus(401); //moze powinno byc 
     }
 
     /** @test */
