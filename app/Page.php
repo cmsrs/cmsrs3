@@ -387,10 +387,6 @@ class Page extends Base
         return $menu->getSlugByLang($lang);    
     }
 
-    /**
-     * todo
-     * cached
-     */
     public function getNumPagesBelongsToThisMenu()
     {
         $menu = $this->menu()->get()->first();
@@ -400,6 +396,19 @@ class Page extends Base
         return $menu->pagesPublished->count();
     }
 
+    public function getNumPagesBelongsToThisMenuCache()
+    {
+        $pageId = $this->id;
+        $isCache = env('CACHE_ENABLE', false);
+        if ($isCache) {
+            $countPages = cache()->remember('countpagesinthismenu_'.$pageId, Carbon::now()->addYear(1), function (){
+                return $this->getNumPagesBelongsToThisMenu();
+            });
+        } else {
+            $countPages = $this->getNumPagesBelongsToThisMenu();
+        }
+        return $countPages;
+    }
     
     private function getMenuSlugByLangCache($lang)
     {
@@ -422,7 +431,7 @@ class Page extends Base
             return $this->getIndependentUrl($lang);
         }
 
-        $countPages = $this->getNumPagesBelongsToThisMenu();
+        $countPages = $this->getNumPagesBelongsToThisMenuCache();
         if( (1 == $countPages) &&   ('shop' != $this->type  )  ){
             $url = "/".Page::PREFIX_CMS_ONE_PAGE_IN_MENU_URL."/".$menuSlug;
         }else{
