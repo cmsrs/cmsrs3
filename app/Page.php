@@ -160,8 +160,8 @@ class Page extends Base
         $pageOut = null;
         foreach ($menus as $menu) {
             if ($menuSlug == $menu->getSlugByLang($lang)) {
-                if(1 == $menu->pagesPublished->count()){ //it is the case for pageSlug = null, 1 page in menu
-                    $pageOut =  $menu->pagesPublished->first();
+                if(1 == $menu->pagesPublishedAndAccess->count()){ //it is the case for pageSlug = null, 1 page in menu
+                    $pageOut =  $menu->pagesPublishedAndAccess->first();
                     break;
                 }
                 foreach ($menu->pagesPublished  as $page) {
