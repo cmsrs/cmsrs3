@@ -20,6 +20,12 @@ class Translate extends Base
         'product_id' => 'integer',        
     ];
 
+    public function page()
+    {
+        return $this->hasOne('App\Page', 'id', 'page_id');
+    }
+    
+
     public function wrapCreate($data, $create = true)
     {
         if (!empty($data['menu_id'])) {

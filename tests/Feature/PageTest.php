@@ -72,6 +72,38 @@ class PageTest extends Base
     }
 
     /** @test */
+    public function it_will_get_content_inner_page_by_short_title( )
+    {
+        $testData =
+        [
+            'title' =>  ['en' => 'inner title'],
+            'short_title' =>  ['en' => 'inner short_title'],
+            'type' => 'inner',
+            'content' =>  ['en' => 'content test4333 inner'],
+        ];
+
+        $objPage = (new Page)->wrapCreate($testData);
+        $this->assertNotEmpty($objPage->id);
+
+        $testData2 =
+        [
+            'title' =>  ['en' => 'inner title 2'],
+            'short_title' =>  ['en' => 'inner short_title 2'],
+            'type' => 'inner',
+            'content' =>  ['en' => 'content test4333 inner 22'],
+        ];
+
+
+        $objPage2 = (new Page)->wrapCreate($testData2);
+        $this->assertNotEmpty($objPage2->id);
+
+        $shortTitle = $testData2['short_title']['en'];
+        $content = (new Page)->getContentInnerPageByShortTitleCache( $shortTitle );
+
+        $this->assertEquals( $testData2['content']['en'], $content);
+    }
+
+    /** @test */
     public function it_will_save_inner_type_page()
     {
         $testData =

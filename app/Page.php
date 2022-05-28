@@ -84,6 +84,39 @@ class Page extends Base
         return $this->hasMany('App\Image')->orderBy('position');
     }
 
+    public function getContentInnerPageByShortTitleCache( $shortTitle, $lang = null )
+    {
+        if( empty($lang) ){
+            $lang = Config::getDefaultLang();
+        }
+        $isCache = env('CACHE_ENABLE', false);
+        if ($isCache) {
+            $ret = cache()->remember('pageinner_by_short_title_'.Str::slug($shortTitle, "_").'_'.$lang, Carbon::now()->addYear(1), function () use ($shortTitle, $lang) {
+                return $this->getContentInnerPageByShortTitle( $shortTitle, $lang );
+            });
+        } else {
+            $ret = $this->getContentInnerPageByShortTitle( $shortTitle, $lang );
+        }
+
+        return $ret;
+    }
+
+    public function getContentInnerPageByShortTitle( $shortTitle, $lang = null )
+    {
+        if( empty($lang) ){
+            $lang = Config::getDefaultLang();
+        }
+
+        $translate = Translate::where('value', '=', $shortTitle)->where('column', '=', 'short_title' )->first();  //where('lang', '=', $defaultLang )->first();
+        if(empty($translate)){
+            return false;
+        }
+
+        $contents = $translate->page()->first()->contents->pluck('value', 'lang')->toArray() ;
+
+        return  empty($contents[$lang]) ? '' : $contents[$lang];
+    }   
+
     public function getContentInnerPageByIdCache( $pageId, $lang = null )
     {
         if( empty($lang) ){
@@ -92,7 +125,7 @@ class Page extends Base
 
         $isCache = env('CACHE_ENABLE', false);
         if ($isCache) {
-            $ret = cache()->remember('pageinner_'.$pageId.'_'.$lang, Carbon::now()->addYear(1), function () use ($pageId, $lang) {
+            $ret = cache()->remember('pageinner_by_pageid_'.$pageId.'_'.$lang, Carbon::now()->addYear(1), function () use ($pageId, $lang) {
                 return $this->getContentInnerPageByPageIdAndLang($pageId, $lang);
             });
         } else {
