@@ -101,6 +101,11 @@ class PageTest extends Base
         $content = (new Page)->getContentInnerPageByShortTitleCache( $shortTitle );
 
         $this->assertEquals( $testData2['content']['en'], $content);
+
+        $title = (new Page)->getContentInnerPageByShortTitleCache( $shortTitle, 'title' );
+
+        $this->assertEquals( $testData2['title']['en'], $title);
+        
     }
 
     /** @test */

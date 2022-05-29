@@ -84,37 +84,43 @@ class Page extends Base
         return $this->hasMany('App\Image')->orderBy('position');
     }
 
-    public function getContentInnerPageByShortTitleCache( $shortTitle, $lang = null )
+    public function getContentInnerPageByShortTitleCache( $shortTitle, $contentOrTitle = 'content',  $lang = null )
     {
         if( empty($lang) ){
             $lang = Config::getDefaultLang();
         }
         $isCache = env('CACHE_ENABLE', false);
         if ($isCache) {
-            $ret = cache()->remember('pageinner_by_short_title_'.Str::slug($shortTitle, "_").'_'.$lang, Carbon::now()->addYear(1), function () use ($shortTitle, $lang) {
-                return $this->getContentInnerPageByShortTitle( $shortTitle, $lang );
+            $ret = cache()->remember('pageinner_by_short_title_'.$contentOrTitle.'_'.Str::slug($shortTitle, "_").'_'.$lang, Carbon::now()->addYear(1), function () use ($shortTitle, $contentOrTitle, $lang) {
+                return $this->getContentInnerPageByShortTitle( $shortTitle, $contentOrTitle, $lang );
             });
         } else {
-            $ret = $this->getContentInnerPageByShortTitle( $shortTitle, $lang );
+            $ret = $this->getContentInnerPageByShortTitle( $shortTitle, $contentOrTitle, $lang );
         }
 
         return $ret;
     }
 
-    public function getContentInnerPageByShortTitle( $shortTitle, $lang = null )
+    public function getContentInnerPageByShortTitle( $shortTitle, $contentOrTitle = 'content',  $lang = null )
     {
+        if( !in_array( $contentOrTitle, ['content', 'title'] ) ){
+            throw new \Exception("second param is content or title allowed, now is: ".$contentOrTitle);
+        }
+
         if( empty($lang) ){
             $lang = Config::getDefaultLang();
         }
 
-        $translate = Translate::where('value', '=', $shortTitle)->where('column', '=', 'short_title' )->first();  //where('lang', '=', $defaultLang )->first();
+        $translate = Translate::where('value', '=', $shortTitle)->where('column', '=', 'short_title' )->get();  //where('lang', '=', $defaultLang )->first();
         if(empty($translate)){
             return false;
         }
 
-        $contents = $translate->page()->first()->contents->pluck('value', 'lang')->toArray() ;
+        $page = $translate->first()->page()->where('type', '=', 'inner')->first();
+        $pageData = $page->getAllPagesWithImagesOneItem();
 
-        return  empty($contents[$lang]) ? '' : $contents[$lang];
+        $dataByLang = empty($pageData[$contentOrTitle]) ? '' : $pageData[$contentOrTitle];
+        return empty($dataByLang[$lang]) ? '' : $dataByLang[$lang];
     }   
 
     public function getContentInnerPageByIdCache( $pageId, $lang = null )
