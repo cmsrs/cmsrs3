@@ -111,12 +111,12 @@ class Page extends Base
             $lang = Config::getDefaultLang();
         }
 
-        $translate = Translate::where('value', '=', $shortTitle)->where('column', '=', 'short_title' )->get();  //where('lang', '=', $defaultLang )->first();
-        if(empty($translate)){
+        $translate = Translate::where('value', '=', $shortTitle)->where('column', '=', 'short_title' )->first();  //where('lang', '=', $defaultLang )->first();
+        if( empty($translate) ){
             return false;
         }
 
-        $page = $translate->first()->page()->where('type', '=', 'inner')->first();
+        $page = $translate->page()->where('type', '=', 'inner')->first();
         $pageData = $page->getAllPagesWithImagesOneItem();
 
         $dataByLang = empty($pageData[$contentOrTitle]) ? '' : $pageData[$contentOrTitle];
