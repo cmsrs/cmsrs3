@@ -113,6 +113,10 @@ class Page extends Base
 
         $page = $this->getPageByShortTitle($shortTitle);
 
+	if( empty($page) ){
+	    return false;
+	}
+
         if( 'url' == $data ){
             return $page->getUrl($lang);
         }
