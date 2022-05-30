@@ -116,7 +116,11 @@ class Page extends Base
             return false;
         }
 
-        $page = $translate->page()->where('type', '=', 'inner')->first();
+        $page = $translate->page()->where('type', '=', 'inner')->where('published', '=', 1)->first();
+        if( empty($page) ){
+            return false;
+        }
+        
         $pageData = $page->getAllPagesWithImagesOneItem();
 
         $dataByLang = empty($pageData[$contentOrTitle]) ? '' : $pageData[$contentOrTitle];

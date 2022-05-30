@@ -80,6 +80,7 @@ class PageTest extends Base
             'short_title' =>  ['en' => 'inner short_title'],
             'type' => 'inner',
             'content' =>  ['en' => 'content test4333 inner'],
+            'published' => 1
         ];
 
         $objPage = (new Page)->wrapCreate($testData);
@@ -91,6 +92,7 @@ class PageTest extends Base
             'short_title' =>  ['en' => 'inner short_title 2'],
             'type' => 'inner',
             'content' =>  ['en' => 'content test4333 inner 22'],
+            'published' => 1
         ];
 
 
