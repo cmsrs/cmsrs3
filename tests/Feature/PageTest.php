@@ -72,8 +72,12 @@ class PageTest extends Base
     }
 
     /** @test */
-    public function it_will_get_content_inner_page_by_short_title( )
+    public function it_will_get_data_page_by_short_title()
     {
+        $p1 = (new Page)->wrapCreate($this->testData);
+        $this->assertNotEmpty($p1->id);
+
+        
         $testData =
         [
             'title' =>  ['en' => 'inner title'],
@@ -100,14 +104,27 @@ class PageTest extends Base
         $this->assertNotEmpty($objPage2->id);
 
         $shortTitle = $testData2['short_title']['en'];
-        $content = (new Page)->getContentInnerPageByShortTitleCache( $shortTitle );
+        $content = (new Page)->getPageDataByShortTitleCache( $shortTitle );
 
         $this->assertEquals( $testData2['content']['en'], $content);
 
-        $title = (new Page)->getContentInnerPageByShortTitleCache( $shortTitle, 'title' );
+        $title = (new Page)->getPageDataByShortTitleCache( $shortTitle, 'title' );
 
         $this->assertEquals( $testData2['title']['en'], $title);
         
+        $url = (new Page)->getPageDataByShortTitleCache( $shortTitle, 'url' );
+
+        $this->assertEmpty($url); //because it is inner page        
+
+        $shortTitle = $this->testData['short_title']['en'];
+        $content = (new Page)->getPageDataByShortTitleCache( $shortTitle );
+        $this->assertEquals( $this->testData['content']['en'], $content);
+
+        $title = (new Page)->getPageDataByShortTitleCache( $shortTitle, 'title' );
+        $this->assertEquals( $this->testData['title']['en'], $title);    
+
+        $url = (new Page)->getPageDataByShortTitleCache( $shortTitle, 'url' );
+        $this->assertNotEmpty($url);
     }
 
     /** @test */

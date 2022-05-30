@@ -84,48 +84,59 @@ class Page extends Base
         return $this->hasMany('App\Image')->orderBy('position');
     }
 
-    public function getContentInnerPageByShortTitleCache( $shortTitle, $contentOrTitle = 'content',  $lang = null )
+    public function getPageDataByShortTitleCache( $shortTitle, $data = 'content',  $lang = null )
     {
         if( empty($lang) ){
             $lang = Config::getDefaultLang();
         }
         $isCache = env('CACHE_ENABLE', false);
         if ($isCache) {
-            $ret = cache()->remember('pageinner_by_short_title_'.$contentOrTitle.'_'.Str::slug($shortTitle, "_").'_'.$lang, Carbon::now()->addYear(1), function () use ($shortTitle, $contentOrTitle, $lang) {
-                return $this->getContentInnerPageByShortTitle( $shortTitle, $contentOrTitle, $lang );
+            $ret = cache()->remember('page_by_short_title_'.$data.'_'.Str::slug($shortTitle, "_").'_'.$lang, Carbon::now()->addYear(1), function () use ($shortTitle, $data, $lang) {
+                return $this->getPageDataByShortTitle( $shortTitle, $data, $lang );
             });
         } else {
-            $ret = $this->getContentInnerPageByShortTitle( $shortTitle, $contentOrTitle, $lang );
+            $ret = $this->getPageDataByShortTitle( $shortTitle, $data, $lang );
         }
 
         return $ret;
     }
 
-    public function getContentInnerPageByShortTitle( $shortTitle, $contentOrTitle = 'content',  $lang = null )
+    public function getPageDataByShortTitle( $shortTitle, $data = 'content',  $lang = null )
     {
-        if( !in_array( $contentOrTitle, ['content', 'title'] ) ){
-            throw new \Exception("second param is content or title allowed, now is: ".$contentOrTitle);
+        if( !in_array( $data, ['content', 'title', 'url'] ) ){
+            throw new \Exception("second param is content or title allowed, now is: ".$data);
         }
 
         if( empty($lang) ){
             $lang = Config::getDefaultLang();
         }
 
+        $page = $this->getPageByShortTitle($shortTitle);
+
+        if( 'url' == $data ){
+            return $page->getUrl($lang);
+        }
+        
+        $pageData = $page->getAllPagesWithImagesOneItem();
+
+        $dataByLang = empty($pageData[$data]) ? '' : $pageData[$data];
+        return empty($dataByLang[$lang]) ? '' : $dataByLang[$lang];
+    }   
+
+
+    private function getPageByShortTitle($shortTitle)
+    {
         $translate = Translate::where('value', '=', $shortTitle)->where('column', '=', 'short_title' )->first();  //where('lang', '=', $defaultLang )->first();
         if( empty($translate) ){
             return false;
         }
 
-        $page = $translate->page()->where('type', '=', 'inner')->where('published', '=', 1)->first();
+        $page = $translate->page()->where('published', '=', 1)->first(); //->where('type', '=', 'inner')
         if( empty($page) ){
             return false;
         }
-        
-        $pageData = $page->getAllPagesWithImagesOneItem();
-
-        $dataByLang = empty($pageData[$contentOrTitle]) ? '' : $pageData[$contentOrTitle];
-        return empty($dataByLang[$lang]) ? '' : $dataByLang[$lang];
-    }   
+        return $page;
+    }
 
     public function getContentInnerPageByIdCache( $pageId, $lang = null )
     {
