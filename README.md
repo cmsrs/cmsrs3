@@ -119,6 +119,23 @@ API_SECRET=""
 It must be the same like in the admin config file.
 It can be empty string.
 
+* (optionally) set avaliable page type that appear in the administration area: 
+
+If not set the list is:
+```bash
+PAGE_TYPES="cms,gallery,shop,contact,main_page,privacy_policy,login,projects,clear,checkout,register,home,shoppingsuccess,search,forgot,inner"
+```
+
+Ihe most of this page type is regular page like: 'login', 'privacy_policy', 'main_page'
+Exception is:
+
+- cms - apear Wyswig editor
+- clear - without Wyswig editor, it require write pure html code
+- inner - it is text box in exsitting page require hardcode in layout page, whre key is short_title
+- gallery - page this photos
+- projects - the same content in each langs
+
+
 * (optionally) for google v3 reCaptcha in the contact form: 
 
 ```bash
