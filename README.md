@@ -126,14 +126,15 @@ If not set the list is:
 PAGE_TYPES="cms,gallery,shop,contact,main_page,privacy_policy,login,projects,clear,checkout,register,home,shoppingsuccess,search,forgot,inner"
 ```
 
-Ihe most of this page type is regular page like: 'login', 'privacy_policy', 'main_page'
+In the most of this page type is regular page like: 'login', 'privacy_policy', 'main_page'
 Exception is:
 
-- cms - apear Wyswig editor
-- clear - without Wyswig editor, it require write pure html code
-- inner - it is text box in exsitting page require hardcode in layout page, whre key is short_title
-- gallery - page this photos
-- projects - the same content in each langs
+    - cms - apear Wyswig editor
+    - clear - without Wyswig editor, it require write pure html code
+    - inner - it is text box in exsitting page require hardcode in layout page, whre key is short_title
+    - gallery - page this photos
+    - projects - the same content in each langs
+
 
 
 * (optionally) for google v3 reCaptcha in the contact form: 
