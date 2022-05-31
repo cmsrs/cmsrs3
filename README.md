@@ -119,7 +119,7 @@ API_SECRET=""
 It must be the same like in the admin config file.
 It can be empty string.
 
-* (optionally) set avaliable page type that appear in the administration area: 
+* (optionally) set available page type that appear in the administration area: 
 
 If not set the list is:
 ```bash
@@ -129,9 +129,9 @@ PAGE_TYPES="cms,gallery,shop,contact,main_page,privacy_policy,login,projects,cle
 In the most of this page type is regular page like: 'login', 'privacy_policy', 'main_page'
 Exception is:
 
-    - cms - apear Wyswig editor
+    - cms - apear Wyswig editor in administration area
     - clear - without Wyswig editor, it require write pure html code
-    - inner - it is text box in exsitting page require hardcode in layout page, whre key is short_title
+    - inner - it is text box in exsitting page require hardcode in layout page, where key is short_title
     - gallery - page this photos
     - projects - the same content in each langs
 
