@@ -22,7 +22,7 @@ git clone https://github.com/cmsrs/cmsrs3.git && cd cmsrs3
 ./go_install.sh
 ```
 
-# INSALLATION
+# INSTALLATION
 
 * download
  
@@ -121,18 +121,16 @@ It can be empty string.
 
 * (optionally) set available page type that appear in the administration area: 
 
-If not set the list is:
+The default page types are:
 ```bash
 PAGE_TYPES="cms,gallery,shop,contact,main_page,privacy_policy,login,projects,clear,checkout,register,home,shoppingsuccess,search,forgot,inner"
 ```
 
-In the most of this page type is regular page like: 'login', 'privacy_policy', 'main_page'
-Exception is:
 
     - cms - apear Wyswig editor in administration area
     - clear - without Wyswig editor, it require write pure html code
-    - inner - it is text box in exsitting page require hardcode in layout page, where key is short_title
-    - gallery - page this photos
+    - inner - it is text box in existing page require hardcode in layout page, where key is short_title
+    - gallery - page with photos
     - projects - the same content in each langs
 
 
