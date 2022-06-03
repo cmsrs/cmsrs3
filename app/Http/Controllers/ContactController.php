@@ -84,7 +84,8 @@ class ContactController extends Controller
         try {
             $contactEmail = env('CONTACT_EMAIL', '');
             if(!empty($contactEmail)){
-                
+
+//UWAGA!! - specjalnie zaczyna ten string od lewej!!!!                
 $bodyMsg = 'email: '.$data['email'].'
 message: '.$data['message'];
 
