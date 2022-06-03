@@ -92,7 +92,7 @@ message: '.$data['message'];
 
                 Mail::raw($bodyMsg, function ($message) use($contactEmail) {
                     $message->to($contactEmail)
-                    ->subject('Message form info')
+                    ->subject('Message form contact form')
                     ;
                   });        
             }
