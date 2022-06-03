@@ -75,6 +75,16 @@ class ContactController extends Controller
             if (empty($contact->id)) {
                 throw new \Exception("I cant get contact id");
             }
+
+            $contactEmail = env('CONTACT_EMAIL', '');
+            if(!empty($contactEmail)){
+                Mail::raw(var_export($data, true ), function ($message) use($contactEmail) {
+                    $message->to($contactEmail)
+                    ->subject('Message form info')
+                    ;
+                  });        
+            }
+
         } catch (\Exception $e) {
             Log::error('contact add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile());
             return response()->json(['success'=> false, 'error'=> 'Add contact problem, details in the log file.'], 200);

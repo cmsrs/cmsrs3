@@ -134,6 +134,13 @@ PAGE_TYPES="cms,gallery,shop,contact,main_page,privacy_policy,login,projects,cle
     - projects - the same content in each langs
 
 
+* (optionally) additionally sending an e-mail with information from the contact form.
+If the value is empty, the text of the message will appear only in the administration panel in the contact tab
+
+```bash
+CONTACT_EMAIL=""
+```
+
 
 * (optionally) for google v3 reCaptcha in the contact form: 
 
