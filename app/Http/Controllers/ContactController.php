@@ -84,7 +84,8 @@ class ContactController extends Controller
         try {
             $contactEmail = env('CONTACT_EMAIL', '');
             if(!empty($contactEmail)){
-                $bodyMsg = 'email: '.$data['email'].'<br>message: '.$data['message'];
+                $bodyMsg = 'email: '.$data['email'].'
+                message: '.$data['message'];
                 Mail::raw($bodyMsg, function ($message) use($contactEmail) {
                     $message->to($contactEmail)
                     ->subject('Message form info')
