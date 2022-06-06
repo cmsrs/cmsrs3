@@ -22,8 +22,17 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark  {{ $bg }} fixed-top lead">
     <a class="navbar-brand" href="{{ url($urlMainPage) }}">
-        <!-- <img id="logo_cmsrs" src="/images/cms/logo_cmsrs.png" alt="{{ config('app.name', 'cmsRS') }}" />        -->
+
+      <?php
+          $path = public_path('images/mysite/logo.png');
+          $isExists = file_exists($path);
+          if($isExists){
+      ?>    
         <img id="logo_cmsrs" src="/images/mysite/logo.png" alt="{{ config('app.name', 'cmsRS') }}" />
+      <?php }else{ ?>
+        <img id="logo_cmsrs" src="/images/cms/logo_cmsrs.png" alt="{{ config('app.name', 'cmsRS') }}" />
+      <?php } ?>
+
     </a>
 
 

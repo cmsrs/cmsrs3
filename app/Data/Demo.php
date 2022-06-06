@@ -171,6 +171,37 @@ class Demo
         $admUrl = (strpos($appUrl, 'demo.cmsrs.pl') !== false) ? $appUrl.'/admin-demo' : $appUrl.'/admin/';
 
 
+        $pInner1 = [
+            'title' => [ "en" => 'Box1 test', "pl" => 'Box1 test' ],
+            'short_title'=> [ "en" => 'main_page_box1', "pl" => 'inner short_title pl' ],
+            'content' => [ "en" =>$this->getDummyTest(),  "pl" =>$this->getDummyTestPl()],            
+            'published' => 1,
+            'type' => 'inner'
+        ];
+        $p17 = $this->getPageObj()->wrapCreate($pInner1);
+        $p['p17'] = $p17;
+
+        $pInner2 = [
+            'title' => [ "en" => 'Box2 test', "pl" => 'Box2 test' ],
+            'short_title'=> [ "en" => 'main_page_box2', "pl" => 'inner short_title pl' ],
+            'content' => [ "en" =>$this->getDummyTest(),  "pl" =>$this->getDummyTestPl()],            
+            'published' => 1,
+            'type' => 'inner'
+        ];
+        $p18 = $this->getPageObj()->wrapCreate($pInner2);
+        $p['p18'] = $p18;
+
+        $pInner3 = [
+            'title' => [ "en" => 'Box3 test', "pl" => 'Box3 test' ],
+            'short_title'=> [ "en" => 'main_page_box3', "pl" => 'inner short_title pl' ],
+            'content' => [ "en" =>$this->getDummyTest(),  "pl" =>$this->getDummyTestPl()],            
+            'published' => 1,
+            'type' => 'inner'
+        ];
+        $p19 = $this->getPageObj()->wrapCreate($pInner3);
+        $p['p19'] = $p19;
+
+
         $mainPage =
         [
             'title'     =>[ "en" =>  'cmsRS demo site', "pl" =>  'cmsRS wersja demo'],
@@ -214,7 +245,33 @@ class Demo
                     <br>
                     More information: <a title='cmsRS' href='https://www.cmsrs.pl' >https://www.cmsrs.pl</a>
                 </p>
+            </div> 
+            
+            <div class='mt-5 container'><!-- container -->      
+      
+            <div class='row'>
+              <div class='col-md-4'>
+                <h3>".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box1', 'title', 'en' )."</h3>
+                <p>
+                  ".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box1', 'content', 'en' )."
+                </p>
+              </div>
+              <div class='col-md-4'>
+                <h3>".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box2', 'title', 'en'  )."</h3>
+                <p>
+                  ".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box2', 'content', 'en'  )."
+                </p>
+              </div>
+              <div class='col-md-4'>
+                <h3>".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box3', 'title', 'en'  )."</h3>
+                <p>
+                  ".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box3', 'content', 'en'  )."
+                </p>
+              </div>
             </div>
+      
+          </div><!-- container -->
+
             ", "pl" => "
             <div class='container pt-5 starter-template  mt-4 mb-4'>
                 <h1>cmsRS wersja demo</h1>
@@ -251,6 +308,34 @@ class Demo
                     Więcej informacji: <a title='cmsRS' href='https://www.cmsrs.pl' >https://www.cmsrs.pl</a>
                 </p>
             </div>
+
+
+            <div class='mt-5 container'><!-- container -->      
+      
+            <div class='row'>
+              <div class='col-md-4'>
+                <h3>".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box1', 'title', 'pl'  )."</h3>
+                <p>
+                  ".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box1', 'content', 'pl' )."
+                </p>
+              </div>
+              <div class='col-md-4'>
+                <h3>".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box2', 'title', 'pl' )."</h3>
+                <p>
+                  ".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box2', 'content', 'pl' )."
+                </p>
+              </div>
+              <div class='col-md-4'>
+                <h3>".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box3', 'title', 'pl' )."</h3>
+                <p>
+                  ".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box3', 'content', 'pl' )."
+                </p>
+              </div>
+            </div>
+      
+          </div><!-- container -->
+
+
             " ],
             'menu_id' => null,
             'page_id' => null,
@@ -545,16 +630,6 @@ class Demo
         ];
         $p['p16'] = $this->getPageObj()->wrapCreate($pForgot);
 
-
-        $pInner = [
-            'title' => [ "en" => 'inner title en', "pl" => 'inner title pl' ],
-            'short_title'=> [ "en" => 'inner shor_title en', "pl" => 'inner short_title pl' ],
-            'content' => [ "en" => 'inner test en', "pl" => 'inner test pl' ],
-            'published' => 1,
-            'type' => 'inner'
-        ];
-        $p17 = $this->getPageObj()->wrapCreate($pInner);
-        $p['p17'] = $p17;
 
         return $p;
     }
