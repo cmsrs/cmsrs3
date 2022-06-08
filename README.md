@@ -73,6 +73,22 @@ php artisan migrate  && php artisan db:seed
 php artisan serve
 ```
 
+# MANAGMENT
+
+* go to the website http://127.0.0.1:8000/admin/
+
+    log in as:
+
+    username: adm@cmsrs.pl
+
+    password: cmsrs123
+
+* create main page (page type: main_page)
+
+* add menu
+    
+* add pages
+   
 # RUN TESTS
 
 * prepare testing:
@@ -191,22 +207,6 @@ tail -f -n0 storage/logs/*
 php artisan command:create-site-map
 ```
 
-# MANAGMENT
-
-* go to the website http://127.0.0.1:8000/admin/
-
-    log in as:
-
-    username: adm@cmsrs.pl
-
-    password: cmsrs123
-
-* create main page (page type: main_page)
-
-* add menu
-    
-* add pages
-   
 # DEMO
 
 http://demo.cmsrs.pl
