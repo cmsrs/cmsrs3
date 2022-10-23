@@ -51,7 +51,8 @@ class Config extends Model
         if ($this->getLangs()) {
             $langs = $this->getLangs();
         } else {
-            throw new \Exception("You must set at least one language in the .env file");
+            $langs = 'en';
+            //throw new \Exception("You must set at least one language in the .env file");
         }
         return $langs;
     }
