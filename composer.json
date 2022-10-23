@@ -1,9 +1,11 @@
 {
-    "name": "laravel/laravel",
+    "name": "cmsrs/cmsrs3",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "CMS/gallery/shop base on the Laravel Framework.",
     "keywords": [
-        "framework",
+        "cms",
+        "gallery",
+        "shop",
         "laravel"
     ],
     "license": "MIT",
