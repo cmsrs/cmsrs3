@@ -7,6 +7,32 @@
 </br>
 
 
+# INSTALLATION BY COMPOSER
+
+```bash
+composer create-project    cmsrs/cmsrs3
+```
+
+```bash
+configure db connection - change .env file.
+```
+
+```bash
+php artisan key:generate && php artisan jwt:secret
+```
+
+```bash
+php artisan migrate  && php artisan db:seed
+```
+
+```bash
+./go_privilege.sh
+```
+
+```bash
+php artisan serve
+```
+
 
 # QUICK INSTALLATION
 
