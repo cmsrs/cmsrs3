@@ -1,5 +1,6 @@
 <?php
 
+
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -22,7 +23,14 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin'
         ]);
 
-
+        $emailClient = 'client@cmsrs.pl';
+        $passClient = 'cmsrs456';
+        DB::table('users')->insert([
+            'name'     => 'client',
+            'email'    => $emailClient,
+            'password' => Hash::make($passClient),
+            'role' => 'client'
+        ]);
 
 
     }

@@ -15,11 +15,12 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->bigIncrements('id')->index();
-            $table->string('name');
+            //$table->string('name');
             $table->string('sku')->nullable();
             $table->integer('price')->nullable();
-            $table->text('description')->nullable();
+            //$table->text('description')->nullable();
             //$table->string('photo')->nullable();
+            $table->boolean('published')->default(0);
             $table->unsignedBigInteger('page_id')->nullable();
             $table->foreign('page_id')->nullable()->references('id')->on('pages')->onDelete('cascade');
             $table->timestamps();

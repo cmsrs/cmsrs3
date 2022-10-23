@@ -23,8 +23,16 @@ class CreateContentsTable extends Migration
             $table->unsignedBigInteger('page_id')->nullable();
             $table->foreign('page_id')->nullable()->references('id')->on('pages')->onDelete('cascade');
 
+
+            $table->unsignedBigInteger('product_id')->nullable();
+            $table->foreign('product_id')->nullable()->references('id')->on('products')->onDelete('cascade');
+            $table->unique(['lang', 'column', 'page_id', 'product_id'], 'translates_index_unique' ); 
+
+            //$table->dropUnique('contents_lang_column_page_id_unique');
+
+
             //'column',
-            $table->unique(['lang', 'column', 'page_id' ]);
+            //$table->unique(['lang', 'column', 'page_id' ]);
             $table->timestamps();
         });
     }

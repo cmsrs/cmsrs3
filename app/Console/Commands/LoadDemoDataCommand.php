@@ -100,6 +100,10 @@ class LoadDemoDataCommand extends Command
         // $user->password = 'cmsrs123';
         // $user->save();
 
+        /**
+         * remove to seeder
+         */
+        /*
         $emailClient = 'client@cmsrs.pl';
         $user2 = new User([
             'email'    => $emailClient,
@@ -108,6 +112,7 @@ class LoadDemoDataCommand extends Command
         ]);
         $user2->password = 'cmsrs456';
         $user2->save();
+         */
 
         /*---------------------*/
         /* ---orders-----------*/
