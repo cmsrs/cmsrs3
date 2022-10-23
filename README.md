@@ -10,12 +10,10 @@
 # INSTALLATION BY COMPOSER
 
 ```bash
-composer create-project    cmsrs/cmsrs3
+composer create-project cmsrs/cmsrs3
 ```
 
-```bash
-configure db connection - change .env file.
-```
+* configure db connection - change .env file.
 
 ```bash
 php artisan key:generate && php artisan jwt:secret
