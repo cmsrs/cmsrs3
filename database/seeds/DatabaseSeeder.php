@@ -23,8 +23,8 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin'
         ]);
 
-        $emailClient = 'client@cmsrs.pl';
-        $passClient = 'cmsrs456';
+        $emailClient = env('CLIENT_EMAIL', 'client@cmsrs.pl');
+        $passClient = env('CLIENT_PASS',  'cmsrs456');
         DB::table('users')->insert([
             'name'     => 'client',
             'email'    => $emailClient,
