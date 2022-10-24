@@ -206,16 +206,17 @@ PAYU_CLIENT_ID=123
 PAYU_CLIENT_SECRET=zzz
 NOTIFY_URL=http://domain/home/orders
 CUSTOMER_IP="123.123.123.123"
-
 ```
 
-* change default login/pass admin and client:
+* change the default login/pass admin and client:
 
+
+```bash
 ADM_EMAIL='adm@cmsrs.pl'
 ADM_PASS='cmsrs123'
-
 CLIENT_EMAIL='client@cmsrs.pl'
 CLIENT_PASS'='cmsrs456'
+```
 
 run:
 
