@@ -209,6 +209,21 @@ CUSTOMER_IP="123.123.123.123"
 
 ```
 
+* change default login/pass admin and client:
+
+ADM_EMAIL='adm@cmsrs.pl'
+ADM_PASS='cmsrs123'
+
+CLIENT_EMAIL='client@cmsrs.pl'
+CLIENT_PASS'='cmsrs456'
+
+run:
+
+```bash
+php artisan db:seed
+```
+
+
 # TROUBLESHOOTING
 
 * logs:
