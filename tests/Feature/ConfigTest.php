@@ -99,8 +99,9 @@ class ConfigTest extends Base
         $this->assertEquals("en", $langs);
 
         $config->setLangs("");
-        $this->expectException(\Exception::class);        
+        //$this->expectException(\Exception::class);        
         $langs = $config->getLangsFromEnv();
+        $this->assertEquals( Config::LANG_DEFAULT, $langs);        
     }
 
     /** @test */

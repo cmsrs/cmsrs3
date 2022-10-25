@@ -142,21 +142,21 @@ It is recommended to run tests on a clean instance (without images)
  
 # CONFIGURATION .env FILE
 
-* add langs, example:
+*  (optionally) set up langs, example:
 
 ```bash
 LANGS="pl,en"
 ```
 
 The first one will be default language.
-You have to add at least one lang (it is require)
+If you don't set up this directive it will be 'en'
 
 * add api secret, example:
 ```bash
 API_SECRET=""
 ```
 
-It must be the same like in the admin config file.
+It must be the same like in the admin config file (see React).
 It can be empty string.
 
 * (optionally) set available page type that appear in the administration area: 
@@ -208,7 +208,7 @@ NOTIFY_URL=http://domain/home/orders
 CUSTOMER_IP="123.123.123.123"
 ```
 
-* change the default login/pass admin and client:
+* (optionally) change the default login/pass admin and client:
 
 
 ```bash

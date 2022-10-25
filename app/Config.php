@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Config extends Model
 {
     const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,login,projects,clear,checkout,register,home,shoppingsuccess,search,forgot,inner'; //default values
+    const LANG_DEFAULT = 'en';
 
     private $langs;
 
@@ -51,7 +52,7 @@ class Config extends Model
         if ($this->getLangs()) {
             $langs = $this->getLangs();
         } else {
-            $langs = 'en';
+            $langs = Config::LANG_DEFAULT;
             //throw new \Exception("You must set at least one language in the .env file");
         }
         return $langs;
@@ -74,7 +75,9 @@ class Config extends Model
     {
         $langs = Config::arrGetLangsEnv();
         if(empty($langs) || empty($langs[0]) ){
-            throw new \Exception("You must set at least one language in the .env file (deflang)");
+            $langs = []; 
+            $langs[0] = LANG_DEFAULT;            
+            //throw new \Exception("You must set at least one language in the .env file (deflang)");
         }
         return $langs[0];
     }
