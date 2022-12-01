@@ -177,6 +177,9 @@ bledy:
 - nie dodaja sie strony z produktami do sitemapy - do poprawy
 
 
+221201
+bledy
+- pozycja w dol dla ostatniej strony  dla stron co maja zagniezdzenia nie dziala popraweni - ale da sie wyklikac klikajac wiele razy do gory
 
 ------------------skrypty------biblioteki--cdn----
 
