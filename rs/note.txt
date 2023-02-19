@@ -181,6 +181,49 @@ bledy:
 bledy
 - pozycja w dol dla ostatniej strony  dla stron co maja zagniezdzenia nie dziala popraweni - ale da sie wyklikac klikajac wiele razy do gory
 
+
+230219
+- cush testy np dla koszyka (mutex):
+(proba zabezpieczenia przez - 'select update')
+
+<code>
+import fetch from 'node-fetch';
+
+const time = new Date();
+console.log(time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds());
+
+const url = 'http://cmsrs.pl/basket';
+const endpoints = [url+ '/a.php' , url+ '/a.php', url+ '/a.php'];
+
+async function runExt( endpoints  ) {
+    try {
+        const responses = await Promise.all(
+            endpoints.map(async u => {
+                const res = await fetch(u);
+            })
+        );
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+console.log(endpoints );
+runExt(endpoints );
+
+</code>
+
+- transkacje dla koszyka
+- sortowanie w php drzewa nie dziala dla ostatniego nie przechodzi na poczatek - dla srodkowego wezla w drzewie
+(do poprawy)
+
+---
+
+- vuejs dla panelu
+- aktualizacja do najnowej wersji laravela
+
+
+
+
 ------------------skrypty------biblioteki--cdn----
 
 
