@@ -180,13 +180,14 @@ class ImageTest extends Base
         $this->assertIsInt($res2->data[0]->images[0]->id);
 
 
-        $this->assertObjectHasAttribute('alt', $res2->data[0]->images[0]);
+        //$this->assertObjectHasAttribute('alt', $res2->data[0]->images[0]);
         $this->assertNotEmpty($res2->data[0]->images[0]->alt);
         $this->assertEquals(self::STR_DESC_IMG1, $res2->data[0]->images[0]->alt->en);
 
         $this->assertEquals($res2->data[0]->images[1]->name, $this->testImgData['images'][1]['name']);
 
-        $this->assertObjectHasAttribute('alt', $res2->data[0]->images[1]);
+        //$this->assertObjectHasAttribute('alt', $res2->data[0]->images[1]);
+        $this->assertNotEmpty( $res2->data[0]->images[1]->alt);
         $this->assertEquals($res2->data[0]->images[1]->alt->en, null);
 
         $this->assertEquals(pathinfo($res2->data[0]->images[1]->fs->org, PATHINFO_BASENAME), $this->name2);
