@@ -6,47 +6,7 @@
 </br>
 </br>
 
-
-# INSTALLATION BY COMPOSER
-
-```bash
-composer create-project cmsrs/cmsrs3
-```
-
-* configure db connection - change .env file.
-
-```bash
-php artisan key:generate && php artisan jwt:secret
-```
-
-```bash
-php artisan migrate && php artisan db:seed
-```
-
-```bash
-./go_privilege.sh
-```
-
-```bash
-php artisan serve
-```
-
-
-# QUICK INSTALLATION
-
-* download
- 
-```bash
-git clone https://github.com/cmsrs/cmsrs3.git && cd cmsrs3
-```
-
-* run script 
-
-```bash
-./go_install.sh
-```
-
-# INSTALLATION
+# INSTALLATION (Recommended Method)
 
 * download
  
@@ -57,6 +17,7 @@ cd cmsrs3
 
 * create user and database
 
+you can run the following script:
 ```bash
 ./go_create_user_and_db.sh
 ```
@@ -97,10 +58,51 @@ php artisan migrate  && php artisan db:seed
 php artisan serve
 ```
 
+
+# INSTALLATION BY COMPOSER
+
+```bash
+composer create-project cmsrs/cmsrs3
+```
+
+* configure db connection - change .env file.
+
+```bash
+php artisan key:generate && php artisan jwt:secret
+```
+
+```bash
+php artisan migrate && php artisan db:seed
+```
+
+```bash
+./go_privilege.sh
+```
+
+```bash
+php artisan serve
+```
+
+
+# QUICK INSTALLATION
+
+* download
+ 
+```bash
+git clone https://github.com/cmsrs/cmsrs3.git && cd cmsrs3
+```
+
+* run script 
+
+```bash
+./go_install.sh
+```
+
 # RUN TESTS
 
 * prepare testing:
 
+create user and database, you can run the following script:
 ```bash
 ./go_create_test_db.sh
 cp .env .env.testing 
