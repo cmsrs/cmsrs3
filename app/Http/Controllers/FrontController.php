@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -215,7 +216,8 @@ class FrontController extends Controller
         $checkout['price_deliver'] = $deliver['price'];
         $checkout['price_total_add_deliver'] = $checkout['price_total'] + $checkout['price_deliver'];
 
-
+        /*
+        //without transaction
         $objCheckout = Checkout::create($checkout);
         if (empty($objCheckout->id)) {
             throw new \Exception("I cant get objCheckout id - problem with save chcekout");
@@ -224,6 +226,27 @@ class FrontController extends Controller
         foreach($baskets as $basket){
             $basket['checkout_id'] = $objCheckout->id;
             Basket::create($basket);
+            Log::debug(' create backet: '.var_export( $basket , true ) );
+        }
+        */
+
+        DB::beginTransaction();
+        try {
+            $objCheckout = Checkout::create($checkout);
+            if (empty($objCheckout->id)) {
+                throw new \Exception("I cant get objCheckout id - problem with save chcekout");
+            }  
+
+            foreach($baskets as $basket){
+                $basket['checkout_id'] = $objCheckout->id;
+                Basket::create($basket);
+                //Log::debug(' create backet: '.var_export( $basket , true ) );
+            }
+            DB::commit();
+        } catch (\Exception $e) {
+            Log::debug(' tranaction problem: '.var_export( $e->getMessage() , true ) );
+            DB::rollback();
+            //throw $e;
         }
 
         
