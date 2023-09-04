@@ -249,6 +249,12 @@ tail -f -n0 storage/logs/*
 php artisan command:create-site-map
 ```
 
+* create client user or edit password for user: 
+
+```bash
+php artisan command:create-client {user} {password}
+```
+
 # DEMO
 
 http://demo.cmsrs.pl
