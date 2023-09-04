@@ -186,6 +186,12 @@ bledy
 - cush testy np dla koszyka (mutex):
 (proba zabezpieczenia przez - 'select update')
 
+
+230902
+- ziana pozycje zjec zdjecic - pierwszy i ostatni - wydaje mio sie ze po przesyuynieciue ostatniego na poczatek wszystkie pozaostale powinny zostrac zwiekszone o 1
+a aktualnie jest tylko zmiana 1 z ostatnim - czy to oby jest ok
+proponuje aby byla mozliwoisc ziany polozenia za pomoca liczy takze - uprosci to robote przy duzej liczbie zdjec
+
 <code>
 import fetch from 'node-fetch';
 
