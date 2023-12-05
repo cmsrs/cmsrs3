@@ -93,9 +93,10 @@ class PageTest extends Base
         $testData2 =
         [
             'title' =>  ['en' => 'inner title 2'],
-            'short_title' =>  ['en' => 'inner short_title 2'],
+            'short_title' =>  ['en' => 'inner short_title 2111'],
             'type' => 'inner',
             'content' =>  ['en' => 'content test4333 inner 22'],
+            //'content' =>  [],
             'published' => 1
         ];
 
@@ -125,6 +126,14 @@ class PageTest extends Base
 
         $url = (new Page)->getPageDataByShortTitleCache( $shortTitle, 'url' );
         $this->assertNotEmpty($url);
+
+        //dd($objPage2);        
+        $response = $this->get('api/pages?token='.$this->token);
+        $res = $response->getData();
+        $this->assertTrue($res->success);
+        $lastItem = $res->data[count($res->data)-1];
+        $this->assertEquals( 'inner', $lastItem->type );
+        $this->assertEquals( $testData2['short_title']['en'], $lastItem->short_title->en );
     }
 
     /** @test */
