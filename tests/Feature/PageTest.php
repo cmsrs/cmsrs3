@@ -97,7 +97,7 @@ class PageTest extends Base
             'type' => 'inner',
             'content' =>  ['en' => 'content test4333 inner 22'],
             //'content' =>  [],
-            'published' => 1
+            'published' => 1 //todo - this condition must be !
         ];
 
 

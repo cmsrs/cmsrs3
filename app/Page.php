@@ -135,7 +135,8 @@ class Page extends Base
             return false;
         }
 
-        $page = $translate->page()->where('published', '=', 1)->first(); //->where('type', '=', 'inner')
+        //->where('type', '=', 'inner') //todo why is this condition ? 'published', '=', 1 - is it make sense (see inner page post:/api/pages)? see test: it_will_get_data_page_by_short_title
+        $page = $translate->page()->where('published', '=', 1)->first(); 
         if( empty($page) ){
             return false;
         }
