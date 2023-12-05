@@ -97,7 +97,7 @@ class PageTest extends Base
             'type' => 'inner',
             'content' =>  ['en' => 'content test4333 inner 22'],
             //'content' =>  [],
-            'published' => 1 //todo - this condition must be !
+            'published' => 1 // true //todo - this condition must be !
         ];
 
 
@@ -135,6 +135,33 @@ class PageTest extends Base
         $this->assertEquals( 'inner', $lastItem->type );
         $this->assertEquals( $testData2['short_title']['en'], $lastItem->short_title->en );
     }
+
+    /** @test */
+    public function it_will_add_inner_page_and_show()
+    {
+        $testData =
+        [
+            'title' =>  ['en' => 'inner title'],
+            'short_title' =>  ['en' => 'inner short_title234333 rs'],
+            'type' => 'inner',
+            //'content' =>  ['en' => 'content test4333 inner'],
+            'content' =>  [],
+            //'published' => true
+        ];
+        $response = $this->post('api/pages?token='.$this->token, $testData);
+        $res = $response->getData();
+        $this->assertTrue($res->success);        
+
+        $response2 = $this->get('api/pages?token='.$this->token);
+        $res2 = $response2->getData();
+        $this->assertTrue($res2->success);        
+
+        $this->assertEquals( $testData['short_title']['en'], $res2->data[0]->short_title->en );
+        $this->assertEquals( 'inner', $res2->data[0]->type );
+        //dd($res2);
+    }
+
+
 
     /** @test */
     public function it_will_save_inner_type_page()
