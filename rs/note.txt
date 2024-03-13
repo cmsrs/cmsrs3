@@ -228,6 +228,10 @@ runExt(endpoints );
 - aktualizacja do najnowej wersji laravela
 
 
+-
+
+
+- obluda bledow w vuejs moze byc lepsze (np przy duplikacie tytulu nalezy zaznaczyc ktore pole trzeba zmienic a to ptrzeba przekaza w api ) - proponuje takze zrobic dokumentacje na stronie o bledach, nie tylko o pozytywnej odpowiedzi 
 
 
 ------------------skrypty------biblioteki--cdn----
