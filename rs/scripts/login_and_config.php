@@ -1,13 +1,21 @@
 <?php
-//$conf = parse_ini_file("../../.env");
-//die('_____sss____'  );
-//
-//var_dump(   );
 
+//$envFile  = '../../.env';
+$envFile  = '.env';
+if( !file_exists( $envFile  )  ){
+    die( 'cant find env file'  );
+}
+
+$env = parse_ini_file(  $envFile  );
+$login =  $env["ADM_EMAIL"] ?? die('probem with login');
+$pass =  $env["ADM_PASS"] ?? die('probem with pass');
+
+//var_dump( $env );
+//die('__________');
 
 $cmdLogin = 'curl  -H "Accept:application/json" -H "Content-Type:application/json" -XPOST  "http://127.0.0.1:8000/api/login" -d \'{ 
-    "email": "adm@cmsrs.pl", 
-    "password": "cmsrs123"
+    "email": "'.$login.'", 
+    "password": "'.$pass.'"
 }\'';
 
 $out = [];
