@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 //use JWTAuth;
 
-use App\Page;
+use App\Page; //it is depend on type
+use App\Product;//it is depend on type
 use App\Image;
 use Validator;
 use Illuminate\Support\Facades\Log;
@@ -21,6 +22,25 @@ class ImageController extends Controller
         $images = Image::getImagesAndThumbsByTypeAndRefId($type, $refId);
 
         return response()->json(['success' => true, 'data'=> $images], 200);
+    }
+
+    public function uploadImageByTypeAndRefId(Request $request, $type, $refId)
+    {
+        if (empty(Image::$type[$type])) {
+            return response()->json(['success'=> false, 'error'=> 'page type not exist'], 404);            
+        }
+
+        $strObj = '\\App\\'.ucfirst($type);
+        $obj = ( new $strObj )->find($refId);
+        if ( empty($obj) ) {
+            return response()->json(['success'=> false, 'error'=> 'obj not found'], 404);            
+        }
+
+        $data = $request->only('image');
+        $objImage = new Image;
+        $objImage->createImages( [$data['image']], $type, $refId);
+
+        return response()->json(['success'=> true], 200);
     }
 
     public function position(Request $request, $direction, $id)

@@ -32,7 +32,7 @@ class Image extends Base
         'product_id'
     ];
 
-    private static $type = [
+    public static $type = [
         'page' => 'page_id',
         'product' => 'product_id'
     ];

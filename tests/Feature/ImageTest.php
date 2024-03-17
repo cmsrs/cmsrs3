@@ -18,6 +18,7 @@ class ImageTest extends Base
 
     private $name1;
     private $name2;
+    private $file2;
     private $pageId;
     private $arrPageId;
     private $testImgData;
@@ -39,6 +40,7 @@ class ImageTest extends Base
 
         $this->name2 = 'phpunittest2.jpg';
         $file2 = $this->getFixtureBase64($this->name2);
+        $this->file2 = $file2;
 
         $this->testImgData =
         [
@@ -478,4 +480,60 @@ class ImageTest extends Base
         $this->assertTrue($arrImages[0]['position'] < $arrImages[1]['position']);
         //$this->clear_imgs();
     }
+
+    /** @test */
+    public function it_will_save_one_image_docs()
+    {
+        $page = Page::findOrFail($this->pageId);
+        $images =  $page->images;
+        $arrImages = $images->toArray();
+        $this->assertTrue(1 < count($arrImages) );
+
+        $image = ['name' => $this->name2, 'data' => $this->file2 ];
+        //print_r($image);
+
+        $type = 'page';
+        $response = $this->post('api/image/'.$type.'/'.$this->pageId.'?token='.$this->token, ['image' => $image]);
+        $this->assertEquals(200, $response->status());
+
+        $res = $response->getData();
+        //print_r($res);
+        $this->assertTrue($res->success);
+
+        $page2 = Page::findOrFail($this->pageId);
+        $images2 =  $page2->images;
+        $arrImages2 = $images2->toArray();
+        $this->assertEquals( count($arrImages)+1, count($arrImages2));
+    }
+
+    /** @test */
+    public function it_will_save_one_image_with_err_type()
+    {
+        $image = ['name' => $this->name2, 'data' => $this->file2 ];
+
+        $response = $this->post('api/image/pageee/'.$this->pageId.'?token='.$this->token, $image);
+
+        $this->assertEquals(404, $response->status());
+        $response->assertJson([
+            'success'=> false,
+            'error' => 'page type not exist'
+        ]);        
+
+    }
+
+    /** @test */
+    public function it_will_save_one_image_with_err_page()
+    {
+        $image = ['name' => $this->name2, 'data' => $this->file2 ];
+
+        $pageIdFake = 123456;
+        $response = $this->post('api/image/page/'.$pageIdFake.'?token='.$this->token, $image);
+
+        $this->assertEquals(404, $response->status());
+        $response->assertJson([
+            'success'=> false,
+            'error' => 'obj not found'
+        ]);        
+    }
+    
 }
