@@ -36,9 +36,9 @@ class ImageController extends Controller
             return response()->json(['success'=> false, 'error'=> 'obj not found'], 404);            
         }
 
-        $data = $request->only('image');
+        $dataImage = $request->only('data', 'name');
         $objImage = new Image;
-        $objImage->createImages( [$data['image']], $type, $refId);
+        $objImage->createImages( [$dataImage], $type, $refId);
 
         return response()->json(['success'=> true], 200);
     }
