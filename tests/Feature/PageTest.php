@@ -843,6 +843,9 @@ class PageTest extends Base
         $response = $this->post('api/pages?token='.$this->token, $testData2);
         $res = $response->getData();
         $this->assertTrue($res->success);
+        $pageId = $res->data->pageId;
+        $this->assertTrue(!empty($pageId));
+        //print_r($res);
 
         $response2 = $this->get('api/pages?token='.$this->token);
         $res2 = $response2->getData();
