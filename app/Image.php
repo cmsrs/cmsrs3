@@ -238,14 +238,14 @@ class Image extends Base
             if (!file_exists($dirImg)) {
                 mkdir($dirImg, 0777, true);
             }
-            \LibImage::make($data)->save($dirImg.'/'.$name);
+            \LibImage::read($data)->save($dirImg.'/'.$name);
 
             $fileName = pathinfo($name, PATHINFO_FILENAME);
             $fileExt = pathinfo($name, PATHINFO_EXTENSION);
 
             foreach (self::$thumbs as $thumbName => $dimension) {
                 $fileThumb = $dirImg.'/'.$fileName.'-'.$thumbName.'.'.$fileExt;
-                \LibImage::make($data)->resize($dimension['x'], $dimension['y'])->save($fileThumb);
+                \LibImage::read($data)->resize($dimension['x'], $dimension['y'])->save($fileThumb);
             }
         }
         return $out;

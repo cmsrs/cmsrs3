@@ -163,7 +163,9 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         //Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         //Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class,
+        //
+        //Intervention\Image\ImageServiceProvider::class,
+        //Intervention\Image\Laravel\Facades\Image::class,
 
         /*
          * Package Service Providers...
@@ -230,7 +232,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'JWTAuth' => PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => PHPOpenSourceSaver\JWTAuth\Facades\JWTFactory::class,
-        'LibImage' => Intervention\Image\Facades\Image::class
+        'LibImage' => Intervention\Image\Laravel\Facades\Image::class,
     ],
 
 ];

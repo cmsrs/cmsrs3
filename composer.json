@@ -19,7 +19,7 @@
     "require": {
         "php": "^8.2.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "intervention/image": "^2.5",
+        "intervention/image-laravel": "^1.2",
         "laravel/framework": "^11.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^4.2",
