@@ -17,8 +17,8 @@ class UserController extends Controller
 
     public function getClientsPaginateAndSort()
     {
-        $pagination = Config::getPagination();
-        $clients = User::where('role', User::$role['client'])->orderBy('id', 'asc')->paginate($pagination);
+        $paginationPerPage = Config::getPagination();
+        $clients = User::where('role', User::$role['client'])->orderBy('id', 'asc')->simplePaginate($paginationPerPage);
 
         return response()->json(['success' => true, 'data'=> $clients], 200);
     }
