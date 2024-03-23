@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Config;
 
 class UserController extends Controller
 {
@@ -13,4 +14,13 @@ class UserController extends Controller
 
         return response()->json(['success' => true, 'data'=> $clients], 200);
     }
+
+    public function getClientsPaginateAndSort()
+    {
+        $pagination = Config::getPagination();
+        $clients = User::where('role', User::$role['client'])->orderBy('id', 'asc')->paginate($pagination);
+
+        return response()->json(['success' => true, 'data'=> $clients], 200);
+    }
+
 }

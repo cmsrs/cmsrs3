@@ -8,6 +8,7 @@ class Config extends Model
 {
     const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,login,projects,clear,checkout,register,home,shoppingsuccess,search,forgot,inner'; //default values
     const LANG_DEFAULT = 'en';
+    const PAGINATION_DEFAULT = 15;    
 
     private $langs;
 
@@ -26,6 +27,18 @@ class Config extends Model
     public function getLangs()
     {
         return $this->langs;
+    }
+
+    public static function getPagination()
+    {
+        $pagination = '';
+        if (env('PAGINATION')) {
+            $pagination = env('PAGINATION');
+        } else {
+            $pagination = Config::PAGINATION_DEFAULT;
+        }
+
+        return $pagination;
     }
 
     public static function getPageTypes()

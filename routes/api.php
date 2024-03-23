@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 */
 
 
-$demoStatus = env('DEMO_STATUS', false);
+$demoStatus = env('DEMO_STATUS', false);  //todo move to midelware - no if
 
 Route::get('productsGetNameAndPrice/{lang?}', 'ProductController@getNameAndPrice');
 
@@ -38,6 +38,8 @@ if($demoStatus){
         //Route::get('images/position/{direction}/{id}', 'ImageController@position'); //only for type page is working
 
         Route::get($apiSecret.'users/clients', 'UserController@getClients');
+        Route::get($apiSecret.'clients', 'UserController@getClientsPaginateAndSort');
+        
         Route::get($apiSecret.'config', 'ConfigController@index');
 
         Route::get($apiSecret.'products', 'ProductController@index');
@@ -78,6 +80,7 @@ if($demoStatus){
         Route::get($apiSecret.'images/position/{direction}/{id}', 'ImageController@position'); //only for type page is working
 
         Route::get($apiSecret.'users/clients', 'UserController@getClients');
+        Route::get($apiSecret.'clients', 'UserController@getClientsPaginateAndSort');
         
         Route::get($apiSecret.'menus', 'MenuController@index');
         Route::post($apiSecret.'menus', 'MenuController@create');
