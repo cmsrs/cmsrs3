@@ -24,7 +24,7 @@ class UserTest extends Base
         $users = User::all()->toArray();        
         $this->assertEquals(2, count($users)); //2 users - one admin, second client
 
-        $this->pagination = Config::getPagination(); //10;
+        $this->pagination = Config::getPagination(); //10 - change .env.testing
         $this->assertEquals(10,$this->pagination);
     }
 
