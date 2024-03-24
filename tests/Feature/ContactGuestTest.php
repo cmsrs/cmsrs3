@@ -18,8 +18,7 @@ class ContactGuestTest extends TestCase
         parent::setUp();
     }
 
-    /** @test */
-    public function it_will_create_contact_docs()
+    public function test_it_will_create_contact_docs()
     {
         $content = array(
             'email' => 'test@example.com',
@@ -51,8 +50,7 @@ class ContactGuestTest extends TestCase
         $this->assertEquals(2, Contact::all()->count());
     }
 
-    /** @test */
-    public function it_will_create_contact_wron_lang()
+    public function test_it_will_create_contact_wron_lang()
     {
         $content = array(
             'email' => 'test@example.com',
@@ -63,8 +61,7 @@ class ContactGuestTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /** @test */
-    public function it_will_create_contact_wrong_email()
+    public function test_it_will_create_contact_wrong_email()
     {
         $content = array(
             'email' => 'test@examplecom1',
@@ -78,8 +75,7 @@ class ContactGuestTest extends TestCase
         $this->assertNotEmpty($res->error);
     }
 
-    /** @test */
-    public function it_will_create_contact_wrong_email_empty()
+    public function test_it_will_create_contact_wrong_email_empty()
     {
         $content = array(
             'email' => '',
@@ -93,8 +89,7 @@ class ContactGuestTest extends TestCase
         $this->assertNotEmpty($res->error);
     }
 
-    /** @test */
-    public function it_will_create_contact_wrong_message()
+    public function test_it_will_create_contact_wrong_message()
     {
         $content = array(
             'email' => 'test@example.com',
@@ -107,8 +102,8 @@ class ContactGuestTest extends TestCase
         $this->assertFalse($res->success);
         $this->assertNotEmpty($res->error);
     }
-    /** @test */
-    public function it_will_create_contact_wrong_message_empty()
+
+    public function test_it_will_create_contact_wrong_message_empty()
     {
         $content = array(
             'email' => 'test@example.com',

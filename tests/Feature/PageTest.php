@@ -71,8 +71,7 @@ class PageTest extends Base
         $this->menuId = $this->menuObj->id;
     }
 
-    /** @test */
-    public function it_will_get_data_page_by_short_title()
+    public function test_it_will_get_data_page_by_short_title()
     {
         $p1 = (new Page)->wrapCreate($this->testData);
         $this->assertNotEmpty($p1->id);
@@ -136,8 +135,7 @@ class PageTest extends Base
         $this->assertEquals( $testData2['short_title']['en'], $lastItem->short_title->en );
     }
 
-    /** @test */
-    public function it_will_add_inner_page_and_show()
+    public function test_it_will_add_inner_page_and_show()
     {
         $testData =
         [
@@ -161,10 +159,7 @@ class PageTest extends Base
         //dd($res2);
     }
 
-
-
-    /** @test */
-    public function it_will_save_inner_type_page()
+    public function test_it_will_save_inner_type_page()
     {
         $testData =
         [
@@ -184,8 +179,7 @@ class PageTest extends Base
         $this->assertEquals( $testData['content']['en'],  $contentValue);
     }
 
-    /** @test */
-    public function it_will_check_position_page_not_related_to_menu()
+    public function test_it_will_check_position_page_not_related_to_menu()
     {
         $p1 = (new Page)->wrapCreate($this->testData);
         $this->testData['title'] =  ['en' => 'uniq'];
@@ -216,9 +210,7 @@ class PageTest extends Base
         $this->assertEquals('clear' , $page11['type']);
     }
 
-
-    /** @test */
-    public function it_will_check_uniq_title_by_empty_menu_add_page()
+    public function test_it_will_check_uniq_title_by_empty_menu_add_page()
     {
         //page not belong to menu
         $p1 = (new Page)->wrapCreate($this->testData);
@@ -231,8 +223,7 @@ class PageTest extends Base
         $this->assertEquals(1, Page::All()->count());
     }
 
-    /** @test */
-    public function it_will_check_uniq_title_by_menu_add_page()
+    public function test_it_will_check_uniq_title_by_menu_add_page()
     {
         $menu1 = (new Menu)->wrapCreate($this->testDataMenu);
         $menu2 = (new Menu)->wrapCreate([ 'name' => ['en' => $this->strTestTitle]]);
@@ -257,8 +248,7 @@ class PageTest extends Base
         $this->assertEquals(2, Page::All()->count());
     }
 
-    /** @test */
-    public function it_will_check_uniq_title_by_menu_update_page()
+    public function test_it_will_check_uniq_title_by_menu_update_page()
     {
         $menu1 = (new Menu)->wrapCreate($this->testDataMenu);
         $menu2 = (new Menu)->wrapCreate([ 'name' => ['en' => $this->strTestTitle]]);
@@ -283,10 +273,7 @@ class PageTest extends Base
         $this->assertEquals(2, Page::All()->count());
     }
 
-
-
-    /** @test */
-    public function it_will_wrong_add_page()
+    public function test_it_will_wrong_add_page()
     {
         $testData2 =
         [
@@ -302,8 +289,7 @@ class PageTest extends Base
         $this->assertNotEmpty($response->getData()->error->{"short_title.en"}[0]);
     }
 
-    /** @test */
-    public function it_will_wrong_update_page()
+    public function test_it_will_wrong_update_page()
     {
         $this->setTestData();
         $testData2 =
@@ -341,9 +327,7 @@ class PageTest extends Base
         $this->assertSame($compareWith['content']['en'], $data->content->en);
     }
 
-
-    /** @test */
-    public function it_will_show_one_page_docs()
+    public function test_it_will_show_one_page_docs()
     {
         $this->setTestData();
         $title2 = 'must be uniq';
@@ -375,8 +359,7 @@ class PageTest extends Base
         $this->assertEquals($objPage2->id, $res2->data->id);
     }
 
-    /** @test */
-    public function it_will_show_all_pages()
+    public function test_it_will_show_all_pages()
     {
         $this->setTestData();
         $response = $this->get('api/pages?token='.$this->token);
@@ -388,8 +371,7 @@ class PageTest extends Base
         $this->comparePageFields($this->testData, $data);
     }
 
-    /** @test */
-    public function it_will_not_create_child_for_unpublished_parent()
+    public function test_it_will_not_create_child_for_unpublished_parent()
     {
         $this->setTestData();
         $testData =
@@ -419,9 +401,7 @@ class PageTest extends Base
         $this->assertEquals(0, $pChild->published);
     }
 
-
-    /** @test */
-    public function it_will_unpublished_children_by_update()
+    public function test_it_will_unpublished_children_by_update()
     {
         $this->setTestData();
         $parentId = $this->dateToTestParent($this->menuId);
@@ -455,8 +435,7 @@ class PageTest extends Base
         $this->assertEquals(2, count($pageU));
     }
 
-    /** @test */
-    public function it_will_add_main_page()
+    public function test_it_will_add_main_page()
     {
         $this->setTestData();
         $parentId = $this->dateToTestParent($this->menuId);
@@ -552,9 +531,7 @@ class PageTest extends Base
         $this->assertFalse($res3->success);
     }
 
-
-    /** @test */
-    public function it_will_add_with_after_login()
+    public function test_it_will_add_with_after_login()
     {
         $this->setTestData();
         $testData2 =
@@ -614,9 +591,7 @@ class PageTest extends Base
         $this->assertEquals(2, count($pagePublish));
     }
 
-
-    /** @test */
-    public function it_will_check_type_pages()
+    public function test_it_will_check_type_pages()
     {
         $this->setTestData();
         $this->assertNotEmpty($this->menuId);
@@ -640,10 +615,7 @@ class PageTest extends Base
         $this->assertEquals($parentId, $testItem->page_id);
     }
 
-
-
-    /** @test */
-    public function it_will_delete_parent()
+    public function test_it_will_delete_parent()
     {
         $this->setTestData();
         $parentId = $this->dateToTestParent($this->menuId);
@@ -678,8 +650,7 @@ class PageTest extends Base
     }
 
 
-    /** @test */
-    public function it_will_add_test_page_id_check_position_child()
+    public function test_it_will_add_test_page_id_check_position_child()
     {
         $this->setTestData();
         $parentId = $this->dateToTestParent($this->menuId);
@@ -719,11 +690,7 @@ class PageTest extends Base
     }
 
 
-
-    
-
-    /** @test */
-    public function it_will_add_test_page_id_check_position_parent()
+    public function test_it_will_add_test_page_id_check_position_parent()
     {
         $this->setTestData();
         $parentId = $this->dateToTestParent($this->menuId);
@@ -762,8 +729,7 @@ class PageTest extends Base
         $this->assertEquals(PageTest::STR_PARENT_TWO, Page::find($pages22[2]['id'])->translatesByColumnAndLang('title', 'en'));
     }
 
-    /** @test */
-    public function it_will_add3a_with_menu_pages()
+    public function test_it_will_add3a_with_menu_pages()
     {
         $this->setTestData();
         $testData3 =
@@ -783,8 +749,7 @@ class PageTest extends Base
         $this->assertEquals(0, $this->menuObj->pagesPublished->count());
     }
 
-    /** @test */
-    public function it_will_add3_with_menu_pages()
+    public function test_it_will_add3_with_menu_pages()
     {
         $this->setTestData();
         $testData3 =
@@ -826,8 +791,7 @@ class PageTest extends Base
     }
 
 
-    /** @test */
-    public function it_will_add_pages_to_check_possition_docs()
+    public function test_it_will_add_pages_to_check_possition_docs()
     {
         $this->setTestData();
         $testData2 =
@@ -956,8 +920,7 @@ class PageTest extends Base
         $this->assertSame($tmpArr[0]->title->en, Page::find($tmpArr2[0]->id)->translatesByColumnAndLang('title', 'en'));
     }
     
-    /** @test */
-    public function it_will_add_pages0()
+    public function test_it_will_add_pages0()
     {
         $this->setTestData();
         $testData2 =
@@ -1009,8 +972,7 @@ class PageTest extends Base
         $this->assertEquals('cms', $lastPage['type'] ); //cms - it is default value
     }
 
-    /** @test */
-    public function it_will_get_pages_by_type_docs()
+    public function test_it_will_get_pages_by_type_docs()
     {
         $testData2 =
             [
@@ -1044,8 +1006,7 @@ class PageTest extends Base
         $this->assertEmpty(count($data->data));
     }
 
-    /** @test */
-    public function it_will_add2_with_menu_pages()
+    public function test_it_will_add2_with_menu_pages()
     {
         $this->setTestData();
         $testData2 =
@@ -1089,8 +1050,7 @@ class PageTest extends Base
         $this->comparePageFields($testData2, $res2->data[1]);
     }
 
-    /** @test */
-    public function it_will_get_slug()
+    public function test_it_will_get_slug()
     {
         $this->setTestData();
         $responseAll = $this->get('api/pages?token='.$this->token);
@@ -1104,8 +1064,7 @@ class PageTest extends Base
     }
 
 
-    /** @test */
-    public function it_will_update_page()
+    public function test_it_will_update_page()
     {
         $this->setTestData();
         $responseAll = $this->get('api/pages?token='.$this->token);
@@ -1167,8 +1126,7 @@ class PageTest extends Base
         $this->assertTrue($res33->success);
     }
 
-    /** @test **/
-    public function it_will_update2_page_with_menu()
+    public function test_it_will_update2_page_with_menu()
     {
         $this->setTestData();
         $responseAll = $this->get('api/pages?token='.$this->token);
@@ -1225,8 +1183,7 @@ class PageTest extends Base
         $this->comparePageFields($testData3, $data);
     }
 
-    /** @test */
-    public function it_will_update_empty_val()
+    public function test_it_will_update_empty_val()
     {
         $menu = (new Menu)->wrapCreate($this->testDataMenu);
         $this->assertNotEmpty($menu->id);
@@ -1263,8 +1220,7 @@ class PageTest extends Base
         $this->comparePageFields($testData, $data);
     }
 
-    /** @test */
-    public function it_will_delete_page()
+    public function test_it_will_delete_page()
     {
         $this->setTestData();
         $responseAll = $this->get('api/pages?token='.$this->token);
@@ -1281,8 +1237,8 @@ class PageTest extends Base
         $resAllAfter = $responseAllAfter->getData();
         $this->assertEmpty($resAllAfter->data);
     }
-    /** @test */
-    public function it_will_delete_page_fake()
+
+    public function test_it_will_delete_page_fake()
     {
         //fake id - obluga bledow
         $responseFake = $this->delete('api/pages/rs_I_eW23423fsd?token='.$this->token);

@@ -40,8 +40,7 @@ class ContentTest extends Base
     /****general *********/
     /*********************/
 
-    /** @test */
-    public function get_arr_langs()
+    public function test_get_arr_langs()
     {
         $content = new Content;
         $arrLangs = $content->getArrLangs();
@@ -59,8 +58,7 @@ class ContentTest extends Base
     /**Content on the Page**/
     /***********************/
 
-    /** @test */
-    public function page_content_wrap_create_ok_1()
+    public function test_page_content_wrap_create_ok_1()
     {
         $data1p = $this->getPageTestData();
         $p = (new Page)->wrapCreate($data1p);
@@ -69,8 +67,7 @@ class ContentTest extends Base
         $this->assertEquals(2, Content::query()->where('page_id', $p->id)->count());
     }
 
-    /** @test */
-    public function page_content_wrap_create_ok_2()
+    public function test_page_content_wrap_create_ok_2()
     {
         $data = $this->getPageTestData();
 
@@ -92,8 +89,7 @@ class ContentTest extends Base
         $this->assertEquals(1, Content::query()->where('page_id', $page->id)->count());
     }
 
-    /** @test */
-    public function page_content_wrap_create_empty_1()
+    public function test_page_content_wrap_create_empty_1()
     {
         $data1p = $this->getPageTestData();
         unset($data1p['content']);
@@ -102,8 +98,7 @@ class ContentTest extends Base
         $this->assertEquals($this->numOfLangs, Content::query()->where('page_id', $p->id)->count());
     }
 
-    /** @test */
-    public function page_content_wrap_create_empty_2()
+    public function test_page_content_wrap_create_empty_2()
     {
         $data1p = $this->getPageTestData();
         $data1p['content'] = [];
@@ -112,8 +107,7 @@ class ContentTest extends Base
         $this->assertEquals($this->numOfLangs, Content::query()->where('page_id', $p->id)->count());
     }
 
-    /** @test */
-    public function page_content_wrap_create_empty_3()
+    public function test_page_content_wrap_create_empty_3()
     {
         $data1p = $this->getPageTestData();
         $data1p['content'] = ['es' => 'fake'];
@@ -122,8 +116,7 @@ class ContentTest extends Base
         $this->assertEquals($this->numOfLangs, Content::query()->where('page_id', $p->id)->where('column', 'content')->whereNull('value')->count());
     }
 
-    /** @test */
-    public function page_content_wrap_create_wrong()
+    public function test_page_content_wrap_create_wrong()
     {
         $data1p = $this->getPageTestData();
         

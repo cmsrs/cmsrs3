@@ -41,8 +41,7 @@ class HomeTest extends Base
         parent::tearDown();
     }
 
-    /** @test */
-    public function it_will_api_home_token()
+    public function test_it_will_api_home_token()
     {
         $this->assertAuthenticated();
         $token = User::getTokenForClient();

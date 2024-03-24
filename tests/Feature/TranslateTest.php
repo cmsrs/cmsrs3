@@ -34,8 +34,7 @@ class TranslateTest extends Base
     /****general *********/
     /*********************/
 
-    /** @test */
-    public function get_arr_langs()
+    public function test_get_arr_langs()
     {
         $translate = new Translate;
         $translate->setArrLangs(['en','pl']);
@@ -54,15 +53,13 @@ class TranslateTest extends Base
     /******* Menu ******/
     /*******************/
 
-    /** @test */
-    public function menu_wrap_create()
+    public function test_menu_wrap_create()
     {
         $m = (new Menu)->wrapCreate(['name' => ['en' => 'About cmsRS', 'pl' => 'O cmsRS' ] ]);
         $this->assertNotEmpty($m->id);
     }
 
-    /** @test */
-    public function menu_translate_wrap_create_ok_1b()
+    public function test_menu_translate_wrap_create_ok_1b()
     {
         $data = ['name' => ['en' => 'About cmsRS', 'pl' => 'O cmsRS', 'es' => 'Fake' ] ];
 
@@ -74,8 +71,7 @@ class TranslateTest extends Base
         $this->assertEquals(2, $countItem);
     }
 
-    /** @test */
-    public function menu_translate_wrap_create_ok_2b()
+    public function test_menu_translate_wrap_create_ok_2b()
     {
         $data = ['name' => ['pl' => 'O cmsRS', 'en' => 'fake' ] ];
 
@@ -91,9 +87,7 @@ class TranslateTest extends Base
         $this->assertEquals(1, $countItem);
     }
 
-
-    /** @test */
-    public function menu_translate_wrap_create_wrong_1()
+    public function test_menu_translate_wrap_create_wrong_1()
     {
         $data = ['name' => ['en' => 'About cmsRS' ] ];
 
@@ -101,8 +95,7 @@ class TranslateTest extends Base
         $menu = (new Menu)->wrapCreate($data);
     }
 
-    /** @test */
-    public function menu_translate_wrap_create_wrong_2()
+    public function test_menu_translate_wrap_create_wrong_2()
     {
         $data = ['name' => ['en' => 'About cmsRS', 'ppllll' => 'O cmsrs' ] ];
 
@@ -110,8 +103,7 @@ class TranslateTest extends Base
         $menu = (new Menu)->wrapCreate($data);
     }
 
-    /** @test */
-    public function menu_translate_wrap_create_wrong_3()
+    public function test_menu_translate_wrap_create_wrong_3()
     {
         $data = ['nameFake' => ['en' => 'About cmsRS', 'pl' => 'O cmsrs' ] ];
 
@@ -123,8 +115,7 @@ class TranslateTest extends Base
     /**Page & Images****/
     /*******************/
     
-    /** @test */
-    public function page_translate_string_data()
+    public function test_page_translate_string_data()
     {
         $m = (new Menu)->wrapCreate(['name' => ['en' => 'About cmsRS', 'pl' => 'O cmsRS' ] ]);
         $this->assertNotEmpty($m->id);
@@ -148,10 +139,7 @@ class TranslateTest extends Base
         $p = (new Page)->wrapCreate($data1p);
     }
     
-
-
-    /** @test */
-    public function page_translate_wrap_create_ok_1()
+    public function test_page_translate_wrap_create_ok_1()
     {
         $data1p = $this->getPageTestData();
         $numOfLangs = (new Translate)->getArrLangs();
@@ -176,8 +164,7 @@ class TranslateTest extends Base
         $this->assertEquals(4, Translate::query()->whereNotNull('image_id')->where('column', 'alt')->count());
     }
 
-    /** @test */
-    public function page_translate_wrap_create_ok_2()
+    public function test_page_translate_wrap_create_ok_2()
     {
         $data = $this->getPageTestData();
         unset($data['description']);
@@ -204,8 +191,7 @@ class TranslateTest extends Base
         $this->assertEquals(3, Translate::query()->whereNotNull('image_id')->where('column', 'alt')->count());
     }
 
-    /** @test */
-    public function page_translate_wrap_create_null_val()
+    public function test_page_translate_wrap_create_null_val()
     {
         $numOfLangs = count((new Translate)->getArrLangs());
         $this->assertEquals(2, $numOfLangs);
@@ -232,8 +218,7 @@ class TranslateTest extends Base
         $this->assertEquals(3*$numOfLangs, Translate::query()->whereNotNull('image_id')->where('column', 'alt')->whereNull('value')->count());
     }
 
-    /** @test */
-    public function page_translate_wrap_create_wrong_1()
+    public function test_page_translate_wrap_create_wrong_1()
     {
         $data1p = $this->getPageTestData();
         unset($data1p['title']);
@@ -242,8 +227,7 @@ class TranslateTest extends Base
         $p = (new Page)->wrapCreate($data1p);
     }
 
-    /** @test */
-    public function page_translate_wrap_create_wrong_2()
+    public function test_page_translate_wrap_create_wrong_2()
     {
         $data1p = $this->getPageTestData();
         $data1p['title'] = ['pl' => 'polska'];

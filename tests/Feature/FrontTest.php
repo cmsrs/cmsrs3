@@ -61,8 +61,7 @@ class FrontTest extends Base
         (new Page)->wrapCreate($this->testData);
     }
 
-    /** @test */
-    public function it_will_get_directly_to_page()
+    public function test_it_will_get_directly_to_page()
     {
 
         $testData =
@@ -96,8 +95,7 @@ class FrontTest extends Base
     }
 
 
-    /** @test */
-    public function it_will_get_all_pages_one_lang_by_type()
+    public function test_it_will_get_all_pages_one_lang_by_type()
     {
         $langs = Config::arrGetLangsEnv();
         $this->assertEquals(1, count($langs) );
@@ -154,8 +152,7 @@ class FrontTest extends Base
     }
 
     
-    /** @test */
-    public function it_will_show_contact_on_the_main_page()
+    public function test_it_will_show_contact_on_the_main_page()
     {
         $this->testData =
         [
@@ -199,8 +196,7 @@ class FrontTest extends Base
      * maybe it will be usefull for sitemap
      * links without: home, login, logout
      */
-    /** @test */
-    public function it_will_get_all_pages_status()
+    public function test_it_will_get_all_pages_status()
     {
         ini_set('memory_limit', '1028M');
 
@@ -213,8 +209,7 @@ class FrontTest extends Base
         $this->checkProductsPagesByLang($products, 'en');
     }
 
-    /** @test */
-    public function it_will_check_set_up()
+    public function test_it_will_check_set_up()
     {
         $this->setTestData();
         $response = $this->get('api/pages?token='.$this->token);
@@ -223,8 +218,7 @@ class FrontTest extends Base
         $this->assertEquals(count($res->data), 1);
     }
 
-    /** @test */
-    public function it_will_get_main_page()
+    public function test_it_will_get_main_page()
     {
         $response = $this->get('/');
         $response->assertStatus(404);
@@ -252,9 +246,7 @@ class FrontTest extends Base
         $response->assertStatus(200);
     }
 
-
-    /** @test */
-    public function it_will_get_cms_page0()
+    public function test_it_will_get_cms_page0()
     {
         $this->setTestData();
         $title = $this->testData['title']['en'];
@@ -273,8 +265,7 @@ class FrontTest extends Base
         $response1->assertStatus(200);
     }
 
-    /** @test */
-    public function it_will_get_cms_page()
+    public function test_it_will_get_cms_page()
     {
         $this->setTestData();
         $title = $this->testData['title']['en'];
@@ -327,8 +318,7 @@ class FrontTest extends Base
         $responseB->assertStatus(404);
     }
 
-    /** @test */
-    public function it_will_get_in_page()
+    public function test_it_will_get_in_page()
     {
         $pPrivacy = [
             'title'     => [ "en" =>'Privacy policy', "pl" => 'polityka prywatnosci' ],

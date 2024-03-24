@@ -22,8 +22,7 @@ class ConfigTest extends Base
         $this->createUser();
     }
 
-    /** @test */
-    public function it_will_get_config_docs()
+    public function test_it_will_get_config_docs()
     {
         $response = $this->get('api/config?token='.$this->token);
 
@@ -87,8 +86,7 @@ class ConfigTest extends Base
         $this->assertEquals(false, $res->data->cache_enable);
     }
 
-    /** @test */
-    public function it_will_get_exeption_no_langs()
+    public function test_it_will_get_exeption_no_langs()
     {
         $config = (new Config);
 
@@ -104,8 +102,7 @@ class ConfigTest extends Base
         $this->assertEquals( Config::LANG_DEFAULT, $langs);        
     }
 
-    /** @test */
-    public function it_will_clear_cache()    
+    public function test_it_will_clear_cache()    
     {
         $response = $this->get('api/config/clearcache?token='.$this->token);
         $res = $response->getData();
@@ -113,8 +110,7 @@ class ConfigTest extends Base
     }
 
 
-    /** @test */
-    public function it_will_create_sitemap()    
+    public function test_it_will_create_sitemap()    
     {
         $response = $this->get('api/config/createsitemap?token='.$this->token);
         $res = $response->getData();

@@ -66,9 +66,7 @@ class PageSecretTest extends Base
     }
 
 
-
-    /** @test */
-    public function it_will_add_main_page()
+    public function test_it_will_add_main_page()
     {
         $testData2 =
       [
@@ -95,9 +93,7 @@ class PageSecretTest extends Base
         $this->assertEquals('main_page', $pages[0]['type']);
     }
 
-
-    /** @test */
-    public function it_will_delete_page()
+    public function test_it_will_delete_page()
     {
         $this->assertNotEmpty($this->apiSecret);
         $this->setTestData();

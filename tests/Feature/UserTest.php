@@ -64,8 +64,7 @@ class UserTest extends Base
 
     }
 
-    /** @test */
-    public function it_will_get_all_user_clients_docs()
+    public function test_it_will_get_all_user_clients_docs()
     {
         $response = $this->get('api/users/clients?token='.$this->token);
         $res = $response->getData();
@@ -82,8 +81,7 @@ class UserTest extends Base
     }
 
 
-    /** @test */
-    public function it_will_get_many_clients_docs()
+    public function test_it_will_get_many_clients_docs()
     {
         $numbersOfClients = 99;
         $this->createManyClients( $numbersOfClients );

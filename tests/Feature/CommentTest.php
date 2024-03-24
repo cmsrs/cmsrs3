@@ -73,8 +73,7 @@ class CommentTest extends Base
         parent::tearDown();
     }
 
-    /** @test */
-    public function it_will_deny_create_comment_fake_page()
+    public function test_it_will_deny_create_comment_fake_page()
     {
         $content = array(
             'content' => 'test comment - test123 - fake page'
@@ -84,8 +83,7 @@ class CommentTest extends Base
         $response->assertStatus(404);
     }
 
-    /** @test */
-    public function it_will_deny_create_comment_page_not_commented()
+    public function test_it_will_deny_create_comment_page_not_commented()
     {
         $content = array(
             'content' => 'test comment - test123 - deny'
@@ -101,8 +99,7 @@ class CommentTest extends Base
     }
 
 
-    /** @test */
-    public function it_will_create_comment_docs()
+    public function test_it_will_create_comment_docs()
     {
         $content = array(
             'content' => 'test comment - test123'
@@ -114,8 +111,7 @@ class CommentTest extends Base
         $this->assertTrue($res->success);
     }
 
-    /** @test */
-    public function it_will_get_comment_docs()
+    public function test_it_will_get_comment_docs()
     {
         $content1 = array(
             'content' => '111 test comment - test123'

@@ -20,8 +20,7 @@ class FrontGuestTest extends TestCase
 
     use RefreshDatabase;
 
-    /** @test */
-    public function it_will_get_login_page()
+    public function test_it_will_get_login_page()
     {
         $pLogin = [
             'title'     => [ "en" =>'login', "pl" => "login" ],
@@ -51,8 +50,7 @@ class FrontGuestTest extends TestCase
         $this->assertNotEmpty($pos, $pageTitle);
     }
 
-    /** @test */
-    public function it_will_redirect_to_login()
+    public function test_it_will_redirect_to_login()
     {
         $response1 = $this->get('/home');
         $response1->assertStatus(302);
@@ -72,8 +70,7 @@ class FrontGuestTest extends TestCase
     }
 
 
-    /** @test */
-    public function it_will_get_as_guest_forbiden()
+    public function test_it_will_get_as_guest_forbiden()
     {
         $response = $this->get('/pl/cms/test/dsas');
         $response->assertStatus(404);
@@ -88,8 +85,7 @@ class FrontGuestTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /** @test */
-    public function it_will_get_main_page_as_guest_forbiden()
+    public function test_it_will_get_main_page_as_guest_forbiden()
     {
         $response = $this->get('/');
         $response->assertStatus(404);
@@ -113,9 +109,7 @@ class FrontGuestTest extends TestCase
         $response->assertStatus(401);
     }
 
-
-    /** @test */
-    public function it_will_get_main_page_as_guest_normal()
+    public function test_it_will_get_main_page_as_guest_normal()
     {
         $response = $this->get('/');
         $response->assertStatus(404);
@@ -140,8 +134,7 @@ class FrontGuestTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
-    public function get_footer_links_2()
+    public function test_get_footer_links_2()
     {
         $testData2 =
         [
@@ -204,10 +197,7 @@ class FrontGuestTest extends TestCase
         $response2->assertStatus(200);
     }
 
-
-
-    /** @test */
-    public function it_will_link_0()
+    public function test_it_will_link_0()
     {
         $testDataMenu = ['name' =>  ['en' => 'About']];
         $m1 = (new Menu)->wrapCreate($testDataMenu);
@@ -258,9 +248,7 @@ class FrontGuestTest extends TestCase
         $response2->assertStatus(200);
     }
 
-
-    /** @test */
-    public function it_will_link_forbid()
+    public function test_it_will_link_forbid()
     {
         $testDataMenu = ['name' =>  ['en' => 'About']];
         $m1 = (new Menu)->wrapCreate($testDataMenu);
@@ -304,8 +292,7 @@ class FrontGuestTest extends TestCase
         $response2->assertStatus(401);
     }
 
-    /** @test */
-    public function it_will_one_link_in_menu_forbid()
+    public function test_it_will_one_link_in_menu_forbid()
     {
         $testDataMenu = ['name' =>   ['en' =>'Contact']];
         $m1 = (new Menu)->wrapCreate($testDataMenu);
@@ -356,8 +343,7 @@ class FrontGuestTest extends TestCase
         //$response1->assertStatus(401); //moze powinno byc 
     }
 
-    /** @test */
-    public function it_will_one_link_in_menu_normal()
+    public function test_it_will_one_link_in_menu_normal()
     {
         $testDataMenu = ['name' => ['en' => 'Contact']];
         $m1 = (new Menu)->wrapCreate($testDataMenu);

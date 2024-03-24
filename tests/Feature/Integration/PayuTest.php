@@ -25,10 +25,7 @@ class PayuTest extends  Base //TestCase
         parent::tearDown();
     }
 
-    /** 
-     * @test
-     */
-    public function it_will_get_access_token_from_payu()
+    public function test_it_will_get_access_token_from_payu()
     {
 
         $this->markTestSkipped('Test skipped because reasons something wrong in external API');
@@ -38,10 +35,7 @@ class PayuTest extends  Base //TestCase
         $this->assertEquals(36, strlen($accessToken) );        
     }
 
-    /** 
-     * @test
-     */
-    public function it_will_get_order_from_payu()
+    public function test_it_will_get_order_from_payu()
     {
         $this->markTestSkipped('Test skipped because reasons something wrong in external API');
 

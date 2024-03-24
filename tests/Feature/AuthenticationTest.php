@@ -46,9 +46,10 @@ class AuthenticationTest extends TestCase
     }
 
 
-    /** @skip */
-    public function it_will_register_a_user()
+    public function test_it_will_register_a_user()
     {
+        $this->markTestSkipped('i dont remember why it is skip');
+
         if (empty($_ENV['RS_SECRET'])) {
             return true;
         }
@@ -77,8 +78,7 @@ class AuthenticationTest extends TestCase
         $privilegeAfterLogout =    $this->privilege_action($response->data->token);
     }
 
-    /** @test */
-    public function it_will_log_a_user_in_docs()
+    public function test_it_will_log_a_user_in_docs()
     {
         $d  = [
             'email'    => 'test@email.com',
@@ -102,8 +102,7 @@ class AuthenticationTest extends TestCase
         $privilegeAfterLogout =    $this->privilege_action($response->data->token);
     }
 
-    /** @test */
-    public function it_will_log_client_in()
+    public function test_it_will_log_client_in()
     {
         $user = new User([
             'email'    => 'client@email.com',
@@ -122,8 +121,7 @@ class AuthenticationTest extends TestCase
         $this->assertFalse($response->success);
     }
 
-    /** @test */
-    public function it_will_not_log_an_invalid_user_in()
+    public function test_it_will_not_log_an_invalid_user_in()
     {
         $response = $this->post('api/login', [
             'email'    => 'test@email.com',

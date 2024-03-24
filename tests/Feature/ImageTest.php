@@ -99,8 +99,7 @@ class ImageTest extends Base
         }
     }
 
-    /** @test */
-    public function it_will_set_translate()
+    public function test_it_will_set_translate()
     {
 
       //one lang: en, and two images
@@ -113,8 +112,7 @@ class ImageTest extends Base
         $this->assertEquals(null, $altEn2);
     }
 
-    /** @test */
-    public function it_will_get_page_with_images_docs()
+    public function test_it_will_get_page_with_images_docs()
     {
         $response0 = $this->get('api/page/'.$this->pageId.'/fr');  //this method doesnt cointain ticket - ti is avaliable as guest
 
@@ -156,8 +154,7 @@ class ImageTest extends Base
         }
     }
 
-    /** @test */
-    public function it_will_get_pages_with_images_docs()
+    public function test_it_will_get_pages_with_images_docs()
     {
         $response2 = $this->get('api/pages?token='.$this->token);
 
@@ -213,9 +210,7 @@ class ImageTest extends Base
         //$this->clear_imgs();
     }
 
-
-    /** @test */
-    public function it_will_delete_page_with_images_docs()
+    public function test_it_will_delete_page_with_images_docs()
     {
         $responseAllBefore = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
         $resAllBefore = $responseAllBefore->getData();
@@ -271,9 +266,7 @@ class ImageTest extends Base
         //$this->clear_imgs();
     }
 
-
-    /** @test */
-    public function it_will_delete_image_docs()
+    public function test_it_will_delete_image_docs()
     {
         //delete first image
         $response2 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
@@ -317,9 +310,7 @@ class ImageTest extends Base
         //$this->clear_imgs();
     }
 
-
-    /** @test */
-    public function it_will_get_images_by_page_id_docs()
+    public function test_it_will_get_images_by_page_id_docs()
     {
         $response2 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
 
@@ -338,9 +329,7 @@ class ImageTest extends Base
         //$this->clear_imgs();
     }
 
-
-    /** @test */
-    public function it_will_add_pages_with_the_same_image_name()
+    public function test_it_will_add_pages_with_the_same_image_name()
     {
 
       //test fake
@@ -371,8 +360,7 @@ class ImageTest extends Base
         }
     }
 
-    /** @test */
-    public function it_will_update_page_with_images_docs()
+    public function test_it_will_update_page_with_images_docs()
     {
         $this->assertEquals(count((array)$this->pageData->images), 2);
         $this->assertEquals($this->pageData->title->en, $this->testImgData['title']['en']);
@@ -456,8 +444,7 @@ class ImageTest extends Base
         $this->assertEquals($mediumHtml, $testPage->images[2]->fs->medium);
     }
 
-    /** @test */
-    public function it_will_get_change_position_images_docs()
+    public function test_it_will_get_change_position_images_docs()
     {
         $response2 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
         $res2 = $response2->getData();
@@ -481,8 +468,7 @@ class ImageTest extends Base
         //$this->clear_imgs();
     }
 
-    /** @test */
-    public function it_will_save_one_image_docs()
+    public function test_it_will_save_one_image_docs()
     {
         $page = Page::findOrFail($this->pageId);
         $images =  $page->images;
@@ -506,8 +492,7 @@ class ImageTest extends Base
         $this->assertEquals( count($arrImages)+1, count($arrImages2));
     }
 
-    /** @test */
-    public function it_will_save_one_image_with_err_type()
+    public function test_it_will_save_one_image_with_err_type()
     {
         $image = ['name' => $this->name2, 'data' => $this->file2 ];
 
@@ -521,8 +506,7 @@ class ImageTest extends Base
 
     }
 
-    /** @test */
-    public function it_will_save_one_image_with_err_page()
+    public function test_it_will_save_one_image_with_err_page()
     {
         $image = ['name' => $this->name2, 'data' => $this->file2 ];
 

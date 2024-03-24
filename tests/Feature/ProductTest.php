@@ -177,8 +177,7 @@ class ProductTest extends Base
 
 
 
-    /** @test */
-    public function it_will_search_products()
+    public function test_it_will_search_products()
     {
         $price1 = 11200; 
         $price2 = 32100;
@@ -202,8 +201,7 @@ class ProductTest extends Base
      * api admin
      * it should be 2 tests - todo - get and update
      */
-    /** @test */
-    public function it_will_get_and_update_checkouts_docs()
+    public function test_it_will_get_and_update_checkouts_docs()
     {
         /*** set data - fixture */
 
@@ -434,8 +432,7 @@ class ProductTest extends Base
      * it is not test admin
      * proccess of buying productcs
     */
-    /** @test */
-    public function it_will_save_checkout()
+    public function test_it_will_save_checkout()
     {
         $price1 = 11200; 
         $price2 = 32100;
@@ -650,8 +647,7 @@ class ProductTest extends Base
      * it is not test admin
      * this api is use in backet (it is usefull when name and price will be changing)
      */
-    /** @test */
-    public function it_will_get_name_and_price_by_lang()
+    public function test_it_will_get_name_and_price_by_lang()
     {
         /* prepare data - start */
         $this->setTestData();        
@@ -711,9 +707,8 @@ class ProductTest extends Base
     /**
      * it is not test admin
      */
-    /** @test */
     /*
-    public function it_will_save_to_basket()
+    public function test_it_will_save_to_basket()
     {
         $ids = $this->setAddTwoProducts();
         $id1 = $ids['id1'];
@@ -759,9 +754,8 @@ class ProductTest extends Base
     /**
      * it is not test admin
      */
-    /** @test */
     /*
-    public function it_will_save_to_order()
+    public function test_it_will_save_to_order()
     {
         $ids = $this->setAddTwoProducts();
         $id1 = $ids['id1'];
@@ -815,9 +809,8 @@ class ProductTest extends Base
     /**
      * it is not test admin
      */
-    /** @test */
     /*
-    public function it_will_save_two_times_to_order()
+    public function test_it_will_save_two_times_to_order()
     {
         $ids = $this->setAddTwoProducts();
         $id1 = $ids['id1'];
@@ -941,8 +934,7 @@ class ProductTest extends Base
      * it is not test admin
      * it tests home/api/tobank
      */
-    /** @test */
-    public function it_will_get_products_and_total_amount()
+    public function test_it_will_get_products_and_total_amount()
     {
         //dd($products);
 
@@ -1024,9 +1016,8 @@ class ProductTest extends Base
      * it is not test admin
      * it tests home/api/tobank
      */
-    /** @test */
     /*
-    public function it_will_post_to_bank()
+    public function test_it_will_post_to_bank()
     {
         //dd($products);
 
@@ -1095,8 +1086,7 @@ class ProductTest extends Base
     */
 
 
-    /** @test */
-    public function it_will_create_product_with_images_by_page()
+    public function test_it_will_create_product_with_images_by_page()
     {
         $this->setTestData();
 
@@ -1128,8 +1118,7 @@ class ProductTest extends Base
     }
 
 
-    /** @test */
-    public function it_will_unpublish_one_page_in_menu_product()
+    public function test_it_will_unpublish_one_page_in_menu_product()
     {
         $this->setTestData();
         //$this->setTestData2();
@@ -1171,8 +1160,7 @@ class ProductTest extends Base
 
 
 
-    /** @test */
-    public function it_will_unpublish_product()
+    public function test_it_will_unpublish_product()
     {
         $this->setTestData();
         $this->setTestData2();
@@ -1212,8 +1200,7 @@ class ProductTest extends Base
         $response2->assertStatus(404);
     }
 
-    /** @test */
-    public function it_will_unpublish_page()
+    public function test_it_will_unpublish_page()
     {
         $this->setTestData();
 
@@ -1242,10 +1229,9 @@ class ProductTest extends Base
         $response2->assertStatus(404);
     }
 
-
-    /** @test */
+    
     /*
-    public function it_will_get_product_data_by_product_id()
+    public function test_it_will_get_product_data_by_product_id()
     {
         $this->setTestData();
 
@@ -1290,8 +1276,7 @@ class ProductTest extends Base
      * similar function to: it_will_get_product_by_slug
      * except one page belongs to menu
      */
-    /** @test */    
-    public function it_will_get_one_product_in_menu_by_slug()
+    public function test_it_will_get_one_product_in_menu_by_slug()
     {
         $this->setTestData();
         //$this->setTestData2();        
@@ -1332,8 +1317,7 @@ class ProductTest extends Base
         $this->assertEquals(null, $product2);
     }
 
-    /** @test */    
-    public function it_will_get_product_by_slug()
+    public function test_it_will_get_product_by_slug()
     {
         $this->setTestData();
         $this->setTestData2();        
@@ -1373,8 +1357,7 @@ class ProductTest extends Base
     }
 
 
-    /** @test */
-    public function it_will_check_fixtures_get_pages_by_type()
+    public function test_it_will_check_fixtures_get_pages_by_type()
     {
         $this->setTestData();
         $type = 'shop';
@@ -1384,8 +1367,7 @@ class ProductTest extends Base
         $this->assertEquals($data->data[0]->title->en, $this->testPage['title']['en']);
     }
 
-    /** @test */
-    public function it_will_check_uniq_product_name_add_action()
+    public function test_it_will_check_uniq_product_name_add_action()
     {
         $this->setTestData();
         $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
@@ -1403,8 +1385,7 @@ class ProductTest extends Base
         $this->assertTrue(strpos($res1->error, 'Duplicate product name') === 0);
     }    
 
-    /** @test */
-    public function it_will_check_uniq_product_name_update_action()
+    public function test_it_will_check_uniq_product_name_update_action()
     {
         $this->setTestData();
         $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
@@ -1433,9 +1414,7 @@ class ProductTest extends Base
         $this->assertTrue(strpos($res2->error, 'Duplicate product name') === 0);
     }    
 
-
-    /** @test */
-    public function it_will_create_product_docs()
+    public function test_it_will_create_product_docs()
     {
         $this->setTestData();
 
@@ -1494,8 +1473,7 @@ class ProductTest extends Base
         $this->clear_imgs($res0->data->productId);
     }
 
-    /** @test */
-    public function it_will_read_product_docs()
+    public function test_it_will_read_product_docs()
     {
         $this->setTestData();
         $res0 = $this->post('api/products?token=' . $this->token, $this->testData);
@@ -1551,8 +1529,7 @@ class ProductTest extends Base
         $this->clear_imgs($res->data->productId);
     }
 
-    /** @test */
-    public function it_will_update_product_docs()
+    public function test_it_will_update_product_docs()
     {
         $this->setTestData();
 
@@ -1611,8 +1588,7 @@ class ProductTest extends Base
         $this->clear_imgs($res->data->productId);
     }
 
-    /** @test */
-    public function it_will_delete_product_docs()
+    public function test_it_will_delete_product_docs()
     {
         $this->setTestData();
 
@@ -1669,8 +1645,7 @@ class ProductTest extends Base
         }
     }
 
-    /** @test */
-    public function it_will_get_change_position_product_images()
+    public function test_it_will_get_change_position_product_images()
     {
         $this->setTestData();
         $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
@@ -1730,8 +1705,7 @@ class ProductTest extends Base
     /**
      * I found bug in the change position image in product, therefore I create lots of tests data
      */
-    /** @test */
-    public function it_will_get_change_position_product_images_for_lots_of_items()
+    public function test_it_will_get_change_position_product_images_for_lots_of_items()
     {
         $this->setTestData();
 

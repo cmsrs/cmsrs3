@@ -46,8 +46,7 @@ class ContactTest extends Base
         $this->assertEquals(2, Contact::All()->count());
     }
 
-    /** @test */
-    public function it_will_get_contact_data_docs()
+    public function test_it_will_get_contact_data_docs()
     {
         $this->setTestData();
         
@@ -67,8 +66,7 @@ class ContactTest extends Base
         $this->assertNotEmpty($res->data[1]->id);
     }
 
-    /** @test */
-    public function it_will_delete_contact_data_docs()
+    public function test_it_will_delete_contact_data_docs()
     {
         $this->setTestData();
         
@@ -88,8 +86,7 @@ class ContactTest extends Base
         $this->assertEquals(1, Contact::All()->count());
     }
 
-    /** @test */
-    public function it_will_create_contact_by_wrap_create()
+    public function test_it_will_create_contact_by_wrap_create()
     {
         $ret = (new Contact)->wrapCreate($this->content1);
         $this->assertEquals(1, Contact::All()->count());

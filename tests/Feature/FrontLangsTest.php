@@ -87,8 +87,7 @@ class FrontLangsTest extends Base
         (new Page)->wrapCreate($this->testData);
     }
 
-    /** @test */
-    public function it_will_change_lang()
+    public function test_it_will_change_lang()
     {
         $this->setTestData('shop');
         $this->setTestData2('shop');        
@@ -137,8 +136,7 @@ class FrontLangsTest extends Base
      * maybe it will be usefull for sitemap
      * links without: home, login, logout
      */
-    /** @test */
-    public function it_will_get_all_pages_status()
+    public function test_it_will_get_all_pages_status()
     {
         ini_set('memory_limit', '1028M');
 
@@ -154,8 +152,7 @@ class FrontLangsTest extends Base
         $this->checkProductsPagesByLang($products, 'pl');        
     }
 
-    /** @test */
-    public function it_will_check_set_up()
+    public function test_it_will_check_set_up()
     {
         $this->setTestData();
         $response = $this->get('api/pages?token='.$this->token);
@@ -168,8 +165,7 @@ class FrontLangsTest extends Base
         $this->assertEquals('en', $this->langs[1]);
     }
 
-    /** @test */
-    public function it_will_get_main_page()
+    public function test_it_will_get_main_page()
     {
         //$this->assertTrue( true );
         $response = $this->get('/');
@@ -210,9 +206,7 @@ class FrontLangsTest extends Base
         $this->assertEmpty(strpos($response3->getContent(), $this->titlePl));
     }
 
-
-    /** @test */
-    public function it_will_get_cms_page0()
+    public function test_it_will_get_cms_page0()
     {
         $this->setTestData();
 
@@ -228,8 +222,7 @@ class FrontLangsTest extends Base
         }
     }
 
-    /** @test */
-    public function it_will_get_cms_page()
+    public function test_it_will_get_cms_page()
     {
         $this->setTestData();
 
@@ -280,8 +273,7 @@ class FrontLangsTest extends Base
         $responseB->assertStatus(404);
     }
 
-    /** @test */
-    public function it_will_get_in_page()
+    public function test_it_will_get_in_page()
     {
         $pPrivacy = [
             'title'     => [ "en" =>'Privacy policy', "pl" => 'polityka prywatnosci' ],
@@ -306,8 +298,7 @@ class FrontLangsTest extends Base
         }
     }
 
-    /** @test */
-    public function it_will_get_all_pages_by_type()
+    public function test_it_will_get_all_pages_by_type()
     {
         $menu = (new Menu)->wrapCreate($this->testDataMenu);
         $this->assertNotEmpty($menu->id);
@@ -361,7 +352,5 @@ class FrontLangsTest extends Base
         }
 
     }
-
-
 
 }

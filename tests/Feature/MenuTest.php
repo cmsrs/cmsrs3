@@ -41,8 +41,7 @@ class MenuTest extends Base
         $this->objMenu = (new Menu)->wrapCreate($this->testData);
     }
 
-    /** @test */
-    public function it_will_check_uniq_name_add_menus()
+    public function test_it_will_check_uniq_name_add_menus()
     {
         $nameEn = 'test menu1';
         $testData1 =
@@ -69,8 +68,6 @@ class MenuTest extends Base
         $res = $response->getData();
         $this->assertTrue($res->success);
 
-
-        //odkomenuj!!!!!!!!!!!!
         $response2ttt = $this->post('api/menus?token='.$this->token, ['name' => ['en' => $ttt]]);
         $resttt = $response2ttt->getData();
         $this->assertTrue($resttt->success);
@@ -83,8 +80,7 @@ class MenuTest extends Base
         $this->assertNotEmpty($res2->error);
     }
 
-    /** @test */
-    public function it_will_check_uniq_name_update_menus()
+    public function test_it_will_check_uniq_name_update_menus()
     {
         $nameEn1 = 'test menu1';
         $testData1 =
@@ -107,8 +103,7 @@ class MenuTest extends Base
         $this->assertFalse($res->success);
     }
 
-    /** @test */
-    public function it_will_wron_add()
+    public function test_it_will_wron_add()
     {
         $testData2 =
       [
@@ -122,8 +117,7 @@ class MenuTest extends Base
         $this->assertNotEmpty($response->getData()->error->{"name.en"}[0]);
     }
 
-    /** @test */
-    public function it_will_wron_update()
+    public function test_it_will_wron_update()
     {
         $this->setTestData();
         $testData2 =
@@ -139,9 +133,7 @@ class MenuTest extends Base
         $this->assertNotEmpty($response->getData()->error->{"name.en"}[0]);
     }
     
-
-    /** @test */
-    public function it_will_get_slug()
+    public function test_it_will_get_slug()
     {
         $this->setTestData();
         $responseAll = $this->get('api/menus?token='.$this->token);
@@ -152,8 +144,7 @@ class MenuTest extends Base
         $this->assertEquals($slug, Str::slug($this->testData['name']['en'], "-"));
     }
 
-    /** @test */
-    public function it_will_get_tree_by_menu()
+    public function test_it_will_get_tree_by_menu()
     {
         $this->setTestData();
         $parentId = $this->dateToTestParent($this->objMenu->id);
@@ -167,9 +158,7 @@ class MenuTest extends Base
         $this->assertEquals(PageTest::STR_CHILD_TWO, Page::find($tree[$parentId]['children'][1]->id)->translatesByColumnAndLang('title', 'en'));
     }
 
-
-    /** @test */
-    public function it_will_change_position_menus_docs()
+    public function test_it_will_change_position_menus_docs()
     {
         $this->setTestData();
 
@@ -230,9 +219,7 @@ class MenuTest extends Base
         $this->assertEquals($res2->data[0]->position, 1);
     }
 
-
-    /** @test */
-    public function it_will_show_all_menus()
+    public function test_it_will_show_all_menus()
     {
         $this->setTestData();
 
@@ -253,8 +240,7 @@ class MenuTest extends Base
         $this->assertNotEmpty($data['id']);
     }
 
-    /** @test */
-    public function it_will_add_menus_docs()
+    public function test_it_will_add_menus_docs()
     {
         $this->setTestData();
         $testData2 =
@@ -327,8 +313,7 @@ class MenuTest extends Base
         $this->assertNotEmpty($response55->getData()->error);
     }
 
-    /** @test */
-    public function it_will_update_menu_docs()
+    public function test_it_will_update_menu_docs()
     {
         $this->setTestData();
         $responseAll = $this->get('api/menus?token='.$this->token);
@@ -380,8 +365,7 @@ class MenuTest extends Base
         $this->assertFalse($res33->success);
     }
 
-    /** @test */
-    public function it_will_delete_menu_docs()
+    public function test_it_will_delete_menu_docs()
     {
         $this->setTestData();
         $responseAll = $this->get('api/menus?token='.$this->token);
@@ -398,8 +382,8 @@ class MenuTest extends Base
         $resAllAfter = $responseAllAfter->getData();
         $this->assertEmpty($resAllAfter->data);
     }
-    /** @test */
-    public function it_will_delete_menu_fake()
+
+    public function test_it_will_delete_menu_fake()
     {
         $this->setTestData();
         //fake id - obluga bledow
