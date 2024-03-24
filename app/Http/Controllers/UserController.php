@@ -15,10 +15,11 @@ class UserController extends Controller
         return response()->json(['success' => true, 'data'=> $clients], 200);
     }
 
-    public function getClientsPaginateAndSort()
+    public function getClientsPaginateAndSort($column, $direction)
     {
+        //tu napisac ze moze byc tylko okreslone: $column, $direction
         $paginationPerPage = Config::getPagination();
-        $clients = User::where('role', User::$role['client'])->orderBy('id', 'asc')->simplePaginate($paginationPerPage);
+        $clients = User::where('role', User::$role['client'])->orderBy($column, $direction)->simplePaginate($paginationPerPage);
 
         return response()->json(['success' => true, 'data'=> $clients], 200);
     }

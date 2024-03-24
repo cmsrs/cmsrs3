@@ -89,7 +89,7 @@ class UserTest extends Base
         $this->assertEquals(2 + $numbersOfClients , count($users)); //2 users - one admin, second client
 
 
-        $response = $this->get('api/clients?token='.$this->token);
+        $response = $this->get('api/clients/id/asc?token='.$this->token);
         $res = $response->getData();
         $this->assertTrue($res->success);
         //dd($res->data);
@@ -108,23 +108,23 @@ class UserTest extends Base
         $this->assertEquals($this->pagination ,$res->data->per_page);
 
         $this->assertEquals(1 ,$res->data->current_page);
-        $this->assertTrue(str_contains($res->data->first_page_url, 'api/clients?page=1'));        
+        $this->assertTrue(str_contains($res->data->first_page_url, 'api/clients/id/asc?page=1'));        
         $this->assertEquals(null ,$res->data->prev_page_url);        
-        $this->assertTrue(str_contains($res->data->next_page_url, 'api/clients?page=2'));
+        $this->assertTrue(str_contains($res->data->next_page_url, 'api/clients/id/asc?page=2'));
 
         //get last page
         $lastPage = ($numbersOfClients + 1) / $res->data->per_page;
         if($numbersOfClients == 99){
             $this->assertEquals(10,  $lastPage);
         }
-        $response2 = $this->get('api/clients?page='.$lastPage.'&token='.$this->token);
+        $response2 = $this->get('api/clients/id/asc?page='.$lastPage.'&token='.$this->token);
         $res2 = $response2->getData();
         $this->assertTrue($res2->success);
         //dd($res2->data);
 
         $this->assertEquals($lastPage ,$res2->data->current_page);
-        $this->assertTrue(str_contains($res2->data->first_page_url, 'api/clients?page=1'));        
-        $this->assertTrue(str_contains($res2->data->prev_page_url, 'api/clients?page='.( $lastPage - 1 ) )); //9
+        $this->assertTrue(str_contains($res2->data->first_page_url, 'api/clients/id/asc?page=1'));        
+        $this->assertTrue(str_contains($res2->data->prev_page_url, 'api/clients/id/asc?page='.( $lastPage - 1 ) )); //9
         $this->assertEquals(null ,$res2->data->next_page_url);
         
 
@@ -140,21 +140,19 @@ class UserTest extends Base
     {
         $numbersOfClients = 99;
         $this->createManyClients( $numbersOfClients );
-        $users = User::all()->toArray();
-        $this->assertEquals(2 + $numbersOfClients , count($users)); //2 users - one admin, second client
+        $users = User::where('role', User::$role['client'])->orderBy('id', 'asc')->get()->toArray();
 
         $response = $this->get('api/clients/id/desc?token='.$this->token);
         $res = $response->getData();
         $this->assertTrue($res->success);
 
-
         $lastPage = ($numbersOfClients + 1) / $res->data->per_page;
-        $response2 = $this->get('api/clients?page='.$lastPage.'&token='.$this->token);
+        $response2 = $this->get('api/clients/id/desc?page='.$lastPage.'&token='.$this->token);
         $res2 = $response2->getData();
         $this->assertTrue($res2->success);
 
-        $firstClient = $this->getTestClient();
-        $lastClient =  $this->getTestClient($numbersOfClients);
+        $firstClient = $users[0];
+        $lastClient =  $users[count($users)-1];
 
         $firstId = $res->data->data[0]->id;  
         $lastId = $res2->data->data[9]->id; 
