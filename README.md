@@ -19,7 +19,7 @@ cd cmsrs3
 
 you can run the following script:
 ```bash
-./go_create_user_and_db.sh
+./rs/go/go_create_user_and_db.sh
 ```
  
 * change file .env:
@@ -49,7 +49,7 @@ php artisan migrate  && php artisan db:seed
 * set permission 
  
 ```bash
-./go_privilege.sh
+./rs/go/go_privilege.sh
 ```
  
 * start server
@@ -76,7 +76,7 @@ php artisan migrate && php artisan db:seed
 ```
 
 ```bash
-./go_privilege.sh
+./rs/go/go_privilege.sh
 ```
 
 ```bash
@@ -95,7 +95,7 @@ git clone https://github.com/cmsrs/cmsrs3.git && cd cmsrs3
 * run script 
 
 ```bash
-./go_install.sh
+./rs/go/go_install.sh
 ```
 
 # RUN TESTS
@@ -104,7 +104,7 @@ git clone https://github.com/cmsrs/cmsrs3.git && cd cmsrs3
 
 create user and database, you can run the following script:
 ```bash
-./go_create_test_db.sh
+./rs/go/go_create_test_db.sh
 cp .env .env.testing 
 ```
  
@@ -122,7 +122,7 @@ CACHE_ENABLE=false
 It is recommended to run tests on a clean instance (without images)
 
 ```bash
-./go_privilege.sh
+./rs/go/go_privilege.sh
 ./vendor/bin/phpunit
 ```
 
@@ -240,7 +240,7 @@ tail -f -n0 storage/logs/*
 * load test (demo) data: 
 
 ```bash
-./go_clear_and_load_demo.sh
+./rs/go/go_clear_and_load_demo.sh
 ```
 
 * create sitemap (it is recommended to put this command in the crontab file): 
