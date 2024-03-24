@@ -136,4 +136,31 @@ class UserTest extends Base
         $this->assertTrue($firstId < $lastId);
     }
 
+    public function test_it_will_get_many_clients_with_sort()
+    {
+        $numbersOfClients = 99;
+        $this->createManyClients( $numbersOfClients );
+        $users = User::all()->toArray();
+        $this->assertEquals(2 + $numbersOfClients , count($users)); //2 users - one admin, second client
+
+        $response = $this->get('api/clients/id/desc?token='.$this->token);
+        $res = $response->getData();
+        $this->assertTrue($res->success);
+
+
+        $lastPage = ($numbersOfClients + 1) / $res->data->per_page;
+        $response2 = $this->get('api/clients?page='.$lastPage.'&token='.$this->token);
+        $res2 = $response2->getData();
+        $this->assertTrue($res2->success);
+
+        $firstClient = $this->getTestClient();
+        $lastClient =  $this->getTestClient($numbersOfClients);
+
+        $firstId = $res->data->data[0]->id;  
+        $lastId = $res2->data->data[9]->id; 
+
+        $this->assertEquals($firstId,  $lastClient['id'] );
+        $this->assertEquals($lastId,  $firstClient['id'] );        
+    }
+
 }
