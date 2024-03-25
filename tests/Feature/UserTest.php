@@ -215,14 +215,39 @@ class UserTest extends Base
         [
             'name' => 'test client',
             'email' => 'test_client_uniq@cmsrs.pl',
-            'role' => User::$role['client'],
+            //'role' => User::$role['client'],
             'password' => $pass,
             'password_confirmation' => $pass
         ];
     
         $response = $this->post('api/clients?token='.$this->token, $testClient);
         $this->assertTrue($response->getData()->success);
-
     }
+
+    public function test_validate_add_client()
+    {
+        $users = User::all()->toArray();
+        $someExistingEmail = $users[0]['email'];
+        $this->assertNotEmpty($someExistingEmail);
+
+        $pass = 's';
+        $testClient =
+        [
+            //'name' => 't',
+            'email' => $someExistingEmail,
+            'password' => '1',
+            'password_confirmation' => 'q'
+        ];
+    
+        $response = $this->post('api/clients?token='.$this->token, $testClient);
+        $res = $response->getData();
+        $this->assertFalse($res->success);
+
+        $this->assertTrue(is_array($res->error->name) && !empty($res->error->name));
+        $this->assertTrue(is_array($res->error->email) && !empty($res->error->email));
+        $this->assertTrue(is_array($res->error->password) && !empty($res->error->password));
+    }
+
+
 
 }
