@@ -48,7 +48,7 @@ class AuthenticationTest extends TestCase
 
     public function test_it_will_register_a_user()
     {
-        $this->markTestSkipped('i dont remember why it is skip');
+        $this->markTestSkipped("Now we don't use registration functionality - it is blocked");
 
         if (empty($_ENV['RS_SECRET'])) {
             return true;

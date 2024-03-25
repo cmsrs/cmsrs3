@@ -7,6 +7,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
@@ -129,5 +130,29 @@ class User extends Authenticatable implements JWTSubject
         }
         return true;
     }
+
+    static public function clientValidator(array $data)
+    {
+        return Validator::make($data, [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+    }
+
+    static public function createClient(array $data)
+    {
+        if( empty($data['name']) || empty($data['email']) ||  empty($data['password']) ){
+            throw new \Exception("Sth wrong with client data i it must be passed validation rules");
+        }
+
+        return User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'role' => User::$role['client'],
+            'password' => $data['password']   //Hash::make($data['password']),
+        ]);
+    }
+
 
 }

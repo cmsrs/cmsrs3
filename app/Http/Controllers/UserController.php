@@ -40,4 +40,27 @@ class UserController extends Controller
         return response()->json(['success' => true, 'data'=> $clients], 200);
     }
 
+    public function createClient(Request $request)
+    {
+        $data = $request->only(
+            'name',
+            'email',
+            'password',
+            'password_confirmation'
+        );
+        $validator = User::clientValidator($data);
+        if ($validator->fails()) {
+            return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
+        }
+
+        try {
+            $user = User::createClient($data);
+        } catch (\Exception $e) {
+            Log::error('client add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); 
+            return response()->json(['success'=> false, 'error'=> 'Add client problem, details in the log file.'], 200);
+        }
+
+        return response()->json(['success'=> true, 'data' => ['userId' => $user->id] ]);        
+    }
+
 }

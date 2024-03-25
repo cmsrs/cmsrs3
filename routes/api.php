@@ -39,6 +39,7 @@ if($demoStatus){
 
         Route::get($apiSecret.'users/clients', 'UserController@getClients');
         Route::get($apiSecret.'clients/{column}/{direction}', 'UserController@getClientsPaginateAndSort');
+        Route::post($apiSecret.'clients', 'UserController@createClient');
         
         Route::get($apiSecret.'config', 'ConfigController@index');
 
@@ -81,6 +82,7 @@ if($demoStatus){
 
         Route::get($apiSecret.'users/clients', 'UserController@getClients');
         Route::get($apiSecret.'clients/{column}/{direction}', 'UserController@getClientsPaginateAndSort');
+        Route::post($apiSecret.'clients', 'UserController@createClient');        
         
         Route::get($apiSecret.'menus', 'MenuController@index');
         Route::post($apiSecret.'menus', 'MenuController@create');
