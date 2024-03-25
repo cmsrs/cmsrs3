@@ -8,7 +8,10 @@ class Config extends Model
 {
     const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,login,projects,clear,checkout,register,home,shoppingsuccess,search,forgot,inner'; //default values
     const LANG_DEFAULT = 'en';
-    const PAGINATION_DEFAULT = 15;    
+    const PAGINATION_DEFAULT = 15; 
+    
+    const SORT_ASC = 'asc';
+    const SORT_DESC = 'desc';
 
     private $langs;
 
@@ -17,6 +20,14 @@ class Config extends Model
         $this->langs = empty(env('LANGS')) ? '' : env('LANGS');
         //dump($this->langs);
         //dd('____sss_____');
+    }
+
+    public static function getAvailableSortingDirection()
+    {
+        return [
+            Config::SORT_ASC,
+            Config::SORT_DESC
+        ];
     }
     
     public function setLangs($langs)

@@ -17,9 +17,25 @@ class UserController extends Controller
 
     public function getClientsPaginateAndSort($column, $direction)
     {
-        //tu napisac ze moze byc tylko okreslone: $column, $direction
+        $objUser = new User;
+
+        if ( !in_array( $column, $objUser->columnsAllowedToSort ) ) {
+            return response()->json([
+                'success'=> false, 
+                'error'=> 'available columns to sort clients: '.implode( ',', $objUser->columnsAllowedToSort)
+            ], 404);
+        }
+
+        ;
+        if ( !in_array( $direction, Config::getAvailableSortingDirection() ) ) {
+            return response()->json([
+                'success'=> false, 
+                'error'=> 'available direction to sort: '.implode( ',', Config::getAvailableSortingDirection())
+            ], 404);
+        }
+
         $paginationPerPage = Config::getPagination();
-        $clients = User::where('role', User::$role['client'])->orderBy($column, $direction)->simplePaginate($paginationPerPage);
+        $clients = $objUser->where('role', User::$role['client'])->orderBy($column, $direction)->simplePaginate($paginationPerPage);
 
         return response()->json(['success' => true, 'data'=> $clients], 200);
     }

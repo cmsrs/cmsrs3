@@ -49,6 +49,14 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
+    public $columnsAllowedToSort = [
+        'id',
+        'name',
+        'email',
+        'created_at',
+        'updated_at'
+    ];
+
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *

@@ -81,14 +81,13 @@ class UserTest extends Base
     }
 
 
-    public function test_it_will_get_many_clients_docs()
+    public function test_it_will_get_many_clients_with_pagination_docs()
     {
         $numbersOfClients = 99;
         $this->createManyClients( $numbersOfClients );
         $users = User::all()->toArray();
         $this->assertEquals(2 + $numbersOfClients , count($users)); //2 users - one admin, second client
-
-
+        
         $response = $this->get('api/clients/id/asc?token='.$this->token);
         $res = $response->getData();
         $this->assertTrue($res->success);
@@ -104,7 +103,7 @@ class UserTest extends Base
         $this->assertNotEmpty( $res->data->data[0]->created_at);
         $this->assertNotEmpty( $res->data->data[0]->updated_at);
 
-        //$this->assertEquals(1 + $numbersOfClients ,$res->data->total);  //without admin - czyli 100, in simplePaginate it is not occure
+        //$this->assertEquals(1 + $numbersOfClients ,$res->data->total);  //without admin - it is 100, in simplePaginate it is not occur
         $this->assertEquals($this->pagination ,$res->data->per_page);
 
         $this->assertEquals(1 ,$res->data->current_page);
@@ -136,7 +135,7 @@ class UserTest extends Base
         $this->assertTrue($firstId < $lastId);
     }
 
-    public function test_it_will_get_many_clients_with_sort()
+    public function test_it_will_get_many_clients_with_pagination_and_sort()
     {
         $numbersOfClients = 99;
         $this->createManyClients( $numbersOfClients );
@@ -159,6 +158,31 @@ class UserTest extends Base
 
         $this->assertEquals($firstId,  $lastClient['id'] );
         $this->assertEquals($lastId,  $firstClient['id'] );        
+    }
+    
+    public function test_restrict_columns_to_specific_names()
+    {
+        $response = $this->get('api/clients/fake/desc?token='.$this->token);  
+        $objUser = new User;
+
+        $this->assertEquals(404, $response->status());
+        $response->assertJson([
+            'success'=> false,
+            'error' => 'available columns to sort clients: '.implode( ',', $objUser->columnsAllowedToSort )
+        ]);        
+
+    }
+
+    public function test_restrict_direction_to_specific_names()
+    {
+        $response = $this->get('api/clients/id/fake?token='.$this->token);  
+
+        $this->assertEquals(404, $response->status());
+        $response->assertJson([
+            'success'=> false,
+            'error' => 'available direction to sort: '.implode( ',', Config::getAvailableSortingDirection())
+        ]);        
+
     }
 
 }
