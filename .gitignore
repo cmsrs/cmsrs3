@@ -27,3 +27,4 @@ stats/
 /resources/views/includes/mysite.blade.php
 /resources/views/includes/mysitefooter.blade.php
 /storage/debugbar/
+.phpunit.cache/test-results
