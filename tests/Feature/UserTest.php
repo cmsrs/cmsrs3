@@ -185,4 +185,27 @@ class UserTest extends Base
 
     }
 
+    public function test_sort_by_all_columns()
+    {
+        $numbersOfClients = 99;
+        $this->createManyClients( $numbersOfClients );
+
+        $objUser = new User;
+        $this->assertNotEmpty(count($objUser->columnsAllowedToSort));
+        foreach ($objUser->columnsAllowedToSort as  $columnName ){
+            $users = User::where('role', User::$role['client'])->orderBy($columnName, 'desc')->get()->toArray();
+            $firstClient = $users[0];
+    
+            $response = $this->get("api/clients/$columnName/desc?token=".$this->token);
+            $res = $response->getData();
+            $this->assertTrue($res->success);
+    
+            $firstName = $res->data->data[0]->{$columnName};
+    
+            $this->assertEquals($firstName, $firstClient[$columnName]);        
+    
+        }
+
+    }
+
 }
