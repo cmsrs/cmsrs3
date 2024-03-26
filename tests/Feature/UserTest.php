@@ -248,6 +248,43 @@ class UserTest extends Base
         $this->assertTrue(is_array($res->error->password) && !empty($res->error->password));
     }
 
+    public function test_update_client_docs()
+    {
+        $index = 1;
+        $users = User::all()->toArray();
+        $emailAdmin = $users[0]['email'];
+        $this->assertEquals(User::$role['client'],  $users[$index]['role']);
 
+        $userId = $users[$index]['id'];
+        $this->assertNotEmpty($userId);
+
+
+        $newPass = 'secretPass123$_new';
+        $testClient =
+        [
+            'name' => 'test client new',
+            'email' => $emailAdmin,//email is not changeable!
+            'password' => $newPass,
+            'password_confirmation' => $newPass
+        ];
+    
+        $response = $this->put("api/clients/$userId?token=".$this->token, $testClient);
+
+        //dd($response);
+        $res = $response->getData();
+
+        $this->assertTrue($res->success);
+        $this->assertEquals( $userId,  $res->data->userId);
+
+        $usersAfter = User::all()->toArray();
+
+        $this->assertEquals($userId,  $usersAfter[$index]['id']);
+        $this->assertEquals(User::$role['client'],  $usersAfter[$index]['role']);
+        $this->assertEquals($testClient['name'],    $usersAfter[$index]['name']);        
+        $this->assertEquals($users[$index]['email'],    $usersAfter[$index]['email']);//email is not changeable!
+        $this->assertNotEquals($emailAdmin,  $usersAfter[$index]['email']);//email is not changeable!
+
+        //dd($usersAfter[$index]);
+    }
 
 }

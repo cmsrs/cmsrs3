@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Config;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -58,6 +59,39 @@ class UserController extends Controller
         } catch (\Exception $e) {
             Log::error('client add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); 
             return response()->json(['success'=> false, 'error'=> 'Add client problem, details in the log file.'], 200);
+        }
+
+        return response()->json(['success'=> true, 'data' => ['userId' => $user->id] ]);        
+    }
+
+    public function updateClient(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        if (empty($user)) {
+            return response()->json(['success'=> false, 'error'=> 'User no found'], 404);
+        }
+
+        $data = $request->only(
+            'name',
+            //'email',
+            'password',
+            'password_confirmation'
+        );
+
+        $data['id'] = $user->id;
+        $data['email'] = $user->email; 
+
+        $validator = User::clientValidator($data);
+        if ($validator->fails()) {
+            return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
+        }
+
+        try {
+            $user->update($data);        
+        } catch (\Exception $e) {
+            Log::error('client update ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); 
+            return response()->json(['success'=> false, 'error'=> 'Update client problem, details in the log file.'], 200);
         }
 
         return response()->json(['success'=> true, 'data' => ['userId' => $user->id] ]);        
