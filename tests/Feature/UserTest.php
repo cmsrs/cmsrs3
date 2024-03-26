@@ -81,7 +81,7 @@ class UserTest extends Base
     }
 
 
-    public function test_it_will_get_many_clients_with_pagination_docs()
+    public function test_it_will_get_many_clients_with_pagination()
     {
         $numbersOfClients = 99;
         $this->createManyClients( $numbersOfClients );
@@ -330,5 +330,32 @@ class UserTest extends Base
         ]);                
     }
 
+    public function test_search_client_by_name_or_email_docs()
+    {
+        $name1 = 'First Abc Kowalski';
+        $name2 = 'Fake Kowalski';
+        User::create([            
+            'name' => $name1,
+            'email' => 'fake@example.com',
+            'password' => Hash::make('password'),
+            'role' => User::$role['client']
+        ]);
+
+        User::create([
+            'name' => $name2,
+            'email' => 'sth@abc-example.com',
+            'password' => Hash::make('password'),
+            'role' => User::$role['client']
+        ]);
+
+        $response = $this->get('api/clients/id/desc?token='.$this->token.'&search= aBC ');
+        $res = $response->getData();
+
+        $this->assertTrue($res->success);
+
+        $this->assertEquals(2, count($res->data->data));
+        $this->assertEquals($name2, $res->data->data[0]->name);        
+        $this->assertEquals($name1, $res->data->data[1]->name);                
+    }
 
 }

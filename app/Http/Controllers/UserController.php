@@ -16,8 +16,13 @@ class UserController extends Controller
         return response()->json(['success' => true, 'data'=> $clients], 200);
     }
 
-    public function getClientsPaginateAndSort($column, $direction)
+    public function getClientsPaginateAndSort(Request $request, $column, $direction)
     {
+        $search = $request->input('search', null);
+        if($search){
+            $search = '%'.trim($search).'%';
+        }
+
         $objUser = new User;
 
         if ( !in_array( $column, $objUser->columnsAllowedToSort ) ) {
@@ -36,7 +41,23 @@ class UserController extends Controller
         }
 
         $paginationPerPage = Config::getPagination();
-        $clients = $objUser->where('role', User::$role['client'])->orderBy($column, $direction)->simplePaginate($paginationPerPage);
+        $clients = $objUser
+            ->where('role', User::$role['client'])   
+            ->when($search, function($query) use ($search) {
+                return $query->where(function($query) use ($search) {
+                    $query->where('name', 'like', $search)
+                        ->orWhere('email', 'like', $search);
+                });
+            })
+            // ->where(function($query) use ($search) {
+            //     if($search){
+            //         $query->where('name', 'like', $search)
+            //         ->orWhere('email', 'like', $search);
+            //     }
+            // })
+            ->orderBy($column, $direction)
+            ->simplePaginate($paginationPerPage)
+            ;
 
         return response()->json(['success' => true, 'data'=> $clients], 200);
     }

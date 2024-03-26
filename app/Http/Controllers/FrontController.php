@@ -220,13 +220,13 @@ class FrontController extends Controller
         //without transaction
         $objCheckout = Checkout::create($checkout);
         if (empty($objCheckout->id)) {
-            throw new \Exception("I cant get objCheckout id - problem with save chcekout");
+            throw new \Exception("I cant get objCheckout id - problem with save checkout");
         }  
         
         foreach($baskets as $basket){
             $basket['checkout_id'] = $objCheckout->id;
             Basket::create($basket);
-            Log::debug(' create backet: '.var_export( $basket , true ) );
+            Log::debug(' create basket: '.var_export( $basket , true ) );
         }
         */
 
@@ -234,17 +234,17 @@ class FrontController extends Controller
         try {
             $objCheckout = Checkout::create($checkout);
             if (empty($objCheckout->id)) {
-                throw new \Exception("I cant get objCheckout id - problem with save chcekout");
+                throw new \Exception("I cant get objCheckout id - problem with save checkout");
             }  
 
             foreach($baskets as $basket){
                 $basket['checkout_id'] = $objCheckout->id;
                 Basket::create($basket);
-                //Log::debug(' create backet: '.var_export( $basket , true ) );
+                //Log::debug(' create basket: '.var_export( $basket , true ) );
             }
             DB::commit();
         } catch (\Exception $e) {
-            Log::debug(' tranaction problem: '.var_export( $e->getMessage() , true ) );
+            Log::debug(' transaction problem: '.var_export( $e->getMessage() , true ) );
             DB::rollback();
             //throw $e;
         }
@@ -261,9 +261,9 @@ class FrontController extends Controller
 
             $redirectUri = $payu->getOrder($data);
             if( empty($redirectUri) ){
-                //throw new \Exception("Somthing wrong with payu - i cant obtain the redirectUri");
-                Log::debug("Somthing wrong with payu - i cant obtain the redirectUri");            
-                return response()->json(['success'=> false, 'error'=> 'Somthing wrong with payu - try later.'], 200); 
+                //throw new \Exception("Something wrong with payu - i cant obtain the redirectUri");
+                Log::debug("Something wrong with payu - i cant obtain the redirectUri");            
+                return response()->json(['success'=> false, 'error'=> 'Something wrong with payu - try later.'], 200); 
             }
             Log::debug('payu redirect url: '.$redirectUri );
             return redirect($redirectUri);
@@ -308,8 +308,8 @@ class FrontController extends Controller
         }
         App::setLocale($lang);
 
-        //todo - http_reffer - i dont know how to obtain this value - it should be from payu
-        //it make sance only for payU - it my opinion
+        //todo - http_reffer - i don't know how to obtain this value - it should be from payu
+        //it make sense only for payU - it my opinion
         $isNewOrders = false; //Order::copyDataFromBasketToOrderForUser();  
 
         $page = Page::getMainPage();
