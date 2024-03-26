@@ -287,4 +287,48 @@ class UserTest extends Base
         //dd($usersAfter[$index]);
     }
 
+    public function test_delete_client_docs()
+    {
+        $index = 1;
+        $users = User::all()->toArray();
+        $usersCount = count($users);
+        $this->assertNotEmpty($usersCount);
+
+        $this->assertEquals(User::$role['client'],  $users[$index]['role']);
+        $userId = $users[$index]['id'];
+        $this->assertNotEmpty($userId);
+
+
+        $response = $this->delete("api/clients/$userId?token=".$this->token );
+        $res = $response->getData();
+
+        $this->assertTrue($res->success);
+
+        $usersAfter = User::all()->toArray();
+        $this->assertEquals($usersCount -1, count($usersAfter) );
+    }
+
+    public function test_delete_admin_prohibited()
+    {
+        $index = 0;
+        $users = User::all()->toArray();
+        $usersCount = count($users);
+        $this->assertNotEmpty($usersCount);
+
+        $this->assertEquals(User::$role['admin'],  $users[$index]['role']);
+        $userId = $users[$index]['id'];
+        $this->assertNotEmpty($userId);
+
+
+        $response = $this->delete("api/clients/$userId?token=".$this->token );
+        $res = $response->getData();
+
+        $this->assertEquals(403, $response->status());
+        $response->assertJson([
+            'success'=> false,
+            'error' => 'delete admin is prohibited'
+        ]);                
+    }
+
+
 }

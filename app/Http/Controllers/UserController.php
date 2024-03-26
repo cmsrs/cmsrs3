@@ -97,4 +97,27 @@ class UserController extends Controller
         return response()->json(['success'=> true, 'data' => ['userId' => $user->id] ]);        
     }
 
+    public function deleteClient(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        if (empty($user)) {
+            return response()->json(['success'=> false, 'error'=> 'User no found'], 404);
+        }
+
+        if ( User::$role['admin'] ==  $user->role ) {
+            return response()->json(['success'=> false, 'error'=> 'delete admin is prohibited'], 403);
+        }
+
+        try {
+            $user->delete();
+        } catch (\Exception $e) {
+            Log::error('client delete ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); 
+            return response()->json(['success'=> false, 'error'=> 'Delete client problem, details in the log file.'], 200);
+        }
+
+        return response()->json(['success'=> true] );
+    }
+
+
 }
