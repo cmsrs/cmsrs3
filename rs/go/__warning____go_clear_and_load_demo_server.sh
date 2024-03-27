@@ -3,7 +3,7 @@ rm -rf public/images/product
 #./go_privilege.sh 
 
 
-./go_clear_all_cache_server.sh
+./rs/go/go_clear_all_cache_server.sh
 php81 artisan migrate:fresh
 php81 artisan db:seed
 php81 artisan command:load-demo-data

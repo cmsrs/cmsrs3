@@ -378,7 +378,7 @@ class Demo
             'commented' => 0,
             'after_login' => 1,
             'type' => 'cms',
-            'content' => [ "en" =>'Message avaliable after log in.', "pl" => "Widomość dostępna tylko po zalogowaniu." ],
+            'content' => [ "en" =>'Message available after log in.', "pl" => "Widomość dostępna tylko po zalogowaniu." ],
             'menu_id' => $m1->id
         ];
 

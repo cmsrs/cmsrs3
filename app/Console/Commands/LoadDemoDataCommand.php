@@ -114,6 +114,18 @@ class LoadDemoDataCommand extends Command
         $user2->save();
          */
 
+        for($i=1; $i<=32; $i++){
+            $name = 'client'.$i;
+            $emailClient = $name.'@cmsrs.pl';
+            $user32 = new User([
+                'name' => $name,                
+                'email' => $emailClient,
+                'role' => User::$role['client']
+            ]);
+            $user32->password = 'cmsrs456';
+            $user32->save();
+        }
+
         /*---------------------*/
         /* ---orders-----------*/
         /*---------------------*/
