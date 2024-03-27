@@ -791,7 +791,7 @@ class PageTest extends Base
     }
 
 
-    public function test_it_will_add_pages_to_check_possition_docs()
+    public function test_it_will_add_pages_to_check_position_docs()
     {
         $this->setTestData();
         $testData2 =
