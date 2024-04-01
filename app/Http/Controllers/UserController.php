@@ -56,7 +56,8 @@ class UserController extends Controller
             //     }
             // })
             ->orderBy($column, $direction)
-            ->simplePaginate($paginationPerPage)
+            //->simplePaginate($paginationPerPage)
+            ->paginate($paginationPerPage)
             ;
 
         return response()->json(['success' => true, 'data'=> $clients], 200);
