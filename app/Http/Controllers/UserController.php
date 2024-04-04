@@ -103,6 +103,10 @@ class UserController extends Controller
             return response()->json(['success'=> false, 'error'=> 'User no found'], 404);
         }
 
+        if ( User::$role['admin'] ==  $user->role ) {
+            return response()->json(['success'=> false, 'error'=> 'update admin is prohibited'], 403);
+        }        
+
         $data = $request->only(
             'name',
             //'email',

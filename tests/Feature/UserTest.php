@@ -248,6 +248,36 @@ class UserTest extends Base
         $this->assertTrue(is_array($res->error->password) && !empty($res->error->password));
     }
 
+    public function test_update_admin()
+    {
+        $index = 0;
+        $users = User::all()->toArray();
+        $emailAdmin = $users[0]['email'];
+        $this->assertEquals(User::$role['admin'],  $users[$index]['role']);
+
+        $userId = $users[$index]['id'];
+        $this->assertNotEmpty($userId);
+
+
+        $newPass = 'secretPass123$_new';
+        $testClient =
+        [
+            'name' => 'test client new',
+            'email' => $emailAdmin,//email is not changeable!
+            'password' => $newPass,
+            'password_confirmation' => $newPass
+        ];
+    
+        $response = $this->put("api/clients/$userId?token=".$this->token, $testClient);
+        $this->assertEquals(403, $response->status());
+        $response->assertJson([
+            'success'=> false,
+            'error' => 'update admin is prohibited'
+        ]);                
+
+    }
+
+
     public function test_update_client_docs()
     {
         $index = 1;
