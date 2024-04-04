@@ -16,6 +16,16 @@ class UserController extends Controller
         return response()->json(['success' => true, 'data'=> $clients], 200);
     }
 
+    public function getClient(Request $request, $id)
+    {
+        $client = User::query()->where('role', User::$role['client'])->where('id', $id )->first();
+        if( empty($client) ){
+            return response()->json(['error' => 'Client not found'], 404);
+        }
+
+        return response()->json(['success' => true, 'data'=> $client->toArray()], 200);
+    }
+
     public function getClientsPaginateAndSort(Request $request, $column, $direction)
     {
         $search = $request->input('search', null);
@@ -32,7 +42,6 @@ class UserController extends Controller
             ], 404);
         }
 
-        ;
         if ( !in_array( $direction, Config::getAvailableSortingDirection() ) ) {
             return response()->json([
                 'success'=> false, 

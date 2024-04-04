@@ -358,4 +358,37 @@ class UserTest extends Base
         $this->assertEquals($name1, $res->data->data[1]->name);                
     }
 
+    public function test_get_client_by_given_id_docs() //it can't be admin.
+    {
+        $users = User::all()->toArray();
+        $index = 1;
+        $userId = $users[$index]['id'];
+        $this->assertTrue( !empty($userId) );
+        $this->assertEquals(User::$role['client'],  $users[$index]['role']);
+
+        $response = $this->get("api/clients/$userId?token=".$this->token );
+        $this->assertEquals(200, $response->status());
+
+        $res = $response->getData();
+        $this->assertTrue($res->success);
+        
+        $this->assertNotEmpty($res->data->name);
+        $this->assertNotEmpty($res->data->email);
+        $this->assertEquals( $userId,  $res->data->id );
+        $this->assertEquals( User::$role['client'],  $res->data->role );
+    }
+
+    public function test_get_admin_by_given_id()
+    {
+        $users = User::all()->toArray();
+        $index = 0;
+        $userId = $users[$index]['id'];
+        $this->assertTrue( !empty($userId) );
+        $this->assertEquals(User::$role['admin'],  $users[$index]['role']);
+
+        $response = $this->get("api/clients/$userId?token=".$this->token );
+        $this->assertEquals(404, $response->status());
+    }
+
+
 }
