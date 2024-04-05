@@ -205,7 +205,6 @@ class UserTest extends Base
             $this->assertEquals($firstName, $firstClient[$columnName]);        
     
         }
-
     }
 
     public function test_add_client_docs()
@@ -224,7 +223,7 @@ class UserTest extends Base
         $this->assertTrue($response->getData()->success);
     }
 
-    public function test_validate_add_client()
+    public function test_validate_add_client_error_docs()
     {
         $users = User::all()->toArray();
         $someExistingEmail = $users[0]['email'];
@@ -274,9 +273,7 @@ class UserTest extends Base
             'success'=> false,
             'error' => 'update admin is prohibited'
         ]);                
-
     }
-
 
     public function test_update_client_docs()
     {
