@@ -30,7 +30,7 @@ class AuthController extends Controller
 
         $validator = Validator::make($credentials, $rules);
         if ($validator->fails()) {
-            return response()->json(['success'=> false, 'error'=> $validator->messages()], 401);
+            return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
         }
 
         //$credentials['is_verified'] = 1;

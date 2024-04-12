@@ -121,13 +121,31 @@ class AuthenticationTest extends TestCase
         $this->assertFalse($response->success);
     }
 
-    public function test_it_will_not_log_an_invalid_user_in()
+    public function test_it_will_not_log_an_invalid_user_in_error_docs()
     {
         $response = $this->post('api/login', [
-            'email'    => 'test@email.com',
+            'email'    => 'test_wrong@email.com',
             'password' => 'wrongpass'
-        ])->getData();
+        ]); //->getData();
+        $res = $response->getData();
+        //print_r($res);
 
-        $this->assertNotEmpty($response->error);
+        $this->assertFalse($res->success);
+        $this->assertNotEmpty($res->error);
     }
+
+    public function test_it_will_not_log_an_invalid_user_in_good_email_the_same_err_as_below()
+    {
+        $d  = [
+            'email'    => 'test@email.com',
+            'password' => 'wrong_pass'
+        ];
+        $response = $this->post('api/login', $d );
+        $res = $response->getData();
+        //print_r($res);
+
+        $this->assertFalse($res->success);
+        $this->assertNotEmpty($res->error);
+    }
+
 }

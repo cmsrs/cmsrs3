@@ -16,6 +16,7 @@ class ConfigController extends Controller
             $config['page_types'] = Config::arrGetPageTypes();
             $config['langs'] =  $objConfig->arrGetLangs();
             $config['cache_enable'] = env('CACHE_ENABLE', false);
+            $config['default_lang'] =  $objConfig->getDefaultLang();
         } catch (\Exception $e) {
             Log::error('config ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile());
             return response()->json(['success'=> false, 'error'=>  $e->getMessage().' Details in the log file.'], 200);
