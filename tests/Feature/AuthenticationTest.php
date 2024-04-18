@@ -127,8 +127,9 @@ class AuthenticationTest extends TestCase
             'email'    => 'test_wrong@email.com',
             'password' => 'wrongpass'
         ]); //->getData();
+        $this->assertEquals(200, $response->status());
         $res = $response->getData();
-        //print_r($res);
+
 
         $this->assertFalse($res->success);
         $this->assertNotEmpty($res->error);
