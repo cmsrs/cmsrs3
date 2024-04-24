@@ -648,6 +648,7 @@ class Page extends Base
     {
         $page = $this->where('id', $this->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->get($this->pageFields)->first()->toArray();
         $formatPage = $this->getPageDataFormat($page);
+        $formatPage['images'] = Image::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
 
         return $formatPage;
     }

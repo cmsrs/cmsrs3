@@ -327,7 +327,7 @@ class PageTest extends Base
         $this->assertSame($compareWith['content']['en'], $data->content->en);
     }
 
-    public function test_it_will_show_one_page_docs()
+    public function test_it_will_show_one_page_see_image_test_page_too()
     {
         $this->setTestData();
         $title2 = 'must be uniq';
