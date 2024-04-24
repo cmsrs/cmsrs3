@@ -112,9 +112,19 @@ class ImageTest extends Base
         $this->assertEquals(null, $altEn2);
     }
 
-    public function test_it_will_get_page_with_images_docs()
+    public function test_it_will_get_page_with_images_with_auth()
     {
-        $response0 = $this->get('api/page/'.$this->pageId.'/fr');  //this method doesnt cointain ticket - ti is avaliable as guest
+        $response0 = $this->get('api/pages/'.$this->pageId.'?token='.$this->token); 
+        $res0 = $response0->getData();
+
+        $this->assertTrue($res0->success);
+        $this->assertNotEmpty($res0->data->id);
+        $this->assertNotEmpty($res0->data->images);
+    }
+
+    public function test_it_will_get_page_with_images_without_auth_docs()
+    {
+        $response0 = $this->get('api/page/'.$this->pageId.'/fr');  //this method doesnt contain ticket - it is available as guest
 
         $this->assertFalse($response0->getData()->success);
       
