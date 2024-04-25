@@ -1833,27 +1833,32 @@ class ProductTest extends Base
 
     private function createProduct( $i = 1 )
     {
-        $this->setTestData();
-
-        $this->testData["product_name"]["en"] = $this->testData["product_name"]["en"]."_".$i;
-        $this->testData["sku"] = $this->testData["sku"]."_".$i;
-        $this->testData["price"] = 100 + $i;
-        $this->testData["product_description"]["en"] = $this->testData["product_description"]["en"]."_".$i;
+        $d =  $this->testData;
+        $d["product_name"]["en"] = $this->testData["product_name"]["en"]."_".$i;
+        $d["sku"] = $this->testData["sku"]."_".$i;
+        $d["price"] = 100 + $i;
+        $d["product_description"]["en"] = $this->testData["product_description"]["en"]."_".$i;
         
-        $res0 = $this->post('api/products?token=' . $this->token, $this->testData);
-        
+        $res0 = $this->post('api/products?token=' . $this->token, $d);
         $res = $res0->getData();    
         $this->assertTrue($res->success);
         $this->assertNotEmpty($res->data->productId);
         return $res->data->productId;
     }
 
+    private function createProducts( $nu )
+    {
+        for($i=1; $i<=$nu; $i++){
+            $productId = $this->createProduct($i);
+        }
+    }
 
     /**
      * get one product
      */
     public function test_get_product_by_given_id_docs() 
     {
+        $this->setTestData();
         $productId = $this->createProduct();
 
         $response = $this->get('api/products/'.$productId.'?token='.$this->token);
@@ -1869,9 +1874,13 @@ class ProductTest extends Base
      */
     public function test_it_will_get_many_products_with_pagination()
     {
+                
+        $this->setTestData();
+        $numbersOfProducts = 32;
+        $this->createProducts( $numbersOfProducts );
+
         $this->markTestSkipped("todo");
-    
-        $numbersOfClients = 99;
+        
         $this->createManyClients( $numbersOfClients );
         $users = User::all()->toArray();
         $this->assertEquals(2 + $numbersOfClients , count($users)); //2 users - one admin, second client
@@ -2059,5 +2068,4 @@ class ProductTest extends Base
         $this->assertTrue(is_array($res->error->password) && !empty($res->error->password));
     }
  
-
 }
