@@ -32,6 +32,7 @@ if($demoStatus){
         Route::get($apiSecret.'menus', 'MenuController@index');
 
         Route::get($apiSecret.'pages', 'PageController@index');
+        Route::get($apiSecret.'pages/{id}/{simple?}', 'PageController@oneItemAdmin')->where('id', '[0-9]+');        
         Route::get($apiSecret.'pages/type/{type}', 'PageController@getPagesByType');
 
         Route::get($apiSecret.'images/{type}/{pageId}', 'ImageController@getItemByTypeAndRefId'); //getItemByPageId
@@ -71,7 +72,7 @@ if($demoStatus){
         Route::get($apiSecret.'logout', 'AuthController@logout');
 
         Route::get($apiSecret.'pages', 'PageController@index');
-        Route::get($apiSecret.'pages/{id}', 'PageController@oneItemAdmin');        
+        Route::get($apiSecret.'pages/{id}/{simple?}', 'PageController@oneItemAdmin')->where('id', '[0-9]+');        
         Route::post($apiSecret.'pages', 'PageController@create');
         Route::put($apiSecret.'pages/{id}', 'PageController@update');
         Route::delete($apiSecret.'pages/{id}', 'PageController@delete');

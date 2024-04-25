@@ -49,7 +49,7 @@ class PageController extends Controller
     }
 
   
-    public function oneItemAdmin(Request $request, $id)
+    public function oneItemAdmin(Request $request, $id, ?string  $simple = null)
     {
         $page = Page::find($id);
 
@@ -57,7 +57,7 @@ class PageController extends Controller
             return response()->json(['success'=> false, 'error'=> 'Page not find'], 404);
         }
 
-        $onePage = $page->getAllPagesWithImagesOneItem();
+        $onePage = $page->getAllPagesWithImagesOneItem($simple);
 
         return response()->json(['success' => true, 'data'=> $onePage], 200);
     }
