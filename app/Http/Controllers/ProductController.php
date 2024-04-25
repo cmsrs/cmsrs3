@@ -30,6 +30,18 @@ class ProductController extends Controller
         }
     }
 
+    public function getItem(Request $request, $id)
+    {
+        $product = Product::find($id);
+        if (empty($product)) {
+            return response()->json(['success'=> false, 'error'=> 'Product no found'], 404);            
+        }
+
+        $data = $product->getProductWithTranslatesContentsAndImages();
+        return response()->json(['success' => true, 'data'=> $data], 200);
+    }
+
+
     public function index()
     {
         $products = (new Product)->getAllProductsWithImages();

@@ -40,14 +40,15 @@ if($demoStatus){
 
         Route::get($apiSecret.'users/clients', 'UserController@getClients');
         Route::get($apiSecret.'clients/{column}/{direction}', 'UserController@getClientsPaginateAndSort');
-        Route::post($apiSecret.'clients', 'UserController@createClient');
-        Route::put($apiSecret.'clients/{id}', 'UserController@updateClient');        
-        Route::delete($apiSecret.'clients/{id}', 'UserController@deleteClient');
+        //Route::post($apiSecret.'clients', 'UserController@createClient');
+        //Route::put($apiSecret.'clients/{id}', 'UserController@updateClient');        
+        //Route::delete($apiSecret.'clients/{id}', 'UserController@deleteClient');
         Route::get($apiSecret.'clients/{id}', 'UserController@getClient');
         
         Route::get($apiSecret.'config', 'ConfigController@index');
 
         Route::get($apiSecret.'products', 'ProductController@index');
+        Route::get($apiSecret.'products/{id}', 'ProductController@getItem');
 
         Route::get($apiSecret.'contacts', 'ContactController@index');            
         Route::get($apiSecret.'checkouts', 'CheckoutController@index');                
@@ -99,6 +100,7 @@ if($demoStatus){
 
         Route::get($apiSecret.'products', 'ProductController@index');
         Route::post($apiSecret.'products', 'ProductController@create');
+        Route::get($apiSecret.'products/{id}', 'ProductController@getItem');
         Route::put($apiSecret.'products/{id}', 'ProductController@update');
         Route::delete($apiSecret.'products/{id}', 'ProductController@delete');
 

@@ -1830,4 +1830,234 @@ class ProductTest extends Base
             $this->clear_imgs($res0->data->productId);
         }
     }
+
+    private function createProduct( $i = 1 )
+    {
+        $this->setTestData();
+
+        $this->testData["product_name"]["en"] = $this->testData["product_name"]["en"]."_".$i;
+        $this->testData["sku"] = $this->testData["sku"]."_".$i;
+        $this->testData["price"] = 100 + $i;
+        $this->testData["product_description"]["en"] = $this->testData["product_description"]["en"]."_".$i;
+        
+        $res0 = $this->post('api/products?token=' . $this->token, $this->testData);
+        
+        $res = $res0->getData();    
+        $this->assertTrue($res->success);
+        $this->assertNotEmpty($res->data->productId);
+        return $res->data->productId;
+    }
+
+
+    /**
+     * get one product
+     */
+    public function test_get_product_by_given_id_docs() 
+    {
+        $productId = $this->createProduct();
+
+        $response = $this->get('api/products/'.$productId.'?token='.$this->token);
+        $res = $response->getData();
+
+        $this->assertTrue($res->success);
+        $this->assertEquals( $productId, $res->data->id );
+        $this->assertEquals( $this->testData["page_id"], $res->data->page_id );
+    }
+
+    /**
+     * pagination products
+     */
+    public function test_it_will_get_many_products_with_pagination()
+    {
+        $this->markTestSkipped("todo");
+    
+        $numbersOfClients = 99;
+        $this->createManyClients( $numbersOfClients );
+        $users = User::all()->toArray();
+        $this->assertEquals(2 + $numbersOfClients , count($users)); //2 users - one admin, second client
+        
+        $response = $this->get('api/clients/id/asc?token='.$this->token);
+        $res = $response->getData();
+        $this->assertTrue($res->success);
+        //dd($res->data);
+
+        $firstClient = $this->getTestClient();
+
+        $firstId = $res->data->data[0]->id; 
+        $this->assertNotEmpty($firstId);
+        $this->assertNotEmpty( $res->data->data[0]->id);
+        $this->assertEquals( $firstClient['name'],  $res->data->data[0]->name);        
+        $this->assertEquals( $firstClient['email'],  $res->data->data[0]->email);
+        $this->assertNotEmpty( $res->data->data[0]->created_at);
+        $this->assertNotEmpty( $res->data->data[0]->updated_at);
+
+        //$this->assertEquals(1 + $numbersOfClients ,$res->data->total);  //without admin - it is 100, in simplePaginate it is not occur
+        $this->assertEquals($this->pagination ,$res->data->per_page);
+
+        $this->assertEquals(1 ,$res->data->current_page);
+        $this->assertTrue(str_contains($res->data->first_page_url, 'api/clients/id/asc?page=1'));        
+        $this->assertEquals(null ,$res->data->prev_page_url);        
+        $this->assertTrue(str_contains($res->data->next_page_url, 'api/clients/id/asc?page=2'));
+
+        //get last page
+        $lastPage = ($numbersOfClients + 1) / $res->data->per_page;
+        if($numbersOfClients == 99){
+            $this->assertEquals(10,  $lastPage);
+        }
+        $response2 = $this->get('api/clients/id/asc?page='.$lastPage.'&token='.$this->token);
+        $res2 = $response2->getData();
+        $this->assertTrue($res2->success);
+        //dd($res2->data);
+
+        $this->assertEquals($lastPage ,$res2->data->current_page);
+        $this->assertTrue(str_contains($res2->data->first_page_url, 'api/clients/id/asc?page=1'));        
+        $this->assertTrue(str_contains($res2->data->prev_page_url, 'api/clients/id/asc?page='.( $lastPage - 1 ) )); //9
+        $this->assertEquals(null ,$res2->data->next_page_url);
+        
+
+        $lastClient = $this->getTestClient($numbersOfClients);
+        $lastId = $res->data->data[9]->id; 
+        $this->assertNotEmpty($lastId);
+        $this->assertEquals($lastClient['email'],  $res2->data->data[9]->email );
+
+        $this->assertTrue($firstId < $lastId);
+    }
+
+    public function test_it_will_get_many_products_with_pagination_and_sort()
+    {
+        $this->markTestSkipped("todo");
+
+        $numbersOfClients = 99;
+        $this->createManyClients( $numbersOfClients );
+        $users = User::where('role', User::$role['client'])->orderBy('id', 'asc')->get()->toArray();
+
+        $response = $this->get('api/clients/id/desc?token='.$this->token);
+        $res = $response->getData();
+        $this->assertTrue($res->success);
+
+        $lastPage = ($numbersOfClients + 1) / $res->data->per_page;
+        $response2 = $this->get('api/clients/id/desc?page='.$lastPage.'&token='.$this->token);
+        $res2 = $response2->getData();
+        $this->assertTrue($res2->success);
+
+        $firstClient = $users[0];
+        $lastClient =  $users[count($users)-1];
+
+        $firstId = $res->data->data[0]->id;  
+        $lastId = $res2->data->data[9]->id; 
+
+        $this->assertEquals($firstId,  $lastClient['id'] );
+        $this->assertEquals($lastId,  $firstClient['id'] );        
+    }
+    
+    public function test_restrict_products_sorted_columns_to_specific_names()
+    {
+        $this->markTestSkipped("todo");
+
+        $response = $this->get('api/clients/fake/desc?token='.$this->token);  
+        $objUser = new User;
+
+        $this->assertEquals(404, $response->status());
+        $response->assertJson([
+            'success'=> false,
+            'error' => 'available columns to sort clients: '.implode( ',', $objUser->columnsAllowedToSort )
+        ]);        
+
+    }
+
+    public function test_restrict_products_sorted_direction_to_specific_names()
+    {
+        $this->markTestSkipped("todo");
+
+        $response = $this->get('api/clients/id/fake?token='.$this->token);  
+
+        $this->assertEquals(404, $response->status());
+        $response->assertJson([
+            'success'=> false,
+            'error' => 'available direction to sort: '.implode( ',', Config::getAvailableSortingDirection())
+        ]);        
+
+    }
+
+    public function test_sort_products_by_all_columns()
+    {
+        $this->markTestSkipped("todo");
+
+        $numbersOfClients = 99;
+        $this->createManyClients( $numbersOfClients );
+
+        $objUser = new User;
+        $this->assertNotEmpty(count($objUser->columnsAllowedToSort));
+        foreach ($objUser->columnsAllowedToSort as  $columnName ){
+            $users = User::where('role', User::$role['client'])->orderBy($columnName, 'desc')->get()->toArray();
+            $firstClient = $users[0];
+    
+            $response = $this->get("api/clients/$columnName/desc?token=".$this->token);
+            $res = $response->getData();
+            $this->assertTrue($res->success);
+    
+            $firstName = $res->data->data[0]->{$columnName};
+    
+            $this->assertEquals($firstName, $firstClient[$columnName]);        
+    
+        }
+    }
+
+    public function test_search_products_by_many_columns_docs()
+    {
+        $this->markTestSkipped("todo");
+
+        $name1 = 'First Abc Kowalski';
+        $name2 = 'Fake Kowalski';
+        User::create([            
+            'name' => $name1,
+            'email' => 'fake@example.com',
+            'password' => Hash::make('password'),
+            'role' => User::$role['client']
+        ]);
+
+        User::create([
+            'name' => $name2,
+            'email' => 'sth@abc-example.com',
+            'password' => Hash::make('password'),
+            'role' => User::$role['client']
+        ]);
+
+        $response = $this->get('api/clients/id/desc?token='.$this->token.'&search= aBC ');
+        $res = $response->getData();
+
+        $this->assertTrue($res->success);
+
+        $this->assertEquals(2, count($res->data->data));
+        $this->assertEquals($name2, $res->data->data[0]->name);        
+        $this->assertEquals($name1, $res->data->data[1]->name);                
+    }
+
+    public function test_validate_add_product_error_docs()
+    {
+        $this->markTestSkipped("todo");
+
+        $users = User::all()->toArray();
+        $someExistingEmail = $users[0]['email'];
+        $this->assertNotEmpty($someExistingEmail);
+
+        $pass = 's';
+        $testClient =
+        [
+            //'name' => 't',
+            'email' => $someExistingEmail,
+            'password' => '1',
+            'password_confirmation' => 'q'
+        ];
+    
+        $response = $this->post('api/clients?token='.$this->token, $testClient);
+        $res = $response->getData();
+        $this->assertFalse($res->success);
+
+        $this->assertTrue(is_array($res->error->name) && !empty($res->error->name));
+        $this->assertTrue(is_array($res->error->email) && !empty($res->error->email));
+        $this->assertTrue(is_array($res->error->password) && !empty($res->error->password));
+    }
+ 
+
 }

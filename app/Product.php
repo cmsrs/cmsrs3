@@ -352,6 +352,12 @@ class Product extends Model
         return $out;
     }
 
+    public function getProductWithTranslatesContentsAndImages()
+    {
+        $product = $this->with(['translates', 'contents'])->first();
+        return $this->getProductDataByProductArr( $product );
+    }
+
     private function getAllProductsWithTranslates()
     {
         return Product::with(['translates', 'contents'])->orderBy('id', 'asc')->get();
