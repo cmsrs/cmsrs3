@@ -1873,12 +1873,24 @@ class ProductTest extends Base
      * pagination products
      */
     public function test_it_will_get_many_products_with_pagination()
-    {
-                
+    {                
         $this->setTestData();
         $numbersOfProducts = 32;
         $this->createProducts( $numbersOfProducts );
 
+        $lang = 'en';
+        $column = 'product_name';
+        $direction = 'desc';
+
+        $response = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token);
+        $res = $response->getData();
+
+        $this->assertEquals(1, $res->data->current_page);
+
+        $firstEl = reset($res->data->data);
+        $this->assertEquals( 'php3 db app_9', $firstEl->product_name  );
+
+        /*
         $this->markTestSkipped("todo");
         
         $this->createManyClients( $numbersOfClients );
@@ -1930,6 +1942,7 @@ class ProductTest extends Base
         $this->assertEquals($lastClient['email'],  $res2->data->data[9]->email );
 
         $this->assertTrue($firstId < $lastId);
+        */
     }
 
     public function test_it_will_get_many_products_with_pagination_and_sort()

@@ -7,6 +7,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 
 class Product extends Model
 {
@@ -62,6 +64,26 @@ class Product extends Model
             'price',
             'page_id'
         ];  
+    }
+
+    public function  getPaginationItems($lang, $column, $direction)
+    {
+        $products = $this->with(['translates' => function ($query) use ($lang) {
+            $query->where('lang', $lang)->where('column', 'product_name');
+        }])
+        ->get();
+
+        $products->each(function ($product) {
+            $firstTranslation = $product->translates->first();
+            unset($product["translates"]);
+            $product->product_name = $firstTranslation ? $firstTranslation->value : null;
+        });
+
+        $products =  ($direction == 'desc') ? $products->sortByDesc($column) : $products->sortBy($column);
+
+        $perPage = Config::getPagination(); 
+        $page = Paginator::resolveCurrentPage() ?: 1;
+        return new LengthAwarePaginator($products->forPage($page, $perPage), $products->count(), $perPage, $page, []);
     }
 
 

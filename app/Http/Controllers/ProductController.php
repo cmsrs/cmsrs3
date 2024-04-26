@@ -41,6 +41,14 @@ class ProductController extends Controller
         return response()->json(['success' => true, 'data'=> $data], 200);
     }
 
+    public function getItemsWithPaginateAndSort(Request $request, $lang, $column, $direction) 
+    {
+
+        $products = (new Product)->getPaginationItems($lang, $column, $direction);
+
+        return response()->json(['success' => true, 'data'=> $products], 200);
+    }
+
 
     public function index()
     {

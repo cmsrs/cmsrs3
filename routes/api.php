@@ -49,6 +49,7 @@ if($demoStatus){
 
         Route::get($apiSecret.'products', 'ProductController@index');
         Route::get($apiSecret.'products/{id}', 'ProductController@getItem');
+        Route::get($apiSecret.'products/pagination/{lang}/{column}/{direction}', 'ProductController@getItemsWithPaginateAndSort');
 
         Route::get($apiSecret.'contacts', 'ContactController@index');            
         Route::get($apiSecret.'checkouts', 'CheckoutController@index');                
@@ -101,6 +102,7 @@ if($demoStatus){
         Route::get($apiSecret.'products', 'ProductController@index');
         Route::post($apiSecret.'products', 'ProductController@create');
         Route::get($apiSecret.'products/{id}', 'ProductController@getItem');
+        Route::get($apiSecret.'products/pagination/{lang}/{column}/{direction}', 'ProductController@getItemsWithPaginateAndSort');
         Route::put($apiSecret.'products/{id}', 'ProductController@update');
         Route::delete($apiSecret.'products/{id}', 'ProductController@delete');
 
