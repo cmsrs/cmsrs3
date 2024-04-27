@@ -7,10 +7,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 
-class Product extends Model
+class Product extends Base
 {
     private $translate;
     private $content;
@@ -30,6 +28,17 @@ class Product extends Model
         'page_id' => 'integer'
     ];
 
+    public $columnsAllowedToSort = [
+        'id',
+        'published',
+        'product_name', //from translate
+        'page_short_title', //from translate - derive from page_id
+        'sku',
+        'price',
+        'created_at',
+        'updated_at'
+    ];
+
     public function page()
     {
         return $this->hasOne('App\Page', 'id', 'page_id');
@@ -44,6 +53,11 @@ class Product extends Model
     {
         return $this->hasMany('App\Translate');
     } 
+
+    public function translatesPage()
+    {
+        return $this->hasMany('App\Translate', 'page_id', 'page_id');
+    }
 
     public function contents()
     {
@@ -70,6 +84,8 @@ class Product extends Model
     {
         $products = $this->with(['translates' => function ($query) use ($lang) {
             $query->where('lang', $lang)->where('column', 'product_name');
+        }])->with(['translatesPage'  => function ($query) use ($lang) {
+            $query->where('lang', $lang)->where('column', 'short_title');                
         }])
         ->get();
 
@@ -77,13 +93,17 @@ class Product extends Model
             $firstTranslation = $product->translates->first();
             unset($product["translates"]);
             $product->product_name = $firstTranslation ? $firstTranslation->value : null;
+
+            $firstTranslationPage = $product->translatesPage->first();
+            unset($product["translatesPage"]);
+            $product->page_short_title = $firstTranslationPage ? $firstTranslationPage->value : null;
         });
 
-        $products =  ($direction == 'desc') ? $products->sortByDesc($column) : $products->sortBy($column);
+        //dump( $products->toArray() );
+        //dd('_______________');
 
-        $perPage = Config::getPagination(); 
-        $page = Paginator::resolveCurrentPage() ?: 1;
-        return new LengthAwarePaginator($products->forPage($page, $perPage), $products->count(), $perPage, $page, []);
+        $products =  ($direction == 'desc') ? $products->sortByDesc($column) : $products->sortBy($column);
+        return $this->getPaginationFromCollection($products);
     }
 
 

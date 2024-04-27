@@ -140,7 +140,6 @@ class ProductTest extends Base
         $res = $this->get('api/pages/type/' . $type . '?token=' . $this->token);
 
         $data = $res->getData();
-
         
         $this->assertTrue($data->success);
         $pageId = null;
@@ -150,6 +149,8 @@ class ProductTest extends Base
                 break;
             }
         }
+        //dd($pageId);
+
         $this->assertNotEmpty($pageId);
 
         //$data->data[1]
@@ -1846,6 +1847,21 @@ class ProductTest extends Base
         return $res->data->productId;
     }
 
+    private function createProduct2( $i = 1 )
+    {
+        $d =  $this->testData2;
+        $d["product_name"]["en"] = $this->testData2["product_name"]["en"]."_".$i;
+        $d["sku"] = $this->testData2["sku"]."_".$i;
+        $d["price"] = 200 + $i;
+        $d["product_description"]["en"] = $this->testData2["product_description"]["en"]."_".$i;
+        
+        $res0 = $this->post('api/products?token=' . $this->token, $d);
+        $res = $res0->getData();    
+        $this->assertTrue($res->success);
+        $this->assertNotEmpty($res->data->productId);
+        return $res->data->productId;
+    }
+
     private function createProducts( $nu )
     {
         for($i=1; $i<=$nu; $i++){
@@ -1878,7 +1894,12 @@ class ProductTest extends Base
         $numbersOfProducts = 32;
         $this->createProducts( $numbersOfProducts );
 
+        $this->setTestData2();
+        $this->createProduct2();
+
         $lang = 'en';
+
+        /*product_name test */
         $column = 'product_name';
         $direction = 'desc';
 
@@ -1889,6 +1910,19 @@ class ProductTest extends Base
 
         $firstEl = reset($res->data->data);
         $this->assertEquals( 'php3 db app_9', $firstEl->product_name  );
+
+        /*page_short_title test */
+        $column = 'page_short_title';
+        $direction = 'desc';
+
+        $response = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token);
+        $res = $response->getData();
+
+        $this->assertEquals(1, $res->data->current_page);
+
+        $firstEl = reset($res->data->data);
+        $this->assertEquals( 'page2', $firstEl->page_short_title  );
+
 
         /*
         $this->markTestSkipped("todo");

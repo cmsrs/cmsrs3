@@ -105,4 +105,12 @@ class Base extends Model
         }
         return $out;
     }
+
+    protected function getPaginationFromCollection($collection)
+    {
+        $perPage = Config::getPagination(); 
+        $page = \Illuminate\Pagination\Paginator::resolveCurrentPage() ?: 1;
+        return new \Illuminate\Pagination\LengthAwarePaginator($collection->forPage($page, $perPage), $collection->count(), $perPage, $page, []);
+    }
+
 }
