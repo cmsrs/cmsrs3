@@ -56,7 +56,7 @@ class UserController extends Controller
                 return $query->where(function($query) use ($search) {
                     $query->where('name', 'like', $search)
                         ->orWhere('email', 'like', $search)
-                        ->orWhere('created_at', 'like', $search) //todo - show only date without time and 'T'
+                        //->orWhere('created_at', 'like', $search) //todo - show only date without time and 'T' or 'Z'
                         ;
                 });
             })

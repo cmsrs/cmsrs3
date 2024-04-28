@@ -44,7 +44,37 @@ class ProductController extends Controller
     public function getItemsWithPaginateAndSort(Request $request, $lang, $column, $direction) 
     {
 
-        $products = (new Product)->getPaginationItems($lang, $column, $direction);
+        // $search = $request->input('search', null);
+        // if($search){
+        //     $search = '%'.trim($search).'%';
+        // }
+
+        $objProduct = new Product;
+
+        if (!in_array($lang, (new Config)->arrGetLangs())) {
+            return response()->json([
+                'success'=> false, 
+                'error'=> 'wrong lang in url'
+            ], 404);
+        }
+
+        if ( !in_array( $column, $objProduct->columnsAllowedToSort ) ) {
+            return response()->json([
+                'success'=> false, 
+                'error'=> 'available columns to sort products: '.implode( ',', $objProduct->columnsAllowedToSort)
+            ], 404);
+        }
+
+        if ( !in_array( $direction, Config::getAvailableSortingDirection() ) ) {
+            return response()->json([
+                'success'=> false, 
+                'error'=> 'available direction to sort: '.implode( ',', Config::getAvailableSortingDirection())
+            ], 404);
+        }
+
+
+
+        $products = $objProduct->getPaginationItems($lang, $column, $direction);
 
         return response()->json(['success' => true, 'data'=> $products], 200);
     }

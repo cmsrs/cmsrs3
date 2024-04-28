@@ -15,6 +15,7 @@ use App\Image;
 use App\Product;
 use App\Translate;
 use App\Content;
+use App\Config;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
@@ -2008,6 +2009,59 @@ class ProductTest extends Base
         $this->assertEquals( $id1-$pagination, $firstEl2->id );
     }
 
+    public function test_restrict_products_sorted_columns_to_specific_names()
+    {
+        $this->setTestData();
+        $numbersOfProducts = 1;
+        $this->createProducts( $numbersOfProducts );
+
+        $lang = 'en';    
+        $column = 'fake';
+        $direction = 'desc';
+
+        $response = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token);
+        $res = $response->getData();
+
+        $objProduct = new Product;
+        $this->assertEquals(404, $response->status());
+        $response->assertJson([
+            'success'=> false,
+            'error' => 'available columns to sort products: '.implode( ',', $objProduct->columnsAllowedToSort )
+        ]);        
+    }
+
+    public function test_restrict_products_sorted_direction_to_specific_names()
+    {
+        $lang = 'en';    
+        $column = 'id';
+        $direction = 'fake';
+
+        $response = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token);
+        $res = $response->getData();
+
+        $this->assertEquals(404, $response->status());
+        $response->assertJson([
+            'success'=> false,
+            'error' => 'available direction to sort: '.implode( ',', Config::getAvailableSortingDirection())
+        ]);        
+    }
+
+    public function test_restrict_products_sorted_to_specific_langs()
+    {
+        $lang = 'enn_fake';    
+        $column = 'id';
+        $direction = 'asc';
+
+        $response = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token);
+        $res = $response->getData();
+
+        $this->assertEquals(404, $response->status());
+        $response->assertJson([
+            'success'=> false,
+            'error' => 'wrong lang in url'
+        ]);        
+    }
+
 
     public function test_it_will_get_many_products_with_pagination_and_sort()
     {
@@ -2036,34 +2090,6 @@ class ProductTest extends Base
         $this->assertEquals($lastId,  $firstClient['id'] );        
     }
     
-    public function test_restrict_products_sorted_columns_to_specific_names()
-    {
-        $this->markTestSkipped("todo");
-
-        $response = $this->get('api/clients/fake/desc?token='.$this->token);  
-        $objUser = new User;
-
-        $this->assertEquals(404, $response->status());
-        $response->assertJson([
-            'success'=> false,
-            'error' => 'available columns to sort clients: '.implode( ',', $objUser->columnsAllowedToSort )
-        ]);        
-
-    }
-
-    public function test_restrict_products_sorted_direction_to_specific_names()
-    {
-        $this->markTestSkipped("todo");
-
-        $response = $this->get('api/clients/id/fake?token='.$this->token);  
-
-        $this->assertEquals(404, $response->status());
-        $response->assertJson([
-            'success'=> false,
-            'error' => 'available direction to sort: '.implode( ',', Config::getAvailableSortingDirection())
-        ]);        
-
-    }
 
     public function test_sort_products_by_all_columns()
     {
