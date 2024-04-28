@@ -1940,7 +1940,7 @@ class ProductTest extends Base
         $this->assertEquals(1, $res->data->current_page);
 
         $firstEl = reset($res->data->data);
-        $this->assertEquals( 33, $firstEl->id );
+        $this->assertEquals( Product::All()->last()->id, $firstEl->id );
 
         /*published test */
         $column = 'published';
@@ -1996,7 +1996,7 @@ class ProductTest extends Base
 
         $firstEl = reset($res->data->data);
 
-        $id1 = 33;
+        $id1 = Product::All()->last()->id;
         $this->assertEquals( $id1, $firstEl->id );
 
         $response2 = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?page=2&token='.$this->token);
