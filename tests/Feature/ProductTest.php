@@ -1854,6 +1854,7 @@ class ProductTest extends Base
         $d["sku"] = $this->testData2["sku"]."_".$i;
         $d["price"] = 200 + $i;
         $d["product_description"]["en"] = $this->testData2["product_description"]["en"]."_".$i;
+        $d["published"] = 0;
         
         $res0 = $this->post('api/products?token=' . $this->token, $d);
         $res = $res0->getData();    
@@ -1924,60 +1925,59 @@ class ProductTest extends Base
         $this->assertEquals( 'page2', $firstEl->page_short_title  );
 
 
-        /*
-        $this->markTestSkipped("todo");
-        
-        $this->createManyClients( $numbersOfClients );
-        $users = User::all()->toArray();
-        $this->assertEquals(2 + $numbersOfClients , count($users)); //2 users - one admin, second client
-        
-        $response = $this->get('api/clients/id/asc?token='.$this->token);
+        /*id test */
+        $column = 'id';
+        $direction = 'desc';
+
+        $response = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token);
         $res = $response->getData();
-        $this->assertTrue($res->success);
-        //dd($res->data);
 
-        $firstClient = $this->getTestClient();
+        $this->assertEquals(1, $res->data->current_page);
 
-        $firstId = $res->data->data[0]->id; 
-        $this->assertNotEmpty($firstId);
-        $this->assertNotEmpty( $res->data->data[0]->id);
-        $this->assertEquals( $firstClient['name'],  $res->data->data[0]->name);        
-        $this->assertEquals( $firstClient['email'],  $res->data->data[0]->email);
-        $this->assertNotEmpty( $res->data->data[0]->created_at);
-        $this->assertNotEmpty( $res->data->data[0]->updated_at);
+        $firstEl = reset($res->data->data);
+        $this->assertEquals( 33, $firstEl->id );
 
-        //$this->assertEquals(1 + $numbersOfClients ,$res->data->total);  //without admin - it is 100, in simplePaginate it is not occur
-        $this->assertEquals($this->pagination ,$res->data->per_page);
+        /*published test */
+        $column = 'published';
+        $direction = 'asc';
 
-        $this->assertEquals(1 ,$res->data->current_page);
-        $this->assertTrue(str_contains($res->data->first_page_url, 'api/clients/id/asc?page=1'));        
-        $this->assertEquals(null ,$res->data->prev_page_url);        
-        $this->assertTrue(str_contains($res->data->next_page_url, 'api/clients/id/asc?page=2'));
+        $response = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token);
+        $res = $response->getData();
 
-        //get last page
-        $lastPage = ($numbersOfClients + 1) / $res->data->per_page;
-        if($numbersOfClients == 99){
-            $this->assertEquals(10,  $lastPage);
-        }
-        $response2 = $this->get('api/clients/id/asc?page='.$lastPage.'&token='.$this->token);
-        $res2 = $response2->getData();
-        $this->assertTrue($res2->success);
-        //dd($res2->data);
+        $this->assertEquals(1, $res->data->current_page);
 
-        $this->assertEquals($lastPage ,$res2->data->current_page);
-        $this->assertTrue(str_contains($res2->data->first_page_url, 'api/clients/id/asc?page=1'));        
-        $this->assertTrue(str_contains($res2->data->prev_page_url, 'api/clients/id/asc?page='.( $lastPage - 1 ) )); //9
-        $this->assertEquals(null ,$res2->data->next_page_url);
-        
+        $firstEl = reset($res->data->data);
+        $this->assertEquals( 'page2', $firstEl->page_short_title  );
+        $this->assertEquals( '0', $firstEl->published  );
 
-        $lastClient = $this->getTestClient($numbersOfClients);
-        $lastId = $res->data->data[9]->id; 
-        $this->assertNotEmpty($lastId);
-        $this->assertEquals($lastClient['email'],  $res2->data->data[9]->email );
+        /*sku test */
+        $column = 'sku';
+        $direction = 'desc';
 
-        $this->assertTrue($firstId < $lastId);
-        */
+        $response = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token);
+        $res = $response->getData();
+
+        $this->assertEquals(1, $res->data->current_page);
+
+        $firstEl = reset($res->data->data);
+        $this->assertEquals( 'AN/34534_9', $firstEl->sku  );
+
+        /*price test */
+        $column = 'price';
+        $direction = 'desc';
+
+        $response = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token);
+        $res = $response->getData();
+
+        $this->assertEquals(1, $res->data->current_page);
+
+        $firstEl = reset($res->data->data);
+        $this->assertEquals( 'page2', $firstEl->page_short_title  );
+        $this->assertEquals( '201', $firstEl->price  );        
     }
+
+
+    
 
     public function test_it_will_get_many_products_with_pagination_and_sort()
     {
