@@ -1886,18 +1886,22 @@ class ProductTest extends Base
         $this->assertEquals( $this->testData["page_id"], $res->data->page_id );
     }
 
-    /**
-     * pagination products
-     */
-    public function test_it_will_get_many_products_with_pagination()
-    {                
+    private function setFakeData()
+    {
         $this->setTestData();
         $numbersOfProducts = 32;
         $this->createProducts( $numbersOfProducts );
 
         $this->setTestData2();
         $this->createProduct2();
+    }
 
+    /**
+     * pagination products
+     */
+    public function test_it_will_get_many_products_with_pagination()
+    {                
+        $this->setFakeData();
         $lang = 'en';
 
         /*product_name test */
@@ -1976,8 +1980,34 @@ class ProductTest extends Base
         $this->assertEquals( '201', $firstEl->price  );        
     }
 
+    public function test_it_will_get_next_pagination_page()
+    {                
+        $this->setFakeData();
+        $lang = 'en';
+        /*id test */
+        $column = 'id';
+        $direction = 'desc';
 
-    
+        $response = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token);
+        $res = $response->getData();
+
+        $this->assertEquals(1, $res->data->current_page);
+
+        $firstEl = reset($res->data->data);
+
+        $id1 = 33;
+        $this->assertEquals( $id1, $firstEl->id );
+
+        $response2 = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?page=2&token='.$this->token);
+        $res2 = $response2->getData();
+
+        $this->assertEquals(2, $res2->data->current_page);
+
+        $firstEl2 = reset($res2->data->data);
+        $pagination = getenv('PAGINATION');
+        $this->assertEquals( $id1-$pagination, $firstEl2->id );
+    }
+
 
     public function test_it_will_get_many_products_with_pagination_and_sort()
     {
