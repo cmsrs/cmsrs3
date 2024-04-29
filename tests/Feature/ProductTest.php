@@ -2115,10 +2115,14 @@ class ProductTest extends Base
         $direction = 'asc';
 
         $search = 'app_1';        
-        
-        $response = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token.'&search='.$search);
 
+        $url = 'api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token.'&search='.$search;
+        $response = $this->get($url);
+        
         $res = $response->getData();
+
+        //print_r($url."\n");
+        //print_r($res);
 
         $this->assertTrue($res->success);
         $dd = $res->data->data;
