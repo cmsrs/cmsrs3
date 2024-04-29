@@ -677,7 +677,7 @@ class ProductTest extends Base
         /* prepare data - stop */
 
         $lang = 'en';
-        $response = $this->get('api/productsGetNameAndPrice/'.$lang);
+        $response = $this->get('api/productsGetNameAndPrice/'.$lang); //TODO - add to docs
 
         //dd($response);
         $data = $response->getData();
@@ -1369,7 +1369,7 @@ class ProductTest extends Base
         $this->assertEquals($data->data[0]->title->en, $this->testPage['title']['en']);
     }
 
-    public function test_it_will_check_uniq_product_name_add_action()
+    public function test_it_will_check_uniq_product_name_add_action() //error
     {
         $this->setTestData();
         $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
@@ -1386,6 +1386,48 @@ class ProductTest extends Base
         $this->assertNotEmpty($res1->error);      
         $this->assertTrue(strpos($res1->error, 'Duplicate product name') === 0);
     }    
+
+    public function test_it_add_product_case1_error_docs() //error
+    {
+        $this->setTestData();
+        $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
+
+        $res0 = $response0->getData();
+        $this->assertTrue($res0->success);        
+
+        $this->testData['price'] = '';
+        $response1 = $this->post('api/products?token=' . $this->token, $this->testData);
+
+        $res1 = $response1->getData();
+
+        //print_r($res1);
+
+        $this->assertFalse($res1->success);
+        $this->assertNotEmpty($res1->error->sku[0]);      
+        $this->assertNotEmpty($res1->error->price[0]);      
+        $this->assertNotEmpty($res1->error->price[1]);
+    }    
+
+    public function test_it_add_product_case2_error_docs() //error
+    {
+        $this->setTestData();
+        $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
+
+        $res0 = $response0->getData();
+        $this->assertTrue($res0->success);        
+
+        $this->testData['sku'] = 'uniq1';
+        $this->testData['price'] = '1';
+        $response1 = $this->post('api/products?token=' . $this->token, $this->testData);
+
+        $res1 = $response1->getData();
+
+        //print_r($res1);
+
+        $this->assertFalse($res1->success);
+        $this->assertTrue(strpos($res1->error, 'Duplicate product name') === 0);
+    }    
+
 
     public function test_it_will_check_uniq_product_name_update_action()
     {
@@ -2129,31 +2171,5 @@ class ProductTest extends Base
         $this->assertEquals(2, count($dd));
     }
 
-
-    public function test_validate_add_product_error_docs()
-    {
-        $this->markTestSkipped("todo");
-
-        $users = User::all()->toArray();
-        $someExistingEmail = $users[0]['email'];
-        $this->assertNotEmpty($someExistingEmail);
-
-        $pass = 's';
-        $testClient =
-        [
-            //'name' => 't',
-            'email' => $someExistingEmail,
-            'password' => '1',
-            'password_confirmation' => 'q'
-        ];
-    
-        $response = $this->post('api/clients?token='.$this->token, $testClient);
-        $res = $response->getData();
-        $this->assertFalse($res->success);
-
-        $this->assertTrue(is_array($res->error->name) && !empty($res->error->name));
-        $this->assertTrue(is_array($res->error->email) && !empty($res->error->email));
-        $this->assertTrue(is_array($res->error->password) && !empty($res->error->password));
-    }
  
 }
