@@ -80,8 +80,8 @@ class Product extends Base
         ];  
     }
 
-    public function  getPaginationItems($lang, $column, $direction)
-    {
+    public function  getPaginationItems($lang, $column, $direction, $search)
+    {        
         $products = $this->with(['translates' => function ($query) use ($lang) {
             $query->where('lang', $lang)->where('column', 'product_name');
         }])->with(['translatesPage'  => function ($query) use ($lang) {
@@ -93,15 +93,22 @@ class Product extends Base
             $firstTranslation = $product->translates->first();
             unset($product["translates"]);
             $product->product_name = $firstTranslation ? $firstTranslation->value : null;
-
+        
             $firstTranslationPage = $product->translatesPage->first();
             unset($product["translatesPage"]);
-            $product->page_short_title = $firstTranslationPage ? $firstTranslationPage->value : null;
+            $product->page_short_title = $firstTranslationPage ? $firstTranslationPage->value : null;        
         });
-
-        //dump( $products->toArray() );
-        //dd('_______________');
-
+        
+        if($search){
+            $search = trim($search);
+            $products = $products->filter(function ($product) use ($search) {
+                $productNameContainsSearch = str_contains(trim($product->product_name), $search);
+                $skuContainsSearch = str_contains(trim($product->sku), $search);
+        
+                return $productNameContainsSearch || $skuContainsSearch;
+            });//->values()->toArray();  //reset keys - start from 0
+        }
+    
         $products =  ($direction == 'desc') ? $products->sortByDesc($column) : $products->sortBy($column);
         return $this->getPaginationFromCollection($products);
     }

@@ -43,11 +43,7 @@ class ProductController extends Controller
 
     public function getItemsWithPaginateAndSort(Request $request, $lang, $column, $direction) 
     {
-
-        // $search = $request->input('search', null);
-        // if($search){
-        //     $search = '%'.trim($search).'%';
-        // }
+        $search = $request->input('search', null);
 
         $objProduct = new Product;
 
@@ -72,9 +68,7 @@ class ProductController extends Controller
             ], 404);
         }
 
-
-
-        $products = $objProduct->getPaginationItems($lang, $column, $direction);
+        $products = $objProduct->getPaginationItems($lang, $column, $direction, $search);
 
         return response()->json(['success' => true, 'data'=> $products], 200);
     }

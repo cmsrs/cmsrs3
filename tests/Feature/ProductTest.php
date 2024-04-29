@@ -115,7 +115,7 @@ class ProductTest extends Base
     /**
      * the same menu as setTestData
      */
-    private function setTestData2()
+    private function setTestData2( $arrD = null )
     {
         //$menu = (new Menu)->wrapCreate($this->testMenu);
 
@@ -164,7 +164,7 @@ class ProductTest extends Base
 
         $this->testData2 = [
             'product_name' => [ 'en' =>  self::STR_PRODUCT_NAME_EN.' 2' ],
-            'sku' => 'AN/34534_22',
+            'sku' =>  !empty($arrD['sku']) ? $arrD['sku'] : 'AN/34534_22',
             'price' => 123,
             'product_description' =>  [ 'en'  =>  self::STR_PRODUCT_DESCRIPION_EN.' 2' ] ,
             'page_id' => $pageId,
@@ -1845,7 +1845,7 @@ class ProductTest extends Base
         $res = $res0->getData();    
         $this->assertTrue($res->success);
         $this->assertNotEmpty($res->data->productId);
-        return $res->data->productId;
+        return $res->data; //->productId;
     }
 
     private function createProduct2( $i = 1 )
@@ -1861,7 +1861,7 @@ class ProductTest extends Base
         $res = $res0->getData();    
         $this->assertTrue($res->success);
         $this->assertNotEmpty($res->data->productId);
-        return $res->data->productId;
+        return $res->data; //->productId;
     }
 
     private function createProducts( $nu )
@@ -1877,13 +1877,13 @@ class ProductTest extends Base
     public function test_get_product_by_given_id_docs() 
     {
         $this->setTestData();
-        $productId = $this->createProduct();
+        $d = $this->createProduct();
 
-        $response = $this->get('api/products/'.$productId.'?token='.$this->token);
+        $response = $this->get('api/products/'.$d->productId.'?token='.$this->token);
         $res = $response->getData();
 
         $this->assertTrue($res->success);
-        $this->assertEquals( $productId, $res->data->id );
+        $this->assertEquals( $d->productId, $res->data->id );
         $this->assertEquals( $this->testData["page_id"], $res->data->page_id );
     }
 
@@ -2062,88 +2062,73 @@ class ProductTest extends Base
         ]);        
     }
 
-
-    public function test_it_will_get_many_products_with_pagination_and_sort()
+    public function test_search_products_by_sku()
     {
-        $this->markTestSkipped("todo");
+        $this->setTestData();
+        $this->setTestData2();
 
-        $numbersOfClients = 99;
-        $this->createManyClients( $numbersOfClients );
-        $users = User::where('role', User::$role['client'])->orderBy('id', 'asc')->get()->toArray();
+        $product1a = $this->createProduct(1);
+        $product1b = $this->createProduct(2);        
+        $product2 = $this->createProduct2();
 
-        $response = $this->get('api/clients/id/desc?token='.$this->token);
+        $sku1a = $product1a->data->sku;
+        $sku1b = $product1b->data->sku;
+        $sku2 = $product2->data->sku;
+        //dump($sku1a, $sku1b, $sku2);
+
+        $lang = 'en';    
+        $column = 'sku';
+        $direction = 'asc';
+
+        $skuSearch = 'AN/34534_2';        
+        
+        $response = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token.'&search='.$skuSearch);
+
         $res = $response->getData();
+
         $this->assertTrue($res->success);
 
-        $lastPage = ($numbersOfClients + 1) / $res->data->per_page;
-        $response2 = $this->get('api/clients/id/desc?page='.$lastPage.'&token='.$this->token);
-        $res2 = $response2->getData();
-        $this->assertTrue($res2->success);
+        //print_r( $res->data);
+        //dd('++++++++++++++++++++');
 
-        $firstClient = $users[0];
-        $lastClient =  $users[count($users)-1];
-
-        $firstId = $res->data->data[0]->id;  
-        $lastId = $res2->data->data[9]->id; 
-
-        $this->assertEquals($firstId,  $lastClient['id'] );
-        $this->assertEquals($lastId,  $firstClient['id'] );        
+        $dd = (array) $res->data->data;
+        $this->assertEquals(2, count($dd));
+        //$this->assertEquals($sku1b, $res->data->data[0]->sku);        
+        //$this->assertEquals($sku2, $res->data->data[1]->sku);                        
     }
-    
 
-    public function test_sort_products_by_all_columns()
-    {
-        $this->markTestSkipped("todo");
-
-        $numbersOfClients = 99;
-        $this->createManyClients( $numbersOfClients );
-
-        $objUser = new User;
-        $this->assertNotEmpty(count($objUser->columnsAllowedToSort));
-        foreach ($objUser->columnsAllowedToSort as  $columnName ){
-            $users = User::where('role', User::$role['client'])->orderBy($columnName, 'desc')->get()->toArray();
-            $firstClient = $users[0];
-    
-            $response = $this->get("api/clients/$columnName/desc?token=".$this->token);
-            $res = $response->getData();
-            $this->assertTrue($res->success);
-    
-            $firstName = $res->data->data[0]->{$columnName};
-    
-            $this->assertEquals($firstName, $firstClient[$columnName]);        
-    
-        }
-    }
 
     public function test_search_products_by_many_columns_docs()
     {
-        $this->markTestSkipped("todo");
+        $this->setTestData();
+        $d['sku'] = 'app_1';
+        $this->setTestData2( $d );
 
-        $name1 = 'First Abc Kowalski';
-        $name2 = 'Fake Kowalski';
-        User::create([            
-            'name' => $name1,
-            'email' => 'fake@example.com',
-            'password' => Hash::make('password'),
-            'role' => User::$role['client']
-        ]);
+        $product1a = $this->createProduct(1);
+        $product1b = $this->createProduct(2);        
+        $product2 = $this->createProduct2();
 
-        User::create([
-            'name' => $name2,
-            'email' => 'sth@abc-example.com',
-            'password' => Hash::make('password'),
-            'role' => User::$role['client']
-        ]);
+        $sku1a = $product1a->data->sku;
+        $sku1b = $product1b->data->sku;
+        $sku2 = $product2->data->sku;
+        //dd($sku1a, $sku1b, $sku2);
 
-        $response = $this->get('api/clients/id/desc?token='.$this->token.'&search= aBC ');
+        $lang = 'en';    
+        $column = 'sku';
+        $direction = 'asc';
+
+        $search = 'app_1';        
+        
+        $response = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token.'&search='.$search);
+
         $res = $response->getData();
 
         $this->assertTrue($res->success);
 
-        $this->assertEquals(2, count($res->data->data));
-        $this->assertEquals($name2, $res->data->data[0]->name);        
-        $this->assertEquals($name1, $res->data->data[1]->name);                
+        $dd = (array) $res->data->data;
+        $this->assertEquals(2, count($dd));
     }
+
 
     public function test_validate_add_product_error_docs()
     {
