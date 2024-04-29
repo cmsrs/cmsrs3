@@ -2088,13 +2088,10 @@ class ProductTest extends Base
 
         $this->assertTrue($res->success);
 
-        //print_r( $res->data);
-        //dd('++++++++++++++++++++');
-
-        $dd = (array) $res->data->data;
+        $dd = $res->data->data;
         $this->assertEquals(2, count($dd));
-        //$this->assertEquals($sku1b, $res->data->data[0]->sku);        
-        //$this->assertEquals($sku2, $res->data->data[1]->sku);                        
+        $this->assertEquals($sku1b, $dd[0]->sku);        
+        $this->assertEquals($sku2, $dd[1]->sku);                        
     }
 
 
@@ -2124,8 +2121,7 @@ class ProductTest extends Base
         $res = $response->getData();
 
         $this->assertTrue($res->success);
-
-        $dd = (array) $res->data->data;
+        $dd = $res->data->data;
         $this->assertEquals(2, count($dd));
     }
 

@@ -106,7 +106,8 @@ class Product extends Base
                 $skuContainsSearch = str_contains(trim($product->sku), $search);
         
                 return $productNameContainsSearch || $skuContainsSearch;
-            });//->values()->toArray();  //reset keys - start from 0
+            });
+            $products = $products->values();//reset keys - start from 0
         }
     
         $products =  ($direction == 'desc') ? $products->sortByDesc($column) : $products->sortBy($column);
