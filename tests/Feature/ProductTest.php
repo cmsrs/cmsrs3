@@ -2263,7 +2263,7 @@ class ProductTest extends Base
     }
 
 
-    public function test_search_products_by_many_columns_docs()
+    public function test_search_products_by_many_columns_pagination_docs()
     {
         $this->setTestData();
         $d['sku'] = 'app_1';
@@ -2295,6 +2295,18 @@ class ProductTest extends Base
         $this->assertTrue($res->success);
         $dd = $res->data->data;
         $this->assertEquals(2, count($dd));
+        $this->assertNotEmpty($dd[0]->id);
+        $this->assertNotEmpty($dd[0]->sku);
+        $this->assertNotEmpty($dd[0]->price);
+        $this->assertNotEmpty($dd[0]->published);
+        $this->assertNotEmpty($dd[0]->page_id);
+        $this->assertNotEmpty($dd[0]->created_at);
+        $this->assertNotEmpty($dd[0]->updated_at);
+        $this->assertNotEmpty($dd[0]->product_name);
+        $this->assertNotEmpty($dd[0]->page_short_title);
+        $this->assertNotEmpty($dd[0]->images);
+        $this->assertTrue( is_array($dd[0]->images) );
+
     }
 
  

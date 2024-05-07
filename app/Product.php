@@ -97,6 +97,7 @@ class Product extends Base
             $firstTranslationPage = $product->translatesPage->first();
             unset($product["translatesPage"]);
             $product->page_short_title = $firstTranslationPage ? $firstTranslationPage->value : null;        
+            //$product->images = Image::getImagesAndThumbsByTypeAndRefId('product', $product->id);
         });
         
         if($search){
@@ -111,7 +112,14 @@ class Product extends Base
         }
     
         $products =  ($direction == 'desc') ? $products->sortByDesc($column) : $products->sortBy($column);
-        return $this->getPaginationFromCollection($products->values()); //values() - reset keys
+        $productsPagination =  $this->getPaginationFromCollection($products->values()); //values() - reset keys
+
+        //For optimization purposes, we only retrieve images for products on the given page.    
+        $productsPagination->each(function ($product) {
+            $product->images = Image::getImagesAndThumbsByTypeAndRefId('product', $product->id);
+        });        
+        
+        return $productsPagination;
     }
 
 
