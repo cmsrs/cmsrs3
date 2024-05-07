@@ -2140,6 +2140,68 @@ class ProductTest extends Base
         $this->assertEquals($res->data->data[2]->sku, "AN/34534_1" );
     }
 
+    public function test_sort_products_by_name()
+    {
+        $this->setTestData();
+        $this->setTestData2();
+
+        $product1a = $this->createProduct(1);
+        $product1b = $this->createProduct(2);        
+        $product2 = $this->createProduct2();
+
+        $lang = 'en';
+        $column = 'product_name';
+        
+        $direction = 'asc';        
+        $response0 = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token);
+
+        $res0 = $response0->getData();
+                
+        $this->assertEquals($res0->data->data[0]->product_name,   "php3 db app 2_1");
+        $this->assertEquals($res0->data->data[1]->product_name,   "php3 db app_1" );
+        $this->assertEquals($res0->data->data[2]->product_name,  "php3 db app_2" );        
+
+        $direction = 'desc';
+        $response = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token);
+
+        $res = $response->getData();
+
+        $this->assertEquals($res->data->data[0]->product_name, "php3 db app_2" );
+        $this->assertEquals($res->data->data[1]->product_name, "php3 db app_1" );
+        $this->assertEquals($res->data->data[2]->product_name, "php3 db app 2_1" );        
+    }
+
+    public function test_sort_products_by_price()
+    {
+        $this->setTestData();
+        $this->setTestData2();
+
+        $product1a = $this->createProduct(1);
+        $product1b = $this->createProduct(2);        
+        $product2 = $this->createProduct2();
+
+        $lang = 'en';
+        $column = 'price';
+        
+        $direction = 'asc';        
+        $response0 = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token);
+
+        $res0 = $response0->getData();
+                
+        $this->assertEquals($res0->data->data[0]->price,   101);
+        $this->assertEquals($res0->data->data[1]->price,   102 );
+        $this->assertEquals($res0->data->data[2]->price,  201 );        
+
+        $direction = 'desc';
+        $response = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token);
+
+        $res = $response->getData();
+
+        $this->assertEquals($res->data->data[0]->price, 201 );
+        $this->assertEquals($res->data->data[1]->price, 102 );
+        $this->assertEquals($res->data->data[2]->price, 101 );    
+    }
+
     public function test_search_products_by_sku()
     {
         $this->setTestData();
