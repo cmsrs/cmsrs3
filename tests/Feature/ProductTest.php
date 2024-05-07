@@ -2104,6 +2104,42 @@ class ProductTest extends Base
         ]);        
     }
 
+    public function test_sort_products_by_sku()
+    {
+        $this->setTestData();
+        $this->setTestData2();
+
+        $product1a = $this->createProduct(1);
+        $product1b = $this->createProduct(2);        
+        $product2 = $this->createProduct2();
+
+        $lang = 'en';
+        $column = 'sku';
+
+        $sku1a = $product1a->data->sku;
+        $sku1b = $product1b->data->sku;
+        $sku2 = $product2->data->sku;
+
+        
+        $direction = 'asc';        
+        $response0 = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token);
+
+        $res0 = $response0->getData();
+        $this->assertEquals($res0->data->data[0]->sku,   "AN/34534_1");
+        $this->assertEquals($res0->data->data[1]->sku,   "AN/34534_2" );
+        $this->assertEquals($res0->data->data[2]->sku,  "AN/34534_22_1" );
+        
+
+        $direction = 'desc';
+        $response = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token);
+
+        $res = $response->getData();
+
+        $this->assertEquals($res->data->data[0]->sku, "AN/34534_22_1" );
+        $this->assertEquals($res->data->data[1]->sku, "AN/34534_2" );
+        $this->assertEquals($res->data->data[2]->sku, "AN/34534_1" );
+    }
+
     public function test_search_products_by_sku()
     {
         $this->setTestData();

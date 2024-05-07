@@ -111,7 +111,7 @@ class Product extends Base
         }
     
         $products =  ($direction == 'desc') ? $products->sortByDesc($column) : $products->sortBy($column);
-        return $this->getPaginationFromCollection($products);
+        return $this->getPaginationFromCollection($products->values()); //values() - reset keys
     }
 
 
