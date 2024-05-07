@@ -2202,6 +2202,34 @@ class ProductTest extends Base
         $this->assertEquals($res->data->data[2]->price, 101 );    
     }
 
+    public function test_sort_products_by_published()
+    {
+        $this->setTestData();
+        $this->setTestData2();
+
+        $product1a = $this->createProduct(1);
+        $product1b = $this->createProduct(2);        
+        $product2 = $this->createProduct2();
+
+        $lang = 'en';
+        $column = 'published';
+        
+        $direction = 'asc';        
+        $response0 = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token);
+
+        $res0 = $response0->getData();
+                
+        $this->assertEquals($res0->data->data[0]->published,   0);
+
+        $direction = 'desc';
+        $response = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token);
+
+        $res = $response->getData();
+
+        $this->assertEquals($res->data->data[0]->published, 1 );
+    }
+
+
     public function test_search_products_by_sku()
     {
         $this->setTestData();
