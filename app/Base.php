@@ -111,7 +111,7 @@ class Base extends Model
         $perPage = Config::getPagination(); 
         $page = \Illuminate\Pagination\Paginator::resolveCurrentPage() ?: 1;
         return new \Illuminate\Pagination\LengthAwarePaginator(
-            $collection->forPage($page, $perPage), 
+            $collection->forPage($page, $perPage)->values(), 
             $collection->count(), 
             $perPage, 
             $page, 
