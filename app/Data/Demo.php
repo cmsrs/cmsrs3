@@ -652,7 +652,7 @@ class Demo
             'product_name' => [ 'en' => 'PHP5','pl' => 'PHP5' ],
             'sku' => '1/234/4',
             'price' => 3000,
-            'published' => 1,            
+            'published' => 0,            
             'product_description' =>  [ 'en' => 'Php5 book', 'pl' =>  'Ksiazka o PHP5' ],
             'page_id' => $p['p5']->id,
             'images' =>  $images['product2']
