@@ -78,11 +78,13 @@ class Base extends TestCase
         //print_r($menus->toArray());
         foreach ($menus as $menu) {
             $pagesPublishedAndAccess = $menu->pagesPublishedAndAccess()->get();
+            //dump($pagesPublishedAndAccess->published);
             if (1 == $pagesPublishedAndAccess->count()) {
                 $f0 = true;
                 $url[] = $pagesPublishedAndAccess->first()->getUrl($lang);
             } else {
                 foreach ($menu->pagesPublishedTree($pagesPublishedAndAccess) as $page) {
+                    //dump($page->published);
                     $url[] = $page->getUrl($lang);
                     $f1 = true;
                     if (!empty($page['children']) && !empty($page->published)) {
@@ -114,7 +116,7 @@ class Base extends TestCase
             $objProduct = Product::find($product['id']);
             $url = $objProduct->getProductUrl( $lang, $productName);
             $response = $this->get($url);
-            $response->assertStatus(200);
+            $response->assertStatus( empty($objProduct->published) ? 404 : 200);
         }
     }
 
@@ -149,6 +151,9 @@ class Base extends TestCase
                 $this->assertNotEmpty($pos, $pageTitle);
             }elseif ('shoppingsuccess' ==  $page->type){
                 $response->assertStatus(404);
+            }elseif ( !$page->published){
+                $response->assertStatus(404);
+                continue; //we don't need $numOfInPages - because this page has 404
             } else {
                 $response->assertStatus(200);
                 $pos = strpos($response->getContent(), $pageTitle);

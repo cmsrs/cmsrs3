@@ -370,6 +370,17 @@ class Demo
             'menu_id' => $m1->id
         ];
 
+        $data2pUnpublished = [
+            'title'     => [ "en" =>'Something page', "pl" =>'Jakaś strona'],
+            'short_title' => [ "en" =>'Sth page', "pl" =>'Strona'],
+            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla'],
+            'published' => 0,
+            'commented' => 0,
+            'type' => 'cms',
+            'content' => [ "en" =>$this->getDummyTest(), "pl" => $this->getDummyTestPl()],
+            'menu_id' => $m1->id
+        ];
+
         $data22pSecret = [
             'title'     =>  [ "en" =>'Secret info', "pl" =>'Tajna informacja' ],
             'short_title' =>  [ "en" =>'Secret info', "pl" =>'Tajna informacja'],
@@ -385,6 +396,7 @@ class Demo
 
         $p['p222'] =  $this->getPageObj()->wrapCreate($data1p);
         $p['p2'] = $this->getPageObj()->wrapCreate($data2p);
+        $p['p2222'] = $this->getPageObj()->wrapCreate($data2pUnpublished);        
         $p['p22'] = $this->getPageObj()->wrapCreate($data22pSecret);
 
         $m2 = $this->getMenuObj()->wrapCreate(['name' => ["en" => 'Gallery', "pl" => "Galeria" ] ]);
