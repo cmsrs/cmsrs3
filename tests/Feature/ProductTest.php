@@ -1929,6 +1929,41 @@ class ProductTest extends Base
         $this->assertEquals( $this->testData["page_id"], $res->data->page_id );
     }
 
+    /**
+     * get one product additional check
+     */
+    public function test_get_product_by_given_id_check_many_products() 
+    {
+        $this->setTestData();
+        $this->setTestData2();
+
+        $product1a = $this->createProduct(1);
+        $product1b = $this->createProduct(2);        
+        $product2 = $this->createProduct2();
+
+        //1
+        $response = $this->get('api/products/'.$product1a->productId.'?token='.$this->token);
+        $res = $response->getData();
+
+        $this->assertTrue($res->success);
+        $this->assertEquals( $product1a->productId, $res->data->id );
+
+        //2
+        $response2 = $this->get('api/products/'.$product1b->productId.'?token='.$this->token);
+        $res2 = $response2->getData();
+
+        $this->assertTrue($res2->success);
+        $this->assertEquals( $product1b->productId, $res2->data->id );
+
+        //3
+        $response3 = $this->get('api/products/'.$product2->productId.'?token='.$this->token);
+        $res3 = $response3->getData();
+
+        $this->assertTrue($res3->success);
+        $this->assertEquals( $product2->productId, $res3->data->id );
+    }
+
+
     private function setFakeData()
     {
         $this->setTestData();
