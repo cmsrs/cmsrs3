@@ -412,8 +412,9 @@ class Product extends Base
 
     public function getProductWithTranslatesContentsAndImages()
     {
-        $product = $this->with(['translates', 'contents'])->first();
-        return $this->getProductDataByProductArr( $product );
+        $productOut = Product::with(['translates', 'contents'])->find($this->id);
+
+        return $this->getProductDataByProductArr( $productOut );
     }
 
     private function getAllProductsWithTranslates()

@@ -1940,10 +1940,12 @@ class ProductTest extends Base
         $product1a = $this->createProduct(1);
         $product1b = $this->createProduct(2);        
         $product2 = $this->createProduct2();
+        //dump($product2);
 
         //1
         $response = $this->get('api/products/'.$product1a->productId.'?token='.$this->token);
         $res = $response->getData();
+        //dump($res);
 
         $this->assertTrue($res->success);
         $this->assertEquals( $product1a->productId, $res->data->id );
@@ -1951,13 +1953,14 @@ class ProductTest extends Base
         //2
         $response2 = $this->get('api/products/'.$product1b->productId.'?token='.$this->token);
         $res2 = $response2->getData();
+        //dump($res2);
 
         $this->assertTrue($res2->success);
         $this->assertEquals( $product1b->productId, $res2->data->id );
 
         //3
         $response3 = $this->get('api/products/'.$product2->productId.'?token='.$this->token);
-        $res3 = $response3->getData();
+        $res3 = $response3->getData();    
 
         $this->assertTrue($res3->success);
         $this->assertEquals( $product2->productId, $res3->data->id );
