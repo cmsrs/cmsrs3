@@ -1384,7 +1384,7 @@ class ProductTest extends Base
 
         $this->assertFalse($res1->success);
         $this->assertNotEmpty($res1->error);      
-        $this->assertTrue(strpos($res1->error, 'Duplicate product name') === 0);
+        $this->assertTrue(strpos($res1->error->product_name, 'Duplicate product name') === 0);
     }    
 
     public function test_it_add_product_case1_error_docs() //error
@@ -1425,7 +1425,7 @@ class ProductTest extends Base
         //print_r($res1);
 
         $this->assertFalse($res1->success);
-        $this->assertTrue(strpos($res1->error, 'Duplicate product name') === 0);
+        $this->assertTrue(strpos($res1->error->product_name, 'Duplicate product name') === 0);
     }    
 
 
@@ -1455,7 +1455,7 @@ class ProductTest extends Base
 
         $this->assertFalse($res2->success);
         $this->assertNotEmpty($res2->error);      
-        $this->assertTrue(strpos($res2->error, 'Duplicate product name') === 0);
+        $this->assertTrue(strpos($res2->error->product_name, 'Duplicate product name') === 0);
     }    
 
     public function test_it_will_create_product_docs()

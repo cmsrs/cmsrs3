@@ -282,7 +282,7 @@ class Product extends Base
 
                 if ($nameIn == $n) {
                     $out['success'] = false;
-                    $out['error'] = "Duplicate product name: $name ($lang)";
+                    $out['error']['product_name'] = "Duplicate product name: $name ($lang)";
                     break;
                 }
             }
