@@ -510,6 +510,27 @@ class ImageTest extends Base
         $this->assertTrue($res2->success);
         $this->assertEquals($numbersTestImages + 2, count($res2->data)); //2 initial image, 2+3 = 5
 
+        $this->assertEquals( self::STR_DESC_IMG1, $res2->data[0]->alt->en );
+        $this->assertEquals( null, $res2->data[1]->alt->en );
+        $this->assertEquals('img0', $res2->data[2]->alt->en );
+        $this->assertEquals('img1', $res2->data[3]->alt->en );
+        $this->assertEquals('img2', $res2->data[4]->alt->en );
+        
+        $resSwap = $this->get('api/images/position/down/'.$res2->data[4]->id.'?token='.$this->token);
+        $resS = $resSwap->getData();
+        $this->assertTrue($resS->success);
+
+        $response3 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
+        $res3 = $response3->getData();
+        $this->assertTrue($res3->success);
+        //dd($res3);        
+
+        $this->assertEquals('img2', $res3->data[0]->alt->en );        
+        $this->assertEquals( self::STR_DESC_IMG1, $res3->data[1]->alt->en );
+        $this->assertEquals( null, $res3->data[2]->alt->en );
+        $this->assertEquals('img0', $res3->data[3]->alt->en );
+        $this->assertEquals('img1', $res3->data[4]->alt->en );
+
     }
 
     public function test_it_will_save_one_image_docs()
