@@ -525,11 +525,26 @@ class ImageTest extends Base
         $this->assertTrue($res3->success);
         //dd($res3);        
 
-        $this->assertEquals('img2', $res3->data[0]->alt->en );        
-        $this->assertEquals( self::STR_DESC_IMG1, $res3->data[1]->alt->en );
-        $this->assertEquals( null, $res3->data[2]->alt->en );
-        $this->assertEquals('img0', $res3->data[3]->alt->en );
-        $this->assertEquals('img1', $res3->data[4]->alt->en );
+        $this->assertEquals('img2', $res3->data[0]->alt->en ); //we swap two items not everything - it is a good approach, because we can set items position as we want.
+        $this->assertEquals( null, $res3->data[1]->alt->en );
+        $this->assertEquals('img0', $res3->data[2]->alt->en );
+        $this->assertEquals('img1', $res3->data[3]->alt->en );
+        $this->assertEquals( self::STR_DESC_IMG1, $res3->data[4]->alt->en );
+
+        $resSwap = $this->get('api/images/position/up/'.$res3->data[3]->id.'?token='.$this->token);//or
+        //$resSwap = $this->get('api/images/position/down/'.$res3->data[2]->id.'?token='.$this->token); 
+        $resS2 = $resSwap->getData();
+        $this->assertTrue($resS2->success);
+
+        $response4 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
+        $res4 = $response4->getData();
+        $this->assertTrue($res4->success);
+
+        $this->assertEquals('img2', $res4->data[0]->alt->en ); 
+        $this->assertEquals( null, $res4->data[1]->alt->en );
+        $this->assertEquals('img1', $res4->data[2]->alt->en );
+        $this->assertEquals('img0', $res4->data[3]->alt->en ); //we swap two items not everything - it is a good approach.       
+        $this->assertEquals( self::STR_DESC_IMG1, $res4->data[4]->alt->en );
 
     }
 
