@@ -36,7 +36,7 @@ if($demoStatus){
         Route::get($apiSecret.'pages/type/{type}', 'PageController@getPagesByType');
 
         Route::get($apiSecret.'images/{type}/{pageId}', 'ImageController@getItemByTypeAndRefId'); //getItemByPageId
-        //Route::get('images/position/{direction}/{id}', 'ImageController@position'); //this get change db! - only for type page is working
+        //Route::get('images/position/{direction}/{id}', 'ImageController@position'); //this get change db! - only for type page or product is working
 
         Route::get($apiSecret.'users/clients', 'UserController@getClients');
         Route::get($apiSecret.'clients/{column}/{direction}', 'UserController@getClientsPaginateAndSort');
@@ -84,7 +84,7 @@ if($demoStatus){
         Route::get($apiSecret.'images/{type}/{pageId}', 'ImageController@getItemByTypeAndRefId'); //getItemByPageId
         Route::post($apiSecret.'image/{type}/{pageId}', 'ImageController@uploadImageByTypeAndRefId');
         Route::delete($apiSecret.'images/{id}',  'ImageController@delete');
-        Route::get($apiSecret.'images/position/{direction}/{id}', 'ImageController@position'); //only for type page is working
+        Route::get($apiSecret.'images/position/{direction}/{id}', 'ImageController@position'); //only for type page and product is working
 
         Route::get($apiSecret.'users/clients', 'UserController@getClients');
         Route::get($apiSecret.'clients/{column}/{direction}', 'UserController@getClientsPaginateAndSort');
