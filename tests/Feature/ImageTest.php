@@ -24,6 +24,7 @@ class ImageTest extends Base
     private $testImgData;
     private $pagesData;
 
+    private $testProductData;
 
     public function setUp(): void
     {
@@ -55,7 +56,7 @@ class ImageTest extends Base
             'published' => 0,
             'commented' => 0,
             'after_login' => 0,
-            'type' => 'contact',
+            'type' => 'shop', //this page will be useful for create product   'contact',
             'content' =>   [ 'en' =>  'lorem ipsum'],
             'menu_id' => null,
             'page_id' => null,
@@ -598,6 +599,68 @@ class ImageTest extends Base
             'success'=> false,
             'error' => 'obj not found'
         ]);        
+    }
+
+    /**
+     * product test
+    */
+    private function createProductBelongsToTestPage($i = 1)    
+    {
+        $this->testProductData = [
+            'product_name' => [ 'en' =>  'test product name'.$i ],
+            'sku' => 'AN/34534'.$i,
+            'price' => 123,
+            'product_description' =>  [ 'en'  =>  'test product description' ] ,
+            'page_id' => $this->pageId,
+            'published' => 1,
+            'images' => [
+                ['name' => $this->name1, 'data' => $this->getFixtureBase64($this->name1),  'alt' => ['en' =>  'product_img1' ] ],
+                ['name' => $this->name1, 'data' => $this->getFixtureBase64($this->name1),  'alt' => ['en' =>  'product_img2' ] ],
+                ['name' => $this->name1, 'data' => $this->getFixtureBase64($this->name1),  'alt' => ['en' =>  'product_img3' ] ],                                
+            ]
+        ];
+        $response0 = $this->post('api/products?token=' . $this->token, $this->testProductData);
+        $res0 = $response0->getData();
+        $this->assertTrue($res0->success);
+        //dd($res0);
+
+        return $res0->data->productId;
+    }
+
+    public function test_check_images_numbers_given_product()    
+    {
+        $productId = $this->createProductBelongsToTestPage(1);        
+        $this->assertNotEmpty($productId);
+        $productId2 = $this->createProductBelongsToTestPage(2);        
+        $this->assertNotEmpty($productId2); //I would like to that productId == 2 (not 1, because pageId ==1)
+
+        $type = 'product';
+        $response2 = $this->get('api/images/'.$type.'/'.$productId2.'?token='.$this->token);
+        $res2 = $response2->getData();
+        $this->assertTrue($res2->success);
+        $this->assertEquals(3, count($res2->data)); //3 initial image
+    }
+
+    public function test_upload_images_to_given_product()    
+    {
+        $productId = $this->createProductBelongsToTestPage(1);        
+        $this->assertNotEmpty($productId);
+        $productId2 = $this->createProductBelongsToTestPage(2);        
+        $this->assertNotEmpty($productId2); //I would like to that productId == 2 (not 1, because pageId ==1)
+
+        $image = ['name' => $this->name2, 'data' => $this->file2 ];
+
+        $type = 'product';
+        $response = $this->post('api/image/'.$type.'/'.$productId2.'?token='.$this->token, $image);
+        $this->assertEquals(200, $response->status());
+
+        $res = $response->getData();
+        $this->assertTrue($res->success);
+
+        $response2 = $this->get('api/images/'.$type.'/'.$productId2.'?token='.$this->token);
+        $res2 = $response2->getData();
+        $this->assertTrue($res2->success);
+        $this->assertEquals(4, count($res2->data)); //3 initial image, 1 - after upload, so 3+1 = 4
     }
     
 }
