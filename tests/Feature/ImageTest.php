@@ -662,5 +662,37 @@ class ImageTest extends Base
         $this->assertTrue($res2->success);
         $this->assertEquals(4, count($res2->data)); //3 initial image, 1 - after upload, so 3+1 = 4
     }
-    
+
+    public function test_position_image_product()    
+    {
+        $productId = $this->createProductBelongsToTestPage(1);        
+        $this->assertNotEmpty($productId);
+        $productId2 = $this->createProductBelongsToTestPage(2);        
+        $this->assertNotEmpty($productId2); //I would like to that productId == 2 (not 1, because pageId ==1)
+
+        $type = 'product';
+        $response2 = $this->get('api/images/'.$type.'/'.$productId2.'?token='.$this->token);
+        $res2 = $response2->getData();
+        $this->assertTrue($res2->success);
+        $this->assertEquals(3, count($res2->data)); //3 initial image
+
+        //dd($res2->data);
+        $this->assertEquals( "product_img1", $res2->data[0]->alt->en ); 
+        $this->assertEquals( "product_img2", $res2->data[1]->alt->en );
+        $this->assertEquals( "product_img3", $res2->data[2]->alt->en );
+
+        $resSwap = $this->get('api/images/position/down/'.$res2->data[1]->id.'?token='.$this->token);
+        $resS2 = $resSwap->getData();
+        $this->assertTrue($resS2->success);
+
+        $response3 = $this->get('api/images/'.$type.'/'.$productId2.'?token='.$this->token);
+        $res3 = $response3->getData();
+        $this->assertTrue($res3->success);
+        $this->assertEquals(3, count($res3->data)); //3 initial image
+
+        $this->assertEquals( "product_img1", $res3->data[0]->alt->en ); 
+        $this->assertEquals( "product_img3", $res3->data[1]->alt->en );
+        $this->assertEquals( "product_img2", $res3->data[2]->alt->en );        
+    }
+
 }

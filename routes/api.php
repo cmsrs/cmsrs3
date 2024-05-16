@@ -81,8 +81,8 @@ if($demoStatus){
         Route::get($apiSecret.'pages/position/{direction}/{id}', 'PageController@position');
         Route::get($apiSecret.'pages/type/{type}', 'PageController@getPagesByType');
 
-        Route::get($apiSecret.'images/{type}/{pageId}', 'ImageController@getItemByTypeAndRefId'); //getItemByPageId
-        Route::post($apiSecret.'image/{type}/{pageId}', 'ImageController@uploadImageByTypeAndRefId');
+        Route::get($apiSecret.'images/{type}/{pageId}', 'ImageController@getItemByTypeAndRefId'); //getItemByPageId, it can be pageId or productId
+        Route::post($apiSecret.'image/{type}/{pageId}', 'ImageController@uploadImageByTypeAndRefId'); //it can be pageId or productId
         Route::delete($apiSecret.'images/{id}',  'ImageController@delete');
         Route::get($apiSecret.'images/position/{direction}/{id}', 'ImageController@position'); //only for type page and product is working
 
