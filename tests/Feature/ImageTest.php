@@ -42,6 +42,11 @@ class ImageTest extends Base
         $file2 = $this->getFixtureBase64($this->name2);
         $this->file2 = $file2;
 
+        $images = [
+            ['name' => $this->name1, 'data' => $file1, 'alt' => ['en' => self::STR_DESC_IMG1] ],
+            ['name' => $this->name2, 'data' => $file2 ] //, 'alt' => ['en' => 'description img2' ]]
+        ];
+
         $this->testImgData =
         [
             'title'     =>  [ 'en' =>  'test p2'],
@@ -54,13 +59,9 @@ class ImageTest extends Base
             'content' =>   [ 'en' =>  'lorem ipsum'],
             'menu_id' => null,
             'page_id' => null,
-            'images' => [
-              ['name' => $this->name1, 'data' => $file1, 'alt' => ['en' => self::STR_DESC_IMG1] ],
-              ['name' => $this->name2, 'data' => $file2 ] //, 'alt' => ['en' => 'description img2' ]]
-            ]
+            'images' => $images
         ];
-
-
+    
         $response = $this->post('api/pages?token='.$this->token, $this->testImgData);
         $res = $response->getData();
 
@@ -470,7 +471,7 @@ class ImageTest extends Base
         $response2 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
         $res2 = $response2->getData();
         $this->assertTrue($res2->success);
-
+        $this->assertEquals(2, count($res2->data));
 
         $resSwap = $this->get('api/images/position/up/'.$res2->data[0]->id.'?token='.$this->token);
 
@@ -487,6 +488,28 @@ class ImageTest extends Base
 
         $this->assertTrue($arrImages[0]['position'] < $arrImages[1]['position']);
         //$this->clear_imgs();
+    }
+
+    public function test_it_will_get_change_position_images_for_many_items()
+    {
+        $file1 = $this->getFixtureBase64($this->name1);
+        $numbersTestImages = 3;
+
+        $images = [];
+        for($i=0; $i<$numbersTestImages; $i++){
+            $images[$i] = ['name' => $this->name1, 'data' => $file1, 'alt' => ['en' => 'img'.$i ] ];
+        }
+        $testImgData = $this->testImgData;
+        $testImgData['images'] = $images;
+        $response = $this->put('api/pages/'.$this->pageId.'?token='.$this->token, $testImgData);
+        $res = $response->getData();
+        $this->assertTrue($res->success);
+
+        $response2 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
+        $res2 = $response2->getData();
+        $this->assertTrue($res2->success);
+        $this->assertEquals($numbersTestImages + 2, count($res2->data)); //2 initial image, 2+3 = 5
+
     }
 
     public function test_it_will_save_one_image_docs()
