@@ -51,15 +51,19 @@ class ImageController extends Controller
 
     public function delete(Request $request, $id)
     {
-        $image = Image::find($id);
+        $ids = explode( ',', $id  );
+        
+        foreach($ids as $itemId){
+            $image = Image::find($itemId);
 
-        if (empty($image)) {
-            return response()->json(['success'=> false, 'error'=> 'Image not find'], 200);
-        }
-
-        $res = $image->delete();
-        if (empty($res)) {
-            return response()->json(['success'=> false, 'error'=> 'Update delete problem'], 200);
+            if (empty($image)) {
+                return response()->json(['success'=> false, 'error'=> 'Image not find id='.$itemId  ], 200);
+            }
+    
+            $res = $image->delete();
+            if (empty($res)) {
+                return response()->json(['success'=> false, 'error'=> 'Image delete problem id='.$itemId], 200);
+            }    
         }
 
         return response()->json(['success'=> true], 200);

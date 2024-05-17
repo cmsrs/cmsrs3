@@ -289,6 +289,54 @@ class ImageTest extends Base
         //$this->clear_imgs();
     }
 
+    public function test_it_will_delete_many_images()
+    {
+        $file1 = $this->getFixtureBase64($this->name1);
+        $numbersTestImages = 3;
+
+        $images = [];
+        for($i=0; $i<$numbersTestImages; $i++){
+            $images[$i] = ['name' => $this->name1, 'data' => $file1, 'alt' => ['en' => 'img'.$i ] ];
+        }
+        $testImgData = $this->testImgData;
+        $testImgData['images'] = $images;
+        $response = $this->put('api/pages/'.$this->pageId.'?token='.$this->token, $testImgData);
+        $res = $response->getData();
+        $this->assertTrue($res->success);
+
+        $response2 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
+        $res2 = $response2->getData();
+        $this->assertTrue($res2->success);
+        $this->assertEquals($numbersTestImages + 2, count($res2->data)); //2 initial image, 2+3 = 5
+
+        //delete all items other then one item
+        $deleteTestIds = [];
+        $leaveTestIds = []; //only one
+        foreach($res2->data as $img ){
+            if( $img->name == $this->name1){
+                $deleteTestIds[] = $img->id;
+            }else{
+                $leaveTestIds[] =  $img->id;
+            }
+        }
+        $this->assertEquals(4, count($deleteTestIds));
+        
+
+        $idsToDelete = implode(',', $deleteTestIds);
+
+        $responseDel = $this->delete('api/images/'.$idsToDelete.'?token='.$this->token);
+        $resDel = $responseDel->getData();
+        $this->assertTrue($resDel->success);
+
+        $response3 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
+        $res3 = $response3->getData();
+        $this->assertTrue($res3->success);
+
+        $this->assertEquals(1, count($leaveTestIds));
+        $this->assertEquals(1, count($res3->data));
+        $this->assertEquals($leaveTestIds[0], $res3->data[0]->id);
+    }
+
     public function test_it_will_delete_image_docs()
     {
         //delete first image
