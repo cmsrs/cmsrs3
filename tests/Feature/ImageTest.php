@@ -383,6 +383,58 @@ class ImageTest extends Base
         }
     }
 
+    /**
+     * update existing images
+     */
+    public function test_it_will_update_page_with_images_position_and_without_upload_new_imgs_case2_docs()
+    {
+        $response0 = $this->get('api/pages/'.$this->pageId.'?token='.$this->token);
+        $res0 = $response0->getData();
+        $this->assertTrue($res0->success);
+
+        $this->assertEquals(2,  count($res0->data->images));
+        $id1Before = $res0->data->images[0]->id;
+        $id2Before = $res0->data->images[1]->id;
+
+        $this->assertNotEmpty($id1Before);
+        $this->assertEquals(1, $res0->data->images[0]->position);
+        $this->assertNotEmpty($id2Before);
+        $this->assertEquals(2, $res0->data->images[1]->position);
+
+        $this->assertTrue($id1Before < $id2Before);
+        $this->assertTrue($res0->data->images[0]->position < $res0->data->images[1]->position);
+
+        $newImagesPosition['title']['en'] = 'Update2 img Title';
+        $newImagesPosition['short_title']['en'] = 'u2 test123';
+        $newImagesPosition['images'][0]['id'] = $id1Before;
+        $newImagesPosition['images'][0]['alt']['en'] = 'last';
+        $newImagesPosition['images'][0]['position'] = 202;
+
+        $newImagesPosition['images'][1]['id'] = $id2Before;
+        $newImagesPosition['images'][1]['alt']['en'] = 'first';
+        $newImagesPosition['images'][1]['position'] = 101;
+
+        $response = $this->put('api/pages/'.$this->pageId.'?token='.$this->token, $newImagesPosition);
+        $res = $response->getData();
+        $this->assertTrue($res->success);
+
+        //check
+        $response1 = $this->get('api/pages/'.$this->pageId.'?token='.$this->token);
+        $res1 = $response1->getData();
+        $this->assertTrue($res1->success);
+
+        $this->assertEquals($newImagesPosition['title']['en'], $res1->data->title->en);
+        $this->assertEquals($newImagesPosition['short_title']['en'], $res1->data->short_title->en);
+
+        $this->assertEquals($id2Before, $res1->data->images[0]->id);
+        $this->assertEquals(101, $res1->data->images[0]->position);
+        $this->assertEquals('first', $res1->data->images[0]->alt->en);
+
+        $this->assertEquals($id1Before, $res1->data->images[1]->id);
+        $this->assertEquals(202, $res1->data->images[1]->position);
+        $this->assertEquals('last', $res1->data->images[1]->alt->en);
+    }
+
     public function test_it_will_update_page_with_images_docs()
     {
         $this->assertEquals(count((array)$this->pageData->images), 2);
@@ -430,7 +482,7 @@ class ImageTest extends Base
         // ----PUT--------
         $response = $this->put('api/pages/'.$this->pageId.'?token='.$this->token, $testImgData);
 
-        $translateAfter = Translate::query()->whereNotNull('image_id')->where('column', 'alt')->get()->toArray();
+        $translateAfter = Translate::query()->whereNotNull('image_id')->where('column', 'alt')->get()->toArray();        
         $this->assertEquals(4, count($translateAfter));
         $this->assertEquals($alt1['en'], $translateAfter[0]['value']);
         $this->assertEquals($alt2['en'], $translateAfter[1]['value']);
@@ -639,6 +691,11 @@ class ImageTest extends Base
         $res2 = $response2->getData();
         $this->assertTrue($res2->success);
         $this->assertEquals(3, count($res2->data)); //3 initial image
+
+        foreach($res2->data as $d  ){
+            $this->assertEquals($productId2, $d->product_id );
+            $this->assertNull($d->page_id );
+        }
     }
 
     public function test_upload_images_to_given_product()    
@@ -661,6 +718,11 @@ class ImageTest extends Base
         $res2 = $response2->getData();
         $this->assertTrue($res2->success);
         $this->assertEquals(4, count($res2->data)); //3 initial image, 1 - after upload, so 3+1 = 4
+
+        foreach($res2->data as $d  ){
+            $this->assertEquals($productId2, $d->product_id );
+            $this->assertNull($d->page_id );
+        }
     }
 
     public function test_position_image_product()    
@@ -693,6 +755,87 @@ class ImageTest extends Base
         $this->assertEquals( "product_img1", $res3->data[0]->alt->en ); 
         $this->assertEquals( "product_img3", $res3->data[1]->alt->en );
         $this->assertEquals( "product_img2", $res3->data[2]->alt->en );        
+
+        foreach($res3->data as $d  ){
+            $this->assertEquals($productId2, $d->product_id );
+            $this->assertNull($d->page_id );
+        }
+        
     }
+
+    /**
+     * update existing images belongs to given product
+     */
+    public function test_it_will_update_product_with_images_position_and_without_upload_new_imgs_case2_docs()
+    {
+        $productId = $this->createProductBelongsToTestPage(1);        
+        $this->assertNotEmpty($productId);        
+        $productId2 = $this->createProductBelongsToTestPage(2);        
+        $this->assertNotEmpty($productId2); //I would like to that productId == 2 (not 1, because pageId ==1)
+
+        $response0 = $this->get('api/products/'.$productId2.'?token='.$this->token);
+        $res0 = $response0->getData();
+        $this->assertTrue($res0->success);
+
+        $this->assertEquals(3,  count($res0->data->images));
+        $id1Before = $res0->data->images[0]->id;
+        $id2Before = $res0->data->images[1]->id;
+        $id3Before = $res0->data->images[2]->id;
+
+        $this->assertNotEmpty($id1Before);
+        $this->assertEquals(1, $res0->data->images[0]->position);
+        $this->assertNotEmpty($id2Before);
+        $this->assertEquals(2, $res0->data->images[1]->position);
+        $this->assertNotEmpty($id3Before);
+        $this->assertEquals(3, $res0->data->images[2]->position);
+
+        $this->assertTrue($id1Before < $id2Before);
+        $this->assertTrue($res0->data->images[0]->position < $res0->data->images[1]->position);
+
+        $newImagesPosition['product_name']['en'] = 'Update2 img Title';
+        $newImagesPosition['sku'] = 'sku/23423';
+        $newImagesPosition['price'] = '1111';
+        $newImagesPosition['page_id'] = $this->pageId;
+        $newImagesPosition['images'][0]['id'] = $id1Before;
+        $newImagesPosition['images'][0]['alt']['en'] = 'last';
+        $newImagesPosition['images'][0]['position'] = 202;
+
+        $newImagesPosition['images'][1]['id'] = $id2Before;
+        $newImagesPosition['images'][1]['alt']['en'] = 'first';
+        $newImagesPosition['images'][1]['position'] = 101;
+
+        $newImagesPosition['images'][2]['id'] = $id3Before;
+        $newImagesPosition['images'][2]['alt']['en'] = 'middle';
+        $newImagesPosition['images'][2]['position'] = 155;
+
+
+        $response = $this->put('api/products/'.$productId2.'?token='.$this->token, $newImagesPosition);
+        $res = $response->getData();
+        $this->assertTrue($res->success);
+
+        //check
+        $response1 = $this->get('api/products/'.$productId2.'?token='.$this->token);
+        $res1 = $response1->getData();
+        $this->assertTrue($res1->success);
+
+        $this->assertEquals($newImagesPosition['product_name']['en'], $res1->data->product_name->en);
+        $this->assertEquals($newImagesPosition['sku'], $res1->data->sku);
+        $this->assertEquals($newImagesPosition['price'], $res1->data->price);
+        $this->assertEquals($newImagesPosition['page_id'], $res1->data->page_id);
+
+        $this->assertEquals($id2Before, $res1->data->images[0]->id);
+        $this->assertEquals(101, $res1->data->images[0]->position);
+        $this->assertEquals('first', $res1->data->images[0]->alt->en);
+
+        $this->assertEquals($id3Before, $res1->data->images[1]->id);
+        $this->assertEquals(155, $res1->data->images[1]->position);
+        $this->assertEquals('middle', $res1->data->images[1]->alt->en);
+
+        $this->assertEquals($id1Before, $res1->data->images[2]->id);
+        $this->assertEquals(202, $res1->data->images[2]->position);
+        $this->assertEquals('last', $res1->data->images[2]->alt->en);
+    }
+
+
 
 }

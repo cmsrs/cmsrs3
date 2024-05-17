@@ -205,6 +205,25 @@ class Image extends Base
         }
     }
 
+    public static function updatePositionImages($images)
+    {
+        foreach ($images as $image) {
+            if(empty($image['id'])){
+                continue;
+            }
+            if(empty($image['position'])){
+                continue;
+            }
+            $imageObj = Image::find($image['id']);
+            if (!$imageObj) {
+                continue;
+            }
+
+            $imageObj->position = $image['position'];
+            $imageObj->save();            
+        }
+    }
+
     public function createImages($images, $type, $refId)
     {
         $out = [];
