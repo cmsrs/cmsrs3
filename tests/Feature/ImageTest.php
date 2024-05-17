@@ -414,6 +414,8 @@ class ImageTest extends Base
         $newImagesPosition['images'][1]['alt']['en'] = 'first';
         $newImagesPosition['images'][1]['position'] = 101;
 
+        //print_r($newImagesPosition);
+
         $response = $this->put('api/pages/'.$this->pageId.'?token='.$this->token, $newImagesPosition);
         $res = $response->getData();
         $this->assertTrue($res->success);
@@ -481,6 +483,8 @@ class ImageTest extends Base
 
         // ----PUT--------
         $response = $this->put('api/pages/'.$this->pageId.'?token='.$this->token, $testImgData);
+        $res = $response->getData();
+        $this->assertTrue($res->success);
 
         $translateAfter = Translate::query()->whereNotNull('image_id')->where('column', 'alt')->get()->toArray();        
         $this->assertEquals(4, count($translateAfter));
@@ -488,12 +492,6 @@ class ImageTest extends Base
         $this->assertEquals($alt2['en'], $translateAfter[1]['value']);
         $this->assertEquals(null, $translateAfter[2]['value']);
         $this->assertEquals(null, $translateAfter[3]['value']);
-
-
-        $res = $response->getData();
-
-
-        $this->assertTrue($res->success);
 
         $response2 = $this->get('api/pages?token='.$this->token);
         $res2 = $response2->getData();
@@ -808,6 +806,7 @@ class ImageTest extends Base
         $newImagesPosition['images'][2]['alt']['en'] = 'middle';
         $newImagesPosition['images'][2]['position'] = 155;
 
+        //print_r($newImagesPosition);
 
         $response = $this->put('api/products/'.$productId2.'?token='.$this->token, $newImagesPosition);
         $res = $response->getData();
