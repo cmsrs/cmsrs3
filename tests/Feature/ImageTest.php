@@ -456,7 +456,7 @@ class ImageTest extends Base
         $newImagesPosition['short_title']['en'] = 'u2 test123';
         $newImagesPosition['images'][0]['id'] = $id1Before;
         $newImagesPosition['images'][0]['alt']['en'] = 'last';
-        $newImagesPosition['images'][0]['position'] = 202;
+        $newImagesPosition['images'][0]['position'] = "202";
 
         $newImagesPosition['images'][1]['id'] = $id2Before;
         $newImagesPosition['images'][1]['alt']['en'] = 'first';
