@@ -476,13 +476,32 @@ class ImageTest extends Base
         $this->assertEquals($newImagesPosition['title']['en'], $res1->data->title->en);
         $this->assertEquals($newImagesPosition['short_title']['en'], $res1->data->short_title->en);
 
-        $this->assertEquals($id2Before, $res1->data->images[0]->id);
-        $this->assertEquals(101, $res1->data->images[0]->position);
-        $this->assertEquals('first', $res1->data->images[0]->alt->en);
+        $images1 = $res1->data->images;
+        $this->assertEquals($id2Before, $images1[0]->id);
+        $this->assertEquals(101, $images1[0]->position);
+        $this->assertEquals('first', $images1[0]->alt->en);
 
-        $this->assertEquals($id1Before, $res1->data->images[1]->id);
-        $this->assertEquals(202, $res1->data->images[1]->position);
-        $this->assertEquals('last', $res1->data->images[1]->alt->en);
+        $this->assertEquals($id1Before, $images1[1]->id);
+        $this->assertEquals(202, $images1[1]->position);
+        $this->assertEquals('last', $images1[1]->alt->en);
+
+        //check all pages (we use this api in vue.js)
+        $response2 = $this->get('api/pages?token='.$this->token);
+        $res2 = $response2->getData();
+        $this->assertTrue($res2->success);
+
+        $this->assertEquals($this->pageId, $res2->data[0]->id);
+        $images2 =$res2->data[0]->images;
+
+        $this->assertEquals($id2Before, $images2[0]->id);
+        $this->assertEquals(101, $images2[0]->position);
+        $this->assertEquals('first', $images2[0]->alt->en);
+
+        $this->assertEquals($id1Before, $images2[1]->id);
+        $this->assertEquals(202, $images2[1]->position);
+        $this->assertEquals('last', $images2[1]->alt->en);
+
+        //dd($res2);
     }
 
     public function test_it_will_update_page_with_images_docs()
