@@ -83,8 +83,8 @@ na dalszy plan:
 
 
 bledy:
-- w admin/pages - dodaje obrazek a pozniej przechodze na inna strone to obrazek zostaje
-- problem z kolejnoscia obrazkow dla produktu w panelu
++ (2404 + poprawione przez nalozenie modal winsdow ) - w admin/pages - dodaje obrazek a pozniej przechodze na inna strone to obrazek zostaje
+(2404 + )  - problem z kolejnoscia obrazkow dla produktu w panelu
 + galeria po zalogowaniu nie dziala - patrz moja strona
 
 
@@ -127,7 +127,7 @@ bledy (o niskiej waznosci):
 - tranzakcje db - jesli nie uda sie dodac strony to nalezy usunac takze tlumaczenia powiazane z ta strona
 + obsluzyc przypadek unikatowych tytulow ston dla danego menu (chociaz short_title jest takie same w projektach -wiec nie jest uniq)
 + obsluzyc przypadek unikatowych tytulow menu
-- kolejnosc obrazkow dla produktu - nie zawsze dzialala -do  poprawy (nie wiem co jest problemem)
+(2405 poprawione + )  - kolejnosc obrazkow dla produktu - nie zawsze dzialala -do  poprawy (nie wiem co jest problemem)
 
 
 critical
@@ -137,13 +137,13 @@ critical
 uwagi:
 + zrzuty bez ladowania vue - stworzyc nowy tym np clear (bez vue)
 - zmienic nazwe privacy na independent (chodzi o typ page) - moze niech ta nazwa zostanie - w koncu tylko te prawnicze glupoty nie sa powiazane z menu
-- blad obrazkow w galerii  jest migotanie przy pokazaniu dynamicznie nowych obrazkow
++ (2405 - brak tego w vuejs) - blad obrazkow w galerii  jest migotanie przy pokazaniu dynamicznie nowych obrazkow
 + galeria po zalogowaniu nie dziala
 + !!!- dla typu cms - mozna zrobic edytor wyswig
 - unpublish img (przydaloby sie) 
 + mozna kod przeleciec jakims parserem (do czyszczenia formatowania sladni)
 + wywalic komentarze w kodzie
-- zbiorowy upload image - todo
+240522 +  - zbiorowy upload image - todo
 - Image::filter trzeba poprawic dla innych jezykow poza polskim 
 - mechanizm cachowania zrobic lepszy - moze w panelu adm. wlacaac i wylaczac cache i - i tam od razu go czyscic
 a nie jak to jest do tej pory:
@@ -153,7 +153,7 @@ a nie jak to jest do tej pory:
 
 + backup bazy danych kodu zrobic zrobic (kod jest na githubvie - tylko to z gitingnora zrobilem)
 + logowanie mozna takze podpiac do menu - moze to dziwne ale bedzie dzialc - sprawdzalem - nie jest to blad 
-- brak zmiany pozycji w panelu dla stron nie powiazanych z menu - kod w laravelu zostal zrobiony a w panelu sie tto nie pojawia - ale i tak tego nie wykorzystuje w wersji produkcyjnej - moze kiedys w przyszlosci sie to przyda.
++(2405 - dziala) - brak zmiany pozycji w panelu dla stron nie powiazanych z menu - kod w laravelu zostal zrobiony a w panelu sie tto nie pojawia - ale i tak tego nie wykorzystuje w wersji produkcyjnej - moze kiedys w przyszlosci sie to przyda.
 
 
 
@@ -179,7 +179,8 @@ bledy:
 
 221201
 bledy
-- pozycja w dol dla ostatniej strony  dla stron co maja zagniezdzenia nie dziala popraweni - ale da sie wyklikac klikajac wiele razy do gory
++- pozycja w dol dla ostatniej strony  dla stron co maja zagniezdzenia nie dziala popraweni - ale da sie wyklikac klikajac wiele razy do gory
+240522 - nie wiem jak to powtorzyc - w vuejs 
 
 
 230219
@@ -188,7 +189,7 @@ bledy
 
 
 230902
-- ziana pozycje zjec zdjecic - pierwszy i ostatni - wydaje mio sie ze po przesyuynieciue ostatniego na poczatek wszystkie pozaostale powinny zostrac zwiekszone o 1
++ (2405  zle myslenie - zostawiamy jak jest)+ ziana pozycje zjec zdjecic - pierwszy i ostatni - wydaje mio sie ze po przesyuynieciue ostatniego na poczatek wszystkie pozaostale powinny zostrac zwiekszone o 1
 a aktualnie jest tylko zmiana 1 z ostatnim - czy to oby jest ok
 proponuje aby byla mozliwoisc ziany polozenia za pomoca liczy takze - uprosci to robote przy duzej liczbie zdjec
 
