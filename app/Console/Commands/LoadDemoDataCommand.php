@@ -84,8 +84,9 @@ class LoadDemoDataCommand extends Command
         /*---------------------*/
         /*--- contacts --------*/
         /*---------------------*/
-        (new Contact)->wrapCreate(['email' => 'tt@cmsrs.pl', 'message' => 'test contact message1'  ]);
-        (new Contact)->wrapCreate(['email' => 'tt2@cmsrs.pl', 'message' => 'test contact message2'  ]);
+        for($ii=1; $ii<=32; $ii++){
+            (new Contact)->wrapCreate(["email" => "tt$ii@cmsrs.pl", "message" => "test contact message$ii" ]);
+        }
            
         /*---------------------*/
         /* ---users -----------*/
