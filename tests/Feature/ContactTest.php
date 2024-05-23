@@ -202,8 +202,12 @@ class ContactTest extends Base
         (new Contact)->wrapCreate(["email" => "$name@cmsrs.pl", "message" => "test contact message" ]);
         (new Contact)->wrapCreate(["email" => "tt@cmsrs.pl", "message" => "test contact $name" ]);        
 
-        $response = $this->get('api/contacts/pagination/id/desc?token='.$this->token."&search=$name");
+        $url = 'api/contacts/pagination/id/desc?token='.$this->token."&search=$name";
+        $response = $this->get($url);
         $res = $response->getData();
+
+        //print_r($url);
+        //print_r($res);
 
         $this->assertTrue($res->success);
 
