@@ -59,6 +59,10 @@ class ProductTest extends Base
         $this->name1 = 'phpunittest1.jpg';
 
         $this->name2 = 'phpunittest2.jpg';
+
+        $pagination = Config::getPagination(); //10 - change .env.testing
+        $this->assertEquals(10,$pagination);
+
     }
 
     protected function tearDown(): void

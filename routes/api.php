@@ -52,6 +52,7 @@ if($demoStatus){
         Route::get($apiSecret.'products/pagination/{lang}/{column}/{direction}', 'ProductController@getItemsWithPaginateAndSort');
 
         Route::get($apiSecret.'contacts', 'ContactController@index');            
+        Route::get($apiSecret.'contacts/pagination/{column}/{direction}', 'ContactController@getItemsWithPaginateAndSort');
         Route::get($apiSecret.'checkouts', 'CheckoutController@index');                
     });
 }else{
@@ -107,6 +108,7 @@ if($demoStatus){
         Route::delete($apiSecret.'products/{id}', 'ProductController@delete');
 
         Route::get($apiSecret.'contacts', 'ContactController@index');    
+        Route::get($apiSecret.'contacts/pagination/{column}/{direction}', 'ContactController@getItemsWithPaginateAndSort');        
         Route::delete($apiSecret.'contacts/{id}', 'ContactController@delete');            
 
         Route::get($apiSecret.'config', 'ConfigController@index');

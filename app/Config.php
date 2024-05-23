@@ -8,7 +8,7 @@ class Config extends Model
 {
     const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,login,projects,clear,checkout,register,home,shoppingsuccess,search,forgot,inner'; //default values
     const LANG_DEFAULT = 'en';
-    const PAGINATION_DEFAULT = 15; 
+    const PAGINATION_DEFAULT = 10; 
     
     const SORT_ASC = 'asc';
     const SORT_DESC = 'desc';

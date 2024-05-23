@@ -153,11 +153,11 @@ class UserTest extends Base
         $firstClient = $users[0];
         $lastClient =  $users[count($users)-1];
 
-        $firstId = $res->data->data[0]->id;  
-        $lastId = $res2->data->data[9]->id; 
+        $lastId = $res->data->data[0]->id;  
+        $firstId = $res2->data->data[9]->id; 
 
-        $this->assertEquals($firstId,  $lastClient['id'] );
-        $this->assertEquals($lastId,  $firstClient['id'] );        
+        $this->assertEquals($lastId, $lastClient['id'] );
+        $this->assertEquals($firstId, $firstClient['id'] );        
     }
     
     public function test_restrict_columns_to_specific_names()

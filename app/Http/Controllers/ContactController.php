@@ -113,6 +113,45 @@ message: '.$data['message'];
         return response()->json(['success' => true, 'data'=> $contact], 200);
     }
 
+    public function getItemsWithPaginateAndSort(Request $request, $column, $direction)
+    {
+        $search = $request->input('search', null);
+        if($search){
+            $search = '%'.trim($search).'%';
+        }
+
+        $objContact = new Contact;
+
+        if ( !in_array( $column, $objContact->columnsAllowedToSort ) ) {
+            return response()->json([
+                'success'=> false, 
+                'error'=> 'available columns to sort contact message: '.implode( ',', $objContact->columnsAllowedToSort)
+            ], 404);
+        }
+
+        if ( !in_array( $direction, Config::getAvailableSortingDirection() ) ) {
+            return response()->json([
+                'success'=> false, 
+                'error'=> 'available direction to sort: '.implode( ',', Config::getAvailableSortingDirection())
+            ], 404);
+        }
+
+        $paginationPerPage = Config::getPagination();
+        $contacts = $objContact
+            ->when($search, function($query) use ($search) {
+                return $query->where(function($query) use ($search) {
+                    $query->where('email', 'like', $search)
+                        ->orWhere('message', 'like', $search)
+                        ;
+                });
+            })
+            ->orderBy($column, $direction)
+            ->paginate($paginationPerPage)
+            ;
+
+        return response()->json(['success' => true, 'data'=> $contacts], 200);
+    }
+
     public function delete(Request $request, $id)
     {
         $contact = Contact::find($id);

@@ -11,6 +11,14 @@ class Contact extends Model
         'message'
     ];
 
+    public $columnsAllowedToSort = [
+        'id',        
+        'email',
+        'message',
+        'created_at',
+        'updated_at'
+    ];
+
     public function getAllData()
     {
         $out = [];
@@ -27,7 +35,7 @@ class Contact extends Model
     }
 
     /**
-     * only for demo perpose
+     * only for demo purpose
      */
     public function wrapCreate($data)
     {
