@@ -13,13 +13,17 @@ class Config extends Model
     const SORT_ASC = 'asc';
     const SORT_DESC = 'desc';
 
+    const CACHE_ENABLE_FILE_DEFAULT = 'app/cache_enable.txt';
+
     private $langs;
+    private $cacheEnableFile;
 
     public function __construct()
     {
         $this->langs = empty(env('LANGS')) ? '' : env('LANGS');
         //dump($this->langs);
         //dd('____sss_____');
+        $this->cacheEnableFile = env('CACHE_ENABLE_FILE', Config::CACHE_ENABLE_FILE_DEFAULT );
     }
 
     public static function getAvailableSortingDirection()
@@ -28,6 +32,11 @@ class Config extends Model
             Config::SORT_ASC,
             Config::SORT_DESC
         ];
+    }
+
+    public function getCacheFilePath()
+    {
+        return storage_path($this->cacheEnableFile);
     }
     
     public function setLangs($langs)

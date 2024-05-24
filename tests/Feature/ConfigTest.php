@@ -18,6 +18,7 @@ class ConfigTest extends Base
     {
         putenv('LANGS="en"');
         putenv('API_SECRET=""');
+        putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');
         parent::setUp();
         $this->createUser();
     }
@@ -124,13 +125,11 @@ class ConfigTest extends Base
         $this->assertFalse($isCache);
     }
 
-    /*
-    public function test_additional_cache_enable_in_file()
+    public function test_get_test_cache_enable_file()
     {
-        dd('____________ss________');
+        $filePath = (new Config)->getCacheFilePath();
+        $expectedSuffix = "storage/app/cache_enable_test.txt";
+        $this->assertStringEndsWith($expectedSuffix, $filePath);
     }
-    */
 
-
-    
 }
