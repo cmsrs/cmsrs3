@@ -120,8 +120,17 @@ class ConfigTest extends Base
 
     public function test_check_is_cache_enable()
     {
-        $isCache = Config::isCacheEnable();
+        $isCache = (new Config)->isCacheEnable();
         $this->assertFalse($isCache);
     }
+
+    /*
+    public function test_additional_cache_enable_in_file()
+    {
+        dd('____________ss________');
+    }
+    */
+
+
     
 }

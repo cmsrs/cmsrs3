@@ -65,7 +65,7 @@ class Image extends Base
     public function getAllTranslate()
     {
         $imageId = $this->id;
-        $isCache = Config::isCacheEnable();
+        $isCache = (new Config)->isCacheEnable();
         if ($isCache) {
             $ret = cache()->remember('imagetranslate_'.$imageId, Carbon::now()->addYear(1), function () use ($imageId) {
                 return $this->translates()->where('image_id', $imageId)->get(['lang', 'column', 'value'])->toArray();

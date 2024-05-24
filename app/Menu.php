@@ -39,7 +39,7 @@ class Menu extends Base
 
     public static function getMenu()
     {
-        $isCache = Config::isCacheEnable();
+        $isCache = (new Config)->isCacheEnable();
         if ($isCache) {
             $menus = cache()->remember('menus', Carbon::now()->addYear(1), function () {
                 return Menu::all()->sortBy('position');
@@ -103,7 +103,7 @@ class Menu extends Base
     public function getAllTranslate()
     {
         $menuId = $this->id;
-        $isCache = Config::isCacheEnable();
+        $isCache = (new Config)->isCacheEnable();
         if ($isCache) {
             $ret = cache()->remember('menutranslatemenuid_'.$menuId, Carbon::now()->addYear(1), function () use ($menuId) {
                 return  $this->translates()->where('menu_id', $menuId)->get(['lang', 'column', 'value'])->toArray();
