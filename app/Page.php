@@ -89,7 +89,7 @@ class Page extends Base
         if( empty($lang) ){
             $lang = Config::getDefaultLang();
         }
-        $isCache = env('CACHE_ENABLE', false);
+        $isCache = Config::isCacheEnable();
         if ($isCache) {
             $ret = cache()->remember('page_by_short_title_'.$data.'_'.Str::slug($shortTitle, "_").'_'.$lang, Carbon::now()->addYear(1), function () use ($shortTitle, $data, $lang) {
                 return $this->getPageDataByShortTitle( $shortTitle, $data, $lang );
@@ -149,7 +149,7 @@ class Page extends Base
             $lang = Config::getDefaultLang();
         }
 
-        $isCache = env('CACHE_ENABLE', false);
+        $isCache = Config::isCacheEnable();
         if ($isCache) {
             $ret = cache()->remember('pageinner_by_pageid_'.$pageId.'_'.$lang, Carbon::now()->addYear(1), function () use ($pageId, $lang) {
                 return $this->getContentInnerPageByPageIdAndLang($pageId, $lang);
@@ -284,7 +284,7 @@ class Page extends Base
     {
         $pageId =$this->id;
 
-        $isCache = env('CACHE_ENABLE', false);
+        $isCache =  Config::isCacheEnable();
         if ($isCache) {
             $ret = cache()->remember('pagetranslatepageid_'.$pageId, Carbon::now()->addYear(1), function () use ($pageId) {
                 return $this->getTranslateMerge($pageId);
@@ -459,7 +459,7 @@ class Page extends Base
     public function getNumPagesBelongsToThisMenuCache()
     {
         $pageId = $this->id;
-        $isCache = env('CACHE_ENABLE', false);
+        $isCache = Config::isCacheEnable();
         if ($isCache) {
             $countPages = cache()->remember('countpagesinthismenu_'.$pageId, Carbon::now()->addYear(1), function (){
                 return $this->getNumPagesBelongsToThisMenu();
@@ -473,7 +473,7 @@ class Page extends Base
     private function getMenuSlugByLangCache($lang)
     {
         $pageId = $this->id;
-        $isCache = env('CACHE_ENABLE', false);
+        $isCache =  Config::isCacheEnable();
         if ($isCache) {
             $menuSlug = cache()->remember('menusluglang_'.$lang.'_'.$pageId, Carbon::now()->addYear(1), function () use ($lang) {
                 return $this->getMenuSlugByLang($lang);
@@ -552,7 +552,7 @@ class Page extends Base
     
     public static function getFirstPageByType($type)
     {
-        $isCache = env('CACHE_ENABLE', false);
+        $isCache =  Config::isCacheEnable();
         if ($isCache) {
             $ret = cache()->remember('pagebytype_'.$type, Carbon::now()->addYear(1), function () use ($type) {
                 return  Page::where('type', '=', $type)->where('published', '=', 1)->get()->first();

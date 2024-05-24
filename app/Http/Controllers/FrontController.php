@@ -351,7 +351,7 @@ class FrontController extends Controller
 
         $menus = $this->menus;
 
-        $isCache = env('CACHE_ENABLE', false);
+        $isCache = Config::isCacheEnable();
         if ($isCache) {
             $pageOut = cache()->remember('page_'.$menuSlug.'_'.$pageSlug.'_'.$lang, Carbon::now()->addYear(1), function () use ($menus, $menuSlug, $pageSlug, $lang) {
                 return Page::getPageBySlug($menus, $menuSlug, $pageSlug, $lang);

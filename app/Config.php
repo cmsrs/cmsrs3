@@ -133,5 +133,11 @@ class Config extends Model
         }
         return $lang;
     }
+
+    public static function isCacheEnable()
+    {        
+        return env('CACHE_ENABLE', false);
+    }
+
     
 }

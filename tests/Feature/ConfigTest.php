@@ -117,5 +117,11 @@ class ConfigTest extends Base
         $res = $response->getData();
         $this->assertTrue($res->success);        
     }
+
+    public function test_check_is_cache_enable()
+    {
+        $isCache = Config::isCacheEnable();
+        $this->assertFalse($isCache);
+    }
     
 }

@@ -472,7 +472,7 @@ class Product extends Base
 
     public function getAllProductsWithImagesByLangCache($lang)
     {
-        $isCache = env('CACHE_ENABLE', false);
+        $isCache = Config::isCacheEnable();
         if ($isCache) {
             $products = cache()->remember('products_name_price_'.$lang , Carbon::now()->addYear(1), function () use ($lang)  {
                 return (new Product)->getAllProductsWithImagesByLang($lang);
