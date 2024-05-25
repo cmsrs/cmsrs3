@@ -48,10 +48,10 @@ class Config extends Model
     public function createFileCacheEnableIfNotExist()
     {
         $filePath = $this->getCacheFilePath();
-        if (File::exists($filePath)) {
-            File::delete($filePath);
+        if (!File::exists($filePath)) {
+            File::put($filePath, '');
             return true;
-        }
+        }        
         return false;
     }
 

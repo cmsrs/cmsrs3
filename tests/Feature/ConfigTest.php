@@ -21,7 +21,7 @@ class ConfigTest extends Base
         putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');
         parent::setUp();
         $this->createUser();
-        //(new Config)->deleteFileCacheEnableIfExist();
+        (new Config)->deleteFileCacheEnableIfExist();
     }
 
 
@@ -134,12 +134,18 @@ class ConfigTest extends Base
         $this->assertStringEndsWith($expectedSuffix, $filePath);
     }
 
+    public function test_get_test_create_cache_enable_file()
+    {
+        $createFile = (new Config)->createFileCacheEnableIfNotExist();
+        $this->assertTrue($createFile);
+    }
+    
     public function test_get_test_create_cache_enable_file_and_delete()
     {
         $createFile = (new Config)->createFileCacheEnableIfNotExist();
-        $this->assertFalse($createFile);
+        $this->assertTrue($createFile);
         $deleteFile = (new Config)->deleteFileCacheEnableIfExist();    
-        $this->assertFalse($deleteFile);
+        $this->assertTrue($deleteFile);
     }
 
 }
