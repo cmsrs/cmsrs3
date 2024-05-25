@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\File;
 
 class Config extends Model
 {
@@ -32,6 +33,26 @@ class Config extends Model
             Config::SORT_ASC,
             Config::SORT_DESC
         ];
+    }
+
+    public function deleteFileCacheEnableIfExist()
+    {
+        $filePath = $this->getCacheFilePath();
+        if (File::exists($filePath)) {
+            File::delete($filePath);
+            return true;
+        }
+        return false;
+    }    
+
+    public function createFileCacheEnableIfNotExist()
+    {
+        $filePath = $this->getCacheFilePath();
+        if (File::exists($filePath)) {
+            File::delete($filePath);
+            return true;
+        }
+        return false;
     }
 
     public function getCacheFilePath()
