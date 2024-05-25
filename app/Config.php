@@ -18,13 +18,13 @@ class Config extends Model
 
     private $langs;
     private $cacheEnableFile;
+    private $filePath;
 
     public function __construct()
     {
         $this->langs = empty(env('LANGS')) ? '' : env('LANGS');
-        //dump($this->langs);
-        //dd('____sss_____');
         $this->cacheEnableFile = env('CACHE_ENABLE_FILE', Config::CACHE_ENABLE_FILE_DEFAULT );
+        $this->filePath = $this->getCacheEnableFilePath();
     }
 
     public static function getAvailableSortingDirection()
@@ -42,15 +42,13 @@ class Config extends Model
     
     public function isExistCacheFileEnable()
     {
-        $filePath = $this->getCacheEnableFilePath();        
-        return File::exists($filePath);
+        return File::exists($this->filePath);
     }
 
     public function deleteFileCacheEnableIfExist()
     {
-        $filePath = $this->getCacheEnableFilePath();
-        if (File::exists($filePath)) {
-            File::delete($filePath);
+        if (File::exists($this->filePath)) {
+            File::delete($this->filePath);
             return true;
         }
         return false;
@@ -58,9 +56,8 @@ class Config extends Model
 
     public function createFileCacheEnableIfNotExist()
     {
-        $filePath = $this->getCacheEnableFilePath();
-        if (!File::exists($filePath)) {
-            File::put($filePath, '');
+        if (!File::exists($this->filePath)) {
+            File::put($this->filePath, '');
             return true;
         }        
         return false;
@@ -127,7 +124,6 @@ class Config extends Model
     public static function arrGetLangsEnv()
     {
         $langs = explode(',', env('LANGS', ''));
-        //dd($langs);
         return $langs;
     }
 
@@ -137,34 +133,28 @@ class Config extends Model
         if(empty($langs) || empty($langs[0]) ){
             $langs = []; 
             $langs[0] = LANG_DEFAULT;            
-            //throw new \Exception("You must set at least one language in the .env file (deflang)");
+            //throw new \Exception("You must set at least one language in the .env file (default lang)");
         }
         return $langs[0];
     }
 
     public static function saveLangToSession($lang)
     {
-        if( request()->hasSession() ){ //it dont session in tests
-            //dd('_____change_lanfg____');
+        if( request()->hasSession() ){ //it don't session in tests
             request()->session()->put('lang', $lang);
         }
     }
 
     /**
-     * this function not wokking properly - for example i homeController
+     * this function not working properly - for example i homeController
      */
     public static function getLangFromSession()
     {        
         $lang = null;
-        //$ss = request()->session();
-        //dd($ss);        
-        if( request()->hasSession() ){ //it dont session in tests
-
-            //dd('____________opk___');
+        if( request()->hasSession() ){ //it don't session in tests
             $lang = request()->session()->get('lang');
         }
         if( empty($lang) ){
-            //dd('____________wrong___');            
             $lang = Config::getDefaultLang();
         }
         return $lang;
