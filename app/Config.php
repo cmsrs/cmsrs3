@@ -160,9 +160,12 @@ class Config extends Model
         return $lang;
     }
 
-    public static function isCacheEnable()
+    public function isCacheEnable()
     {        
-        return env('CACHE_ENABLE', false);
+        $formEnv = env('CACHE_ENABLE', false);
+        $isFileExist = $this->isExistCacheFileEnable();
+
+        return $formEnv && $isFileExist;
     }
 
     

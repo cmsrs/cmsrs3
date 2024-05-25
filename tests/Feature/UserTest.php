@@ -17,6 +17,7 @@ class UserTest extends Base
     {
         putenv('LANGS="en"');
         putenv('API_SECRET=""');        
+        putenv('CACHE_ENABLE="false"');
         
         parent::setUp();
         $this->createUser();
@@ -417,5 +418,13 @@ class UserTest extends Base
         $this->assertEquals(404, $response->status());
     }
 
+    /**
+     * config test, here because we assume that CACHE_ENABLE="false"
+     */
+    public function test_check_is_cache_enable_for_cache_enable_false()
+    {
+        $isCache = (new Config)->isCacheEnable();
+        $this->assertFalse($isCache);
+    }
 
 }

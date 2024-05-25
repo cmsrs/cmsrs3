@@ -18,6 +18,7 @@ class ConfigTest extends Base
     {
         putenv('LANGS="en"');
         putenv('API_SECRET=""');
+        putenv('CACHE_ENABLE="true"');
         putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');
         parent::setUp();
         $this->createUser();
@@ -121,12 +122,6 @@ class ConfigTest extends Base
         $this->assertTrue($res->success);        
     }
 
-    public function test_check_is_cache_enable()
-    {
-        $isCache = (new Config)->isCacheEnable();
-        $this->assertFalse($isCache);
-    }
-
     public function test_get_test_cache_enable_file()
     {
         $filePath = (new Config)->getCacheEnableFilePath();
@@ -214,6 +209,21 @@ class ConfigTest extends Base
         $response->assertStatus(400);
         $res = $response->getData();
         $this->assertEquals('Invalid action', $res->error->toggle_cache_enable_file);        
+    }
+
+    /**
+     * see UserTest the test is the same, but result is different because here is CACHE_ENABLE="true"
+     */
+    public function test_check_is_cache_enable_for_cache_enable_true()
+    {
+        $isCache = (new Config)->isCacheEnable();
+        $this->assertFalse($isCache);
+    }
+
+    public function test_api_is_cache_enable()    
+    {
+        $this->markTestSkipped('todo tomorrow');
+        $response = $this->get('api/config/is-cache-enable?token='.$this->token);
     }
 
 
