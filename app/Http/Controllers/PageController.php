@@ -141,7 +141,7 @@ class PageController extends Controller
             }
         } catch (\Exception $e) {
             Log::error('page update ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); //.' for: '.var_export($data, true )
-            return response()->json(['success'=> false, 'error'=> 'Update page problem - exeption'], 200);
+            return response()->json(['success'=> false, 'error'=> 'Update page problem - exception'], 200);
         }
 
         if (empty($res)) {

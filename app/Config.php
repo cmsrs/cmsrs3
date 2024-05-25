@@ -35,9 +35,20 @@ class Config extends Model
         ];
     }
 
+    public function getCacheEnableFilePath()
+    {
+        return storage_path($this->cacheEnableFile);
+    }
+    
+    public function isExistCacheFileEnable()
+    {
+        $filePath = $this->getCacheEnableFilePath();        
+        return File::exists($filePath);
+    }
+
     public function deleteFileCacheEnableIfExist()
     {
-        $filePath = $this->getCacheFilePath();
+        $filePath = $this->getCacheEnableFilePath();
         if (File::exists($filePath)) {
             File::delete($filePath);
             return true;
@@ -47,17 +58,12 @@ class Config extends Model
 
     public function createFileCacheEnableIfNotExist()
     {
-        $filePath = $this->getCacheFilePath();
+        $filePath = $this->getCacheEnableFilePath();
         if (!File::exists($filePath)) {
             File::put($filePath, '');
             return true;
         }        
         return false;
-    }
-
-    public function getCacheFilePath()
-    {
-        return storage_path($this->cacheEnableFile);
     }
     
     public function setLangs($langs)

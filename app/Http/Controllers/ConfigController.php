@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Http\Request;
 
 class ConfigController extends Controller
 {
@@ -49,5 +50,26 @@ class ConfigController extends Controller
 
         return response()->json(['success' => true], 200);
     }
+    
+    public function toggleCacheEnableFile(Request $request)
+    {
+        $action = $request->input('action', null);
+        $objConfig = new Config;
+    
+        if ($action == 'enable') {
+            if( $objConfig->createFileCacheEnableIfNotExist() ){
+                return response()->json(['success'=> true, 'message' => 'Cache enabled']);
+            }
+            return response()->json(['success'=> false, 'error' => [ 'toggle_cache_enable_file'  => 'Cache was already enabled'] ]);
+        } elseif ($action == 'disable') {
+            if( $objConfig->deleteFileCacheEnableIfExist() ){
+                return response()->json(['success'=> true, 'message' => 'Cache disabled']);
+            }
+            return response()->json(['success'=> false, 'error' => [ 'toggle_cache_enable_file'  => 'Cache was already disabled'] ]);
+        } else {
+            return response()->json(['success'=> false, 'error' => [ 'toggle_cache_enable_file'  => 'Invalid action'] ], 400);
+        }
+    } 
+
 
 }

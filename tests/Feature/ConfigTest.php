@@ -129,23 +129,92 @@ class ConfigTest extends Base
 
     public function test_get_test_cache_enable_file()
     {
-        $filePath = (new Config)->getCacheFilePath();
+        $filePath = (new Config)->getCacheEnableFilePath();
         $expectedSuffix = "storage/app/cache_enable_test.txt";
         $this->assertStringEndsWith($expectedSuffix, $filePath);
     }
 
-    public function test_get_test_create_cache_enable_file()
+    public function test_it_will_create_cache_enable_file()
     {
         $createFile = (new Config)->createFileCacheEnableIfNotExist();
         $this->assertTrue($createFile);
+    }
+
+    public function test_api_it_will_create_cache_enable_file_two_times_docs()    
+    {
+        $post = ['action' => 'enable'];
+        $response = $this->post('api/config/toggle-cache-enable-file?token='.$this->token, $post);
+        $response->assertStatus(200);
+        $res = $response->getData();
+        $this->assertTrue($res->success);           
+        $this->assertTrue((new Config)->isExistCacheFileEnable());
+        $this->assertEquals('Cache enabled', $res->message);   
+        //print_r($res);
+
+        $response2 = $this->post('api/config/toggle-cache-enable-file?token='.$this->token, $post);
+        $res2 = $response2->getData();
+        //print_r($res2);
+        $this->assertFalse($res2->success);       
+        $this->assertTrue((new Config)->isExistCacheFileEnable());
+        $this->assertEquals('Cache was already enabled', $res2->error->toggle_cache_enable_file);   
     }
     
-    public function test_get_test_create_cache_enable_file_and_delete()
+    public function test_it_will_create_cache_enable_file_and_delete()
     {
         $createFile = (new Config)->createFileCacheEnableIfNotExist();
+        $this->assertTrue((new Config)->isExistCacheFileEnable());
         $this->assertTrue($createFile);
+
         $deleteFile = (new Config)->deleteFileCacheEnableIfExist();    
         $this->assertTrue($deleteFile);
+        $this->assertTrue(!(new Config)->isExistCacheFileEnable());
     }
+
+    public function test_api_it_will_create_cache_enable_file_and_delete_two_times_docs()    
+    {
+        $post = ['action' => 'enable'];
+        $response = $this->post('api/config/toggle-cache-enable-file?token='.$this->token, $post);
+        //dd($response);
+        $res = $response->getData();
+        $this->assertTrue($res->success);           
+        $this->assertTrue((new Config)->isExistCacheFileEnable());
+        $this->assertEquals('Cache enabled', $res->message);   
+
+        $post2 = ['action' => 'disable'];
+        $response2 = $this->post('api/config/toggle-cache-enable-file?token='.$this->token, $post2);
+        $response2->assertStatus(200);
+        $res2 = $response2->getData();
+        $this->assertTrue($res2->success);           
+        $this->assertTrue(!(new Config)->isExistCacheFileEnable());
+        $this->assertEquals('Cache disabled', $res2->message);
+        //print_r($res2);
+
+        $post3 = ['action' => 'disable'];
+        $response3 = $this->post('api/config/toggle-cache-enable-file?token='.$this->token, $post3);
+        $res3 = $response3->getData();
+        $this->assertFalse($res3->success);   
+        $this->assertTrue(!(new Config)->isExistCacheFileEnable());        
+        $this->assertEquals('Cache was already disabled', $res3->error->toggle_cache_enable_file);
+        //print_r($res3);
+    }
+
+    public function test_api_toggle_cache_enable_file_with_fake_param()    
+    {
+        $post = ['action' => 'fake'];
+        $response = $this->post('api/config/toggle-cache-enable-file?token='.$this->token, $post);
+        $response->assertStatus(400);
+        $res = $response->getData();
+        $this->assertEquals('Invalid action', $res->error->toggle_cache_enable_file);        
+    }
+
+    public function test_api_toggle_cache_enable_file_with_wrong_post()    
+    {
+        $post = ['test' => 'fake'];
+        $response = $this->post('api/config/toggle-cache-enable-file?token='.$this->token, $post);
+        $response->assertStatus(400);
+        $res = $response->getData();
+        $this->assertEquals('Invalid action', $res->error->toggle_cache_enable_file);        
+    }
+
 
 }
