@@ -16,8 +16,9 @@ class UserTest extends Base
     public function setUp(): void
     {
         putenv('LANGS="en"');
-        putenv('API_SECRET=""');        
+        putenv('API_SECRET=""');  
         putenv('CACHE_ENABLE="false"');
+        putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');        
         
         parent::setUp();
         $this->createUser();

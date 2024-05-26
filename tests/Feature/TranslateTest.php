@@ -19,6 +19,9 @@ class TranslateTest extends Base
     {
         putenv('LANGS="en,pl"');
         putenv('API_SECRET=""');
+        putenv('CACHE_ENABLE="false"');
+        putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');        
+
         parent::setUp();
 
         $this->createUser();
