@@ -26,7 +26,7 @@ class PageSecretTest extends Base
         $this->apiSecret = '8761';        
         putenv('LANGS="en"');                
         putenv('API_SECRET="'.$this->apiSecret.'"');
-        putenv('CACHE_ENABLE="false"');
+        putenv('CACHE_ENABLE=false');
         putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');        
 
         parent::setUp();

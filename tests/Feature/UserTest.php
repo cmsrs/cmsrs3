@@ -17,7 +17,7 @@ class UserTest extends Base
     {
         putenv('LANGS="en"');
         putenv('API_SECRET=""');  
-        putenv('CACHE_ENABLE="false"');
+        putenv('CACHE_ENABLE=false');
         putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');        
         
         parent::setUp();
@@ -424,8 +424,20 @@ class UserTest extends Base
      */
     public function test_check_is_cache_enable_for_cache_enable_false()
     {
+        (new Config)->deleteFileCacheEnableIfExist();
         $isCache = (new Config)->isCacheEnable();
         $this->assertFalse($isCache);
     }
+
+    public function test_check_is_cache_enable_when_file_exists_and_for_cache_enable_false()
+    {
+        (new Config)->deleteFileCacheEnableIfExist();
+        $createFile = (new Config)->createFileCacheEnableIfNotExist();
+        $this->assertTrue((new Config)->isExistCacheFileEnable());
+        $this->assertTrue($createFile);
+
+        $isCache = (new Config)->isCacheEnable();
+        $this->assertFalse($isCache);
+    }    
 
 }

@@ -164,7 +164,6 @@ class Config extends Model
     {        
         $formEnv = env('CACHE_ENABLE', false);
         $isFileExist = $this->isExistCacheFileEnable();
-
         return $formEnv && $isFileExist;
     }
 

@@ -18,7 +18,7 @@ class ConfigTest extends Base
     {
         putenv('LANGS="en"');
         putenv('API_SECRET=""');
-        putenv('CACHE_ENABLE="true"');
+        putenv('CACHE_ENABLE=true');
         putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');
         parent::setUp();
         $this->createUser();
