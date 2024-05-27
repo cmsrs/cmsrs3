@@ -75,14 +75,7 @@ class Config extends Model
 
     public static function getPagination()
     {
-        $pagination = '';
-        if (env('PAGINATION')) {
-            $pagination = env('PAGINATION');
-        } else {
-            $pagination = Config::PAGINATION_DEFAULT;
-        }
-
-        return $pagination;
+        return env('PAGINATION', Config::PAGINATION_DEFAULT);
     }
 
     public static function getPageTypes()

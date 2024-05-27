@@ -102,21 +102,17 @@ git clone https://github.com/cmsrs/cmsrs3.git && cd cmsrs3
 
 * prepare testing:
 
-create user and database, you can run the following script:
+create user and database for testing, you can run the following script:
 ```bash
 ./rs/go/go_create_test_db.sh
-cp .env .env.testing 
 ```
  
-change in file .env.testing:
+* prepare .env.testing file, and change db connection:
 
 ```bash
-APP_ENV=testing
-DB_DATABASE=cmsrs_testing
-LANGS="en"
-CACHE_ENABLE=false
+cp  .env.testing.cmsrs .env.testing 
 ```
-
+ 
 * run tests: 
 
 It is recommended to run tests on a clean instance (without images)
