@@ -111,19 +111,21 @@ class ConfigTest extends Base
         $this->assertEquals( Config::LANG_DEFAULT, $langs);        
     }
 
-    public function test_it_will_clear_cache()    
+    public function test_it_will_clear_cache_docs()    
     {
         $response = $this->get('api/config/clearcache?token='.$this->token);
         $res = $response->getData();
         $this->assertTrue($res->success);
+        //print_r($res);
     }
 
 
-    public function test_it_will_create_sitemap()    
+    public function test_it_will_create_sitemap_docs()    
     {
         $response = $this->get('api/config/createsitemap?token='.$this->token);
         $res = $response->getData();
         $this->assertTrue($res->success);        
+        //print_r($res);
     }
 
     public function test_get_test_cache_enable_file()
@@ -142,6 +144,7 @@ class ConfigTest extends Base
     public function test_api_it_will_create_cache_enable_file_two_times_docs()    
     {
         $post = ['action' => 'enable'];
+        //print_r($post);
         $response = $this->post('api/config/toggle-cache-enable-file?token='.$this->token, $post);
         $response->assertStatus(200);
         $res = $response->getData();
