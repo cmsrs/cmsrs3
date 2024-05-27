@@ -15,16 +15,20 @@ class ConfigTest extends Base
     use RefreshDatabase;
 
     public function setUp(): void
-    {
+    {        
         putenv('LANGS="en"');
         putenv('API_SECRET=""');
         putenv('CACHE_ENABLE=true');
         putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');
-        parent::setUp();
+        parent::setUp();        
         $this->createUser();
-        (new Config)->deleteFileCacheEnableIfExist();
+        (new Config)->deleteFileCacheEnableIfExist();        
     }
 
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+    }
 
     public function test_it_will_get_config_docs()
     {
@@ -88,7 +92,7 @@ class ConfigTest extends Base
         /***************/
         /*******cache **/
         /***************/
-        $this->assertEquals(false, $res->data->cache_enable);
+        $this->assertEquals(true, $res->data->cache_enable);
     }
 
     public function test_it_will_get_exception_no_langs()
@@ -216,14 +220,27 @@ class ConfigTest extends Base
      */
     public function test_check_is_cache_enable_for_cache_enable_true()
     {
+        $this->assertFalse((new Config)->isExistCacheFileEnable()); //see setup
         $isCache = (new Config)->isCacheEnable();
         $this->assertFalse($isCache);
     }
-
-    public function test_api_is_cache_enable()    
+    
+    /**
+     * CACHE_ENABLE=true
+     */
+    public function test_is_cache_enable_it_is_only_one_case_when_cache_is_enable()    
     {
-        $this->markTestSkipped('todo tomorrow');
-        $response = $this->get('api/config/is-cache-enable?token='.$this->token);
+        $this->assertFalse((new Config)->isExistCacheFileEnable()); //see setup
+        $post = ['action' => 'enable'];
+        $response = $this->post('api/config/toggle-cache-enable-file?token='.$this->token, $post);
+        $response->assertStatus(200);
+        $res = $response->getData();
+        $this->assertTrue($res->success);           
+        $this->assertTrue((new Config)->isExistCacheFileEnable());
+
+        $isCache = (new Config)->isCacheEnable();
+        $this->assertTrue($isCache);
+        //$response = $this->get('api/config/is-cache-enable?token='.$this->token);
     }
 
 

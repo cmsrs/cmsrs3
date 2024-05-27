@@ -11,8 +11,6 @@ class AuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 
-
-
     public function setUp(): void
     {
         putenv('LANGS="en"');
