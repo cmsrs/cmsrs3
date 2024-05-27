@@ -51,8 +51,55 @@ php artisan migrate  && php artisan db:seed
 php artisan serve
 ```
 
+
+# INSTALLATION BY COMPOSER
+
+```bash
+composer create-project cmsrs/cmsrs3
+```
+
+* configure db connection - change .env file.
+
+```bash
+php artisan key:generate && php artisan jwt:secret
+```
+
+```bash
+php artisan migrate && php artisan db:seed
+```
+
+```bash
+./rs/go/go_privilege.sh
+```
+
+```bash
+php artisan serve
+```
+
+
+# QUICK INSTALLATION
+
+* download
+ 
+```bash
+git clone https://github.com/cmsrs/cmsrs3.git && cd cmsrs3
+```
+
+* run script 
+
+```bash
+./rs/go/go_install.sh
+```
+
 # RUN TESTS
 
+* prepare testing:
+
+create user and database for testing, you can run the following script:
+```bash
+./rs/go/go_create_test_db.sh
+```
+ 
 * prepare .env.testing file, and change db connection:
 
 ```bash
