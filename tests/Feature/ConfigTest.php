@@ -240,8 +240,31 @@ class ConfigTest extends Base
 
         $isCache = (new Config)->isCacheEnable();
         $this->assertTrue($isCache);
-        //$response = $this->get('api/config/is-cache-enable?token='.$this->token);
     }
 
+    public function test_api_is_cache_enable_false_docs()    
+    {
+        $this->assertFalse((new Config)->isExistCacheFileEnable()); //see setup
+        $response = $this->get('api/config/is-cache-enable?token='.$this->token);
+        $response->assertStatus(200);
+        $res = $response->getData();
+        //print_r($res);
+        $this->assertTrue($res->success);           
+        $this->assertFalse($res->data->cache_enable);
+    }
+
+    public function test_api_is_cache_enable_true()    
+    {
+        $post = ['action' => 'enable'];
+        $response = $this->post('api/config/toggle-cache-enable-file?token='.$this->token, $post);
+        $response->assertStatus(200);
+        $this->assertTrue((new Config)->isExistCacheFileEnable());
+
+        $response = $this->get('api/config/is-cache-enable?token='.$this->token);
+        $response->assertStatus(200);
+        $res = $response->getData();
+        $this->assertTrue($res->success);           
+        $this->assertTrue($res->data->cache_enable);
+    }
 
 }

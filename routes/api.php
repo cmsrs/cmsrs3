@@ -46,6 +46,7 @@ if($demoStatus){
         Route::get($apiSecret.'clients/{id}', 'UserController@getClient');
         
         Route::get($apiSecret.'config', 'ConfigController@index');
+        Route::get($apiSecret.'config/is-cache-enable', 'ConfigController@isCacheEnable');
 
         Route::get($apiSecret.'products', 'ProductController@index');
         Route::get($apiSecret.'products/{id}', 'ProductController@getItem');
@@ -114,7 +115,8 @@ if($demoStatus){
         Route::get($apiSecret.'config', 'ConfigController@index');
         Route::get($apiSecret.'config/clearcache', 'ConfigController@clearCache');
         Route::get($apiSecret.'config/createsitemap', 'ConfigController@createSiteMap');                
-        Route::post($apiSecret.'config/toggle-cache-enable-file', 'ConfigController@toggleCacheEnableFile');                
+        Route::post($apiSecret.'config/toggle-cache-enable-file', 'ConfigController@toggleCacheEnableFile');      
+        Route::get($apiSecret.'config/is-cache-enable', 'ConfigController@isCacheEnable');
 
         Route::get($apiSecret.'checkouts', 'CheckoutController@index');        
         Route::put($apiSecret.'checkouts/{id}', 'CheckoutController@update');        
