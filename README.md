@@ -15,7 +15,7 @@ git clone https://github.com/cmsrs/cmsrs3.git
 cd cmsrs3
 ```
 
-* prepare .env.testing file, and change db connection:
+* prepare .env file, and change db connection:
  
 ```bash
 cp .env.cmsrs .env
