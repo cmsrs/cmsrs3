@@ -6,7 +6,7 @@
 </br>
 </br>
 
-# INSTALLATION (Recommended Method)
+# INSTALLATION
 
 * download
  
