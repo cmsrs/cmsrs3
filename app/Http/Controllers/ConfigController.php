@@ -91,7 +91,7 @@ class ConfigController extends Controller
             Log::error('is cache enable ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); 
             return response()->json(['success'=> false, 'error'=> 'is cache enable problem, details in the log file.'], 200);
         }
-        return response()->json(['success' => true, 'data'=> ['cache_enable' => $ret]], 200);
+        return response()->json(['success' => true, 'data'=> ['is_cache_enable' => $ret]], 200);
     } 
 
 }

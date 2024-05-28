@@ -257,7 +257,7 @@ class ConfigTest extends Base
         $res = $response->getData();
         //print_r($res);
         $this->assertTrue($res->success);           
-        $this->assertFalse($res->data->cache_enable);
+        $this->assertFalse($res->data->is_cache_enable);
     }
 
     public function test_api_is_cache_enable_true()    
@@ -271,7 +271,7 @@ class ConfigTest extends Base
         $response->assertStatus(200);
         $res = $response->getData();
         $this->assertTrue($res->success);           
-        $this->assertTrue($res->data->cache_enable);
+        $this->assertTrue($res->data->is_cache_enable);
     }
 
 }
