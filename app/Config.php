@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Artisan;
 
 class Config extends Model
 {
@@ -61,6 +62,11 @@ class Config extends Model
             return true;
         }        
         return false;
+    }
+
+    public function clearCache()
+    {
+        Artisan::call('cache:clear');        
     }
     
     public function setLangs($langs)
@@ -153,9 +159,14 @@ class Config extends Model
         return $lang;
     }
 
+    public function getConfigCacheEnable()
+    {
+        return env('CACHE_ENABLE', false);
+    }
+
     public function isCacheEnable()
     {        
-        $formEnv = env('CACHE_ENABLE', false);
+        $formEnv = $this->getConfigCacheEnable();
         $isFileExist = $this->isExistCacheFileEnable();
         return $formEnv && $isFileExist;
     }

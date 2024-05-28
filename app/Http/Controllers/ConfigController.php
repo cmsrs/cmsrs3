@@ -29,8 +29,14 @@ class ConfigController extends Controller
 
     public function clearCache()
     {
+        $objConfig = new Config();
+        if(!$objConfig->getConfigCacheEnable()){
+            return response()->json(['success'=> false, 'error' => ['clear_cache'  => "don't allowed, because cache_enable is false"] ]);
+        }
+
         try {
-            Artisan::call('cache:clear');  
+            $objConfig->clearCache();
+            //Artisan::call('cache:clear');  
         } catch (\Exception $e) {
             Log::error('config ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile());
             return response()->json(['success'=> false, 'error'=>  $e->getMessage().' Details in the log file.'], 200);
@@ -56,14 +62,19 @@ class ConfigController extends Controller
     {
         $action = $request->input('action', null);
         $objConfig = new Config;
+        if(!$objConfig->getConfigCacheEnable()){
+            return response()->json(['success'=> false, 'error' => ['toggle_cache_enable_file'  => "don't allowed, because cache_enable is false"] ]);
+        }
     
         if ($action == 'enable') {
             if( $objConfig->createFileCacheEnableIfNotExist() ){
+                $objConfig->clearCache();
                 return response()->json(['success'=> true, 'data' => [ 'value' => true, 'message' => 'Cache enabled']]);
             }
             return response()->json(['success'=> false, 'error' => [ 'toggle_cache_enable_file'  => 'Cache was already enabled'] ]);
         } elseif ($action == 'disable') {
             if( $objConfig->deleteFileCacheEnableIfExist() ){
+                $objConfig->clearCache();
                 return response()->json(['success'=> true, 'data' => [ 'value' => false, 'message' => 'Cache disabled']]);
             }
             return response()->json(['success'=> false, 'error' => [ 'toggle_cache_enable_file'  => 'Cache was already disabled'] ]);
@@ -82,6 +93,5 @@ class ConfigController extends Controller
         }
         return response()->json(['success' => true, 'data'=> ['cache_enable' => $ret]], 200);
     } 
-
 
 }
