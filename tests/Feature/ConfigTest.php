@@ -93,6 +93,7 @@ class ConfigTest extends Base
         /*******cache **/
         /***************/
         $this->assertEquals(true, $res->data->cache_enable);
+        $this->assertEquals(false, $res->data->is_cache_enable);
     }
 
     public function test_it_will_get_exception_no_langs()
@@ -150,7 +151,8 @@ class ConfigTest extends Base
         $res = $response->getData();
         $this->assertTrue($res->success);           
         $this->assertTrue((new Config)->isExistCacheFileEnable());
-        $this->assertEquals('Cache enabled', $res->message);   
+        $this->assertEquals('Cache enabled', $res->data->message);   
+        $this->assertEquals(true, $res->data->value);   
         //print_r($res);
 
         $response2 = $this->post('api/config/toggle-cache-enable-file?token='.$this->token, $post);
@@ -180,7 +182,8 @@ class ConfigTest extends Base
         $res = $response->getData();
         $this->assertTrue($res->success);           
         $this->assertTrue((new Config)->isExistCacheFileEnable());
-        $this->assertEquals('Cache enabled', $res->message);   
+        $this->assertEquals('Cache enabled', $res->data->message);   
+        $this->assertEquals(true, $res->data->value);   
 
         $post2 = ['action' => 'disable'];
         $response2 = $this->post('api/config/toggle-cache-enable-file?token='.$this->token, $post2);
@@ -188,7 +191,8 @@ class ConfigTest extends Base
         $res2 = $response2->getData();
         $this->assertTrue($res2->success);           
         $this->assertTrue(!(new Config)->isExistCacheFileEnable());
-        $this->assertEquals('Cache disabled', $res2->message);
+        $this->assertEquals('Cache disabled', $res2->data->message);
+        $this->assertEquals(false, $res2->data->value);   
         //print_r($res2);
 
         $post3 = ['action' => 'disable'];

@@ -17,6 +17,7 @@ class ConfigController extends Controller
             $config['page_types'] = Config::arrGetPageTypes();
             $config['langs'] =  $objConfig->arrGetLangs();
             $config['cache_enable'] = env('CACHE_ENABLE', false);
+            $config['is_cache_enable'] = $objConfig->isCacheEnable();
             $config['default_lang'] =  $objConfig->getDefaultLang();
         } catch (\Exception $e) {
             Log::error('config ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile());
@@ -58,12 +59,12 @@ class ConfigController extends Controller
     
         if ($action == 'enable') {
             if( $objConfig->createFileCacheEnableIfNotExist() ){
-                return response()->json(['success'=> true, 'message' => 'Cache enabled']);
+                return response()->json(['success'=> true, 'data' => [ 'value' => true, 'message' => 'Cache enabled']]);
             }
             return response()->json(['success'=> false, 'error' => [ 'toggle_cache_enable_file'  => 'Cache was already enabled'] ]);
         } elseif ($action == 'disable') {
             if( $objConfig->deleteFileCacheEnableIfExist() ){
-                return response()->json(['success'=> true, 'message' => 'Cache disabled']);
+                return response()->json(['success'=> true, 'data' => [ 'value' => false, 'message' => 'Cache disabled']]);
             }
             return response()->json(['success'=> false, 'error' => [ 'toggle_cache_enable_file'  => 'Cache was already disabled'] ]);
         } else {
