@@ -212,3 +212,7 @@ https://www.cmsrs.pl/en/cms/cmsrs/about-cmsrs
 # REACT SOURCE CODE
 
 https://github.com/cmsrs/cmsrs3-react
+
+# VUEJS SOURCE CODE - REACT ALTERNATIVE, NEW VERSION, RECOMENDED
+
+https://github.com/cmsrs/cmsrs3-vuejs
