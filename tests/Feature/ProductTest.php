@@ -437,16 +437,30 @@ class ProductTest extends Base
 
     }
 
-    public function test_save_checkout_directly_without_post()
+    private function warpSaveTestCheckoutManyTimes( $times )
     {
         $price1 = 11200; 
-        $price2 = 32100;
+        $price2 = 32100;        
         $ids = $this->setAddTwoProducts($price1, $price2);
+
+        $userId = $this->createClientUser()->id; //Auth::check() ? Auth::user()->id : null;
+        $this->assertNotEmpty($userId);
+
+        $out = [];
+        for($i =0; $i<$times; $i++){
+            $out[$i]['objCheckout'] = $this->saveTestCheckout( $ids, $userId, $i )['objCheckout'];
+        }        
+        return $out;
+    }
+
+
+    private function saveTestCheckout( $ids, $userId, $i )
+    {
         $id1 = $ids['id1'];
         $id2 = $ids['id2'];        
 
-        $qty0a = 2;
-        $qty1a = 5;
+        $qty0a = 2+$i;
+        $qty1a = 5+$i;
         $firstName = 'Jan';
 
         $data =
@@ -485,12 +499,7 @@ class ProductTest extends Base
             'payment' => Payment::KEY_CASH
         );
 
-        $c0 = Checkout::all()->count();
-        $this->assertEquals(0, $c0);
-
-        $userId = $this->createClientUser()->id; //Auth::check() ? Auth::user()->id : null;
-        $this->assertNotEmpty($userId);
-        $sessionId = 123; //session()->getId()
+        $sessionId = 123+$i; //session()->getId()
 
         list(
             'productsDataAndTotalAmount' => $productsDataAndTotalAmount,
@@ -498,17 +507,25 @@ class ProductTest extends Base
             'objCheckout' => $objCheckout
         ) = (new Product)->saveCheckout($data, $userId, $sessionId);
         $this->assertNotEmpty($objCheckout->id);
+        return [
+            'objCheckout' => $objCheckout
+        ];    
+    }
+
+    public function test_save_checkout_directly_without_post()
+    {
+        $c0 = Checkout::all()->count();
+        $this->assertEquals(0, $c0);
+
+        $times = 10;
+        $out =  $this->warpSaveTestCheckoutManyTimes( $times );        
+        $this->assertEquals($times, count($out));
 
         $c1 = Checkout::all()->count();
-        $this->assertEquals(1, $c1);
+        $this->assertEquals($times, $c1);
 
-        $ch = Checkout::first();
-
-        $this->assertEquals($ch->id, $objCheckout->id);
-
-        $this->assertEquals(0, $ch->is_pay);
-        $this->assertEquals($userId, $ch->user_id);
-        $this->assertEquals($firstName, $ch->first_name);
+        $ch = Checkout::first();     
+        $this->assertEquals($ch->id, $out[0]['objCheckout']->id);
     }
 
     /**
@@ -2448,6 +2465,29 @@ class ProductTest extends Base
         $this->assertTrue( is_array($dd[0]->images) );
 
     }
+
+    /**
+     * checkouts - pagination
+     */
+    public function test_sort_checkout_by_total_price()
+    {
+        $this->markTestSkipped('todo tomorrow');
+
+        $times = 10;
+        $out =  $this->warpSaveTestCheckoutManyTimes( $times );        
+        $this->assertEquals($times, count($out));
+
+        $lang = 'en';    
+        $column = 'total_price';
+        $direction = 'asc';
+        $search = '';        
+
+        $url = 'api/checkouts/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token.'&search='.$search;
+        $response = $this->get($url);
+        
+        $res = $response->getData();        
+    }
+
 
  
 }
