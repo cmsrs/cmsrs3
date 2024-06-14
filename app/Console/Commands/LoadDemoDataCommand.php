@@ -12,6 +12,9 @@ use App\Product;
 use App\Translate;
 use App\Content;
 use App\Contact;
+use App\Deliver;
+use App\Payment;
+
 use App\Data\Demo;
 
 class LoadDemoDataCommand extends Command
@@ -82,7 +85,7 @@ class LoadDemoDataCommand extends Command
         $products = $objDemoData->product($p);
 
         /*---------------------*/
-        /*--- contacts --------*/
+        /*--- contacts --------*/        
         /*---------------------*/
         for($ii=1; $ii<=32; $ii++){
             (new Contact)->wrapCreate(["email" => "tt$ii@cmsrs.pl", "message" => "test contact message$ii" ]);
@@ -115,7 +118,8 @@ class LoadDemoDataCommand extends Command
         $user2->save();
          */
 
-        for($i=1; $i<=32; $i++){
+        $numberOfFakeUsers = 32;
+        for($i=1; $i<=$numberOfFakeUsers; $i++){
             $name = 'client'.$i;
             $emailClient = $name.'@cmsrs.pl';
             $user32 = new User([
@@ -126,6 +130,67 @@ class LoadDemoDataCommand extends Command
             $user32->password = 'cmsrs456';
             $user32->save();
         }
+
+        /*---------------------*/
+        /* ---checkout---------*/        
+        /*---------------------*/
+        function wrapSaveCheckout($products, $i ){
+            $prod0 =  empty($products[0]) ? die( "can't find product0 to checkout" ) : $products[0];
+            $prod1 =  empty($products[1]) ? die( "can't find product1 to checkout" ) : $products[1];
+            $prod2 =  empty($products[2]) ? die( "can't find product2 to checkout" ) : $products[2];
+            $prod3 =  empty($products[3]) ? die( "can't find product3 to checkout" ) : $products[3];
+
+            if( empty($prod0->id) ||empty($prod1->id) ||empty($prod2->id) ||empty($prod3->id) ){
+                die("product id not occur");
+            }
+
+            $name = 'client'.$i;
+            $emailClient = $name.'@cmsrs.pl';
+
+            $data =
+            Array
+            (
+                'products' => Array
+                    (
+                        0 => Array
+                            (
+                                'id' => $prod0->id,
+                                'qty' => (($i+1) % 4) + 1 //we don't  want 0, therefore we add 1 at the end
+                            ),
+            
+                        1 => Array
+                            (
+                                'id' => $prod1->id,
+                                'qty' => (($i+2) % 4) + 1
+                            ),
+                        2 => Array 
+                            (
+                                'id' => $prod2->id,
+                                'qty' => (($i+3) % 4) + 1
+                            ),
+                        3 => Array
+                            (
+                                'id' => $prod3->id,
+                                'qty' => (($i+4) % 4) + 1
+                            )
+
+                    ),        
+                'lang' => 'en',
+                'email' => $emailClient,
+                'first_name' => $name,
+                'last_name' => 'Kowalski',
+                'address' => "ul. Kolejowa $i m 2",
+                'country' => 'Polska',
+                'city' => 'Warszawa',
+                'telephone' => 123456788 + $i,
+                'postcode' => '03-456',
+                'deliver' => Deliver::KEY_DPD_COURIER,
+                'payment' => Payment::KEY_CASH
+            );
+        }
+        for($i=1; $i<=$numberOfFakeUsers; $i++){
+            wrapSaveCheckout($products, $i );
+        }        
 
         /*---------------------*/
         /* ---orders-----------*/

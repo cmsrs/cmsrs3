@@ -124,7 +124,8 @@ todo
 bledy (o niskiej waznosci):
 - 2x mozna dodac formularz kontaktowy - moze do poprawy
 - tlumaczenie bledow przy logowaniu na polski
-- tranzakcje db - jesli nie uda sie dodac strony to nalezy usunac takze tlumaczenia powiazane z ta strona
+- tranzakcje db - jesli nie uda sie dodac strony to nalezy usunac takze tlumaczenia powiazane z ta strona 
+- tranzakcje db - jesli nie uda sie dodac  checkout - to trzeba sprawdzic czy  tlumaczenia takze zniknely - todo - do sptawdzenia i testowania 
 + obsluzyc przypadek unikatowych tytulow ston dla danego menu (chociaz short_title jest takie same w projektach -wiec nie jest uniq)
 + obsluzyc przypadek unikatowych tytulow menu
 (2405 poprawione + )  - kolejnosc obrazkow dla produktu - nie zawsze dzialala -do  poprawy (nie wiem co jest problemem)

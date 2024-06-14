@@ -679,7 +679,7 @@ class Demo
             'images' =>   $images['product3']
         ];
         $products['product4'] = [
-            'product_name' => [  'en' => 'English',  'pl' => 'Angielski'] ,
+            'product_name' => [  'en' => 'English book',  'pl' => 'Książka angielski'] ,
             'sku' => 'A/3/3/4',
             'price' => 2800,
             'published' => 1,            

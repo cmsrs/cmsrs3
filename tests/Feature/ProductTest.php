@@ -497,6 +497,7 @@ class ProductTest extends Base
             'checkout' => $checkout,
             'objCheckout' => $objCheckout
         ) = (new Product)->saveCheckout($data, $userId, $sessionId);
+        $this->assertNotEmpty($objCheckout->id);
 
         $c1 = Checkout::all()->count();
         $this->assertEquals(1, $c1);
