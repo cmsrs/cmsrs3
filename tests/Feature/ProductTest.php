@@ -431,15 +431,88 @@ class ProductTest extends Base
             }elseif( $o['product_id'] == $ids['id2'] ){
                 $this->assertEquals( 2 * $qty1a, $o['qty']); //2x
             }else{
-                $this->assertTrue(false); //this case is imposible
+                $this->assertTrue(false); //this case is impossible
             }
         }
 
     }
 
+    public function test_save_checkout_directly_without_post()
+    {
+        $price1 = 11200; 
+        $price2 = 32100;
+        $ids = $this->setAddTwoProducts($price1, $price2);
+        $id1 = $ids['id1'];
+        $id2 = $ids['id2'];        
+
+        $qty0a = 2;
+        $qty1a = 5;
+        $firstName = 'Jan';
+
+        $data =
+        Array
+        (
+            //'_token' => 'gTXqPBuPTbTz1yKecuMiaX8j5ynB1LiO4ul01PwZ',
+            'products' => Array
+                (
+                    0 => Array
+                        (
+                            'id' => $id1,
+                            'qty' => $qty0a
+                        ),
+        
+                    1 => Array
+                        (
+                            'id' => $id2,
+                            'qty' => $qty1a
+                        ),
+                    2 => Array //fake
+                        (
+                            'id' => 10003,
+                            'qty' => 44
+                        )
+                ),        
+            'lang' => 'en',
+            'email' => 'client@cmsrs.pl',
+            'first_name' => $firstName,
+            'last_name' => 'Kowalski',
+            'address' => 'kolejowa 1 m 2',
+            'country' => 'Polska',
+            'city' => 'Warszawa',
+            'telephone' => '1234567123',
+            'postcode' => '03-456',
+            'deliver' => Deliver::KEY_DPD_COURIER,
+            'payment' => Payment::KEY_CASH
+        );
+
+        $c0 = Checkout::all()->count();
+        $this->assertEquals(0, $c0);
+
+        $userId = $this->createClientUser()->id; //Auth::check() ? Auth::user()->id : null;
+        $this->assertNotEmpty($userId);
+        $sessionId = 123; //session()->getId()
+
+        list(
+            'productsDataAndTotalAmount' => $productsDataAndTotalAmount,
+            'checkout' => $checkout,
+            'objCheckout' => $objCheckout
+        ) = (new Product)->saveCheckout($data, $userId, $sessionId);
+
+        $c1 = Checkout::all()->count();
+        $this->assertEquals(1, $c1);
+
+        $ch = Checkout::first();
+
+        $this->assertEquals($ch->id, $objCheckout->id);
+
+        $this->assertEquals(0, $ch->is_pay);
+        $this->assertEquals($userId, $ch->user_id);
+        $this->assertEquals($firstName, $ch->first_name);
+    }
+
     /**
      * it is not test admin
-     * proccess of buying productcs
+     * process of buying products
     */
     public function test_it_will_save_checkout()
     {
@@ -654,7 +727,7 @@ class ProductTest extends Base
 
     /**
      * it is not test admin
-     * this api is use in backet (it is usefull when name and price will be changing)
+     * this api is use in basket (it is useful when name and price will be changing)
      */
     public function test_it_will_get_name_and_price_by_lang()
     {

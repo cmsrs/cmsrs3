@@ -42,8 +42,8 @@ class CheckoutController extends Controller
         try {
             $res = $checkout->update($data);            
         } catch (\Exception $e) {
-            Log::error('checkoput update ex: '.$e->getMessage());
-            return response()->json(['success'=> false, 'error'=> 'Update checkout problem - exeption'], 200);
+            Log::error('checkout update ex: '.$e->getMessage());
+            return response()->json(['success'=> false, 'error'=> 'Update checkout problem - exception'], 200);
         }
 
         if (empty($res)) {

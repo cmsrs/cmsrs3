@@ -51,6 +51,8 @@ class Base extends TestCase
         Auth::login($user);
         $this->assertTrue(Auth::check());
         $this->assertAuthenticated();
+
+        return $user;
     }
 
 

@@ -184,70 +184,12 @@ class FrontController extends Controller
             'deliver',
             'payment'
         );
-        if(empty($data['products']) || !is_array($data['products']) ){
-            //abort(500);            
-            throw new \Exception('No products in post - checkout');
-        }
-        $payment = Payment::getPayment( $data['payment'] );        
-        if( empty($payment) ){
-            throw new \Exception('Payment problem - checkout');
-        }
 
-        $deliver = Deliver::getDeliver( $data['deliver'] );
-        if( empty($deliver) ){
-            throw new \Exception('Deliver problem - checkout');
-        }
-
-
-        $baskets = $data['products'];
-        $reindexBaskets = Base::reIndexArr($baskets);
-        $baskets = [];
-        $productsDataAndTotalAmount = Product::getDataToPayment( $reindexBaskets, $baskets );
-        if( empty($baskets) ){
-            //abort(500);            
-            throw new \Exception('No data in basket (not found data in db)');
-        }
-
-        unset($data['products']);
-        $checkout = $data;
-        $checkout['user_id'] = Auth::check() ? Auth::user()->id : null;
-        $checkout['session_id'] = session()->getId();
-        $checkout['price_total'] =  $productsDataAndTotalAmount['totalAmount'];
-        $checkout['price_deliver'] = $deliver['price'];
-        $checkout['price_total_add_deliver'] = $checkout['price_total'] + $checkout['price_deliver'];
-
-        /*
-        //without transaction
-        $objCheckout = Checkout::create($checkout);
-        if (empty($objCheckout->id)) {
-            throw new \Exception("I cant get objCheckout id - problem with save checkout");
-        }  
-        
-        foreach($baskets as $basket){
-            $basket['checkout_id'] = $objCheckout->id;
-            Basket::create($basket);
-            Log::debug(' create basket: '.var_export( $basket , true ) );
-        }
-        */
-
-        DB::beginTransaction();
-        try {
-            $objCheckout = Checkout::create($checkout);
-            if (empty($objCheckout->id)) {
-                throw new \Exception("I cant get objCheckout id - problem with save checkout");
-            }  
-
-            foreach($baskets as $basket){
-                $basket['checkout_id'] = $objCheckout->id;
-                Basket::create($basket);
-                //Log::debug(' create basket: '.var_export( $basket , true ) );
-            }
-            DB::commit();
-        } catch (\Exception $e) {
-            Log::debug(' transaction problem: '.var_export( $e->getMessage() , true ) );
-            DB::rollback();
-            //throw $e;
-        }
+        list(
+            'productsDataAndTotalAmount' => $productsDataAndTotalAmount,
+            'checkout' => $checkout,
+            'objCheckout' => $objCheckout
+        ) = (new Product)->saveCheckout($data, (Auth::check() ? Auth::user()->id : null), session()->getId());
 
         
         if( Payment::KEY_PAYU  == $data['payment'] ){

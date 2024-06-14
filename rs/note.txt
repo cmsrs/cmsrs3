@@ -219,8 +219,10 @@ runExt(endpoints );
 
 </code>
 
-- transkacje dla koszyka
-- sortowanie w php drzewa nie dziala dla ostatniego nie przechodzi na poczatek - dla srodkowego wezla w drzewie
++- transkacje dla koszyka (w: Route::post('/post/checkout', 'FrontController@postCheckout'); - jest tranzakajcja - moze to wystarczy na ta chwile)
+patrz: public function saveCheckout($data, $userId, $sessionId): product.php
+
++- (nie wiem jak to powrortzyc - na producji w react dziala i w vuejs tez) - sortowanie w php drzewa nie dziala dla ostatniego nie przechodzi na poczatek - dla srodkowego wezla w drzewie
 (do poprawy)
 
 ---
