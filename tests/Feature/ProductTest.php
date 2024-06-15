@@ -487,10 +487,10 @@ class ProductTest extends Base
                         )
                 ),        
             'lang' => 'en',
-            'email' => 'client@cmsrs.pl',
+            'email' => "client$i@cmsrs.pl",
             'first_name' => $firstName,
             'last_name' => 'Kowalski',
-            'address' => 'kolejowa 1 m 2',
+            'address' => "kolejowa $i m 2",
             'country' => 'Polska',
             'city' => 'Warszawa',
             'telephone' => '1234567123',
@@ -2469,25 +2469,80 @@ class ProductTest extends Base
     /**
      * checkouts - pagination
      */
+    public function test_restrict_checkouts_sorted_columns_to_specific_names()
+    {
+        $this->warpSaveTestCheckoutManyTimes( 2 );        
+
+        $lang = 'en';    
+        $column = 'fake';
+        $direction = 'desc';
+
+        $response = $this->get('api/checkouts/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token);
+        $res = $response->getData();
+
+        $objCheckout = new Checkout;
+        $this->assertEquals(404, $response->status());
+        $response->assertJson([
+            'success'=> false,
+            'error' => 'available columns to sort checkouts: '.implode( ',', $objCheckout->columnsAllowedToSort )
+        ]);        
+    }
+
+    public function test_restrict_checkouts_sorted_direction_to_specific_names()
+    {
+        $lang = 'en';    
+        $column = 'id';
+        $direction = 'fake';
+
+        $response = $this->get('api/checkouts/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token);
+        $res = $response->getData();
+
+        $this->assertEquals(404, $response->status());
+        $response->assertJson([
+            'success'=> false,
+            'error' => 'available direction to sort: '.implode( ',', Config::getAvailableSortingDirection())
+        ]);        
+    }
+
+    public function test_restrict_checkouts_sorted_to_specific_langs()
+    {
+        $lang = 'enn_fake';    
+        $column = 'id';
+        $direction = 'asc';
+
+        $response = $this->get('api/checkouts/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token);
+        $res = $response->getData();
+
+        $this->assertEquals(404, $response->status());
+        $response->assertJson([
+            'success'=> false,
+            'error' => 'wrong lang in url'
+        ]);        
+    }
+
     public function test_sort_checkout_by_total_price()
     {
-        $this->markTestSkipped('todo tomorrow');
-
-        $times = 10;
+        $times = 32;
         $out =  $this->warpSaveTestCheckoutManyTimes( $times );        
         $this->assertEquals($times, count($out));
 
         $lang = 'en';    
-        $column = 'total_price';
+        $column = 'price_total_add_deliver';
         $direction = 'asc';
         $search = '';        
 
         $url = 'api/checkouts/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token.'&search='.$search;
         $response = $this->get($url);
+        $res = $response->getData();      
         
-        $res = $response->getData();        
+        $this->assertNotEmpty($res->data->data[0]->price_total_add_deliver);
+        $this->assertNotEmpty($res->data->data[1]->price_total_add_deliver);
+        $this->assertNotEmpty($res->data->data[2]->price_total_add_deliver);
+        $this->assertNotEmpty($res->data->data[3]->price_total_add_deliver);
+
+        $this->assertTrue($res->data->data[0]->price_total_add_deliver < $res->data->data[1]->price_total_add_deliver);
+        $this->assertTrue($res->data->data[1]->price_total_add_deliver < $res->data->data[2]->price_total_add_deliver);
+        $this->assertTrue($res->data->data[2]->price_total_add_deliver < $res->data->data[3]->price_total_add_deliver);
     }
-
-
  
 }

@@ -54,7 +54,8 @@ if($demoStatus){
 
         Route::get($apiSecret.'contacts', 'ContactController@index');            
         Route::get($apiSecret.'contacts/pagination/{column}/{direction}', 'ContactController@getItemsWithPaginateAndSort');
-        Route::get($apiSecret.'checkouts', 'CheckoutController@index');                
+        Route::get($apiSecret.'checkouts', 'CheckoutController@index');      
+        Route::get($apiSecret.'checkouts/pagination/{lang}/{column}/{direction}', 'CheckoutController@getItemsWithPaginateAndSort');                                
     });
 }else{
     #Route::post('register', 'AuthController@register');
@@ -118,7 +119,8 @@ if($demoStatus){
         Route::post($apiSecret.'config/toggle-cache-enable-file', 'ConfigController@toggleCacheEnableFile');      
         Route::get($apiSecret.'config/is-cache-enable', 'ConfigController@isCacheEnable');
 
-        Route::get($apiSecret.'checkouts', 'CheckoutController@index');        
+        Route::get($apiSecret.'checkouts', 'CheckoutController@index');  
+        Route::get($apiSecret.'checkouts/pagination/{lang}/{column}/{direction}', 'CheckoutController@getItemsWithPaginateAndSort');              
         Route::put($apiSecret.'checkouts/{id}', 'CheckoutController@update');        
     });
 }

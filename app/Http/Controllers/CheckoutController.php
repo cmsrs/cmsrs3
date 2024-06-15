@@ -23,6 +23,38 @@ class CheckoutController extends Controller
         return response()->json(['success' => true, 'data'=> $checkouts], 200);
     }
 
+    public function getItemsWithPaginateAndSort(Request $request, $lang, $column, $direction) 
+    {
+        $search = $request->input('search', null);
+
+        $objCheckout = new Checkout;
+
+        if (!in_array($lang, (new Config)->arrGetLangs())) {
+            return response()->json([
+                'success'=> false, 
+                'error'=> 'wrong lang in url'
+            ], 404);
+        }
+
+        if ( !in_array( $column, $objCheckout->columnsAllowedToSort ) ) {
+            return response()->json([
+                'success'=> false, 
+                'error'=> 'available columns to sort checkouts: '.implode( ',', $objCheckout->columnsAllowedToSort)
+            ], 404);
+        }
+
+        if ( !in_array( $direction, Config::getAvailableSortingDirection() ) ) {
+            return response()->json([
+                'success'=> false, 
+                'error'=> 'available direction to sort: '.implode( ',', Config::getAvailableSortingDirection())
+            ], 404);
+        }
+
+        $checkouts = $objCheckout->getPaginationItems($lang, $column, $direction, $search);
+
+        return response()->json(['success' => true, 'data'=> $checkouts], 200);
+    }
+
     public function update(Request $request, $id)
     {
         $checkout = Checkout::find($id);

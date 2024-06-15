@@ -259,3 +259,6 @@ patrz: public function saveCheckout($data, $userId, $sessionId): product.php
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>      
 -->
 
+todo 240615
+
+- sprawdzic jak zachowuja sie tabelki w vuejs bez zadnych danych
