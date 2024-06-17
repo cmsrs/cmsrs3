@@ -77,7 +77,7 @@ class Checkout extends Base
         })->orderBy($column, $direction)->get();        
 
         // if($search){
-        //     $search = '%'.trim($search).'%';
+        //     $search = '%'.$search.'%';
         //     $objCheckouts = Checkout::where('email', 'like', $search)->orderBy($column, $direction)->get();
         // }else{
         //     $objCheckouts = Checkout::orderBy($column, $direction)->get();

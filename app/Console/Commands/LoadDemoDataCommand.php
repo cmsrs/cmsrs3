@@ -119,7 +119,8 @@ class LoadDemoDataCommand extends Command
          */
 
         $numberOfFakeUsers = 32;
-        for($i=1; $i<=$numberOfFakeUsers; $i++){
+        $demoUsers = [];
+        for($i=1; $i<=$numberOfFakeUsers; $i++){ //!!!! dry
             $name = 'client'.$i;
             $emailClient = $name.'@cmsrs.pl';
             $user32 = new User([
@@ -129,6 +130,7 @@ class LoadDemoDataCommand extends Command
             ]);
             $user32->password = 'cmsrs456';
             $user32->save();
+            $demoUsers[$i] = $user32->id;
         }
 
         /*---------------------*/
@@ -187,9 +189,22 @@ class LoadDemoDataCommand extends Command
                 'deliver' => Deliver::KEY_DPD_COURIER,
                 'payment' => Payment::KEY_CASH
             );
+            return $data;
         }
-        for($i=1; $i<=$numberOfFakeUsers; $i++){
-            wrapSaveCheckout($products, $i );
+        for($i=1; $i<=$numberOfFakeUsers; $i++){ //!!!! dry
+            if( empty($userId = $demoUsers[$i]) ){
+                die( 'not found user' );
+            }
+
+            $d = wrapSaveCheckout($products, $i );
+
+            $sessionId = 'demo123';
+            list(
+                'productsDataAndTotalAmount' => $productsDataAndTotalAmount,
+                'checkout' => $checkout,
+                'objCheckout' => $objCheckout
+            ) = (new Product)->saveCheckout($d, $userId, $sessionId);
+            //$this->assertNotEmpty($objCheckout->id);
         }        
 
         /*---------------------*/
