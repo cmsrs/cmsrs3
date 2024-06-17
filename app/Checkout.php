@@ -68,8 +68,21 @@ class Checkout extends Base
     }
 
     public function  getPaginationItems($lang, $column, $direction, $search)
-    {  
-        $objCheckouts = Checkout::orderBy($column, $direction)->get();
+    { 
+
+        $search = trim($search);
+
+        $objCheckouts = Checkout::when($search, function ($query, $search) {
+            return $query->where('email', 'like', '%' . $search . '%');
+        })->orderBy($column, $direction)->get();        
+
+        // if($search){
+        //     $search = '%'.trim($search).'%';
+        //     $objCheckouts = Checkout::where('email', 'like', $search)->orderBy($column, $direction)->get();
+        // }else{
+        //     $objCheckouts = Checkout::orderBy($column, $direction)->get();
+        // }
+
         $checkouts = Checkout::printCheckouts( $objCheckouts, $lang );
 
         return $this->getPaginationFromCollection( collect($checkouts) );

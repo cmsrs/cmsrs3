@@ -2544,5 +2544,24 @@ class ProductTest extends Base
         $this->assertTrue($res->data->data[1]->price_total_add_deliver < $res->data->data[2]->price_total_add_deliver);
         $this->assertTrue($res->data->data[2]->price_total_add_deliver < $res->data->data[3]->price_total_add_deliver);
     }
+
+    public function test_search_and_sort_checkout_by_total_price_docs()
+    {
+        $times = 32;
+        $out =  $this->warpSaveTestCheckoutManyTimes( $times );        
+        $this->assertEquals($times, count($out));
+
+        $lang = 'en';    
+        $column = 'price_total_add_deliver';
+        $direction = 'asc';
+        $search = 'client3';        
+
+        $url = 'api/checkouts/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token.'&search='.$search;
+        $response = $this->get($url);
+        $res = $response->getData();      
+
+        $this->assertEquals(3, count($res->data->data)); //client3, client30, client31
+    }
+
  
 }
