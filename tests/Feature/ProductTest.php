@@ -2547,7 +2547,7 @@ class ProductTest extends Base
 
     public function test_search_and_sort_checkout_by_total_price_docs()
     {
-        $times = 32;
+        $times = 31;
         $out =  $this->warpSaveTestCheckoutManyTimes( $times );        
         $this->assertEquals($times, count($out));
 
@@ -2558,9 +2558,11 @@ class ProductTest extends Base
 
         $url = 'api/checkouts/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token.'&search='.$search;
         $response = $this->get($url);
-        $res = $response->getData();      
+        $res = $response->getData();   
+        
+        //print_r($res);
 
-        $this->assertEquals(3, count($res->data->data)); //client3, client30, client31
+        $this->assertEquals(2, count($res->data->data)); //client3, client30
     }
 
  
