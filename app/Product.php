@@ -217,10 +217,7 @@ class Product extends Base
 
     static public function getDefaultProductName($productTranslates, $lang)
     {
-        //$lang = Config::getDefaultLang();
-
         $defaultProductName = '';
-
 
         foreach ($productTranslates as $translate) {
             if( ('product_name' == $translate['column']) && ($translate['lang']  == $lang) ){
@@ -228,9 +225,6 @@ class Product extends Base
                 break;
             }            
         }
-        //dump($lang);
-        //dd($productTranslates);
-
         return $defaultProductName;
     }
 
@@ -523,7 +517,6 @@ class Product extends Base
     {
         $products = $this->getAllProductsWithImages( true );
 
-        //dd($products);
         $out = [];
         foreach($products as $product){
             if( !empty($product['published']) ){

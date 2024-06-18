@@ -127,9 +127,22 @@ class Checkout extends Base
     {
         $out = [];
         $j = 0;
+
+        //to optimization purpose
+        $pIds = [];
         foreach($baskets as $basket){
-            //todo - sql in foreach :( - refactor it - to optimization
-            $product = Product::with(['translates'])->where('id', $basket['product_id'])->first();
+            $pIds[ $basket['product_id'] ] = $basket['product_id'];
+        }
+            
+        $pIdsValues = array_values($pIds);
+        $products = Product::with(['translates'])->whereIn('id', $pIdsValues)->get()->pluck(null, 'id')->all();
+
+        foreach($baskets as $basket){
+            //$product = Product::with(['translates'])->where('id', $basket['product_id'])->first(); //i don't want sql in foreach
+            if(  empty($product =  $products[$basket['product_id']]) ){
+                throw new \Exception("can't find product id =" . $basket['product_id'] );
+            }
+
             $productName = Product::getDefaultProductName( $product->translates, $lang );
             $out[$j]['qty'] = $basket->qty;
             $out[$j]['price'] = $basket->price /100;
