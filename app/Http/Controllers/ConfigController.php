@@ -18,7 +18,8 @@ class ConfigController extends Controller
             $config['langs'] =  $objConfig->arrGetLangs();
             $config['cache_enable'] = env('CACHE_ENABLE', false);
             $config['is_cache_enable'] = $objConfig->isCacheEnable();
-            $config['default_lang'] =  $objConfig->getDefaultLang();
+            $config['default_lang'] = $objConfig->getDefaultLang();
+            $config['currency'] = $objConfig->getCurrency();
         } catch (\Exception $e) {
             Log::error('config ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile());
             return response()->json(['success'=> false, 'error'=>  $e->getMessage().' Details in the log file.'], 200);

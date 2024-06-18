@@ -18,6 +18,7 @@ class ConfigTest extends Base
     {        
         putenv('LANGS="en"');
         putenv('API_SECRET=""');
+        putenv('CURRENCY="EUR"');        
         putenv('CACHE_ENABLE=true');
         putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');
         parent::setUp();        
@@ -94,6 +95,11 @@ class ConfigTest extends Base
         /***************/
         $this->assertEquals(true, $res->data->cache_enable);
         $this->assertEquals(false, $res->data->is_cache_enable);
+
+        /***************/
+        /*** currency **/
+        /***************/
+        $this->assertEquals('EUR', $res->data->currency);
     }
 
     public function test_it_will_get_exception_no_langs()

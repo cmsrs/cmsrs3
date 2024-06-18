@@ -6,7 +6,8 @@ Bug
 
 in Future:
 - rejestracja przy checkout (do przemyslenia)
-- w zakladce setting mozna dodac parametry np. koszt wysylki (lub moze walute)
+- w zakladce setting mozna dodac parametry np. koszt wysylki lub moze walute...
++ waluta w env
 
 - wdrozyc system wysylki maili (przy rejestracji i przypomnij haslo) - funkcjonalność framweorku
 - rejestracja uzytkownika - wymagany mail z url-em aktywacyjnym - funkcjonalność framweorku
@@ -91,9 +92,9 @@ bledy:
 
 
 kamienie milowe:
-- testy reacta
++- testy reacta / tu zmienilem na vuejs i napsalem testy
 + migracja
-- docker
+- docker (czy to jest az tak wazne)
 
 
 

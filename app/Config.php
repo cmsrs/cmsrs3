@@ -15,6 +15,7 @@ class Config extends Model
     const SORT_ASC = 'asc';
     const SORT_DESC = 'desc';
 
+    const CURRENCY_DEFAULT = 'USD';
     const CACHE_ENABLE_FILE_DEFAULT = 'app/cache_enable.txt';
 
     private $langs;
@@ -34,6 +35,11 @@ class Config extends Model
             Config::SORT_ASC,
             Config::SORT_DESC
         ];
+    }
+
+    public function getCurrency()
+    {
+        return env('CURRENCY', Config::CURRENCY_DEFAULT);
     }
 
     public function getCacheEnableFilePath()

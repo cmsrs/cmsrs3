@@ -111,7 +111,7 @@ PAGE_TYPES="cms,gallery,shop,contact,main_page,privacy_policy,login,projects,cle
 ```
 
 
-    - cms - apear Wyswig editor in administration area
+    - cms - appear Wyswig editor in administration area
     - clear - without Wyswig editor, it require write pure html code
     - inner - it is text box in existing page require hardcode in layout page, where key is short_title
     - gallery - page with photos
@@ -137,6 +137,12 @@ GOOGLE_RECAPTCHA_PUBLIC
 
 ```bash
 CACHE_ENABLE=true
+```
+
+* (optionally) set the currency, the default is USD:
+
+```bash
+CURRENCY=PLN
 ```
 
 * PayU integration:
