@@ -95,6 +95,13 @@ class LoadDemoDataCommand extends Command
         /* ---users -----------*/
         /*---------------------*/
 
+        /** and */
+
+        /*---------------------*/
+        /* ---checkout---------*/        
+        /*---------------------*/
+
+
         //It,s created by the 'seed'
         // $user = new User([
         //     'email'    => 'adm@cmsrs.pl',
@@ -118,9 +125,8 @@ class LoadDemoDataCommand extends Command
         $user2->save();
          */
 
-        $numberOfFakeUsers = 32;
-        $demoUsers = [];
-        for($i=1; $i<=$numberOfFakeUsers; $i++){ //!!!! dry
+        function wrapSaveUser($i)
+        {
             $name = 'client'.$i;
             $emailClient = $name.'@cmsrs.pl';
             $user32 = new User([
@@ -130,13 +136,30 @@ class LoadDemoDataCommand extends Command
             ]);
             $user32->password = 'cmsrs456';
             $user32->save();
-            $demoUsers[$i] = $user32->id;
+            if( empty($user32->id) ){
+                die( 'Sth wrong with save user' );
+            }
+
+            return  $user32->id;
         }
 
-        /*---------------------*/
-        /* ---checkout---------*/        
-        /*---------------------*/
-        function wrapSaveCheckout($products, $i ){
+        /*
+        $numberOfFakeUsers = 32;
+        //$demoUsers = [];
+        for($i=1; $i<=$numberOfFakeUsers; $i++){ //!!!! dry
+            $name = 'client'.$i;
+            $emailClient = $name.'@cmsrs.pl';
+            $user32 = new User([
+                'name' => $name,                
+                'email' => $emailClient,
+                'role' => User::$role['client']
+            ]);
+            $user32->password = 'cmsrs456';
+            $user32->save();        
+        }
+        */
+
+        function getDataSaveCheckout($products, $i ){
             $prod0 =  empty($products[0]) ? die( "can't find product0 to checkout" ) : $products[0];
             $prod1 =  empty($products[1]) ? die( "can't find product1 to checkout" ) : $products[1];
             $prod2 =  empty($products[2]) ? die( "can't find product2 to checkout" ) : $products[2];
@@ -191,20 +214,25 @@ class LoadDemoDataCommand extends Command
             );
             return $data;
         }
-        for($i=1; $i<=$numberOfFakeUsers; $i++){ //!!!! dry
-            if( empty($userId = $demoUsers[$i]) ){
+
+        $numberOfFakeUsers = 32;
+        for($i=1; $i<=$numberOfFakeUsers; $i++){
+            $userId = wrapSaveUser($i);
+            if( empty($userId) ){
                 die( 'not found user' );
             }
 
-            $d = wrapSaveCheckout($products, $i );
+            $d = getDataSaveCheckout($products, $i );
 
             $sessionId = 'demo123';
             list(
-                'productsDataAndTotalAmount' => $productsDataAndTotalAmount,
-                'checkout' => $checkout,
+                //'productsDataAndTotalAmount' => $productsDataAndTotalAmount,
+                //'checkout' => $checkout,
                 'objCheckout' => $objCheckout
             ) = (new Product)->saveCheckout($d, $userId, $sessionId);
-            //$this->assertNotEmpty($objCheckout->id);
+            if(empty($objCheckout->id)){
+                die('sth wrong with create checkout');
+            }
         }        
 
         /*---------------------*/
