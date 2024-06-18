@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Number;
 
 class Base extends Model
 {
@@ -117,6 +118,12 @@ class Base extends Model
             $page, 
             ['path' => request()->url()]
         );
+    }
+
+    protected static function formatCurrency($number)
+    {
+        $currency = (new Config)->getCurrency(); 
+        return Number::currency( ($number / 100), $currency  ); //100 - cents
     }
 
 }

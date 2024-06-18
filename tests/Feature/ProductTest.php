@@ -2533,12 +2533,16 @@ class ProductTest extends Base
 
         $url = 'api/checkouts/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token.'&search='.$search;
         $response = $this->get($url);
-        $res = $response->getData();      
+        $res = $response->getData(); 
+        
+        //print_r($res);
         
         $this->assertNotEmpty($res->data->data[0]->price_total_add_deliver);
         $this->assertNotEmpty($res->data->data[1]->price_total_add_deliver);
         $this->assertNotEmpty($res->data->data[2]->price_total_add_deliver);
         $this->assertNotEmpty($res->data->data[3]->price_total_add_deliver);
+
+        $this->assertStringContainsString('$',$res->data->data[0]->price_total_add_deliver);
 
         $this->assertTrue($res->data->data[0]->price_total_add_deliver < $res->data->data[1]->price_total_add_deliver);
         $this->assertTrue($res->data->data[1]->price_total_add_deliver < $res->data->data[2]->price_total_add_deliver);

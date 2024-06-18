@@ -7,13 +7,15 @@ Bug
 in Future:
 - rejestracja przy checkout (do przemyslenia)
 - w zakladce setting mozna dodac parametry np. koszt wysylki lub moze walute...
+- metody dostawy - grubszy temat
 + waluta w env
+
 
 - wdrozyc system wysylki maili (przy rejestracji i przypomnij haslo) - funkcjonalność framweorku
 - rejestracja uzytkownika - wymagany mail z url-em aktywacyjnym - funkcjonalność framweorku
 
 - sprawdzenie jak dzila sklep dla wiekszej ilosci produktow - problem wydajnosciowy
-- sprawdzenie czy produkty doladowywuja sie dynamicznie - tak jak ma to miejsce w galerii zdjec
+- sprawdzenie czy produkty doladowywuja sie dynamicznie - tak jak ma to miejsce w galerii zdjec .... 
 
 css to fix:
 - widok produktu - mobile - poprawic

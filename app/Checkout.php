@@ -105,9 +105,9 @@ class Checkout extends Base
     {
         $out = [];
         $out['id'] = $checkout->id;
-        $out['price_total'] = $checkout->price_total /100;
-        $out['price_deliver'] = $checkout->price_deliver /100;
-        $out['price_total_add_deliver'] = $checkout->price_total_add_deliver / 100;
+        $out['price_total'] = self::formatCurrency( $checkout->price_total );
+        $out['price_deliver'] = self::formatCurrency( $checkout->price_deliver );
+        $out['price_total_add_deliver'] = self::formatCurrency( $checkout->price_total_add_deliver );
         $out['user_id'] =  $checkout->user_id;
         $out['email'] =  $checkout->email;
         $out['first_name'] =  $checkout->first_name;
@@ -145,7 +145,7 @@ class Checkout extends Base
 
             $productName = Product::getDefaultProductName( $product->translates, $lang );
             $out[$j]['qty'] = $basket->qty;
-            $out[$j]['price'] = $basket->price /100;
+            $out[$j]['price'] = self::formatCurrency( $basket->price);
             $out[$j]['product_id'] = $basket['product_id'];
             $out[$j]['product_name'] = $productName;
             $out[$j]['product_url'] = $product->getProductUrl($lang, $productName);
