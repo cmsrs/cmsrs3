@@ -15,6 +15,7 @@ class ContactGuestTest extends TestCase
     {
         putenv('LANGS="en,pl"');
         putenv('API_SECRET=""');
+        putenv('CURRENCY="USD"');        
         putenv('CACHE_ENABLE=false');
         putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');        
 

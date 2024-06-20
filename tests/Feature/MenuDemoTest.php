@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 
-class MenuTest extends Base
+class MenuDemoTest extends Base
 {
     use RefreshDatabase;
 
@@ -22,7 +22,8 @@ class MenuTest extends Base
         putenv('API_SECRET=""');
         putenv('CURRENCY="USD"');        
         putenv('CACHE_ENABLE=false');
-        putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');        
+        putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');      
+        //putenv('DEMO_STATUS=true'); //!!!! it is different from MenuTest
 
         parent::setUp();
         
@@ -73,8 +74,8 @@ class MenuTest extends Base
         $this->assertTrue($res->success);
 
         $response2ttt = $this->post('api/menus?token='.$this->token, ['name' => ['en' => $ttt]]);
-        $resttt = $response2ttt->getData();
-        $this->assertTrue($resttt->success);
+        $rest = $response2ttt->getData();
+        $this->assertTrue($rest->success);
 
 
         $response2 = $this->post('api/menus?token='.$this->token, $testData1);
@@ -259,7 +260,7 @@ class MenuTest extends Base
         $this->assertTrue($res->success);
 
 
-        //sprawdzamy rekordy w db
+        //check row in db
         $response2 = $this->get('api/menus?token='.$this->token);
 
         $res2 = $response2->getData();
@@ -277,7 +278,7 @@ class MenuTest extends Base
 
         $this->assertSame($data2['position'], $testData2['position']);
 
-        //wrond data
+        //wrong data
         $testData22 =
       [
            'name'     => ['en' => 'test menu22'],
@@ -345,7 +346,7 @@ class MenuTest extends Base
         $res0 = $response0->getData();
         $this->assertTrue($res0->success);
 
-        //pobieramy $menus
+        //receive $menus
         $response = $this->get('api/menus?token='.$this->token);
         $res = $response->getData();
         $this->assertTrue($res->success);
@@ -357,7 +358,7 @@ class MenuTest extends Base
         $this->assertNotEmpty($data['position']);
         $this->assertFalse(isset($testData3['position']));
 
-        //wrond data
+        //wrong data
         $testData33 =
       [
             'id' => $id,
@@ -390,7 +391,7 @@ class MenuTest extends Base
     public function test_it_will_delete_menu_fake()
     {
         $this->setTestData();
-        //fake id - obluga bledow
+        //fake id - mange errors
         $responseFake = $this->delete('api/menus/rs_I_eW23423fsd?token='.$this->token);
         $resFake = $responseFake->getData();
         $this->assertFalse($resFake->success);

@@ -30,6 +30,7 @@ class ImageTest extends Base
     {
         putenv('LANGS="en"');
         putenv('API_SECRET=""');
+        putenv('CURRENCY="USD"');        
         putenv('CACHE_ENABLE=false');
         putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');        
 
