@@ -101,6 +101,17 @@ class ConfigTest extends Base
         /*** currency **/
         /***************/
         $this->assertEquals('EUR', $res->data->currency);
+
+
+        /***************/
+        /*** is shop **/
+        /***************/
+        $this->assertEquals(true, $res->data->is_shop);
+
+        /***************/
+        /* demo status */
+        /***************/        
+        $this->assertEquals(false, $res->data->demo_status);        
     }
 
     public function test_it_will_get_exception_no_langs()

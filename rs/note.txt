@@ -266,3 +266,7 @@ todo 240615
 
 - sprawdzic jak zachowuja sie tabelki w vuejs bez zadnych danych
 - pozycja produktow ... do przemyslenia
+- #uwaga!!! + ja wlacze ten cache to jest probvlem z wywwolaniem:  GET http://demo.cmsrs.pl/api/productsGetNameAndPrice/en
+# trzeba zbadac
+CACHE_ENABLE=true
+

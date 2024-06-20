@@ -37,6 +37,16 @@ class Config extends Model
         ];
     }
 
+    public function getIsShop()
+    {
+        return env('IS_SHOP', true);
+    }
+
+    public function getDemoStatus()
+    {
+        return env('DEMO_STATUS', false);
+    }
+
     public function getCurrency()
     {
         return env('CURRENCY', Config::CURRENCY_DEFAULT);

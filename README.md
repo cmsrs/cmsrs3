@@ -145,6 +145,12 @@ CACHE_ENABLE=true
 CURRENCY=PLN
 ```
 
+* (optionally) set is_shop, the default is true:
+
+```bash
+IS_SHOP=true
+```
+
 * PayU integration:
 
 ```bash
