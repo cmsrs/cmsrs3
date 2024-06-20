@@ -265,3 +265,4 @@ patrz: public function saveCheckout($data, $userId, $sessionId): product.php
 todo 240615
 
 - sprawdzic jak zachowuja sie tabelki w vuejs bez zadnych danych
+- pozycja produktow ... do przemyslenia
