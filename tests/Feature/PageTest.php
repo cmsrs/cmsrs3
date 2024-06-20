@@ -33,6 +33,7 @@ class PageTest extends Base
         putenv('CURRENCY="USD"');        
         putenv('CACHE_ENABLE=false');
         putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');        
+        putenv('DEMO_STATUS=false');     
 
         parent::setUp();
 

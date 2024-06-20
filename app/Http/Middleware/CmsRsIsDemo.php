@@ -20,7 +20,10 @@ class CmsRsIsDemo
             }
 
             if($request->getMethod() != "GET"  ){
-                dd('not allowed in demo mode');
+                return response()->json([
+                    'success' => false,
+                    'error' => "We're sorry, but this action is not available in the demo version."
+                ], 403);                
             }
        }
 

@@ -21,6 +21,7 @@ class ConfigTest extends Base
         putenv('CURRENCY="EUR"');        
         putenv('CACHE_ENABLE=true');
         putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');
+        putenv('DEMO_STATUS=false');     
         parent::setUp();        
         $this->createUser();
         (new Config)->deleteFileCacheEnableIfExist();        
