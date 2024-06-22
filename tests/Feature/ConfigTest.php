@@ -132,7 +132,7 @@ class ConfigTest extends Base
 
     public function test_it_will_clear_cache_docs()    
     {
-        $response = $this->get('api/config/clearcache?token='.$this->token);
+        $response = $this->put('api/config/clearcache?token='.$this->token);
         $res = $response->getData();
         $this->assertTrue($res->success);
         //print_r($res);
@@ -141,7 +141,7 @@ class ConfigTest extends Base
 
     public function test_it_will_create_sitemap_docs()    
     {
-        $response = $this->get('api/config/createsitemap?token='.$this->token);
+        $response = $this->put('api/config/createsitemap?token='.$this->token);
         $res = $response->getData();
         $this->assertTrue($res->success);        
         //print_r($res);

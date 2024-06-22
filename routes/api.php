@@ -115,13 +115,13 @@ Route::get('productsGetNameAndPrice/{lang?}', 'ProductController@getNameAndPrice
         Route::delete($apiSecret.'contacts/{id}', 'ContactController@delete');            
 
         Route::get($apiSecret.'config', 'ConfigController@index');
-        Route::get($apiSecret.'config/clearcache', 'ConfigController@clearCache');
-        Route::get($apiSecret.'config/createsitemap', 'ConfigController@createSiteMap');                
+        Route::put($apiSecret.'config/clearcache', 'ConfigController@clearCache');
+        Route::put($apiSecret.'config/createsitemap', 'ConfigController@createSiteMap');                
         Route::post($apiSecret.'config/toggle-cache-enable-file', 'ConfigController@toggleCacheEnableFile');      
         Route::get($apiSecret.'config/is-cache-enable', 'ConfigController@isCacheEnable');
 
         Route::get($apiSecret.'checkouts', 'CheckoutController@index');  
         Route::get($apiSecret.'checkouts/pagination/{lang}/{column}/{direction}', 'CheckoutController@getItemsWithPaginateAndSort');              
-        Route::put($apiSecret.'checkouts/{id}', 'CheckoutController@update');        
+        Route::patch($apiSecret.'checkouts/{id}', 'CheckoutController@update');        
     });
 //}

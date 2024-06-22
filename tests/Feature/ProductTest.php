@@ -340,7 +340,7 @@ class ProductTest extends Base
         ];
 
 
-        $response2 = $this->put('api/checkouts/'.$ch->id.'?token='.$this->token, $dataUpdate);
+        $response2 = $this->patch('api/checkouts/'.$ch->id.'?token='.$this->token, $dataUpdate);
         //dd($response2);
         $res2 = $response2->getData();
 
@@ -368,7 +368,7 @@ class ProductTest extends Base
 
 
         //second time update
-        $response2b = $this->put('api/checkouts/'.$ch->id.'?token='.$this->token, $dataUpdate);
+        $response2b = $this->patch('api/checkouts/'.$ch->id.'?token='.$this->token, $dataUpdate);
         //dd($response2);
         $res2b = $response2b->getData();
         $this->assertTrue($res2b->success);
@@ -413,7 +413,7 @@ class ProductTest extends Base
         $this->assertNotEquals($ch->id, $chLast->id);
         //dd($chLast);
 
-        $response2c = $this->put('api/checkouts/'.$chLast->id.'?token='.$this->token, $dataUpdate);
+        $response2c = $this->patch('api/checkouts/'.$chLast->id.'?token='.$this->token, $dataUpdate);
         //dd($response2);
         $res2c = $response2c->getData();
         $this->assertTrue($res2c->success);
