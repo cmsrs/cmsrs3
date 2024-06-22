@@ -200,7 +200,7 @@ class PageTest extends Base
 
         $this->assertEquals('cms' , $page1['type']);
         
-        $res2a = $this->get('api/pages/position/up/'.$page1['id'].'?token='.$this->token);
+        $res2a = $this->patch('api/pages/position/up/'.$page1['id'].'?token='.$this->token);
         $res22a = $res2a->getData();
         $this->assertTrue($res22a->success);
 
@@ -673,7 +673,7 @@ class PageTest extends Base
         $this->assertEquals(Page::find($pages[0]['id'])->translatesByColumnAndLang('title', 'en'), PageTest::STR_CHILD_ONE);
         $this->assertEquals(Page::find($pages[1]['id'])->translatesByColumnAndLang('title', 'en'), PageTest::STR_CHILD_TWO);
 
-        $res2a = $this->get('api/pages/position/up/'.$pages[0]['id'].'?token='.$this->token);
+        $res2a = $this->patch('api/pages/position/up/'.$pages[0]['id'].'?token='.$this->token);
 
         $res22a = $res2a->getData();
         $this->assertTrue($res22a->success);
@@ -717,7 +717,7 @@ class PageTest extends Base
         $this->assertNotEmpty($positionBefore2);
         $this->assertTrue($positionBefore1 < $positionBefore2);
 
-        $res2a = $this->get('api/pages/position/down/'.$pages[1]['id'].'?token='.$this->token);
+        $res2a = $this->patch('api/pages/position/down/'.$pages[1]['id'].'?token='.$this->token);
 
         $res22a = $res2a->getData();
         $this->assertTrue($res22a->success);
@@ -878,7 +878,7 @@ class PageTest extends Base
         $this->assertEquals($positionBefore, 2);
 
         //2x change position - and result should be the same.
-        $res1a = $this->get('api/pages/position/down/'.$tmpArr[1]->id.'?token='.$this->token);
+        $res1a = $this->patch('api/pages/position/down/'.$tmpArr[1]->id.'?token='.$this->token);
 
 
         $res22a = $res1a->getData();
@@ -910,7 +910,7 @@ class PageTest extends Base
         $this->assertEquals($item->position, 1);
 
 
-        $res2b = $this->get('api/pages/position/down/'.$tmpArr[1]->id.'?token='.$this->token);
+        $res2b = $this->patch('api/pages/position/down/'.$tmpArr[1]->id.'?token='.$this->token);
         $res22b = $res2b->getData();
         $this->assertTrue($res22b->success);
 

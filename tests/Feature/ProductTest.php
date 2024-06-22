@@ -1811,7 +1811,7 @@ class ProductTest extends Base
         $this->assertEquals($res2->data[0]->name, 'phpunittest1.jpg');
         $this->assertEquals($res2->data[0]->position, 1);
   
-        $resSwap = $this->get('api/images/position/up/'.$res2->data[0]->id.'?token='.$this->token);
+        $resSwap = $this->patch('api/images/position/up/'.$res2->data[0]->id.'?token='.$this->token);
   
         $response2Swap = $this->get('api/images/product/'.$productId.'?token='.$this->token);
         $res2Swap = $response2Swap->getData();
@@ -1826,7 +1826,7 @@ class ProductTest extends Base
         $res3prod = $resprod3->getData();
         $this->assertEquals($res3prod->data[0]->images[0]->name, 'phpunittest2.jpg');
 
-        $resSwap2 = $this->get('api/images/position/up/'.$res2->data[0]->id.'?token='.$this->token);
+        $resSwap2 = $this->patch('api/images/position/up/'.$res2->data[0]->id.'?token='.$this->token);
   
         $response3Swap = $this->get('api/images/product/'.$productId.'?token='.$this->token);
         $res3Swap = $response3Swap->getData();
@@ -1932,27 +1932,27 @@ class ProductTest extends Base
         $this->assertEquals(null, $lastImage['page_id']);
 
         //for($i = 0; $i < count($allImgsBefore)-1; $i++){
-        $resSwap = $this->get('api/images/position/up/'.$lastImage['id'].'?token='.$this->token);
+        $resSwap = $this->patch('api/images/position/up/'.$lastImage['id'].'?token='.$this->token);
         $res = $resSwap->getData();
         $this->assertTrue($res->success);
 
-        $resSwap = $this->get('api/images/position/up/'.$lastImage['id'].'?token='.$this->token);
+        $resSwap = $this->patch('api/images/position/up/'.$lastImage['id'].'?token='.$this->token);
         $res = $resSwap->getData();
         $this->assertTrue($res->success);
 
-        $resSwap = $this->get('api/images/position/up/'.$lastImage['id'].'?token='.$this->token);
+        $resSwap = $this->patch('api/images/position/up/'.$lastImage['id'].'?token='.$this->token);
         $res = $resSwap->getData();
         $this->assertTrue($res->success);
 
-        $resSwap = $this->get('api/images/position/down/'.$lastImage['id'].'?token='.$this->token);
+        $resSwap = $this->patch('api/images/position/down/'.$lastImage['id'].'?token='.$this->token);
         $res = $resSwap->getData();
         $this->assertTrue($res->success);
 
-        $resSwap = $this->get('api/images/position/down/'.$lastImage['id'].'?token='.$this->token);
+        $resSwap = $this->patch('api/images/position/down/'.$lastImage['id'].'?token='.$this->token);
         $res = $resSwap->getData();
         $this->assertTrue($res->success);
 
-        $resSwap = $this->get('api/images/position/down/'.$lastImage['id'].'?token='.$this->token);
+        $resSwap = $this->patch('api/images/position/down/'.$lastImage['id'].'?token='.$this->token);
         $res = $resSwap->getData();
         $this->assertTrue($res->success);
         //}

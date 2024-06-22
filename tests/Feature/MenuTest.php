@@ -195,7 +195,7 @@ class MenuTest extends Base
         $this->assertNotEmpty($name);
         $this->assertEquals($name, $testData3['name']['en']);
 
-        $res = $this->get('api/menus/position/up/'.$res->data[2]->id.'?token='.$this->token);
+        $res = $this->patch('api/menus/position/up/'.$res->data[2]->id.'?token='.$this->token);
         $res22a = $res->getData();
         $this->assertTrue($res22a->success);
 
@@ -209,7 +209,7 @@ class MenuTest extends Base
 
 
         $name1 = Menu::find($res1->data[2]->id)->translatesByColumnAndLang('name', 'en');
-        $resDown = $this->get('api/menus/position/down/'.$res1->data[2]->id.'?token='.$this->token);
+        $resDown = $this->patch('api/menus/position/down/'.$res1->data[2]->id.'?token='.$this->token);
         $res22a1 = $resDown->getData();
         $this->assertTrue($res22a1->success);
 

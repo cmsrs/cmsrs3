@@ -596,7 +596,7 @@ class ImageTest extends Base
         $this->assertTrue($res2->success);
         $this->assertEquals(2, count($res2->data));
 
-        $resSwap = $this->get('api/images/position/up/'.$res2->data[0]->id.'?token='.$this->token);
+        $resSwap = $this->patch('api/images/position/up/'.$res2->data[0]->id.'?token='.$this->token);
 
         $response2Swap = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
         $res2Swap = $response2Swap->getData();
@@ -639,7 +639,7 @@ class ImageTest extends Base
         $this->assertEquals('img1', $res2->data[3]->alt->en );
         $this->assertEquals('img2', $res2->data[4]->alt->en );
         
-        $resSwap = $this->get('api/images/position/down/'.$res2->data[4]->id.'?token='.$this->token);
+        $resSwap = $this->patch('api/images/position/down/'.$res2->data[4]->id.'?token='.$this->token);
         $resS = $resSwap->getData();
         $this->assertTrue($resS->success);
 
@@ -654,7 +654,7 @@ class ImageTest extends Base
         $this->assertEquals('img1', $res3->data[3]->alt->en );
         $this->assertEquals( self::STR_DESC_IMG1, $res3->data[4]->alt->en );
 
-        $resSwap = $this->get('api/images/position/up/'.$res3->data[3]->id.'?token='.$this->token);//or
+        $resSwap = $this->patch('api/images/position/up/'.$res3->data[3]->id.'?token='.$this->token);//or
         //$resSwap = $this->get('api/images/position/down/'.$res3->data[2]->id.'?token='.$this->token); 
         $resS2 = $resSwap->getData();
         $this->assertTrue($resS2->success);
@@ -813,7 +813,7 @@ class ImageTest extends Base
         $this->assertEquals( "product_img2", $res2->data[1]->alt->en );
         $this->assertEquals( "product_img3", $res2->data[2]->alt->en );
 
-        $resSwap = $this->get('api/images/position/down/'.$res2->data[1]->id.'?token='.$this->token);
+        $resSwap = $this->patch('api/images/position/down/'.$res2->data[1]->id.'?token='.$this->token);
         $resS2 = $resSwap->getData();
         $this->assertTrue($resS2->success);
 

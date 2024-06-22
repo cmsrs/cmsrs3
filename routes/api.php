@@ -82,13 +82,13 @@ Route::get('productsGetNameAndPrice/{lang?}', 'ProductController@getNameAndPrice
         Route::post($apiSecret.'pages', 'PageController@create');
         Route::put($apiSecret.'pages/{id}', 'PageController@update');
         Route::delete($apiSecret.'pages/{id}', 'PageController@delete');
-        Route::get($apiSecret.'pages/position/{direction}/{id}', 'PageController@position');
+        Route::patch($apiSecret.'pages/position/{direction}/{id}', 'PageController@position');
         Route::get($apiSecret.'pages/type/{type}', 'PageController@getPagesByType');
 
         Route::get($apiSecret.'images/{type}/{pageId}', 'ImageController@getItemByTypeAndRefId'); //getItemByPageId, it can be pageId or productId
         Route::post($apiSecret.'image/{type}/{pageId}', 'ImageController@uploadImageByTypeAndRefId'); //it can be pageId or productId
         Route::delete($apiSecret.'images/{id}',  'ImageController@delete');
-        Route::get($apiSecret.'images/position/{direction}/{id}', 'ImageController@position'); //only for type page and product is working
+        Route::patch($apiSecret.'images/position/{direction}/{id}', 'ImageController@position'); //only for type page and product is working
 
         Route::get($apiSecret.'users/clients', 'UserController@getClients');
         Route::get($apiSecret.'clients/{column}/{direction}', 'UserController@getClientsPaginateAndSort');
@@ -101,7 +101,7 @@ Route::get('productsGetNameAndPrice/{lang?}', 'ProductController@getNameAndPrice
         Route::post($apiSecret.'menus', 'MenuController@create');
         Route::put($apiSecret.'menus/{id}', 'MenuController@update');
         Route::delete($apiSecret.'menus/{id}', 'MenuController@delete');
-        Route::get($apiSecret.'menus/position/{direction}/{id}', 'MenuController@position');
+        Route::patch($apiSecret.'menus/position/{direction}/{id}', 'MenuController@position');
 
         Route::get($apiSecret.'products', 'ProductController@index');
         Route::post($apiSecret.'products', 'ProductController@create');
