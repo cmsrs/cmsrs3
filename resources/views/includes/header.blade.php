@@ -1,5 +1,5 @@
 <?php $manyLangs = ( 1 < count($langs)); ?>
-<?php $bg = env('DEMO_STATUS') ?  'bg-dark' : 'bg-secondary'; ?>
+<?php $bg = env('DEMO_STATUS', false) ?  'bg-dark' : 'bg-secondary'; ?>
 <?php //$bg = 'bg-secondary'; ?>
 <?php $pLogin = App\Page::getFirstPageByType('login');  ?>
 <?php $pRegister = App\Page::getFirstPageByType('register');  ?>
@@ -15,7 +15,7 @@
 
 <div id="page_id" data-page-id="{{$page ? $page->id : ''}}"></div>  
 <div id="lang" data-lang="{{$lang ?  $lang : ''}}"></div>    
-<div id="is_shop" data-is-shop="{{ env('IS_SHOP'), 0 }}"></div>          
+<div id="is_shop" data-is-shop="{{ env('IS_SHOP'), 1 }}"></div>          
 <div id="commented" data-commented="{{ $page ? $page->commented : '' }}"></div>          
 
 
@@ -69,7 +69,7 @@
   </div>
 
     <ul class="list-unstyled  m-0 p-0">
-      <?php if(  env('IS_SHOP', false) ){ ?>
+      <?php if(  env('IS_SHOP', true) ){ ?>
         <li class="nav-item ml-1  mr-4 cursor-pointer" v-on:click="toglebasket()">
           <i style="font-size:40px;color:#ff5050" class="fa">&#xf07a;</i>
           <span style="color:#ff5050">@{{ cart_length ? cart_length : '' }}</span>
