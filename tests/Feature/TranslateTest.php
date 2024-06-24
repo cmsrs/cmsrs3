@@ -23,6 +23,7 @@ class TranslateTest extends Base
         putenv('CACHE_ENABLE=false');
         putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');        
         putenv('DEMO_STATUS=false');     
+        putenv('IS_SHOP=true');
 
         parent::setUp();
 

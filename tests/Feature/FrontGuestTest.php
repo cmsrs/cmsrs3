@@ -18,7 +18,8 @@ class FrontGuestTest extends TestCase
         putenv('CURRENCY="USD"');        
         putenv('CACHE_ENABLE=false');
         putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');  
-        putenv('DEMO_STATUS=false');           
+        putenv('DEMO_STATUS=false');  
+        putenv('IS_SHOP=true');         
 
         parent::setUp();
     }

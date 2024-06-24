@@ -151,7 +151,7 @@ CURRENCY=PLN
 IS_SHOP=true
 ```
 
-* PayU integration:
+* (optionally) PayU integration:
 
 ```bash
 #https://merch-prod.snd.payu.com - sandbox

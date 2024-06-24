@@ -56,13 +56,6 @@ Route::group(['middleware' => ['jwt.auth']], function() {
     Route::delete($apiSecret.'menus/{id}', 'MenuController@delete');
     Route::patch($apiSecret.'menus/position/{direction}/{id}', 'MenuController@position');
 
-    Route::get($apiSecret.'products', 'ProductController@index');
-    Route::post($apiSecret.'products', 'ProductController@create');
-    Route::get($apiSecret.'products/{id}', 'ProductController@getItem');
-    Route::get($apiSecret.'products/pagination/{lang}/{column}/{direction}', 'ProductController@getItemsWithPaginateAndSort');
-    Route::put($apiSecret.'products/{id}', 'ProductController@update');
-    Route::delete($apiSecret.'products/{id}', 'ProductController@delete');
-
     Route::get($apiSecret.'contacts', 'ContactController@index');    
     Route::get($apiSecret.'contacts/pagination/{column}/{direction}', 'ContactController@getItemsWithPaginateAndSort');        
     Route::delete($apiSecret.'contacts/{id}', 'ContactController@delete');            
@@ -73,7 +66,18 @@ Route::group(['middleware' => ['jwt.auth']], function() {
     Route::post($apiSecret.'config/toggle-cache-enable-file', 'ConfigController@toggleCacheEnableFile');      
     Route::get($apiSecret.'config/is-cache-enable', 'ConfigController@isCacheEnable');
 
-    Route::get($apiSecret.'checkouts', 'CheckoutController@index');  
-    Route::get($apiSecret.'checkouts/pagination/{lang}/{column}/{direction}', 'CheckoutController@getItemsWithPaginateAndSort');              
-    Route::patch($apiSecret.'checkouts/{id}', 'CheckoutController@update');        
+    /* shop start */
+    if(env('IS_SHOP', true )){
+        Route::get($apiSecret.'products', 'ProductController@index');
+        Route::post($apiSecret.'products', 'ProductController@create');
+        Route::get($apiSecret.'products/{id}', 'ProductController@getItem');
+        Route::get($apiSecret.'products/pagination/{lang}/{column}/{direction}', 'ProductController@getItemsWithPaginateAndSort');
+        Route::put($apiSecret.'products/{id}', 'ProductController@update');
+        Route::delete($apiSecret.'products/{id}', 'ProductController@delete');
+    
+        Route::get($apiSecret.'checkouts', 'CheckoutController@index');  
+        Route::get($apiSecret.'checkouts/pagination/{lang}/{column}/{direction}', 'CheckoutController@getItemsWithPaginateAndSort');              
+        Route::patch($apiSecret.'checkouts/{id}', 'CheckoutController@update');            
+    }
+    /* shop stop */
 });
