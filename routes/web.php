@@ -15,6 +15,7 @@ use App\Page;
 |
 */
 $demoStatus = env('DEMO_STATUS', false);
+$isShop = env('IS_SHOP', true );
 if($demoStatus){
     Auth::routes(['register' => false, 'reset' => false]);
 }else{
@@ -33,7 +34,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 //depreciate - /home/api/tobank!
 //Route::post('/home/api/tobank', 'HomeController@tobank')->name('tobank');
-Route::post('/post/checkout', 'FrontController@postCheckout');
+if($isShop){
+    Route::post('/post/checkout', 'FrontController@postCheckout');
+}
 
 Route::get('/changelang/{lang}/{pageId}/{productSlug?}', 'FrontController@changeLang')->name('changelang');
 //});
@@ -41,9 +44,12 @@ Route::get('/changelang/{lang}/{pageId}/{productSlug?}', 'FrontController@change
 
 Route::get('/', 'FrontController@index');
 if( empty($langs)  || (1 == count($langs)) ){    
-    Route::get('/shoppingsuccess', 'FrontController@shoppingsuccess');        
-    Route::get('/search', 'FrontController@search');                
-    Route::get('/checkout', 'FrontController@checkout')->name('checkout');
+    if($isShop){
+        Route::get('/shoppingsuccess', 'FrontController@shoppingsuccess');        
+        Route::get('/search', 'FrontController@search');                
+        Route::get('/checkout', 'FrontController@checkout')->name('checkout');
+    }
+
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');    
     Route::get('/register', 'Auth\RegisterController@showRegistrationForm')->name('register');            
@@ -53,9 +59,12 @@ if( empty($langs)  || (1 == count($langs)) ){
     Route::get('/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}/{productSlug?}', 'FrontController@getPage');
     Route::get('/'.Page::PREFIX_IN_URL.'/{pageSlug}', 'FrontController@getSeparatePage');    
 }else{
-    Route::get('/{lang}/shoppingsuccess', 'FrontController@shoppingsuccess');
-    Route::get('/{lang}/search', 'FrontController@search');
-    Route::get('/{lang}/checkout', 'FrontController@checkout');
+    if($isShop){
+        Route::get('/{lang}/shoppingsuccess', 'FrontController@shoppingsuccess');
+        Route::get('/{lang}/search', 'FrontController@search');
+        Route::get('/{lang}/checkout', 'FrontController@checkout');
+    }
+
     Route::get('/{lang}/home', 'HomeController@index');        
     Route::get('/{lang}', 'FrontController@index');
     Route::get('/{lang}/login', 'Auth\LoginController@showLoginForm'); //->name('login');    
