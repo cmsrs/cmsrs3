@@ -207,7 +207,7 @@
         <div v-if="cart.length">
           <div class="m-4 cart-total font-weight-bold" >{{ __('Total') }}: @{{ total_add_deliver_sanit }} zł</div>                  
         </div>
-        <button class="m-3 btn">{{ __('Go to bank') }}</button>
+        <button class="m-3 btn" v-on:click="checkout($event)">{{ __('Go to bank') }}</button>
       <div>
 
   </form>

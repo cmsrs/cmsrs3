@@ -15,7 +15,8 @@
 
 <div id="page_id" data-page-id="{{$page ? $page->id : ''}}"></div>  
 <div id="lang" data-lang="{{$lang ?  $lang : ''}}"></div>    
-<div id="is_shop" data-is-shop="{{ env('IS_SHOP'), 1 }}"></div>          
+<div id="is_shop" data-is-shop="{{ env('IS_SHOP', 1) }}"></div>          
+<div id="is_demo" data-is-demo="{{ env('DEMO_STATUS', 0) }}"></div>          
 <div id="commented" data-commented="{{ $page ? $page->commented : '' }}"></div>          
 
 

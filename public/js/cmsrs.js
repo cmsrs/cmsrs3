@@ -16,6 +16,7 @@ new Vue({
                 page : {},
                 images: [],
                 is_shop: false,
+                is_demo: false,
                 commented : false,
 
                 //contact
@@ -40,6 +41,8 @@ new Vue({
                 const el4 = document.querySelector('#commented');
                 this.commented = el4 ? parseInt(el4.dataset.commented) : false;
                 
+                const el5 = document.querySelector('#is_demo');
+                this.is_demo = el3 ? el5.dataset.isDemo : false;
 
                 //-----comments----
                 //TODO - no comments in page
@@ -92,6 +95,12 @@ new Vue({
         methods: {
                 addComment: function( event){
                         let pageId = this.page_id;
+                        if(this.is_demo){
+                                event.preventDefault();
+                                this.demoAlert();
+                                return false;
+                        }
+
                         if(!this.comment.length){
                                         return false;
                         }
@@ -117,6 +126,12 @@ new Vue({
                 },
                 contact: function( event){
                         let self = this;
+                        if(this.is_demo){
+                                event.preventDefault();
+                                this.demoAlert();
+                                return false;
+                        }
+
                         if (event) {
                                 event.preventDefault();
                         }
@@ -273,9 +288,20 @@ new Vue({
 
                 calculateTotalAddDeliverSanit: function(total, deliver_price){
                         return (total + deliver_price)/100;
+                },
+
+
+                demoAlert: function(){
+                        alert("We're sorry, but this action is not available in the demo version.");
+                },
+
+                checkout: function(event){
+                        if(this.is_demo){
+                                event.preventDefault();
+                                this.demoAlert();
+                                return false;
+                        }
                 }
-
-
                 /*
                 tobank: function(){
                         const el = document.querySelector('#token');
