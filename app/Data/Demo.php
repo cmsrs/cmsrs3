@@ -224,12 +224,14 @@ class Demo
                 </form>
                 
 
-                <p class='lead'>
+
                     <div class='alert alert-secondary' role='alert'>
                      The demo version was created for demonstration purposes.
                     </div>
 
                     <br><br>
+
+                <p class='lead'>
                     Login to the admin panel: <a href=\"$admUrl\">$admUrl</a>
                     <br>
                     <br>
@@ -281,13 +283,15 @@ class Demo
                 </form>
 
 
-                <p class='lead'>
+
 
                     <div class='alert alert-secondary' role='alert'>
                     Wersja demo została stworzona tylko dla celów demonstarcyjnych.
                     </div>
 
                     <br><br>
+
+                <p class='lead'>
                     Login do panelu administracyjnego: <a href=\"$admUrl\">$admUrl</a>
                     <br>
                     <br>
