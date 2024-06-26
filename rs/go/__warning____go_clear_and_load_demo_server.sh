@@ -4,10 +4,10 @@ rm -rf public/images/product
 
 
 ./rs/go/go_clear_all_cache_server.sh
-php81 artisan migrate:fresh
-php81 artisan db:seed
-php81 artisan command:load-demo-data
+php83 artisan migrate:fresh
+php83 artisan db:seed
+php83 artisan command:load-demo-data
 
-php81 artisan  cache:clear
-php81  artisan command:create-site-map
+php83 artisan  cache:clear
+php83  artisan command:create-site-map
 

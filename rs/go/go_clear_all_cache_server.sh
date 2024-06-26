@@ -1,5 +1,5 @@
-php81 artisan cache:clear
-php81 artisan route:clear
-php81 artisan config:clear
-php81 artisan view:clear
+php83 artisan cache:clear
+php83 artisan route:clear
+php83 artisan config:clear
+php83 artisan view:clear
 

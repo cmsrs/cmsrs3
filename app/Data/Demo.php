@@ -224,22 +224,18 @@ class Demo
                 </form>
                 
 
-                <p class='lead'>The demo version was created for demonstration purposes.<p>
-                    <div class='alert alert-danger' role='alert'>Saving, updating, deleting a single record has been disabled.</div>
+                <p class='lead'>
+                    <div class='alert alert-secondary' role='alert'>
+                     The demo version was created for demonstration purposes.
+                    </div>
+
                     <br><br>
-                    <p class='lead'>
                     Login to the admin panel: <a href=\"$admUrl\">$admUrl</a>
                     <br>
                     <br>
                     admin: adm@cmsrs.pl
                     <br>
                     pass: cmsrs123
-                    <br>
-
-                    <br>
-                    client: client@cmsrs.pl
-                    <br>
-                    pass: cmsrs456
                     <br>
 
                     <br>
@@ -285,10 +281,13 @@ class Demo
                 </form>
 
 
-                <p class='lead'>Wersja demo została stworzona tylko dla celów demonstarcyjnych.<p>
-                    <div class='alert alert-danger' role='alert'>Zapisywanie, aktualizacja i kasowanie rekordu zostały zabronione.</div>
+                <p class='lead'>
+
+                    <div class='alert alert-secondary' role='alert'>
+                    Wersja demo została stworzona tylko dla celów demonstarcyjnych.
+                    </div>
+
                     <br><br>
-                    <p class='lead'>
                     Login do panelu administracyjnego: <a href=\"$admUrl\">$admUrl</a>
                     <br>
                     <br>
@@ -296,13 +295,6 @@ class Demo
                     <br>
                     hasło: cmsrs123
                     <br>
-
-                    <br>
-                    klient: client@cmsrs.pl
-                    <br>
-                    hasło: cmsrs456
-                    <br>
-
 
                     <br>
                     Więcej informacji: <a title='cmsRS' href='https://www.cmsrs.pl' >https://www.cmsrs.pl</a>
