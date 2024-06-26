@@ -100,7 +100,7 @@
 
     <ul class="nav navbar-nav ml-auto" >
       <!-- Authentication Links -->
-      <?php if($pLogin){ ?>
+      <?php if($pLogin &&  !env('DEMO_STATUS', false) ){ ?>
         <?php $loginStyle = $manyLangs ? 'mr-4' : ''; ?>          
         @guest            
               <li class="nav-item {{$loginStyle}}">
