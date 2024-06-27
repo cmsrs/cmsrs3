@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Artisan;
 class Config extends Model
 {
     const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,login,projects,clear,checkout,register,home,shoppingsuccess,search,forgot,inner'; //default values
-    const LANG_DEFAULT = 'en';
+    const LANG_DEFAULT = 'en,pl';
     const PAGINATION_DEFAULT = 10; 
     
     const SORT_ASC = 'asc';
@@ -24,7 +24,7 @@ class Config extends Model
 
     public function __construct()
     {
-        $this->langs = empty(env('LANGS')) ? '' : env('LANGS');
+        $this->langs =  env('LANGS', Config::LANG_DEFAULT ); //empty(env('LANGS')) ? Config::LANG_DEFAULT : env('LANGS');
         $this->cacheEnableFile = env('CACHE_ENABLE_FILE', Config::CACHE_ENABLE_FILE_DEFAULT );
         $this->filePath = $this->getCacheEnableFilePath();
     }
@@ -102,14 +102,14 @@ class Config extends Model
 
     public static function getPageTypes()
     {
-        $pageTypes = '';
-        if (env('PAGE_TYPES')) {
-            $pageTypes = env('PAGE_TYPES');
-        } else {
-            $pageTypes = Config::PAGE_TYPES_STR_DEFAULT;
-        }
+        // $pageTypes = '';
+        // if (env('PAGE_TYPES')) {
+        //     $pageTypes = env('PAGE_TYPES');
+        // } else {
+        //     $pageTypes = Config::PAGE_TYPES_STR_DEFAULT;
+        // }
 
-        return $pageTypes;
+        return env('PAGE_TYPES', Config::PAGE_TYPES_STR_DEFAULT);
     }
 
     public static function arrGetPageTypes()
@@ -138,7 +138,7 @@ class Config extends Model
 
     public static function arrGetLangsEnv()
     {
-        $langs = explode(',', env('LANGS', ''));
+        $langs = explode(',', env('LANGS', Config::LANG_DEFAULT));
         return $langs;
     }
 

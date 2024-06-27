@@ -139,7 +139,7 @@ class FrontLangsTest extends Base
     }
 
     /**
-     * maybe it will be usefull for sitemap
+     * maybe it will be useful for sitemap
      * links without: home, login, logout
      */
     public function test_it_will_get_all_pages_status()

@@ -18,7 +18,18 @@ cd cmsrs3
 * prepare .env file, and change db connection:
  
 ```bash
-cp .env.cmsrs .env
+cp .env.example .env
+```
+
+change db connection, for example:
+
+```bash
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=cmsrs
+DB_USERNAME=rs
+DB_PASSWORD="secret102*"
 ```
 
 * install dependency
@@ -33,13 +44,17 @@ composer install
 php artisan key:generate && php artisan jwt:secret
 ```
  
-* create database tables and create admin user (email: adm@cmsrs.pl, pass: cmsrs123, change in .env file) 
+* create database tables and create: 
+
+- admin (email: adm@cmsrs.pl, pass: cmsrs123) 
+
+- client (email: client@cmsrs.pl, pass: cmsrs456) 
 
 ```bash
 php artisan migrate  && php artisan db:seed
 ```
  
-* set permission 
+* (optionally) set permission 
  
 ```bash
 ./rs/go/go_privilege.sh
@@ -56,15 +71,33 @@ php artisan serve
 * prepare .env.testing file, and change db connection:
 
 ```bash
-cp  .env.testing.cmsrs .env.testing 
+cp  .env.example .env.testing 
 ```
+
+change db connection, for example:
+
+Attention! DB_DATABASE should be different than the one in the .env file.
+
+```bash
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=cmsrs_testing
+DB_USERNAME=rs
+DB_PASSWORD="secret102*"
+```
+
+* (optionally) set permission 
  
+```bash
+./rs/go/go_privilege.sh
+```
+
 * run tests: 
 
 It is recommended to run tests on a clean instance (without images)
 
 ```bash
-./rs/go/go_privilege.sh
 ./vendor/bin/phpunit
 ```
 
@@ -93,14 +126,14 @@ LANGS="pl,en"
 ```
 
 The first one will be default language.
-If you don't set up this directive it will be 'en'
+If you don't set up this directive it will be 'en,pl'
 
-* add api secret, example:
+* add api secret, the default is '':
 ```bash
 API_SECRET=""
 ```
 
-It must be the same like in the admin config file (see React).
+It must be the same like in the admin config file (see Vue.js).
 It can be empty string.
 
 * (optionally) set available page type that appear in the administration area: 
@@ -133,7 +166,7 @@ GOOGLE_RECAPTCHA_PRIV
 GOOGLE_RECAPTCHA_PUBLIC
 ```
  
-* (optionally) enable database cache: 
+* (optionally) enable database cache, the fefault is false: 
 
 ```bash
 CACHE_ENABLE=true
@@ -192,6 +225,8 @@ tail -f -n0 storage/logs/*
 # CLI COMMANDS 
 
 * load test (demo) data: 
+
+**I highly recommend running this script in order to understand how my CMS works.
 
 ```bash
 ./rs/go/go_clear_and_load_demo.sh
