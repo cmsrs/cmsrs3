@@ -147,7 +147,7 @@ class Config extends Model
         $langs = Config::arrGetLangsEnv();
         if(empty($langs) || empty($langs[0]) ){
             $langs = []; 
-            $langs[0] = LANG_DEFAULT;            
+            $langs[0] = Config::LANG_DEFAULT;            
             //throw new \Exception("You must set at least one language in the .env file (default lang)");
         }
         return $langs[0];
