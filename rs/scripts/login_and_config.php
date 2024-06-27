@@ -1,14 +1,14 @@
 <?php
 
-//$envFile  = '../../.env';
-$envFile  = '.env';
+$envFile  = '../../.env';
+//$envFile  = '.env';
 if( !file_exists( $envFile  )  ){
     die( 'cant find env file'  );
 }
 
 $env = parse_ini_file(  $envFile  );
-$login =  $env["ADM_EMAIL"] ?? die('probem with login');
-$pass =  $env["ADM_PASS"] ?? die('probem with pass');
+$login =  $env["ADM_EMAIL"] ?   $env["ADM_EMAIL"] : 'adm@cmsrs.pl' ;
+$pass =  $env["ADM_PASS"] ? $env["ADM_PASS"] : 'cmsrs123'  ;
 
 //var_dump( $env );
 //die('__________');
