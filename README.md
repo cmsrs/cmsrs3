@@ -44,10 +44,20 @@ composer install
 php artisan key:generate && php artisan jwt:secret
 ```
  
-* create database tables and create: 
+* Create database tables and seed initial data:
 
     - admin (email: adm@cmsrs.pl, pass: cmsrs123) 
     - client (email: client@cmsrs.pl, pass: cmsrs456) 
+
+Before running this command, you can modify these values in the `.env` file:
+
+```bash
+ADM_EMAIL='adm@cmsrs.pl'
+ADM_PASS='cmsrs123'
+CLIENT_EMAIL='client@cmsrs.pl'
+CLIENT_PASS='cmsrs456'
+```
+
 
 ```bash
 php artisan migrate  && php artisan db:seed
