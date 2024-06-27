@@ -46,9 +46,8 @@ php artisan key:generate && php artisan jwt:secret
  
 * create database tables and create: 
 
-- admin (email: adm@cmsrs.pl, pass: cmsrs123) 
-
-- client (email: client@cmsrs.pl, pass: cmsrs456) 
+    - admin (email: adm@cmsrs.pl, pass: cmsrs123) 
+    - client (email: client@cmsrs.pl, pass: cmsrs456) 
 
 ```bash
 php artisan migrate  && php artisan db:seed
@@ -166,7 +165,7 @@ GOOGLE_RECAPTCHA_PRIV
 GOOGLE_RECAPTCHA_PUBLIC
 ```
  
-* (optionally) enable database cache, the fefault is false: 
+* (optionally) enable database cache, the default is false: 
 
 ```bash
 CACHE_ENABLE=true
