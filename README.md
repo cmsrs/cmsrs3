@@ -196,23 +196,6 @@ NOTIFY_URL=http://domain/home/orders
 CUSTOMER_IP="123.123.123.123"
 ```
 
-* (optionally) change the default login/pass admin and client:
-
-
-```bash
-ADM_EMAIL='adm@cmsrs.pl'
-ADM_PASS='cmsrs123'
-CLIENT_EMAIL='client@cmsrs.pl'
-CLIENT_PASS='cmsrs456'
-```
-
-run:
-
-```bash
-php artisan db:seed
-```
-
-
 # TROUBLESHOOTING
 
 * logs:
@@ -225,7 +208,7 @@ tail -f -n0 storage/logs/*
 
 * load test (demo) data: 
 
-**I highly recommend running this script in order to understand how my CMS works.
+**I highly recommend running this script in order to understand how my CMS works.**
 
 ```bash
 ./rs/go/go_clear_and_load_demo.sh
@@ -255,10 +238,6 @@ https://www.cmsrs.pl/en/cms/cmsrs/cmsrs-video-tutorial
 
 https://www.cmsrs.pl/en/cms/cmsrs/about-cmsrs
 
-# REACT SOURCE CODE
-
-https://github.com/cmsrs/cmsrs3-react
-
-# VUEJS SOURCE CODE - REACT ALTERNATIVE, NEW VERSION, RECOMENDED
+# VUEJS SOURCE CODE 
 
 https://github.com/cmsrs/cmsrs3-vuejs
