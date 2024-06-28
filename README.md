@@ -49,7 +49,7 @@ php artisan key:generate && php artisan jwt:secret
     - admin (email: adm@cmsrs.pl, pass: cmsrs123) 
     - client (email: client@cmsrs.pl, pass: cmsrs456) 
 
-Before running this command, you can modify these values in the `.env` file:
+ (optionally) Before running this command, you can modify these values in the `.env` file. These are the default values: 
 
 ```bash
 ADM_EMAIL='adm@cmsrs.pl'
@@ -57,7 +57,6 @@ ADM_PASS='cmsrs123'
 CLIENT_EMAIL='client@cmsrs.pl'
 CLIENT_PASS='cmsrs456'
 ```
-
 
 ```bash
 php artisan migrate  && php artisan db:seed
@@ -218,7 +217,7 @@ tail -f -n0 storage/logs/*
 
 * load test (demo) data: 
 
-**I highly recommend running this script in order to understand how my CMS works.**
+**I highly recommend running this script to understand how my CMS works. (Remember to leave the default values in the .env file.)**
 
 ```bash
 ./rs/go/go_clear_and_load_demo.sh
