@@ -235,9 +235,13 @@ php artisan command:create-site-map
 php artisan command:create-client {user} {password}
 ```
 
-# DEMO
+# DEMO - Frontend
 
 http://demo.cmsrs.pl
+
+# DEMO - Admin Panel
+
+http://demo.cmsrs.pl/admin-demo
 
 # TUTORIALS
 
@@ -247,6 +251,6 @@ https://www.cmsrs.pl/en/cms/cmsrs/cmsrs-video-tutorial
 
 https://www.cmsrs.pl/en/cms/cmsrs/about-cmsrs
 
-# VUEJS SOURCE CODE 
+# VUE.JS SOURCE CODE 
 
 https://github.com/cmsrs/cmsrs3-vuejs
