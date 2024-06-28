@@ -6,7 +6,7 @@
 </br>
 </br>
 
-# INSTALLATION
+## INSTALLATION
 
 * download
  
@@ -74,7 +74,7 @@ php artisan migrate  && php artisan db:seed
 php artisan serve
 ```
 
-# RUN TESTS
+## RUN TESTS
 
 * prepare .env.testing file, and change db connection:
 
@@ -109,7 +109,7 @@ It is recommended to run tests on a clean instance (without images)
 ./vendor/bin/phpunit
 ```
 
-# MANAGMENT
+## MANAGMENT
 
 * go to the website http://127.0.0.1:8000/admin/
 
@@ -125,7 +125,7 @@ It is recommended to run tests on a clean instance (without images)
     
 * add pages   
  
-# CONFIGURATION .env FILE
+## CONFIGURATION .env FILE
 
 *  (optionally) set up langs, example:
 
@@ -205,7 +205,7 @@ NOTIFY_URL=http://domain/home/orders
 CUSTOMER_IP="123.123.123.123"
 ```
 
-# TROUBLESHOOTING
+## TROUBLESHOOTING
 
 * logs:
 
@@ -213,7 +213,7 @@ CUSTOMER_IP="123.123.123.123"
 tail -f -n0 storage/logs/*
 ```
 
-# CLI COMMANDS 
+## CLI COMMANDS 
 
 * load test (demo) data: 
 
@@ -235,22 +235,22 @@ php artisan command:create-site-map
 php artisan command:create-client {user} {password}
 ```
 
-# DEMO - Frontend
+## DEMO - Frontend
 
 http://demo.cmsrs.pl
 
-# DEMO - Admin Panel
+## DEMO - Admin Panel
 
 http://demo.cmsrs.pl/admin-demo
 
-# TUTORIALS
+## TUTORIALS
 
 https://www.cmsrs.pl/en/cms/cmsrs/cmsrs-video-tutorial
 
-# MORE INFORMATION
+## MORE INFORMATION
 
 https://www.cmsrs.pl/en/cms/cmsrs/about-cmsrs
 
-# VUE.JS SOURCE CODE 
+## VUE.JS SOURCE CODE 
 
 https://github.com/cmsrs/cmsrs3-vuejs
