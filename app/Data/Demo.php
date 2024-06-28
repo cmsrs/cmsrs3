@@ -167,9 +167,9 @@ class Demo
         $images = $this->getTestImg($unitTest);
 
         $p = [];
-        $appUrl = env('APP_URL');
-        $admUrl = (strpos($appUrl, 'demo.cmsrs.pl') !== false) ? $appUrl.'/admin-demo' : $appUrl.'/admin/';
-
+        //$appUrl = env('APP_URL');
+        //$admUrl = (strpos($appUrl, 'demo.cmsrs.pl') !== false) ? $appUrl.'/admin-demo' : $appUrl.'/admin/';
+        $admUrl = env('DEMO_STATUS', false) ? '/admin-demo' : '/admin/';
 
         $pInner1 = [
             'title' => [ "en" => 'Box1 test', "pl" => 'Box1 test' ],
@@ -232,7 +232,7 @@ class Demo
                     <br><br>
 
                 <p class='lead'>
-                    Login to the admin panel: <a href=\"$admUrl\">$admUrl</a>
+                    Admin panel: <a href=\"$admUrl\">$admUrl</a>
                     <br>
                     <br>
                     admin: adm@cmsrs.pl
@@ -292,7 +292,7 @@ class Demo
                     <br><br>
 
                 <p class='lead'>
-                    Login do panelu administracyjnego: <a href=\"$admUrl\">$admUrl</a>
+                    Panel administracyjny: <a href=\"$admUrl\">$admUrl</a>
                     <br>
                     <br>
                     admin: adm@cmsrs.pl

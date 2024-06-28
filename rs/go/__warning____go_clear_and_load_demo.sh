@@ -8,4 +8,5 @@ sudo rm -rf public/images/product
 php artisan migrate:fresh
 php artisan db:seed
 php artisan command:load-demo-data
+php artisan command:create-cache-enable-file
 

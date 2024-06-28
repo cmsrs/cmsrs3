@@ -23,7 +23,7 @@ class Migration extends Command
      *
      * @var string
      */
-    protected $description = 'Exemple of migration (migration my old web site)';
+    protected $description = 'Example of migration (migration my old web site)';
 
     /**
      * Create a new command instance.

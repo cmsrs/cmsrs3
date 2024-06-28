@@ -9,5 +9,6 @@ php83 artisan db:seed
 php83 artisan command:load-demo-data
 
 php83 artisan  cache:clear
-php83  artisan command:create-site-map
+php83 artisan command:create-site-map
+php83 artisan command:create-cache-enable-file
 

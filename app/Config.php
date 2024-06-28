@@ -29,6 +29,11 @@ class Config extends Model
         $this->filePath = $this->getCacheEnableFilePath();
     }
 
+    public function getCacheFilePath()
+    {
+        return $this->filePath;
+    }
+
     public static function getAvailableSortingDirection()
     {
         return [

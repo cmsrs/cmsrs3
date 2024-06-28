@@ -42,7 +42,7 @@ new Vue({
                 this.commented = el4 ? parseInt(el4.dataset.commented) : false;
                 
                 const el5 = document.querySelector('#is_demo');
-                this.is_demo = el3 ? el5.dataset.isDemo : false;
+                this.is_demo = el5 ? el5.dataset.isDemo : false;
 
                 //-----comments----
                 //TODO - no comments in page
