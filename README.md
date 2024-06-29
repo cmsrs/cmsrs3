@@ -1,6 +1,6 @@
 <p align="center">
     <img src="http://www.cmsrs.pl/images/cms/logo_cmsrs.png"><br/>
-    Multilingual CMS system with online shop module 
+    CMS, gallery, and shop based on Laravel and Vue.js
 </p>
 </br>
 </br>

@@ -1,7 +1,7 @@
 {
     "name": "cmsrs/cmsrs3",
     "type": "project",
-    "description": "CMS/gallery/shop base on the Laravel Framework.",
+    "description": "CMS, gallery, and shop based on Laravel and Vue.js",
     "keywords": [
         "cms",
         "gallery",
