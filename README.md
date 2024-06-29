@@ -127,7 +127,7 @@ LANGS="pl,en"
 The first one will be default language.
 If you don't set up this directive it will be 'en,pl'
 
-* add api secret, the default is '':
+* (optionally) add api secret, the default is '':
 ```bash
 API_SECRET=""
 ```
@@ -156,7 +156,6 @@ If the value is empty, the text of the message will appear only in the administr
 ```bash
 CONTACT_EMAIL=""
 ```
-
 
 * (optionally) for google v3 reCaptcha in the contact form: 
 
@@ -194,14 +193,6 @@ PAYU_CLIENT_ID=123
 PAYU_CLIENT_SECRET=zzz
 NOTIFY_URL=http://domain/home/orders
 CUSTOMER_IP="123.123.123.123"
-```
-
-## TROUBLESHOOTING
-
-* logs:
-
-```bash
-tail -f -n0 storage/logs/*
 ```
 
 ## CLI COMMANDS 
