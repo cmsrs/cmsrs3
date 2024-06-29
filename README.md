@@ -229,7 +229,7 @@ php artisan command:create-client {user} {password}
 * change admin password:
 
 ```bash
-php artisan command:change-admin-pass newpassword
+php artisan command:change-admin-pass {newpassword}
 ```
 
 ## DEMO - Frontend
