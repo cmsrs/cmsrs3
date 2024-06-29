@@ -49,15 +49,6 @@ php artisan key:generate && php artisan jwt:secret
     - admin (email/login: adm@cmsrs.pl, pass: cmsrs123) 
     - client (email/login: client@cmsrs.pl, pass: cmsrs456) 
 
- (optionally) Before running this command, you can modify these values in the `.env` file. These are the default values: 
-
-```bash
-ADM_EMAIL='adm@cmsrs.pl'
-ADM_PASS='cmsrs123'
-CLIENT_EMAIL='client@cmsrs.pl'
-CLIENT_PASS='cmsrs456'
-```
-
 ```bash
 php artisan migrate  && php artisan db:seed
 ```
@@ -233,6 +224,12 @@ php artisan command:create-site-map
 
 ```bash
 php artisan command:create-client {user} {password}
+```
+
+* change admin password:
+
+```bash
+php artisan command:change-admin-pass newpassword
 ```
 
 ## DEMO - Frontend
