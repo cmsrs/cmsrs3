@@ -750,7 +750,7 @@ class ProductTest extends Base
      * it is not test admin
      * this api is use in basket (it is useful when name and price will be changing)
      */
-    public function test_it_will_get_name_and_price_by_lang()
+    public function test_it_will_get_name_and_price_by_lang_docs()
     {
         /* prepare data - start */
         $this->setTestData();        
@@ -778,10 +778,11 @@ class ProductTest extends Base
         /* prepare data - stop */
 
         $lang = 'en';
-        $response = $this->get('api/productsGetNameAndPrice/'.$lang); //TODO - add to docs
+        $url = 'api/productsGetNameAndPrice/'.$lang;
+        $response = $this->get($url);
 
-        //dd($response);
         $data = $response->getData();
+        //print_r($data);
         $this->assertTrue($data->success);
 
         $dd = (array)$data->data;
