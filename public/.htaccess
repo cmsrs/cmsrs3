@@ -42,6 +42,14 @@ AddHandler application/x-httpd-php83 php
     RewriteRule   ^pl/cms/cmsrs/cms---laravel-i-react  /pl/cms/cmsrs/cms-laravel-i-react [R=301,L]
     RewriteRule   ^en/cms/cmsrs/cms---laravel-and-react  /en/cms/cmsrs/cms-laravel-and-react [R=301,L]
 
+
+
+    RewriteRule   ^pl/cms/cmsrs/cms-laravel-i-react   /pl/cms/cmsrs/pobierz-cms-galeria-sklep-laravel-i-vuejs [R=301,L]
+    RewriteRule   ^en/cms/cmsrs/cms-laravel-and-react  /en/cms/cmsrs/download-cms-gallery-shop-laravel-and-vuejs [R=301,L]
+
+
+
+
     RewriteRule   ^en/cms/projects/game-description---checkers-for-mobile-and-stationary-devices  /en/cms/projects/game-description-checkers-for-mobile-and-stationary-devices [R=301,L]
     RewriteRule   ^pl/cms/projekty/opis-gry---warcaby-na-urzadzenia-mobile-i-stacjonarne  /pl/cms/projekty/opis-gry-warcaby-na-urzadzenia-mobile-i-stacjonarne [R=301,L]
 
