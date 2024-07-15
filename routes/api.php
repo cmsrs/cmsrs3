@@ -21,6 +21,7 @@ Route::post('comments/{pageId}', 'CommentController@create');
 Route::post('contact/{lang}', 'ContactController@create');    
 
 Route::get('page/{id}/{lang}', 'PageController@oneItem');
+Route::get('page-type/{type}', 'PageController@getFirstPageByTypeForGuest');
 
 Route::group(['middleware' => ['jwt.auth']], function() {
     $apiSecret = env('API_SECRET', '' );

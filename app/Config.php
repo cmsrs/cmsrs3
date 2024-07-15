@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Artisan;
 
 class Config extends Model
 {
-    const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,login,projects,clear,checkout,register,home,shoppingsuccess,search,forgot,inner'; //default values
+    const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,login,projects,clear,checkout,register,home,shoppingsuccess,search,forgot,inner,slider_main'; //default values
     const LANG_DEFAULT = 'en,pl';
     const PAGINATION_DEFAULT = 10; 
     

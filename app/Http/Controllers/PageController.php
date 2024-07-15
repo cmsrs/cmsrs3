@@ -70,6 +70,18 @@ class PageController extends Controller
         return response()->json(['success' => true, 'data'=> $pages], 200);
     }
 
+    public function getFirstPageByTypeForGuest(Request $request, $type)
+    {
+        if ( !in_array( $type, Config::arrGetPageTypes() )  ) {
+            return response()->json(['success'=> false, 'error'=> 'wrong type' ], 200);
+        }
+
+        $page = (new Page)->getFirstPageWithImagesForGuest($type);
+
+        return response()->json(['success' => true, 'data'=> $page], 200);
+    }
+
+
     public function getPagesByType(Request $request, $type)
     {
         $pages = (new Page)->getAllPagesWithImages($type);

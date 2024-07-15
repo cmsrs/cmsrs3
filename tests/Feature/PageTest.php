@@ -978,6 +978,34 @@ class PageTest extends Base
         $this->assertEquals('cms', $lastPage['type'] ); //cms - it is default value
     }
 
+    public function test_it_will_get_first_page_by_type_without_auth_docs()
+    {
+        $testData2 =
+            [
+                'title' => [ 'en' =>  'test p2'],
+                'short_title' => [ 'en' =>  'p22'],
+                'published' => 1,
+                'after_login' => 0,                
+                'type' => 'slider_main',
+                'content' => [ 'en' => 'test content'],
+                'menu_id' => null,
+                'images' => []
+            ];
+
+        $response = $this->post('api/pages?token=' . $this->token, $testData2);
+        $res = $response->getData();
+        $this->assertTrue($res->success);
+
+
+        $type = 'slider_main';
+        $res = $this->get('api/page-type/'.$type);
+
+        $data =  $res->getData();
+        $this->assertTrue($data->success);
+
+        $this->assertEquals($type, $data->data->type);
+    }
+
     public function test_it_will_get_pages_by_type_docs()
     {
         $testData2 =

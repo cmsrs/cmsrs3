@@ -656,6 +656,20 @@ class Page extends Base
         return $formatPage;
     }
 
+    public function getFirstPageWithImagesForGuest($type)
+    {        
+        $page = Page::with(['translates', 'contents'])->where('type', $type)->where('after_login', false)->orderBy('position', 'asc')->get($this->pageFields)->first(); //->toSql(); ///toArray();
+
+        $out = [];
+        if($page){
+            $page = $page->toArray();
+            $out = $this->getPageDataFormat($page);
+            $out['images'] = Image::getImagesAndThumbsByTypeAndRefId('page', $page['id']);    
+        }
+
+        return $out;
+    }    
+
     public function getAllPagesWithImages($type = null)
     {
         if ($type) {
