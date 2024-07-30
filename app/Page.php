@@ -658,7 +658,11 @@ class Page extends Base
 
     public function getFirstPageWithImagesForGuest($type)
     {        
-        $page = Page::with(['translates', 'contents'])->where('type', $type)->where('after_login', false)->orderBy('position', 'asc')->get($this->pageFields)->first(); //->toSql(); ///toArray();
+        if ( !in_array( $type, Config::arrGetPageTypes() )  ) {
+            throw new \Exception("Wrong type : ".$type);
+        }
+        
+        $page = Page::with(['translates', 'contents'])->where('type', $type)->where('published', true)->where('after_login', false)->orderBy('position', 'asc')->get($this->pageFields)->first(); //->toSql(); ///toArray();
 
         $out = [];
         if($page){

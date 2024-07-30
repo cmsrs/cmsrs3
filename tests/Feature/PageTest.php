@@ -978,6 +978,53 @@ class PageTest extends Base
         $this->assertEquals('cms', $lastPage['type'] ); //cms - it is default value
     }
 
+    public function test_model_it_will_get_first_page_by_type_without_auth()
+    {
+        $type = 'slider_main';
+        $testData2 =
+            [
+                'title' => [ 'en' =>  'test p2'],
+                'short_title' => [ 'en' =>  'p22'],
+                'published' => 1,
+                'after_login' => 0,                
+                'type' => $type,
+                'content' => [ 'en' => 'test content'],
+                'menu_id' => null,
+                'images' => []
+            ];
+
+        $response = $this->post('api/pages?token=' . $this->token, $testData2);
+        $res = $response->getData();
+        $this->assertTrue($res->success);
+
+        $page = (new Page)->getFirstPageWithImagesForGuest($type);
+        $this->assertEquals($type, $page['type']);
+        $this->assertNotEmpty($page['id']);
+    }
+
+    public function test_model_it_will_get_first_page_by_type_and_not_published_without_auth()
+    {
+        $type = 'slider_main';
+        $testData2 =
+            [
+                'title' => [ 'en' =>  'test p2'],
+                'short_title' => [ 'en' =>  'p22'],
+                'published' => 0,
+                'after_login' => 0,                
+                'type' => $type,
+                'content' => [ 'en' => 'test content'],
+                'menu_id' => null,
+                'images' => []
+            ];
+
+        $response = $this->post('api/pages?token=' . $this->token, $testData2);
+        $res = $response->getData();
+        $this->assertTrue($res->success);
+
+        $page = (new Page)->getFirstPageWithImagesForGuest($type);
+        $this->assertEmpty($page);
+    }
+
     public function test_it_will_get_first_page_by_type_without_auth_docs()
     {
         $testData2 =
