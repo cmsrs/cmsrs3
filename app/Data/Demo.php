@@ -81,13 +81,26 @@ class Demo
                 ['name' => 'imggreece1.jpg', 'data' => $this->getTestPhoto('gallery/greece/imggreece1.jpg'), 'alt' => [ "en" =>'description imggreece1', "pl" =>'opis imggreece1'  ]],
                 ['name' => 'imggreece2.jpg', 'data' => $this->getTestPhoto('gallery/greece/imggreece2.jpg'), 'alt' => [ "en" =>'description imggreece2', "pl" =>'opis imggreece2'  ]]
             ];
+
+            $imagesSlider = [
+                ['name' => 's1.png', 'data' => $this->getTestPhoto('slider/s1.png'), 'alt' => [ "en" =>'slider1', "pl" =>'pl_slider1'  ]],
+                ['name' => 's2.png', 'data' => $this->getTestPhoto('slider/s2.png'), 'alt' => [ "en" =>'slider2', "pl" =>'pl_slider2'  ]],
+                ['name' => 's3.png', 'data' => $this->getTestPhoto('slider/s3.png'), 'alt' => [ "en" =>'slider3', "pl" =>'pl_slider3'  ]],
+                ['name' => 's4.png', 'data' => $this->getTestPhoto('slider/s4.png'), 'alt' => [ "en" =>'slider4', "pl" =>'pl_slider4'  ]],
+                ['name' => 's5.png', 'data' => $this->getTestPhoto('slider/s5.png'), 'alt' => [ "en" =>'slider5', "pl" =>'pl_slider5'  ]],
+                ['name' => 's6.png', 'data' => $this->getTestPhoto('slider/s6.png'), 'alt' => [ "en" =>'slider6', "pl" =>'pl_slider6'  ]],
+                ['name' => 's7.png', 'data' => $this->getTestPhoto('slider/s7.png'), 'alt' => [ "en" =>'slider7', "pl" =>'pl_slider7'  ]],
+                ['name' => 's8.png', 'data' => $this->getTestPhoto('slider/s8.png'), 'alt' => [ "en" =>'slider8', "pl" =>'pl_slider8'  ]],
+            ];
+
         } else {
             $img = $this->imgUnit1();
             $images = $this->imgUnit2();
             $imagesGrec = $images;
+            $imagesSlider = $this->imgUnit2();
         }
 
-        return ['about_me' => $img, 'poland' => $images, 'greece' => $imagesGrec  ];
+        return ['about_me' => $img, 'poland' => $images, 'greece' => $imagesGrec, 'slider' => $imagesSlider  ];
     }
 
     private function getProductImg($unitTest)
@@ -200,6 +213,19 @@ class Demo
         ];
         $p19 = $this->getPageObj()->wrapCreate($pInner3);
         $p['p19'] = $p19;
+
+
+        $pSlider = [
+            'title' => [ "en" => 'Slider', "pl" => 'Slider pl' ],
+            'short_title'=> [ "en" => 'slider_main_page', "pl" => 'slider_main_page_pl' ],
+            //'content' => [ "en" =>,  "pl" =>$this->getDummyTestPl()],            
+            'published' => 1,
+            //'type' => 'slider_main',
+            'type' => 'inner',
+            'images' => $images['slider']
+        ];
+        $p100 = $this->getPageObj()->wrapCreate($pSlider);
+        $p['p100'] = $p100;
 
 
         $mainPage =

@@ -1025,6 +1025,9 @@ class PageTest extends Base
         $this->assertEmpty($page);
     }
 
+    /**
+     * this api is not use - so i don't describe documentation on my page -  maybe todo in future or remove this api
+     */
     public function test_it_will_get_first_page_by_type_without_auth_docs()
     {
         $testData2 =
