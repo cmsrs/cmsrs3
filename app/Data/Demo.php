@@ -217,7 +217,7 @@ class Demo
 
         $pSlider = [
             'title' => [ "en" => 'Slider', "pl" => 'Slider pl' ],
-            'short_title'=> [ "en" => 'slider_main_page', "pl" => 'slider_main_page_pl' ],
+            'short_title'=> [ "en" => 'main_page_slider', "pl" => 'main page slider pl' ],
             //'content' => [ "en" =>,  "pl" =>$this->getDummyTestPl()],            
             'published' => 1,
             //'type' => 'slider_main',
