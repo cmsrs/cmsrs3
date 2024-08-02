@@ -20,6 +20,8 @@ AddHandler application/x-httpd-php83 php
     RewriteRule   ^en/projects/checkers  /en/cms/projects/checkers [R=301,L]
 
 
+    RewriteRule   ^pl/cms/cmsrs/zrzuty-ekaranu-cmsrs  / [R=301,L]
+    RewriteRule   ^en/cms/cmsrs/screenshots-cmsrs     / [R=301,L]
 
     RewriteRule   ^pl/projekty/tictacto  /pl/cms/projekty/kolko-i-krzyzyk [R=301,L]
     RewriteRule   ^pl/projekty/kulki  /pl/cms/projekty/kulki [R=301,L]
