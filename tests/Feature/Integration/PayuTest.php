@@ -36,7 +36,7 @@ class PayuTest extends  Base //TestCase
     public function test_it_will_get_access_token_from_payu()
     {
 
-        $this->markTestSkipped('Test skipped because reasons something wrong in external API');
+        $this->markTestSkipped('Test skipped because something wrong in external API');
 
         $accessToken = $this->payu->getAccessToken();
         $this->assertNotEmpty($accessToken);
@@ -45,7 +45,7 @@ class PayuTest extends  Base //TestCase
 
     public function test_it_will_get_order_from_payu()
     {
-        $this->markTestSkipped('Test skipped because reasons something wrong in external API');
+        $this->markTestSkipped('Test skipped because something wrong in external API');
 
         $this->createClientUser();
 

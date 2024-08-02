@@ -1030,6 +1030,7 @@ class PageTest extends Base
      */
     public function test_it_will_get_first_page_by_type_without_auth_docs()
     {
+        $this->markTestSkipped('Test skipped because not expose this api: api/page-type');
         $testData2 =
             [
                 'title' => [ 'en' =>  'test p2'],
