@@ -220,8 +220,8 @@ class Demo
             'short_title'=> [ "en" => 'main_page_slider', "pl" => 'main page slider pl' ],
             //'content' => [ "en" =>,  "pl" =>$this->getDummyTestPl()],            
             'published' => 1,
-            //'type' => 'slider_main',
-            'type' => 'inner',
+            'type' => 'slider_main',
+            //'type' => 'inner',
             'images' => $images['slider']
         ];
         $p100 = $this->getPageObj()->wrapCreate($pSlider);
@@ -272,8 +272,12 @@ class Demo
             </div> 
             
             <div class='mt-5 container'><!-- container -->      
-      
+
             <div class='row'>
+                <div class='slidecontainer m-4'></div>
+            </div>
+      
+            <div class='row mt-3'>
               <div class='col-md-4'>
                 <h3>".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box1', 'title', 'en' )."</h3>
                 <p>
@@ -332,9 +336,13 @@ class Demo
             </div>
 
 
-            <div class='mt-5 container'><!-- container -->      
-      
+            <div class='mt-5 container'><!-- container -->    
+
             <div class='row'>
+                <div class='slidecontainer m-4'></div>
+            </div>            
+      
+            <div class='row mt-3'>
               <div class='col-md-4'>
                 <h3>".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box1', 'title', 'pl'  )."</h3>
                 <p>

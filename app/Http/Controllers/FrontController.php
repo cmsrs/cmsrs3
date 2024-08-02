@@ -263,10 +263,15 @@ class FrontController extends Controller
         //     $urlSearch = $pSearch->getUrl($lang);
         // }
 
+        //slider_main
+        $sliderData = (new Page)->getFirstPageWithImagesForGuestCache( 'slider_main' );
+        $sliderDataImages = empty($sliderData['images']) ? false : $sliderData['images'];
+
         $data = $page->getDataToView( [
             //'url_search' =>  $urlSearch,
             'view' => 'index',
             'is_new_orders' => $isNewOrders,
+            'slider_images' => $sliderDataImages,
             'lang' => $lang,
             'langs' => $this->langs,
             'menus' => $this->menus

@@ -1000,6 +1000,11 @@ class PageTest extends Base
         $page = (new Page)->getFirstPageWithImagesForGuest($type);
         $this->assertEquals($type, $page['type']);
         $this->assertNotEmpty($page['id']);
+
+        //$pageById = (new Page)->getPageWithImagesById($page['id']);
+        //$this->assertEquals($type, $pageById['type']);
+        //$this->assertNotEmpty($pageById['id']);
+        //$this->assertEquals($page['id'], $pageById['id']);
     }
 
     public function test_model_it_will_get_first_page_by_type_and_not_published_without_auth()

@@ -299,3 +299,48 @@ table.table  th{
   height: 100%;
 }
 
+
+
+/** main slider **/
+
+.slidecontainer {
+  position: relative;
+  width: 100%;
+  /*max-width: 500px;*/
+  margin: auto;
+  overflow: hidden;
+  text-align: center;
+}
+
+.slidecontainer img {
+  width: 100%;
+  transition: opacity 0.5s;
+}
+
+.main-slider-prev, .main-slider-next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  margin-top: -22px;
+  padding: 16px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  user-select: none;
+}
+
+.main-slider-prev {
+  left: 0;
+  border-radius: 0 3px 3px 0;
+}
+
+.main-slider-next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+.main-slider-prev:hover, .main-slider-next:hover {
+  background-color: rgba(0,0,0,0.8);
+}

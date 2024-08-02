@@ -656,6 +656,52 @@ class Page extends Base
         return $formatPage;
     }
 
+
+    /*
+    public function getPageWithImagesByIdCache($pageId)
+    {
+        $isCache =  (new Config)->isCacheEnable();
+        if ($isCache) {
+            $ret = cache()->remember('page_with_images_page_id_'.$pageId, Carbon::now()->addYear(1), function () use ($pageId) {
+                return  (new Page)->getPageWithImagesById($pageId);
+            });
+        } else {
+            $ret = (new Page)->getPageWithImagesById($pageId);
+        }
+
+        return $ret;
+    }
+
+    public function getPageWithImagesById($pageId)
+    {                
+        $page = Page::with(['translates', 'contents'])->where('id', $pageId)->where('published', true)->where('after_login', false)->orderBy('position', 'asc')->get($this->pageFields)->first(); //->toSql(); ///toArray();
+
+        $out = [];
+        if($page){
+            $page = $page->toArray();
+            $out = $this->getPageDataFormat($page);
+            $out['images'] = Image::getImagesAndThumbsByTypeAndRefId('page', $page['id']);    
+        }
+
+        return $out;
+    } 
+    */   
+
+
+    public function getFirstPageWithImagesForGuestCache($type)
+    {        
+        $isCache =  (new Config)->isCacheEnable();
+        if ($isCache) {
+            $ret = cache()->remember('page_with_images_by_type_'.$type, Carbon::now()->addYear(1), function () use ($type) {
+                return  (new Page)->getFirstPageWithImagesForGuest($type);
+            });
+        } else {
+            $ret = (new Page)->getFirstPageWithImagesForGuest($type);
+        }
+
+        return $ret;
+    }
+
     public function getFirstPageWithImagesForGuest($type)
     {        
         if ( !in_array( $type, Config::arrGetPageTypes() )  ) {

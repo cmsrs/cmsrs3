@@ -2,7 +2,11 @@
 <html>
 <head>
    @include('includes.head')
-   @includeIf('includes.mysite')
+   @includeIf('includes.mysite')   
+   <script>
+      var slider_images = {!! !empty($slider_images) ? json_encode($slider_images->toArray()) : '' !!};
+   </script>
+
 </head>
 <body>
 
@@ -15,6 +19,9 @@
       </main><!-- /.container -->
    </div>
 
+<?php if( !empty($slider_images) ){ ?>
+   <script type="application/javascript" src="/js/slider.js"></script>  
+<?php } ?>
 <script type="application/javascript" src="/js/lib/vue.js"></script>
 <script type="application/javascript" src="/js/lib/axios.js"></script>
 <script type="application/javascript" src="/js/cmsrs.js"></script>  
