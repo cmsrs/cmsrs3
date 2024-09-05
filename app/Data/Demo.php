@@ -82,6 +82,7 @@ class Demo
                 ['name' => 'imggreece2.jpg', 'data' => $this->getTestPhoto('gallery/greece/imggreece2.jpg'), 'alt' => [ "en" =>'description imggreece2', "pl" =>'opis imggreece2'  ]]
             ];
 
+            /*
             $imagesSlider = [
                 ['name' => 's1.png', 'data' => $this->getTestPhoto('slider/s1.png'), 'alt' => [ "en" =>'slider1', "pl" =>'pl_slider1'  ]],
                 ['name' => 's2.png', 'data' => $this->getTestPhoto('slider/s2.png'), 'alt' => [ "en" =>'slider2', "pl" =>'pl_slider2'  ]],
@@ -92,6 +93,13 @@ class Demo
                 ['name' => 's7.png', 'data' => $this->getTestPhoto('slider/s7.png'), 'alt' => [ "en" =>'slider7', "pl" =>'pl_slider7'  ]],
                 ['name' => 's8.png', 'data' => $this->getTestPhoto('slider/s8.png'), 'alt' => [ "en" =>'slider8', "pl" =>'pl_slider8'  ]],
             ];
+            */
+
+            $imagesSlider = [
+                ['name' => 's1.png', 'data' => $this->getTestPhoto('clothes/sox.jpg'), 'alt' => [ "en" =>'slider1', "pl" =>'pl_slider1'  ]],
+                ['name' => 's2.png', 'data' => $this->getTestPhoto('books/php5.jpg'), 'alt' => [ "en" =>'slider2', "pl" =>'pl_slider2'  ]],
+                ['name' => 's3.png', 'data' => $this->getTestPhoto('books/java.jpg'), 'alt' => [ "en" =>'slider3', "pl" =>'pl_slider3'  ]],
+            ];               
 
         } else {
             $img = $this->imgUnit1();
@@ -217,11 +225,11 @@ class Demo
 
         $pSlider = [
             'title' => [ "en" => 'Slider', "pl" => 'Slider pl' ],
-            'short_title'=> [ "en" => 'main_page_slider', "pl" => 'main page slider pl' ],
+            'short_title'=> [ "en" => 'main_page_slider', "pl" => 'main_page_slider' ],
             //'content' => [ "en" =>,  "pl" =>$this->getDummyTestPl()],            
             'published' => 1,
-            'type' => 'slider_main',
-            //'type' => 'inner',
+            //'type' => 'slider_main',
+            'type' => 'inner',
             'images' => $images['slider']
         ];
         $p100 = $this->getPageObj()->wrapCreate($pSlider);

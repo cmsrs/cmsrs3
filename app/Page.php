@@ -103,7 +103,7 @@ class Page extends Base
 
     public function getPageDataByShortTitle( $shortTitle, $data = 'content',  $lang = null )
     {
-        if( !in_array( $data, ['content', 'title', 'url'] ) ){
+        if( !in_array( $data, ['content', 'title', 'images', 'url'] ) ){
             throw new \Exception("second param is content or title allowed, now is: ".$data);
         }
 
@@ -124,6 +124,9 @@ class Page extends Base
         $pageData = $page->getAllPagesWithImagesOneItem();
 
         $dataByLang = empty($pageData[$data]) ? '' : $pageData[$data];
+        if ($data == 'images') {
+            return $dataByLang;
+        }
         return empty($dataByLang[$lang]) ? '' : $dataByLang[$lang];
     }   
 
@@ -740,6 +743,14 @@ class Page extends Base
         return $out;
     }
 
+    /**
+     * 
+     * old method: getPageDataByShortTitleCache
+     * 
+     * 
+     * this method is writeln by new manner, and gets many pages, not one (but i use getPageDataByShortTitleCache this method instead)
+     * don't use this method
+     */
     public function getAllPagesWithImagesByShortTitleForDefaultLang($shortTitle)
     {
         $lang = Config::getDefaultLang();

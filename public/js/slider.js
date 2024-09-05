@@ -6,12 +6,25 @@ window.onload = function()
     var prev = document.createElement('a');
     prev.className = 'main-slider-prev';
     prev.innerHTML = '&#10094;';
-    prev.onclick = function() { plusMainSlides(-1); };
     
     var next = document.createElement('a');
     next.className = 'main-slider-next';
     next.innerHTML = '&#10095;';
-    next.onclick = function() { plusMainSlides(1); };
+
+
+    // Auto slide functionality
+    var autoSlideInterval = setInterval(function() {
+        plusMainSlides(1); // Move to the next slide automatically
+    }, 5000); // Change slide every 3 seconds    
+
+    next.onclick = function() { 
+        plusMainSlides(1); 
+        clearInterval(autoSlideInterval);
+    };
+    prev.onclick = function() { 
+        plusMainSlides(-1); 
+        clearInterval(autoSlideInterval);
+    };
 
     container.appendChild(prev);
 

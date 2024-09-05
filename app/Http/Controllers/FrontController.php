@@ -264,8 +264,9 @@ class FrontController extends Controller
         // }
 
         //slider_main
-        $sliderData = (new Page)->getFirstPageWithImagesForGuestCache( 'slider_main' );
-        $sliderDataImages = empty($sliderData['images']) ? false : $sliderData['images'];
+        //$sliderData = (new Page)->getFirstPageWithImagesForGuestCache( 'slider_main' );
+        //$sliderDataImages = empty($sliderData['images']) ? false : $sliderData['images'];
+        $sliderDataImages = (new \app\Page)->getPageDataByShortTitleCache( 'main_page_slider', 'images' );
 
         $data = $page->getDataToView( [
             //'url_search' =>  $urlSearch,
