@@ -1336,4 +1336,29 @@ class PageTest extends Base
         $this->assertFalse($resFake->success);
         $this->assertNotEmpty($resFake->error);
     }
+
+    public function test_it_will_get_pages_by_short_title_default_lang()
+    {
+        $shortTitleTest = 'p22_test';
+        $testData2 =
+            [
+                'title' => [ 'en' =>  'test p2'],
+                'short_title' => [ 'en' =>  $shortTitleTest],
+                'published' => 1,
+                'type' => 'shop',
+                'content' => [ 'en' => 'some test content'],
+                'menu_id' => null,
+                //'images' => []
+            ];
+
+        $response = $this->post('api/pages?token=' . $this->token, $testData2);
+        $res = $response->getData();
+        $this->assertTrue($res->success);
+
+        $pages = (new Page)->getAllPagesWithImagesByShortTitleForDefaultLang($shortTitleTest);
+    
+        $this->assertEquals( 1, count($pages) );
+        $this->assertEquals($shortTitleTest, $pages[0][ "short_title" ]['en'] );
+    }
+
 }

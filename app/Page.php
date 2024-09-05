@@ -740,6 +740,34 @@ class Page extends Base
         return $out;
     }
 
+    public function getAllPagesWithImagesByShortTitleForDefaultLang($shortTitle)
+    {
+        $lang = Config::getDefaultLang();
+
+        $pages = Page::with(['translates', 'contents'])
+            ->where('published', true)
+            ->where('after_login', false)
+            ->whereHas('translates', function($query) use ($shortTitle, $lang) {
+                $query->where('lang', $lang)
+                    ->where('column', 'short_title')
+                    ->where('value', $shortTitle);
+            })
+            ->orderBy('position', 'asc')
+            ->get($this->pageFields)
+            ->toArray()
+            ;
+
+        $i = 0;
+        $out = [];
+        foreach ($pages as $page) {
+            $out[$i] = $this->getPageDataFormat($page);
+            $out[$i]['images'] = Image::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
+            $i++;
+        }
+
+        return $out;
+    }
+
     public function delete()
     {
         foreach ($this->images()->get() as $img) {
