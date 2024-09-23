@@ -310,7 +310,12 @@ table.table  th{
   margin: auto;
   overflow: hidden;
   text-align: center;
-  height: 500px;
+}
+
+@media(min-width: 500px) {
+  .slidecontainer {
+    height: 500px;
+  }  
 }
 
 .slidecontainer img {
