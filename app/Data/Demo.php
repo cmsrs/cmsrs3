@@ -284,28 +284,7 @@ class Demo
             <div class='row'>
                 <div class='slidecontainer m-4'></div>
             </div>
-      
-            <div class='row mt-3'>
-              <div class='col-md-4'>
-                <h3>".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box1', 'title', 'en' )."</h3>
-                <p>
-                  ".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box1', 'content', 'en' )."
-                </p>
-              </div>
-              <div class='col-md-4'>
-                <h3>".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box2', 'title', 'en'  )."</h3>
-                <p>
-                  ".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box2', 'content', 'en'  )."
-                </p>
-              </div>
-              <div class='col-md-4'>
-                <h3>".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box3', 'title', 'en'  )."</h3>
-                <p>
-                  ".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box3', 'content', 'en'  )."
-                </p>
-              </div>
-            </div>
-      
+            
           </div><!-- container -->
 
             ", "pl" => "
@@ -349,28 +328,7 @@ class Demo
             <div class='row'>
                 <div class='slidecontainer m-4'></div>
             </div>            
-      
-            <div class='row mt-3'>
-              <div class='col-md-4'>
-                <h3>".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box1', 'title', 'pl'  )."</h3>
-                <p>
-                  ".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box1', 'content', 'pl' )."
-                </p>
-              </div>
-              <div class='col-md-4'>
-                <h3>".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box2', 'title', 'pl' )."</h3>
-                <p>
-                  ".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box2', 'content', 'pl' )."
-                </p>
-              </div>
-              <div class='col-md-4'>
-                <h3>".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box3', 'title', 'pl' )."</h3>
-                <p>
-                  ".(new \app\Page)->getPageDataByShortTitleCache( 'main_page_box3', 'content', 'pl' )."
-                </p>
-              </div>
-            </div>
-      
+            
           </div><!-- container -->
 
 

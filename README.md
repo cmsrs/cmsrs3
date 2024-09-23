@@ -145,7 +145,7 @@ PAGE_TYPES="cms,gallery,shop,contact,main_page,privacy_policy,login,projects,cle
 
     - cms - appear Wyswig editor in administration area
     - clear - without Wyswig editor, it require write pure html code
-    - inner - it is text box in existing page require hardcode in layout page, where key is short_title
+    - inner - it is text box in existing page require hardcode in layout page, where key is short_title, example using in code: (new \app\Page)->getPageDataByShortTitleCache( 'main_page_box1', 'content' )
     - gallery - page with photos
     - projects - the same content in each langs
 

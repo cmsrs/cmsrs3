@@ -7,6 +7,10 @@ sudo rm -rf public/images/product
 ./rs/go/go_clear_all_cache.sh
 php artisan migrate:fresh
 php artisan db:seed
+
+#without demo data - start (comment  this line)
 php artisan command:load-demo-data
+#without demo data - stop
+
 php artisan command:create-cache-enable-file
 
