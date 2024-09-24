@@ -193,7 +193,7 @@ class Demo
         $admUrl = env('DEMO_STATUS', false) ? '/admin-demo' : '/admin/';
 
         $pInner1 = [
-            'title' => [ "en" => 'Box1 test', "pl" => 'Box1 test' ],
+            'title' => [ "en" => 'Box1 test en', "pl" => 'Box1 test pl' ],
             'short_title'=> [ "en" => 'main_page_box1', "pl" => 'inner short_title pl' ],
             'content' => [ "en" =>$this->getDummyTest(),  "pl" =>$this->getDummyTestPl()],            
             'published' => 1,
@@ -203,7 +203,7 @@ class Demo
         $p['p17'] = $p17;
 
         $pInner2 = [
-            'title' => [ "en" => 'Box2 test', "pl" => 'Box2 test' ],
+            'title' => [ "en" => 'Box2 test en', "pl" => 'Box2 test pl' ],
             'short_title'=> [ "en" => 'main_page_box2', "pl" => 'inner short_title pl' ],
             'content' => [ "en" =>$this->getDummyTest(),  "pl" =>$this->getDummyTestPl()],            
             'published' => 1,
@@ -213,7 +213,7 @@ class Demo
         $p['p18'] = $p18;
 
         $pInner3 = [
-            'title' => [ "en" => 'Box3 test', "pl" => 'Box3 test' ],
+            'title' => [ "en" => 'Box3 test en', "pl" => 'Box3 test pl' ],
             'short_title'=> [ "en" => 'main_page_box3', "pl" => 'inner short_title pl' ],
             'content' => [ "en" =>$this->getDummyTest(),  "pl" =>$this->getDummyTestPl()],            
             'published' => 1,

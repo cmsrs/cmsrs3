@@ -18,27 +18,27 @@
       @yield('content')
 
       <?php
-         $box1 = (new \app\Page)->getPageDataByShortTitleCache( 'main_page_box1', 'content' );
-         $box2 = (new \app\Page)->getPageDataByShortTitleCache( 'main_page_box2', 'content' );
-         $box3 = (new \app\Page)->getPageDataByShortTitleCache( 'main_page_box3', 'content' );
+         $box1 = (new \app\Page)->getPageDataByShortTitleCache( 'main_page_box1', 'content', $lang );
+         $box2 = (new \app\Page)->getPageDataByShortTitleCache( 'main_page_box2', 'content', $lang );
+         $box3 = (new \app\Page)->getPageDataByShortTitleCache( 'main_page_box3', 'content', $lang );
       ?>
       <?php  if( $box1 && $box2 && $box3 ){ ?>
       <div class="mt-5 container">
          <div class='row'>
               <div class='col-md-4'>
-                <h3><?php echo (new \app\Page)->getPageDataByShortTitleCache( 'main_page_box1', 'title' ) ?></h3>
+                <h3><?php echo (new \app\Page)->getPageDataByShortTitleCache( 'main_page_box1', 'title', $lang ); ?></h3>
                 <p>
                   <?php echo $box1 ?>
                 </p>
               </div>
               <div class='col-md-4'>
-                <h3><?php echo (new \app\Page)->getPageDataByShortTitleCache( 'main_page_box2', 'title'  ) ?></h3>
+                <h3><?php echo (new \app\Page)->getPageDataByShortTitleCache( 'main_page_box2', 'title', $lang ); ?></h3>
                 <p>
                   <?php echo $box2 ?>
                 </p>
               </div>
               <div class='col-md-4'>
-                <h3><?php echo (new \app\Page)->getPageDataByShortTitleCache( 'main_page_box3', 'title'  ) ?></h3>
+                <h3><?php echo (new \app\Page)->getPageDataByShortTitleCache( 'main_page_box3', 'title', $lang ); ?></h3>
                 <p>
                   <?php echo $box3 ?>
                 </p>
