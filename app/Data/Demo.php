@@ -403,7 +403,7 @@ class Demo
             'published' => 1,
             'commented' => 0,
             'type' => 'gallery',
-            'content' => '',
+            'content' => [ "en" =>'Below, I present photos from Poland.', "pl" => "Ponizej przedstwaiam zdjęcia z Polski" ],
             'menu_id' => $m2->id,
             'images' => $images['poland']
         ];
