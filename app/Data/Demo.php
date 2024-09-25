@@ -223,6 +223,18 @@ class Demo
         $p['p19'] = $p19;
 
 
+        $pInner200 = [
+            'title' => [ "en" => 'Company data', "pl" => 'Dane firmy' ],
+            'short_title'=> [ "en" => 'company_data', "pl" => 'company_data' ],
+            'content' => [ "en" => '<b>Company Data:</b><br><br> ul. Kolejowa 800/900<br>00-999 Kacze Doły<br>Poland',  "pl" =>'<b>Siedziba firmy:</b><br><br> ul. Kolejowa 800/900<br>00-999 Kacze Doły<br>Polska' ],
+            'published' => 1,
+            'type' => 'inner'
+        ];
+        $p200 = $this->getPageObj()->wrapCreate($pInner200);
+        $p['p200'] = $p200;
+
+
+
         $pSlider = [
             'title' => [ "en" => 'Slider', "pl" => 'Slider pl' ],
             'short_title'=> [ "en" => 'main_page_slider', "pl" => 'main_page_slider' ],

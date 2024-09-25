@@ -25,26 +25,51 @@
 
   @elseif($page->type  === 'contact')
 
-    <div v-if="messageInfo"  class="alert alert-success" role="alert">
-      @{{ messageInfo }}
+  <?php 
+      $companyData = (new app\Page)->getPageDataByShortTitleCache( 'company_data', 'content', $lang );
+      $classCompany1 = !empty($companyData) ? "col-xl-9" : "col";
+  ?>
+
+  <div class="container">
+    <div class="row">
+
+      <div class="<?php echo $classCompany1;?>">
+
+        <div v-if="messageInfo"  class="alert alert-success" role="alert">
+          @{{ messageInfo }}
+        </div>
+        <form>
+          <div class="form-group">
+            <label for="email">{{ __('Email address') }}</label>
+            <input type="text" class="form-control" id="email" v-model="email"  @click="clearMessageInfo()">
+            <div  v-if="emailErr"  class="invalid-feedback" style="display:block">
+              @{{ emailErr }}
+            </div>        
+          </div>
+          <div class="form-group">
+            <label for="message">{{ __('Message') }}</label>
+            <textarea class="form-control" id="message" rows="10" v-model="message"  @click="clearMessageInfo()"></textarea>
+            <div  v-if="messageErr"  class="invalid-feedback" style="display:block">
+              @{{ messageErr }}
+            </div>        
+          </div>
+          <button type="submit" class="btn btn-primary" v-on:click="contact( $event )">{{ __('Submit') }}</button>
+        </form>
+
+      </div><!-- col -->
+
+      <?php if( !empty($companyData ) ){ ?>
+      <div class="col-xl-3">
+        <div class="mt-3">
+            <?php 
+                echo $companyData;
+            ?>
+        </div>
+      </div>
+      <?php } ?>
+
     </div>
-    <form>
-      <div class="form-group">
-        <label for="email">{{ __('Email address') }}</label>
-        <input type="text" class="form-control" id="email" v-model="email"  @click="clearMessageInfo()">
-        <div  v-if="emailErr"  class="invalid-feedback" style="display:block">
-          @{{ emailErr }}
-        </div>        
-      </div>
-      <div class="form-group">
-        <label for="message">{{ __('Message') }}</label>
-        <textarea class="form-control" id="message" rows="10" v-model="message"  @click="clearMessageInfo()"></textarea>
-        <div  v-if="messageErr"  class="invalid-feedback" style="display:block">
-          @{{ messageErr }}
-        </div>        
-      </div>
-      <button type="submit" class="btn btn-primary" v-on:click="contact( $event )">{{ __('Submit') }}</button>
-    </form>
+  </div>
 
   @endif
 
