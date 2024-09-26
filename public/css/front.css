@@ -350,3 +350,8 @@ table.table  th{
 .main-slider-prev:hover, .main-slider-next:hover {
   background-color: rgba(0,0,0,0.8);
 }
+
+.changelang  img{
+  width: 16px;
+  height: 11px;
+} 
