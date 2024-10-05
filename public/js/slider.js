@@ -1,5 +1,9 @@
 window.onload = function() 
 {
+    if(!slider_images.length){
+        return false;
+    }
+
     var container = document.getElementsByClassName('slidecontainer')[0];
 
     // Create navigation arrows

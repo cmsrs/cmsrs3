@@ -4,7 +4,7 @@
    @include('includes.head')
    @includeIf('includes.mysite')   
    <script>
-      var slider_images = {!! !empty($slider_images) ? json_encode($slider_images->toArray()) : json_encode('') !!};
+      var slider_images = <?php echo json_encode( !empty($slider_images) ? $slider_images->toArray() : []) ?>;
    </script>
 
 </head>
