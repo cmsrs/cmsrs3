@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models\Cmsrs;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 

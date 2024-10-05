@@ -1,5 +1,5 @@
 <?php
-namespace App;
+namespace App\Models\Cmsrs;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;

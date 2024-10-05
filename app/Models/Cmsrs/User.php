@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models\Cmsrs;
 
 use Illuminate\Notifications\Notifiable;
 //use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+//use Illuminate\Support\Facades\Auth;
+//use Illuminate\Support\Facades\Auth;
 
 
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
@@ -97,6 +99,10 @@ class User extends Authenticatable implements JWTSubject
         if( empty($user) ){
             throw new \Exception("User not auth");
         }
+
+        if (!method_exists($user, 'getTokenClient')) {
+            throw new \Exception("Method getTokenClient does not exist");
+        }       
 
         return $user->getTokenClient();
     }

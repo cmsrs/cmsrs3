@@ -1,6 +1,7 @@
 <?php
 
-namespace App;
+namespace App\Models\Cmsrs;
+//use LibImage;
 
 use Carbon\Carbon;
 
@@ -78,7 +79,7 @@ class Image extends Base
     }
 
     /**
-    * TODO - mmove function to helper
+    * TODO - move function to helper
     * fix for another language
     */
     public static function filter($string, $delimiter = '-')
@@ -257,14 +258,14 @@ class Image extends Base
             if (!file_exists($dirImg)) {
                 mkdir($dirImg, 0777, true);
             }
-            \LibImage::read($data)->save($dirImg.'/'.$name);
+            \Intervention\Image\Laravel\Facades\Image::read($data)->save($dirImg.'/'.$name);
 
             $fileName = pathinfo($name, PATHINFO_FILENAME);
             $fileExt = pathinfo($name, PATHINFO_EXTENSION);
 
             foreach (self::$thumbs as $thumbName => $dimension) {
                 $fileThumb = $dirImg.'/'.$fileName.'-'.$thumbName.'.'.$fileExt;
-                \LibImage::read($data)->resize($dimension['x'], $dimension['y'])->save($fileThumb);
+                \Intervention\Image\Laravel\Facades\Image::read($data)->resize($dimension['x'], $dimension['y'])->save($fileThumb);
             }
         }
         return $out;
