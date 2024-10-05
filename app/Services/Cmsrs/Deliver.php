@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Cmsrs;
+namespace App\Services\Cmsrs;
 
 class Deliver
 {    
@@ -9,7 +9,6 @@ class Deliver
     const KEY_DPD_COURIER = 'dpd_courier';
     const KEY_PARCEL_LOCKERS = 'parcel_lockers';
 
-    /*
     static public function getDeliver( $key = null )
     {
         $Delivers = [
@@ -37,7 +36,6 @@ class Deliver
 
         return $Delivers[$key];
     }
-    */
 
 
 

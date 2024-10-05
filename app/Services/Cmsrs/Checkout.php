@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Cmsrs;
+namespace App\Services\Cmsrs;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -41,7 +41,6 @@ class Checkout extends Base
     } 
     
 
-    /*
     static public function findActiveOrder()
     {
         $orders = self::findActiveOrders();
@@ -154,6 +153,5 @@ class Checkout extends Base
         }
         return $out;
     }
-    */
 
 }

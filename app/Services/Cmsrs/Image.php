@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Cmsrs;
+namespace App\Services\Cmsrs;
 //use LibImage;
 
 use Carbon\Carbon;
@@ -63,8 +63,6 @@ class Image extends Base
         }
     }
 
-
-    /*    
     public function getAllTranslate()
     {
         $imageId = $this->id;
@@ -79,7 +77,6 @@ class Image extends Base
 
         return $ret;
     }
-    */
 
     /**
     * TODO - move function to helper

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Cmsrs;
+namespace App\Services\Cmsrs;
 
 class Content extends Base
 {
@@ -17,7 +17,6 @@ class Content extends Base
         'product_id' => 'integer'
     ];
 
-    /*
     public function wrapCreate($data, $create = true)
     {
         if (!empty($data['page_id'])) {
@@ -48,5 +47,4 @@ class Content extends Base
         $this->wrapTranslateUpdate($obj, $row);
         return true;
     }
-    */
 }

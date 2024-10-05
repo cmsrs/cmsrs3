@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Cmsrs;
+namespace App\Services\Cmsrs;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,7 +19,6 @@ class Contact extends Model
         'updated_at'
     ];
 
-    /*
     public function getAllData()
     {
         $out = [];
@@ -34,15 +33,12 @@ class Contact extends Model
         }
         return $out;
     }
-    */
 
     /**
      * only for demo purpose
      */
-    /*
     public function wrapCreate($data)
     {
         return $this->create($data);
     }
-    */
 }
