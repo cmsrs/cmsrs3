@@ -78,7 +78,7 @@ class Image extends Base
     }
 
     /**
-    * TODO - mmove function to helper
+    * TODO - move function to helper
     * fix for another language
     */
     public static function filter($string, $delimiter = '-')
