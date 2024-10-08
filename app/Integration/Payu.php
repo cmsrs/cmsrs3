@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Config;
+use App\Services\Cmsrs\ConfigService;
 
 class Payu extends Model
 {
@@ -51,7 +51,7 @@ class Payu extends Model
         // if( empty($user) ){
         //     throw new \Exception('no user auth' );
         // }
-        $lang = Config::getDefaultLang();
+        $lang = ConfigService::getDefaultLang();
 
         $data = [
             //"notifyUrl" =>  "http://demo.cmsrs.pl/home/orders", //"https://your.eshop.com/notify",

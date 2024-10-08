@@ -2,16 +2,16 @@
 
 namespace App\Data;
 
-use App\Page;
-use App\Menu;
-use App\Product;
+use App\Services\Cmsrs\PageService;
+use App\Services\Cmsrs\MenuService;
+use App\Services\Cmsrs\ProductService;
 use App\Comment;
 
 class Demo
 {
     private function getPageObj()
     {
-        $pageObj = new Page;
+        $pageObj = new PageService();
         // $pageObj->setTranslate($this->translate);
         // $pageObj->setContent($this->content);
         return $pageObj;
@@ -19,14 +19,14 @@ class Demo
 
     private function getMenuObj()
     {
-        $menuObj = new Menu;
+        $menuObj = new MenuService();
         // $menuObj->setTranslate($this->translate);
         return $menuObj;
     }
 
     private function getProductObj()
     {
-        $productObj = new Product;
+        $productObj = new ProductService();
         // $productObj->setTranslate($this->translate);
         return $productObj;
     }

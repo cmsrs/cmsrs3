@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Config;
+use App\Services\Cmsrs\ConfigService;
 
 class CreateCacheEnableFile extends Command
 {
@@ -38,7 +38,7 @@ class CreateCacheEnableFile extends Command
      */
     public function handle()
     {
-        $cacheFilePath = (new Config)->getCacheFilePath();
+        $cacheFilePath = (new ConfigService)->getCacheFilePath();
         if (!file_exists($cacheFilePath)){
             touch($cacheFilePath);
         }

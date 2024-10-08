@@ -1,8 +1,8 @@
 <?php
 
 //use Illuminate\Support\Facades\Auth;
-use App\Config;
-use App\Page;
+use App\Services\Cmsrs\ConfigService;
+use App\Models\Cmsrs\Page;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +23,7 @@ if($demoStatus){
 }
 
 
-$langs = Config::arrGetLangsEnv();
+$langs = ConfigService::arrGetLangsEnv();
 //dd( count($langs));
 //$langs = (new Config)->arrGetLangs();
 

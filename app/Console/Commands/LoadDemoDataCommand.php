@@ -3,17 +3,22 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Page;
-use App\Order;
-use App\Menu;
-use App\User;
-use App\Comment;
+
+use App\Models\Cmsrs\User;
 use App\Product;
 use App\Translate;
-use App\Content;
+use App\Models\Cmsrs\Comment;
 use App\Contact;
 use App\Deliver;
 use App\Payment;
+
+use App\Services\Cmsrs\ProductService;
+use App\Services\Cmsrs\TranslateService;
+use App\Services\Cmsrs\ContentService;
+use App\Services\Cmsrs\ContactService;
+use App\Services\Cmsrs\DeliverService;
+use App\Services\Cmsrs\PaymentService;
+
 
 use App\Data\Demo;
 
@@ -48,9 +53,9 @@ class LoadDemoDataCommand extends Command
         parent::__construct();
 
         $this->langs = ['en'];
-        $this->translate = new Translate;
+        $this->translate = new TranslateService;
         $this->translate->setArrLangs($this->langs);
-        $this->content = new Content;
+        $this->content = new ContentService;
         $this->content->setArrLangs($this->langs);
     }
 
@@ -88,7 +93,7 @@ class LoadDemoDataCommand extends Command
         /*--- contacts --------*/        
         /*---------------------*/
         for($ii=1; $ii<=32; $ii++){
-            (new Contact)->wrapCreate(["email" => "tt$ii@cmsrs.pl", "message" => "test contact message$ii" ]);
+            (new ContactService)->wrapCreate(["email" => "tt$ii@cmsrs.pl", "message" => "test contact message$ii" ]);
         }
            
         /*---------------------*/
@@ -209,8 +214,8 @@ class LoadDemoDataCommand extends Command
                 'city' => 'Warszawa',
                 'telephone' => 123456788 + $i,
                 'postcode' => '03-456',
-                'deliver' => Deliver::KEY_DPD_COURIER,
-                'payment' => Payment::KEY_CASH
+                'deliver' => DeliverService::KEY_DPD_COURIER,
+                'payment' => PaymentService::KEY_CASH
             );
             return $data;
         }
@@ -229,7 +234,7 @@ class LoadDemoDataCommand extends Command
                 //'productsDataAndTotalAmount' => $productsDataAndTotalAmount,
                 //'checkout' => $checkout,
                 'objCheckout' => $objCheckout
-            ) = (new Product)->saveCheckout($d, $userId, $sessionId);
+            ) = (new ProductService())->saveCheckout($d, $userId, $sessionId);
             if(empty($objCheckout->id)){
                 die('sth wrong with create checkout');
             }

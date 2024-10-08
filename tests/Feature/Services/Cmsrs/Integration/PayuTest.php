@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Feature\Integration;
+namespace Tests\Feature\Services\Cmsrs\Integration;
 
-use Tests\Feature\Base;
+use Tests\Feature\Services\Cmsrs\Base;
 use App\Integration\Payu;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;

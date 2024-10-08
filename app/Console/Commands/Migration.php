@@ -6,8 +6,8 @@ use DB;
 
 use Illuminate\Console\Command;
 
-use App\Page;
-use App\Menu;
+use App\Services\Cmsrs\PageService;
+use App\Services\Cmsrs\MenuService;
 
 class Migration extends Command
 {
@@ -49,7 +49,7 @@ class Migration extends Command
         $this->loginPage();
         $menus = $this->getOldMenuData();
         foreach ($menus as $oldMenuId => $m) {
-            $newMenu = (new Menu)->wrapCreate(['name' => $m]);
+            $newMenu = (new MenuService())->wrapCreate(['name' => $m]);
             $pages = $this->getOldPagesByMenuId($oldMenuId);
             foreach ($pages as $oldPageId => $p) {
                 $newPage = $this->createPagesForMenu($newMenu->id, $p, $oldPageId);
@@ -106,7 +106,7 @@ class Migration extends Command
             //'images' => $this->getOldImagesByPageId($oldPageId) //comment this if you dont want images
         ];
 
-        return (new Page)->wrapCreate($dataP);
+        return (new PageService())->wrapCreate($dataP);
     }
 
     
@@ -285,7 +285,7 @@ class Migration extends Command
             'page_id' => null,
             //'images' => []
         ];
-        (new Page)->wrapCreate($mainPage);
+        (new PageService())->wrapCreate($mainPage);
     }
 
     private function privacyPage()
@@ -304,7 +304,7 @@ class Migration extends Command
             'images' => [
             ]
         ];
-        (new Page)->wrapCreate($pPrivacy);
+        (new PageService())->wrapCreate($pPrivacy);
     }
 
     private function getPrivacyPolicy()
@@ -325,6 +325,6 @@ class Migration extends Command
             'images' => [
             ]
         ];
-        (new Page)->wrapCreate($pLogin);
+        (new PageService())->wrapCreate($pLogin);
     }
 }
