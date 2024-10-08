@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Services\Cmsrs;
 
-use App\User;
+use App\Models\Cmsrs\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -98,6 +98,9 @@ class AuthenticationTest extends TestCase
         $this->assertTrue($response->success);
 
         $privilege =   $this->privilege_action($response->data->token);
+        //dd($privilege);        
+        //dd($privilege->getData());
+
         $this->assertTrue($privilege->getData()->success);
 
         $logout =   $this->logout_action($response->data->token);

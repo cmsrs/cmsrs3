@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
-use App\Config;
+use App\Services\Cmsrs\ConfigService;
 
 class Authenticate extends Middleware
 {
@@ -15,8 +15,8 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
-        $langs = (new Config)->arrGetLangs();
-        $lang = Config::getLangFromSession();
+        $langs = (new ConfigService)->arrGetLangs();
+        $lang = ConfigService::getLangFromSession();
         if (! $request->expectsJson()) {
             $appUrl = env('APP_URL');
             $urlRedirect = (1 === count($langs)) ?  $appUrl.'/login' :   $appUrl.'/'.$lang.'/login';   //route('login');

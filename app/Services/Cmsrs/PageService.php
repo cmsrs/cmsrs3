@@ -54,7 +54,7 @@ class PageService extends BaseService
 
     public function __construct(array $attributes = array())
     {
-        parent::__construct($attributes);
+        //parent::__construct($attributes);
 
         $this->pageFields = [
           'id',
@@ -67,8 +67,8 @@ class PageService extends BaseService
           'page_id'
       ];
   
-        $this->translate = new Translate;
-        $this->content = new Content;
+        $this->translate = new TranslateService;
+        $this->content = new ContentService;
         $this->langs = $this->getArrLangs();
     }
 
@@ -325,9 +325,9 @@ class PageService extends BaseService
     public static function CreatePage($data)
     {
         $menuId = empty($data['menu_id']) ? null : $data['menu_id'];
-        $data['position'] = Page::getNextPositionByMenuId($menuId);
-        $data = Page::validateMainPage($data);
-        $data = Page::validateParentPublished($data);
+        $data['position'] = PageService::getNextPositionByMenuId($menuId);
+        $data = PageService::validateMainPage($data);
+        $data = PageService::validateParentPublished($data);
 
         $page = Page::create($data);
         if (empty($page->id)) {
@@ -342,11 +342,11 @@ class PageService extends BaseService
      */
     public function wrapCreate($data)
     {
-        $page = Page::CreatePage($data);
+        $page = PageService::CreatePage($data);
         $this->createTranslate([ 'page_id' => $page->id, 'data' => $data ]);
 
         if (!empty($data['images']) && is_array($data['images'])) {
-            $objImage = new Image;
+            $objImage = new ImageService();
             $objImage->setTranslate($this->translate);
             $objImage->createImages($data['images'], 'page', $page->id);
         }
@@ -369,8 +369,8 @@ class PageService extends BaseService
     
     public static function getFooterPages($lang)
     {
-        $privacyPolicy = Page::getFirstPageByType('privacy_policy');
-        $contact = Page::getFirstPageByType('contact');
+        $privacyPolicy = PageService::getFirstPageByType('privacy_policy');
+        $contact = PageService::getFirstPageByType('contact');
 
         $out = [];
         $policyUrl = null;
@@ -585,7 +585,7 @@ class PageService extends BaseService
 
     public static function getMainPage()
     {
-        return Page::getFirstPageByType('main_page');
+        return PageService::getFirstPageByType('main_page');
     }
 
     public static function validateMainPage($data, $create = true)

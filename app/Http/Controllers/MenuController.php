@@ -30,7 +30,7 @@ class MenuController extends Controller
 
     public function index()
     {
-        $menus = Menu::getAllMenus();
+        $menus = MenuService::getAllMenus();
 
         return response()->json(['success' => true, 'data'=> $menus], 200);
     }

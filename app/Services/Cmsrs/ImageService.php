@@ -57,7 +57,7 @@ class ImageService extends BaseService
     {
         parent::__construct($attributes);
 
-        $this->translate = new Translate;
+        $this->translate = new TranslateService;
     }
 
 

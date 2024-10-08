@@ -4,6 +4,7 @@ namespace Tests\Feature\Services\Cmsrs;
 
 use App\Models\Cmsrs\Contact;
 use App\Services\Cmsrs\ConfigService;
+use App\Services\Cmsrs\ContactService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ContactTest extends Base
@@ -101,7 +102,7 @@ class ContactTest extends Base
 
     public function test_it_will_create_contact_by_wrap_create()
     {
-        $ret = (new Contact)->wrapCreate($this->content1);
+        $ret = (new ContactService)->wrapCreate($this->content1);
         $this->assertEquals(1, Contact::All()->count());
 
         $d = Contact::All()->first()->toArray();
@@ -205,8 +206,8 @@ class ContactTest extends Base
     public function test_search_contact_messages_by_email_or_message_docs()
     {
         $name = 'abc';
-        (new Contact)->wrapCreate(["email" => "$name@cmsrs.pl", "message" => "test contact message" ]);
-        (new Contact)->wrapCreate(["email" => "tt@cmsrs.pl", "message" => "test contact $name" ]);        
+        (new ContactService)->wrapCreate(["email" => "$name@cmsrs.pl", "message" => "test contact message" ]);
+        (new ContactService)->wrapCreate(["email" => "tt@cmsrs.pl", "message" => "test contact $name" ]);        
 
         $url = 'api/contacts/pagination/id/desc?token='.$this->token."&search=$name";
         $response = $this->get($url);

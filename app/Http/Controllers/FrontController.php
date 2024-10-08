@@ -96,7 +96,7 @@ class FrontController extends Controller
         }
         App::setLocale($lang);
 
-        $page = Page::getFirstPageByType('shoppingsuccess');
+        $page = PageService::getFirstPageByType('shoppingsuccess');
         if(!$page){
             Log::error('if you want this page you have to add page in type shoppingsuccess');
             abort(404);
@@ -218,7 +218,7 @@ class FrontController extends Controller
             return redirect($redirectUri);
 
         }else{
-            $pShoppingSuccess = Page::getFirstPageByType('shoppingsuccess'); 
+            $pShoppingSuccess = PageService::getFirstPageByType('shoppingsuccess'); 
             if( empty($pShoppingSuccess) ){
                 throw new \Exception("you should add page type = shoppingsuccess");
             }
@@ -261,7 +261,7 @@ class FrontController extends Controller
         //it make sense only for payU - it my opinion
         $isNewOrders = false; //Order::copyDataFromBasketToOrderForUser();  
 
-        $page = Page::getMainPage();
+        $page = PageService::getMainPage();
         $this->validatePage($page);
 
         // $pSearch = App\Page::getFirstPageByType('search');

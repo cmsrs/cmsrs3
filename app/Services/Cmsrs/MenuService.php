@@ -26,9 +26,9 @@ class MenuService extends BaseService
 
     public function __construct(array $attributes = array())
     {
-        parent::__construct($attributes);
+        //parent::__construct($attributes);
 
-        $this->translate = new Translate;
+        $this->translate = new TranslateService;
     }
 
 
@@ -187,7 +187,7 @@ class MenuService extends BaseService
     public static function checkIsDuplicateName($data, $id = '')
     {
         $out = ['success' => true ];
-        $menus = Menu::getAllMenus();
+        $menus = MenuService::getAllMenus();
         foreach ($menus as $menu) {
             if ($menu['id']  == $id) {
                 continue;

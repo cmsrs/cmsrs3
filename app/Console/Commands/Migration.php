@@ -2,7 +2,10 @@
 
 namespace App\Console\Commands;
 
-use DB;
+//use DB;
+use Illuminate\Support\Facades\DB;
+//composer require illuminate/support
+
 
 use Illuminate\Console\Command;
 
