@@ -83,7 +83,7 @@ class ForgotPasswordController extends Controller
         }
         App::setLocale($lang);
         
-        $data = $page->getDataToView( [
+        $data = $page->getDataToView( $page, [
             'view' => 'forgot',
             'lang' => $lang,
             'langs' => $this->langs,

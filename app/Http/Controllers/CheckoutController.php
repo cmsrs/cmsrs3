@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Config;
-use App\Checkout;
-use App\Order;
+use App\Services\Cmsrs\ConfigService;
+use App\Models\Cmsrs\Checkout;
+
+use App\Services\Cmsrs\OrderService;
+use App\Services\Cmsrs\CheckoutService;
+
+
 use Illuminate\Support\Facades\Log;
 use Validator;
 
@@ -17,9 +21,9 @@ class CheckoutController extends Controller
 
     public function index()
     {
-        $lang = Config::getDefaultLang();
+        $lang = ConfigService::getDefaultLang();
         $objCheckouts = Checkout::All();
-        $checkouts = Checkout::printCheckouts( $objCheckouts, $lang );
+        $checkouts = CheckoutService::printCheckouts( $objCheckouts, $lang );
         return response()->json(['success' => true, 'data'=> $checkouts], 200);
     }
 
@@ -27,26 +31,27 @@ class CheckoutController extends Controller
     {
         $search = $request->input('search', null);
 
-        $objCheckout = new Checkout;
+        $objCheckout = new CheckoutService;
 
-        if (!in_array($lang, (new Config)->arrGetLangs())) {
+        if (!in_array($lang, (new ConfigService)->arrGetLangs())) {
             return response()->json([
                 'success'=> false, 
                 'error'=> 'wrong lang in url'
             ], 404);
         }
 
-        if ( !in_array( $column, $objCheckout->columnsAllowedToSort ) ) {
+        $columnsAllowedToSort = (new Checkout)->columnsAllowedToSort;
+        if ( !in_array( $column, $columnsAllowedToSort ) ) {
             return response()->json([
                 'success'=> false, 
-                'error'=> 'available columns to sort checkouts: '.implode( ',', $objCheckout->columnsAllowedToSort)
+                'error'=> 'available columns to sort checkouts: '.implode( ',', $columnsAllowedToSort)
             ], 404);
         }
 
-        if ( !in_array( $direction, Config::getAvailableSortingDirection() ) ) {
+        if ( !in_array( $direction, ConfigService::getAvailableSortingDirection() ) ) {
             return response()->json([
                 'success'=> false, 
-                'error'=> 'available direction to sort: '.implode( ',', Config::getAvailableSortingDirection())
+                'error'=> 'available direction to sort: '.implode( ',', ConfigService::getAvailableSortingDirection())
             ], 404);
         }
 
@@ -83,7 +88,7 @@ class CheckoutController extends Controller
         }
 
         if( empty($beforeIsPay) && !empty($data['is_pay']) ){
-            Order::copyDataFromBasketToOrderForUser($checkout);
+            OrderService::copyDataFromBasketToOrderForUser($checkout);
         }
 
         return response()->json(['success'=> true], 200);

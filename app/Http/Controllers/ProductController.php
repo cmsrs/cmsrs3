@@ -3,9 +3,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Product;
-use App\Image;
-use App\Config;
+use App\Models\Cmsrs\Product;
+use App\Models\Cmsrs\Image;
+
+use App\Services\Cmsrs\ConfigService;
+use App\Services\Cmsrs\ProductService;
+
 use Validator;
 use Illuminate\Support\Facades\Log;
 
@@ -20,10 +23,10 @@ class ProductController extends Controller
 
     public function __construct()
     {
-        $this->validationRules['type'] = 'in:'.Config::getPageTypes();
+        $this->validationRules['type'] = 'in:'.ConfigService::getPageTypes();
         $this->validationRules['published'] = 'boolean';
 
-        $langs = (new Config)->arrGetLangs();
+        $langs = (new ConfigService)->arrGetLangs();
         foreach ($langs as $lang) {
             $this->validationRules['product_name.'.$lang] = 'max:255|required';  //|unique:translates
             $this->validationRules['product_description.'.$lang] = 'max:1280';
@@ -37,7 +40,7 @@ class ProductController extends Controller
             return response()->json(['success'=> false, 'error'=> 'Product no found'], 404);            
         }
 
-        $data = $product->getProductWithTranslatesContentsAndImages();
+        $data = (new ProductService)->getProductWithTranslatesContentsAndImages($product);
         return response()->json(['success' => true, 'data'=> $data], 200);
     }
 
@@ -47,7 +50,7 @@ class ProductController extends Controller
 
         $objProduct = new Product;
 
-        if (!in_array($lang, (new Config)->arrGetLangs())) {
+        if (!in_array($lang, (new ConfigService)->arrGetLangs())) {
             return response()->json([
                 'success'=> false, 
                 'error'=> 'wrong lang in url'
@@ -61,14 +64,14 @@ class ProductController extends Controller
             ], 404);
         }
 
-        if ( !in_array( $direction, Config::getAvailableSortingDirection() ) ) {
+        if ( !in_array( $direction, ConfigService::getAvailableSortingDirection() ) ) {
             return response()->json([
                 'success'=> false, 
-                'error'=> 'available direction to sort: '.implode( ',', Config::getAvailableSortingDirection())
+                'error'=> 'available direction to sort: '.implode( ',', ConfigService::getAvailableSortingDirection())
             ], 404);
         }
 
-        $products = $objProduct->getPaginationItems($lang, $column, $direction, $search);
+        $products = (new ProductService)->getPaginationItems($lang, $column, $direction, $search);
 
         return response()->json(['success' => true, 'data'=> $products], 200);
     }
@@ -76,7 +79,7 @@ class ProductController extends Controller
 
     public function index()
     {
-        $products = (new Product)->getAllProductsWithImages();
+        $products = (new ProductService())->getAllProductsWithImages();
 
         return response()->json(['success' => true, 'data'=> $products], 200);
     }
@@ -99,13 +102,13 @@ class ProductController extends Controller
         }
 
         //check unique
-        $valid = (new Product)->checkIsDuplicateName($data);
+        $valid = (new ProductService())->checkIsDuplicateName($data);
         if (empty($valid['success'])) {
             return response()->json($valid, 200);
         }        
 
         try {
-            $product = (new Product)->wrapCreate($data);
+            $product = (new ProductService())->wrapCreate($data);
         } catch (\Exception $e) {
 
             Log::error('product add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); //.' for: '.var_export($data, true )
@@ -140,7 +143,7 @@ class ProductController extends Controller
         }
 
         //check unique
-        $valid = (new Product)->checkIsDuplicateName($data, $product->id);
+        $valid = (new ProductService)->checkIsDuplicateName($data, $product->id);
         if (empty($valid['success'])) {
             return response()->json($valid, 200);
         }        
@@ -182,10 +185,10 @@ class ProductController extends Controller
     public function getNameAndPrice(Request $request, $lang = '')
     {
         if( empty($lang) ){
-            $lang = Config::getDefaultLang();
+            $lang = ConfigService::getDefaultLang();
         }
 
-        $products = (new Product)->getAllProductsWithImagesByLangCache($lang);
+        $products = (new ProductService)->getAllProductsWithImagesByLangCache($lang);
         return response()->json(['success'=> true, 'data' => $products]);
     }
 

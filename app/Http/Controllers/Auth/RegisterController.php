@@ -127,7 +127,7 @@ class RegisterController extends Controller
         ];
         */      
 
-        $data = $page->getDataToView( [
+        $data = $page->getDataToView( $page, [
             'view' => 'register',
             'lang' => $lang,
             'langs' => $this->langs,

@@ -4,15 +4,20 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-use App\Config;
-use App\Menu;
+
+use App\Services\Cmsrs\ConfigService;
+
+use App\Models\Cmsrs\Menu;
+use App\Services\Cmsrs\MenuService;
+
+
 use Validator;
 
 class MenuController extends Controller
 {
     public function __construct()
     {
-        $langs = (new Config)->arrGetLangs();
+        $langs = (new ConfigService)->arrGetLangs();
         foreach ($langs as $lang) {
             $this->validationRules['name.'.$lang] = 'max:255|required'; //|unique:App\Translate,value,null,menu_id';
         }
@@ -52,10 +57,10 @@ class MenuController extends Controller
         }
 
         try {
-            (new Menu)->wrapCreate($data);
+            (new MenuService)->wrapCreate($data);
         } catch (\Exception $e) {
             Log::error('menu add ex: '.$e->getMessage());
-            return response()->json(['success'=> false, 'error'=> 'Add menu problem - exeption'], 200);
+            return response()->json(['success'=> false, 'error'=> 'Add menu problem - exception'], 200);
         }
 
 
@@ -78,7 +83,7 @@ class MenuController extends Controller
         }
 
         //check unique
-        $valid = Menu::checkIsDuplicateName($data, $menu->id);
+        $valid = MenuService::checkIsDuplicateName($data, $menu->id);
         if (empty($valid['success'])) {
             return response()->json($valid, 200);
         }

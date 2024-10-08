@@ -4,9 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Page;
-use App\Config;
-use App\Image;
+use App\Models\Cmsrs\Page;
+use App\Services\Cmsrs\PageService;
+
+use App\Models\Cmsrs\Menu;
+use App\Services\Cmsrs\MenuService;
+
+use App\Models\Cmsrs\Image;
+use App\Services\Cmsrs\ImageService;
+
+
+use App\Services\Cmsrs\ConfigService;
+
 use Validator;
 use Illuminate\Support\Facades\Log;
 
@@ -14,9 +23,9 @@ class PageController extends Controller
 {
     public function __construct()
     {
-        $this->validationRules['type'] = 'in:'.Config::getPageTypes();
+        $this->validationRules['type'] = 'in:'.ConfigService::getPageTypes();
 
-        $langs = (new Config)->arrGetLangs();
+        $langs = (new ConfigService)->arrGetLangs();
         foreach ($langs as $lang) {
             $this->validationRules['title.'.$lang] = 'max:255|required';
             $this->validationRules['short_title.'.$lang] = 'max:128|required';
@@ -64,7 +73,7 @@ class PageController extends Controller
 
     public function index()
     {
-        $pages = (new Page)->getAllPagesWithImages();
+        $pages = (new PageService())->getAllPagesWithImages();
 
 
         return response()->json(['success' => true, 'data'=> $pages], 200);
@@ -72,11 +81,11 @@ class PageController extends Controller
 
     public function getFirstPageByTypeForGuest(Request $request, $type)
     {
-        if ( !in_array( $type, Config::arrGetPageTypes() )  ) {
+        if ( !in_array( $type, ConfigService::arrGetPageTypes() )  ) {
             return response()->json(['success'=> false, 'error'=> 'wrong type' ], 200);
         }
 
-        $page = (new Page)->getFirstPageWithImagesForGuest($type);
+        $page = (new PageService)->getFirstPageWithImagesForGuest($type);
 
         return response()->json(['success' => true, 'data'=> $page], 200);
     }
@@ -106,13 +115,13 @@ class PageController extends Controller
         }
 
         //check unique
-        $valid = Page::checkIsDuplicateTitleByMenu($data);
+        $valid = PageService::checkIsDuplicateTitleByMenu($data);
         if (empty($valid['success'])) {
             return response()->json($valid, 200);
         }
 
         try {
-            $page =  (new Page)->wrapCreate($data);
+            $page =  (new PageService)->wrapCreate($data);
         } catch (\Exception $e) {
             Log::error('page add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); //.' for: '.var_export($data, true )
             return response()->json(['success'=> false, 'error'=> 'Add page problem, details in the log file.'], 200); //.$e->getMessage()
@@ -136,20 +145,20 @@ class PageController extends Controller
         }        
 
         //check unique
-        $valid = Page::checkIsDuplicateTitleByMenu($data, $page->id);
+        $valid = PageService::checkIsDuplicateTitleByMenu($data, $page->id);
         if (empty($valid['success'])) {
             return response()->json($valid, 200);
         }
 
         try {
-            $data = Page::validateMainPage($data, false);
+            $data = PageService::validateMainPage($data, false);
             if (empty($data['published'])) {
                 $page->unpublishedChildren();
             }
             $res = $page->wrapUpdate($data);
             if (!empty($data['images']) && is_array($data['images'])) {
-                Image::createImagesAndUpdateAlt($data['images'], 'page', $page->id);
-                Image::updatePositionImages($data['images']);
+                ImageService::createImagesAndUpdateAlt($data['images'], 'page', $page->id);
+                ImageService::updatePositionImages($data['images']);
             }
         } catch (\Exception $e) {
             Log::error('page update ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); //.' for: '.var_export($data, true )

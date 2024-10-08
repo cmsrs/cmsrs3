@@ -71,7 +71,7 @@ class LoginController extends Controller
 
         $pForgot = Page::getFirstPageByType('forgot');
       
-        $data = $page->getDataToView( [
+        $data = $page->getDataToView($page, [
             'view' => 'login',
             'pforgot' => $pForgot,
             'lang' => $lang,

@@ -2,8 +2,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Comment;
-use App\Page;
+use App\Models\Cmsrs\Comment;
+use App\Models\Cmsrs\Page;
 use Validator;
 use Illuminate\Support\Facades\Log;
 

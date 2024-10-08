@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Contact;
-use App\Config;
+use App\Models\Cmsrs\Contact;
+use App\Services\Cmsrs\ConfigService;
 use App\Mail\OrderShipped;
 use Validator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use App;
+use App\Services\Cmsrs\ContactService;
 
 class ContactController extends Controller
 {
@@ -21,7 +22,7 @@ class ContactController extends Controller
 
     public function create(Request $request, $lang)
     {
-        $langs = (new Config)->arrGetLangs();
+        $langs = (new ConfigService)->arrGetLangs();
         if (!in_array($lang, $langs)) {
             abort(404);
         }
@@ -108,7 +109,7 @@ message: '.$data['message'];
 
     public function index()
     {
-        $contact = (new Contact)->getAllData();
+        $contact = (new ContactService)->getAllData();
 
         return response()->json(['success' => true, 'data'=> $contact], 200);
     }
@@ -129,14 +130,14 @@ message: '.$data['message'];
             ], 404);
         }
 
-        if ( !in_array( $direction, Config::getAvailableSortingDirection() ) ) {
+        if ( !in_array( $direction, ConfigService::getAvailableSortingDirection() ) ) {
             return response()->json([
                 'success'=> false, 
-                'error'=> 'available direction to sort: '.implode( ',', Config::getAvailableSortingDirection())
+                'error'=> 'available direction to sort: '.implode( ',', ConfigService::getAvailableSortingDirection())
             ], 404);
         }
 
-        $paginationPerPage = Config::getPagination();
+        $paginationPerPage = ConfigService::getPagination();
         $contacts = $objContact
             ->when($search, function($query) use ($search) {
                 return $query->where(function($query) use ($search) {

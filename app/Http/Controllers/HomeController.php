@@ -3,16 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
-use App\Menu;
-use App\Page;
-use App\Product;
-use App\Basket;
-use App\Checkout;
-use App\Order;
-use App\Base;
-use App\Config;
+use App\Models\Cmsrs\User;
+use App\Services\Cmsrs\MenuService;
+use App\Services\Cmsrs\PageService;
+use App\Services\Cmsrs\Product;
+use App\Services\Cmsrs\Basket;
+use App\Services\Cmsrs\Checkout;
+use App\Services\Cmsrs\Order;
+use App\Services\Cmsrs\Base;
+use App\Services\Cmsrs\Config;
 use App\Integration\Payu;
+
+use App\Services\Cmsrs\BaseService;
+use App\Services\Cmsrs\CheckoutService;
+use App\Services\Cmsrs\ConfigService;
+use App\Services\Cmsrs\OrderService;
+use App\Services\Cmsrs\ProductService;
 use Illuminate\Support\Facades\Log;
 //use App;
 use Illuminate\Support\Facades\App;
@@ -35,8 +41,8 @@ class HomeController extends Controller
         //App::setLocale($lang);
 
         $this->middleware('auth');
-        $this->menus =  Menu::getMenu(); //$menus;
-        $this->langs = (new Config)->arrGetLangs();
+        $this->menus =  MenuService::getMenu(); //$menus;
+        $this->langs = (new ConfigService)->arrGetLangs();
     }
 
     /**
@@ -46,7 +52,7 @@ class HomeController extends Controller
      */
     public function index($lang = null)
     {
-        $page = Page::getFirstPageByType('home');
+        $page = PageService::getFirstPageByType('home');
         if(!$page){
             Log::error('if you want this page you have to add page in type home');
             abort(404);
@@ -58,18 +64,18 @@ class HomeController extends Controller
         App::setLocale($lang);
 
         $user = Auth::user();    
-        $arrOrders = Order::inOrdersByUserId($user->id)->toArray();        
+        $arrOrders = OrderService::inOrdersByUserId($user->id)->toArray();        
         $orders = [];
         if( !empty($arrOrders) ){
-            $arrOrdersReindex = Base::reIndexArr($arrOrders, 'product_id');
+            $arrOrdersReindex = BaseService::reIndexArr($arrOrders, 'product_id');
             $baskets = false;
-            Product::getDataToPayment( $arrOrdersReindex, $baskets, $orders);    
+            ProductService::getDataToPayment( $arrOrdersReindex, $baskets, $orders);    
         }
 
-        $objCheckouts = Checkout::findActiveOrders()->get();
-        $checkouts = Checkout::printCheckouts( $objCheckouts, $lang );
+        $objCheckouts = CheckoutService::findActiveOrders()->get();
+        $checkouts = CheckoutService::printCheckouts( $objCheckouts, $lang );
 
-        $data = $page->getDataToView( [
+        $data =  (new PageService)->getDataToView( $page, [
             'checkouts' => $checkouts,
             'orders' => $orders,            
             'lang' => $lang,

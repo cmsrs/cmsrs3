@@ -6,17 +6,24 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-use App\Page;
+use App\Models\Cmsrs\Page;
+use App\Services\Cmsrs\PageService;
+
+
 use App\Basket;
 use App\Base;
-use App\Checkout;
+use App\Models\Cmsrs\Checkout;
 use App\User;
-use App\Product;
-use App\Menu;
-use App\Config;
+use App\Models\Cmsrs\Product;
+
+use App\Models\Cmsrs\Menu;
+use App\Services\Cmsrs\MenuService;
+
+
+use App\Services\Cmsrs\ConfigService;
 use App\Order;
-use App\Deliver;
-use App\Payment;
+use App\Services\Cmsrs\DeliverService;
+use App\Services\Cmsrs\PaymentService;
 use Carbon\Carbon;
 use App;
 use Illuminate\Support\Facades\Auth;
@@ -29,8 +36,8 @@ class FrontController extends Controller
 
     public function __construct()
     {    
-        $this->menus =  Menu::getMenu(); //$menus;
-        $this->langs = (new Config)->arrGetLangs();
+        $this->menus =  MenuService::getMenu(); //$menus;
+        $this->langs = (new ConfigService)->arrGetLangs();
     }
 
 
@@ -56,7 +63,7 @@ class FrontController extends Controller
         }
         App::setLocale($lang);
 
-        $page = Page::getFirstPageByType('search');
+        $page = PageService::getFirstPageByType('search');
         if(!$page){
             Log::error('if you want this page you have to add page in type search');
             abort(404);
@@ -67,7 +74,7 @@ class FrontController extends Controller
         $key = $request->input('key');
         $products = (new Product)->wrapSearchProducts( $lang, $key);        
 
-        $data = $page->getDataToView( [
+        $data = $page->getDataToView( $page, [
             'key' => $key,
             'url_search' =>  $urlSearch,
             'products' => $products,
@@ -105,7 +112,7 @@ class FrontController extends Controller
             abort(404);
         }
 
-        $data = $page->getDataToView( [
+        $data = (new PageService)->getDataToView( $page, [
             'checkout' => $objCheckout,
             'lang' => $lang,
             'langs' => $this->langs,
@@ -126,18 +133,18 @@ class FrontController extends Controller
         }
         App::setLocale($lang);
 
-        $page = Page::getFirstPageByType('checkout');
+        $page = PageService::getFirstPageByType('checkout');
         if(!$page){
             Log::error('if you want this page you have to add page in type checkout');            
             abort(404);
         }
 
-        $payments = Payment::getPayment();
-        $delivers = Deliver::getDeliver();        
+        $payments = PaymentService::getPayment();
+        $delivers = DeliverService::getDeliver();        
 
         //$token =  '123todo'; // User::getTokenForClient(); //todo - when user not auth
 
-        $data = $page->getDataToView( [
+        $data = (new PageService)->getDataToView( $page, [
             //'token' => $token,
             'payments' => $payments,
             'delivers' => $delivers,
@@ -192,7 +199,7 @@ class FrontController extends Controller
         ) = (new Product)->saveCheckout($data, (Auth::check() ? Auth::user()->id : null), session()->getId());
 
         
-        if( Payment::KEY_PAYU  == $data['payment'] ){
+        if( PaymentService::KEY_PAYU  == $data['payment'] ){
             //redirect to payU
             $payu = new Payu;
 
@@ -233,7 +240,7 @@ class FrontController extends Controller
             abort(404);
         }
         $url = $page->getUrl($lang, $productSlug );
-        Config::saveLangToSession($lang);
+        ConfigService::saveLangToSession($lang);
         return redirect($url);
     }
 
@@ -266,9 +273,9 @@ class FrontController extends Controller
         //slider_main
         //$sliderData = (new Page)->getFirstPageWithImagesForGuestCache( 'slider_main' );
         //$sliderDataImages = empty($sliderData['images']) ? false : $sliderData['images'];
-        $sliderDataImages = (new \app\Page)->getPageDataByShortTitleCache( 'main_page_slider', 'images' );
+        $sliderDataImages = (new PageService )->getPageDataByShortTitleCache( 'main_page_slider', 'images' );
 
-        $data = $page->getDataToView( [
+        $data = (new PageService)->getDataToView($page, [
             //'url_search' =>  $urlSearch,
             'view' => 'index',
             'is_new_orders' => $isNewOrders,
@@ -299,7 +306,7 @@ class FrontController extends Controller
 
         $menus = $this->menus;
 
-        $isCache = (new Config)->isCacheEnable();
+        $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
             $pageOut = cache()->remember('page_'.$menuSlug.'_'.$pageSlug.'_'.$lang, Carbon::now()->addYear(1), function () use ($menus, $menuSlug, $pageSlug, $lang) {
                 return Page::getPageBySlug($menus, $menuSlug, $pageSlug, $lang);
@@ -311,7 +318,7 @@ class FrontController extends Controller
         $this->validatePage($pageOut);
 
         //$data = $this->getData($pageOut, $lang);
-        $data = $pageOut->getDataToView( [
+        $data = (new PageService)->getDataToView( $pageOut, [
             'lang' => $lang,
             'langs' => $this->langs,
             'menus' => $this->menus
@@ -376,7 +383,7 @@ class FrontController extends Controller
 
         //$data = $this->getData($pageOut, $lang);
 
-        $data = $pageOut->getDataToView( [
+        $data = (new PageService)->getDataToView( $pageOut, [
             'lang' => $lang,
             'langs' => $this->langs,
             'menus' => $this->menus

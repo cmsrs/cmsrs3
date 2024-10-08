@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
-use App\Config;
+
+use App\Models\Cmsrs\User;
+use App\Services\Cmsrs\ConfigService;
 use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
@@ -42,14 +43,14 @@ class UserController extends Controller
             ], 404);
         }
 
-        if ( !in_array( $direction, Config::getAvailableSortingDirection() ) ) {
+        if ( !in_array( $direction, ConfigService::getAvailableSortingDirection() ) ) {
             return response()->json([
                 'success'=> false, 
-                'error'=> 'available direction to sort: '.implode( ',', Config::getAvailableSortingDirection())
+                'error'=> 'available direction to sort: '.implode( ',', ConfigService::getAvailableSortingDirection())
             ], 404);
         }
 
-        $paginationPerPage = Config::getPagination();
+        $paginationPerPage = ConfigService::getPagination();
         $clients = $objUser
             ->where('role', User::$role['client'])   
             ->when($search, function($query) use ($search) {

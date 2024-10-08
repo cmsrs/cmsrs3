@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Config;
+use App\Services\Cmsrs\ConfigService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Http\Request;
@@ -11,10 +11,10 @@ class ConfigController extends Controller
 {
     public function index()
     {
-        $objConfig = new Config();
+        $objConfig = new ConfigService();
         try {
             $config = [];
-            $config['page_types'] = Config::arrGetPageTypes();
+            $config['page_types'] = ConfigService::arrGetPageTypes();
             $config['langs'] =  $objConfig->arrGetLangs();
             $config['cache_enable'] = env('CACHE_ENABLE', false);
             $config['is_cache_enable'] = $objConfig->isCacheEnable();
@@ -32,7 +32,7 @@ class ConfigController extends Controller
 
     public function clearCache()
     {
-        $objConfig = new Config();
+        $objConfig = new ConfigService();
         if(!$objConfig->getConfigCacheEnable()){
             return response()->json(['success'=> false, 'error' => ['clear_cache'  => "don't allowed, because cache_enable is false"] ]);
         }
@@ -64,7 +64,7 @@ class ConfigController extends Controller
     public function toggleCacheEnableFile(Request $request)
     {
         $action = $request->input('action', null);
-        $objConfig = new Config;
+        $objConfig = new ConfigService;
         if(!$objConfig->getConfigCacheEnable()){
             return response()->json(['success'=> false, 'error' => ['toggle_cache_enable_file'  => "don't allowed, because cache_enable is false"] ]);
         }
@@ -89,7 +89,7 @@ class ConfigController extends Controller
     public function isCacheEnable()
     {
         try {
-            $ret = (new Config)->isCacheEnable();
+            $ret = (new ConfigService)->isCacheEnable();
         } catch (\Exception $e) {
             Log::error('is cache enable ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); 
             return response()->json(['success'=> false, 'error'=> 'is cache enable problem, details in the log file.'], 200);
