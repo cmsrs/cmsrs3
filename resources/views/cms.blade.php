@@ -9,11 +9,11 @@
 
       @if( $page->images)
         @foreach($page->images as $image)
-            <img class="m-3" src="{{$image->getHtmlImage()}}" alt="{{$image->translatesByColumnAndLang( 'alt', $lang ) }}" />
+            <img class="m-3" src="{{$image->getHtmlImage()}}" alt="{{ $pageService->translatesByColumnAndLang($image, 'alt', $lang ) }}" />
         @endforeach
       @endif
 
-      <div class="mt-2">{!! $page->translatesByColumnAndLang( 'content', $lang ) !!}</div>
+      <div class="mt-2">{!!  $pageService->translatesByColumnAndLang($page, 'content', $lang ) !!}</div>
 
   @elseif($page->type  === 'gallery')
 
@@ -26,7 +26,7 @@
   @elseif($page->type  === 'contact')
 
   <?php 
-      $companyData = (new app\Page)->getPageDataByShortTitleCache( 'company_data', 'content', $lang );
+      $companyData = $pageService->getPageDataByShortTitleCache( 'company_data', 'content', $lang );
       $classCompany1 = !empty($companyData) ? "col-xl-9" : "col";
   ?>
 

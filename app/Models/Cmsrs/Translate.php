@@ -23,7 +23,7 @@ class Translate extends Model
 
     public function page()
     {
-        return $this->hasOne('App\Page', 'id', 'page_id');
+        return $this->hasOne('App\Models\Cmsrs\Page', 'id', 'page_id');
     }
     
 

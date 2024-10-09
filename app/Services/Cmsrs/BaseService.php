@@ -7,7 +7,7 @@ use Illuminate\Support\Number;
 use App\Models\Cmsrs\Translate;
 //use App\Models\Cmsrs\Config;
 
-abstract class BaseService
+abstract  class BaseService
 {
     private $arrLangs;
 

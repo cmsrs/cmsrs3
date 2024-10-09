@@ -161,7 +161,7 @@ class ImageService extends BaseService
         if (empty($objImg)) {
             return false;
         }
-        $imgDir = Image::getImageDir(self::getRefType($objImg), self::getRefId($objImg), $img->id, $isAbs);
+        $imgDir = self::getImageDir(self::getRefType($objImg), self::getRefId($objImg), $img->id, $isAbs);
         $fileName = pathinfo($img->name, PATHINFO_FILENAME);
         $fileExt = pathinfo($img->name, PATHINFO_EXTENSION);
 
@@ -254,7 +254,7 @@ class ImageService extends BaseService
 
             $dbData = [
             'name' => $name,
-            'position' => Image::getNextPositionByTypeAndRefId($type, $refId),
+            'position' => self::getNextPositionByTypeAndRefId($type, $refId),
             $strRefId => $refId
         ];
             $image = Image::create($dbData);
@@ -267,7 +267,7 @@ class ImageService extends BaseService
 
             $out[$key] = $image;
 
-            $dirImg = Image::getImageDir($type, $refId, $image->id);
+            $dirImg = self::getImageDir($type, $refId, $image->id);
             if (!file_exists($dirImg)) {
                 mkdir($dirImg, 0777, true);
             }
@@ -314,11 +314,11 @@ class ImageService extends BaseService
 
     public static function getImagesAndThumbsByTypeAndRefId($type, $refId = null)
     {
-        $images  = Image::getImagesByTypeAndRefId($type, $refId);
+        $images  = ImageService::getImagesByTypeAndRefId($type, $refId);
 
         foreach ($images  as $k => $img) {
-            $images[$k]['alt'] = Image::getAltImg($img);
-            $images[$k]['fs']  = Image::getAllImage($img, false);
+            $images[$k]['alt'] = ImageService::getAltImg($img);
+            $images[$k]['fs']  = ImageService::getAllImage($img, false);
             unset($img['translates']);
         }
 

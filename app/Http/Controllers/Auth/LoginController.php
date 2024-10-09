@@ -7,8 +7,18 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Log;
 use App\Page;
 use App\Config;
-use App\Menu;
-use App;
+//use App\Menu;
+//use App;
+use Illuminate\Support\Facades\App;
+
+
+use App\Models\Cmsrs\Menu;
+
+
+use App\Services\Cmsrs\MenuService;
+use App\Services\Cmsrs\PageService;
+use App\Services\Cmsrs\ConfigService;
+
 
 class LoginController extends Controller
 {
@@ -33,6 +43,7 @@ class LoginController extends Controller
     protected $redirectTo = '/en/home';
     protected $lang;    
     protected $langs;        
+    protected $menus;        
 
     /**
      * Create a new controller instance.
@@ -48,17 +59,17 @@ class LoginController extends Controller
         //$locale = App::getLocale();
         //dd($locale);
         //dump('____________________'.$this->lang);
-        $this->langs = (new Config)->arrGetLangs();
+        $this->langs = (new ConfigService)->arrGetLangs();
 
-        $pHome = App\Page::getFirstPageByType('home');
+        $pHome = PageService::getFirstPageByType('home');
         if( $pHome ){
-            $this->redirectTo = $pHome->getUrl($this->langs[0]);
+            $this->redirectTo = (new PageService) ->getUrl($pHome, $this->langs[0]);
         }
     }
     
     public function showLoginForm($lang = null)
     {
-        $page = Page::getFirstPageByType('login');
+        $page = PageService::getFirstPageByType('login');
         if(!$page){
             Log::error('if you want this page you have to add page in type login');
             abort(404);
@@ -69,9 +80,9 @@ class LoginController extends Controller
         }
         App::setLocale($lang);
 
-        $pForgot = Page::getFirstPageByType('forgot');
+        $pForgot = PageService::getFirstPageByType('forgot');
       
-        $data = $page->getDataToView($page, [
+        $data =  (new PageService) ->getDataToView($page, [
             'view' => 'login',
             'pforgot' => $pForgot,
             'lang' => $lang,

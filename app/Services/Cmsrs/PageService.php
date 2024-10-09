@@ -13,7 +13,7 @@ use App\Models\Cmsrs\Product;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Basket;
 use App\Models\Cmsrs\Image;
-
+use Namshi\JOSE\Base64\Base64UrlSafeEncoder;
 
 class PageService extends BaseService
 {
@@ -127,7 +127,7 @@ class PageService extends BaseService
 	}
 
         if( 'url' == $data ){
-            return $page->getUrl($lang);
+            return $this->getUrl($page, $lang);
         }
         
         $pageData = $this->getAllPagesWithImagesOneItem($page);
@@ -209,8 +209,9 @@ class PageService extends BaseService
         }
 
         $data = [
+            'pageService' => (new PageService),
             'menus' =>  isSet($dataIn['menus']) ? $dataIn['menus'] : null,
-            'page' => $this,
+            'page' => $mPage,
             'h1' => $this->translatesByColumnAndLang($mPage, 'title', $lang ),
             'page_title' => $this->translatesByColumnAndLang($mPage, 'title', $lang ) ?? config('app.name', 'cmsRS'),
             'seo_description' =>  $this->translatesByColumnAndLang($mPage, 'description', $lang ) ?? config('app.name', 'cmsRS'),
@@ -253,7 +254,7 @@ class PageService extends BaseService
         $menuId = empty($data['menu_id']) ? 0 : $data['menu_id'];
 
         $out = ['success' => true ];
-        $pages = (new Page)->getAllPagesWithImages();
+        $pages = (new PageService())->getAllPagesWithImages();
         foreach ($pages as $page) {
             $mId = empty($page['menu_id']) ? 0 : $page['menu_id'];
             if ($page['id']  == $id) {
@@ -367,7 +368,7 @@ class PageService extends BaseService
         return true;
     }
     
-    public static function getFooterPages($lang)
+    public function getFooterPages($lang)
     {
         $privacyPolicy = PageService::getFirstPageByType('privacy_policy');
         $contact = PageService::getFirstPageByType('contact');
@@ -376,15 +377,15 @@ class PageService extends BaseService
         $policyUrl = null;
         $policyTitle = null;
         if (!empty($privacyPolicy)) {
-            $policyUrl = $privacyPolicy->getUrl($lang);
-            $policyTitle = $privacyPolicy->translatesByColumnAndLang($privacyPolicy, 'title', $lang);
+            $policyUrl = $this->getUrl($privacyPolicy, $lang);
+            $policyTitle =  $this->translatesByColumnAndLang($privacyPolicy, 'title', $lang);
         }
 
         $contactUrl = null;
         $contactTitle = null;
         if (!empty($contact)) {
-            $contactUrl = $contact->getUrl($lang);
-            $contactTitle = $contact->translatesByColumnAndLang($contact, 'title', $lang);
+            $contactUrl = $this->getUrl($contact, $lang);
+            $contactTitle = $this->translatesByColumnAndLang($contact, 'title', $lang);
         }
 
         $out['policyUrl'] = $policyUrl;
@@ -592,7 +593,7 @@ class PageService extends BaseService
     {
         if (isset($data['type']) && ($data['type'] == 'main_page')) {
             if ($create) {
-                $p = Page::getMainPage();
+                $p = PageService::getMainPage();
                 if ($p) {
                     throw new \Exception("Two main page not allowed");
                 }
@@ -669,7 +670,7 @@ class PageService extends BaseService
         $page = $mPage->with(['translates', 'contents'])->orderBy('position', 'asc')->get($this->pageFields)->first()->toArray();        
         $formatPage = $this->getPageDataFormat($page);
         if(!$simple){
-            $formatPage['images'] = Image::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
+            $formatPage['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
         }
         
 
@@ -734,7 +735,7 @@ class PageService extends BaseService
         if($page){
             $page = $page->toArray();
             $out = $this->getPageDataFormat($page);
-            $out['images'] = Image::getImagesAndThumbsByTypeAndRefId('page', $page['id']);    
+            $out['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('page', $page['id']);    
         }
 
         return $out;
@@ -753,7 +754,7 @@ class PageService extends BaseService
         $out = [];
         foreach ($pages as $page) {
             $out[$i] = $this->getPageDataFormat($page);
-            $out[$i]['images'] = Image::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
+            $out[$i]['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
             $i++;
         }
 
@@ -789,7 +790,7 @@ class PageService extends BaseService
         $out = [];
         foreach ($pages as $page) {
             $out[$i] = $this->getPageDataFormat($page);
-            $out[$i]['images'] = Image::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
+            $out[$i]['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
             $i++;
         }
 
@@ -864,7 +865,7 @@ class PageService extends BaseService
         }
         $menuId = $page->menu_id;
         $pageId = $page->page_id;
-        $pages = Page::getPagesByMenuId($menuId, $pageId);
+        $pages = PageService::getPagesByMenuId($menuId, $pageId);
 
 
         $countPages = count($pages);

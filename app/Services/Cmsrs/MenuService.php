@@ -64,7 +64,7 @@ class MenuService extends BaseService
 
     public static function CreateMenu($data)
     {
-        $data['position'] = Menu::getNextPosition();
+        $data['position'] = MenuService::getNextPosition();
 
         $menu = Menu::create($data);
         if (empty($menu->id)) {

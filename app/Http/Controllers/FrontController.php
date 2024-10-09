@@ -25,9 +25,12 @@ use App\Order;
 use App\Services\Cmsrs\DeliverService;
 use App\Services\Cmsrs\PaymentService;
 use Carbon\Carbon;
-use App;
+//use App;
+use Illuminate\Support\Facades\App;
+
 use Illuminate\Support\Facades\Auth;
 use App\Integration\Payu;
+use App\Services\Cmsrs\ProductService;
 
 class FrontController extends Controller
 {
@@ -47,7 +50,7 @@ class FrontController extends Controller
             abort(404);
         }
 
-        if (!$page->checkAuth()) {
+        if (! (new PageService())->checkAuth( $page )) {
             abort(401);
         }
     }
@@ -68,11 +71,11 @@ class FrontController extends Controller
             Log::error('if you want this page you have to add page in type search');
             abort(404);
         }
-        $urlSearch = $page->getUrl($lang);
+        $urlSearch = $this->getUrl($page, $lang);
         //dd($urlSearch);
 
         $key = $request->input('key');
-        $products = (new Product)->wrapSearchProducts( $lang, $key);        
+        $products = (new ProductService())->wrapSearchProducts( $lang, $key);        
 
         $data = $page->getDataToView( $page, [
             'key' => $key,
@@ -223,7 +226,7 @@ class FrontController extends Controller
                 throw new \Exception("you should add page type = shoppingsuccess");
             }
 
-            $urlShoppingSuccess = $pShoppingSuccess->getUrl($lang);       
+            $urlShoppingSuccess = (new PageService )->getUrl($pShoppingSuccess, $lang);       
             //$request->session()->flash('status', 'Task was successful!');            
             //$request->session()->keep(['checkout_id' => $objCheckout->id]);            
             $request->session()->flash('checkout_id', $objCheckout->id);            
@@ -239,7 +242,7 @@ class FrontController extends Controller
         if( empty($page) ){
             abort(404);
         }
-        $url = $page->getUrl($lang, $productSlug );
+        $url = (new PageService )->getUrl($page, $lang, $productSlug );
         ConfigService::saveLangToSession($lang);
         return redirect($url);
     }
@@ -261,7 +264,7 @@ class FrontController extends Controller
         //it make sense only for payU - it my opinion
         $isNewOrders = false; //Order::copyDataFromBasketToOrderForUser();  
 
-        $page = PageService::getMainPage();
+        $page = PageService::getMainPage();    
         $this->validatePage($page);
 
         // $pSearch = App\Page::getFirstPageByType('search');
@@ -309,10 +312,10 @@ class FrontController extends Controller
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
             $pageOut = cache()->remember('page_'.$menuSlug.'_'.$pageSlug.'_'.$lang, Carbon::now()->addYear(1), function () use ($menus, $menuSlug, $pageSlug, $lang) {
-                return Page::getPageBySlug($menus, $menuSlug, $pageSlug, $lang);
+                return PageService::getPageBySlug($menus, $menuSlug, $pageSlug, $lang);
             });
         } else {
-            $pageOut = Page::getPageBySlug($menus, $menuSlug, $pageSlug, $lang);
+            $pageOut = PageService::getPageBySlug($menus, $menuSlug, $pageSlug, $lang);
         }
      
         $this->validatePage($pageOut);
@@ -326,7 +329,7 @@ class FrontController extends Controller
 
 
         if($productSlug){ //product page
-            $objProduct = new Product;
+            $objProduct = new ProductService();
             $product = $objProduct->getProductBySlug($productSlug, $lang);
             if(empty($product)){
                 abort(404);

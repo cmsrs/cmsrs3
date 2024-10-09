@@ -1,14 +1,14 @@
 <?php $manyLangs = ( 1 < count($langs)); ?>
 <?php $bg = env('DEMO_STATUS', false) ?  'bg-dark' : 'bg-secondary'; ?>
 <?php //$bg = 'bg-secondary'; ?>
-<?php $pLogin = App\Page::getFirstPageByType('login');  ?>
-<?php $pRegister = App\Page::getFirstPageByType('register');  ?>
-<?php $pHome = App\Page::getFirstPageByType('home');  ?>
+<?php $pLogin = $pageService::getFirstPageByType('login');  ?>
+<?php $pRegister = $pageService::getFirstPageByType('register');  ?>
+<?php $pHome = $pageService::getFirstPageByType('home');  ?>
 <?php 
-  $mainPage = App\Page::getFirstPageByType('main_page');  
+  $mainPage = $pageService::getFirstPageByType('main_page');  
   $urlMainPage = '/';
   if($mainPage){
-    $urlMainPage = $mainPage->getUrl($lang);  
+    $urlMainPage = $pageService->getUrl($mainPage, $lang);  
   }
 ?>
 <?php $productNameSlug = !empty($product_name_slug) ? $product_name_slug : null ?>
@@ -49,15 +49,15 @@
             <?php $pagesPublishedAndAccess = $menu->pagesPublishedAndAccess()->get(); ?>    
             <li class="nav-item dropdown">
             <?php if( 1 == $pagesPublishedAndAccess->count() ){  ?>
-              <a class=" ml-3 nav-link" href="{{$pagesPublishedAndAccess->first()->getUrl($lang)}}">{{ $pagesPublishedAndAccess->first()->translatesByColumnAndLang( 'short_title', $lang ) }}</a>
+              <a class=" ml-3 nav-link" href="{{ $pageService->getUrl($pagesPublishedAndAccess->first(),  $lang)}}">{{$pageService->translatesByColumnAndLang(  $pagesPublishedAndAccess->first(), 'short_title', $lang ) }}</a>
             <?php }else{ ?>
-              <a class="nav-link dropdown-toggle ml-3" href="#" id="dropdown{{ $menu->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ $menu->translatesByColumnAndLang( 'name', $lang ) }}</a>
+              <a class="nav-link dropdown-toggle ml-3" href="#" id="dropdown{{ $menu->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ $pageService->translatesByColumnAndLang($menu, 'name', $lang ) }}</a>
               <div class="dropdown-menu" aria-labelledby="dropdown{{ $menu->id }}">
                   <?php foreach ($menu->pagesPublishedTree($pagesPublishedAndAccess) as $pageMenu) { ?>                                
-                    <a class="dropdown-item" href="{{$pageMenu->getUrl($lang)}}">{{ $pageMenu->translatesByColumnAndLang( 'short_title', $lang ) }}</a>
+                    <a class="dropdown-item" href="{{ $pageService->getUrl($pageMenu, $lang)}}">{{  $pageService->translatesByColumnAndLang($pageMenu, 'short_title', $lang ) }}</a>
                     <?php if( !empty($pageMenu['children']) && !empty($pageMenu->published) ){ ?>
                         <?php foreach ($pageMenu['children'] as $p) { ?>                    
-                            <a class="dropdown-item ml-3" href="{{$p->getUrl($lang)}}">{{ $p->translatesByColumnAndLang( 'short_title', $lang ) }}</a>
+                            <a class="dropdown-item ml-3" href="{{ $pageService->getUrl($p, $lang)}}">{{ $pageService->translatesByColumnAndLang($p, 'short_title', $lang ) }}</a>
                         <?php } ?>
                     <?php } ?>                  
                   <?php } ?>
@@ -104,17 +104,17 @@
         <?php $loginStyle = $manyLangs ? 'mr-4' : ''; ?>          
         @guest            
               <li class="nav-item {{$loginStyle}}">
-                  <a class="nav-link" href="{{ $pLogin->getUrl($lang) }}">{{ $pLogin->translatesByColumnAndLang( 'short_title', $lang ) }}</a>
+                  <a class="nav-link" href="{{ $pageService->getUrl($pLogin, $lang) }}">{{ $pageService->translatesByColumnAndLang($pLogin, 'short_title', $lang ) }}</a>
               </li>
               @if (Route::has('register') && $pRegister )
                   <li class="nav-item  {{$loginStyle}}">
-                      <a class="nav-link" href="{{ $pRegister->getUrl($lang) }}">{{ $pRegister->translatesByColumnAndLang( 'short_title', $lang ) }}</a>
+                      <a class="nav-link" href="{{ $pageService->getUrl($pRegister, $lang) }}">{{ $pageService->translatesByColumnAndLang($pRegister, 'short_title', $lang ) }}</a>
                   </li>
               @endif
         @else
               @if ( $pHome )
               <li class="nav-item active {{$loginStyle}}">
-                    <a class="nav-link" href="{{ $pHome->getUrl($lang) }}">{{ $pHome->translatesByColumnAndLang( 'short_title', $lang ) }}</a>
+                    <a class="nav-link" href="{{ $pageService->getUrl($pHome, $lang) }}">{{ $pageService->translatesByColumnAndLang($pHome, 'short_title', $lang ) }}</a>
               </li>
               @endif
               <form id="logout-form" action="{{ route('logout') }}" method="POST" >

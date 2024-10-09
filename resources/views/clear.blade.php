@@ -1,8 +1,8 @@
 @extends('layouts.default')
 @section('content')
 
-<h1 class="mb-4 mt-3">{{$page->translatesByColumnAndLang( 'title', $lang )}}</h1>
+<h1 class="mb-4 mt-3">{{$pageService->translatesByColumnAndLang($page, 'title', $lang )}}</h1>
 
-<div class="mt-2">{!! $page->translatesByColumnAndLang( 'content', $lang ) !!}</div>
+<div class="mt-2">{!! $pageService->translatesByColumnAndLang( $page, 'content', $lang ) !!}</div>
 
 @stop

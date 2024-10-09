@@ -2,17 +2,28 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+//use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 //use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Log;
-use App\Page;
-use App\Config;
-use App\Menu;
-use App;
+//use App\Page;
+//use App\Config;
+//use App\Menu;
+//use App;
 
+use App\Models\Cmsrs\Menu;
+use App\Models\Cmsrs\User;
+
+
+use App\Services\Cmsrs\MenuService;
+use App\Services\Cmsrs\PageService;
+use App\Services\Cmsrs\ConfigService;
+
+
+
+use Illuminate\Support\Facades\App;
 
 class RegisterController extends Controller
 {
@@ -36,6 +47,10 @@ class RegisterController extends Controller
      */
     protected $redirectTo = '/en/home';
 
+    protected $lang;    
+    protected $langs;        
+    protected $menus;        
+
     /**
      * Create a new controller instance.
      *
@@ -45,14 +60,14 @@ class RegisterController extends Controller
     {
         //abort(404); //TODO 
         $this->middleware('guest');
-        $this->langs = (new Config)->arrGetLangs();
+        $this->langs = (new ConfigService)->arrGetLangs();
         $this->menus = Menu::all()->sortBy('position'); //TODO cached
 
         //$this->langs = (new Config)->arrGetLangs();
 
-        $pHome = App\Page::getFirstPageByType('home');
+        $pHome = PageService::getFirstPageByType('home');
         if( $pHome ){
-            $this->redirectTo = $pHome->getUrl($this->langs[0]);
+            $this->redirectTo = (new PageService)->getUrl( $pHome, $this->langs[0]);
         }
 
 
@@ -103,7 +118,7 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm($lang = null)
     {
-        $page = Page::getFirstPageByType('register');
+        $page = PageService::getFirstPageByType('register');
         if(!$page){
             Log::error('if you want this page you have to add page in type login');
             abort(404);

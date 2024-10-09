@@ -41,27 +41,27 @@ class Product extends Model
 
     public function page()
     {
-        return $this->hasOne('App\Page', 'id', 'page_id');
+        return $this->hasOne('App\Models\Cmsrs\Page', 'id', 'page_id');
     }
 
     public function images()
     {
-        return $this->hasMany('App\Image');
+        return $this->hasMany('App\Models\Cmsrs\Image');
     }
 
     public function translates()
     {
-        return $this->hasMany('App\Translate');
+        return $this->hasMany('App\Models\Cmsrs\Translate');
     } 
 
     public function translatesPage()
     {
-        return $this->hasMany('App\Translate', 'page_id', 'page_id');
+        return $this->hasMany('App\Models\Cmsrs\Translate', 'page_id', 'page_id');
     }
 
     public function contents()
     {
-        return $this->hasMany('App\Content');
+        return $this->hasMany('App\Models\Cmsrs\Content');
     }        
 
 

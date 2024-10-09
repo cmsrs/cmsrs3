@@ -1,7 +1,7 @@
 @extends('layouts.index')
 @section('content')
 
-@if( $page->translatesByColumnAndLang( 'content', $lang ) )
+@if( $pageService->translatesByColumnAndLang($page, 'content', $lang ) )
   @if( $is_new_orders )
     <script>
       //alert('new order');
@@ -14,13 +14,13 @@
 
       @if (Auth::check())
       <br>
-        <?php $pHome = App\Page::getFirstPageByType('home');  ?>
-        {{ __('Your:') }} <a class="nav-link" href="{{ $pHome->getUrl($lang) }}">{{ __('Orders') }}</a>
+        <?php $pHome = $pageService::getFirstPageByType('home');  ?>
+        {{ __('Your:') }} <a class="nav-link" href="{{ $pageService->getUrl($pHome, $lang) }}">{{ __('Orders') }}</a>
       @endif
       </div>
     </div>
   @endif  
-  {!! $page->translatesByColumnAndLang( 'content', $lang ) !!}
+  {!! $pageService->translatesByColumnAndLang($page, 'content', $lang ) !!}
 @endif
 
 

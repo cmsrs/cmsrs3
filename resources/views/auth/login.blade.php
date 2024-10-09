@@ -59,7 +59,7 @@
                                 </button>
 
                                 @if (Route::has('password.request') && $pforgot  )
-                                    <a class="btn btn-link" href="{{ $pforgot->getUrl($lang) }}">
+                                    <a class="btn btn-link" href="{{  $pageService->getUrl($pforgot, $lang) }}">
                                         {{ __('Forgot Your Password?') }}
                                     </a>
                                 @endif

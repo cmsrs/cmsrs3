@@ -13,7 +13,7 @@
               <div class="container">
                 <div class="row">
                   <div class="col">
-                  {{ __('Category') }}: <a href="{{$page->getUrl($lang)}}">{{$page->translatesByColumnAndLang( 'title', $lang )}}</a>
+                  {{ __('Category') }}: <a href="{{ $pageService->getUrl($page, $lang)}}">{{ $pageService->translatesByColumnAndLang( $page, 'title', $lang )}}</a>
                   <br>
                   @if( !empty($product['images']) &&  !empty($product['images'][0]) )
                       <img class="m-3" src="{{$product['images'][0]->getHtmlImage()}}" alt="{{$product['images'][0]->alt[$lang]}}" />

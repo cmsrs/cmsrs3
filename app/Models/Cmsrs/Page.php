@@ -45,23 +45,23 @@ class Page extends Model
 
     public function menu()
     {
-        return $this->hasOne('App\Menu', 'id', 'menu_id');
+        return $this->hasOne('App\Models\Cmsrs\Menu', 'id', 'menu_id');
     }
 
     public function translates()
     {
-        return $this->hasMany('App\Translate');
+        return $this->hasMany('App\Models\Cmsrs\Translate');
     }
 
 
     public function contents()
     {
-        return $this->hasMany('App\Content');
+        return $this->hasMany('App\Models\Cmsrs\Content');
     }
 
     public function images()
     {
-        return $this->hasMany('App\Image')->orderBy('position');
+        return $this->hasMany('App\Models\Cmsrs\Image')->orderBy('position');
     }
 
     /*

@@ -229,7 +229,36 @@ class FrontTest extends Base
         $this->assertEquals(count($res->data), 1);
     }
 
-    public function test_it_will_get_main_page()
+    public function test_it_will_get_main_page_1()
+    {
+        $testData2 =
+        [
+            'title'     =>  ['en' =>'cmsRS'],
+            'short_title' =>  ['en' =>'cmsRS'],
+            'description' =>  ['en' =>'cmsRS'],
+            'published' => 1,
+            'commented' => 0,
+            'after_login' => 1,
+            'type' => 'main_page',
+            'content' =>  ['en' =>'main page'],
+            'menu_id' => null,
+            'page_id' => null
+        ];
+  
+        $response = $this->post('api/pages?token='.$this->token, $testData2);
+  
+        $pages = Page::All()->toArray();
+        $this->assertEquals( 1, count($pages));
+
+        $res = $response->getData();
+        $this->assertTrue($res->success);
+        
+        $response = $this->get('/');
+        $response->assertStatus(200);
+    }
+
+
+    public function test_it_will_get_main_page_2()
     {
         $response = $this->get('/');
         $response->assertStatus(404);
@@ -250,9 +279,12 @@ class FrontTest extends Base
   
         $response = $this->post('api/pages?token='.$this->token, $testData2);
   
+        $pages = Page::All()->toArray();
+        $this->assertEquals( 1, count($pages));
+
         $res = $response->getData();
         $this->assertTrue($res->success);
-
+        
         $response = $this->get('/');
         $response->assertStatus(200);
     }

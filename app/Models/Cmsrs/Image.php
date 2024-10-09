@@ -46,7 +46,7 @@ class Image extends Model
 
     public function translates()
     {
-        return $this->hasMany('App\Translate');
+        return $this->hasMany('App\Models\Cmsrs\Translate');
     }    
 
     /*

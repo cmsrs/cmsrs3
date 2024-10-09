@@ -76,10 +76,10 @@ class ProductService extends BaseService
 
     public function __construct(array $attributes = array())
     {
-        parent::__construct($attributes);
+        //parent::__construct($attributes);
 
-        $this->translate = new Translate;
-        $this->content = new Content;
+        $this->translate = new TranslateService;
+        $this->content = new ContentService;
 
         $this->productFields = [
             'id',
@@ -107,7 +107,7 @@ class ProductService extends BaseService
 
         $reindexBaskets = BaseService::reIndexArr($data['products']);
         $baskets = [];
-        $productsDataAndTotalAmount = Product::getDataToPayment( $reindexBaskets, $baskets );
+        $productsDataAndTotalAmount = ProductService::getDataToPayment( $reindexBaskets, $baskets );
         if( empty($baskets) ){
             throw new \Exception('No data in basket (not found data in db)');
         }
@@ -220,8 +220,8 @@ class ProductService extends BaseService
 
     public function wrapSearchProducts( $lang, $key)
     {
-        $objProducts = Product::searchProducts( $lang, $key);
-        $arrProducts = Product::objToArray( $objProducts );
+        $objProducts = ProductService::searchProducts( $lang, $key);
+        $arrProducts = ProductService::objToArray( $objProducts );
         return $this->getProductsWithImagesByIds($arrProducts);
     }
 
@@ -301,7 +301,7 @@ class ProductService extends BaseService
                 throw new \Exception("qty empty - something wrong");
             }
 
-            $productName = Product::getDefaultProductName( $product->translates, $lang );
+            $productName = ProductService::getDefaultProductName( $product->translates, $lang );
             $qty = $itemIn['qty'];            
 
             $out["products"][] = [
@@ -321,7 +321,7 @@ class ProductService extends BaseService
             }
             
             if( is_array($orders) ){
-                $productImage = Image::getImagesAndThumbsByTypeAndRefId('product', $product->id)->toArray();
+                $productImage = ImageService::getImagesAndThumbsByTypeAndRefId('product', $product->id)->toArray();
                 $orders[] = [
                     "name" =>  $productName,
                     "unitPrice" => $product->price,
@@ -387,7 +387,7 @@ class ProductService extends BaseService
         $this->createTranslate([ 'product_id' => $product->id, 'data' => $data ]);
   
         if (!empty($data['images']) && is_array($data['images'])) {
-            $objImage = new Image;
+            $objImage = new ImageService();
             $objImage->setTranslate($this->translate);
             $objImage->createImages($data['images'], 'product', $product->id);
         }
@@ -451,7 +451,7 @@ class ProductService extends BaseService
     public function getProductUrl(Product $mProduct, $lang, $productName)
     {
         $mPage = $mProduct->page()->get()->first();
-        return $mProduct->page()->get()->first()->getUrl($mPage, $lang, Str::slug($productName, '-') );
+        return  (new PageService)->getUrl($mPage, $lang, Str::slug($productName, '-') );
     }    
 
     public function getProductUrls(Product $productWithTranslate) //to_dodalem_model_jako_arg
@@ -482,7 +482,7 @@ class ProductService extends BaseService
         $out = $this->getProductDataFormat($arrProduct);
         $out['product_name_default_lang'] = $this->getProductNameDefaultLang($out);
 
-        $out['images'] = Image::getImagesAndThumbsByTypeAndRefId('product', $arrProduct['id']);
+        $out['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('product', $arrProduct['id']);
         return $out;
     }
 
@@ -550,10 +550,10 @@ class ProductService extends BaseService
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
             $products = cache()->remember('products_name_price_'.$lang , Carbon::now()->addYear(1), function () use ($lang)  {
-                return (new Product)->getAllProductsWithImagesByLang($lang);
+                return (new ProductService())->getAllProductsWithImagesByLang($lang);
             });
         } else {
-            $products = (new Product)->getAllProductsWithImagesByLang($lang);
+            $products = (new ProductService())->getAllProductsWithImagesByLang($lang);
         }
 
         return $products;    

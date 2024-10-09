@@ -24,12 +24,12 @@ class Menu extends Model
 
     public function pages()
     {
-        return $this->hasMany('App\Page');
+        return $this->hasMany('App\Models\Cmsrs\Page');
     }
 
     public function translates()
     {
-        return $this->hasMany('App\Translate');
+        return $this->hasMany('App\Models\Cmsrs\Translate');
     }
 
     

@@ -22,7 +22,7 @@ class CreateSiteMap extends Command
      *
      * @var string
      */
-    protected $description = 'Command create site map (the script creates a sitempe in txt format)';
+    protected $description = 'Command create site map (the script creates a sitemap in txt format)';
 
     /**
      * Create a new command instance.
@@ -41,15 +41,16 @@ class CreateSiteMap extends Command
      */
     public function handle()
     {
+        $pageService = new PageService();
         $appUrl = env('APP_URL');
-        $langs = (new PageService())->getArrLangs();
+        $langs = $pageService->getArrLangs();
         $pages = Page::where('after_login', '=', 0)->where('published', '=', 1)->where('type', '!=', 'inner')->get();
         $prodUrls = (new ProductService())->getProductsUrl();
 
         $strUrls = '';
         foreach ($langs as $lang) {
             foreach ($pages as $page) {
-                $strUrls .= $appUrl.$page->getUrl($lang)."\n";
+                $strUrls .= $appUrl. $pageService->getUrl($page, $lang)."\n";
             }
             foreach ($prodUrls as $prodUrl){
                 $strUrls .= $appUrl.$prodUrl[$lang]."\n";

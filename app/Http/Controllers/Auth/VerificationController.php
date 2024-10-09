@@ -5,6 +5,16 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 
+
+use App\Models\Cmsrs\Menu;
+use App\Models\Cmsrs\User;
+
+
+use App\Services\Cmsrs\MenuService;
+use App\Services\Cmsrs\PageService;
+use App\Services\Cmsrs\ConfigService;
+
+
 class VerificationController extends Controller
 {
     /*
@@ -27,6 +37,10 @@ class VerificationController extends Controller
      */
     protected $redirectTo = '/en/home';
 
+    protected $lang;    
+    protected $langs;        
+    protected $menus;        
+
     /**
      * Create a new controller instance.
      *
@@ -44,8 +58,8 @@ class VerificationController extends Controller
         $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
 
-        $this->langs = (new Config)->arrGetLangs();
-        $pHome = App\Page::getFirstPageByType('home');
+        $this->langs = (new ConfigService)->arrGetLangs();
+        $pHome = PageService::getFirstPageByType('home');
         if( $pHome ){
             $this->redirectTo = $pHome->getUrl($this->langs[0]);
         }

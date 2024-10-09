@@ -7,10 +7,19 @@ use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
-use App\Page;
-use App\Config;
-use App\Menu;
-use App;
+//use App\Page;
+//use App\Config;
+use App\Models\Cmsrs\Menu;
+//use App;
+use Illuminate\Support\Facades\App;
+
+use App\Services\Cmsrs\MenuService;
+use App\Services\Cmsrs\PageService;
+
+
+use App\Services\Cmsrs\ConfigService;
+
+
 
 
 class ForgotPasswordController extends Controller
@@ -33,6 +42,8 @@ class ForgotPasswordController extends Controller
     }
     */
     
+    private $menus;
+    private $langs;
 
     /**
      * Create a new controller instance.
@@ -48,7 +59,7 @@ class ForgotPasswordController extends Controller
         }
 
         $this->menus = Menu::all()->sortBy('position'); //TODO cached
-        $this->langs = (new Config)->arrGetLangs();
+        $this->langs = (new ConfigService)->arrGetLangs();
         
 
         $this->middleware('guest');
@@ -72,7 +83,7 @@ class ForgotPasswordController extends Controller
 
     public function showLinkRequestForm($lang = null)
     {
-        $page = Page::getFirstPageByType('forgot');
+        $page = PageService::getFirstPageByType('forgot');
         if(!$page){
             Log::error('if you want this page you have to add page in type forgot');
             abort(404);
@@ -83,7 +94,7 @@ class ForgotPasswordController extends Controller
         }
         App::setLocale($lang);
         
-        $data = $page->getDataToView( $page, [
+        $data =  (new PageService() )->getDataToView( $page, [
             'view' => 'forgot',
             'lang' => $lang,
             'langs' => $this->langs,

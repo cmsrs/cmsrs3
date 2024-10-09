@@ -39,7 +39,7 @@ class Checkout extends Model
 
     public function baskets()
     {
-        return $this->hasMany('App\Basket');
+        return $this->hasMany('App\Models\Cmsrs\Basket');
     } 
     
 

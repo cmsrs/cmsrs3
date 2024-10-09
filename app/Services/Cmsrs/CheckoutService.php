@@ -88,7 +88,7 @@ class CheckoutService extends BaseService
         //     $objCheckouts = Checkout::orderBy($column, $direction)->get();
         // }
 
-        $checkouts = Checkout::printCheckouts( $objCheckouts, $lang );
+        $checkouts = CheckoutService::printCheckouts( $objCheckouts, $lang );
 
         return $this->getPaginationFromCollection( collect($checkouts) );
 
