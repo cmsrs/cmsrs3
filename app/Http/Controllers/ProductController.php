@@ -7,6 +7,7 @@ use App\Models\Cmsrs\Product;
 use App\Models\Cmsrs\Image;
 
 use App\Services\Cmsrs\ConfigService;
+use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\ProductService;
 
 use Validator;
@@ -149,14 +150,14 @@ class ProductController extends Controller
         }        
 
         try {
-            $res = $product->wrapUpdate($data);
+            $res = (new ProductService)->wrapUpdate( $product, $data);
             if (!empty($data['images']) && is_array($data['images'])) {
-                Image::createImagesAndUpdateAlt($data['images'], 'product', $product->id);
-                Image::updatePositionImages($data['images']);
+                ImageService::createImagesAndUpdateAlt($data['images'], 'product', $product->id);
+                ImageService::updatePositionImages($data['images']);
             }
         } catch (\Exception $e) {
-            Log::error('product update ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); //.' for: '.var_export($data, true )
-            return response()->json(['success'=> false, 'error'=> 'Update product problem - exeption'], 200);
+            Log::error('product update ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile().' for: '.var_export($e, true )  );//var_export($data, true )
+            return response()->json(['success'=> false, 'error'=> 'Update product problem - exception'], 200);
         }
 
         if (empty($res)) {

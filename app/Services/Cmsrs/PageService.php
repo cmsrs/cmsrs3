@@ -626,10 +626,11 @@ class PageService extends BaseService
     public function arrImages(Page $mPage,  $lang)
     {
         $out = [];
+        $imageService = new ImageService();
         foreach ($mPage->images as $image) {
-            $item = Image::getAllImage($image, false);
+            $item = $imageService->getAllImage($image, false);
             $item['id'] = $image->id;
-            $item['alt'] = Image::getAltImg($image);
+            $item['alt'] = $imageService->getAltImg($image);
             $item['altlang'] = !empty($item['alt'][$lang]) ? $item['alt'][$lang] : ''; //it neeeds to javascript - to modal window in gallery
             $out[] = $item;
         }

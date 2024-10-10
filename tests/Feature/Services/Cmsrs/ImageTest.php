@@ -236,7 +236,7 @@ class ImageTest extends Base
         }
       
         $page = Page::findOrFail($this->pageId);
-        $arrImages =  $page->arrImages('en');
+        $arrImages = (new PageService() ) ->arrImages($page, 'en');
         $this->assertEquals(2, count($arrImages));
 
 
@@ -269,7 +269,11 @@ class ImageTest extends Base
 
 
         $objPage = Page::find($this->pageId);
-        $altEn = $objPage->images()->first()->translatesByColumnAndLang('alt', 'en'); //For this method (translatesByColumnAndLang) maybe should create new test.
+
+        $objImage = $objPage->images()->first();
+        $this->assertNotEmpty($objImage->id );
+        //dd($objImage);
+        $altEn =  (new ImageService() )->translatesByColumnAndLang( $objImage, 'alt', 'en'); //For this method (translatesByColumnAndLang) maybe should create new test.
         $this->assertEquals(self::STR_DESC_IMG1, $altEn);
         $this->assertEquals(2, $objPage->images()->get()->count());
 

@@ -46,7 +46,7 @@
 
       <ul class="nav-main-rs  navbar-nav mr-auto">
           <?php foreach ($menus as $menu) { ?>
-            <?php $pagesPublishedAndAccess = $menu->pagesPublishedAndAccess()->get(); ?>    
+            <?php $pagesPublishedAndAccess =  (new App\Services\Cmsrs\MenuService) ->pagesPublishedAndAccess($menu)->get(); ?>    
             <li class="nav-item dropdown">
             <?php if( 1 == $pagesPublishedAndAccess->count() ){  ?>
               <a class=" ml-3 nav-link" href="{{ $pageService->getUrl($pagesPublishedAndAccess->first(),  $lang)}}">{{$pageService->translatesByColumnAndLang(  $pagesPublishedAndAccess->first(), 'short_title', $lang ) }}</a>

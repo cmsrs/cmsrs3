@@ -196,7 +196,7 @@ class ProductService extends BaseService
 
         //For optimization purposes, we only retrieve images for products on the given page.    
         $productsPagination->each(function ($product) {
-            $product->images = Image::getImagesAndThumbsByTypeAndRefId('product', $product->id);
+            $product->images = ImageService::getImagesAndThumbsByTypeAndRefId('product', $product->id);
         });        
         
         return $productsPagination;
@@ -327,7 +327,7 @@ class ProductService extends BaseService
                     "unitPrice" => $product->price,
                     "qty" => $qty,
                     "product_id" => $product->id,
-                    "product_url" => self::getProductUrl($product, $lang, $productName), //zmiana_1007
+                    "product_url" =>  (new ProductService())->getProductUrl($product, $lang, $productName), //zmiana_1007
                     "product_img" =>  empty($productImage[0]) ? '' : $productImage[0]['fs']['small']
                 ];
             }
@@ -512,7 +512,7 @@ class ProductService extends BaseService
             $out[$i] = $this->getProductDataByProductArr( $product );
 
             if($withUrls){
-                $urls = $product->getProductUrls($product);
+                $urls = $this->getProductUrls($product);
                 $out[$i] = array_merge($out[$i], $urls);    
             }
             $i++;
@@ -619,8 +619,9 @@ class ProductService extends BaseService
     {
         $i = 0;
         $out = [];
+
         foreach ($products as $key => $product) {
-            $urls =  $product->getProductUrls($product);
+            $urls =  $this->getProductUrls($product);
             $out[$i] =  array_merge( $this->getProductDataByProductArr( $product ), $urls);
             $i++;
         }

@@ -70,10 +70,6 @@ class ImageService extends BaseService
 
     public function getAllTranslate(Image $mImage)
     {
-        if (!property_exists($mImage, 'id')) {
-            throw new \Exception('Model does not have an ID');
-        }
-
         $imageId = $mImage->id; 
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
@@ -161,7 +157,8 @@ class ImageService extends BaseService
         if (empty($objImg)) {
             return false;
         }
-        $imgDir = self::getImageDir(self::getRefType($objImg), self::getRefId($objImg), $img->id, $isAbs);
+        $imageService = new ImageService();
+        $imgDir = self::getImageDir($imageService->getRefType($objImg), $imageService->getRefId($objImg), $img->id, $isAbs);
         $fileName = pathinfo($img->name, PATHINFO_FILENAME);
         $fileExt = pathinfo($img->name, PATHINFO_EXTENSION);
 
@@ -203,10 +200,10 @@ class ImageService extends BaseService
 
         //the order is important - first update then create
         if ($imagesUpdate) {
-            (new Image)->updateImages($imagesUpdate);
+            (new ImageService() )->updateImages($imagesUpdate);
         }
         if ($imagesCreate) {
-            (new Image)->createImages($imagesCreate, $type, $refId);
+            (new ImageService() )->createImages($imagesCreate, $type, $refId);
         }
 
         return true;
@@ -377,7 +374,7 @@ class ImageService extends BaseService
             }
         }
 
-        $images = Image::getImagesByTypeAndRefId($t, $refId);
+        $images = ImageService::getImagesByTypeAndRefId($t, $refId);
 
         $countImages = count($images);
         if ($countImages < 2) {

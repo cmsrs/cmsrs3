@@ -50,7 +50,7 @@ class PageController extends Controller
         try {
             $page = $page->getPageWithImages($lang);
         } catch (\Exception $e) {
-            Log::error('page add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); //.' for: '.var_export($data, true )
+            Log::error('page add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile().' for: '.var_export($e, true ) );
       return response()->json(['success'=> false, 'error'=> 'Get page with lang problem, details in the log file.'], 200); //.$e->getMessage()
         }
 
@@ -161,7 +161,7 @@ class PageController extends Controller
                 ImageService::updatePositionImages($data['images']);
             }
         } catch (\Exception $e) {
-            Log::error('page update ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); //.' for: '.var_export($data, true )
+            Log::error('page update ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile().' for: '.var_export($e, true ) );
             return response()->json(['success'=> false, 'error'=> 'Update page problem - exception'], 200);
         }
 

@@ -199,7 +199,7 @@ class FrontController extends Controller
             'productsDataAndTotalAmount' => $productsDataAndTotalAmount,
             'checkout' => $checkout,
             'objCheckout' => $objCheckout
-        ) = (new Product)->saveCheckout($data, (Auth::check() ? Auth::user()->id : null), session()->getId());
+        ) = (new ProductService())->saveCheckout($data, (Auth::check() ? Auth::user()->id : null), session()->getId());
 
         
         if( PaymentService::KEY_PAYU  == $data['payment'] ){
@@ -338,7 +338,7 @@ class FrontController extends Controller
                 abort(404);
             }
 
-            $urls = $product->getProductUrls($product);        
+            $urls = ( new ProductService() )->getProductUrls($product);        
             $data['url_category'] = $urls['url_category'];
             //$data['url_product'] = $urls['url_product'];
             $product = $objProduct->getProductDataByProductArr( $product );

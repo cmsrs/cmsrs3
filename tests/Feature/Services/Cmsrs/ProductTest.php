@@ -738,7 +738,7 @@ class ProductTest extends Base
         //pShoppingSuccess
         $pSuc = PageService::getFirstPageByType('shoppingsuccess');
         $this->assertNotEmpty($pSuc);
-        $urlShoppingSuccess = $pSuc->getUrl('en');
+        $urlShoppingSuccess = (new PageService() ) ->getUrl($pSuc, 'en');
         $response3 = $this->get($urlShoppingSuccess);
         $response3->assertStatus(200); //because there is checkout_id in session therefore is 200 status
 
@@ -1430,7 +1430,7 @@ class ProductTest extends Base
 
         $this->assertEquals($productId, $product['id']);
 
-        $urls = $product->getProductUrls($product);  
+        $urls = ( new ProductService() ) ->getProductUrls($product);  
 
         //dump($urls);
         $this->assertNotEmpty($urls);
@@ -1471,7 +1471,7 @@ class ProductTest extends Base
 
         $this->assertEquals($productId, $product['id']);
 
-        $urls = $product->getProductUrls($product);  
+        $urls = (new ProductService() ) ->getProductUrls($product);  
         $this->assertNotEmpty($urls);
 
         $urlCategory = $urls['url_category']['en'];

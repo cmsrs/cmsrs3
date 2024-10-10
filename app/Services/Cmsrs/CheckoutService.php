@@ -148,7 +148,7 @@ class CheckoutService extends BaseService
                 throw new \Exception("can't find product id =" . $basket['product_id'] );
             }
 
-            $productName = Product::getDefaultProductName( $product->translates, $lang );
+            $productName = ProductService::getDefaultProductName( $product->translates, $lang );
             $out[$j]['qty'] = $basket->qty;
             $out[$j]['price'] = self::formatCurrency( $basket->price);
             $out[$j]['product_id'] = $basket['product_id'];
