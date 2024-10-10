@@ -119,9 +119,9 @@ class ImageService extends BaseService
         }
     }
 
-    public function getHtmlImage($type = Image::IMAGE_THUMB_TYPE_MEDIUM)
+    public function getHtmlImage(Image $mImage, $type = Image::IMAGE_THUMB_TYPE_MEDIUM)
     {
-        $img = self::getAllImage($this, false);
+        $img = self::getAllImage($mImage, false);
         return $img[$type];
     }
 

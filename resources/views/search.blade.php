@@ -34,7 +34,7 @@
                   <div class="col">
                   @if( !empty($product['images']) &&  !empty($product['images'][0]) )
                     <a href="{{$product['url_product'][$lang] }}">
-                      <img class="m-3" src="{{$product['images'][0]->getHtmlImage()}}" alt="{{$product['images'][0]->alt[$lang]}}" />
+                      <img class="m-3" src="{{ (new App\Services\Cmsrs\ImageService)->getHtmlImage($product['images'][0])}}" alt="{{$product['images'][0]->alt[$lang]}}" />
                     </a>
                   @endif
 <!--                  </div>

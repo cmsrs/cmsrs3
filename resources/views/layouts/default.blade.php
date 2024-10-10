@@ -24,7 +24,7 @@
 
    <?php if( 'gallery' == $view ){ ?>
       <script type="application/javascript">
-         var imagesGlobal = JSON.parse('<?php echo json_encode($page->arrImages($lang)) ?>');    
+         var imagesGlobal = JSON.parse('<?php echo json_encode(  (new App\Services\Cmsrs\PageService) ->arrImages($page, $lang)) ?>');    
       </script>
       <script type="application/javascript" src="/js/gallery.js"></script>  
    <?php } ?>

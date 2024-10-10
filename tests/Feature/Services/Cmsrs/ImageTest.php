@@ -172,7 +172,7 @@ class ImageTest extends Base
         $page = Page::findOrFail($this->pageId);
 
 
-        $arrImages =  $page->arrImages('en');
+        $arrImages =  (new PageService())->arrImages($page, 'en');
 
         for ($i=0; $i<$count; $i++) {
             $this->assertEquals($arrImages[$i]['org'], $res3->data->images[$i]->org);
@@ -600,7 +600,7 @@ class ImageTest extends Base
         $this->assertEquals($testPage->images[3]->alt->en, null);
 
         $imageObj11 = Image::find($testPage->images[2]->id);
-        $mediumHtml = $imageObj11->getHtmlImage();
+        $mediumHtml =  (new ImageService())->getHtmlImage($imageObj11);
         $this->assertEquals($mediumHtml, $testPage->images[2]->fs->medium);
     }
 

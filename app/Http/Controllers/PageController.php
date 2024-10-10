@@ -48,7 +48,7 @@ class PageController extends Controller
         }
 
         try {
-            $page = $page->getPageWithImages($lang);
+            $page = (new PageService())->getPageWithImages($page,  $lang);
         } catch (\Exception $e) {
             Log::error('page add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile().' for: '.var_export($e, true ) );
       return response()->json(['success'=> false, 'error'=> 'Get page with lang problem, details in the log file.'], 200); //.$e->getMessage()
@@ -151,11 +151,12 @@ class PageController extends Controller
         }
 
         try {
+            $pageService = new PageService;
             $data = PageService::validateMainPage($data, false);
             if (empty($data['published'])) {
-                $page->unpublishedChildren();
+                $pageService->unpublishedChildren($page);
             }
-            $res = $page->wrapUpdate($data);
+            $res = $pageService->wrapUpdate($page, $data);
             if (!empty($data['images']) && is_array($data['images'])) {
                 ImageService::createImagesAndUpdateAlt($data['images'], 'page', $page->id);
                 ImageService::updatePositionImages($data['images']);
