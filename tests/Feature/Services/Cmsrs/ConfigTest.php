@@ -70,7 +70,7 @@ class ConfigTest extends Base
             $p = (new PageService())->wrapCreate($data);
             $in = true;
 
-            $url = $p->getUrl('en');
+            $url =  (new PageService()) ->getUrl($p, 'en');
             //dump($url);
             $response = $this->get($url);
 

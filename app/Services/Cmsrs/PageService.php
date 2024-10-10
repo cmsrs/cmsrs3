@@ -283,7 +283,7 @@ class PageService extends BaseService
   
 
 
-    public function getSlugByLang($model, $lang)
+    public function getSlugByLang(Page $model, $lang)
     {
         $column = 'title';
         $name = $this->translatesByColumnAndLang($model, $column, $lang);
@@ -384,6 +384,8 @@ class PageService extends BaseService
         $contactUrl = null;
         $contactTitle = null;
         if (!empty($contact)) {
+
+            //dd($contact);
             $contactUrl = $this->getUrl($contact, $lang);
             $contactTitle = $this->translatesByColumnAndLang($contact, 'title', $lang);
         }
@@ -463,7 +465,7 @@ class PageService extends BaseService
         if( empty($menu) ){
             return null;
         }
-        return $menu->getSlugByLang($mPage, $lang);    
+        return  (new MenuService)->getSlugByLang($menu, $lang);    
     }
 
     public function getNumPagesBelongsToThisMenu(Page $mPage)
@@ -473,7 +475,7 @@ class PageService extends BaseService
             return null;
         }
         //return $menu->pagesPublished->count();
-        return $menu->pagesPublishedAndAccess->count();        
+        return  (new MenuService)->pagesPublishedAndAccess($menu)->count();        
     }
 
     public function getNumPagesBelongsToThisMenuCache(Page $mPage)

@@ -51,7 +51,7 @@ class MenuController extends Controller
         }
 
         //check unique
-        $valid = Menu::checkIsDuplicateName($data);
+        $valid = MenuService::checkIsDuplicateName($data);
         if (empty($valid['success'])) {
             return response()->json($valid, 200);
         }

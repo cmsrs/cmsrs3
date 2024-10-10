@@ -10,7 +10,7 @@ use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\TranslateService;
 
 use App\Models\Cmsrs\Content;
-
+use App\Services\Cmsrs\ContentService;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
@@ -51,7 +51,7 @@ class ContentTest extends Base
 
     public function test_get_arr_langs()
     {
-        $content = new Content;
+        $content = new ContentService;
         $arrLangs = $content->getArrLangs();
         $this->assertTrue(is_array($arrLangs));
         $this->assertEquals(2, count($arrLangs));
@@ -83,7 +83,7 @@ class ContentTest extends Base
 
         $translate = new TranslateService;
         $translate->setArrLangs(['pl']);
-        $content = new Content;
+        $content = new ContentService;
         $content->setArrLangs(['pl']);
 
         $objPage = new PageService();

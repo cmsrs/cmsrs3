@@ -88,13 +88,13 @@ class MenuService extends BaseService
      */
     public function wrapCreate($data)
     {
-        $menu = Menu::CreateMenu($data);
+        $menu = MenuService::CreateMenu($data);
         $this->translate->wrapCreate([ 'menu_id' => $menu->id, 'data' => $data ], true);
 
         return $menu;
     }
     
-    public function getSlugByLang($model, $lang)
+    public function getSlugByLang(Menu $model, $lang)
     {
         $column = 'name';
         $name = $this->translatesByColumnAndLang($model, $column, $lang);
@@ -104,6 +104,8 @@ class MenuService extends BaseService
 
     public function getAllTranslate(Menu $mMenu)
     {
+        //dd($mMenu);
+
         $menuId = $mMenu->id;
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {

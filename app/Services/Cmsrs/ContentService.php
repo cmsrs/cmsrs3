@@ -49,4 +49,14 @@ class ContentService extends BaseService
         $this->wrapTranslateUpdate($obj, $row);
         return true;
     }
+
+    public function createRow($row)
+    {
+        $objContent = new Content;
+        $content = $objContent->create($row);
+        if (empty($content->id)) {
+            throw new \Exception("problem with save into content table");
+        }
+    }    
+
 }

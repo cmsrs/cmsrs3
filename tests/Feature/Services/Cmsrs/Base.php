@@ -16,6 +16,7 @@ use App\Services\Cmsrs\PageService;
 
 
 use App\Models\Cmsrs\Product;
+use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\ProductService;
 
 //use App\Translate;
@@ -82,27 +83,30 @@ class Base extends TestCase
         //cms link
         //see in: resources/views/includes/header.blade.php
         //this function only use in tests - maybe it will use in code in the future
+        $pageService = new PageService();
+
         $url = [];
         $menus = Menu::All();
         $f0 = false;
         $f1 = false;
         $f2 = false;
         //print_r($menus->toArray());
+        $mS = new MenuService();
         foreach ($menus as $menu) {
-            $pagesPublishedAndAccess = $menu->pagesPublishedAndAccess()->get();
+            $pagesPublishedAndAccess = $mS ->pagesPublishedAndAccess($menu)->get();
             //dump($pagesPublishedAndAccess->published);
             if (1 == $pagesPublishedAndAccess->count()) {
                 $f0 = true;
-                $url[] = $pagesPublishedAndAccess->first()->getUrl($lang);
+                $url[] = $pageService->getUrl($pagesPublishedAndAccess->first(), $lang);
             } else {
                 foreach ($menu->pagesPublishedTree($pagesPublishedAndAccess) as $page) {
                     //dump($page->published);
-                    $url[] = $page->getUrl($lang);
+                    $url[] =  $pageService ->getUrl($page, $lang);
                     $f1 = true;
                     if (!empty($page['children']) && !empty($page->published)) {
                         foreach ($page['children'] as $p) {
                             $f2 = true;
-                            $url[] = $p->getUrl($lang);
+                            $url[] =  $pageService ->getUrl($p, $lang);
                         }
                     }
                 }
@@ -132,18 +136,20 @@ class Base extends TestCase
         }
     }
 
+
     public function checkAllPagesByLang($p, $lang, $onlyOneLang = false)
     {
+        $pageService = new PageService;
         $urlIn = [];
         $numOfInPages = 0;
         $numOfInAfterLoginPages = 0;
         foreach ($p as $page) {
-            $pageTitle = $page->translatesByColumnAndLang('title', $lang);
-            $pageShortTitle = $page->translatesByColumnAndLang('short_title', $lang);
+            $pageTitle = $pageService->translatesByColumnAndLang($page, 'title', $lang);
+            $pageShortTitle = $pageService->translatesByColumnAndLang($page, 'short_title', $lang);
             $this->assertNotEmpty($pageTitle);
             $this->assertNotEmpty($pageShortTitle);
 
-            $itemUrlIn = $page->getUrl($lang);
+            $itemUrlIn = $pageService->getUrl($page, $lang);
 
             if($page->after_login){
                 $numOfInAfterLoginPages++;
@@ -185,55 +191,55 @@ class Base extends TestCase
         }
 
         //independent
-        $urlPolicy = PageService::getFirstPageByType('privacy_policy')->getUrl($lang);
+        $urlPolicy = $pageService->getUrl( PageService::getFirstPageByType('privacy_policy'),$lang);
         $response2 = $this->get($urlPolicy);
         $response2->assertStatus(200);
         $url[] = $urlPolicy;
 
         //main page
-        $urlMainPage = PageService::getFirstPageByType('main_page')->getUrl($lang);
+        $urlMainPage = $pageService->getUrl( PageService::getFirstPageByType('main_page'),$lang);
         $response3 = $this->get($urlMainPage);
         $response3->assertStatus(200);
         $url[] = $urlMainPage;
 
         //login
-        $urlLogin = PageService::getFirstPageByType('login')->getUrl($lang);
+        $urlLogin = $pageService->getUrl( PageService::getFirstPageByType('login'),$lang);
         $response3 = $this->get($urlLogin);
         $response3->assertStatus(302);
         $url[] = $urlLogin;
 
         //register
-        $urlRegister = PageService::getFirstPageByType('register')->getUrl($lang);
+        $urlRegister = $pageService->getUrl( PageService::getFirstPageByType('register'),$lang);
         $response3 = $this->get($urlRegister);
         $response3->assertStatus(302); // why 302 ??
         $url[] = $urlRegister;
 
         //checkout
-        $urlCheckout = PageService::getFirstPageByType('checkout')->getUrl($lang);
+        $urlCheckout = $pageService->getUrl( PageService::getFirstPageByType('checkout'),$lang);
         $response3 = $this->get($urlCheckout);
         $response3->assertStatus(200);
         $url[] = $urlCheckout;
 
         //home
-        $urlHome = PageService::getFirstPageByType('home')->getUrl($lang);
+        $urlHome = $pageService->getUrl( PageService::getFirstPageByType('home'),$lang);
         $response3 = $this->get($urlHome);
         $response3->assertStatus(200);
         $url[] = $urlHome;
 
         //pShoppingSuccess
-        $urlShoppingSuccess = PageService::getFirstPageByType('shoppingsuccess')->getUrl($lang);
+        $urlShoppingSuccess = $pageService->getUrl( PageService::getFirstPageByType('shoppingsuccess'),$lang);
         $response3 = $this->get($urlShoppingSuccess);
         $response3->assertStatus(404); //because there is no checkout_id in session
         $url[] = $urlShoppingSuccess;
 
         //pSearch
-        $urlSearch = PageService::getFirstPageByType('search')->getUrl($lang);
+        $urlSearch = $pageService->getUrl( PageService::getFirstPageByType('search'),$lang);
         $response3 = $this->get($urlSearch);
         $response3->assertStatus(200);
         $url[] = $urlSearch;
         
         //pForgot
-        $urlForgot = PageService::getFirstPageByType('forgot')->getUrl($lang);
+        $urlForgot = $pageService->getUrl( PageService::getFirstPageByType('forgot'),$lang);
         $response3 = $this->get($urlForgot);
         $response3->assertStatus(302); // why 302 ??
         $url[] = $urlForgot;
@@ -330,7 +336,7 @@ class Base extends TestCase
         $parentId = null;
         $pages = Page::all();
         foreach ($pages as $p) {
-            $title = Page::find($p->id)->translatesByColumnAndLang('title', 'en');
+            $title = ( new PageService() )->translatesByColumnAndLang(Page::find($p->id), 'title', 'en');
             if (PageTest::STR_PARENT_TWO == $title) {
                 $parentId = $p->id;
             }
@@ -382,7 +388,7 @@ class Base extends TestCase
 
     protected function getPageTestData()
     {
-        $m = (new Menu)->wrapCreate(['name' => ['en' => 'About cmsRS', 'pl' => 'O cmsRS' ] ]);
+        $m = (new MenuService())->wrapCreate(['name' => ['en' => 'About cmsRS', 'pl' => 'O cmsRS' ] ]);
         $this->assertNotEmpty($m->id);
 
         $data1p = [

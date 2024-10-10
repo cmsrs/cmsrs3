@@ -27,6 +27,9 @@ abstract  class BaseService
 
     public function genericCreateTranslate($d, $refName, $columns, $create = true)
     {
+
+        //dump($columns);
+
         $refId = $d[$refName];
         $data = $d['data'];
         foreach ($columns as $column => $require) {
@@ -89,6 +92,7 @@ abstract  class BaseService
 
     protected function createRow($row)
     {
+        //dd( $row );
         $translate = Translate::create($row);
         if (empty($translate->id)) {
             throw new \Exception("problem with save into translate table");

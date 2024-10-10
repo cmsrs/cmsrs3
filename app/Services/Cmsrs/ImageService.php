@@ -55,7 +55,7 @@ class ImageService extends BaseService
 
     public function __construct(array $attributes = array())
     {
-        parent::__construct($attributes);
+        //parent::__construct($attributes);
 
         $this->translate = new TranslateService;
     }

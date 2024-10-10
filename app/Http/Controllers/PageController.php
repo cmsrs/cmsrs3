@@ -66,7 +66,7 @@ class PageController extends Controller
             return response()->json(['success'=> false, 'error'=> 'Page not find'], 404);
         }
 
-        $onePage = $page->getAllPagesWithImagesOneItem($simple);
+        $onePage = ( new PageService() )->getAllPagesWithImagesOneItem($page, $simple);
 
         return response()->json(['success' => true, 'data'=> $onePage], 200);
     }
@@ -93,7 +93,7 @@ class PageController extends Controller
 
     public function getPagesByType(Request $request, $type)
     {
-        $pages = (new Page)->getAllPagesWithImages($type);
+        $pages = (new PageService())->getAllPagesWithImages($type);
 
         return response()->json(['success' => true, 'data'=> $pages], 200);
     }
@@ -101,7 +101,7 @@ class PageController extends Controller
 
     public function position(Request $request, $direction, $id)
     {
-        $ret = Page::swapPosition($direction, $id);
+        $ret = PageService::swapPosition($direction, $id);
         return response()->json(['success'=> $ret]);
     }
 

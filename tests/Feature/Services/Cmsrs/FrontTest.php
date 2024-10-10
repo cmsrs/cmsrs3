@@ -146,7 +146,7 @@ class FrontTest extends Base
         foreach($pages as $page){
 
             foreach($langs as $lang){
-                $url = $page->getUrl($lang);
+                $url = (new PageService() )->getUrl($page, $lang);
                 $response = $this->get($url);
     
                 $status = (('login' === $page->type) || ('register' === $page->type)  || ('forgot' === $page->type) ) ? 302 : 200; //why forgot??
@@ -301,7 +301,7 @@ class FrontTest extends Base
         $p0 = Page::query()->where('menu_id', $this->menuId)->get()->first();
         $this->assertNotEmpty($p0);
 
-        $url =  $p0->getUrl('en');
+        $url =  (new PageService()) ->getUrl( $p0, 'en');
 
         
         $response1 = $this->get($url);
@@ -349,7 +349,7 @@ class FrontTest extends Base
 
         $i = 0;
         foreach ($p as $pp) {
-            $url0 = $pp->getUrl('en');
+            $url0 = (new PageService()) ->getUrl($pp, 'en');
             $response = $this->get($url0);
             $response->assertStatus(200);
             $i++;
@@ -379,7 +379,7 @@ class FrontTest extends Base
         $this->assertNotEmpty($p->id);
 
         $lang = 'en';
-        $url =  $p->getUrl($lang);
+        $url =  (new PageService()) ->getUrl($p, $lang);
         $this->assertNotEmpty($url);
         $response1 = $this->get($url);
         $response1->assertStatus(200);

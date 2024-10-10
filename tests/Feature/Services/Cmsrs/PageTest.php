@@ -599,7 +599,7 @@ class PageTest extends Base
       
 
         $menu = Menu::findOrFail($this->menuId);
-        $pagePublish = $menu->pagesPublishedAndAccess()->get()->toArray();
+        $pagePublish = (new MenuService()  ) ->pagesPublishedAndAccess($menu)->get()->toArray();
 
         $this->assertEquals(2, count($pagePublish));
     }
@@ -645,7 +645,7 @@ class PageTest extends Base
 
         $pageToDel = Page::findorfail($parentId);
         $this->assertNotEmpty($pageToDel->id);
-        $this->assertEquals($pageToDel->translatesByColumnAndLang('title', 'en'), PageTest::STR_PARENT_TWO);
+        $this->assertEquals( (new PageService )->translatesByColumnAndLang($pageToDel, 'title', 'en'), PageTest::STR_PARENT_TWO);
         $pageToDel->delete();
 
         $pagesAfter = Page::All()->toArray();
@@ -678,8 +678,8 @@ class PageTest extends Base
         $positionBefore1 = $pages[0]['position'];
         $positionBefore2 = $pages[1]['position'];
 
-        $this->assertEquals(Page::find($pages[0]['id'])->translatesByColumnAndLang('title', 'en'), PageTest::STR_CHILD_ONE);
-        $this->assertEquals(Page::find($pages[1]['id'])->translatesByColumnAndLang('title', 'en'), PageTest::STR_CHILD_TWO);
+        $this->assertEquals(  (new PageService() )->translatesByColumnAndLang(Page::find($pages[0]['id']), 'title', 'en'), PageTest::STR_CHILD_ONE);
+        $this->assertEquals((new PageService() )->translatesByColumnAndLang(Page::find($pages[1]['id']), 'title', 'en'), PageTest::STR_CHILD_TWO);
 
         $res2a = $this->patch('api/pages/position/up/'.$pages[0]['id'].'?token='.$this->token);
 
@@ -698,8 +698,8 @@ class PageTest extends Base
         $this->assertEquals($positionBefore2, $positionAfter2);
 
 
-        $this->assertEquals(PageTest::STR_CHILD_TWO, Page::find($pages22[0]['id'])->translatesByColumnAndLang('title', 'en'));
-        $this->assertEquals(PageTest::STR_CHILD_ONE, Page::find($pages22[1]['id'])->translatesByColumnAndLang('title', 'en'));
+        $this->assertEquals(PageTest::STR_CHILD_TWO, (new PageService() )->translatesByColumnAndLang(Page::find($pages22[0]['id']), 'title', 'en'));
+        $this->assertEquals(PageTest::STR_CHILD_ONE, (new PageService() )->translatesByColumnAndLang(Page::find($pages22[1]['id']),  'title', 'en'));
     }
 
 
@@ -712,8 +712,8 @@ class PageTest extends Base
 
         $this->assertEquals(count($pages), 3);
 
-        $this->assertEquals(Page::find($pages[1]['id'])->translatesByColumnAndLang('title', 'en'), PageTest::STR_PARENT_TWO);
-        $this->assertEquals(Page::find($pages[2]['id'])->translatesByColumnAndLang('title', 'en'), PageTest::STR_PARENT_TREE);
+        $this->assertEquals((new PageService() )->translatesByColumnAndLang( Page::find($pages[1]['id']), 'title', 'en'), PageTest::STR_PARENT_TWO);
+        $this->assertEquals((new PageService() )->translatesByColumnAndLang( Page::find($pages[2]['id']), 'title', 'en'), PageTest::STR_PARENT_TREE);
 
         $this->assertEquals($pages[1]['page_id'], null);
         $this->assertEquals($pages[2]['page_id'], null);
@@ -738,8 +738,8 @@ class PageTest extends Base
         $this->assertNotEmpty($positionAfter1);
         $this->assertNotEmpty($positionAfter2);
 
-        $this->assertEquals(PageTest::STR_PARENT_TREE, Page::find($pages22[1]['id'])->translatesByColumnAndLang('title', 'en'));
-        $this->assertEquals(PageTest::STR_PARENT_TWO, Page::find($pages22[2]['id'])->translatesByColumnAndLang('title', 'en'));
+        $this->assertEquals(PageTest::STR_PARENT_TREE, (new PageService() )->translatesByColumnAndLang( Page::find($pages22[1]['id']),  'title', 'en'));
+        $this->assertEquals(PageTest::STR_PARENT_TWO, (new PageService() )->translatesByColumnAndLang( Page::find($pages22[2]['id']),  'title', 'en'));
     }
 
     public function test_it_will_add3a_with_menu_pages()
@@ -759,7 +759,9 @@ class PageTest extends Base
         $this->assertTrue($response->getData()->success);
 
         $this->assertEquals(1, $this->menuObj->pages->count());
-        $this->assertEquals(0, $this->menuObj->pagesPublished->count());
+
+        $pagesPublished  = (new MenuService() )->pagesPublished($this->menuObj);
+        $this->assertEquals(0, $pagesPublished->count());
     }
 
     public function test_it_will_add3_with_menu_pages()
@@ -798,9 +800,12 @@ class PageTest extends Base
 
 
         $this->assertEquals(2, count($this->menuObj->pages));
-        $this->assertEquals(1, count($this->menuObj->pagesPublished));  //tylko jedno jest z published ===1 dla 'menu_id' =>  $this->menuId
-        $this->assertNotEmpty($this->menuObj->pagesPublished[0]->id);
-        $this->assertEquals(Page::find($this->menuObj->pagesPublished[0]->id)->translatesByColumnAndLang('title', 'en'), $testData2['title']['en']);
+
+        $pagesPublished  = (new MenuService() )->pagesPublished($this->menuObj);
+        //dd($pagesPublished->count());
+        $this->assertEquals(1, $pagesPublished->count() );  //tylko jedno jest z published ===1 dla 'menu_id' =>  $this->menuId
+        $this->assertNotEmpty($pagesPublished->first()->id);
+        $this->assertEquals( ( new PageService() ) ->translatesByColumnAndLang( $pagesPublished->first(), 'title', 'en'), $testData2['title']['en']);
     }
 
 
@@ -930,7 +935,7 @@ class PageTest extends Base
             }
         }
 
-        $this->assertSame($tmpArr[0]->title->en, Page::find($tmpArr2[0]->id)->translatesByColumnAndLang('title', 'en'));
+        $this->assertSame($tmpArr[0]->title->en, (new PageService )->translatesByColumnAndLang( Page::find($tmpArr2[0]->id), 'title', 'en'));
     }
     
     public function test_it_will_add_pages0()
@@ -1004,7 +1009,7 @@ class PageTest extends Base
         $res = $response->getData();
         $this->assertTrue($res->success);
 
-        $page = (new Page)->getFirstPageWithImagesForGuest($type);
+        $page = (new PageService()  )->getFirstPageWithImagesForGuest($type);
         $this->assertEquals($type, $page['type']);
         $this->assertNotEmpty($page['id']);
 
@@ -1156,7 +1161,7 @@ class PageTest extends Base
 
         $this->assertNotEmpty($id);
 
-        $slug = Page::find($id)->getSlugByLang('en');
+        $slug = (new PageService()) ->getSlugByLang(Page::find($id), 'en');
         $this->assertEquals($slug, Str::slug($this->testData['title']['en'], "-"));
     }
 
@@ -1170,7 +1175,7 @@ class PageTest extends Base
 
         $this->assertNotEmpty($id);
 
-        $slug = Page::find($id)->getSlugByLang('en');
+        $slug = (new PageService())->getSlugByLang(Page::find($id), 'en');
         $this->assertEquals($slug, Str::slug($this->testData['title']['en'], "-"));
 
 
@@ -1192,7 +1197,7 @@ class PageTest extends Base
 
         $response0 = $this->put('api/pages/'.$id.'?token='.$this->token, $testData3);
 
-        $slugAfter = Page::find($id)->getSlugByLang('en');
+        $slugAfter = (new PageService())->getSlugByLang(Page::find($id), 'en');
         $this->assertNotEquals($slug, $slugAfter);
         $this->assertEquals($slugAfter, Str::slug($testData3['title']['en'], "-"));
 
@@ -1232,7 +1237,7 @@ class PageTest extends Base
 
         $this->assertNotEmpty($id);
 
-        $allTranslate = Page::find($id)->getAllTranslate();
+        $allTranslate = (new PageService() )->getAllTranslate(Page::find($id) );
         $this->assertEquals(4, count($allTranslate));
 
         //$id = 1;
@@ -1274,7 +1279,7 @@ class PageTest extends Base
         $this->assertEquals(count($res->data), 1);
         $data = $res->data[0];
 
-        $allTranslate = Page::find($id)->getAllTranslate();
+        $allTranslate = (new PageService() )->getAllTranslate(Page::find($id) );
         $this->assertEquals(4, count($allTranslate));
 
         $this->comparePageFields($testData3, $data);
@@ -1311,7 +1316,7 @@ class PageTest extends Base
         $data = $res2->data[0];
         $pageId = $data->id;
         $this->assertNotEmpty($pageId);
-        $allTranslate = Page::find($pageId)->getAllTranslate();
+        $allTranslate = (new PageService() )->getAllTranslate(Page::find($pageId));
         $this->assertEquals(4, count($allTranslate));
 
         $this->comparePageFields($testData, $data);
@@ -1362,7 +1367,7 @@ class PageTest extends Base
         $res = $response->getData();
         $this->assertTrue($res->success);
 
-        $pages = (new Page)->getAllPagesWithImagesByShortTitleForDefaultLang($shortTitleTest);
+        $pages = (new PageService() )->getAllPagesWithImagesByShortTitleForDefaultLang($shortTitleTest);
     
         $this->assertEquals( 1, count($pages) );
         $this->assertEquals($shortTitleTest, $pages[0][ "short_title" ]['en'] );

@@ -179,7 +179,7 @@ class FrontLangsTest extends Base
         $this->assertEquals('en', $this->langs[1]);
     }
 
-    public function test_it_will_get_main_page()
+    public function test_it_will_get_main_page_langs()
     {
         //$this->assertTrue( true );
         $response = $this->get('/');
@@ -208,6 +208,8 @@ class FrontLangsTest extends Base
 
         $response1 = $this->get('/');
         $response1->assertStatus(200);
+
+        //dd($response1->getContent());
         $this->assertNotEmpty(strpos($response1->getContent(), $this->titlePl));
 
         $response2 = $this->get('/en');
@@ -228,8 +230,9 @@ class FrontLangsTest extends Base
         $this->assertNotEmpty($p0);
 
 
+
         foreach ($this->langs as $lang) {
-            $url =  $p0->getUrl($lang);
+            $url = (new PageService() )->getUrl($p0, $lang);
             $this->assertNotEmpty($url);
             $response1 = $this->get($url);
             $response1->assertStatus(200);
@@ -275,7 +278,7 @@ class FrontLangsTest extends Base
 
         $i = 0;
         foreach ($p as $pp) {
-            $url0 = $pp->getUrl('en');
+            $url0 = (new PageService() )->getUrl($pp, 'en');
             $response = $this->get($url0);
             $response->assertStatus(200);
             $i++;
@@ -301,11 +304,11 @@ class FrontLangsTest extends Base
             ]
         ];
 
-        $p = (new Page)->wrapCreate($pPrivacy);
+        $p = (new PageService())->wrapCreate($pPrivacy);
         $this->assertNotEmpty($p->id);
 
         foreach ($this->langs as $lang) {
-            $url =  $p->getUrl($lang);
+            $url = ( new PageService() )->getUrl($p, $lang);
             $this->assertNotEmpty($url);
             $response1 = $this->get($url);
             $response1->assertStatus(200);
@@ -348,7 +351,7 @@ class FrontLangsTest extends Base
         foreach($pages as $page){
 
             foreach($langs as $lang){
-                $url = $page->getUrl($lang);
+                $url =  (new PageService() )->getUrl($page,  $lang);
                 $response = $this->get($url);
     
 

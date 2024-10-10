@@ -120,7 +120,7 @@ class MenuDemoTest extends Base
         $resAll = $responseAll->getData();
         $id = $resAll->data[0]->id;
 
-        $slug = Menu::find($id)->getSlugByLang('en');
+        $slug = (new MenuService()) ->getSlugByLang(Menu::find($id), 'en');
         $this->assertEquals($slug, Str::slug($this->testData['name']['en'], "-"));
     }
 
@@ -135,8 +135,9 @@ class MenuDemoTest extends Base
 
         $data = (array)$res->data[0];
 
-        $this->assertEquals(Menu::find($data['id'])->translatesByColumnAndLang('name', 'en'), $data['name']->en);
-        $this->assertSame(Menu::find($data['id'])->translatesByColumnAndLang('name', 'en'), $this->testData['name']['en']);
+        $mMenu = Menu::find($data['id']);
+        $this->assertEquals((new MenuService() )->translatesByColumnAndLang($mMenu, 'name', 'en'), $data['name']->en);
+        $this->assertSame( (new MenuService() )->translatesByColumnAndLang($mMenu, 'name', 'en'), $this->testData['name']['en']);
         $this->assertSame($data['position'], 1/*$this->testData['position']*/);
 
         $this->assertIsInt($data['position']);
@@ -165,7 +166,7 @@ class MenuDemoTest extends Base
         $id = $resAll->data[0]->id;
 
 
-        $slug = Menu::find($id)->getSlugByLang('en');
+        $slug = (new MenuService() )->getSlugByLang(Menu::find($id), 'en');
         $this->assertEquals($slug, Str::slug($this->testData['name']['en'], "-"));
 
 
