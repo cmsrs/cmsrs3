@@ -376,8 +376,9 @@ class FrontController extends Controller
 
         $pageOut = null;
         $pages = Page::all();
+        $pageService = new PageService();
         foreach ($pages as $page) {
-            if ($page->getSlugByLang($lang) == $pageSlug) {
+            if ($pageService->getSlugByLang($page, $lang) == $pageSlug) {
                 $pageOut = $page;
                 break;
             }

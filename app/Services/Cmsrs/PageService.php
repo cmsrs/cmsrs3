@@ -227,19 +227,20 @@ class PageService extends BaseService
 
 
 
-    public static function getPageBySlug($menus, $menuSlug, $pageSlug, $lang)
+    public static function getPageBySlug($menus, $menuSlug, $pageSlug, $lang) //todo - change static
     {
-        $menuService = new MenuService;
+        $menuService = new MenuService; //todo
+        $pageService = new MenuService;//todo
         $pageOut = null;
         foreach ($menus as $menu) {
-            if ($menuSlug == self::getSlugByLang($menu, $lang)) {
+            if ($menuSlug == $pageService->getSlugByLang($menu, $lang)) {
                 $objPagesPublishedAndAccess = $menuService->pagesPublishedAndAccess($menu);
                 if(1 == $objPagesPublishedAndAccess->count()){ //it is the case for pageSlug = null, 1 page in menu
                     $pageOut =  $objPagesPublishedAndAccess->first();
                     break;
                 }
                 foreach ($menuService->pagesPublished($menu)  as $page) {
-                    if ($pageSlug == self::getSlugByLang($page, $lang)) {
+                    if ($pageSlug == $pageService->getSlugByLang($page, $lang)) {
                         $pageOut = $page;
                         break;
                     }
@@ -301,11 +302,11 @@ class PageService extends BaseService
 
         $isCache =  (new ConfigService)->isCacheEnable();
         if ($isCache) {
-            $ret = cache()->remember('pagetranslatepageid_'.$pageId, Carbon::now()->addYear(1), function () use ($pageId) {
-                return $this->getTranslateMerge($pageId);
+            $ret = cache()->remember('pagetranslatepageid_'.$pageId, Carbon::now()->addYear(1), function () use ($mPage, $pageId) {
+                return $this->getTranslateMerge($mPage, $pageId);
             });
         } else {
-            $ret = $this->getTranslateMerge($pageId);
+            $ret = $this->getTranslateMerge($mPage, $pageId);
         }
 
         return $ret;
@@ -314,10 +315,10 @@ class PageService extends BaseService
     /**
      * todo refactor
      */
-    public function getTranslateMerge($pageId)
+    public function getTranslateMerge(Page $mPage, $pageId)
     {
-        $translates = (new Page)->translates()->where('page_id', $pageId)->get(['lang', 'column', 'value'])->toArray();//zmiana 1007
-        $contents = (new Page)->contents()->where('page_id', $pageId)->get(['lang', 'column', 'value'])->toArray();//zmiana 1007
+        $translates = $mPage->translates()->where('page_id', $pageId)->get(['lang', 'column', 'value'])->toArray();//zmiana 1007
+        $contents = $mPage->contents()->where('page_id', $pageId)->get(['lang', 'column', 'value'])->toArray();//zmiana 1007
         $ret = array_merge($translates, $contents);
         return $ret;
     }
@@ -462,6 +463,7 @@ class PageService extends BaseService
     private function getMenuSlugByLang(Page $mPage, $lang)
     {
         $menu = $mPage->menu()->get()->first();
+
         if( empty($menu) ){
             return null;
         }
@@ -509,6 +511,8 @@ class PageService extends BaseService
     private function getCmsUrl(Page $mPage, $lang, $urlParam = null)
     {
         $menuSlug = $this->getMenuSlugByLangCache($mPage, $lang);
+
+        //dd($menuSlug);
         if(empty($menuSlug)){
             return $this->getIndependentUrl($mPage, $lang);
         }
@@ -712,15 +716,19 @@ class PageService extends BaseService
     */   
 
 
+    /**
+     * todo
+     * gdzie to jest wykorzystywane do skasowania??
+     */
     public function getFirstPageWithImagesForGuestCache($type)
     {        
         $isCache =  (new ConfigService)->isCacheEnable();
         if ($isCache) {
             $ret = cache()->remember('page_with_images_by_type_'.$type, Carbon::now()->addYear(1), function () use ($type) {
-                return  (new Page)->getFirstPageWithImagesForGuest($type);
+                return  (new PageService()  )->getFirstPageWithImagesForGuest($type);
             });
         } else {
-            $ret = (new Page)->getFirstPageWithImagesForGuest($type);
+            $ret = (new PageService()  )->getFirstPageWithImagesForGuest($type);
         }
 
         return $ret;

@@ -11,7 +11,7 @@ use App\Services\Cmsrs\ConfigService;
 
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Menu;
-
+use App\Models\Cmsrs\Translate;
 
 use App\Data\Demo;
 use Illuminate\Support\Str;
@@ -70,6 +70,10 @@ class FrontTest extends Base
         ];
 
         (new PageService())->wrapCreate($this->testData);
+
+        $this->assertEquals(1, Menu::All()->count());
+        $this->assertEquals(1, Page::All()->count());
+        $this->assertEquals(4, Translate::All()->count()); //1 from menu, 3 from page
     }
 
     public function test_it_will_get_directly_to_page()
@@ -302,6 +306,8 @@ class FrontTest extends Base
         $this->assertNotEmpty($p0);
 
         $url =  (new PageService()) ->getUrl( $p0, 'en');
+
+        //dd($url);
 
         
         $response1 = $this->get($url);

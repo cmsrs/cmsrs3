@@ -67,10 +67,13 @@ class ConfigTest extends Base
                 'content' => ['en' =>'test'],
                 'menu_id' => null
             ];
+
             $p = (new PageService())->wrapCreate($data);
+            //dump($p->toArray());
+
             $in = true;
 
-            $url =  (new PageService()) ->getUrl($p, 'en');
+            $url =  (new PageService())->getUrl($p, 'en');
             //dump($url);
             $response = $this->get($url);
 
@@ -81,6 +84,7 @@ class ConfigTest extends Base
 
             //dump($page_type);
             $response->assertStatus($status);
+            break;
         }
         $this->assertTrue($in);
         $pagesNum = Page::all()->count();

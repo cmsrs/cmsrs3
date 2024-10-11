@@ -158,12 +158,12 @@ class MenuTest extends Base
         $parentId = $this->dateToTestParent($this->objMenu->id);
 
         $publishedAndAccess = (new MenuService()) ->pagesPublishedAndAccess( $this->objMenu )->get(); //->toArray();
-        $tree = $this->objMenu->pagesPublishedTree($publishedAndAccess);
+        $tree = (new MenuService())->pagesPublishedTree( $publishedAndAccess);
         $this->assertEquals(3, count($tree));
         $this->assertEquals(2, count($tree[$parentId]['children']));
       
-        $this->assertEquals(PageTest::STR_CHILD_ONE, Page::find($tree[$parentId]['children'][0]->id)->translatesByColumnAndLang('title', 'en'));
-        $this->assertEquals(PageTest::STR_CHILD_TWO, Page::find($tree[$parentId]['children'][1]->id)->translatesByColumnAndLang('title', 'en'));
+        $this->assertEquals(PageTest::STR_CHILD_ONE, (new MenuService())->translatesByColumnAndLang(Page::find($tree[$parentId]['children'][0]->id), 'title', 'en'));
+        $this->assertEquals(PageTest::STR_CHILD_TWO, (new MenuService())->translatesByColumnAndLang(Page::find($tree[$parentId]['children'][1]->id), 'title', 'en'));
     }
 
     public function test_it_will_change_position_menus_docs()

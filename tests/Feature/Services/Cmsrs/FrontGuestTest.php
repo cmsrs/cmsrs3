@@ -195,6 +195,8 @@ class FrontGuestTest extends TestCase
 
         $footerPages = (new PageService)->getFooterPages('en');
 
+        //dd($footerPages);
+
         $this->assertNotEmpty($footerPages['policyUrl']);
         $this->assertNotEmpty($footerPages['policyTitle']);
         $this->assertNotEmpty($footerPages['contactUrl']);

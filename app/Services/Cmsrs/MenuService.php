@@ -99,6 +99,8 @@ class MenuService extends BaseService
         $column = 'name';
         $name = $this->translatesByColumnAndLang($model, $column, $lang);
 
+        //dd('______________________________________-'.$name);
+
         return Str::slug($name, "-");
     }
 
@@ -109,11 +111,11 @@ class MenuService extends BaseService
         $menuId = $mMenu->id;
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
-            $ret = cache()->remember('menutranslatemenuid_'.$menuId, Carbon::now()->addYear(1), function () use ($menuId) {
-                return  (new Menu)->translates()->where('menu_id', $menuId)->get(['lang', 'column', 'value'])->toArray();
+            $ret = cache()->remember('menutranslatemenuid_'.$menuId, Carbon::now()->addYear(1), function () use ($mMenu, $menuId) {
+                return  $mMenu->translates()->where('menu_id', $menuId)->get(['lang', 'column', 'value'])->toArray();
             });
         } else {
-            $ret = (new Menu)->translates()->where('menu_id', $menuId)->get(['lang', 'column', 'value'])->toArray();
+            $ret = $mMenu->translates()->where('menu_id', $menuId)->get(['lang', 'column', 'value'])->toArray();            
         }
         return $ret;
     }
