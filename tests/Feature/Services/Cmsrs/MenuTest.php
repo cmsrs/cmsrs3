@@ -3,6 +3,7 @@
 namespace Tests\Feature\Services\Cmsrs;
 
 use App\Services\Cmsrs\MenuService;
+use App\Services\Cmsrs\PageService;
 
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
@@ -161,9 +162,18 @@ class MenuTest extends Base
         $tree = (new MenuService())->pagesPublishedTree( $publishedAndAccess);
         $this->assertEquals(3, count($tree));
         $this->assertEquals(2, count($tree[$parentId]['children']));
+
+        $page0 = Page::find($tree[$parentId]['children'][0]->id);
+        $this->assertEquals($tree[$parentId]['children'][0]->id, $page0->id);
+
+        $page1 = Page::find($tree[$parentId]['children'][1]->id);
+        $this->assertEquals($tree[$parentId]['children'][1]->id, $page1->id);
       
-        $this->assertEquals(PageTest::STR_CHILD_ONE, (new MenuService())->translatesByColumnAndLang(Page::find($tree[$parentId]['children'][0]->id), 'title', 'en'));
-        $this->assertEquals(PageTest::STR_CHILD_TWO, (new MenuService())->translatesByColumnAndLang(Page::find($tree[$parentId]['children'][1]->id), 'title', 'en'));
+        $title0 = (new PageService())->translatesByColumnAndLang($page0, 'title', 'en');
+        $title1 = (new PageService())->translatesByColumnAndLang($page1, 'title', 'en');
+
+        $this->assertEquals(PageTest::STR_CHILD_ONE, $title0);
+        $this->assertEquals(PageTest::STR_CHILD_TWO, $title1);
     }
 
     public function test_it_will_change_position_menus_docs()

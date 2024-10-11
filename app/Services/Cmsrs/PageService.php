@@ -230,16 +230,18 @@ class PageService extends BaseService
     public static function getPageBySlug($menus, $menuSlug, $pageSlug, $lang) //todo - change static
     {
         $menuService = new MenuService; //todo
-        $pageService = new MenuService;//todo
+        $pageService = new PageService;//todo
         $pageOut = null;
         foreach ($menus as $menu) {
-            if ($menuSlug == $pageService->getSlugByLang($menu, $lang)) {
+            if ($menuSlug == $menuService->getSlugByLang($menu, $lang)) {
                 $objPagesPublishedAndAccess = $menuService->pagesPublishedAndAccess($menu);
                 if(1 == $objPagesPublishedAndAccess->count()){ //it is the case for pageSlug = null, 1 page in menu
                     $pageOut =  $objPagesPublishedAndAccess->first();
                     break;
                 }
-                foreach ($menuService->pagesPublished($menu)  as $page) {
+
+                $pagesPublished = $menuService->pagesPublished($menu);
+                foreach ($pagesPublished as $page) {
                     if ($pageSlug == $pageService->getSlugByLang($page, $lang)) {
                         $pageOut = $page;
                         break;

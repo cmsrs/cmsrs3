@@ -132,7 +132,7 @@ class MenuService extends BaseService
 
     public function pagesPublished(Menu $mMenu) //to_jest_duza_zmiana!!!
     {
-        $pages = $mMenu->pages()->where('published', '=', 1)->orderBy('position', 'asc');//?
+        $pages = $mMenu->pages()->where('published', '=', 1)->orderBy('position', 'asc')->get();
         return $pages;
     }
 

@@ -51,9 +51,9 @@
             <?php if( 1 == $pagesPublishedAndAccess->count() ){  ?>
               <a class=" ml-3 nav-link" href="{{ $pageService->getUrl($pagesPublishedAndAccess->first(),  $lang)}}">{{$pageService->translatesByColumnAndLang(  $pagesPublishedAndAccess->first(), 'short_title', $lang ) }}</a>
             <?php }else{ ?>
-              <a class="nav-link dropdown-toggle ml-3" href="#" id="dropdown{{ $menu->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ $pageService->translatesByColumnAndLang($menu, 'name', $lang ) }}</a>
+              <a class="nav-link dropdown-toggle ml-3" href="#" id="dropdown{{ $menu->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ (new App\Services\Cmsrs\MenuService)->translatesByColumnAndLang($menu, 'name', $lang ) }}</a>
               <div class="dropdown-menu" aria-labelledby="dropdown{{ $menu->id }}">
-                  <?php foreach ($menu->pagesPublishedTree($pagesPublishedAndAccess) as $pageMenu) { ?>                                
+                  <?php foreach ((new App\Services\Cmsrs\MenuService)->pagesPublishedTree($pagesPublishedAndAccess) as $pageMenu) { ?>
                     <a class="dropdown-item" href="{{ $pageService->getUrl($pageMenu, $lang)}}">{{  $pageService->translatesByColumnAndLang($pageMenu, 'short_title', $lang ) }}</a>
                     <?php if( !empty($pageMenu['children']) && !empty($pageMenu->published) ){ ?>
                         <?php foreach ($pageMenu['children'] as $p) { ?>                    

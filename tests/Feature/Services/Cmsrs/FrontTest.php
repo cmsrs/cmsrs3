@@ -314,7 +314,7 @@ class FrontTest extends Base
         $response1->assertStatus(200);
     }
 
-    public function test_it_will_get_cms_page()
+    public function test_it_will_get_cms_page1()
     {
         $this->setTestData();
         $title = $this->testData['title']['en'];

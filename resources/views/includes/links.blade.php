@@ -1,3 +1,6 @@
+<?php
+    die('not used');
+?>
 <p class="starter-template">
     <h5>Links:</h5>
     <ul>
