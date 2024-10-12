@@ -113,7 +113,7 @@ class PageService extends BaseService
     public function getPageDataByShortTitle( $shortTitle, $data = 'content',  $lang = null )
     {
         if( !in_array( $data, ['content', 'title', 'images', 'url'] ) ){
-            throw new \Exception("second param is content or title allowed, now is: ".$data);
+            throw new \Exception("second param is: content title images and url allowed, but now is: ".$data);
         }
 
         if( empty($lang) ){
@@ -675,8 +675,13 @@ class PageService extends BaseService
 
     public function getAllPagesWithImagesOneItem(Page $mPage, ?string $simple = null)
     {
+        //dump('-----------------');
+        //dump($mPage->toArray() );
+        //dump($mPage->id);
         //$page = ( new  )->where('id', $this->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->get($this->pageFields)->first()->toArray();
-        $page = $mPage->with(['translates', 'contents'])->orderBy('position', 'asc')->get($this->pageFields)->first()->toArray();        
+        $page = (new Page)->where( 'id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->get($this->pageFields)->first()->toArray();        
+
+        //dd($page);
         $formatPage = $this->getPageDataFormat($page);
         if(!$simple){
             $formatPage['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
@@ -812,8 +817,9 @@ class PageService extends BaseService
 
     public function delete(Page $mPage)
     {
+        $imageService = new ImageService();
         foreach ($mPage->images()->get() as $img) {
-            $img->delete();
+            $imageService->delete($img);
         }
 
         return $mPage->delete();  // parent::delete();

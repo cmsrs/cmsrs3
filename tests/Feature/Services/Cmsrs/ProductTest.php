@@ -1787,7 +1787,9 @@ class ProductTest extends Base
         $this->assertEquals(null, $translateBefore[1]['value']);
   
   
+        
         $response33 = $this->delete('api/products/'.$productId.'?token='.$this->token);
+        //dd($response33);
         $res33 = $response33->getData();
 
         $this->assertTrue($res33->success);
@@ -1814,7 +1816,7 @@ class ProductTest extends Base
     {
         $obj = Product::find($productId);
         if ($obj) {  //delete img from fs.
-            $obj->delete();
+            (new ProductService() )->delete($obj);
         }
     }
 

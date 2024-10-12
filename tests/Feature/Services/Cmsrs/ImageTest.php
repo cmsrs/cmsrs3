@@ -702,7 +702,6 @@ class ImageTest extends Base
         $type = 'page';
         $response = $this->post('api/image/'.$type.'/'.$this->pageId.'?token='.$this->token, $image);
 
-        //dd($response);
         $this->assertEquals(200, $response->status());
 
         $res = $response->getData();

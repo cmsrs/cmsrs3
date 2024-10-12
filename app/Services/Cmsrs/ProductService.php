@@ -630,8 +630,9 @@ class ProductService extends BaseService
 
     public function delete( Product $mProduct ) //to_jest_duza_zmiana!!!
     {
+        $imageService = new ImageService();
         foreach ($mProduct->images()->get() as $img) {
-            $img->delete();
+            $imageService->delete( $img );
         }
         return  $mProduct->delete(); // parent::delete();
     }

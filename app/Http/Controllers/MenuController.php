@@ -89,9 +89,9 @@ class MenuController extends Controller
         }
   
         try {
-            $res = $menu->wrapUpdate($data);
+            $res =  ( new MenuService() ) ->wrapUpdate($menu, $data);
         } catch (\Exception $e) {
-            Log::error('menu update ex: '.$e->getMessage());
+            Log::error('menu update ex: '.$e->getMessage().' for: '.var_export($e, true ));
             return response()->json(['success'=> false, 'error'=> 'Update menu problem - exeption'], 200);
         }
 

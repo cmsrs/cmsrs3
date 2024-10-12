@@ -331,7 +331,7 @@ class MenuTest extends Base
         $this->assertNotEmpty($response55->getData()->error);
     }
 
-    public function test_it_will_update_menu_docs()
+    public function test_it_will_update_menu_uniq_docs()
     {
         $this->setTestData();
         $responseAll = $this->get('api/menus?token='.$this->token);
@@ -352,7 +352,7 @@ class MenuTest extends Base
         $response0 = $this->put('api/menus/'.$id.'?token='.$this->token, $testData3);
         $this->assertTrue($response0->getData()->success);
 
-        $slugAfter = Menu::find($id)->getSlugByLang('en');
+        $slugAfter =  (new MenuService() )->getSlugByLang(Menu::find($id), 'en');
         $this->assertNotEquals($slug, $slugAfter);
         $this->assertEquals($slugAfter, Str::slug($testData3['name']['en'], "-"));
 

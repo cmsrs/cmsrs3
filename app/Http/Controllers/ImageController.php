@@ -31,7 +31,7 @@ class ImageController extends Controller
 
     public function uploadImageByTypeAndRefId(Request $request, $type, $refId)
     {
-        if (empty(ImageService::$type[$type])) {
+        if (empty(Image::$type[$type])) {
             return response()->json(['success'=> false, 'error'=> 'page type not exist'], 404);            
         }
 
