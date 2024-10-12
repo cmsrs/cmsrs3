@@ -368,6 +368,7 @@ class ImageTest extends Base
 
         $imgDir = ImageService::getImageDir('page', $imgToDel->page_id, $imgToDel->id);
         $file = $imgDir."/".$imgToDel->name;
+        //dump($file);
         $this->assertFileExists($file);
 
         $fileName = pathinfo($imgToDel->name, PATHINFO_FILENAME);
@@ -382,6 +383,8 @@ class ImageTest extends Base
         $this->assertEquals(self::STR_DESC_IMG1, $translateBefore[0]['value']);
 
         $responseDel = $this->delete('api/images/'.$imgToDel->id.'?token='.$this->token);
+        $resDel = $responseDel->getData();
+        $this->assertTrue($resDel->success);
 
         $translateAfter = Translate::query()->where('image_id', $imgToDel->id)->where('column', 'alt')->get()->toArray();
         $this->assertEmpty($translateAfter);
@@ -698,6 +701,8 @@ class ImageTest extends Base
 
         $type = 'page';
         $response = $this->post('api/image/'.$type.'/'.$this->pageId.'?token='.$this->token, $image);
+
+        //dd($response);
         $this->assertEquals(200, $response->status());
 
         $res = $response->getData();

@@ -84,7 +84,7 @@ class ConfigTest extends Base
 
             //dump($page_type);
             $response->assertStatus($status);
-            break;
+            //break;
         }
         $this->assertTrue($in);
         $pagesNum = Page::all()->count();

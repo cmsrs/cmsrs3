@@ -73,11 +73,11 @@ class ImageService extends BaseService
         $imageId = $mImage->id; 
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
-            $ret = cache()->remember('imagetranslate_'.$imageId, Carbon::now()->addYear(1), function () use ($imageId) {
-                return  (new Image)->translates()->where('image_id', $imageId)->get(['lang', 'column', 'value'])->toArray();
+            $ret = cache()->remember('imagetranslate_'.$imageId, Carbon::now()->addYear(1), function () use ($mImage, $imageId) {
+                return  $mImage->translates()->where('image_id', $imageId)->get(['lang', 'column', 'value'])->toArray();
             });
         } else {
-            $ret = (new Image)->translates()->where('image_id', $imageId)->get(['lang', 'column', 'value'])->toArray();
+            $ret = $mImage->translates()->where('image_id', $imageId)->get(['lang', 'column', 'value'])->toArray();
         }
 
         return $ret;

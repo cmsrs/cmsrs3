@@ -84,6 +84,7 @@ class Base extends TestCase
         //see in: resources/views/includes/header.blade.php
         //this function only use in tests - maybe it will use in code in the future
         $pageService = new PageService();
+        $menuService = new MenuService();
 
         $url = [];
         $menus = Menu::All();
@@ -99,7 +100,7 @@ class Base extends TestCase
                 $f0 = true;
                 $url[] = $pageService->getUrl($pagesPublishedAndAccess->first(), $lang);
             } else {
-                foreach ($menu->pagesPublishedTree($pagesPublishedAndAccess) as $page) {
+                foreach (  $menuService->pagesPublishedTree($pagesPublishedAndAccess) as $page) {
                     //dump($page->published);
                     $url[] =  $pageService ->getUrl($page, $lang);
                     $f1 = true;
@@ -130,7 +131,7 @@ class Base extends TestCase
             $productName = $product['product_name'][$lang];
 
             $objProduct = Product::find($product['id']);
-            $url = $objProduct->getProductUrl( $lang, $productName);
+            $url = (new ProductService() )->getProductUrl($objProduct,  $lang, $productName);
             $response = $this->get($url);
             $response->assertStatus( empty($objProduct->published) ? 404 : 200);
         }

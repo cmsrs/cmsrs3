@@ -71,13 +71,13 @@ class FrontController extends Controller
             Log::error('if you want this page you have to add page in type search');
             abort(404);
         }
-        $urlSearch = $this->getUrl($page, $lang);
+        $urlSearch = (new PageService())->getUrl($page, $lang);
         //dd($urlSearch);
 
         $key = $request->input('key');
         $products = (new ProductService())->wrapSearchProducts( $lang, $key);        
 
-        $data = $page->getDataToView( $page, [
+        $data = (new PageService())->getDataToView( $page, [
             'key' => $key,
             'url_search' =>  $urlSearch,
             'products' => $products,

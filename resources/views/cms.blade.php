@@ -9,7 +9,7 @@
 
       @if( $page->images)
         @foreach($page->images as $image)
-            <img class="m-3" src="{{ (new App\Services\Cmsrs\ImageService) ->getHtmlImage($image)}}" alt="{{ $pageService->translatesByColumnAndLang($image, 'alt', $lang ) }}" />
+            <img class="m-3" src="{{ (new App\Services\Cmsrs\ImageService)->getHtmlImage($image)}}" alt="{{ (new App\Services\Cmsrs\ImageService)->translatesByColumnAndLang($image, 'alt', $lang ) }}" />
         @endforeach
       @endif
 

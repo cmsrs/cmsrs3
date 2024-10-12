@@ -211,7 +211,7 @@ class FrontTest extends Base
      * maybe it will be usefull for sitemap
      * links without: home, login, logout
      */
-    public function test_it_will_get_all_pages_status()
+    public function test_it_will_get_all_pages_status_one_lang()
     {
         ini_set('memory_limit', '1028M');
 

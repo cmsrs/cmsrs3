@@ -350,8 +350,9 @@ class FrontGuestTest extends TestCase
         $response1 = $this->get((new PageService())->getUrl($p1, 'en')) ;
         $response1->assertStatus(401);
 
-        $url2 = $p2->getUrl('en');
-        $response1 = $this->get((new PageService())->getUrl($p2, 'en'));
+        $url2 = (new PageService())->getUrl($p2, 'en');
+        //$response1 = $this->get((new PageService())->getUrl($p2, 'en'));
+        $response1 = $this->get($url2);
         $response1->assertStatus(404);
         //$response1->assertStatus(401); //moze powinno byc 
     }
