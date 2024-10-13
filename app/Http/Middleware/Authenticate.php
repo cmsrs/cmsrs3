@@ -20,9 +20,10 @@ class Authenticate extends Middleware
         if (! $request->expectsJson()) {
             $appUrl = env('APP_URL');
             $urlRedirect = (count($langs) === 1) ? $appUrl.'/login' : $appUrl.'/'.$lang.'/login';
-    
+
             return $urlRedirect;
         }
+
         return null;
     }
 }

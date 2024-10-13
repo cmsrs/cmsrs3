@@ -70,7 +70,6 @@ class LoadDemoDataCommand extends Command
         return $user32->id;
     }
 
-
     private function getDataSaveCheckout($products, $i)
     {
         $prod0 = empty($products[0]) ? exit("can't find product0 to checkout") : $products[0];
@@ -123,7 +122,6 @@ class LoadDemoDataCommand extends Command
 
         return $data;
     }
-
 
     /**
      * Execute the console command.
@@ -193,7 +191,6 @@ class LoadDemoDataCommand extends Command
         $user2->save();
          */
 
-
         /*
         $numberOfFakeUsers = 32;
         //$demoUsers = [];
@@ -209,7 +206,6 @@ class LoadDemoDataCommand extends Command
             $user32->save();
         }
         */
-
 
         $numberOfFakeUsers = 32;
         for ($i = 1; $i <= $numberOfFakeUsers; $i++) {
