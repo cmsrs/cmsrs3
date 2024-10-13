@@ -3,14 +3,17 @@
 namespace App\Services\Cmsrs;
 
 use App\Models\Cmsrs\Image;
-use Carbon\Carbon;
+use App\Models\Cmsrs\Menu;
+use App\Models\Cmsrs\Page;
+use App\Services\Cmsrs\Helpers\CacheService;
+use App\Services\Cmsrs\Interfaces\TranslateInterface;
 use Intervention\Image\Laravel\Facades\Image as LibImage;
 
-class ImageService extends BaseService
+class ImageService extends BaseService implements TranslateInterface
 {
     private $translate;
 
-    public function __construct(array $attributes = [])
+    public function __construct()
     {
         $this->translate = new TranslateService;
     }
@@ -22,12 +25,12 @@ class ImageService extends BaseService
         }
     }
 
-    public function getAllTranslate(Image $mImage)
+    public function getAllTranslate(Page|Image|Menu $mImage)
     {
         $imageId = $mImage->id;
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
-            $ret = cache()->remember('imagetranslate_'.$imageId, Carbon::now()->addYear(1), function () use ($mImage, $imageId) {
+            $ret = cache()->remember('imagetranslate_'.$imageId, CacheService::setTime(), function () use ($mImage, $imageId) {
                 return $mImage->translates()->where('image_id', $imageId)->get(['lang', 'column', 'value'])->toArray();
             });
         } else {

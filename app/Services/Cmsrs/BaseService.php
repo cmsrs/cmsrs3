@@ -2,7 +2,9 @@
 
 namespace App\Services\Cmsrs;
 
+use App\Models\Cmsrs\Content;
 use App\Models\Cmsrs\Translate;
+use App\Services\Cmsrs\Interfaces\TranslateInterface;
 use Illuminate\Support\Number;
 
 abstract class BaseService
@@ -55,11 +57,14 @@ abstract class BaseService
 
     public function getAllTranslateByColumn($model)
     {
-        $data = $this->getAllTranslate($model); //from child
-
         $out = [];
-        foreach ($data as $d) {
-            $out[$d['column']][$d['lang']] = $d['value'];
+
+        if ($this instanceof TranslateInterface) {
+            $data = $this->getAllTranslate($model); //from child
+
+            foreach ($data as $d) {
+                $out[$d['column']][$d['lang']] = $d['value'];
+            }
         }
 
         return $out;
@@ -77,7 +82,7 @@ abstract class BaseService
         return $value;
     }
 
-    protected function wrapTranslateUpdate($obj, $row)
+    protected function wrapTranslateUpdate(Translate|Content|false $obj, $row)
     {
         if ($obj) {
             $obj->update(['value' => $row['value']]);

@@ -13,9 +13,9 @@ use Illuminate\Http\Request;
 
 class ImageController extends Controller
 {
-    private $validationRules = [
-        'name' => 'max:255',
-    ];
+    // private $validationRules = [
+    //     'name' => 'max:255',
+    // ];
 
     public function getItemByTypeAndRefId(Request $request, $type, $refId)
     {
@@ -55,7 +55,6 @@ class ImageController extends Controller
         $ids = explode(',', $id);
         $imageService = new ImageService;
 
-        //dd('_______________________________');
         foreach ($ids as $itemId) {
             $image = Image::find($itemId);
 

@@ -65,7 +65,7 @@ class MenuController extends Controller
 
     public function update(Request $request, $id)
     {
-        $menu = Menu::findOrFail($id);
+        $menu = Menu::find($id);
 
         if (empty($menu)) {
             return response()->json(['success' => false, 'error' => 'Menu not find'], 200);

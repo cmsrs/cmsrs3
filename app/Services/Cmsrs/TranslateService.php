@@ -37,6 +37,7 @@ class TranslateService extends BaseService
 
     public function updateRow($row)
     {
+        $obj = false;
         if (! empty($row['menu_id'])) {
             $obj = Translate::where('menu_id', $row['menu_id'])->where('column', $row['column'])->where('lang', $row['lang'])->first();
         } elseif (! empty($row['page_id'])) {

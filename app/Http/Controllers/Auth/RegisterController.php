@@ -84,14 +84,13 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @return \App\User
+     * @return \App\Models\Cmsrs\User
      */
     protected function create(array $data)
     {
         $demoStatus = env('DEMO_STATUS', false);
         if ($demoStatus) {
             abort(404);
-            exit;
         }
 
         return User::createClient($data);

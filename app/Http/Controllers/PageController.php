@@ -121,7 +121,7 @@ class PageController extends Controller
 
     public function update(Request $request, $id)
     {
-        $page = Page::findOrFail($id);
+        $page = Page::find($id);
 
         if (empty($page)) {
             return response()->json(['success' => false, 'error' => 'Page not find'], 200);

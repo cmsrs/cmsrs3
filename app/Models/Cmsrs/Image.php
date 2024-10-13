@@ -3,11 +3,10 @@
 namespace App\Models\Cmsrs;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Image extends Model
 {
-    private $translate;
-
     const IMAGE_DIR = 'images';
 
     const IMAGE_ORG = 'org';
@@ -45,8 +44,8 @@ class Image extends Model
         'position' => 'integer',
     ];
 
-    public function translates()
+    public function translates(): HasMany
     {
-        return $this->hasMany('App\Models\Cmsrs\Translate');
+        return $this->hasMany('App\Models\Cmsrs\Translate', 'image_id', 'id'); //it should be work without params - phpstan
     }
 }

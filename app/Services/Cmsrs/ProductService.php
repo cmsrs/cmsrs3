@@ -5,7 +5,7 @@ namespace App\Services\Cmsrs;
 use App\Models\Cmsrs\Basket;
 use App\Models\Cmsrs\Checkout;
 use App\Models\Cmsrs\Product;
-use Carbon\Carbon;
+use App\Services\Cmsrs\Helpers\CacheService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -493,7 +493,7 @@ class ProductService extends BaseService
     {
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
-            $products = cache()->remember('products_name_price_'.$lang, Carbon::now()->addYear(1), function () use ($lang) {
+            $products = cache()->remember('products_name_price_'.$lang, CacheService::setTime(), function () use ($lang) {
                 return (new ProductService)->getAllProductsWithImagesByLang($lang);
             });
         } else {

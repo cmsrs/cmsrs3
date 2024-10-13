@@ -38,6 +38,7 @@ class ContentService extends BaseService
 
     public function updateRow($row)
     {
+        $obj = false;
         if (! empty($row['page_id'])) {
             $obj = Content::where('page_id', $row['page_id'])->where('column', $row['column'])->where('lang', $row['lang'])->first();
         } elseif (! empty($row['product_id'])) {

@@ -2,13 +2,16 @@
 
 namespace App\Services\Cmsrs;
 
+use App\Models\Cmsrs\Image;
+use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Translate;
-use Carbon\Carbon;
+use App\Services\Cmsrs\Helpers\CacheService;
+use App\Services\Cmsrs\Interfaces\TranslateInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
-class PageService extends BaseService
+class PageService extends BaseService implements TranslateInterface
 {
     private $translate;
 
@@ -17,7 +20,7 @@ class PageService extends BaseService
     public $pageFields;
     //private $langs;
 
-    public function __construct(array $attributes = [])
+    public function __construct()
     {
         $this->pageFields = [
             'id',
@@ -42,7 +45,7 @@ class PageService extends BaseService
         }
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
-            $ret = cache()->remember('page_by_short_title_'.$data.'_'.Str::slug($shortTitle, '_').'_'.$lang, Carbon::now()->addYear(1), function () use ($shortTitle, $data, $lang) {
+            $ret = cache()->remember('page_by_short_title_'.$data.'_'.Str::slug($shortTitle, '_').'_'.$lang, CacheService::setTime(), function () use ($shortTitle, $data, $lang) {
                 return $this->getPageDataByShortTitle($shortTitle, $data, $lang);
             });
         } else {
@@ -106,7 +109,7 @@ class PageService extends BaseService
 
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
-            $ret = cache()->remember('pageinner_by_pageid_'.$pageId.'_'.$lang, Carbon::now()->addYear(1), function () use ($pageId, $lang) {
+            $ret = cache()->remember('pageinner_by_pageid_'.$pageId.'_'.$lang, CacheService::setTime(), function () use ($pageId, $lang) {
                 return $this->getContentInnerPageByPageIdAndLang($pageId, $lang);
             });
         } else {
@@ -238,13 +241,13 @@ class PageService extends BaseService
         return Str::slug($name, '-');
     }
 
-    public function getAllTranslate(Page $mPage)
+    public function getAllTranslate(Page|Image|Menu $mPage)
     {
         $pageId = $mPage->id;
 
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
-            $ret = cache()->remember('pagetranslatepageid_'.$pageId, Carbon::now()->addYear(1), function () use ($mPage, $pageId) {
+            $ret = cache()->remember('pagetranslatepageid_'.$pageId, CacheService::setTime(), function () use ($mPage, $pageId) {
                 return $this->getTranslateMerge($mPage, $pageId);
             });
         } else {
@@ -259,8 +262,8 @@ class PageService extends BaseService
      */
     public function getTranslateMerge(Page $mPage, $pageId)
     {
-        $translates = $mPage->translates()->where('page_id', $pageId)->get(['lang', 'column', 'value'])->toArray(); //zmiana 1007
-        $contents = $mPage->contents()->where('page_id', $pageId)->get(['lang', 'column', 'value'])->toArray(); //zmiana 1007
+        $translates = $mPage->translates()->where('page_id', $pageId)->get(['lang', 'column', 'value'])->toArray();
+        $contents = $mPage->contents()->where('page_id', $pageId)->get(['lang', 'column', 'value'])->toArray();
         $ret = array_merge($translates, $contents);
 
         return $ret;
@@ -428,7 +431,7 @@ class PageService extends BaseService
         $pageId = $mPage->id;
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
-            $countPages = cache()->remember('countpagesinthismenu_'.$pageId, Carbon::now()->addYear(1), function () use ($mPage) {
+            $countPages = cache()->remember('countpagesinthismenu_'.$pageId, CacheService::setTime(), function () use ($mPage) {
                 return $this->getNumPagesBelongsToThisMenu($mPage);
             });
         } else {
@@ -443,7 +446,7 @@ class PageService extends BaseService
         $pageId = $mPage->id;
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
-            $menuSlug = cache()->remember('menusluglang_'.$lang.'_'.$pageId, Carbon::now()->addYear(1), function () use ($mPage, $lang) {
+            $menuSlug = cache()->remember('menusluglang_'.$lang.'_'.$pageId, CacheService::setTime(), function () use ($mPage, $lang) {
                 return $this->getMenuSlugByLang($mPage, $lang);
             });
         } else {
@@ -526,7 +529,7 @@ class PageService extends BaseService
     {
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
-            $ret = cache()->remember('pagebytype_'.$type, Carbon::now()->addYear(1), function () use ($type) {
+            $ret = cache()->remember('pagebytype_'.$type, CacheService::setTime(), function () use ($type) {
                 return Page::where('type', '=', $type)->where('published', '=', 1)->get()->first();
             });
         } else {
@@ -637,7 +640,7 @@ class PageService extends BaseService
     {
         $isCache =  (new Config)->isCacheEnable();
         if ($isCache) {
-            $ret = cache()->remember('page_with_images_page_id_'.$pageId, Carbon::now()->addYear(1), function () use ($pageId) {
+            $ret = cache()->remember('page_with_images_page_id_'.$pageId, CacheService::setTime(), function () use ($pageId) {
                 return  (new Page)->getPageWithImagesById($pageId);
             });
         } else {
@@ -671,7 +674,7 @@ class PageService extends BaseService
     {
         $isCache =  (new ConfigService)->isCacheEnable();
         if ($isCache) {
-            $ret = cache()->remember('page_with_images_by_type_'.$type, Carbon::now()->addYear(1), function () use ($type) {
+            $ret = cache()->remember('page_with_images_by_type_'.$type, CacheService::setTime(), function () use ($type) {
                 return  (new PageService()  )->getFirstPageWithImagesForGuest($type);
             });
         } else {

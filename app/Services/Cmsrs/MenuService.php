@@ -2,16 +2,19 @@
 
 namespace App\Services\Cmsrs;
 
+use App\Models\Cmsrs\Image;
 use App\Models\Cmsrs\Menu;
-use Carbon\Carbon;
+use App\Models\Cmsrs\Page;
+use App\Services\Cmsrs\Helpers\CacheService;
+use App\Services\Cmsrs\Interfaces\TranslateInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
-class MenuService extends BaseService
+class MenuService extends BaseService implements TranslateInterface
 {
     private $translate;
 
-    public function __construct(array $attributes = [])
+    public function __construct()
     {
         $this->translate = new TranslateService;
     }
@@ -27,7 +30,7 @@ class MenuService extends BaseService
     {
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
-            $menus = cache()->remember('menus', Carbon::now()->addYear(1), function () {
+            $menus = cache()->remember('menus', CacheService::setTime(), function () {
                 return Menu::all()->sortBy('position');
             });
         } else {
@@ -77,12 +80,12 @@ class MenuService extends BaseService
         return Str::slug($name, '-');
     }
 
-    public function getAllTranslate(Menu $mMenu)
+    public function getAllTranslate(Image|Page|Menu $mMenu)
     {
         $menuId = $mMenu->id;
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
-            $ret = cache()->remember('menutranslatemenuid_'.$menuId, Carbon::now()->addYear(1), function () use ($mMenu, $menuId) {
+            $ret = cache()->remember('menutranslatemenuid_'.$menuId, CacheService::setTime(), function () use ($mMenu, $menuId) {
                 return $mMenu->translates()->where('menu_id', $menuId)->get(['lang', 'column', 'value'])->toArray();
             });
         } else {

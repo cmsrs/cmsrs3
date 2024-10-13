@@ -24,6 +24,6 @@ class Authenticate extends Middleware
             return $urlRedirect;
         }
 
-        return null;
+        return ''; //phpstan fix
     }
 }

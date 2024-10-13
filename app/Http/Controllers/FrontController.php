@@ -5,17 +5,13 @@ namespace App\Http\Controllers;
 use App\Integration\Payu;
 use App\Models\Cmsrs\Checkout;
 use App\Models\Cmsrs\Page;
-use App\Models\Cmsrs\Product;
-use App\Order;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\DeliverService;
+use App\Services\Cmsrs\Helpers\CacheService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\PaymentService;
 use App\Services\Cmsrs\ProductService;
-use App\User;
-use Carbon\Carbon;
-//use App;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
@@ -302,7 +298,7 @@ class FrontController extends Controller
 
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
-            $pageOut = cache()->remember('page_'.$menuSlug.'_'.$pageSlug.'_'.$lang, Carbon::now()->addYear(1), function () use ($menus, $menuSlug, $pageSlug, $lang) {
+            $pageOut = cache()->remember('page_'.$menuSlug.'_'.$pageSlug.'_'.$lang, CacheService::setTime(), function () use ($menus, $menuSlug, $pageSlug, $lang) {
                 return PageService::getPageBySlug($menus, $menuSlug, $pageSlug, $lang);
             });
         } else {

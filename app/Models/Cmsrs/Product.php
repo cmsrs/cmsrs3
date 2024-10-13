@@ -3,13 +3,10 @@
 namespace App\Models\Cmsrs;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
-    private $translate;
-
-    private $content;
-
     public $productFields;
 
     protected $fillable = [
@@ -46,9 +43,9 @@ class Product extends Model
         return $this->hasMany('App\Models\Cmsrs\Image');
     }
 
-    public function translates()
+    public function translates(): HasMany
     {
-        return $this->hasMany('App\Models\Cmsrs\Translate');
+        return $this->hasMany('App\Models\Cmsrs\Translate'); //it should be work without params , 'product_id', 'id' - phpstan
     }
 
     public function translatesPage()

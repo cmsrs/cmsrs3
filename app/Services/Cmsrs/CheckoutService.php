@@ -105,7 +105,7 @@ class CheckoutService extends BaseService
         }
 
         $pIdsValues = array_values($pIds);
-        $products = Product::with(['translates'])->whereIn('id', $pIdsValues)->get()->pluck(null, 'id')->all();
+        $products = (new Product)->whereIn('id', $pIdsValues)->with(['translates'])->get()->pluck(null, 'id')->all();
 
         foreach ($baskets as $basket) {
             //$product = Product::with(['translates'])->where('id', $basket['product_id'])->first(); //i don't want sql in foreach
