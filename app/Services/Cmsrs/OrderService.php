@@ -2,12 +2,12 @@
 
 namespace App\Services\Cmsrs;
 
-use App\Models\Cmsrs\User;
 use App\Models\Cmsrs\Order;
+use App\Models\Cmsrs\User;
 
 class OrderService extends BaseService
 {
-    static public function copyDataFromBasketToOrderForUser($checkout)
+    public static function copyDataFromBasketToOrderForUser($checkout)
     {
         // $checkout = Checkout::findActiveOrder();
         // if(empty($checkout)){
@@ -15,27 +15,27 @@ class OrderService extends BaseService
         // }
 
         //$checkout->is_pay = 1;
-        //$checkout->save();    
-        
+        //$checkout->save();
+
         $userId = $checkout->user_id;
-        if( empty($userId) ){
+        if (empty($userId)) {
             return true;
         }
 
         $user = User::find($userId);
-        //$user = Auth::user();            
-        if(empty($user)){
+        //$user = Auth::user();
+        if (empty($user)) {
             return true;
         }
 
         /**
-        * copy basket to orders form login users
-        */
-        $objBaskets =  $checkout->baskets;
+         * copy basket to orders form login users
+         */
+        $objBaskets = $checkout->baskets;
         $objOrders = Order::where('user_id', '=', $user->id)->get();  //->toArray();
 
-        if($objBaskets->count()){
-            foreach($objBaskets as $objBasket){
+        if ($objBaskets->count()) {
+            foreach ($objBaskets as $objBasket) {
                 $arrBasket = $objBasket->toArray();
                 $arrBasket['user_id'] = $user->id;
 
@@ -45,16 +45,16 @@ class OrderService extends BaseService
 
                 //find order by product_id
                 $objOrderByProductId = null;
-                foreach($objOrders as $objOrder){
-                    if($objOrder->product_id ==  $productId){
+                foreach ($objOrders as $objOrder) {
+                    if ($objOrder->product_id == $productId) {
                         $objOrderByProductId = $objOrder;
                         break;
                     }
                 }
 
-                if( empty($objOrderByProductId) ){
+                if (empty($objOrderByProductId)) {
                     Order::create($arrBasket);
-                }else{
+                } else {
                     $objOrderByProductId->qty = $objOrderByProductId->qty + $arrBasket['qty'];
                     $objOrderByProductId->save();
                 }
@@ -62,7 +62,6 @@ class OrderService extends BaseService
         }
 
         return true;
-
 
         // $orders = [];
         // if($objBaskets->count()){
@@ -84,13 +83,12 @@ class OrderService extends BaseService
         //     foreach($orders as $order){
         //         Order::create($order);
         //     }
-        // }    
-        
-    }   
+        // }
 
-    static public function inOrdersByUserId($userId)
+    }
+
+    public static function inOrdersByUserId($userId)
     {
-            return Order::where('user_id', '=', $userId)->get(); //->toArray();
-    }    
-    
+        return Order::where('user_id', '=', $userId)->get(); //->toArray();
+    }
 }

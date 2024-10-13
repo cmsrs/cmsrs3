@@ -4,26 +4,20 @@ namespace App\Http\Controllers\Auth;
 
 //use App\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
+use App\Models\Cmsrs\Menu;
 //use Illuminate\Support\Facades\Validator;
-use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Support\Facades\Log;
+use App\Models\Cmsrs\User;
+use App\Services\Cmsrs\ConfigService;
 //use App\Page;
 //use App\Config;
 //use App\Menu;
 //use App;
 
-use App\Models\Cmsrs\Menu;
-use App\Models\Cmsrs\User;
-
-
-use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
-use App\Services\Cmsrs\ConfigService;
-
-
-
+use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class RegisterController extends Controller
 {
@@ -47,9 +41,11 @@ class RegisterController extends Controller
      */
     protected $redirectTo = '/en/home';
 
-    protected $lang;    
-    protected $langs;        
-    protected $menus;        
+    protected $lang;
+
+    protected $langs;
+
+    protected $menus;
 
     /**
      * Create a new controller instance.
@@ -58,7 +54,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        //abort(404); //TODO 
+        //abort(404); //TODO
         $this->middleware('guest');
         $this->langs = (new ConfigService)->arrGetLangs();
         $this->menus = Menu::all()->sortBy('position'); //TODO cached
@@ -66,16 +62,14 @@ class RegisterController extends Controller
         //$this->langs = (new Config)->arrGetLangs();
 
         $pHome = PageService::getFirstPageByType('home');
-        if( $pHome ){
-            $this->redirectTo = (new PageService)->getUrl( $pHome, $this->langs[0]);
+        if ($pHome) {
+            $this->redirectTo = (new PageService)->getUrl($pHome, $this->langs[0]);
         }
-
 
     }
 
     /**
      * Get a validator for an incoming registration request.
-     *
      */
     protected function validator(array $data)
     {
@@ -90,14 +84,13 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
      * @return \App\User
      */
     protected function create(array $data)
     {
         $demoStatus = env('DEMO_STATUS', false);
-        if($demoStatus){
-            abort(404);            
+        if ($demoStatus) {
+            abort(404);
             exit;
         }
 
@@ -119,38 +112,36 @@ class RegisterController extends Controller
     public function showRegistrationForm($lang = null)
     {
         $page = PageService::getFirstPageByType('register');
-        if(!$page){
+        if (! $page) {
             Log::error('if you want this page you have to add page in type login');
             abort(404);
         }
 
-        if(empty($lang)){
+        if (empty($lang)) {
             $lang = $this->langs[0];
         }
 
-        App::setLocale($lang);      
+        App::setLocale($lang);
 
         /*
-        $data = [ 
+        $data = [
             'view' => 'register',
-            'menus' => $this->menus,  
-            'page' => $page, 
-            'lang' => $lang, 
+            'menus' => $this->menus,
+            'page' => $page,
+            'lang' => $lang,
             'langs' => $this->langs,
             'page_title' => $page->translatesByColumnAndLang( 'title', $lang ) ?? config('app.name', 'cmsRS'),
             'seo_description' =>  $page->translatesByColumnAndLang( 'description', $lang ) ?? config('app.name', 'cmsRS')
         ];
-        */      
+        */
 
-        $data = $page->getDataToView( $page, [
+        $data = $page->getDataToView($page, [
             'view' => 'register',
             'lang' => $lang,
             'langs' => $this->langs,
-            'menus' => $this->menus
+            'menus' => $this->menus,
         ]);
-
 
         return view('auth.register', $data);
     }
-
 }

@@ -2,104 +2,105 @@
 
 namespace App\Services\Cmsrs;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use App\Models\Cmsrs\Translate;
 use App\Models\Cmsrs\Page;
+use App\Models\Cmsrs\Translate;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class PageService extends BaseService
 {
-
     private $translate;
+
     private $content;
+
     public $pageFields;
     //private $langs;
 
-
-    public function __construct(array $attributes = array())
+    public function __construct(array $attributes = [])
     {
         $this->pageFields = [
-          'id',
-          'published',
-          'commented',
-          'after_login',
-          'position',
-          'type',
-          'menu_id',
-          'page_id'
-      ];
-  
+            'id',
+            'published',
+            'commented',
+            'after_login',
+            'position',
+            'type',
+            'menu_id',
+            'page_id',
+        ];
+
         $this->translate = new TranslateService;
         $this->content = new ContentService;
         //$this->langs = $this->getArrLangs();
     }
 
-    public function getPageDataByShortTitleCache( $shortTitle, $data = 'content',  $lang = null )
+    public function getPageDataByShortTitleCache($shortTitle, $data = 'content', $lang = null)
     {
-        if( empty($lang) ){
+        if (empty($lang)) {
             $lang = ConfigService::getDefaultLang();
         }
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
-            $ret = cache()->remember('page_by_short_title_'.$data.'_'.Str::slug($shortTitle, "_").'_'.$lang, Carbon::now()->addYear(1), function () use ($shortTitle, $data, $lang) {
-                return $this->getPageDataByShortTitle( $shortTitle, $data, $lang );
+            $ret = cache()->remember('page_by_short_title_'.$data.'_'.Str::slug($shortTitle, '_').'_'.$lang, Carbon::now()->addYear(1), function () use ($shortTitle, $data, $lang) {
+                return $this->getPageDataByShortTitle($shortTitle, $data, $lang);
             });
         } else {
-            $ret = $this->getPageDataByShortTitle( $shortTitle, $data, $lang );
+            $ret = $this->getPageDataByShortTitle($shortTitle, $data, $lang);
         }
 
         return $ret;
     }
 
-    public function getPageDataByShortTitle( $shortTitle, $data = 'content',  $lang = null )
+    public function getPageDataByShortTitle($shortTitle, $data = 'content', $lang = null)
     {
-        if( !in_array( $data, ['content', 'title', 'images', 'url'] ) ){
-            throw new \Exception("second param is: content title images and url allowed, but now is: ".$data);
+        if (! in_array($data, ['content', 'title', 'images', 'url'])) {
+            throw new \Exception('second param is: content title images and url allowed, but now is: '.$data);
         }
 
-        if( empty($lang) ){
+        if (empty($lang)) {
             $lang = ConfigService::getDefaultLang();
         }
 
         $page = $this->getPageByShortTitle($shortTitle);
 
-	if( empty($page) ){
-	    return false;
-	}
+        if (empty($page)) {
+            return false;
+        }
 
-        if( 'url' == $data ){
+        if ($data == 'url') {
             return $this->getUrl($page, $lang);
         }
-        
+
         $pageData = $this->getAllPagesWithImagesOneItem($page);
 
         $dataByLang = empty($pageData[$data]) ? '' : $pageData[$data];
         if ($data == 'images') {
             return $dataByLang;
         }
-        return empty($dataByLang[$lang]) ? '' : $dataByLang[$lang];
-    }   
 
+        return empty($dataByLang[$lang]) ? '' : $dataByLang[$lang];
+    }
 
     private function getPageByShortTitle($shortTitle)
     {
-        $translate = Translate::where('value', '=', $shortTitle)->where('column', '=', 'short_title' )->first();  //where('lang', '=', $defaultLang )->first();
-        if( empty($translate) ){
+        $translate = Translate::where('value', '=', $shortTitle)->where('column', '=', 'short_title')->first();  //where('lang', '=', $defaultLang )->first();
+        if (empty($translate)) {
             return false;
         }
 
         //->where('type', '=', 'inner') //todo why is this condition ? 'published', '=', 1 - is it make sense (see inner page post:/api/pages)? see test: it_will_get_data_page_by_short_title
-        $page = $translate->page()->where('published', '=', 1)->first(); 
-        if( empty($page) ){
+        $page = $translate->page()->where('published', '=', 1)->first();
+        if (empty($page)) {
             return false;
         }
+
         return $page;
     }
 
-    public function getContentInnerPageByIdCache( $pageId, $lang = null )
+    public function getContentInnerPageByIdCache($pageId, $lang = null)
     {
-        if( empty($lang) ){
+        if (empty($lang)) {
             $lang = ConfigService::getDefaultLang();
         }
 
@@ -118,67 +119,65 @@ class PageService extends BaseService
     private function getContentInnerPageByPageIdAndLang($pageId, $lang)
     {
         $page = Page::findOrFail($pageId);
-        
-        $contents = $page->contents->pluck('value', 'lang')->toArray() ;
 
-        return  empty($contents[$lang]) ? '' : $contents[$lang];
+        $contents = $page->contents->pluck('value', 'lang')->toArray();
+
+        return empty($contents[$lang]) ? '' : $contents[$lang];
     }
 
     public function setTranslate($objTranslate)
     {
-        if (!empty($objTranslate)) {
+        if (! empty($objTranslate)) {
             $this->translate = $objTranslate;
         }
     }
 
     public function setContent($objContent)
     {
-        if (!empty($objContent)) {
+        if (! empty($objContent)) {
             $this->content = $objContent;
         }
     }
 
-    public function getDataToView(Page $mPage, $dataIn )   //($pageOut, $lang)
+    public function getDataToView(Page $mPage, $dataIn)   //($pageOut, $lang)
     {
         $lang = $dataIn['lang'];
-        if( empty($lang) ){
-            throw new \Exception("Now lang in dataIn");
+        if (empty($lang)) {
+            throw new \Exception('Now lang in dataIn');
         }
 
-        $products = null;        
-        if ('shop' === $mPage->type) {
+        $products = null;
+        if ($mPage->type === 'shop') {
             $products = (new ProductService)->getProductsWithImagesByPage($mPage->id);
         }
 
         $data = [
             'pageService' => (new PageService),
-            'menus' =>  isSet($dataIn['menus']) ? $dataIn['menus'] : null,
+            'menus' => isset($dataIn['menus']) ? $dataIn['menus'] : null,
             'page' => $mPage,
-            'h1' => $this->translatesByColumnAndLang($mPage, 'title', $lang ),
-            'page_title' => $this->translatesByColumnAndLang($mPage, 'title', $lang ) ?? config('app.name', 'cmsRS'),
-            'seo_description' =>  $this->translatesByColumnAndLang($mPage, 'description', $lang ) ?? config('app.name', 'cmsRS'),
+            'h1' => $this->translatesByColumnAndLang($mPage, 'title', $lang),
+            'page_title' => $this->translatesByColumnAndLang($mPage, 'title', $lang) ?? config('app.name', 'cmsRS'),
+            'seo_description' => $this->translatesByColumnAndLang($mPage, 'description', $lang) ?? config('app.name', 'cmsRS'),
             'products' => $products,
             'lang' => $lang,
             'langs' => $dataIn['langs'],
             're_public' => env('GOOGLE_RECAPTCHA_PUBLIC', ''),
-            'view' => $this->getViewNameByType( $mPage )
+            'view' => $this->getViewNameByType($mPage),
         ];
 
-        return  array_merge($data, $dataIn);
+        return array_merge($data, $dataIn);
     }
-
-
 
     public static function getPageBySlug($menus, $menuSlug, $pageSlug, $lang) //todo - change static
     {
         $menuService = new MenuService; //todo
-        $pageService = new PageService;//todo
+        $pageService = new PageService; //todo
         $pageOut = null;
         foreach ($menus as $menu) {
             if ($menuSlug == $menuService->getSlugByLang($menu, $lang)) {
                 $objPagesPublishedAndAccess = $menuService->pagesPublishedAndAccess($menu);
-                if(1 == $objPagesPublishedAndAccess->count()){ //it is the case for pageSlug = null, 1 page in menu
-                    $pageOut =  $objPagesPublishedAndAccess->first();
+                if ($objPagesPublishedAndAccess->count() == 1) { //it is the case for pageSlug = null, 1 page in menu
+                    $pageOut = $objPagesPublishedAndAccess->first();
                     break;
                 }
 
@@ -191,6 +190,7 @@ class PageService extends BaseService
                 }
             }
         }
+
         return $pageOut;
     }
 
@@ -198,23 +198,23 @@ class PageService extends BaseService
     {
         $menuId = empty($data['menu_id']) ? 0 : $data['menu_id'];
 
-        $out = ['success' => true ];
-        $pages = (new PageService())->getAllPagesWithImages();
+        $out = ['success' => true];
+        $pages = (new PageService)->getAllPagesWithImages();
         foreach ($pages as $page) {
             $mId = empty($page['menu_id']) ? 0 : $page['menu_id'];
-            if ($page['id']  == $id) {
+            if ($page['id'] == $id) {
                 continue;
             }
-            if ($mId !=  $menuId) {
+            if ($mId != $menuId) {
                 continue;
             }
 
             foreach ($page['title'] as $lang => $title) {
                 if (empty($data['title']) || empty($data['title'][$lang])) {
-                    throw new \Exception("page title is empty - but is require");
+                    throw new \Exception('page title is empty - but is require');
                 }
-                $titleIn = Str::slug($data['title'][$lang], "-");
-                $t = Str::slug($title, "-");
+                $titleIn = Str::slug($data['title'][$lang], '-');
+                $t = Str::slug($title, '-');
                 if ($titleIn == $t) {
                     $out['success'] = false;
                     $out['error'] = "Duplicate title: $title ($lang)";
@@ -222,11 +222,9 @@ class PageService extends BaseService
                 }
             }
         }
-    
+
         return $out;
     }
-  
-
 
     public function getSlugByLang(Page $model, $lang)
     {
@@ -237,14 +235,14 @@ class PageService extends BaseService
         //   throw new \Exception("I cant create slug for page column: $column for lang: $lang, because value is empty");
         // }
 
-        return Str::slug($name, "-");
+        return Str::slug($name, '-');
     }
 
     public function getAllTranslate(Page $mPage)
     {
-        $pageId =$mPage->id;
+        $pageId = $mPage->id;
 
-        $isCache =  (new ConfigService)->isCacheEnable();
+        $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
             $ret = cache()->remember('pagetranslatepageid_'.$pageId, Carbon::now()->addYear(1), function () use ($mPage, $pageId) {
                 return $this->getTranslateMerge($mPage, $pageId);
@@ -255,18 +253,18 @@ class PageService extends BaseService
 
         return $ret;
     }
-    
+
     /**
      * todo refactor
      */
     public function getTranslateMerge(Page $mPage, $pageId)
     {
-        $translates = $mPage->translates()->where('page_id', $pageId)->get(['lang', 'column', 'value'])->toArray();//zmiana 1007
-        $contents = $mPage->contents()->where('page_id', $pageId)->get(['lang', 'column', 'value'])->toArray();//zmiana 1007
+        $translates = $mPage->translates()->where('page_id', $pageId)->get(['lang', 'column', 'value'])->toArray(); //zmiana 1007
+        $contents = $mPage->contents()->where('page_id', $pageId)->get(['lang', 'column', 'value'])->toArray(); //zmiana 1007
         $ret = array_merge($translates, $contents);
+
         return $ret;
     }
-
 
     public static function CreatePage($data)
     {
@@ -277,8 +275,9 @@ class PageService extends BaseService
 
         $page = Page::create($data);
         if (empty($page->id)) {
-            throw new \Exception("I cant get page id");
+            throw new \Exception('I cant get page id');
         }
+
         return $page;
     }
 
@@ -289,17 +288,17 @@ class PageService extends BaseService
     public function wrapCreate($data)
     {
         $page = PageService::CreatePage($data);
-        $this->createTranslate([ 'page_id' => $page->id, 'data' => $data ]);
+        $this->createTranslate(['page_id' => $page->id, 'data' => $data]);
 
-        if (!empty($data['images']) && is_array($data['images'])) {
-            $objImage = new ImageService();
+        if (! empty($data['images']) && is_array($data['images'])) {
+            $objImage = new ImageService;
             $objImage->setTranslate($this->translate);
             $objImage->createImages($data['images'], 'page', $page->id);
         }
 
         return $page;
     }
-    
+
     public function createTranslate($dd, $create = true)
     {
         $this->translate->wrapCreate($dd, $create);
@@ -309,10 +308,11 @@ class PageService extends BaseService
     public function wrapUpdate(Page $mPage, $data) //zmiana_1007
     {
         $mPage->update($data);
-        $this->createTranslate([ 'page_id' => $mPage->id, 'data' => $data ], false);
+        $this->createTranslate(['page_id' => $mPage->id, 'data' => $data], false);
+
         return true;
     }
-    
+
     public function getFooterPages($lang)
     {
         $privacyPolicy = PageService::getFirstPageByType('privacy_policy');
@@ -321,31 +321,28 @@ class PageService extends BaseService
         $out = [];
         $policyUrl = null;
         $policyTitle = null;
-        if (!empty($privacyPolicy)) {
+        if (! empty($privacyPolicy)) {
             $policyUrl = $this->getUrl($privacyPolicy, $lang);
-            $policyTitle =  $this->translatesByColumnAndLang($privacyPolicy, 'title', $lang);
+            $policyTitle = $this->translatesByColumnAndLang($privacyPolicy, 'title', $lang);
         }
 
         $contactUrl = null;
         $contactTitle = null;
-        if (!empty($contact)) {
+        if (! empty($contact)) {
 
             $contactUrl = $this->getUrl($contact, $lang);
             $contactTitle = $this->translatesByColumnAndLang($contact, 'title', $lang);
         }
 
         $out['policyUrl'] = $policyUrl;
-        $out['policyTitle'] =  $policyTitle;
-        $out['contactUrl'] =  $contactUrl;
-        $out['contactTitle'] =  $contactTitle;
-    
+        $out['policyTitle'] = $policyTitle;
+        $out['contactUrl'] = $contactUrl;
+        $out['contactTitle'] = $contactTitle;
+
         return $out;
     }
 
-
-    
-
-    public function getViewNameByType( $mPage )
+    public function getViewNameByType($mPage)
     {
         $type = $mPage->type;
         if ($type == 'projects') {
@@ -373,19 +370,21 @@ class PageService extends BaseService
         } else {
             $view = 'cms';
         }
+
         return $view;
     }
 
     public function getUrl(Page $mPage, $lang, $urlParam = null)
     {
         $type = $mPage->type;
-        if( 'inner' == $type ){
+        if ($type == 'inner') {
             return false;
-        }elseif ('main_page' == $type) {
+        } elseif ($type == 'main_page') {
             return $this->getMainUrl($lang);
-        } elseif ( ('login' == $type) || ('checkout' == $type) || ('register' == $type) || ('home' == $type) || ($type == 'shoppingsuccess') ||  ($type == 'search') ||  ($type == 'forgot')  ) {
+        } elseif (($type == 'login') || ($type == 'checkout') || ($type == 'register') || ($type == 'home') || ($type == 'shoppingsuccess') || ($type == 'search') || ($type == 'forgot')) {
             return $this->getTypeUrl($type, $lang);
-        } 
+        }
+
         //elseif ('privacy_policy' == $this->type) {
         //    return $this->getIndependentUrl($lang);
         //}
@@ -394,10 +393,10 @@ class PageService extends BaseService
 
     private function getTypeUrl($type, $lang)
     {
-        $url = "/".$type;
+        $url = '/'.$type;
         $langs = ConfigService::arrGetLangsEnv();
-        if (1 < count($langs)) {
-            $url = "/".$lang.$url;
+        if (count($langs) > 1) {
+            $url = '/'.$lang.$url;
         }
 
         return $url;
@@ -407,19 +406,21 @@ class PageService extends BaseService
     {
         $menu = $mPage->menu()->get()->first();
 
-        if( empty($menu) ){
+        if (empty($menu)) {
             return null;
         }
-        return  (new MenuService)->getSlugByLang($menu, $lang);    
+
+        return (new MenuService)->getSlugByLang($menu, $lang);
     }
 
     public function getNumPagesBelongsToThisMenu(Page $mPage)
     {
         $menu = $mPage->menu()->get()->first();
-        if( empty($menu) ){
+        if (empty($menu)) {
             return null;
         }
-        return  (new MenuService)->pagesPublishedAndAccess($menu)->count();        
+
+        return (new MenuService)->pagesPublishedAndAccess($menu)->count();
     }
 
     public function getNumPagesBelongsToThisMenuCache(Page $mPage)
@@ -427,19 +428,20 @@ class PageService extends BaseService
         $pageId = $mPage->id;
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
-            $countPages = cache()->remember('countpagesinthismenu_'.$pageId, Carbon::now()->addYear(1), function ()  use ($mPage) { 
+            $countPages = cache()->remember('countpagesinthismenu_'.$pageId, Carbon::now()->addYear(1), function () use ($mPage) {
                 return $this->getNumPagesBelongsToThisMenu($mPage);
             });
         } else {
             $countPages = $this->getNumPagesBelongsToThisMenu($mPage);
         }
+
         return $countPages;
     }
-    
+
     private function getMenuSlugByLangCache(Page $mPage, $lang)
     {
         $pageId = $mPage->id;
-        $isCache =  (new ConfigService)->isCacheEnable();
+        $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
             $menuSlug = cache()->remember('menusluglang_'.$lang.'_'.$pageId, Carbon::now()->addYear(1), function () use ($mPage, $lang) {
                 return $this->getMenuSlugByLang($mPage, $lang);
@@ -447,30 +449,31 @@ class PageService extends BaseService
         } else {
             $menuSlug = $this->getMenuSlugByLang($mPage, $lang);
         }
+
         return $menuSlug;
     }
-    
+
     private function getCmsUrl(Page $mPage, $lang, $urlParam = null)
     {
         $menuSlug = $this->getMenuSlugByLangCache($mPage, $lang);
 
-        if(empty($menuSlug)){
+        if (empty($menuSlug)) {
             return $this->getIndependentUrl($mPage, $lang);
         }
 
         $countPages = $this->getNumPagesBelongsToThisMenuCache($mPage);
-        if( (1 == $countPages) &&  ('shop' != $mPage->type  )  ){
-            $url = "/".Page::PREFIX_CMS_ONE_PAGE_IN_MENU_URL."/".$menuSlug;
-        }else{
-            $url = "/".Page::PREFIX_CMS_URL."/".$menuSlug."/".$this->getSlugByLang($mPage, $lang);
+        if (($countPages == 1) && ($mPage->type != 'shop')) {
+            $url = '/'.Page::PREFIX_CMS_ONE_PAGE_IN_MENU_URL.'/'.$menuSlug;
+        } else {
+            $url = '/'.Page::PREFIX_CMS_URL.'/'.$menuSlug.'/'.$this->getSlugByLang($mPage, $lang);
         }
-        if($urlParam){
+        if ($urlParam) {
             //$url = $url."/".Str::slug($urlParam, '-');
-            $url = $url."/".$urlParam;            
+            $url = $url.'/'.$urlParam;
         }
         $langs = ConfigService::arrGetLangsEnv();
-        if (1 < count($langs)) {
-            $url = "/".$lang.$url;
+        if (count($langs) > 1) {
+            $url = '/'.$lang.$url;
         }
 
         return $url;
@@ -482,19 +485,20 @@ class PageService extends BaseService
         array_shift($langs); //after this langs will be changed. It has rest of langs without first one.
 
         if (empty($langs)) {
-            $url = "/";
+            $url = '/';
         } else {
-            $url = in_array($lang, $langs) ? "/".$lang : "/";
+            $url = in_array($lang, $langs) ? '/'.$lang : '/';
         }
+
         return $url;
     }
 
     private function getIndependentUrl(Page $mPage, $lang)
     {
-        $url = "/".Page::PREFIX_IN_URL."/".$this->getSlugByLang($mPage, $lang);
+        $url = '/'.Page::PREFIX_IN_URL.'/'.$this->getSlugByLang($mPage, $lang);
         $langs = ConfigService::arrGetLangsEnv();
-        if (1 < count($langs)) {
-            $url = "/".$lang.$url;
+        if (count($langs) > 1) {
+            $url = '/'.$lang.$url;
         }
 
         return $url;
@@ -511,18 +515,19 @@ class PageService extends BaseService
 
     public function checkAuth(Page $mPage)
     {
-        if ($mPage->after_login && !(Auth::check())) {
+        if ($mPage->after_login && ! (Auth::check())) {
             return false;
         }
+
         return true;
     }
-    
+
     public static function getFirstPageByType($type)
     {
-        $isCache =  (new ConfigService)->isCacheEnable();
+        $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
             $ret = cache()->remember('pagebytype_'.$type, Carbon::now()->addYear(1), function () use ($type) {
-                return  Page::where('type', '=', $type)->where('published', '=', 1)->get()->first();
+                return Page::where('type', '=', $type)->where('published', '=', 1)->get()->first();
             });
         } else {
             $ret = Page::where('type', '=', $type)->where('published', '=', 1)->get()->first();
@@ -542,13 +547,14 @@ class PageService extends BaseService
             if ($create) {
                 $p = PageService::getMainPage();
                 if ($p) {
-                    throw new \Exception("Two main page not allowed");
+                    throw new \Exception('Two main page not allowed');
                 }
             }
 
             $data['menu_id'] = null;
             $data['page_id'] = null;
         }
+
         return $data;
     }
 
@@ -557,28 +563,28 @@ class PageService extends BaseService
      */
     public static function validateParentPublished($data)
     {
-        if (!empty($data['page_id'])) {
+        if (! empty($data['page_id'])) {
             $p = Page::findOrFail($data['page_id']);
-            if (0 == $p->published) {
+            if ($p->published == 0) {
                 $data['published'] = 0;
             }
         }
+
         return $data;
     }
-    
 
-    
-    public function arrImages(Page $mPage,  $lang)
+    public function arrImages(Page $mPage, $lang)
     {
         $out = [];
-        $imageService = new ImageService();
+        $imageService = new ImageService;
         foreach ($mPage->images as $image) {
             $item = $imageService->getAllImage($image, false);
             $item['id'] = $image->id;
             $item['alt'] = $imageService->getAltImg($image);
-            $item['altlang'] = !empty($item['alt'][$lang]) ? $item['alt'][$lang] : ''; //it neeeds to javascript - to modal window in gallery
+            $item['altlang'] = ! empty($item['alt'][$lang]) ? $item['alt'][$lang] : ''; //it neeeds to javascript - to modal window in gallery
             $out[] = $item;
         }
+
         return $out;
     }
 
@@ -586,13 +592,14 @@ class PageService extends BaseService
     {
         $langs = $this->getArrLangs();
 
-        if (!in_array($lang, $langs)) {
+        if (! in_array($lang, $langs)) {
             throw new \Exception("Problem with langs - lang: $lang no exist");
         }
 
-        $p['id'] =$mPage->id;
-        $p['type'] =$mPage->type;
+        $p['id'] = $mPage->id;
+        $p['type'] = $mPage->type;
         $p['images'] = $this->arrImages($mPage, $lang);
+
         return $p;
     }
 
@@ -608,24 +615,22 @@ class PageService extends BaseService
         foreach ($page['contents'] as $translate) {
             $out[$translate['column']][$translate['lang']] = $translate['value'];
         }
+
         return $out;
     }
 
-
     public function getAllPagesWithImagesOneItem(Page $mPage, ?string $simple = null)
     {
-        $page = (new Page)->where( 'id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->get($this->pageFields)->first()->toArray();        
+        $page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->get($this->pageFields)->first()->toArray();
 
         //dd($page);
         $formatPage = $this->getPageDataFormat($page);
-        if(!$simple){
+        if (! $simple) {
             $formatPage['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
         }
-        
 
         return $formatPage;
     }
-
 
     /*
     public function getPageWithImagesByIdCache($pageId)
@@ -643,19 +648,19 @@ class PageService extends BaseService
     }
 
     public function getPageWithImagesById($pageId)
-    {                
+    {
         $page = Page::with(['translates', 'contents'])->where('id', $pageId)->where('published', true)->where('after_login', false)->orderBy('position', 'asc')->get($this->pageFields)->first(); //->toSql(); ///toArray();
 
         $out = [];
         if($page){
             $page = $page->toArray();
             $out = $this->getPageDataFormat($page);
-            $out['images'] = Image::getImagesAndThumbsByTypeAndRefId('page', $page['id']);    
+            $out['images'] = Image::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
         }
 
         return $out;
-    } 
-    */   
+    }
+    */
 
     /**
      * todo
@@ -663,7 +668,7 @@ class PageService extends BaseService
      */
     /*
     public function getFirstPageWithImagesForGuestCache($type)
-    {        
+    {
         $isCache =  (new ConfigService)->isCacheEnable();
         if ($isCache) {
             $ret = cache()->remember('page_with_images_by_type_'.$type, Carbon::now()->addYear(1), function () use ($type) {
@@ -678,22 +683,22 @@ class PageService extends BaseService
     */
 
     public function getFirstPageWithImagesForGuest($type)
-    {        
-        if ( !in_array( $type, ConfigService::arrGetPageTypes() )  ) {
-            throw new \Exception("Wrong type : ".$type);
+    {
+        if (! in_array($type, ConfigService::arrGetPageTypes())) {
+            throw new \Exception('Wrong type : '.$type);
         }
-        
+
         $page = Page::with(['translates', 'contents'])->where('type', $type)->where('published', true)->where('after_login', false)->orderBy('position', 'asc')->get($this->pageFields)->first(); //->toSql(); ///toArray();
 
         $out = [];
-        if($page){
+        if ($page) {
             $page = $page->toArray();
             $out = $this->getPageDataFormat($page);
-            $out['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('page', $page['id']);    
+            $out['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
         }
 
         return $out;
-    }    
+    }
 
     public function getAllPagesWithImages($type = null)
     {
@@ -702,7 +707,6 @@ class PageService extends BaseService
         } else {
             $pages = Page::with(['translates', 'contents'])->orderBy('position', 'asc')->get($this->pageFields)->toArray();
         }
-
 
         $i = 0;
         $out = [];
@@ -718,7 +722,7 @@ class PageService extends BaseService
     /**
      * We can delete this method
      * old method: getPageDataByShortTitleCache
-     * 
+     *
      * this method is tested
      * this method is writeln by new manner, and gets many pages, not one (but i use getPageDataByShortTitleCache this method instead)
      * don't use this method
@@ -731,15 +735,14 @@ class PageService extends BaseService
         $pages = Page::with(['translates', 'contents'])
             ->where('published', true)
             ->where('after_login', false)
-            ->whereHas('translates', function($query) use ($shortTitle, $lang) {
+            ->whereHas('translates', function ($query) use ($shortTitle, $lang) {
                 $query->where('lang', $lang)
                     ->where('column', 'short_title')
                     ->where('value', $shortTitle);
             })
             ->orderBy('position', 'asc')
             ->get($this->pageFields)
-            ->toArray()
-            ;
+            ->toArray();
 
         $i = 0;
         $out = [];
@@ -754,7 +757,7 @@ class PageService extends BaseService
 
     public function delete(Page $mPage)
     {
-        $imageService = new ImageService();
+        $imageService = new ImageService;
         foreach ($mPage->images()->get() as $img) {
             $imageService->delete($img);
         }
@@ -766,22 +769,21 @@ class PageService extends BaseService
     {
         if (empty($menuId)) {
             $page = Page::query()
-                  ->whereNull('menu_id')
-                  ->orderBy('position', 'desc')
-                  ->first()
-                  ;
+                ->whereNull('menu_id')
+                ->orderBy('position', 'desc')
+                ->first();
         } else {
             $page = Page::query()
-                  ->where('menu_id', '=', $menuId)
-                  ->orderBy('position', 'desc')
-                  ->first()
-                  ;
+                ->where('menu_id', '=', $menuId)
+                ->orderBy('position', 'desc')
+                ->first();
         }
 
-        if (!$page) {
+        if (! $page) {
             return 1;
         }
-        return  $page->position+1;
+
+        return $page->position + 1;
     }
 
     public static function getPagesByMenuId($menuId, $pageId)
@@ -789,39 +791,35 @@ class PageService extends BaseService
         $page = [];
         if (empty($menuId)) {
             $page = Page::query()
-                  ->whereNull('menu_id')
-                  ->orderBy('position', 'asc')
-                  ->get()
-                  ;
-        } elseif (!empty($menuId) && empty($pageId)) {
+                ->whereNull('menu_id')
+                ->orderBy('position', 'asc')
+                ->get();
+        } elseif (! empty($menuId) && empty($pageId)) {
             $page = Page::query()
-                  ->where('menu_id', '=', $menuId)
-                  ->whereNull('page_id')
-                  ->orderBy('position', 'asc')
-                  ->get()
-                  ;
-        } elseif (!empty($menuId) && !empty($pageId)) {
+                ->where('menu_id', '=', $menuId)
+                ->whereNull('page_id')
+                ->orderBy('position', 'asc')
+                ->get();
+        } elseif (! empty($menuId) && ! empty($pageId)) {
             $page = Page::query()
-                  ->where('menu_id', '=', $menuId)
-                  ->where('page_id', '=', $pageId)
-                  ->orderBy('position', 'asc')
-                  ->get()
-                  ;
+                ->where('menu_id', '=', $menuId)
+                ->where('page_id', '=', $pageId)
+                ->orderBy('position', 'asc')
+                ->get();
         }
+
         return $page;
     }
-
 
     public static function swapPosition($direction, $id)
     {
         $page = Page::find($id);
-        if (!$page) {
+        if (! $page) {
             return false;
         }
         $menuId = $page->menu_id;
         $pageId = $page->page_id;
         $pages = PageService::getPagesByMenuId($menuId, $pageId);
-
 
         $countPages = count($pages);
         if ($countPages < 2) {
@@ -830,24 +828,25 @@ class PageService extends BaseService
 
         foreach ($pages as $key => $p) {
             if (($p->id == $id)) {
-                if ($direction === "up") {
-                    $swapKey = ($key === 0) ?  $countPages - 1 : $key - 1;
+                if ($direction === 'up') {
+                    $swapKey = ($key === 0) ? $countPages - 1 : $key - 1;
                 }
 
-                if ($direction === "down") {
+                if ($direction === 'down') {
                     $swapKey = ($key === ($countPages - 1)) ? 0 : $key + 1;
                 }
 
                 $positionKey = $p->position;
 
-                Page::where('id', $p->id)->update([ 'position' => $pages[$swapKey]->position ]);
+                Page::where('id', $p->id)->update(['position' => $pages[$swapKey]->position]);
 
-                Page::where('id', $pages[$swapKey]->id)->update(['position' => $positionKey ]);
+                Page::where('id', $pages[$swapKey]->id)->update(['position' => $positionKey]);
                 //$obj2 = Page::find($pages[$swapKey]->id);
                 //$obj2->position = 44;  //$positionKey;
                 //$obj2->save();
             }
         }
+
         return true;
     }
 }

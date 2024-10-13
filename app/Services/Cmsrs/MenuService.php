@@ -1,24 +1,24 @@
 <?php
+
 namespace App\Services\Cmsrs;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
 use App\Models\Cmsrs\Menu;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class MenuService extends BaseService
 {
     private $translate;
 
-
-    public function __construct(array $attributes = array())
+    public function __construct(array $attributes = [])
     {
         $this->translate = new TranslateService;
     }
 
     public function setTranslate($objTranslate)
     {
-        if (!empty($objTranslate)) {
+        if (! empty($objTranslate)) {
             $this->translate = $objTranslate;
         }
     }
@@ -43,7 +43,7 @@ class MenuService extends BaseService
 
         $menu = Menu::create($data);
         if (empty($menu->id)) {
-            throw new \Exception("I cant get menu id");
+            throw new \Exception('I cant get menu id');
         }
 
         return $menu;
@@ -52,7 +52,8 @@ class MenuService extends BaseService
     public function wrapUpdate(Menu $mMenu, $data)
     {
         $mMenu->update($data);
-        $this->translate->wrapCreate([ 'menu_id' => $mMenu->id, 'data' => $data ], false);
+        $this->translate->wrapCreate(['menu_id' => $mMenu->id, 'data' => $data], false);
+
         return true;
     }
 
@@ -63,17 +64,17 @@ class MenuService extends BaseService
     public function wrapCreate($data)
     {
         $menu = MenuService::CreateMenu($data);
-        $this->translate->wrapCreate([ 'menu_id' => $menu->id, 'data' => $data ], true);
+        $this->translate->wrapCreate(['menu_id' => $menu->id, 'data' => $data], true);
 
         return $menu;
     }
-    
+
     public function getSlugByLang(Menu $model, $lang)
     {
         $column = 'name';
         $name = $this->translatesByColumnAndLang($model, $column, $lang);
 
-        return Str::slug($name, "-");
+        return Str::slug($name, '-');
     }
 
     public function getAllTranslate(Menu $mMenu)
@@ -82,17 +83,19 @@ class MenuService extends BaseService
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
             $ret = cache()->remember('menutranslatemenuid_'.$menuId, Carbon::now()->addYear(1), function () use ($mMenu, $menuId) {
-                return  $mMenu->translates()->where('menu_id', $menuId)->get(['lang', 'column', 'value'])->toArray();
+                return $mMenu->translates()->where('menu_id', $menuId)->get(['lang', 'column', 'value'])->toArray();
             });
         } else {
-            $ret = $mMenu->translates()->where('menu_id', $menuId)->get(['lang', 'column', 'value'])->toArray();            
+            $ret = $mMenu->translates()->where('menu_id', $menuId)->get(['lang', 'column', 'value'])->toArray();
         }
+
         return $ret;
     }
 
-    public function pagesPublished(Menu $mMenu) 
+    public function pagesPublished(Menu $mMenu)
     {
         $pages = $mMenu->pages()->where('published', '=', 1)->orderBy('position', 'asc')->get();
+
         return $pages;
     }
 
@@ -101,7 +104,7 @@ class MenuService extends BaseService
         if (Auth::check()) {
             $pages = $mMenu->pages()->where('published', '=', 1)->orderBy('position', 'asc');
         } else {
-            $pages =  $mMenu->pages()->where('published', '=', 1)->where('after_login', '=', 0)->orderBy('position', 'asc');
+            $pages = $mMenu->pages()->where('published', '=', 1)->where('after_login', '=', 0)->orderBy('position', 'asc');
         }
 
         return $pages;
@@ -109,19 +112,18 @@ class MenuService extends BaseService
 
     public function pagesPublishedTree($pagesByMenu)
     {
-        $tree = array();
+        $tree = [];
         foreach ($pagesByMenu as $page) {
             if (empty($page->page_id)) {
                 $tree[$page->id] = $page;
             }
         }
 
-
         foreach ($pagesByMenu as $page) {
-            if (!empty($page->page_id)) {
+            if (! empty($page->page_id)) {
                 $children = empty($tree[$page->page_id]['children']) ? [] : $tree[$page->page_id]['children'];
                 array_push($children, $page);
-                if (!empty($tree[$page->page_id])) {
+                if (! empty($tree[$page->page_id])) {
                     $tree[$page->page_id]->setAttribute('children', $children);
                 }
             }
@@ -132,7 +134,7 @@ class MenuService extends BaseService
 
     public static function getAllMenus()
     {
-        $menus =  Menu::with('translates')->orderBy('position', 'asc')->get()->toArray();
+        $menus = Menu::with('translates')->orderBy('position', 'asc')->get()->toArray();
 
         $out = [];
         $i = 0;
@@ -150,18 +152,18 @@ class MenuService extends BaseService
 
     public static function checkIsDuplicateName($data, $id = '')
     {
-        $out = ['success' => true ];
+        $out = ['success' => true];
         $menus = MenuService::getAllMenus();
         foreach ($menus as $menu) {
-            if ($menu['id']  == $id) {
+            if ($menu['id'] == $id) {
                 continue;
             }
             foreach ($menu['name'] as $lang => $name) {
                 if (empty($data['name']) || empty($data['name'][$lang])) {
-                    throw new \Exception("menu name is empty - but is require");
+                    throw new \Exception('menu name is empty - but is require');
                 }
-                $nameIn = Str::slug($data['name'][$lang], "-");
-                $n = Str::slug($name, "-");
+                $nameIn = Str::slug($data['name'][$lang], '-');
+                $n = Str::slug($name, '-');
                 if ($nameIn == $n) {
                     $out['success'] = false;
                     $out['error'] = "Duplicate menu: $name ($lang)";
@@ -169,28 +171,28 @@ class MenuService extends BaseService
                 }
             }
         }
+
         return $out;
     }
 
     public static function getNextPosition()
     {
         $menu = Menu::query()
-                ->orderBy('position', 'desc')
-                ->first()
-                ;
+            ->orderBy('position', 'desc')
+            ->first();
 
-        if (!$menu) {
+        if (! $menu) {
             return 1;
         }
-        return  $menu->position+1;
+
+        return $menu->position + 1;
     }
 
     public static function swapPosition($direction, $id)
     {
         $menus = Menu::query()
-                ->orderBy('position', 'asc')
-                ->get()
-                ;
+            ->orderBy('position', 'asc')
+            ->get();
 
         $countMenus = count($menus);
         if ($countMenus < 2) {
@@ -199,11 +201,11 @@ class MenuService extends BaseService
 
         foreach ($menus as $key => $menu) {
             if (($menu->id == $id)) {
-                if ($direction === "up") {
-                    $swapKey = ($key === 0) ?  $countMenus - 1 : $key - 1;
+                if ($direction === 'up') {
+                    $swapKey = ($key === 0) ? $countMenus - 1 : $key - 1;
                 }
 
-                if ($direction === "down") {
+                if ($direction === 'down') {
                     $swapKey = ($key === ($countMenus - 1)) ? 0 : $key + 1;
                 }
 
@@ -214,6 +216,7 @@ class MenuService extends BaseService
                 $menus[$swapKey]->save();
             }
         }
+
         return true;
     }
 }

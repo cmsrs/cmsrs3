@@ -33,7 +33,6 @@ class CreateCheckoutsTable extends Migration
             $table->integer('price_deliver')->nullable();
             $table->integer('price_total')->nullable();
             $table->integer('price_total_add_deliver')->nullable();
-            
 
             $table->timestamps();
         });

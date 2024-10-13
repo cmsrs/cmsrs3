@@ -1,12 +1,9 @@
 <?php
+
 namespace Tests\Feature\Services\Cmsrs;
 
-use App\Models\Cmsrs\Page;
-use App\Services\Cmsrs\PageService;
-
 use App\Models\Cmsrs\Menu;
-
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\Services\Cmsrs\PageService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CommentTest extends Base
@@ -14,11 +11,15 @@ class CommentTest extends Base
     use RefreshDatabase;
 
     private $name1;
+
     private $name2;
 
     private $testData;
+
     private $testPage;
+
     private $testMenu;
+
     private $menuId;
 
     private $pageId;
@@ -27,25 +28,24 @@ class CommentTest extends Base
     {
         putenv('LANGS="en"');
         putenv('API_SECRET=""');
-        putenv('CURRENCY="USD"');       
+        putenv('CURRENCY="USD"');
         putenv('CACHE_ENABLE=false');
-        putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"'); 
-        putenv('DEMO_STATUS=false');    
-        putenv('IS_SHOP=true');        
+        putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');
+        putenv('DEMO_STATUS=false');
+        putenv('IS_SHOP=true');
 
         parent::setUp();
         $this->createUser();
 
         $this->testMenu =
             [
-                'name'     => 'books',
-                'position' => 77
+                'name' => 'books',
+                'position' => 77,
             ];
 
         $menu = new Menu($this->testMenu);
         $save = $menu->save();
         $this->assertTrue($save);
-
 
         $menuObj = $menu->all()->first();
 
@@ -55,19 +55,19 @@ class CommentTest extends Base
 
         $this->testPage =
         [
-            'title' =>  ['en' => 'programmer'],
-            'short_title' =>  ['en' =>'page1' ],
+            'title' => ['en' => 'programmer'],
+            'short_title' => ['en' => 'page1'],
             'published' => 1,
             'commented' => 1,
             'position' => 7,
             'type' => $type,
-            'content' => ['en' =>'content test133445' ],
-            'menu_id' => $this->menuId
+            'content' => ['en' => 'content test133445'],
+            'menu_id' => $this->menuId,
         ];
 
         $objPage = (new PageService)->wrapCreate($this->testPage);
 
-        $res = $this->get('api/pages/type/' . $type . '?token=' . $this->token);
+        $res = $this->get('api/pages/type/'.$type.'?token='.$this->token);
 
         $data = $res->getData();
         $this->pageId = $data->data[0]->id;
@@ -83,37 +83,35 @@ class CommentTest extends Base
 
     public function test_it_will_deny_create_comment_fake_page()
     {
-        $content = array(
-            'content' => 'test comment - test123 - fake page'
-        );
+        $content = [
+            'content' => 'test comment - test123 - fake page',
+        ];
 
-        $response = $this->post('api/comments/' . 134, $content);
+        $response = $this->post('api/comments/'. 134, $content);
         $response->assertStatus(404);
     }
 
     public function test_it_will_deny_create_comment_page_not_commented()
     {
-        $content = array(
-            'content' => 'test comment - test123 - deny'
-        );
+        $content = [
+            'content' => 'test comment - test123 - deny',
+        ];
 
         $this->testPage['commented'] = 0;
         $objPage = (new PageService)->wrapCreate($this->testPage);
         $this->assertNotEmpty($objPage->id);
 
-
-        $response = $this->post('api/comments/' . $objPage->id, $content);
+        $response = $this->post('api/comments/'.$objPage->id, $content);
         $response->assertStatus(404);
     }
 
-
     public function test_it_will_create_comment_docs()
     {
-        $content = array(
-            'content' => 'test comment - test123'
-        );
+        $content = [
+            'content' => 'test comment - test123',
+        ];
 
-        $response = $this->post('api/comments/' . $this->pageId, $content);
+        $response = $this->post('api/comments/'.$this->pageId, $content);
 
         $res = $response->getData();
         $this->assertTrue($res->success);
@@ -121,25 +119,23 @@ class CommentTest extends Base
 
     public function test_it_will_get_comment_docs()
     {
-        $content1 = array(
-            'content' => '111 test comment - test123'
-        );
+        $content1 = [
+            'content' => '111 test comment - test123',
+        ];
 
-        $res1 = $this->post('api/comments/' . $this->pageId, $content1);
+        $res1 = $this->post('api/comments/'.$this->pageId, $content1);
         $r1 = $res1->getData();
         $this->assertTrue($r1->success);
 
+        $content2 = [
+            'content' => '222 test comment - test123',
+        ];
 
-        $content2 = array(
-            'content' => '222 test comment - test123'
-        );
-
-        $res2 = $this->post('api/comments/' . $this->pageId, $content2);
+        $res2 = $this->post('api/comments/'.$this->pageId, $content2);
         $r2 = $res2->getData();
         $this->assertTrue($r2->success);
 
-
-        $response = $this->get('api/comments/' . $this->pageId);
+        $response = $this->get('api/comments/'.$this->pageId);
         $res = $response->getData();
 
         $this->assertTrue($res->success);

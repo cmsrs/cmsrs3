@@ -7,8 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Page extends Model
 {
     const PREFIX_CMS_URL = 'cms';
-    const PREFIX_CMS_ONE_PAGE_IN_MENU_URL = 'o';    
-    //const PREFIX_SHOP_URL = 'shop';    
+
+    const PREFIX_CMS_ONE_PAGE_IN_MENU_URL = 'o';
+
+    //const PREFIX_SHOP_URL = 'shop';
     const PREFIX_IN_URL = 'in'; //(in) independent
 
     //private $translate;
@@ -23,12 +25,12 @@ class Page extends Model
         'position',
         'type',
         'menu_id',
-        'page_id'
+        'page_id',
     ];
 
     public $requiredColumn = [
         'title',
-        'short_title'
+        'short_title',
     ];
 
     protected $casts = [
@@ -37,7 +39,7 @@ class Page extends Model
         'after_login' => 'integer',
         'position' => 'integer',
         'menu_id' => 'integer',
-        'page_id' => 'integer'
+        'page_id' => 'integer',
     ];
 
     public function menu()
@@ -50,7 +52,6 @@ class Page extends Model
         return $this->hasMany('App\Models\Cmsrs\Translate');
     }
 
-
     public function contents()
     {
         return $this->hasMany('App\Models\Cmsrs\Content');
@@ -60,5 +61,4 @@ class Page extends Model
     {
         return $this->hasMany('App\Models\Cmsrs\Image')->orderBy('position');
     }
-
 }

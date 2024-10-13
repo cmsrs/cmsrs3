@@ -6,16 +6,15 @@ header("Access-Control-Allow-Methods: OPTIONS, GET, PUT,  POST");
 header("Access-Control-Allow-Headers: Content-Type, Depth, User-Agent, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control");
  */
 
-//I dont't want do this in .htaccess because i have problem with my open source version 
-if( 'cmsrs.pl' ==  strtolower(  $_SERVER['SERVER_NAME'])  ){
-    header('Location: https://www.cmsrs.pl'.$_SERVER["REQUEST_URI"]); exit();
+//I dont't want do this in .htaccess because i have problem with my open source version
+if (strtolower($_SERVER['SERVER_NAME']) == 'cmsrs.pl') {
+    header('Location: https://www.cmsrs.pl'.$_SERVER['REQUEST_URI']);
+    exit();
 }
-
 
 /**
  * Laravel - A PHP Framework For Web Artisans
  *
- * @package  Laravel
  * @author   Taylor Otwell <taylor@laravel.com>
  */
 // die('=======');

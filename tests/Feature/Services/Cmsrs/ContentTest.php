@@ -2,33 +2,27 @@
 
 namespace Tests\Feature\Services\Cmsrs;
 
-use App\Services\Cmsrs\PageService;
-use App\Menu;
-use App\Image;
-
-use App\Models\Cmsrs\Translate;
-use App\Services\Cmsrs\TranslateService;
-
 use App\Models\Cmsrs\Content;
+use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\ContentService;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\Services\Cmsrs\PageService;
+use App\Services\Cmsrs\TranslateService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Str;
 
 class ContentTest extends Base
 {
     use RefreshDatabase;
-    public $numOfLangs;
 
+    public $numOfLangs;
 
     public function setUp(): void
     {
         putenv('LANGS="en,pl"');
         putenv('API_SECRET=""');
-        putenv('CURRENCY="USD"');        
+        putenv('CURRENCY="USD"');
         putenv('CACHE_ENABLE=false');
-        putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');   
-        putenv('DEMO_STATUS=false');          
+        putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');
+        putenv('DEMO_STATUS=false');
         putenv('IS_SHOP=true');
 
         parent::setUp();
@@ -62,7 +56,6 @@ class ContentTest extends Base
         $this->assertSame($arrLangTest, $arrLangs2);
     }
 
-
     /***********************/
     /**Content on the Page**/
     /***********************/
@@ -80,17 +73,14 @@ class ContentTest extends Base
     {
         $data = $this->getPageTestData();
 
-
         $translate = new TranslateService;
         $translate->setArrLangs(['pl']);
         $content = new ContentService;
         $content->setArrLangs(['pl']);
 
-        $objPage = new PageService();
+        $objPage = new PageService;
         $objPage->setTranslate($translate);
         $objPage->setContent($content);
-
-
 
         $page = $objPage->wrapCreate($data, $translate, $content);
         $this->assertNotEmpty($page->id);
@@ -103,7 +93,7 @@ class ContentTest extends Base
         $data1p = $this->getPageTestData();
         unset($data1p['content']);
 
-        $p = (new PageService())->wrapCreate($data1p);
+        $p = (new PageService)->wrapCreate($data1p);
         $this->assertEquals($this->numOfLangs, Content::query()->where('page_id', $p->id)->count());
     }
 
@@ -112,7 +102,7 @@ class ContentTest extends Base
         $data1p = $this->getPageTestData();
         $data1p['content'] = [];
 
-        $p = (new PageService())->wrapCreate($data1p);
+        $p = (new PageService)->wrapCreate($data1p);
         $this->assertEquals($this->numOfLangs, Content::query()->where('page_id', $p->id)->count());
     }
 
@@ -128,12 +118,12 @@ class ContentTest extends Base
     public function test_page_content_wrap_create_wrong()
     {
         $data1p = $this->getPageTestData();
-        
+
         $data1p['content'] = 'str fake';
         $data1p['description'] = 'strereer';
- 
+
         //$this->expectException(\Exception::class);
-        $p = (new PageService())->wrapCreate($data1p);
+        $p = (new PageService)->wrapCreate($data1p);
         $this->assertEquals($this->numOfLangs, Content::query()->where('page_id', $p->id)->where('column', 'content')->whereNull('value')->count());
         $this->assertEquals($this->numOfLangs, Translate::query()->where('page_id', $p->id)->where('column', 'description')->whereNull('value')->count());
     }

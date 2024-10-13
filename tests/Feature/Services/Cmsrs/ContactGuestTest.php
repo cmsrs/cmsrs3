@@ -5,9 +5,7 @@ namespace Tests\Feature\Services\Cmsrs;
 use App\Models\Cmsrs\Contact;
 //use App\Services\Cmsrs\ContactService;
 
-
 use Illuminate\Foundation\Testing\RefreshDatabase;
-
 use Tests\TestCase;
 
 class ContactGuestTest extends TestCase
@@ -18,36 +16,33 @@ class ContactGuestTest extends TestCase
     {
         putenv('LANGS="en,pl"');
         putenv('API_SECRET=""');
-        putenv('CURRENCY="USD"');        
+        putenv('CURRENCY="USD"');
         putenv('CACHE_ENABLE=false');
-        putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');  
-        putenv('DEMO_STATUS=false');     
-        putenv('IS_SHOP=true');      
+        putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');
+        putenv('DEMO_STATUS=false');
+        putenv('IS_SHOP=true');
 
         parent::setUp();
     }
 
     public function test_it_will_create_contact_docs()
     {
-        $content = array(
+        $content = [
             'email' => 'test@example.com',
-            'message' => 'test message - test123'
-        );
+            'message' => 'test message - test123',
+        ];
 
         $response = $this->post('api/contact/pl', $content);
         $res = $response->getData();
 
-
         $this->assertTrue($res->success);
         $msgPl = $res->message;
         $this->assertNotEmpty($msgPl);
-        
+
         $this->assertEquals(1, Contact::all()->count());
-        $item =  Contact::all()->first();
+        $item = Contact::all()->first();
         $this->assertEquals($content['email'], $item->email);
         $this->assertEquals($content['message'], $item->message);
-
-
 
         $response = $this->post('api/contact/en', $content);
         $res = $response->getData();
@@ -55,16 +50,16 @@ class ContactGuestTest extends TestCase
         $msgEn = $res->message;
         $this->assertNotEmpty($msgEn);
         $this->assertNotEquals($msgPl, $msgEn);
-        
+
         $this->assertEquals(2, Contact::all()->count());
     }
 
     public function test_it_will_create_contact_wron_lang()
     {
-        $content = array(
+        $content = [
             'email' => 'test@example.com',
-            'message' => 'test message - test123'
-        );
+            'message' => 'test message - test123',
+        ];
 
         $response = $this->post('api/contact/fr', $content);
         $response->assertStatus(404);
@@ -72,10 +67,10 @@ class ContactGuestTest extends TestCase
 
     public function test_it_will_create_contact_wrong_email()
     {
-        $content = array(
+        $content = [
             'email' => 'test@examplecom1',
-            'message' => 'test message - test123'
-        );
+            'message' => 'test message - test123',
+        ];
 
         $response = $this->post('api/contact/pl', $content);
 
@@ -86,10 +81,10 @@ class ContactGuestTest extends TestCase
 
     public function test_it_will_create_contact_wrong_email_empty()
     {
-        $content = array(
+        $content = [
             'email' => '',
-            'message' => 'test message - test123'
-        );
+            'message' => 'test message - test123',
+        ];
 
         $response = $this->post('api/contact/pl', $content);
 
@@ -100,10 +95,10 @@ class ContactGuestTest extends TestCase
 
     public function test_it_will_create_contact_wrong_message()
     {
-        $content = array(
+        $content = [
             'email' => 'test@example.com',
-            'message' => str_repeat("5", 501)
-        );
+            'message' => str_repeat('5', 501),
+        ];
 
         $response = $this->post('api/contact/pl', $content);
 
@@ -114,10 +109,10 @@ class ContactGuestTest extends TestCase
 
     public function test_it_will_create_contact_wrong_message_empty()
     {
-        $content = array(
+        $content = [
             'email' => 'test@example.com',
-            'message' => ''
-        );
+            'message' => '',
+        ];
 
         $response = $this->post('api/contact/en', $content);
 

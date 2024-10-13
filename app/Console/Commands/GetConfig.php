@@ -37,32 +37,30 @@ class GetConfig extends Command
      */
     public function handle()
     {
-        $admEmail = env('ADM_EMAIL', "adm@cmsrs.pl");
-        $admPass = env('ADM_PASS', "cmsrs123");
+        $admEmail = env('ADM_EMAIL', 'adm@cmsrs.pl');
+        $admPass = env('ADM_PASS', 'cmsrs123');
 
         $cmdLogin = 'curl  -H "Accept:application/json" -H "Content-Type:application/json" -XPOST  "http://127.0.0.1:8000/api/login" -d \'{ 
             "email": "'.$admEmail.'", 
             "password": "'.$admPass.'"
         }\'';
 
-        
         $out = [];
         exec($cmdLogin, $out);
-        
-        
+
         $res1 = json_decode($out[0]);
-        
+
         if ($res1->success) {
             $token = $res1->data->token;
         } else {
-            die('something wrong with login');
+            exit('something wrong with login');
         }
-                        
+
         $cmdGetConfig = "curl  -H 'Accept:application/json' -H 'Content-Type:application/json' -XGET  'http://127.0.0.1:8000/api/config?token=$token'";
-        
+
         $out2 = [];
         exec($cmdGetConfig, $out2);
-        
+
         print_r($out2);
     }
 }

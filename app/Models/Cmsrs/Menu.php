@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models\Cmsrs;
 
 use Illuminate\Database\Eloquent\Model;
@@ -6,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Menu extends Model
 {
     protected $fillable = [
-        'position'
+        'position',
     ];
 
     protected $casts = [
@@ -14,7 +15,7 @@ class Menu extends Model
     ];
 
     public $requiredColumn = [
-        'name'
+        'name',
     ];
 
     public function pages()
@@ -26,5 +27,4 @@ class Menu extends Model
     {
         return $this->hasMany('App\Models\Cmsrs\Translate');
     }
-
 }

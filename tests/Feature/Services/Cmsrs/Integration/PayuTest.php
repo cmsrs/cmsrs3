@@ -2,13 +2,11 @@
 
 namespace Tests\Feature\Services\Cmsrs\Integration;
 
-use Tests\Feature\Services\Cmsrs\Base;
 use App\Integration\Payu;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Str;
+use Tests\Feature\Services\Cmsrs\Base;
 
-class PayuTest extends  Base //TestCase
+class PayuTest extends Base //TestCase
 {
     use RefreshDatabase;
 
@@ -17,11 +15,11 @@ class PayuTest extends  Base //TestCase
     public function setUp(): void
     {
         putenv('LANGS="en"');
-        putenv('API_SECRET=""');  
-        putenv('CURRENCY="USD"');        
+        putenv('API_SECRET=""');
+        putenv('CURRENCY="USD"');
         putenv('CACHE_ENABLE=false');
-        putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');   
-        putenv('DEMO_STATUS=false');     
+        putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');
+        putenv('DEMO_STATUS=false');
         putenv('IS_SHOP=true');
 
         parent::setUp();
@@ -40,7 +38,7 @@ class PayuTest extends  Base //TestCase
 
         $accessToken = $this->payu->getAccessToken();
         $this->assertNotEmpty($accessToken);
-        $this->assertEquals(36, strlen($accessToken) );        
+        $this->assertEquals(36, strlen($accessToken));
     }
 
     public function test_it_will_get_order_from_payu()
@@ -55,7 +53,7 @@ class PayuTest extends  Base //TestCase
             'customerIp' =>  '127.0.0.1', //$_SERVER['REMOTE_ADDR'],
             'currencyCode' => 'PLN',
             'description' => 'RTV market',
-            'merchantPosId' => env('PAYU_POS_ID'),            
+            'merchantPosId' => env('PAYU_POS_ID'),
             'buyer' => [
                 "email"=> "john.doe@example.com",
                 //"phone"=> "654111654",
@@ -64,48 +62,42 @@ class PayuTest extends  Base //TestCase
                 "language"=> "pl"
             ],
             */
-            "products" => [
+            'products' => [
                 [
-                    "name"=> "Wireless Mouse for Laptop",
-                    "unitPrice"=> "15000",
-                    "quantity"=> "1"
+                    'name' => 'Wireless Mouse for Laptop',
+                    'unitPrice' => '15000',
+                    'quantity' => '1',
                 ],
                 [
-                    "name"=> "HDMI cable",
-                    "unitPrice"=> "6000",
-                    "quantity"=> "1"
-                ]
+                    'name' => 'HDMI cable',
+                    'unitPrice' => '6000',
+                    'quantity' => '1',
+                ],
             ],
-            'totalAmount' => '21000'
+            'totalAmount' => '21000',
         ];
 
-
-
         $buyerData = [
-            "email" => "client@cmsrs.pl",
-            "first_name" => "Jan",
-            "last_name" => "Kowalski",
+            'email' => 'client@cmsrs.pl',
+            'first_name' => 'Jan',
+            'last_name' => 'Kowalski',
             //"address" => "kolejowa 1 m 2",
             //"country" => "Polska",
             //"city" => "Warszawa",
-            "telephone" => "1234567123",
+            'telephone' => '1234567123',
             //"postcode" => "03-456",
             //"user_id" => 1,
             //"session_id" => "KVyHIQKatIsilQqwBmwxzVToKLlEgNQnb6WdK75V"
         ];
-          
 
+        $data = $this->payu->dataToSend($additionalData, $buyerData);
+        //dd($data);
 
-
-        $data = $this->payu->dataToSend( $additionalData, $buyerData );
-        //dd($data);                
-                
         $redirectUri = $this->payu->getOrder($data);
-        
+
         $this->assertNotEmpty($redirectUri);
         $urlHost = parse_url($redirectUri, PHP_URL_HOST);
         $this->assertNotEmpty($urlHost);
-        $this->assertEquals(parse_url(env('PAYU_URL'), PHP_URL_HOST), $urlHost );        
+        $this->assertEquals(parse_url(env('PAYU_URL'), PHP_URL_HOST), $urlHost);
     }
-
 }

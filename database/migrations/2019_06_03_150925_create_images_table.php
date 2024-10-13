@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateImagesTable extends Migration
 {
@@ -16,7 +16,7 @@ class CreateImagesTable extends Migration
         Schema::create('images', function (Blueprint $table) {
             $table->bigIncrements('id')->index();
             $table->string('name')->nullable();
-            //$table->string('alt')->nullable();            
+            //$table->string('alt')->nullable();
             $table->integer('position')->unsigned()->nullable();
             $table->unsignedBigInteger('page_id')->nullable();
             $table->unsignedBigInteger('product_id')->nullable();

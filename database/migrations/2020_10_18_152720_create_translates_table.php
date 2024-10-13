@@ -19,15 +19,12 @@ class CreateTranslatesTable extends Migration
             $table->string('column', 32)->notNullable();
             $table->string('value', 510)->nullable();
 
-
             $table->unsignedBigInteger('product_id')->nullable();
             $table->foreign('product_id')->nullable()->references('id')->on('products')->onDelete('cascade');
-            $table->unique(['lang', 'column', 'menu_id', 'page_id', 'image_id', 'product_id'], 'translates_index_unique' ); 
+            $table->unique(['lang', 'column', 'menu_id', 'page_id', 'image_id', 'product_id'], 'translates_index_unique');
 
-            //$table->dropUnique('translates_lang_column_menu_id_page_id_image_id_unique');                        
+            //$table->dropUnique('translates_lang_column_menu_id_page_id_image_id_unique');
 
-
-            
             $table->unsignedBigInteger('menu_id')->nullable();
             $table->foreign('menu_id')->nullable()->references('id')->on('menus')->onDelete('cascade');
 
@@ -37,8 +34,8 @@ class CreateTranslatesTable extends Migration
             $table->unsignedBigInteger('image_id')->nullable();
             $table->foreign('image_id')->nullable()->references('id')->on('images')->onDelete('cascade');
 
-            //$table->unique(['lang', 'column', 'menu_id', 'page_id', 'image_id' ]); 
-            $table->timestamps();        
+            //$table->unique(['lang', 'column', 'menu_id', 'page_id', 'image_id' ]);
+            $table->timestamps();
         });
     }
 

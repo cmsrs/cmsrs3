@@ -1,24 +1,24 @@
 <?php
+
 namespace App\Services\Cmsrs;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
-
-use App\Models\Cmsrs\Product;
-use App\Models\Cmsrs\Checkout;
 use App\Models\Cmsrs\Basket;
-
+use App\Models\Cmsrs\Checkout;
+use App\Models\Cmsrs\Product;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class ProductService extends BaseService
 {
     private $translate;
+
     private $content;
 
     public $productFields;
 
-    public function __construct(array $attributes = array())
+    public function __construct(array $attributes = [])
     {
         $this->translate = new TranslateService;
         $this->content = new ContentService;
@@ -28,29 +28,29 @@ class ProductService extends BaseService
             'published',
             'sku',
             'price',
-            'page_id'
-        ];  
+            'page_id',
+        ];
     }
 
     public function saveCheckout($data, $userId, $sessionId)
     {
-        if(empty($data['products']) || !is_array($data['products']) ){
+        if (empty($data['products']) || ! is_array($data['products'])) {
             throw new \Exception('No products in post - checkout');
         }
-        $payment = PaymentService::getPayment( $data['payment'] );        
-        if( empty($payment) ){
+        $payment = PaymentService::getPayment($data['payment']);
+        if (empty($payment)) {
             throw new \Exception('Payment problem - checkout');
         }
 
-        $deliver = DeliverService::getDeliver( $data['deliver'] );
-        if( empty($deliver) ){
+        $deliver = DeliverService::getDeliver($data['deliver']);
+        if (empty($deliver)) {
             throw new \Exception('Deliver problem - checkout');
         }
 
         $reindexBaskets = BaseService::reIndexArr($data['products']);
         $baskets = [];
-        $productsDataAndTotalAmount = ProductService::getDataToPayment( $reindexBaskets, $baskets );
-        if( empty($baskets) ){
+        $productsDataAndTotalAmount = ProductService::getDataToPayment($reindexBaskets, $baskets);
+        if (empty($baskets)) {
             throw new \Exception('No data in basket (not found data in db)');
         }
 
@@ -58,132 +58,129 @@ class ProductService extends BaseService
         $checkout = $data;
         $checkout['user_id'] = $userId; //Auth::check() ? Auth::user()->id : null;
         $checkout['session_id'] = $sessionId; //session()->getId();
-        $checkout['price_total'] =  $productsDataAndTotalAmount['totalAmount'];
+        $checkout['price_total'] = $productsDataAndTotalAmount['totalAmount'];
         $checkout['price_deliver'] = $deliver['price'];
         $checkout['price_total_add_deliver'] = $checkout['price_total'] + $checkout['price_deliver'];
 
-        
         //without transaction
         // $objCheckout = Checkout::create($checkout);
         // if (empty($objCheckout->id)) {
         //     throw new \Exception("I cant get objCheckout id - problem with save checkout");
-        // }  
-        
+        // }
+
         // foreach($baskets as $basket){
         //     $basket['checkout_id'] = $objCheckout->id;
         //     Basket::create($basket);
         //     Log::debug(' create basket: '.var_export( $basket , true ) );
         // }
-        
 
         DB::beginTransaction();
         try {
             $objCheckout = Checkout::create($checkout);
             if (empty($objCheckout->id)) {
-                throw new \Exception("I cant get objCheckout id - problem with save checkout");
-            }  
+                throw new \Exception('I cant get objCheckout id - problem with save checkout');
+            }
 
-            foreach($baskets as $basket){
+            foreach ($baskets as $basket) {
                 $basket['checkout_id'] = $objCheckout->id;
                 Basket::create($basket);
                 //Log::debug(' create basket: '.var_export( $basket , true ) );
             }
             DB::commit();
         } catch (\Exception $e) {
-            Log::debug(' transaction problem: '.var_export( $e->getMessage() , true ) );
+            Log::debug(' transaction problem: '.var_export($e->getMessage(), true));
             DB::rollback();
             //throw $e;
         }
 
-        return [ 
-            'productsDataAndTotalAmount' =>  $productsDataAndTotalAmount,
+        return [
+            'productsDataAndTotalAmount' => $productsDataAndTotalAmount,
             'checkout' => $checkout,
-            'objCheckout' =>  $objCheckout
+            'objCheckout' => $objCheckout,
         ];
     }
 
-    public function  getPaginationItems($lang, $column, $direction, $search)
-    {        
+    public function getPaginationItems($lang, $column, $direction, $search)
+    {
         $products = (new Product)->with(['translates' => function ($query) use ($lang) {
             $query->where('lang', $lang)->where('column', 'product_name');
-        }])->with(['translatesPage'  => function ($query) use ($lang) {
-            $query->where('lang', $lang)->where('column', 'short_title');                
+        }])->with(['translatesPage' => function ($query) use ($lang) {
+            $query->where('lang', $lang)->where('column', 'short_title');
         }])
-        ->get();
+            ->get();
 
         $products->each(function ($product) {
             $firstTranslation = $product->translates->first();
-            unset($product["translates"]);
+            unset($product['translates']);
             $product->product_name = $firstTranslation ? $firstTranslation->value : null;
-        
+
             $firstTranslationPage = $product->translatesPage->first();
-            unset($product["translatesPage"]);
-            $product->page_short_title = $firstTranslationPage ? $firstTranslationPage->value : null;        
+            unset($product['translatesPage']);
+            $product->page_short_title = $firstTranslationPage ? $firstTranslationPage->value : null;
             //$product->images = Image::getImagesAndThumbsByTypeAndRefId('product', $product->id);
         });
-        
-        if($search){
+
+        if ($search) {
             $search = trim($search);
             $products = $products->filter(function ($product) use ($search) {
                 $productNameContainsSearch = str_contains(trim($product->product_name), $search);
                 $skuContainsSearch = str_contains(trim($product->sku), $search);
-        
+
                 return $productNameContainsSearch || $skuContainsSearch;
             });
-            $products = $products->values();//reset keys - start from 0
+            $products = $products->values(); //reset keys - start from 0
         }
-    
-        $products =  ($direction == 'desc') ? $products->sortByDesc($column) : $products->sortBy($column);
-        $productsPagination =  $this->getPaginationFromCollection($products->values()); //values() - reset keys
 
-        //For optimization purposes, we only retrieve images for products on the given page.    
+        $products = ($direction == 'desc') ? $products->sortByDesc($column) : $products->sortBy($column);
+        $productsPagination = $this->getPaginationFromCollection($products->values()); //values() - reset keys
+
+        //For optimization purposes, we only retrieve images for products on the given page.
         $productsPagination->each(function ($product) {
             $product->images = ImageService::getImagesAndThumbsByTypeAndRefId('product', $product->id);
-        });        
-        
+        });
+
         return $productsPagination;
     }
 
-
-    static public function searchProducts( $lang, $key)
+    public static function searchProducts($lang, $key)
     {
-        return DB::select("select distinct product_id from translates where (`product_id` is not null) and (`lang` = :lang) and (`column` = 'product_name') and (`value` like  :key )", ['lang' => $lang, 'key' => '%'.$key.'%' ]);
+        return DB::select("select distinct product_id from translates where (`product_id` is not null) and (`lang` = :lang) and (`column` = 'product_name') and (`value` like  :key )", ['lang' => $lang, 'key' => '%'.$key.'%']);
     }
 
-    static public function objToArray( $obj )
+    public static function objToArray($obj)
     {
         $out = [];
-        foreach( $obj as $o ){
+        foreach ($obj as $o) {
             $out[] = $o->product_id;
         }
 
         return $out;
     }
 
-    public function wrapSearchProducts( $lang, $key)
+    public function wrapSearchProducts($lang, $key)
     {
-        $objProducts = ProductService::searchProducts( $lang, $key);
-        $arrProducts = ProductService::objToArray( $objProducts );
+        $objProducts = ProductService::searchProducts($lang, $key);
+        $arrProducts = ProductService::objToArray($objProducts);
+
         return $this->getProductsWithImagesByIds($arrProducts);
     }
 
-    static public function getDefaultProductName($productTranslates, $lang)
+    public static function getDefaultProductName($productTranslates, $lang)
     {
         $defaultProductName = '';
 
         foreach ($productTranslates as $translate) {
-            if( ('product_name' == $translate['column']) && ($translate['lang']  == $lang) ){
+            if (($translate['column'] == 'product_name') && ($translate['lang'] == $lang)) {
                 $defaultProductName = $translate['value'];
                 break;
-            }            
+            }
         }
+
         return $defaultProductName;
     }
 
-
     /**
      * this function is similar to: getDataToPayment
-     * 
      */
     /*
     static public function getDataToOrders( $arrCart )
@@ -195,7 +192,7 @@ class ProductService extends BaseService
 
         $ids = array_keys($arrCart);
         $arrProducts = Product::with(['translates'])->whereIn('id', $ids)->orderBy('id', 'asc')->get()->toArray();
-    
+
         $out = [];
         $totalAmount = 0;
         foreach($arrProducts as $arrProduct){
@@ -207,7 +204,7 @@ class ProductService extends BaseService
                 "quantity" => $itemIn['qty']
             ];
             $baskets[] = [
-                "qty" => $itemIn['qty'],                
+                "qty" => $itemIn['qty'],
                 "user_id" => $user->id,
                 "product_id" => $arrProduct['id']
             ];
@@ -220,8 +217,7 @@ class ProductService extends BaseService
     }
     */
 
-
-    static public function getDataToPayment( $arrCart, &$baskets, bool|array &$orders = false )
+    public static function getDataToPayment($arrCart, &$baskets, bool|array &$orders = false)
     {
         /*
         $user = Auth::user();
@@ -232,69 +228,69 @@ class ProductService extends BaseService
 
         $ids = array_keys($arrCart);
         $arrProducts = Product::with(['translates'])->whereIn('id', $ids)->orderBy('id', 'asc')->get(); //->toArray();
-    
+
         $out = [];
         $totalAmount = 0;
         $lang = ConfigService::getDefaultLang();
-        foreach($arrProducts as $product){
+        foreach ($arrProducts as $product) {
 
             $itemIn = $arrCart[$product->id];
-            if( empty($itemIn['qty']) ){
-                throw new \Exception("qty empty - something wrong");
+            if (empty($itemIn['qty'])) {
+                throw new \Exception('qty empty - something wrong');
             }
 
-            $productName = ProductService::getDefaultProductName( $product->translates, $lang );
-            $qty = $itemIn['qty'];            
+            $productName = ProductService::getDefaultProductName($product->translates, $lang);
+            $qty = $itemIn['qty'];
 
-            $out["products"][] = [
-                "name" =>  $productName,
-                "unitPrice" => $product->price,
-                "quantity" => $qty
+            $out['products'][] = [
+                'name' => $productName,
+                'unitPrice' => $product->price,
+                'quantity' => $qty,
             ];
 
-            if( is_array($baskets) ){
+            if (is_array($baskets)) {
                 $baskets[] = [
-                    "qty" => $qty,
+                    'qty' => $qty,
                     //"user_id" => $user->id,
-                    "price" => $product->price,
-                    "product_id" => $product->id,
+                    'price' => $product->price,
+                    'product_id' => $product->id,
                     //"checkout_id" => $checkoutId
                 ];
             }
-            
-            if( is_array($orders) ){
+
+            if (is_array($orders)) {
                 $productImage = ImageService::getImagesAndThumbsByTypeAndRefId('product', $product->id)->toArray();
                 $orders[] = [
-                    "name" =>  $productName,
-                    "unitPrice" => $product->price,
-                    "qty" => $qty,
-                    "product_id" => $product->id,
-                    "product_url" =>  (new ProductService())->getProductUrl($product, $lang, $productName), //zmiana_1007
-                    "product_img" =>  empty($productImage[0]) ? '' : $productImage[0]['fs']['small']
+                    'name' => $productName,
+                    'unitPrice' => $product->price,
+                    'qty' => $qty,
+                    'product_id' => $product->id,
+                    'product_url' => (new ProductService)->getProductUrl($product, $lang, $productName), //zmiana_1007
+                    'product_img' => empty($productImage[0]) ? '' : $productImage[0]['fs']['small'],
                 ];
             }
-            
+
             $totalAmount += $product->price * $qty;
         }
-        $out['totalAmount'] =  $totalAmount;
+        $out['totalAmount'] = $totalAmount;
 
-        return  $out;
+        return $out;
     }
 
     public function checkIsDuplicateName($data, $id = '')
     {
-        $out = ['success' => true ];
+        $out = ['success' => true];
         $products = $this->getAllProductsWithImages();
         foreach ($products as $product) {
-            if ($product['id']  == $id) {
+            if ($product['id'] == $id) {
                 continue;
             }
             foreach ($product['product_name'] as $lang => $name) {
                 if (empty($data['product_name']) || empty($data['product_name'][$lang])) {
-                    throw new \Exception("product_name is empty - but is require");
+                    throw new \Exception('product_name is empty - but is require');
                 }
-                $nameIn = Str::slug($data['product_name'][$lang], "-");
-                $n = Str::slug($name, "-");
+                $nameIn = Str::slug($data['product_name'][$lang], '-');
+                $n = Str::slug($name, '-');
 
                 if ($nameIn == $n) {
                     $out['success'] = false;
@@ -303,10 +299,9 @@ class ProductService extends BaseService
                 }
             }
         }
+
         return $out;
     }
-
-
 
     // public function setTranslate($objTranslate)
     // {
@@ -324,29 +319,30 @@ class ProductService extends BaseService
         $product = Product::create($data);
 
         if (empty($product->id)) {
-            throw new \Exception("I cant get product id");
+            throw new \Exception('I cant get product id');
         }
-        $this->createTranslate([ 'product_id' => $product->id, 'data' => $data ]);
-  
-        if (!empty($data['images']) && is_array($data['images'])) {
-            $objImage = new ImageService();
+        $this->createTranslate(['product_id' => $product->id, 'data' => $data]);
+
+        if (! empty($data['images']) && is_array($data['images'])) {
+            $objImage = new ImageService;
             $objImage->setTranslate($this->translate);
             $objImage->createImages($data['images'], 'product', $product->id);
         }
+
         return $product;
     }
-
 
     public function createTranslate($dd, $create = true)
     {
         $this->translate->wrapCreate($dd, $create);
-        $this->content->wrapCreate($dd, $create);        
+        $this->content->wrapCreate($dd, $create);
     }
 
     public function wrapUpdate(Product $mProduct, $data)
     {
         $res = $mProduct->update($data);
-        $this->createTranslate([ 'product_id' => $mProduct->id, 'data' => $data ], false);
+        $this->createTranslate(['product_id' => $mProduct->id, 'data' => $data], false);
+
         return $res;
     }
 
@@ -358,24 +354,24 @@ class ProductService extends BaseService
         }
         foreach ($product['translates'] as $translate) {
             $out[$translate['column']][$translate['lang']] = $translate['value'];
-            if( 'product_name' == $translate['column']){
+            if ($translate['column'] == 'product_name') {
                 $out['product_name_slug'][$translate['lang']] = Str::slug($translate['value'], '-');
             }
         }
         foreach ($product['contents'] as $translate) {
             $out[$translate['column']][$translate['lang']] = $translate['value'];
         }
+
         return $out;
     }
-
 
     public function getProductBySlug($productSlug, $lang)
     {
         $productOut = null;
         $products = $this->getAllProductsWithTranslates();
-        foreach($products as $product){
+        foreach ($products as $product) {
             $arrProduct = $this->getProductDataFormat($product);
-            if($productSlug ==  Str::slug($arrProduct['product_name'][$lang], '-')){
+            if ($productSlug == Str::slug($arrProduct['product_name'][$lang], '-')) {
                 $productOut = $product;
                 break;
             }
@@ -387,35 +383,39 @@ class ProductService extends BaseService
     public function getCategoryUrl(Product $mProduct, $lang)
     {
         $mPage = $mProduct->page()->get()->first();
-        return  (new PageService)->getUrl($mPage, $lang);
+
+        return (new PageService)->getUrl($mPage, $lang);
     }
 
     public function getProductUrl(Product $mProduct, $lang, $productName)
     {
         $mPage = $mProduct->page()->get()->first();
-        return  (new PageService)->getUrl($mPage, $lang, Str::slug($productName, '-') );
-    }    
+
+        return (new PageService)->getUrl($mPage, $lang, Str::slug($productName, '-'));
+    }
 
     public function getProductUrls(Product $productWithTranslate)
     {
-        $out = array();
+        $out = [];
         $arrProduct = $this->getProductDataFormat($productWithTranslate);
         $langs = ConfigService::arrGetLangsEnv();
 
-        foreach($langs as $lang){
+        foreach ($langs as $lang) {
             $out['url_category'][$lang] = $this->getCategoryUrl($productWithTranslate, $lang);
             $out['url_product'][$lang] = $this->getProductUrl($productWithTranslate, $lang, $arrProduct['product_name'][$lang]);
         }
+
         return $out;
     }
 
     private function getProductNameDefaultLang($arrProductFormat)
     {
         $lang = ConfigService::getDefaultLang();
+
         return $arrProductFormat['product_name'][$lang];
     }
 
-    public function getProductDataByProductArr( $product )
+    public function getProductDataByProductArr($product)
     {
         $arrProduct = $product->toArray();
 
@@ -424,6 +424,7 @@ class ProductService extends BaseService
         $out['product_name_default_lang'] = $this->getProductNameDefaultLang($out);
 
         $out['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('product', $arrProduct['id']);
+
         return $out;
     }
 
@@ -431,7 +432,7 @@ class ProductService extends BaseService
     {
         $productOut = Product::with(['translates', 'contents'])->find($mProduct->id);
 
-        return $this->getProductDataByProductArr( $productOut );
+        return $this->getProductDataByProductArr($productOut);
     }
 
     private function getAllProductsWithTranslates()
@@ -439,9 +440,10 @@ class ProductService extends BaseService
         return Product::with(['translates', 'contents'])->orderBy('id', 'asc')->get();
     }
 
-    public function getAllProductsWithImages( $withUrls = false )
+    public function getAllProductsWithImages($withUrls = false)
     {
         $products = $this->getAllProductsWithTranslates();
+
         return $this->getAllProductsWithImagesArr($products, $withUrls);
     }
 
@@ -450,17 +452,17 @@ class ProductService extends BaseService
         $i = 0;
         $out = [];
         foreach ($products as $product) {
-            $out[$i] = $this->getProductDataByProductArr( $product );
+            $out[$i] = $this->getProductDataByProductArr($product);
 
-            if($withUrls){
+            if ($withUrls) {
                 $urls = $this->getProductUrls($product);
-                $out[$i] = array_merge($out[$i], $urls);    
+                $out[$i] = array_merge($out[$i], $urls);
             }
             $i++;
         }
+
         return $out;
     }
-    
 
     /**
      * function use on the frontend
@@ -468,21 +470,22 @@ class ProductService extends BaseService
      */
     public function getAllProductsWithImagesByLang($lang)
     {
-        $products = $this->getAllProductsWithImages( true );
+        $products = $this->getAllProductsWithImages(true);
 
         $out = [];
-        foreach($products as $product){
-            if( !empty($product['published']) ){
-                $productId = $product["id"];
+        foreach ($products as $product) {
+            if (! empty($product['published'])) {
+                $productId = $product['id'];
                 //$out[$productId]["product_id"] = $productId;
-                $out[$productId]["price"] = $product["price"];
-                $out[$productId]["name"] = $product["product_name"][$lang];
-                $out[$productId]["url_product"] = $product["url_product"][$lang];
-                if( !empty($product["images"]) && !empty($img = $product["images"]->first()) ){
-                    $out[$productId]["url_image"] =  $img->fs["small"];
+                $out[$productId]['price'] = $product['price'];
+                $out[$productId]['name'] = $product['product_name'][$lang];
+                $out[$productId]['url_product'] = $product['url_product'][$lang];
+                if (! empty($product['images']) && ! empty($img = $product['images']->first())) {
+                    $out[$productId]['url_image'] = $img->fs['small'];
                 }
             }
         }
+
         return $out;
     }
 
@@ -490,14 +493,14 @@ class ProductService extends BaseService
     {
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
-            $products = cache()->remember('products_name_price_'.$lang , Carbon::now()->addYear(1), function () use ($lang)  {
-                return (new ProductService())->getAllProductsWithImagesByLang($lang);
+            $products = cache()->remember('products_name_price_'.$lang, Carbon::now()->addYear(1), function () use ($lang) {
+                return (new ProductService)->getAllProductsWithImagesByLang($lang);
             });
         } else {
-            $products = (new ProductService())->getAllProductsWithImagesByLang($lang);
+            $products = (new ProductService)->getAllProductsWithImagesByLang($lang);
         }
 
-        return $products;    
+        return $products;
     }
 
     /*
@@ -517,18 +520,19 @@ class ProductService extends BaseService
     public function getProductsUrl()
     {
         $urls = [];
-        $products = Product::with(['translates', 'contents', 'page' ])->where('published', '=', 1)->orderBy('id', 'asc')->get();
+        $products = Product::with(['translates', 'contents', 'page'])->where('published', '=', 1)->orderBy('id', 'asc')->get();
         $i = 0;
         foreach ($products as $key => $product) {
-            if($product['page']->published && $product->published){
+            if ($product['page']->published && $product->published) {
                 $arrProduct = $this->getProductDataFormat($product);
-                $langs = ConfigService::arrGetLangsEnv();        
-                foreach($langs as $lang){
-                    $urls[$i][$lang] = $this->getProductUrl($product, $lang, $arrProduct['product_name'][$lang]);//zmiana_1007
+                $langs = ConfigService::arrGetLangsEnv();
+                foreach ($langs as $lang) {
+                    $urls[$i][$lang] = $this->getProductUrl($product, $lang, $arrProduct['product_name'][$lang]); //zmiana_1007
                 }
                 $i++;
             }
-        }        
+        }
+
         return $urls;
     }
 
@@ -537,14 +541,15 @@ class ProductService extends BaseService
      */
     public function getProductsWithImagesByIds($ids)
     {
-        $products = Product::with(['translates', 'contents'])->whereIn('id', $ids)->orderBy('id', 'asc')->where('published', '=', 1)->get(); 
+        $products = Product::with(['translates', 'contents'])->whereIn('id', $ids)->orderBy('id', 'asc')->where('published', '=', 1)->get();
+
         return $this->dataToRender($products);
     }
-
 
     public function getProductsWithImagesByPage($pageId)
     {
         $products = Product::with(['translates', 'contents'])->where('page_id', $pageId)->orderBy('id', 'asc')->where('published', '=', 1)->get(); //->toArray();
+
         return $this->dataToRender($products);
         // $i = 0;
         // $out = [];
@@ -562,19 +567,21 @@ class ProductService extends BaseService
         $out = [];
 
         foreach ($products as $key => $product) {
-            $urls =  $this->getProductUrls($product);
-            $out[$i] =  array_merge( $this->getProductDataByProductArr( $product ), $urls);
+            $urls = $this->getProductUrls($product);
+            $out[$i] = array_merge($this->getProductDataByProductArr($product), $urls);
             $i++;
         }
+
         return $out;
     }
 
-    public function delete( Product $mProduct ) //to_jest_duza_zmiana!!!
+    public function delete(Product $mProduct) //to_jest_duza_zmiana!!!
     {
-        $imageService = new ImageService();
+        $imageService = new ImageService;
         foreach ($mProduct->images()->get() as $img) {
-            $imageService->delete( $img );
+            $imageService->delete($img);
         }
-        return  $mProduct->delete(); // parent::delete();
+
+        return $mProduct->delete(); // parent::delete();
     }
 }

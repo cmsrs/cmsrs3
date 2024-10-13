@@ -2,29 +2,35 @@
 
 namespace App\Services\Cmsrs;
 
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
 
 class ConfigService
 {
     const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,login,projects,clear,checkout,register,home,shoppingsuccess,search,forgot,inner,slider_main'; //default values
+
     const LANG_DEFAULT = 'en,pl';
-    const PAGINATION_DEFAULT = 10; 
-    
+
+    const PAGINATION_DEFAULT = 10;
+
     const SORT_ASC = 'asc';
+
     const SORT_DESC = 'desc';
 
     const CURRENCY_DEFAULT = 'USD';
+
     const CACHE_ENABLE_FILE_DEFAULT = 'app/cache_enable.txt';
 
     private $langs;
+
     private $cacheEnableFile;
+
     private $filePath;
 
     public function __construct()
     {
-        $this->langs =  env('LANGS', ConfigService::LANG_DEFAULT ); //empty(env('LANGS')) ? Config::LANG_DEFAULT : env('LANGS');
-        $this->cacheEnableFile = env('CACHE_ENABLE_FILE', ConfigService::CACHE_ENABLE_FILE_DEFAULT );
+        $this->langs = env('LANGS', ConfigService::LANG_DEFAULT); //empty(env('LANGS')) ? Config::LANG_DEFAULT : env('LANGS');
+        $this->cacheEnableFile = env('CACHE_ENABLE_FILE', ConfigService::CACHE_ENABLE_FILE_DEFAULT);
         $this->filePath = $this->getCacheEnableFilePath();
     }
 
@@ -37,7 +43,7 @@ class ConfigService
     {
         return [
             ConfigService::SORT_ASC,
-            ConfigService::SORT_DESC
+            ConfigService::SORT_DESC,
         ];
     }
 
@@ -60,7 +66,7 @@ class ConfigService
     {
         return storage_path($this->cacheEnableFile);
     }
-    
+
     public function isExistCacheFileEnable()
     {
         return File::exists($this->filePath);
@@ -70,25 +76,29 @@ class ConfigService
     {
         if (File::exists($this->filePath)) {
             File::delete($this->filePath);
+
             return true;
         }
+
         return false;
-    }    
+    }
 
     public function createFileCacheEnableIfNotExist()
     {
-        if (!File::exists($this->filePath)) {
+        if (! File::exists($this->filePath)) {
             File::put($this->filePath, '');
+
             return true;
-        }        
+        }
+
         return false;
     }
 
     public function clearCache()
     {
-        Artisan::call('cache:clear');        
+        Artisan::call('cache:clear');
     }
-    
+
     public function setLangs($langs)
     {
         $this->langs = $langs;
@@ -112,6 +122,7 @@ class ConfigService
     public static function arrGetPageTypes()
     {
         $strPageTypes = ConfigService::getPageTypes();
+
         return explode(',', $strPageTypes);
     }
 
@@ -124,35 +135,39 @@ class ConfigService
             $langs = ConfigService::LANG_DEFAULT;
             //throw new \Exception("You must set at least one language in the .env file");
         }
+
         return $langs;
     }
 
     public function arrGetLangs()
     {
         $strLangs = ConfigService::getLangsFromEnv();
+
         return explode(',', $strLangs);
     }
 
     public static function arrGetLangsEnv()
     {
         $langs = explode(',', env('LANGS', ConfigService::LANG_DEFAULT));
+
         return $langs;
     }
 
     public static function getDefaultLang()
     {
         $langs = ConfigService::arrGetLangsEnv();
-        if(empty($langs) || empty($langs[0]) ){
-            $langs = []; 
-            $langs[0] = ConfigService::LANG_DEFAULT;            
+        if (empty($langs) || empty($langs[0])) {
+            $langs = [];
+            $langs[0] = ConfigService::LANG_DEFAULT;
             //throw new \Exception("You must set at least one language in the .env file (default lang)");
         }
+
         return $langs[0];
     }
 
     public static function saveLangToSession($lang)
     {
-        if( request()->hasSession() ){ //it don't session in tests
+        if (request()->hasSession()) { //it don't session in tests
             request()->session()->put('lang', $lang);
         }
     }
@@ -161,14 +176,15 @@ class ConfigService
      * this function not working properly - for example i homeController
      */
     public static function getLangFromSession()
-    {        
+    {
         $lang = null;
-        if( request()->hasSession() ){ //it don't session in tests
+        if (request()->hasSession()) { //it don't session in tests
             $lang = request()->session()->get('lang');
         }
-        if( empty($lang) ){
+        if (empty($lang)) {
             $lang = ConfigService::getDefaultLang();
         }
+
         return $lang;
     }
 
@@ -178,10 +194,10 @@ class ConfigService
     }
 
     public function isCacheEnable()
-    {        
+    {
         $formEnv = $this->getConfigCacheEnable();
         $isFileExist = $this->isExistCacheFileEnable();
+
         return $formEnv && $isFileExist;
     }
-
 }

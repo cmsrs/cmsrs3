@@ -2,25 +2,17 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-
+use App\Data\Demo;
+use App\Models\Cmsrs\Comment;
 use App\Models\Cmsrs\User;
 use App\Product;
-use App\Translate;
-use App\Models\Cmsrs\Comment;
-use App\Contact;
-use App\Deliver;
-use App\Payment;
-
-use App\Services\Cmsrs\ProductService;
-use App\Services\Cmsrs\TranslateService;
-use App\Services\Cmsrs\ContentService;
 use App\Services\Cmsrs\ContactService;
+use App\Services\Cmsrs\ContentService;
 use App\Services\Cmsrs\DeliverService;
 use App\Services\Cmsrs\PaymentService;
-
-
-use App\Data\Demo;
+use App\Services\Cmsrs\ProductService;
+use App\Services\Cmsrs\TranslateService;
+use Illuminate\Console\Command;
 
 class LoadDemoDataCommand extends Command
 {
@@ -38,9 +30,10 @@ class LoadDemoDataCommand extends Command
      */
     protected $description = 'Load Demo Data';
 
-
     private $langs;
+
     private $translate;
+
     private $content;
 
     /**
@@ -58,7 +51,6 @@ class LoadDemoDataCommand extends Command
         $this->content = new ContentService;
         $this->content->setArrLangs($this->langs);
     }
-
 
     /**
      * Execute the console command.
@@ -79,9 +71,8 @@ class LoadDemoDataCommand extends Command
         /*---------------------*/
         /*--- comments --------*/
         /*---------------------*/
-        Comment::create(['page_id' => $p['p2']->id,  'content' => 'First test comment - test1' ]);
-        Comment::create(['page_id' => $p['p2']->id,  'content' => 'Second test comment - test2' ]);
-
+        Comment::create(['page_id' => $p['p2']->id,  'content' => 'First test comment - test1']);
+        Comment::create(['page_id' => $p['p2']->id,  'content' => 'Second test comment - test2']);
 
         /*---------------------*/
         /*--- products --------*/
@@ -90,12 +81,12 @@ class LoadDemoDataCommand extends Command
         $products = $objDemoData->product($p);
 
         /*---------------------*/
-        /*--- contacts --------*/        
+        /*--- contacts --------*/
         /*---------------------*/
-        for($ii=1; $ii<=32; $ii++){
-            (new ContactService)->wrapCreate(["email" => "tt$ii@cmsrs.pl", "message" => "test contact message$ii" ]);
+        for ($ii = 1; $ii <= 32; $ii++) {
+            (new ContactService)->wrapCreate(['email' => "tt$ii@cmsrs.pl", 'message' => "test contact message$ii"]);
         }
-           
+
         /*---------------------*/
         /* ---users -----------*/
         /*---------------------*/
@@ -103,9 +94,8 @@ class LoadDemoDataCommand extends Command
         /** and */
 
         /*---------------------*/
-        /* ---checkout---------*/        
+        /* ---checkout---------*/
         /*---------------------*/
-
 
         //It,s created by the 'seed'
         // $user = new User([
@@ -135,17 +125,17 @@ class LoadDemoDataCommand extends Command
             $name = 'client'.$i;
             $emailClient = $name.'@cmsrs.pl';
             $user32 = new User([
-                'name' => $name,                
+                'name' => $name,
                 'email' => $emailClient,
-                'role' => User::$role['client']
+                'role' => User::$role['client'],
             ]);
             $user32->password = 'cmsrs456';
             $user32->save();
-            if( empty($user32->id) ){
-                die( 'Sth wrong with save user' );
+            if (empty($user32->id)) {
+                exit('Sth wrong with save user');
             }
 
-            return  $user32->id;
+            return $user32->id;
         }
 
         /*
@@ -155,56 +145,52 @@ class LoadDemoDataCommand extends Command
             $name = 'client'.$i;
             $emailClient = $name.'@cmsrs.pl';
             $user32 = new User([
-                'name' => $name,                
+                'name' => $name,
                 'email' => $emailClient,
                 'role' => User::$role['client']
             ]);
             $user32->password = 'cmsrs456';
-            $user32->save();        
+            $user32->save();
         }
         */
 
-        function getDataSaveCheckout($products, $i ){
-            $prod0 =  empty($products[0]) ? die( "can't find product0 to checkout" ) : $products[0];
-            $prod1 =  empty($products[1]) ? die( "can't find product1 to checkout" ) : $products[1];
-            $prod2 =  empty($products[2]) ? die( "can't find product2 to checkout" ) : $products[2];
-            $prod3 =  empty($products[3]) ? die( "can't find product3 to checkout" ) : $products[3];
+        function getDataSaveCheckout($products, $i)
+        {
+            $prod0 = empty($products[0]) ? exit("can't find product0 to checkout") : $products[0];
+            $prod1 = empty($products[1]) ? exit("can't find product1 to checkout") : $products[1];
+            $prod2 = empty($products[2]) ? exit("can't find product2 to checkout") : $products[2];
+            $prod3 = empty($products[3]) ? exit("can't find product3 to checkout") : $products[3];
 
-            if( empty($prod0->id) ||empty($prod1->id) ||empty($prod2->id) ||empty($prod3->id) ){
-                die("product id not occur");
+            if (empty($prod0->id) || empty($prod1->id) || empty($prod2->id) || empty($prod3->id)) {
+                exit('product id not occur');
             }
 
             $name = 'client'.$i;
             $emailClient = $name.'@cmsrs.pl';
 
             $data =
-            Array
-            (
-                'products' => Array
-                    (
-                        0 => Array
-                            (
-                                'id' => $prod0->id,
-                                'qty' => (($i+1) % 4) + 1 //we don't  want 0, therefore we add 1 at the end
-                            ),
-            
-                        1 => Array
-                            (
-                                'id' => $prod1->id,
-                                'qty' => (($i+2) % 4) + 1
-                            ),
-                        2 => Array 
-                            (
-                                'id' => $prod2->id,
-                                'qty' => (($i+3) % 4) + 1
-                            ),
-                        3 => Array
-                            (
-                                'id' => $prod3->id,
-                                'qty' => (($i+4) % 4) + 1
-                            )
 
-                    ),        
+            [
+                'products' => [
+                    0 => [
+                        'id' => $prod0->id,
+                        'qty' => (($i + 1) % 4) + 1, //we don't  want 0, therefore we add 1 at the end
+                    ],
+
+                    1 => [
+                        'id' => $prod1->id,
+                        'qty' => (($i + 2) % 4) + 1,
+                    ],
+                    2 => [
+                        'id' => $prod2->id,
+                        'qty' => (($i + 3) % 4) + 1,
+                    ],
+                    3 => [
+                        'id' => $prod3->id,
+                        'qty' => (($i + 4) % 4) + 1,
+                    ],
+
+                ],
                 'lang' => 'en',
                 'email' => $emailClient,
                 'first_name' => $name,
@@ -215,30 +201,31 @@ class LoadDemoDataCommand extends Command
                 'telephone' => 123456788 + $i,
                 'postcode' => '03-456',
                 'deliver' => DeliverService::KEY_DPD_COURIER,
-                'payment' => PaymentService::KEY_CASH
-            );
+                'payment' => PaymentService::KEY_CASH,
+            ];
+
             return $data;
         }
 
         $numberOfFakeUsers = 32;
-        for($i=1; $i<=$numberOfFakeUsers; $i++){
+        for ($i = 1; $i <= $numberOfFakeUsers; $i++) {
             $userId = wrapSaveUser($i);
-            if( empty($userId) ){
-                die( 'not found user' );
+            if (empty($userId)) {
+                exit('not found user');
             }
 
-            $d = getDataSaveCheckout($products, $i );
+            $d = getDataSaveCheckout($products, $i);
 
             $sessionId = 'demo123';
-            list(
+            [
                 //'productsDataAndTotalAmount' => $productsDataAndTotalAmount,
                 //'checkout' => $checkout,
                 'objCheckout' => $objCheckout
-            ) = (new ProductService())->saveCheckout($d, $userId, $sessionId);
-            if(empty($objCheckout->id)){
-                die('sth wrong with create checkout');
+            ] = (new ProductService)->saveCheckout($d, $userId, $sessionId);
+            if (empty($objCheckout->id)) {
+                exit('sth wrong with create checkout');
             }
-        }        
+        }
 
         /*---------------------*/
         /* ---orders-----------*/
@@ -247,13 +234,13 @@ class LoadDemoDataCommand extends Command
         $uu =  User::where('email', '=', $emailClient)->first();
         $order1 = [
             'qty' => 2,
-            'user_id' => $uu->id, 
+            'user_id' => $uu->id,
             'product_id' =>  $products[0]->id
         ];
 
         $order2 = [
             'qty' => 7,
-            'user_id' => $uu->id, 
+            'user_id' => $uu->id,
             'product_id' =>  $products[2]->id
         ];
 

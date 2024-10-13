@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models\Cmsrs;
 
 use Illuminate\Database\Eloquent\Model;
@@ -6,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     private $translate;
+
     private $content;
 
     public $productFields;
@@ -14,13 +16,13 @@ class Product extends Model
         'sku',
         'price',
         'published',
-        'page_id'
+        'page_id',
     ];
 
     protected $casts = [
         'published' => 'integer',
         'price' => 'integer',
-        'page_id' => 'integer'
+        'page_id' => 'integer',
     ];
 
     public $columnsAllowedToSort = [
@@ -31,7 +33,7 @@ class Product extends Model
         'sku',
         'price',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     public function page()
@@ -47,7 +49,7 @@ class Product extends Model
     public function translates()
     {
         return $this->hasMany('App\Models\Cmsrs\Translate');
-    } 
+    }
 
     public function translatesPage()
     {
@@ -57,6 +59,5 @@ class Product extends Model
     public function contents()
     {
         return $this->hasMany('App\Models\Cmsrs\Content');
-    }        
-
+    }
 }

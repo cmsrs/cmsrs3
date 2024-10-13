@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Services\Cmsrs\ConfigService;
+use Illuminate\Console\Command;
 
 class CreateCacheEnableFile extends Command
 {
@@ -39,10 +39,10 @@ class CreateCacheEnableFile extends Command
     public function handle()
     {
         $cacheFilePath = (new ConfigService)->getCacheFilePath();
-        if (!file_exists($cacheFilePath)){
+        if (! file_exists($cacheFilePath)) {
             touch($cacheFilePath);
         }
 
-        return 0;        
+        return 0;
     }
 }

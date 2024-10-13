@@ -22,7 +22,7 @@ class CreateOrdersTable extends Migration
             $table->unsignedBigInteger('product_id')->notNullable();
             $table->foreign('product_id')->notNullable()->references('id')->on('products');
 
-            $table->unique(['user_id', 'product_id'], 'unique_orders_index' ); 
+            $table->unique(['user_id', 'product_id'], 'unique_orders_index');
             //DB::statement('ALTER TABLE `orders`  ADD UNIQUE `unique_orders_index` (`user_id`, `product_id`)');
 
             $table->timestamps();

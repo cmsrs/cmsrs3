@@ -1,4 +1,5 @@
 <?php
-$str =  "../../.env";
+
+$str = '../../.env';
 //$conf = parse_ini_file($str);
-die('_____sss____'  );
+exit('_____sss____');

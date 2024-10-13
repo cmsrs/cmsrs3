@@ -2,22 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use App\Models\Cmsrs\Page;
-use App\Services\Cmsrs\PageService;
-
-use App\Models\Cmsrs\Menu;
-use App\Services\Cmsrs\MenuService;
-
-use App\Models\Cmsrs\Image;
-use App\Services\Cmsrs\ImageService;
-
-
 use App\Services\Cmsrs\ConfigService;
-
-use Validator;
+use App\Services\Cmsrs\ImageService;
+use App\Services\Cmsrs\PageService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Validator;
 
 class PageController extends Controller
 {
@@ -37,81 +28,78 @@ class PageController extends Controller
         'published' => 'boolean',
         'commented' => 'boolean',
         'after_login' => 'boolean',
-  ];
-  
+    ];
+
     public function oneItem(Request $request, $id, $lang)
     {
         $page = Page::find($id);
 
         if (empty($page)) {
-            return response()->json(['success'=> false, 'error'=> 'Page not find'], 404);
+            return response()->json(['success' => false, 'error' => 'Page not find'], 404);
         }
 
         try {
-            $page = (new PageService())->getPageWithImages($page,  $lang);
+            $page = (new PageService)->getPageWithImages($page, $lang);
         } catch (\Exception $e) {
-            Log::error('page add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile().' for: '.var_export($e, true ) );
-      return response()->json(['success'=> false, 'error'=> 'Get page with lang problem, details in the log file.'], 200); //.$e->getMessage()
+            Log::error('page add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile().' for: '.var_export($e, true));
+
+            return response()->json(['success' => false, 'error' => 'Get page with lang problem, details in the log file.'], 200); //.$e->getMessage()
         }
 
-        return response()->json(['success' => true, 'data'=> $page], 200);
+        return response()->json(['success' => true, 'data' => $page], 200);
     }
 
-  
-    public function oneItemAdmin(Request $request, $id, ?string  $simple = null)
+    public function oneItemAdmin(Request $request, $id, ?string $simple = null)
     {
         $page = Page::find($id);
 
         if (empty($page)) {
-            return response()->json(['success'=> false, 'error'=> 'Page not find'], 404);
+            return response()->json(['success' => false, 'error' => 'Page not find'], 404);
         }
 
-        $onePage = ( new PageService() )->getAllPagesWithImagesOneItem($page, $simple);
+        $onePage = (new PageService)->getAllPagesWithImagesOneItem($page, $simple);
 
-        return response()->json(['success' => true, 'data'=> $onePage], 200);
+        return response()->json(['success' => true, 'data' => $onePage], 200);
     }
 
     public function index()
     {
-        $pages = (new PageService())->getAllPagesWithImages();
+        $pages = (new PageService)->getAllPagesWithImages();
 
-
-        return response()->json(['success' => true, 'data'=> $pages], 200);
+        return response()->json(['success' => true, 'data' => $pages], 200);
     }
 
     public function getFirstPageByTypeForGuest(Request $request, $type)
     {
-        if ( !in_array( $type, ConfigService::arrGetPageTypes() )  ) {
-            return response()->json(['success'=> false, 'error'=> 'wrong type' ], 200);
+        if (! in_array($type, ConfigService::arrGetPageTypes())) {
+            return response()->json(['success' => false, 'error' => 'wrong type'], 200);
         }
 
         $page = (new PageService)->getFirstPageWithImagesForGuest($type);
 
-        return response()->json(['success' => true, 'data'=> $page], 200);
+        return response()->json(['success' => true, 'data' => $page], 200);
     }
-
 
     public function getPagesByType(Request $request, $type)
     {
-        $pages = (new PageService())->getAllPagesWithImages($type);
+        $pages = (new PageService)->getAllPagesWithImages($type);
 
-        return response()->json(['success' => true, 'data'=> $pages], 200);
+        return response()->json(['success' => true, 'data' => $pages], 200);
     }
-
 
     public function position(Request $request, $direction, $id)
     {
         $ret = PageService::swapPosition($direction, $id);
-        return response()->json(['success'=> $ret]);
-    }
 
+        return response()->json(['success' => $ret]);
+    }
 
     public function create(Request $request)
     {
         $data = $request->only('title', 'short_title', 'description', 'published', 'commented', 'after_login', 'type', 'content', 'menu_id', 'page_id', 'images');
         $validator = Validator::make($data, $this->validationRules);
         if ($validator->fails()) {
-            return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
+            return response()->json(['success' => false, 'error' => $validator->messages()], 200);
         }
 
         //check unique
@@ -121,13 +109,14 @@ class PageController extends Controller
         }
 
         try {
-            $page =  (new PageService)->wrapCreate($data);
+            $page = (new PageService)->wrapCreate($data);
         } catch (\Exception $e) {
             Log::error('page add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); //.' for: '.var_export($data, true )
-            return response()->json(['success'=> false, 'error'=> 'Add page problem, details in the log file.'], 200); //.$e->getMessage()
+
+            return response()->json(['success' => false, 'error' => 'Add page problem, details in the log file.'], 200); //.$e->getMessage()
         }
 
-        return response()->json(['success'=> true, 'data' => ['pageId' => $page->id, 'data' => $data] ]);
+        return response()->json(['success' => true, 'data' => ['pageId' => $page->id, 'data' => $data]]);
     }
 
     public function update(Request $request, $id)
@@ -135,14 +124,14 @@ class PageController extends Controller
         $page = Page::findOrFail($id);
 
         if (empty($page)) {
-            return response()->json(['success'=> false, 'error'=> 'Page not find'], 200);
+            return response()->json(['success' => false, 'error' => 'Page not find'], 200);
         }
 
         $data = $request->only('title', 'short_title', 'description', 'published', 'commented', 'after_login', 'type', 'content', 'menu_id', 'page_id', 'images'); //'position',
         $validator = Validator::make($data, $this->validationRules);
         if ($validator->fails()) {
-            return response()->json(['success'=> false, 'error'=> $validator->messages()], 200);
-        }        
+            return response()->json(['success' => false, 'error' => $validator->messages()], 200);
+        }
 
         //check unique
         $valid = PageService::checkIsDuplicateTitleByMenu($data, $page->id);
@@ -157,20 +146,21 @@ class PageController extends Controller
                 $pageService->unpublishedChildren($page);
             }
             $res = $pageService->wrapUpdate($page, $data);
-            if (!empty($data['images']) && is_array($data['images'])) {
+            if (! empty($data['images']) && is_array($data['images'])) {
                 ImageService::createImagesAndUpdateAlt($data['images'], 'page', $page->id);
                 ImageService::updatePositionImages($data['images']);
             }
         } catch (\Exception $e) {
-            Log::error('page update ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile().' for: '.var_export($e, true ) );
-            return response()->json(['success'=> false, 'error'=> 'Update page problem - exception'], 200);
+            Log::error('page update ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile().' for: '.var_export($e, true));
+
+            return response()->json(['success' => false, 'error' => 'Update page problem - exception'], 200);
         }
 
         if (empty($res)) {
-            return response()->json(['success'=> false, 'error'=> 'Update page problem'], 200);
+            return response()->json(['success' => false, 'error' => 'Update page problem'], 200);
         }
 
-        return response()->json(['success'=> true], 200);
+        return response()->json(['success' => true], 200);
     }
 
     public function delete(Request $request, $id)
@@ -178,14 +168,14 @@ class PageController extends Controller
         $page = Page::find($id);
 
         if (empty($page)) {
-            return response()->json(['success'=> false, 'error'=> 'Page not find'], 200);
+            return response()->json(['success' => false, 'error' => 'Page not find'], 200);
         }
 
         $res = $page->delete();
         if (empty($res)) {
-            return response()->json(['success'=> false, 'error'=> 'Page delete problem'], 200);
+            return response()->json(['success' => false, 'error' => 'Page delete problem'], 200);
         }
 
-        return response()->json(['success'=> true], 200);
+        return response()->json(['success' => true], 200);
     }
 }

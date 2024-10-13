@@ -3,14 +3,12 @@
 namespace App\Console\Commands;
 
 //use DB;
-use Illuminate\Support\Facades\DB;
+use App\Services\Cmsrs\MenuService;
 //composer require illuminate/support
 
-
-use Illuminate\Console\Command;
-
 use App\Services\Cmsrs\PageService;
-use App\Services\Cmsrs\MenuService;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class Migration extends Command
 {
@@ -38,7 +36,7 @@ class Migration extends Command
         parent::__construct();
     }
 
-    private $imgOldPath = "/var/www/cmsrsloc/public/images/gallery/";
+    private $imgOldPath = '/var/www/cmsrsloc/public/images/gallery/';
 
     /**
      * Execute the console command.
@@ -52,7 +50,7 @@ class Migration extends Command
         $this->loginPage();
         $menus = $this->getOldMenuData();
         foreach ($menus as $oldMenuId => $m) {
-            $newMenu = (new MenuService())->wrapCreate(['name' => $m]);
+            $newMenu = (new MenuService)->wrapCreate(['name' => $m]);
             $pages = $this->getOldPagesByMenuId($oldMenuId);
             foreach ($pages as $oldPageId => $p) {
                 $newPage = $this->createPagesForMenu($newMenu->id, $p, $oldPageId);
@@ -76,9 +74,9 @@ class Migration extends Command
             $out[$img->id]['alt'][$img->lang] = $img->value;
             $out[$img->id]['name'] = $img->name;
 
-            $imgPath = $this->imgOldPath.$oldPageId."/".$img->name;
-            if (!file_exists($imgPath)) {
-                die("obrazek: $imgPath nie istnieje");
+            $imgPath = $this->imgOldPath.$oldPageId.'/'.$img->name;
+            if (! file_exists($imgPath)) {
+                exit("obrazek: $imgPath nie istnieje");
             }
             $out[$img->id]['data'] = $this->getImgData($imgPath); //wrog for performance
         }
@@ -90,15 +88,15 @@ class Migration extends Command
     {
         $type = pathinfo($img, PATHINFO_EXTENSION);
         $data = file_get_contents($img);
-        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-  
+        $base64 = 'data:image/'.$type.';base64,'.base64_encode($data);
+
         return $base64;
     }
 
     private function createPagesForMenu($newMenuId, $oldData, $oldPageId)
     {
         $dataP = [
-            'title'     => $oldData['page_title'],
+            'title' => $oldData['page_title'],
             'short_title' => $oldData['label'],
             'description' => $oldData['html_desc'],
             'published' => 1,
@@ -109,10 +107,8 @@ class Migration extends Command
             //'images' => $this->getOldImagesByPageId($oldPageId) //comment this if you dont want images
         ];
 
-        return (new PageService())->wrapCreate($dataP);
+        return (new PageService)->wrapCreate($dataP);
     }
-
-    
 
     private function getOldPagesByMenuId($menuId)
     {
@@ -122,8 +118,7 @@ class Migration extends Command
             left join core_translates as t on (t.page_id = p.id )  \n
             left join core_contents as c on (c.page_id = p.id )  \n  
             where (p.menu_id = $menuId) and  (p.published = 1) \n
-            order by p.position"
-            ;
+            order by p.position";
 
         $pages = DB::connection('mysql2')->select($sql);
 
@@ -134,10 +129,9 @@ class Migration extends Command
         foreach ($pages as $pp) {
             $out[$pp->id]['content'][$pp->c_lang] = $pp->content;
         }
-        
+
         return $out;
     }
-
 
     private function getOldMenuData()
     {
@@ -147,25 +141,25 @@ class Migration extends Command
         foreach ($menus as $m) {
             $out[$m->id][$m->lang] = $m->value;
         }
+
         return $out;
     }
-    
 
     private function mainPage()
     {
         $mainPage =
         [
-            'title'     =>[
-                "en" =>  'Multilingual CMS system with online store module, Laravel and React Redux, checkers online, tic-tac-toe online game, ball line online game, Robert  Szczepanski - home page - cmsRS',
-                "pl" =>  'Wielojęzyczny CMS z modułem sklepu internetowego, Laravel i React Redux, gra w warcaby, gra w kółko i krzyżyk, gra w kulki, Robert Szczepański - strona prywatna - cmsRS'
+            'title' => [
+                'en' => 'Multilingual CMS system with online store module, Laravel and React Redux, checkers online, tic-tac-toe online game, ball line online game, Robert  Szczepanski - home page - cmsRS',
+                'pl' => 'Wielojęzyczny CMS z modułem sklepu internetowego, Laravel i React Redux, gra w warcaby, gra w kółko i krzyżyk, gra w kulki, Robert Szczepański - strona prywatna - cmsRS',
             ],
-            'short_title' =>[
-                "en" =>  'cmsRS main page',
-                "pl" =>  'cmsRS strona glowna'
+            'short_title' => [
+                'en' => 'cmsRS main page',
+                'pl' => 'cmsRS strona glowna',
             ],
-            'description' =>[
-                "en" =>  'download multilingual cms with online store module, base on Laravel and React Redux, tic-tac-toe game, checkers online,  ball lines game. Home page of Robert Szczepanski',
-                "pl" =>  'pobierz wilojęzyczny cms z modulem sklepu internetowego oparty o Laravel i React Redux, gra w kółko i krzyżyk, warcaby, gra w kulki. Prywatna strona Roberta Szczepańskiego'
+            'description' => [
+                'en' => 'download multilingual cms with online store module, base on Laravel and React Redux, tic-tac-toe game, checkers online,  ball lines game. Home page of Robert Szczepanski',
+                'pl' => 'pobierz wilojęzyczny cms z modulem sklepu internetowego oparty o Laravel i React Redux, gra w kółko i krzyżyk, warcaby, gra w kulki. Prywatna strona Roberta Szczepańskiego',
             ],
             'published' => 1,
             'commented' => 0,
@@ -228,7 +222,7 @@ class Migration extends Command
           
             </div>',
 
-          'pl' => '          
+                'pl' => '          
             <div>
 
             <div class="jumbotron">
@@ -280,34 +274,33 @@ class Migration extends Command
               <hr>        
             </div> <!-- /container -->
           
-            </div>'
-        
-        
-        ],
+            </div>',
+
+            ],
             'menu_id' => null,
             'page_id' => null,
             //'images' => []
         ];
-        (new PageService())->wrapCreate($mainPage);
+        (new PageService)->wrapCreate($mainPage);
     }
 
     private function privacyPage()
     {
         $pPrivacy = [
-            'title'     => [ "en" =>'Privacy policy', "pl" => "Polityka prywatności" ],
-            'short_title' => [ "en" =>'Privacy policy', "pl" => "Polityka prywatności"],
+            'title' => ['en' => 'Privacy policy', 'pl' => 'Polityka prywatności'],
+            'short_title' => ['en' => 'Privacy policy', 'pl' => 'Polityka prywatności'],
             'description' => [
-                "en" =>'Polityka prywatności, Polityka cookies, Polityka użycia plików cookies w naszym serwisie oraz opis zarządzania ustawieniami cookies w przeglądarce',
-                "pl" => 'Polityka prywatności, Polityka cookies, Polityka użycia plików cookies w naszym serwisie oraz opis zarządzania ustawieniami cookies w przeglądarce'
+                'en' => 'Polityka prywatności, Polityka cookies, Polityka użycia plików cookies w naszym serwisie oraz opis zarządzania ustawieniami cookies w przeglądarce',
+                'pl' => 'Polityka prywatności, Polityka cookies, Polityka użycia plików cookies w naszym serwisie oraz opis zarządzania ustawieniami cookies w przeglądarce',
             ],
             'published' => 1,
             'commented' => 0,
             'type' => 'privacy_policy',
-            'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            'content' => ['en' => $this->getPrivacyPolicy(), 'pl' => $this->getPrivacyPolicy()],
             'images' => [
-            ]
+            ],
         ];
-        (new PageService())->wrapCreate($pPrivacy);
+        (new PageService)->wrapCreate($pPrivacy);
     }
 
     private function getPrivacyPolicy()
@@ -315,19 +308,18 @@ class Migration extends Command
         return '<p>POLITYKA COOKIES<br /> <br />Zgodnie z wymaganiami dotyczącymi serwisów internetowych, informuje Państwa, że dla zapewnienia lepszego działania serwisu używam mechanizmu plików cookies.<br /><br />1. Pliki cookies (tzw. "ciasteczka”) stanowią dane informatyczne, w szczególności pliki tekstowe, które są zapisywane i przechowywane w urządzeniu końcowym Użytkownika Serwisu ( na komputerze, smartfonie, tablecie itp.) i przeznaczone są do korzystania ze stron internetowych Serwisu. Cookies zazwyczaj zawierają nazwę strony internetowej, z której pochodzą, czas przechowywania plików cookies na urządzeniu końcowym oraz unikalny numer, służący do identyfikacji przeglądarki, z jakiej następuje połączenie ze stroną internetową.<br /> <br />2.Pliki cookies wykorzystywane są w celu:<br /><br />a) dostosowania zawartości stron internetowych Serwisu do preferencji Użytkownika oraz optymalizacji korzystania ze stron internetowych; w szczególności pliki te pozwalają rozpoznać urządzenie końcowe Użytkownika Serwisu i odpowiednio wyświetlić stronę internetową, dostosowaną do jego indywidualnych potrzeb;<br /><br />b) tworzenia statystyk, które pomagają zrozumieć, w jaki sposób Użytkownicy Serwisu korzystają ze stron internetowych, co umożliwia ulepszanie ich struktury i zawartości;<br /> <br />c) utrzymanie sesji Użytkownika Serwisu (po zalogowaniu), dzięki której Użytkownik nie musi na każdej podstronie Serwisu ponownie wpisywać loginu i hasła (o ile funkcja logowań ie jest dostępna w Serwisie).<br />  <br />3. W ramach Serwisu stosowane są dwa zasadnicze rodzaje plików cookies:<br /> <br />a) "sesyjne" (session cookies), które są plikami tymczasowymi, które przechowywane są w urządzeniu końcowym Użytkownika do czasu wylogowania, opuszczenia strony internetowej lub wyłączenia oprogramowania (przeglądarki internetowej) i które są niezbędne do działania Serwisu oraz korzystania z usług dostępnych w ramach Serwisu;<br /> <br />b) "stałe" (persistent cookies),które przechowywane są w urządzeniu końcowym Użytkownika przez czas określony w parametrach plików cookies lub do czasu ich usunięcia przez Użytkownika.<br /> <br />4. W ramach Serwisu pliki cookies mogą być wykorzystywane w celu:<br /> <br />a) zbierania informacji o sposobie korzystania przez Użytkownika ze stron internetowych Serwisu (np.: informacji na temat obszarów, które odwiedza Użytkownik, czasu jaki na nich spędza oraz problemów jakie na nich napotyka), co pozwala poprawiać działanie stron internetowych Serwisu,<br /> <br />b) zapamiętania wybranych przez Użytkownika ustawień by zapewnić personalizację interfejsu Użytkownika (np. w zakresie wybranego języka lub regionu, z którego pochodzi Użytkownik, rozmiaru czcionki, wyglądu strony internetowej) oraz by dostarczyć Użytkownikowi bardziej spersonalizowane treści i usługi;<br /> <br />5. W wielu przypadkach przeglądark i internetowe domyślnie dopuszczają przechowywanie plików cookies w urządzeniu końcowym Użytkownika. Użytkownicy Serwisu mogą dokonać w każdym czasie zmiany ustawień dotyczących plików cookies w swoich przeglądarkach internetowych. Zmiana ustawień może w szczególności polegać na blokowaniu automatycznej obsługi plików cookies bądź na informowaniu o każdorazowym zamieszczeniu plików cookies w urządzeniu końcowym Użytkownika Serwisu. Szczegółowe informacje o możliwości i sposobach obsługi plików cookies dostępne są w ustawieniach przeglądarki internetowej.<br /> <br />6. Informuje, że ograniczenia stosowania plików cookies mogą wpłynąć na niektóre funkcjonalności dostępne na stronach internetowych Serwisu, co może negatywnie wpłynąć na wygodę korzystania z Serwisu lub doprowadzić do zablokowania niektórych funkcjonalności.</p>';
     }
 
-
     private function loginPage()
     {
         $pLogin = [
-            'title'     => [ "en" =>'Log into cmsRS system', "pl" => "Logowanie do systemu cmsRS" ],
-            'short_title' => [ "en" =>'Login', "pl" => "Logowanie"],
-            'description' => [ "en" =>'Description... Needed for google', "pl" => 'Opis..... Potrzebne dla googla'  ],
+            'title' => ['en' => 'Log into cmsRS system', 'pl' => 'Logowanie do systemu cmsRS'],
+            'short_title' => ['en' => 'Login', 'pl' => 'Logowanie'],
+            'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
             'published' => 1,
             'commented' => 0,
             'type' => 'login',
             'images' => [
-            ]
+            ],
         ];
-        (new PageService())->wrapCreate($pLogin);
+        (new PageService)->wrapCreate($pLogin);
     }
 }

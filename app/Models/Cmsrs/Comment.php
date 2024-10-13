@@ -8,7 +8,7 @@ class Comment extends Model
 {
     protected $fillable = [
         'content',
-        'page_id'
+        'page_id',
     ];
 
     protected $casts = [

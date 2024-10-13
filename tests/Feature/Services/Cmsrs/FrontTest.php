@@ -2,18 +2,14 @@
 
 namespace Tests\Feature\Services\Cmsrs;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-
-use App\Services\Cmsrs\PageService;
-use App\Services\Cmsrs\MenuService;
-use App\Services\Cmsrs\ConfigService;
-
-use App\Models\Cmsrs\Page;
-use App\Models\Cmsrs\Menu;
-use App\Models\Cmsrs\Translate;
-
 use App\Data\Demo;
+use App\Models\Cmsrs\Menu;
+use App\Models\Cmsrs\Page;
+use App\Models\Cmsrs\Translate;
+use App\Services\Cmsrs\ConfigService;
+use App\Services\Cmsrs\MenuService;
+use App\Services\Cmsrs\PageService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 
 class FrontTest extends Base
@@ -21,19 +17,21 @@ class FrontTest extends Base
     use RefreshDatabase;
 
     private $testData;
-    private $testDataMenu;
-    private $menuId;
-    private $menuObj;
 
+    private $testDataMenu;
+
+    private $menuId;
+
+    private $menuObj;
 
     public function setUp(): void
     {
         putenv('LANGS="en"');
         putenv('API_SECRET=""');
-        putenv('CURRENCY="USD"');        
+        putenv('CURRENCY="USD"');
         putenv('CACHE_ENABLE=false');
-        putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');        
-        putenv('DEMO_STATUS=false');     
+        putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');
+        putenv('DEMO_STATUS=false');
         putenv('IS_SHOP=true');
 
         parent::setUp();
@@ -41,7 +39,7 @@ class FrontTest extends Base
 
         $this->testDataMenu =
         [
-             'name'     =>  ['en' => 'test men7 zółć'],
+            'name' => ['en' => 'test men7 zółć'],
         ];
     }
 
@@ -52,7 +50,7 @@ class FrontTest extends Base
 
     private function setTestData()
     {
-        $menu = (new MenuService())->wrapCreate($this->testDataMenu);
+        $menu = (new MenuService)->wrapCreate($this->testDataMenu);
 
         $this->menuObj = $menu;
         $this->menuId = $menu->id;
@@ -60,16 +58,16 @@ class FrontTest extends Base
 
         $this->testData =
         [
-            'title' =>  ['en' => 'page 1 test test slug'],
-            'short_title' =>  ['en' => 'page1'],
+            'title' => ['en' => 'page 1 test test slug'],
+            'short_title' => ['en' => 'page1'],
             'published' => 1,
             'position' => 7,
             'type' => 'cms',
-            'content' =>  ['en' => 'content test133445'],
-            'menu_id' => $this->menuId
+            'content' => ['en' => 'content test133445'],
+            'menu_id' => $this->menuId,
         ];
 
-        (new PageService())->wrapCreate($this->testData);
+        (new PageService)->wrapCreate($this->testData);
 
         $this->assertEquals(1, Menu::All()->count());
         $this->assertEquals(1, Page::All()->count());
@@ -81,131 +79,124 @@ class FrontTest extends Base
 
         $testData =
         [
-            'title' =>  ['en' => 'home'],
-            'short_title' =>  ['en' => 'home'],
+            'title' => ['en' => 'home'],
+            'short_title' => ['en' => 'home'],
             'published' => 1,
             'type' => 'home',
             'content' => null,
-            'menu_id' => null //!!!! - contact not related to menu
+            'menu_id' => null, //!!!! - contact not related to menu
         ];
 
-        (new PageService())->wrapCreate($testData);
+        (new PageService)->wrapCreate($testData);
 
         $count = Page::All()->count();
         $this->assertEquals(1, $count);
-
 
         $response1 = $this->get('/home');
         $response1->assertStatus(200);
 
         $response2 = $this->get('home/orders');
-        $response2->assertStatus(404);        
+        $response2->assertStatus(404);
 
         $response3 = $this->get('home/basket');
-        $response3->assertStatus(404);        
-
+        $response3->assertStatus(404);
 
         $response3b = $this->get('home/basketbb');
-        $response3b->assertStatus(404);        
+        $response3b->assertStatus(404);
     }
-
 
     public function test_it_will_get_all_pages_one_lang_by_type()
     {
         $langs = ConfigService::arrGetLangsEnv();
-        $this->assertEquals(1, count($langs) );
+        $this->assertEquals(1, count($langs));
 
         $testDataMenu =
         [
-            'name' =>  ['en' => 'menu test' ],
+            'name' => ['en' => 'menu test'],
         ];
 
-        $menu = (new MenuService())->wrapCreate($testDataMenu);
+        $menu = (new MenuService)->wrapCreate($testDataMenu);
         $this->assertNotEmpty($menu->id);
 
         $pageTypes = ConfigService::arrGetPageTypes();
-        $this->assertTrue(9 <= count($pageTypes));
+        $this->assertTrue(count($pageTypes) >= 9);
         foreach ($pageTypes as $page_type) {
             $data = [
-                'title'     => ['en' => $page_type.' en'],
-                'short_title' => ['en' =>$page_type],
-                'description' => ['en' =>'Description... Needed for google'],
+                'title' => ['en' => $page_type.' en'],
+                'short_title' => ['en' => $page_type],
+                'description' => ['en' => 'Description... Needed for google'],
                 'published' => 1,
                 'commented' => 1,
                 'type' => $page_type,
-                'content' => ['en' =>'test'],
-                'menu_id' => null
+                'content' => ['en' => 'test'],
+                'menu_id' => null,
             ];
-            $p = (new PageService())->wrapCreate($data);
+            $p = (new PageService)->wrapCreate($data);
 
             $data['menu_id'] = $menu->id;
-            if('main_page' !== $page_type){
-                $p = (new PageService())->wrapCreate($data);
+            if ($page_type !== 'main_page') {
+                $p = (new PageService)->wrapCreate($data);
             }
         }
         $pages = Page::All();
 
-        $this->assertEquals(2*count($pageTypes) - 1, count($pages) );
-        $in = false;        
-        foreach($pages as $page){
+        $this->assertEquals(2 * count($pageTypes) - 1, count($pages));
+        $in = false;
+        foreach ($pages as $page) {
 
-            foreach($langs as $lang){
-                $url = (new PageService() )->getUrl($page, $lang);
+            foreach ($langs as $lang) {
+                $url = (new PageService)->getUrl($page, $lang);
                 $response = $this->get($url);
-    
-                $status = (('login' === $page->type) || ('register' === $page->type)  || ('forgot' === $page->type) ) ? 302 : 200; //why forgot??
-                if ('shoppingsuccess' ==  $page->type){
-                    $status =404;
+
+                $status = (($page->type === 'login') || ($page->type === 'register') || ($page->type === 'forgot')) ? 302 : 200; //why forgot??
+                if ($page->type == 'shoppingsuccess') {
+                    $status = 404;
                 }
-                
-                $response->assertStatus($status);    
-                $in = true;        
-            }            
+
+                $response->assertStatus($status);
+                $in = true;
+            }
 
         }
         $this->assertTrue($in);
     }
 
-    
     public function test_it_will_show_contact_on_the_main_page()
     {
         $this->testData =
         [
-            'title' =>  ['en' => 'contact'],
-            'short_title' =>  ['en' => 'contact'],
+            'title' => ['en' => 'contact'],
+            'short_title' => ['en' => 'contact'],
             'published' => 1,
             'type' => 'contact',
             'content' => null,
-            'menu_id' => null //!!!! - contact not related to menu
+            'menu_id' => null, //!!!! - contact not related to menu
         ];
 
-        (new PageService())->wrapCreate($this->testData);
+        (new PageService)->wrapCreate($this->testData);
 
         $count = Page::All()->count();
         $this->assertEquals(1, $count);
 
-
         $testMainPage =
         [
-            'title'     =>  ['en' =>'cmsRS'],
-            'short_title' =>  ['en' =>'cmsRS'],
-            'description' =>  ['en' =>'cmsRS'],
+            'title' => ['en' => 'cmsRS'],
+            'short_title' => ['en' => 'cmsRS'],
+            'description' => ['en' => 'cmsRS'],
             'published' => 1,
             'commented' => 0,
             'after_login' => 0,
             'type' => 'main_page',
-            'content' =>  ['en' =>'main page'],
+            'content' => ['en' => 'main page'],
             'menu_id' => null,
-            'page_id' => null
+            'page_id' => null,
         ];
-        (new PageService())->wrapCreate($testMainPage);
+        (new PageService)->wrapCreate($testMainPage);
         $this->assertEquals(2, Page::All()->count());
-
 
         $response = $this->get('/');
         $response->assertStatus(200);
     }
-
 
     /**
      * maybe it will be usefull for sitemap
@@ -237,30 +228,29 @@ class FrontTest extends Base
     {
         $testData2 =
         [
-            'title'     =>  ['en' =>'cmsRS'],
-            'short_title' =>  ['en' =>'cmsRS'],
-            'description' =>  ['en' =>'cmsRS'],
+            'title' => ['en' => 'cmsRS'],
+            'short_title' => ['en' => 'cmsRS'],
+            'description' => ['en' => 'cmsRS'],
             'published' => 1,
             'commented' => 0,
             'after_login' => 1,
             'type' => 'main_page',
-            'content' =>  ['en' =>'main page'],
+            'content' => ['en' => 'main page'],
             'menu_id' => null,
-            'page_id' => null
+            'page_id' => null,
         ];
-  
+
         $response = $this->post('api/pages?token='.$this->token, $testData2);
-  
+
         $pages = Page::All()->toArray();
-        $this->assertEquals( 1, count($pages));
+        $this->assertEquals(1, count($pages));
 
         $res = $response->getData();
         $this->assertTrue($res->success);
-        
+
         $response = $this->get('/');
         $response->assertStatus(200);
     }
-
 
     public function test_it_will_get_main_page_2()
     {
@@ -269,26 +259,26 @@ class FrontTest extends Base
 
         $testData2 =
         [
-            'title'     =>  ['en' =>'cmsRS'],
-            'short_title' =>  ['en' =>'cmsRS'],
-            'description' =>  ['en' =>'cmsRS'],
+            'title' => ['en' => 'cmsRS'],
+            'short_title' => ['en' => 'cmsRS'],
+            'description' => ['en' => 'cmsRS'],
             'published' => 1,
             'commented' => 0,
             'after_login' => 1,
             'type' => 'main_page',
-            'content' =>  ['en' =>'main page'],
+            'content' => ['en' => 'main page'],
             'menu_id' => null,
-            'page_id' => null
+            'page_id' => null,
         ];
-  
+
         $response = $this->post('api/pages?token='.$this->token, $testData2);
-  
+
         $pages = Page::All()->toArray();
-        $this->assertEquals( 1, count($pages));
+        $this->assertEquals(1, count($pages));
 
         $res = $response->getData();
         $this->assertTrue($res->success);
-        
+
         $response = $this->get('/');
         $response->assertStatus(200);
     }
@@ -305,11 +295,10 @@ class FrontTest extends Base
         $p0 = Page::query()->where('menu_id', $this->menuId)->get()->first();
         $this->assertNotEmpty($p0);
 
-        $url =  (new PageService()) ->getUrl( $p0, 'en');
+        $url = (new PageService)->getUrl($p0, 'en');
 
         //dd($url);
 
-        
         $response1 = $this->get($url);
         $response1->assertStatus(200);
     }
@@ -329,24 +318,23 @@ class FrontTest extends Base
         //not working - see this it_will_get_cms_page0 (this work)
         // $response = $this->get('/c/'.$menuSlug.'/'.$pageSlug);
         // $response->assertStatus(404);
-        
 
         $testData2 =
         [
-            'title'     =>  ['en' =>'cmsRS'],
-            'short_title' =>  ['en' =>'cmsRS'],
-            'description' =>  ['en' =>'cmsRS'],
+            'title' => ['en' => 'cmsRS'],
+            'short_title' => ['en' => 'cmsRS'],
+            'description' => ['en' => 'cmsRS'],
             'published' => 1,
             'commented' => 0,
             'after_login' => 1,
             'type' => 'cms',
-            'content' =>  ['en' =>'main page'],
+            'content' => ['en' => 'main page'],
             'menu_id' => $this->menuId,
-            'page_id' => null
+            'page_id' => null,
         ];
-  
+
         $response = $this->post('api/pages?token='.$this->token, $testData2);
-  
+
         $res = $response->getData();
         $this->assertTrue($res->success);
 
@@ -355,14 +343,13 @@ class FrontTest extends Base
 
         $i = 0;
         foreach ($p as $pp) {
-            $url0 = (new PageService()) ->getUrl($pp, 'en');
+            $url0 = (new PageService)->getUrl($pp, 'en');
             $response = $this->get($url0);
             $response->assertStatus(200);
             $i++;
         }
         $this->assertEquals(2, $i);
 
-        
         $responseB = $this->get('/'.$menuSlug);
         $responseB->assertStatus(404);
     }
@@ -370,22 +357,22 @@ class FrontTest extends Base
     public function test_it_will_get_in_page()
     {
         $pPrivacy = [
-            'title'     => [ "en" =>'Privacy policy', "pl" => 'polityka prywatnosci' ],
-            'short_title' => [ "en" =>'Privacy policy', "pl" => 'polityka prywatnosci'],
-            'description' => [ "en" =>'Description... Needed for google', "pl" => 'polityka prywatnosci'],
+            'title' => ['en' => 'Privacy policy', 'pl' => 'polityka prywatnosci'],
+            'short_title' => ['en' => 'Privacy policy', 'pl' => 'polityka prywatnosci'],
+            'description' => ['en' => 'Description... Needed for google', 'pl' => 'polityka prywatnosci'],
             'published' => 1,
             'commented' => 0,
             'type' => 'privacy_policy',
-            'content' => [ "en" => 'politics ....', "pl" => 'polityka prywatnosci'],
+            'content' => ['en' => 'politics ....', 'pl' => 'polityka prywatnosci'],
             'images' => [
-            ]
+            ],
         ];
 
-        $p = (new PageService())->wrapCreate($pPrivacy);
+        $p = (new PageService)->wrapCreate($pPrivacy);
         $this->assertNotEmpty($p->id);
 
         $lang = 'en';
-        $url =  (new PageService()) ->getUrl($p, $lang);
+        $url = (new PageService)->getUrl($p, $lang);
         $this->assertNotEmpty($url);
         $response1 = $this->get($url);
         $response1->assertStatus(200);

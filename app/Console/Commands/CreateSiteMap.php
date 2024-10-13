@@ -2,11 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Services\Cmsrs\PageService;
 use App\Models\Cmsrs\Page;
-
+use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\ProductService;
+use Illuminate\Console\Command;
 
 class CreateSiteMap extends Command
 {
@@ -41,18 +40,18 @@ class CreateSiteMap extends Command
      */
     public function handle()
     {
-        $pageService = new PageService();
+        $pageService = new PageService;
         $appUrl = env('APP_URL');
         $langs = $pageService->getArrLangs();
         $pages = Page::where('after_login', '=', 0)->where('published', '=', 1)->where('type', '!=', 'inner')->get();
-        $prodUrls = (new ProductService())->getProductsUrl();
+        $prodUrls = (new ProductService)->getProductsUrl();
 
         $strUrls = '';
         foreach ($langs as $lang) {
             foreach ($pages as $page) {
-                $strUrls .= $appUrl. $pageService->getUrl($page, $lang)."\n";
+                $strUrls .= $appUrl.$pageService->getUrl($page, $lang)."\n";
             }
-            foreach ($prodUrls as $prodUrl){
+            foreach ($prodUrls as $prodUrl) {
                 $strUrls .= $appUrl.$prodUrl[$lang]."\n";
             }
         }

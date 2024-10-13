@@ -23,6 +23,6 @@ return new class extends Migration
     {
         Schema::table('contents', function (Blueprint $table) {
             $table->text('value')->nullable()->change();
-        });        
+        });
     }
 };

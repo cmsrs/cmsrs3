@@ -1,6 +1,5 @@
 <?php
 
-
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,18 +19,17 @@ class DatabaseSeeder extends Seeder
             'name' => 'adm',
             'email' => $admEmail,
             'password' => Hash::make($admPass),
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         $emailClient = env('CLIENT_EMAIL', 'client@cmsrs.pl');
-        $passClient = env('CLIENT_PASS',  'cmsrs456');
+        $passClient = env('CLIENT_PASS', 'cmsrs456');
         DB::table('users')->insert([
-            'name'     => 'client',
-            'email'    => $emailClient,
+            'name' => 'client',
+            'email' => $emailClient,
             'password' => Hash::make($passClient),
-            'role' => 'client'
+            'role' => 'client',
         ]);
-
 
     }
 }

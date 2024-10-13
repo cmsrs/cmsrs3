@@ -3,19 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\ResetsPasswords;
+use App\Services\Cmsrs\ConfigService;
 //use App\Config;
 
-
-use App\Models\Cmsrs\Menu;
-use App\Models\Cmsrs\User;
-
-
-use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
-use App\Services\Cmsrs\ConfigService;
-
-
+use Illuminate\Foundation\Auth\ResetsPasswords;
 
 class ResetPasswordController extends Controller
 {
@@ -32,10 +24,11 @@ class ResetPasswordController extends Controller
 
     use ResetsPasswords;
 
-    protected $lang;    
-    protected $langs;        
-    protected $menus;        
+    protected $lang;
 
+    protected $langs;
+
+    protected $menus;
 
     /**
      * Where to redirect users after resetting their password.
@@ -52,17 +45,17 @@ class ResetPasswordController extends Controller
     public function __construct()
     {
         $demoStatus = env('DEMO_STATUS', false);
-        if($demoStatus){
-            echo "Not permission";
-            die();
+        if ($demoStatus) {
+            echo 'Not permission';
+            exit();
         }
 
         $this->middleware('guest');
 
         $this->langs = (new ConfigService)->arrGetLangs();
         $pHome = PageService::getFirstPageByType('home');
-        if( $pHome ){
-            $this->redirectTo = (new PageService) ->getUrl($pHome, $this->langs[0]);
+        if ($pHome) {
+            $this->redirectTo = (new PageService)->getUrl($pHome, $this->langs[0]);
         }
 
     }

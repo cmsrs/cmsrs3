@@ -2,25 +2,22 @@
 
 namespace App\Models\Cmsrs;
 
-use Illuminate\Notifications\Notifiable;
-//use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Support\Facades\Hash;
+//use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-
-
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
-
     public static $role = [
         'admin' => 'admin',
-        'client' => 'client'
+        'client' => 'client',
     ];
 
     /**
@@ -29,7 +26,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password' , 'role'
+        'name', 'email', 'password', 'role',
     ];
 
     /**
@@ -56,7 +53,7 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     /**
@@ -68,6 +65,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->getKey();
     }
+
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.
      *
@@ -80,7 +78,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function setPasswordAttribute($password)
     {
-        if (!empty($password)) {
+        if (! empty($password)) {
             $this->attributes['password'] = Hash::make($password);
 
             // if( $this->role === 'admin' ) {
@@ -91,11 +89,11 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
-    static public function getTokenForClient()
+    public static function getTokenForClient()
     {
         $user = Auth::user();
-        if( empty($user) ){
-            throw new \Exception("User not auth");
+        if (empty($user)) {
+            throw new \Exception('User not auth');
         }
 
         return $user->getTokenClient();
@@ -104,44 +102,46 @@ class User extends Authenticatable implements JWTSubject
     public function getTokenClient()
     {
         $appKey = env('APP_KEY');
-        if( empty($appKey) ){
-            throw new \Exception("empty APP_KEY in config file");
+        if (empty($appKey)) {
+            throw new \Exception('empty APP_KEY in config file');
         }
-                
-        return sha1($this->email."_".$this->id."_".$appKey);
+
+        return sha1($this->email.'_'.$this->id.'_'.$appKey);
     }
 
     public function checkClientByToken($token)
     {
         $expectedToken = $this->getTokenClient();
-        if($expectedToken ==  $token){
+        if ($expectedToken == $token) {
             return true;
         }
+
         return false;
     }
 
-    static public function  checkApiClientByToken($token)
+    public static function checkApiClientByToken($token)
     {
         $user = Auth::user();
-        if( empty($user) ){
-            throw new \Exception("User not auth - for check");
+        if (empty($user)) {
+            throw new \Exception('User not auth - for check');
         }
-        if( !$user->checkClientByToken($token) ){
-            throw new \Exception("User not valid - check");
+        if (! $user->checkClientByToken($token)) {
+            throw new \Exception('User not valid - check');
         }
+
         return true;
     }
 
-    static public function clientValidator(array $data)
+    public static function clientValidator(array $data)
     {
         $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => [
-                0 => 'required', 
-                1 => 'string', 
-                2 => 'email', 
-                3 => 'max:255', 
-                4 => !empty($data['id']) ? Rule::unique('users')->ignore($data['id']) :  Rule::unique('users')
+                0 => 'required',
+                1 => 'string',
+                2 => 'email',
+                3 => 'max:255',
+                4 => ! empty($data['id']) ? Rule::unique('users')->ignore($data['id']) : Rule::unique('users'),
             ],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];
@@ -149,19 +149,17 @@ class User extends Authenticatable implements JWTSubject
         return Validator::make($data, $rules);
     }
 
-    static public function createClient(array $data)
+    public static function createClient(array $data)
     {
-        if( empty($data['name']) || empty($data['email']) ||  empty($data['password']) ){
-            throw new \Exception("Sth wrong with client data i it must be passed validation rules");
+        if (empty($data['name']) || empty($data['email']) || empty($data['password'])) {
+            throw new \Exception('Sth wrong with client data i it must be passed validation rules');
         }
 
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'role' => User::$role['client'],
-            'password' => $data['password']   //Hash::make($data['password']),
+            'password' => $data['password'],   //Hash::make($data['password']),
         ]);
     }
-
-
 }

@@ -2,15 +2,8 @@
 
 namespace Tests\Feature\Services\Cmsrs;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-
-use App\Page;
 use App\Models\Cmsrs\User;
-use App\Menu;
-use App\Config;
-use App\Data\Demo;
-use Illuminate\Support\Str;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 
 class HomeTest extends Base
@@ -18,24 +11,28 @@ class HomeTest extends Base
     use RefreshDatabase;
 
     private $testData;
+
     private $testDataMenu;
+
     private $menuId;
+
     private $menuObj;
+
     private $titleEn = 'eeeeeeeeeeeeeeeennnnnnnnnnnnnnnnn';
+
     private $titlePl = 'pppppppppppppppplllllllllllllllll';
+
     private $langs;
-
-
 
     public function setUp(): void
     {
         putenv('LANGS="pl,en"');
         putenv('API_SECRET=""');
-        putenv('CURRENCY="USD"');        
+        putenv('CURRENCY="USD"');
         putenv('CACHE_ENABLE=false');
-        putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');     
-        putenv('DEMO_STATUS=false');  
-        putenv('IS_SHOP=true');      
+        putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');
+        putenv('DEMO_STATUS=false');
+        putenv('IS_SHOP=true');
 
         parent::setUp();
         //$this->createUser();
@@ -60,5 +57,4 @@ class HomeTest extends Base
         $staticCheck = User::checkApiClientByToken($token);
         $this->assertTrue($staticCheck);
     }
-
 }

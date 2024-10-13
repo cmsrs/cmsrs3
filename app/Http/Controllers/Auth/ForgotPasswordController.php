@@ -3,24 +3,16 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Log;
+use App\Models\Cmsrs\Menu;
+use App\Services\Cmsrs\ConfigService;
+use App\Services\Cmsrs\PageService;
 //use App\Page;
 //use App\Config;
-use App\Models\Cmsrs\Menu;
+use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 //use App;
 use Illuminate\Support\Facades\App;
-
-use App\Services\Cmsrs\MenuService;
-use App\Services\Cmsrs\PageService;
-
-
-use App\Services\Cmsrs\ConfigService;
-
-
-
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class ForgotPasswordController extends Controller
 {
@@ -35,14 +27,15 @@ class ForgotPasswordController extends Controller
     |
     */
 
-    use SendsPasswordResetEmails;    
+    use SendsPasswordResetEmails;
     /*
     use SendsPasswordResetEmails{
         sendResetLinkEmail as traitSendResetLinkEmail;
     }
     */
-    
+
     private $menus;
+
     private $langs;
 
     /**
@@ -53,14 +46,13 @@ class ForgotPasswordController extends Controller
     public function __construct()
     {
         $demoStatus = env('DEMO_STATUS', false);
-        if($demoStatus){
-            echo "Not permission";
-            die();
+        if ($demoStatus) {
+            echo 'Not permission';
+            exit();
         }
 
         $this->menus = Menu::all()->sortBy('position'); //TODO cached
         $this->langs = (new ConfigService)->arrGetLangs();
-        
 
         $this->middleware('guest');
     }
@@ -78,32 +70,29 @@ class ForgotPasswordController extends Controller
             $message->to($to_email, $to_name)->subject('Artisans Web Testing Mail');
             $message->from('test@gmail.com','Artisans Web');
         });
-    } 
-    */   
+    }
+    */
 
     public function showLinkRequestForm($lang = null)
     {
         $page = PageService::getFirstPageByType('forgot');
-        if(!$page){
+        if (! $page) {
             Log::error('if you want this page you have to add page in type forgot');
             abort(404);
         }
 
-        if(empty($lang)){
+        if (empty($lang)) {
             $lang = $this->langs[0];
         }
         App::setLocale($lang);
-        
-        $data =  (new PageService() )->getDataToView( $page, [
+
+        $data = (new PageService)->getDataToView($page, [
             'view' => 'forgot',
             'lang' => $lang,
             'langs' => $this->langs,
-            'menus' => $this->menus
+            'menus' => $this->menus,
         ]);
-        
+
         return view('auth.passwords.email', $data);
     }
-    
-
-
 }

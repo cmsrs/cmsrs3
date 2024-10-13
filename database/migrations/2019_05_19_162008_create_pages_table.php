@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreatePagesTable extends Migration
 {
@@ -21,15 +21,13 @@ class CreatePagesTable extends Migration
             //$table->string('description')->nullable();
             $table->boolean('published')->default(0);
             $table->boolean('commented')->default(0);
-            $table->boolean('after_login')->default(0);            
+            $table->boolean('after_login')->default(0);
             $table->integer('position')->unsigned()->nullable();
-            $table->enum('type', ['cms','gallery','shop','contact','main_page','privacy_policy','login','projects','clear','checkout','register','home',  'shoppingsuccess', 'search','forgot','inner'  ])->default('cms');
+            $table->enum('type', ['cms', 'gallery', 'shop', 'contact', 'main_page', 'privacy_policy', 'login', 'projects', 'clear', 'checkout', 'register', 'home',  'shoppingsuccess', 'search', 'forgot', 'inner'])->default('cms');
             //$table->text('content')->nullable();
             //$table->string('slug')->notNullable();
 
             //DB::statement("ALTER TABLE pages MODIFY COLUMN  type ENUM('cms','gallery','shop','contact','main_page','privacy_policy','login','projects','clear') not null");
-
-
 
             $table->unsignedBigInteger('page_id')->nullable();
             $table->foreign('page_id')->nullable()->references('id')->on('pages')->onDelete('set null');

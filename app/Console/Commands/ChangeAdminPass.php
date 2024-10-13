@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\Cmsrs\User;
+use Illuminate\Console\Command;
 
 class ChangeAdminPass extends Command
 {
@@ -26,19 +26,19 @@ class ChangeAdminPass extends Command
      */
     public function handle()
     {
-        $pass =  $this->argument('pass');
+        $pass = $this->argument('pass');
 
-        if(!$pass){
+        if (! $pass) {
             echo 'set admin password';
             exit;
         }
 
         $roleAdm = User::$role['admin'];
-        $user = User::where( 'role', $roleAdm)->first();
-        if($user){
+        $user = User::where('role', $roleAdm)->first();
+        if ($user) {
             $user->password = $pass;
-            $user->save();                
-        }else{
+            $user->save();
+        } else {
             echo "can't find admin user";
             exit;
         }

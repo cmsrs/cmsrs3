@@ -2,23 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Support\Facades\Log;
-use App\Page;
 use App\Config;
+use App\Http\Controllers\Controller;
+use App\Models\Cmsrs\Menu;
+use App\Services\Cmsrs\ConfigService;
 //use App\Menu;
 //use App;
-use Illuminate\Support\Facades\App;
-
-
-use App\Models\Cmsrs\Menu;
-
-
-use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
-use App\Services\Cmsrs\ConfigService;
-
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
@@ -41,9 +34,12 @@ class LoginController extends Controller
      * @var string
      */
     protected $redirectTo = '/en/home';
-    protected $lang;    
-    protected $langs;        
-    protected $menus;        
+
+    protected $lang;
+
+    protected $langs;
+
+    protected $menus;
 
     /**
      * Create a new controller instance.
@@ -62,35 +58,34 @@ class LoginController extends Controller
         $this->langs = (new ConfigService)->arrGetLangs();
 
         $pHome = PageService::getFirstPageByType('home');
-        if( $pHome ){
-            $this->redirectTo = (new PageService) ->getUrl($pHome, $this->langs[0]);
+        if ($pHome) {
+            $this->redirectTo = (new PageService)->getUrl($pHome, $this->langs[0]);
         }
     }
-    
+
     public function showLoginForm($lang = null)
     {
         $page = PageService::getFirstPageByType('login');
-        if(!$page){
+        if (! $page) {
             Log::error('if you want this page you have to add page in type login');
             abort(404);
         }
 
-        if(empty($lang)){
+        if (empty($lang)) {
             $lang = $this->langs[0];
         }
         App::setLocale($lang);
 
         $pForgot = PageService::getFirstPageByType('forgot');
-      
-        $data =  (new PageService) ->getDataToView($page, [
+
+        $data = (new PageService)->getDataToView($page, [
             'view' => 'login',
             'pforgot' => $pForgot,
             'lang' => $lang,
             'langs' => $this->langs,
-            'menus' => $this->menus
+            'menus' => $this->menus,
         ]);
-        
+
         return view('auth.login', $data);
     }
-
 }

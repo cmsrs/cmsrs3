@@ -3,7 +3,6 @@
 namespace Tests\Feature\Services\Cmsrs;
 
 use App\Models\Cmsrs\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -15,20 +14,19 @@ class AuthenticationTest extends TestCase
     {
         putenv('LANGS="en"');
         putenv('API_SECRET=""');
-        putenv('CURRENCY="USD"');        
+        putenv('CURRENCY="USD"');
         putenv('CACHE_ENABLE=false');
-        putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');     
-        putenv('DEMO_STATUS=false');     
-        putenv('IS_SHOP=true');   
+        putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');
+        putenv('DEMO_STATUS=false');
+        putenv('IS_SHOP=true');
 
         parent::setUp();
 
-
         $user = new User([
-             'email'    => 'test@email.com',
-             'name'     => 'test testowy',
-             'role' => User::$role['admin']
-         ]);
+            'email' => 'test@email.com',
+            'name' => 'test testowy',
+            'role' => User::$role['admin'],
+        ]);
 
         $user->password = 'cmsrs';
 
@@ -38,9 +36,9 @@ class AuthenticationTest extends TestCase
     private function privilege_action($token)
     {
         $response = $this->get('api/menus?token='.$token);
+
         return $response;
     }
-
 
     private function logout_action($token)
     {
@@ -48,7 +46,6 @@ class AuthenticationTest extends TestCase
 
         return $response;
     }
-
 
     public function test_it_will_register_a_user()
     {
@@ -62,33 +59,29 @@ class AuthenticationTest extends TestCase
 
         $response = $this->post('api/register', [
             'secret' => $secret,
-            'email'    => 'test2@email.com',
-            'name'     => 'iii',
-            'password' => 'cmsrs'
+            'email' => 'test2@email.com',
+            'name' => 'iii',
+            'password' => 'cmsrs',
         ]);
 
-
         $response = $response->getData();
-
 
         $this->assertStringStartsWith('eyJ0eXA', $response->data->token);
         $this->assertTrue($response->success);
 
-
-        $privilege =   $this->privilege_action($response->data->token);
+        $privilege = $this->privilege_action($response->data->token);
         $this->assertNotEmpty($privilege->getData()->testrs);
-        $logout =   $this->logout_action($response->data->token);
+        $logout = $this->logout_action($response->data->token);
         $this->assertTrue($logout->getData()->success);
-        $privilegeAfterLogout =    $this->privilege_action($response->data->token);
+        $privilegeAfterLogout = $this->privilege_action($response->data->token);
     }
 
     public function test_it_will_log_a_user_in_docs()
     {
-        $d  = [
-            'email'    => 'test@email.com',
-            'password' => 'cmsrs'
+        $d = [
+            'email' => 'test@email.com',
+            'password' => 'cmsrs',
         ];
-
 
         $response = $this->post('api/login', $d); //->getData();
 
@@ -97,32 +90,32 @@ class AuthenticationTest extends TestCase
         $this->assertStringStartsWith('eyJ0eXA', $response->data->token);
         $this->assertTrue($response->success);
 
-        $privilege =   $this->privilege_action($response->data->token);
-        //dd($privilege);        
+        $privilege = $this->privilege_action($response->data->token);
+        //dd($privilege);
         //dd($privilege->getData());
 
         $this->assertTrue($privilege->getData()->success);
 
-        $logout =   $this->logout_action($response->data->token);
+        $logout = $this->logout_action($response->data->token);
 
         $this->assertTrue($logout->getData()->success);
-        $privilegeAfterLogout =    $this->privilege_action($response->data->token);
+        $privilegeAfterLogout = $this->privilege_action($response->data->token);
     }
 
     public function test_it_will_log_client_in()
     {
         $user = new User([
-            'email'    => 'client@email.com',
-            'name'     => 'client test',
-            'role' => User::$role['client']
+            'email' => 'client@email.com',
+            'name' => 'client test',
+            'role' => User::$role['client'],
         ]);
-    
+
         $user->password = 'cmsrs456';
         $user->save();
 
         $response = $this->post('api/login', [
-        'email'    => 'client@email.com',
-        'password' => 'cmsrs456'
+            'email' => 'client@email.com',
+            'password' => 'cmsrs456',
         ])->getData();
 
         $this->assertFalse($response->success);
@@ -131,12 +124,11 @@ class AuthenticationTest extends TestCase
     public function test_it_will_not_log_an_invalid_user_in_error_docs()
     {
         $response = $this->post('api/login', [
-            'email'    => 'test_wrong@email.com',
-            'password' => 'wrongpass'
+            'email' => 'test_wrong@email.com',
+            'password' => 'wrongpass',
         ]); //->getData();
         $this->assertEquals(200, $response->status());
         $res = $response->getData();
-
 
         $this->assertFalse($res->success);
         $this->assertNotEmpty($res->error);
@@ -144,16 +136,15 @@ class AuthenticationTest extends TestCase
 
     public function test_it_will_not_log_an_invalid_user_in_good_email_the_same_err_as_below()
     {
-        $d  = [
-            'email'    => 'test@email.com',
-            'password' => 'wrong_pass'
+        $d = [
+            'email' => 'test@email.com',
+            'password' => 'wrong_pass',
         ];
-        $response = $this->post('api/login', $d );
+        $response = $this->post('api/login', $d);
         $res = $response->getData();
         //print_r($res);
 
         $this->assertFalse($res->success);
         $this->assertNotEmpty($res->error);
     }
-
 }

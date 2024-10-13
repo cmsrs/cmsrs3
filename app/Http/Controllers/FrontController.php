@@ -2,47 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-
-use App\Models\Cmsrs\Page;
-use App\Services\Cmsrs\PageService;
-
-
-use App\Basket;
-use App\Base;
+use App\Integration\Payu;
 use App\Models\Cmsrs\Checkout;
-use App\User;
+use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Product;
-
-use App\Models\Cmsrs\Menu;
-use App\Services\Cmsrs\MenuService;
-
-
-use App\Services\Cmsrs\ConfigService;
 use App\Order;
+use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\DeliverService;
+use App\Services\Cmsrs\MenuService;
+use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\PaymentService;
+use App\Services\Cmsrs\ProductService;
+use App\User;
 use Carbon\Carbon;
 //use App;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
-
 use Illuminate\Support\Facades\Auth;
-use App\Integration\Payu;
-use App\Services\Cmsrs\ProductService;
+use Illuminate\Support\Facades\Log;
 
 class FrontController extends Controller
 {
     private $menus;
+
     private $langs;
 
     public function __construct()
-    {    
-        $this->menus =  MenuService::getMenu(); //$menus;
+    {
+        $this->menus = MenuService::getMenu(); //$menus;
         $this->langs = (new ConfigService)->arrGetLangs();
     }
-
 
     private function validatePage($page)
     {
@@ -50,111 +39,110 @@ class FrontController extends Controller
             abort(404);
         }
 
-        if (! (new PageService())->checkAuth( $page )) {
+        if (! (new PageService)->checkAuth($page)) {
             abort(401);
         }
     }
 
-    public function search(Request $request, $lang = null )
+    public function search(Request $request, $lang = null)
     {
 
         if (empty($lang)) {
             $lang = $this->langs[0];
         }
-        if (!in_array($lang, $this->langs)) {
+        if (! in_array($lang, $this->langs)) {
             abort(404);
         }
         App::setLocale($lang);
 
         $page = PageService::getFirstPageByType('search');
-        if(!$page){
+        if (! $page) {
             Log::error('if you want this page you have to add page in type search');
             abort(404);
         }
-        $urlSearch = (new PageService())->getUrl($page, $lang);
+        $urlSearch = (new PageService)->getUrl($page, $lang);
         //dd($urlSearch);
 
         $key = $request->input('key');
-        $products = (new ProductService())->wrapSearchProducts( $lang, $key);        
+        $products = (new ProductService)->wrapSearchProducts($lang, $key);
 
-        $data = (new PageService())->getDataToView( $page, [
+        $data = (new PageService)->getDataToView($page, [
             'key' => $key,
-            'url_search' =>  $urlSearch,
+            'url_search' => $urlSearch,
             'products' => $products,
             'lang' => $lang,
             'langs' => $this->langs,
-            'menus' => $this->menus
-        ]);        
+            'menus' => $this->menus,
+        ]);
 
-        return view('search', $data);        
+        return view('search', $data);
     }
 
-    public function shoppingsuccess(Request $request, $lang = null )
+    public function shoppingsuccess(Request $request, $lang = null)
     {
         if (empty($lang)) {
             $lang = $this->langs[0];
         }
-        if (!in_array($lang, $this->langs)) {
+        if (! in_array($lang, $this->langs)) {
             abort(404);
         }
         App::setLocale($lang);
 
         $page = PageService::getFirstPageByType('shoppingsuccess');
-        if(!$page){
+        if (! $page) {
             Log::error('if you want this page you have to add page in type shoppingsuccess');
             abort(404);
         }
 
-        if( $request->session()->has('checkout_id')){
+        if ($request->session()->has('checkout_id')) {
             $checkoutId = $request->session()->get('checkout_id');
             $objCheckout = Checkout::find($checkoutId);
             $request->session()->forget('checkout_id');
-            //$request->session()->flush();    
+            //$request->session()->flush();
         }
-        if( empty($objCheckout) ){
+        if (empty($objCheckout)) {
             abort(404);
         }
 
-        $data = (new PageService)->getDataToView( $page, [
+        $data = (new PageService)->getDataToView($page, [
             'checkout' => $objCheckout,
             'lang' => $lang,
             'langs' => $this->langs,
-            'menus' => $this->menus
+            'menus' => $this->menus,
         ]);
 
         return view('shoppingsuccess', $data);
     }
 
-
-    public function checkout(Request $request, $lang = null )
+    public function checkout(Request $request, $lang = null)
     {
         if (empty($lang)) {
             $lang = $this->langs[0];
         }
-        if (!in_array($lang, $this->langs)) {
+        if (! in_array($lang, $this->langs)) {
             abort(404);
         }
         App::setLocale($lang);
 
         $page = PageService::getFirstPageByType('checkout');
-        if(!$page){
-            Log::error('if you want this page you have to add page in type checkout');            
+        if (! $page) {
+            Log::error('if you want this page you have to add page in type checkout');
             abort(404);
         }
 
         $payments = PaymentService::getPayment();
-        $delivers = DeliverService::getDeliver();        
+        $delivers = DeliverService::getDeliver();
 
         //$token =  '123todo'; // User::getTokenForClient(); //todo - when user not auth
 
-        $data = (new PageService)->getDataToView( $page, [
+        $data = (new PageService)->getDataToView($page, [
             //'token' => $token,
             'payments' => $payments,
             'delivers' => $delivers,
             'lang' => $lang,
             'langs' => $this->langs,
-            'menus' => $this->menus
-        ] );
+            'menus' => $this->menus,
+        ]);
 
         return view('checkout', $data);
     }
@@ -162,7 +150,7 @@ class FrontController extends Controller
     public function postCheckout(Request $request)
     {
         $lang = $request->input('lang');
-        if (!in_array($lang, $this->langs)) {
+        if (! in_array($lang, $this->langs)) {
             abort(404);
         }
         App::setLocale($lang);
@@ -179,7 +167,7 @@ class FrontController extends Controller
             'postcode' => 'required',
             'deliver' => 'required',
             'payment' => 'required',
-        ]);     
+        ]);
 
         $data = $request->only(
             'products',
@@ -195,55 +183,57 @@ class FrontController extends Controller
             'payment'
         );
 
-        list(
+        [
             'productsDataAndTotalAmount' => $productsDataAndTotalAmount,
             'checkout' => $checkout,
             'objCheckout' => $objCheckout
-        ) = (new ProductService())->saveCheckout($data, (Auth::check() ? Auth::user()->id : null), session()->getId());
+        ] = (new ProductService)->saveCheckout($data, (Auth::check() ? Auth::user()->id : null), session()->getId());
 
-        
-        if( PaymentService::KEY_PAYU  == $data['payment'] ){
+        if ($data['payment'] == PaymentService::KEY_PAYU) {
             //redirect to payU
             $payu = new Payu;
 
             //dd($checkout);
-            $data = $payu->dataToSend( $productsDataAndTotalAmount, $checkout );  
+            $data = $payu->dataToSend($productsDataAndTotalAmount, $checkout);
 
-            Log::debug(' data sended to payu: '.var_export($data, true ) );        
+            Log::debug(' data sended to payu: '.var_export($data, true));
 
             $redirectUri = $payu->getOrder($data);
-            if( empty($redirectUri) ){
+            if (empty($redirectUri)) {
                 //throw new \Exception("Something wrong with payu - i cant obtain the redirectUri");
-                Log::debug("Something wrong with payu - i cant obtain the redirectUri");            
-                return response()->json(['success'=> false, 'error'=> 'Something wrong with payu - try later.'], 200); 
+                Log::debug('Something wrong with payu - i cant obtain the redirectUri');
+
+                return response()->json(['success' => false, 'error' => 'Something wrong with payu - try later.'], 200);
             }
-            Log::debug('payu redirect url: '.$redirectUri );
+            Log::debug('payu redirect url: '.$redirectUri);
+
             return redirect($redirectUri);
 
-        }else{
-            $pShoppingSuccess = PageService::getFirstPageByType('shoppingsuccess'); 
-            if( empty($pShoppingSuccess) ){
-                throw new \Exception("you should add page type = shoppingsuccess");
+        } else {
+            $pShoppingSuccess = PageService::getFirstPageByType('shoppingsuccess');
+            if (empty($pShoppingSuccess)) {
+                throw new \Exception('you should add page type = shoppingsuccess');
             }
 
-            $urlShoppingSuccess = (new PageService )->getUrl($pShoppingSuccess, $lang);       
-            //$request->session()->flash('status', 'Task was successful!');            
-            //$request->session()->keep(['checkout_id' => $objCheckout->id]);            
-            $request->session()->flash('checkout_id', $objCheckout->id);            
+            $urlShoppingSuccess = (new PageService)->getUrl($pShoppingSuccess, $lang);
+            //$request->session()->flash('status', 'Task was successful!');
+            //$request->session()->keep(['checkout_id' => $objCheckout->id]);
+            $request->session()->flash('checkout_id', $objCheckout->id);
+
             return redirect($urlShoppingSuccess);
         }
 
     }
 
-
     public function changeLang($lang, $pageId, $productSlug = null)
     {
         $page = Page::find($pageId);
-        if( empty($page) ){
+        if (empty($page)) {
             abort(404);
         }
-        $url = (new PageService )->getUrl($page, $lang, $productSlug );
+        $url = (new PageService)->getUrl($page, $lang, $productSlug);
         ConfigService::saveLangToSession($lang);
+
         return redirect($url);
     }
 
@@ -255,16 +245,16 @@ class FrontController extends Controller
         if (empty($lang)) {
             $lang = $this->langs[0];
         }
-        if (!in_array($lang, $this->langs)) {
+        if (! in_array($lang, $this->langs)) {
             abort(404);
         }
         App::setLocale($lang);
 
         //todo - http_reffer - i don't know how to obtain this value - it should be from payu
         //it make sense only for payU - it my opinion
-        $isNewOrders = false; //Order::copyDataFromBasketToOrderForUser();  
+        $isNewOrders = false; //Order::copyDataFromBasketToOrderForUser();
 
-        $page = PageService::getMainPage();    
+        $page = PageService::getMainPage();
         $this->validatePage($page);
 
         // $pSearch = App\Page::getFirstPageByType('search');
@@ -276,7 +266,7 @@ class FrontController extends Controller
         //slider_main
         //$sliderData = (new Page)->getFirstPageWithImagesForGuestCache( 'slider_main' );
         //$sliderDataImages = empty($sliderData['images']) ? false : $sliderData['images'];
-        $sliderDataImages = (new PageService )->getPageDataByShortTitleCache( 'main_page_slider', 'images' );
+        $sliderDataImages = (new PageService)->getPageDataByShortTitleCache('main_page_slider', 'images');
 
         $data = (new PageService)->getDataToView($page, [
             //'url_search' =>  $urlSearch,
@@ -285,8 +275,8 @@ class FrontController extends Controller
             'slider_images' => $sliderDataImages,
             'lang' => $lang,
             'langs' => $this->langs,
-            'menus' => $this->menus
-        ] );
+            'menus' => $this->menus,
+        ]);
 
         return view('index', $data);
     }
@@ -294,6 +284,7 @@ class FrontController extends Controller
     public function getPageLangs($lang, $menuSlug, $pageSlug = null, $productSlug = null)
     {
         $data = $this->getPage($menuSlug, $pageSlug, $productSlug, $lang);
+
         return view($data['view'], $data);
     }
 
@@ -317,37 +308,36 @@ class FrontController extends Controller
         } else {
             $pageOut = PageService::getPageBySlug($menus, $menuSlug, $pageSlug, $lang);
         }
-     
+
         $this->validatePage($pageOut);
 
         //$data = $this->getData($pageOut, $lang);
-        $data = (new PageService)->getDataToView( $pageOut, [
+        $data = (new PageService)->getDataToView($pageOut, [
             'lang' => $lang,
             'langs' => $this->langs,
-            'menus' => $this->menus
+            'menus' => $this->menus,
         ]);
 
-
-        if($productSlug){ //product page
-            $objProduct = new ProductService();
+        if ($productSlug) { //product page
+            $objProduct = new ProductService;
             $product = $objProduct->getProductBySlug($productSlug, $lang);
-            if(empty($product)){
+            if (empty($product)) {
                 abort(404);
             }
-            if(empty($product->published)){
+            if (empty($product->published)) {
                 abort(404);
             }
 
-            $urls = ( new ProductService() )->getProductUrls($product);        
+            $urls = (new ProductService)->getProductUrls($product);
             $data['url_category'] = $urls['url_category'];
             //$data['url_product'] = $urls['url_product'];
-            $product = $objProduct->getProductDataByProductArr( $product );
+            $product = $objProduct->getProductDataByProductArr($product);
             $data['product'] = $product;
             $data['h1'] = $product['product_name'][$lang];
             $data['product_name'] = $product['product_name'];
             $data['product_name_slug'] = $product['product_name_slug'];
             $data['page_title'] = $product['product_name'][$lang] ?? config('app.name', 'cmsRS');
-            $data['seo_description'] =  $product['product_description'][$lang] ?? config('app.name', 'cmsRS');
+            $data['seo_description'] = $product['product_description'][$lang] ?? config('app.name', 'cmsRS');
         }
 
         if ($manyLangs) {
@@ -360,9 +350,9 @@ class FrontController extends Controller
     public function getSeparatePageLangs($lang, $pageSlug)
     {
         $data = $this->getSeparatePage($pageSlug, $lang);
+
         return view($data['view'], $data);
     }
-
 
     public function getSeparatePage($pageSlug, $lang = null)
     {
@@ -372,11 +362,11 @@ class FrontController extends Controller
         } else {
             $manyLangs = true;
         }
-        App::setLocale($lang);    
+        App::setLocale($lang);
 
         $pageOut = null;
         $pages = Page::all();
-        $pageService = new PageService();
+        $pageService = new PageService;
         foreach ($pages as $page) {
             if ($pageService->getSlugByLang($page, $lang) == $pageSlug) {
                 $pageOut = $page;
@@ -387,18 +377,16 @@ class FrontController extends Controller
 
         //$data = $this->getData($pageOut, $lang);
 
-        $data = (new PageService)->getDataToView( $pageOut, [
+        $data = (new PageService)->getDataToView($pageOut, [
             'lang' => $lang,
             'langs' => $this->langs,
-            'menus' => $this->menus
-        ] );
-
+            'menus' => $this->menus,
+        ]);
 
         if ($manyLangs) {
             return $data;
         }
-    
+
         return view($data['view'], $data);
     }
-
 }

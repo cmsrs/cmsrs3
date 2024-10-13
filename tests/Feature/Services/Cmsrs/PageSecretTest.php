@@ -1,40 +1,38 @@
 <?php
+
 namespace Tests\Feature\Services\Cmsrs;
 
-
-use App\Services\Cmsrs\PageService;
-use App\Services\Cmsrs\MenuService;
-
 use App\Models\Cmsrs\Page;
-use App\Models\Cmsrs\Menu;
-use App\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\Services\Cmsrs\MenuService;
+use App\Services\Cmsrs\PageService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Str;
 
 class PageSecretTest extends Base
 {
     use RefreshDatabase;
 
-
     private $testData;
+
     private $testDataMenu;
+
     private $menuId;
+
     private $menuObj;
+
     private $objPage;
 
     private $apiSecret;
 
     public function setUp(): void
     {
-        $this->apiSecret = '8761';        
-        putenv('LANGS="en"');                
+        $this->apiSecret = '8761';
+        putenv('LANGS="en"');
         putenv('API_SECRET="'.$this->apiSecret.'"');
-        putenv('CURRENCY="USD"');        
+        putenv('CURRENCY="USD"');
         putenv('CACHE_ENABLE=false');
-        putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');   
-        putenv('DEMO_STATUS=false');    
-        putenv('IS_SHOP=true');      
+        putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');
+        putenv('DEMO_STATUS=false');
+        putenv('IS_SHOP=true');
 
         parent::setUp();
 
@@ -42,21 +40,21 @@ class PageSecretTest extends Base
 
         $this->testData =
         [
-            'title' =>  ['en' => 'page 1 test'],
-            'short_title' =>  ['en' =>'page1'],
-            'description' =>  ['en' =>'this page: test desc ...'],
+            'title' => ['en' => 'page 1 test'],
+            'short_title' => ['en' => 'page1'],
+            'description' => ['en' => 'this page: test desc ...'],
             'published' => 1,
             'commented' => 1,
             'after_login' => 0,
             'type' => 'cms',
-            'content' =>  ['en' => 'content test133445'],
+            'content' => ['en' => 'content test133445'],
             'menu_id' => null,
-            'page_id' => null
+            'page_id' => null,
         ];
 
         $this->testDataMenu =
         [
-             'name'     => ['en' => 'test men7'],
+            'name' => ['en' => 'test men7'],
         ];
     }
 
@@ -64,30 +62,29 @@ class PageSecretTest extends Base
     {
         parent::tearDown();
     }
-    
+
     private function setTestData()
     {
-        $this->objPage = (new PageService())->wrapCreate($this->testData);
+        $this->objPage = (new PageService)->wrapCreate($this->testData);
 
-        $menu = (new MenuService())->wrapCreate($this->testDataMenu);
+        $menu = (new MenuService)->wrapCreate($this->testDataMenu);
 
         $this->menuObj = $menu->all()->first();
         $this->menuId = $this->menuObj->id;
     }
 
-
     public function test_it_will_add_main_page()
     {
         $testData2 =
       [
-          'title'     =>  ['en' =>'test p2xx'],
-          'short_title' =>  ['en' =>'p22'],
-          'description' =>  ['en' =>'test1234'],
+          'title' => ['en' => 'test p2xx'],
+          'short_title' => ['en' => 'p22'],
+          'description' => ['en' => 'test1234'],
           'published' => 1,
           'commented' => 0,
           'after_login' => 1,
           'type' => 'main_page',
-          'content' =>  ['en' =>'aaa ffdfds'],
+          'content' => ['en' => 'aaa ffdfds'],
           'menu_id' => null, //it must be null for type main_page
           'page_id' => null, //it must be null for type main_page
       ];
@@ -97,8 +94,8 @@ class PageSecretTest extends Base
 
         $res = $response->getData();
         $this->assertTrue($res->success);
-      
-        $pages =  Page::all()->toArray();
+
+        $pages = Page::all()->toArray();
         $this->assertEquals(1, count($pages));
         $this->assertEquals('main_page', $pages[0]['type']);
     }

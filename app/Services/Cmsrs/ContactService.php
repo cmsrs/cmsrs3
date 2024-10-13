@@ -8,15 +8,15 @@ class ContactService extends BaseService
 {
     protected $fillable = [
         'email',
-        'message'
+        'message',
     ];
 
     public $columnsAllowedToSort = [
-        'id',        
+        'id',
         'email',
         'message',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
 
     public function getAllData()
@@ -31,6 +31,7 @@ class ContactService extends BaseService
             $item['created_at_format'] = $contact->created_at->format('Y-m-d H:i:s');
             $out[] = $item;
         }
+
         return $out;
     }
 

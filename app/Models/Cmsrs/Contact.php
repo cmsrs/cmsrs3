@@ -8,15 +8,14 @@ class Contact extends Model
 {
     protected $fillable = [
         'email',
-        'message'
+        'message',
     ];
 
     public $columnsAllowedToSort = [
-        'id',        
+        'id',
         'email',
         'message',
         'created_at',
-        'updated_at'
+        'updated_at',
     ];
-
 }

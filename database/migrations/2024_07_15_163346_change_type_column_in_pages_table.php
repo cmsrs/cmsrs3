@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('pages', function (Blueprint $table) {
-            $table->enum('type', ['cms','gallery','shop','contact','main_page','privacy_policy','login','projects','clear','checkout','register','home',  'shoppingsuccess', 'search','forgot','inner'])
+            $table->enum('type', ['cms', 'gallery', 'shop', 'contact', 'main_page', 'privacy_policy', 'login', 'projects', 'clear', 'checkout', 'register', 'home',  'shoppingsuccess', 'search', 'forgot', 'inner'])
                 ->default('cms')
                 ->change();
         });

@@ -8,15 +8,14 @@ class Basket extends Model
 {
     protected $fillable = [
         'qty',
-        'price',        
+        'price',
         'checkout_id',
-        'product_id'
+        'product_id',
     ];
 
     protected $casts = [
         'price' => 'integer',
         'checkout_id' => 'integer',
-        'product_id' => 'integer'
+        'product_id' => 'integer',
     ];
-
 }
