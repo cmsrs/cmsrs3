@@ -2,7 +2,6 @@
 
 namespace App\Services\Cmsrs;
 
-//use Illuminate\Database\Eloquent\Model;
 use App\Models\Cmsrs\Contact;
 
 class ContactService extends BaseService

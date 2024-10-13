@@ -5,32 +5,8 @@ use App\Models\Cmsrs\Translate;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 
-
 class TranslateService extends BaseService
 {
-    /*
-    protected $fillable = [
-        'lang',
-        'column',
-        'value',
-        'page_id',
-        'menu_id',
-        'image_id',
-        'product_id'
-    ];
-
-    protected $casts = [
-        'page_id' => 'integer',
-        'menu_id' => 'integer',
-        'image_id' => 'integer',
-        'product_id' => 'integer',        
-    ];
-
-    public function page()
-    {
-        return $this->hasOne('App\Page', 'id', 'page_id');
-    }
-    */
 
     public function wrapCreate($data, $create = true)
     {

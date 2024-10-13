@@ -4,22 +4,9 @@ namespace App\Services\Cmsrs;
 
 use App\Models\Cmsrs\User;
 use App\Models\Cmsrs\Order;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Model;
 
 class OrderService extends BaseService
 {
-    // protected $fillable = [
-    //     'qty',
-    //     'user_id',
-    //     'product_id'
-    // ];
-
-    // protected $casts = [
-    //     'user_id' => 'integer',
-    //     'product_id' => 'integer'
-    // ];
-
     static public function copyDataFromBasketToOrderForUser($checkout)
     {
         // $checkout = Checkout::findActiveOrder();
@@ -76,36 +63,34 @@ class OrderService extends BaseService
 
         return true;
 
-/*
-        $orders = [];
-        if($objBaskets->count()){
-            foreach($objBaskets as $objBasket){
-                $arrBasket = $objBasket->toArray();
-                $arrBasket['user_id'] = $user->id;
 
-                unset($arrBasket['created_at']);
-                unset($arrBasket['updated_at']);
-                $productId = $arrBasket['product_id'];
+        // $orders = [];
+        // if($objBaskets->count()){
+        //     foreach($objBaskets as $objBasket){
+        //         $arrBasket = $objBasket->toArray();
+        //         $arrBasket['user_id'] = $user->id;
 
-                if( empty($orders[$productId]) ){
-                    $orders[$productId] = $arrBasket;
-                }else{
-                    $orders[$productId]['qty'] += $arrBasket['qty'];
-                }
-            }
-            Order::where('user_id', '=', $user->id)->delete();
-            foreach($orders as $order){
-                Order::create($order);
-            }
-        }    
-*/
+        //         unset($arrBasket['created_at']);
+        //         unset($arrBasket['updated_at']);
+        //         $productId = $arrBasket['product_id'];
+
+        //         if( empty($orders[$productId]) ){
+        //             $orders[$productId] = $arrBasket;
+        //         }else{
+        //             $orders[$productId]['qty'] += $arrBasket['qty'];
+        //         }
+        //     }
+        //     Order::where('user_id', '=', $user->id)->delete();
+        //     foreach($orders as $order){
+        //         Order::create($order);
+        //     }
+        // }    
         
     }   
 
     static public function inOrdersByUserId($userId)
     {
             return Order::where('user_id', '=', $userId)->get(); //->toArray();
-    }
-    
+    }    
     
 }

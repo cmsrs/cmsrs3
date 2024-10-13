@@ -4,33 +4,17 @@ namespace App\Services\Cmsrs;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Models\Cmsrs\Translate;
 use App\Models\Cmsrs\Menu;
 
 class MenuService extends BaseService
 {
     private $translate;
 
-    // protected $fillable = [
-    //     'position'
-    // ];
-
-    // protected $casts = [
-    //     'position' => 'integer',
-    // ];
-
-    // public $requiredColumn = [
-    //     'name'
-    // ];
-    
 
     public function __construct(array $attributes = array())
     {
-        //parent::__construct($attributes);
-
         $this->translate = new TranslateService;
     }
-
 
     public function setTranslate($objTranslate)
     {
@@ -53,15 +37,6 @@ class MenuService extends BaseService
         return $menus;
     }
 
-
-    private function getMenuObj()
-    {
-        $menuObj = new Menu;
-        $menuObj->setTranslate($this->translate);
-        return $menuObj;
-    }
-    
-
     public static function CreateMenu($data)
     {
         $data['position'] = MenuService::getNextPosition();
@@ -81,7 +56,6 @@ class MenuService extends BaseService
         return true;
     }
 
-
     /**
      * use also in script to load demo (test) data
      * php artisan command:load-demo-data
@@ -99,15 +73,11 @@ class MenuService extends BaseService
         $column = 'name';
         $name = $this->translatesByColumnAndLang($model, $column, $lang);
 
-        //dd('______________________________________-'.$name);
-
         return Str::slug($name, "-");
     }
 
     public function getAllTranslate(Menu $mMenu)
     {
-        //dd($mMenu);
-
         $menuId = $mMenu->id;
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
@@ -120,23 +90,13 @@ class MenuService extends BaseService
         return $ret;
     }
 
-    // public function pages()
-    // {
-    //     return $this->hasMany('App\Page');
-    // }
-
-    // public function translates()
-    // {
-    //     return $this->hasMany('App\Translate');
-    // }
-
-    public function pagesPublished(Menu $mMenu) //to_jest_duza_zmiana!!!
+    public function pagesPublished(Menu $mMenu) 
     {
         $pages = $mMenu->pages()->where('published', '=', 1)->orderBy('position', 'asc')->get();
         return $pages;
     }
 
-    public function pagesPublishedAndAccess(Menu $mMenu) //to_jest_duza_zmiana!!!
+    public function pagesPublishedAndAccess(Menu $mMenu)
     {
         if (Auth::check()) {
             $pages = $mMenu->pages()->where('published', '=', 1)->orderBy('position', 'asc');

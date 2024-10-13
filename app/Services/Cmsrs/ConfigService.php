@@ -2,7 +2,6 @@
 
 namespace App\Services\Cmsrs;
 
-//use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 
@@ -107,13 +106,6 @@ class ConfigService
 
     public static function getPageTypes()
     {
-        // $pageTypes = '';
-        // if (env('PAGE_TYPES')) {
-        //     $pageTypes = env('PAGE_TYPES');
-        // } else {
-        //     $pageTypes = Config::PAGE_TYPES_STR_DEFAULT;
-        // }
-
         return env('PAGE_TYPES', ConfigService::PAGE_TYPES_STR_DEFAULT);
     }
 
@@ -192,5 +184,4 @@ class ConfigService
         return $formEnv && $isFileExist;
     }
 
-    
 }

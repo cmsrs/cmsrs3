@@ -17,45 +17,15 @@ use Namshi\JOSE\Base64\Base64UrlSafeEncoder;
 
 class PageService extends BaseService
 {
-    //const PREFIX_CMS_URL = 'cms';
-    //const PREFIX_CMS_ONE_PAGE_IN_MENU_URL = 'o';    
-    //const PREFIX_IN_URL = 'in'; //(in) independent
 
     private $translate;
     private $content;
     public $pageFields;
-    private $langs;
+    //private $langs;
 
-    /*
-    protected $fillable = [
-        'published',
-        'commented',
-        'after_login',
-        'position',
-        'type',
-        'menu_id',
-        'page_id'
-    ];
-
-    public $requiredColumn = [
-        'title',
-        'short_title'
-    ];
-
-    protected $casts = [
-        'published' => 'integer',
-        'commented' => 'integer',
-        'after_login' => 'integer',
-        'position' => 'integer',
-        'menu_id' => 'integer',
-        'page_id' => 'integer'
-    ];
-    */
 
     public function __construct(array $attributes = array())
     {
-        //parent::__construct($attributes);
-
         $this->pageFields = [
           'id',
           'published',
@@ -69,29 +39,8 @@ class PageService extends BaseService
   
         $this->translate = new TranslateService;
         $this->content = new ContentService;
-        $this->langs = $this->getArrLangs();
+        //$this->langs = $this->getArrLangs();
     }
-
-    // public function menu()
-    // {
-    //     return $this->hasOne('App\Menu', 'id', 'menu_id');
-    // }
-
-    // public function translates()
-    // {
-    //     return $this->hasMany('App\Translate');
-    // }
-
-
-    // public function contents()
-    // {
-    //     return $this->hasMany('App\Content');
-    // }
-
-    // public function images()
-    // {
-    //     return $this->hasMany('App\Image')->orderBy('position');
-    // }
 
     public function getPageDataByShortTitleCache( $shortTitle, $data = 'content',  $lang = null )
     {
@@ -388,7 +337,6 @@ class PageService extends BaseService
         $contactTitle = null;
         if (!empty($contact)) {
 
-            //dd($contact);
             $contactUrl = $this->getUrl($contact, $lang);
             $contactTitle = $this->translatesByColumnAndLang($contact, 'title', $lang);
         }
@@ -478,7 +426,6 @@ class PageService extends BaseService
         if( empty($menu) ){
             return null;
         }
-        //return $menu->pagesPublished->count();
         return  (new MenuService)->pagesPublishedAndAccess($menu)->count();        
     }
 
@@ -514,7 +461,6 @@ class PageService extends BaseService
     {
         $menuSlug = $this->getMenuSlugByLangCache($mPage, $lang);
 
-        //dd($menuSlug);
         if(empty($menuSlug)){
             return $this->getIndependentUrl($mPage, $lang);
         }
@@ -675,10 +621,6 @@ class PageService extends BaseService
 
     public function getAllPagesWithImagesOneItem(Page $mPage, ?string $simple = null)
     {
-        //dump('-----------------');
-        //dump($mPage->toArray() );
-        //dump($mPage->id);
-        //$page = ( new  )->where('id', $this->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->get($this->pageFields)->first()->toArray();
         $page = (new Page)->where( 'id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->get($this->pageFields)->first()->toArray();        
 
         //dd($page);
@@ -722,11 +664,11 @@ class PageService extends BaseService
     } 
     */   
 
-
     /**
      * todo
-     * gdzie to jest wykorzystywane do skasowania??
+     * this method not use
      */
+    /*
     public function getFirstPageWithImagesForGuestCache($type)
     {        
         $isCache =  (new ConfigService)->isCacheEnable();
@@ -740,6 +682,7 @@ class PageService extends BaseService
 
         return $ret;
     }
+    */
 
     public function getFirstPageWithImagesForGuest($type)
     {        
@@ -780,12 +723,13 @@ class PageService extends BaseService
     }
 
     /**
-     * 
+     * We can delete this method
      * old method: getPageDataByShortTitleCache
      * 
-     * 
+     * this method is tested
      * this method is writeln by new manner, and gets many pages, not one (but i use getPageDataByShortTitleCache this method instead)
      * don't use this method
+     * maybe in the future i will use it
      */
     public function getAllPagesWithImagesByShortTitleForDefaultLang($shortTitle)
     {
@@ -822,9 +766,8 @@ class PageService extends BaseService
             $imageService->delete($img);
         }
 
-        return $mPage->delete();  // parent::delete();
+        return $mPage->delete();
     }
-
 
     public static function getNextPositionByMenuId($menuId)
     {

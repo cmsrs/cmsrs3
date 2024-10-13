@@ -4,7 +4,6 @@ namespace App\Services\Cmsrs;
 
 class DeliverService
 {    
-
     const KEY_PICKUP_IN_PERSON = 'pickup_in_person';
     const KEY_DPD_COURIER = 'dpd_courier';
     const KEY_PARCEL_LOCKERS = 'parcel_lockers';
@@ -36,7 +35,4 @@ class DeliverService
 
         return $Delivers[$key];
     }
-
-
-
 }

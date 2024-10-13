@@ -23,61 +23,8 @@ class ProductService extends BaseService
 
     public $productFields;
 
-    /*
-    protected $fillable = [
-        'sku',
-        'price',
-        'published',
-        'page_id'
-    ];
-
-    protected $casts = [
-        'published' => 'integer',
-        'price' => 'integer',
-        'page_id' => 'integer'
-    ];
-
-    public $columnsAllowedToSort = [
-        'id',
-        'published',
-        'product_name', //from translate
-        'page_short_title', //from translate - derive from page_id
-        'sku',
-        'price',
-        'created_at',
-        'updated_at'
-    ];
-
-    public function page()
-    {
-        return $this->hasOne('App\Page', 'id', 'page_id');
-    }
-
-    public function images()
-    {
-        return $this->hasMany('App\Image');
-    }
-
-    public function translates()
-    {
-        return $this->hasMany('App\Translate');
-    } 
-
-    public function translatesPage()
-    {
-        return $this->hasMany('App\Translate', 'page_id', 'page_id');
-    }
-
-    public function contents()
-    {
-        return $this->hasMany('App\Content');
-    } 
-    */       
-
     public function __construct(array $attributes = array())
     {
-        //parent::__construct($attributes);
-
         $this->translate = new TranslateService;
         $this->content = new ContentService;
 
@@ -442,7 +389,7 @@ class ProductService extends BaseService
         return $productOut;
     }
 
-    public function getCategoryUrl(Product $mProduct, $lang) //to_jest_duza_zmiana!!!
+    public function getCategoryUrl(Product $mProduct, $lang)
     {
         $mPage = $mProduct->page()->get()->first();
         return  (new PageService)->getUrl($mPage, $lang);
@@ -454,16 +401,15 @@ class ProductService extends BaseService
         return  (new PageService)->getUrl($mPage, $lang, Str::slug($productName, '-') );
     }    
 
-    public function getProductUrls(Product $productWithTranslate) //to_dodalem_model_jako_arg
+    public function getProductUrls(Product $productWithTranslate)
     {
         $out = array();
-        //$arrProduct = $this->toArray();
         $arrProduct = $this->getProductDataFormat($productWithTranslate);
         $langs = ConfigService::arrGetLangsEnv();
 
         foreach($langs as $lang){
-            $out['url_category'][$lang] = $this->getCategoryUrl($productWithTranslate, $lang); //zmiana_1007
-            $out['url_product'][$lang] = $this->getProductUrl($productWithTranslate, $lang, $arrProduct['product_name'][$lang]); //zmiana_1007
+            $out['url_category'][$lang] = $this->getCategoryUrl($productWithTranslate, $lang);
+            $out['url_product'][$lang] = $this->getProductUrl($productWithTranslate, $lang, $arrProduct['product_name'][$lang]);
         }
         return $out;
     }
