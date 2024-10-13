@@ -8,7 +8,7 @@ use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {

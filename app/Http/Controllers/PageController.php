@@ -8,7 +8,7 @@ use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\PageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class PageController extends Controller
 {

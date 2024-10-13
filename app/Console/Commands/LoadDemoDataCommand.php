@@ -52,6 +52,79 @@ class LoadDemoDataCommand extends Command
         $this->content->setArrLangs($this->langs);
     }
 
+    private function wrapSaveUser($i)
+    {
+        $name = 'client'.$i;
+        $emailClient = $name.'@cmsrs.pl';
+        $user32 = new User([
+            'name' => $name,
+            'email' => $emailClient,
+            'role' => User::$role['client'],
+        ]);
+        $user32->password = 'cmsrs456';
+        $user32->save();
+        if (empty($user32->id)) {
+            exit('Sth wrong with save user');
+        }
+
+        return $user32->id;
+    }
+
+
+    private function getDataSaveCheckout($products, $i)
+    {
+        $prod0 = empty($products[0]) ? exit("can't find product0 to checkout") : $products[0];
+        $prod1 = empty($products[1]) ? exit("can't find product1 to checkout") : $products[1];
+        $prod2 = empty($products[2]) ? exit("can't find product2 to checkout") : $products[2];
+        $prod3 = empty($products[3]) ? exit("can't find product3 to checkout") : $products[3];
+
+        if (empty($prod0->id) || empty($prod1->id) || empty($prod2->id) || empty($prod3->id)) {
+            exit('product id not occur');
+        }
+
+        $name = 'client'.$i;
+        $emailClient = $name.'@cmsrs.pl';
+
+        $data =
+
+        [
+            'products' => [
+                0 => [
+                    'id' => $prod0->id,
+                    'qty' => (($i + 1) % 4) + 1, //we don't  want 0, therefore we add 1 at the end
+                ],
+
+                1 => [
+                    'id' => $prod1->id,
+                    'qty' => (($i + 2) % 4) + 1,
+                ],
+                2 => [
+                    'id' => $prod2->id,
+                    'qty' => (($i + 3) % 4) + 1,
+                ],
+                3 => [
+                    'id' => $prod3->id,
+                    'qty' => (($i + 4) % 4) + 1,
+                ],
+
+            ],
+            'lang' => 'en',
+            'email' => $emailClient,
+            'first_name' => $name,
+            'last_name' => 'Kowalski',
+            'address' => "ul. Kolejowa $i m 2",
+            'country' => 'Polska',
+            'city' => 'Warszawa',
+            'telephone' => 123456788 + $i,
+            'postcode' => '03-456',
+            'deliver' => DeliverService::KEY_DPD_COURIER,
+            'payment' => PaymentService::KEY_CASH,
+        ];
+
+        return $data;
+    }
+
+
     /**
      * Execute the console command.
      *
@@ -120,23 +193,6 @@ class LoadDemoDataCommand extends Command
         $user2->save();
          */
 
-        function wrapSaveUser($i)
-        {
-            $name = 'client'.$i;
-            $emailClient = $name.'@cmsrs.pl';
-            $user32 = new User([
-                'name' => $name,
-                'email' => $emailClient,
-                'role' => User::$role['client'],
-            ]);
-            $user32->password = 'cmsrs456';
-            $user32->save();
-            if (empty($user32->id)) {
-                exit('Sth wrong with save user');
-            }
-
-            return $user32->id;
-        }
 
         /*
         $numberOfFakeUsers = 32;
@@ -154,67 +210,15 @@ class LoadDemoDataCommand extends Command
         }
         */
 
-        function getDataSaveCheckout($products, $i)
-        {
-            $prod0 = empty($products[0]) ? exit("can't find product0 to checkout") : $products[0];
-            $prod1 = empty($products[1]) ? exit("can't find product1 to checkout") : $products[1];
-            $prod2 = empty($products[2]) ? exit("can't find product2 to checkout") : $products[2];
-            $prod3 = empty($products[3]) ? exit("can't find product3 to checkout") : $products[3];
-
-            if (empty($prod0->id) || empty($prod1->id) || empty($prod2->id) || empty($prod3->id)) {
-                exit('product id not occur');
-            }
-
-            $name = 'client'.$i;
-            $emailClient = $name.'@cmsrs.pl';
-
-            $data =
-
-            [
-                'products' => [
-                    0 => [
-                        'id' => $prod0->id,
-                        'qty' => (($i + 1) % 4) + 1, //we don't  want 0, therefore we add 1 at the end
-                    ],
-
-                    1 => [
-                        'id' => $prod1->id,
-                        'qty' => (($i + 2) % 4) + 1,
-                    ],
-                    2 => [
-                        'id' => $prod2->id,
-                        'qty' => (($i + 3) % 4) + 1,
-                    ],
-                    3 => [
-                        'id' => $prod3->id,
-                        'qty' => (($i + 4) % 4) + 1,
-                    ],
-
-                ],
-                'lang' => 'en',
-                'email' => $emailClient,
-                'first_name' => $name,
-                'last_name' => 'Kowalski',
-                'address' => "ul. Kolejowa $i m 2",
-                'country' => 'Polska',
-                'city' => 'Warszawa',
-                'telephone' => 123456788 + $i,
-                'postcode' => '03-456',
-                'deliver' => DeliverService::KEY_DPD_COURIER,
-                'payment' => PaymentService::KEY_CASH,
-            ];
-
-            return $data;
-        }
 
         $numberOfFakeUsers = 32;
         for ($i = 1; $i <= $numberOfFakeUsers; $i++) {
-            $userId = wrapSaveUser($i);
+            $userId = $this->wrapSaveUser($i);
             if (empty($userId)) {
                 exit('not found user');
             }
 
-            $d = getDataSaveCheckout($products, $i);
+            $d = $this->getDataSaveCheckout($products, $i);
 
             $sessionId = 'demo123';
             [

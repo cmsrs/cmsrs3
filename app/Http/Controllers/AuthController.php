@@ -4,11 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Cmsrs\User;
 use Illuminate\Http\Request;
-use JWTAuth;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
-//, Hash; //Mail;
 
 class AuthController extends Controller
 {
@@ -85,7 +84,8 @@ class AuthController extends Controller
     {
         $demoStatus = env('DEMO_STATUS', false);
         if ($demoStatus) {
-            echo 'Not permission';
+            //echo 'Not permission';
+            return response()->json(['success' => false, 'error' => 'Not permission']); //phpstan fix
         } else {
             if ($request->ip() !== '127.0.0.1' || ($request->input('secret') !== $_ENV['RS_SECRET'])) {
                 return response()->json(['success' => false, 'error' => 'no access']);

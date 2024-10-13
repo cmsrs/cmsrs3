@@ -6,7 +6,7 @@ use App\Models\Cmsrs\Comment;
 use App\Models\Cmsrs\Page;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class CommentController extends Controller
 {

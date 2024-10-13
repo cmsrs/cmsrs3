@@ -7,7 +7,7 @@ use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\MenuService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class MenuController extends Controller
 {
