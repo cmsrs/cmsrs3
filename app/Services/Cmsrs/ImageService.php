@@ -3,7 +3,6 @@
 namespace App\Services\Cmsrs;
 
 use Carbon\Carbon;
-use App\Models\Cmsrs\Translate;
 use App\Models\Cmsrs\Image;
 use Intervention\Image\Laravel\Facades\Image as LibImage;
 
@@ -13,8 +12,6 @@ class ImageService extends BaseService
 
     public function __construct(array $attributes = array())
     {
-        //parent::__construct($attributes);
-
         $this->translate = new TranslateService;
     }
 

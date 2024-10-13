@@ -1,19 +1,14 @@
 <?php
 namespace App\Services\Cmsrs;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
-use App\Models\Cmsrs\Translate;
-use App\Models\Cmsrs\Content;
 use App\Models\Cmsrs\Product;
 use App\Models\Cmsrs\Checkout;
 use App\Models\Cmsrs\Basket;
-use App\Models\Cmsrs\Image;
 
 
 class ProductService extends BaseService
