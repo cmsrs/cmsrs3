@@ -20,8 +20,8 @@ class CreateImagesTable extends Migration
             $table->integer('position')->unsigned()->nullable();
             $table->unsignedBigInteger('page_id')->nullable();
             $table->unsignedBigInteger('product_id')->nullable();
-            $table->foreign('page_id')->nullable()->references('id')->on('pages')->onDelete('cascade');
-            $table->foreign('product_id')->nullable()->references('id')->on('products')->onDelete('cascade');
+            $table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->timestamps();
         });
     }

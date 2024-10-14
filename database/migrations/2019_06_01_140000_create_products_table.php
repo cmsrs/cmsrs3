@@ -22,7 +22,7 @@ class CreateProductsTable extends Migration
             //$table->string('photo')->nullable();
             $table->boolean('published')->default(0);
             $table->unsignedBigInteger('page_id')->nullable();
-            $table->foreign('page_id')->nullable()->references('id')->on('pages')->onDelete('cascade');
+            $table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
             $table->timestamps();
         });
     }

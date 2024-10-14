@@ -17,7 +17,7 @@ class CreateCheckoutsTable extends Migration
             //$table->id();
             $table->bigIncrements('id')->index();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->nullable()->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users');
 
             $table->string('email');
             $table->string('first_name');

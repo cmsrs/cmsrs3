@@ -16,15 +16,15 @@ class CreateContentsTable extends Migration
         Schema::create('contents', function (Blueprint $table) {
             $table->bigIncrements('id')->index();
 
-            $table->string('lang', 8)->notNullable();
-            $table->string('column', 32)->notNullable();
+            $table->string('lang', 8);//->notNullable();
+            $table->string('column', 32);//->notNullable();
             $table->text('value')->nullable(); //consider use $table->mediumText('value')
 
             $table->unsignedBigInteger('page_id')->nullable();
-            $table->foreign('page_id')->nullable()->references('id')->on('pages')->onDelete('cascade');
+            $table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
 
             $table->unsignedBigInteger('product_id')->nullable();
-            $table->foreign('product_id')->nullable()->references('id')->on('products')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->unique(['lang', 'column', 'page_id', 'product_id'], 'translates_index_unique');
 
             //$table->dropUnique('contents_lang_column_page_id_unique');

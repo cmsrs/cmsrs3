@@ -8,6 +8,21 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Product extends Model
 {
+
+    /**
+     * it is additional data (not related with db)
+     * 
+     * @var string|null
+     */
+    //public $product_name;
+
+    /**
+     * it is additional data (not related with db)
+     * 
+     * @var string|null
+     */
+    //public $page_short_title;
+
     public $productFields;
 
     protected $fillable = [
