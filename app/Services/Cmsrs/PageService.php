@@ -624,7 +624,7 @@ class PageService extends BaseService implements TranslateInterface
 
     public function getAllPagesWithImagesOneItem(Page $mPage, ?string $simple = null)
     {
-        $page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->first()->toArray();        
+        $page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->first()->toArray();
         //$page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->get($this->pageFields)->first()->toArray(); //phpstan fix
 
         $formatPage = $this->getPageDataFormat($page);
@@ -793,18 +793,18 @@ class PageService extends BaseService implements TranslateInterface
     public static function getPagesByMenuId($menuId, $pageId)
     {
         $page = [];
-        if ($menuId === null ) {
+        if ($menuId === null) {
             $page = Page::query()
                 ->whereNull('menu_id')
                 ->orderBy('position', 'asc')
                 ->get();
-        } elseif (($menuId !== null) && ($pageId === null )) {
+        } elseif (($menuId !== null) && ($pageId === null)) {
             $page = Page::query()
                 ->where('menu_id', '=', $menuId)
                 ->whereNull('page_id')
                 ->orderBy('position', 'asc')
                 ->get();
-        } elseif (($menuId !== null) && ($pageId !== null )) {
+        } elseif (($menuId !== null) && ($pageId !== null)) {
             $page = Page::query()
                 ->where('menu_id', '=', $menuId)
                 ->where('page_id', '=', $pageId)
@@ -817,16 +817,16 @@ class PageService extends BaseService implements TranslateInterface
 
     public static function swapPosition($direction, $id)
     {
-        if ( !in_array( $direction, ['up', 'down'] )  ) {
-            throw new \Exception("Wrong direction (Page). It can be up or down direction = ".$direction );
+        if (! in_array($direction, ['up', 'down'])) {
+            throw new \Exception('Wrong direction (Page). It can be up or down direction = '.$direction);
         }
 
         $page = Page::find($id);
         if (! $page) {
             return false;
         }
-        $menuId = empty( $page->menu_id ) ? null : $page->menu_id;
-        $pageId = empty($page->page_id)  ? null:  $page->page_id;
+        $menuId = empty($page->menu_id) ? null : $page->menu_id;
+        $pageId = empty($page->page_id) ? null : $page->page_id;
         $pages = PageService::getPagesByMenuId($menuId, $pageId);
 
         $countPages = count($pages);

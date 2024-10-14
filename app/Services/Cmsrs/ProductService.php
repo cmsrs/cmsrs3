@@ -382,14 +382,14 @@ class ProductService extends BaseService
 
     public function getCategoryUrl(Product $mProduct, $lang)
     {
-        $mPage = $mProduct->page()->get()->first();
+        $mPage = $mProduct->page()->first();
 
         return (new PageService)->getUrl($mPage, $lang);
     }
 
     public function getProductUrl(Product $mProduct, $lang, $productName)
     {
-        $mPage = $mProduct->page()->get()->first();
+        $mPage = $mProduct->page()->first();
 
         return (new PageService)->getUrl($mPage, $lang, Str::slug($productName, '-'));
     }
@@ -504,7 +504,7 @@ class ProductService extends BaseService
     }
 
     /*
-    //dont use
+    // not use
     public function getProductDataByProductId( $productId )
     {
         $product = Product::with(['translates', 'contents'])->where('id', $productId)->orderBy('id', 'asc')->get()->first();

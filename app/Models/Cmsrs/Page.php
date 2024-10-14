@@ -48,17 +48,17 @@ class Page extends Model
         return $this->hasOne('App\Models\Cmsrs\Menu', 'id', 'menu_id');
     }
 
-    public function translates() : HasMany
+    public function translates(): HasMany
     {
         return $this->hasMany('App\Models\Cmsrs\Translate');
     }
 
-    public function contents() : HasMany
+    public function contents(): HasMany
     {
         return $this->hasMany('App\Models\Cmsrs\Content');
     }
 
-    public function images() : HasMany
+    public function images(): HasMany
     {
         return $this->hasMany('App\Models\Cmsrs\Image')->orderBy('position');
     }

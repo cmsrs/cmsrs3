@@ -133,9 +133,9 @@ class ImageTest extends Base
         $res0 = $response0->getData();
         $this->assertTrue($res0->success);
 
-        $pageFields = (new PageService )->pageFields;
-        $this->assertFalse(in_array('created_at', $pageFields ));
-        $this->assertTrue(in_array('id', $pageFields ));
+        $pageFields = (new PageService)->pageFields;
+        $this->assertFalse(in_array('created_at', $pageFields));
+        $this->assertTrue(in_array('id', $pageFields));
 
         $this->assertFalse(property_exists($res0->data, 'created_at'), 'Property created_at should not exists');
         $this->assertFalse(property_exists($res0->data, 'updated_at'), 'Property updated_at should not exists');

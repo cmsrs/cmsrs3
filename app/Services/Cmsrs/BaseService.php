@@ -4,9 +4,9 @@ namespace App\Services\Cmsrs;
 
 use App\Models\Cmsrs\Content;
 use App\Models\Cmsrs\Translate;
-use Illuminate\Support\Number;
 use App\Services\Cmsrs\Interfaces\TranslateInterface;
 use App\Services\Cmsrs\Interfaces\TranslateValueInterface;
+use Illuminate\Support\Number;
 
 abstract class BaseService
 {

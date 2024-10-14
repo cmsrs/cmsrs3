@@ -36,7 +36,7 @@ class TranslateService extends BaseService implements TranslateValueInterface
         return true;
     }
 
-    public function updateRow(Array $row)
+    public function updateRow(array $row)
     {
         $obj = false;
         if (! empty($row['menu_id'])) {

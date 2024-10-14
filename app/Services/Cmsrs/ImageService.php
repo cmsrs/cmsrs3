@@ -321,10 +321,10 @@ class ImageService extends BaseService implements TranslateInterface
 
     public static function swapPosition($direction, $id)
     {
-        if ( !in_array( $direction, ['up', 'down'] )  ) {
-            throw new \Exception("Wrong direction (Image). It can be up or down direction = ".$direction );
+        if (! in_array($direction, ['up', 'down'])) {
+            throw new \Exception('Wrong direction (Image). It can be up or down direction = '.$direction);
         }
-        
+
         $image = Image::find($id);
         if (! $image) {
             return false;

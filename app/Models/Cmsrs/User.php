@@ -23,7 +23,7 @@ class User extends Authenticatable implements JWTSubject
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'name', 'email', 'password', 'role',
@@ -32,7 +32,7 @@ class User extends Authenticatable implements JWTSubject
     /**
      * The attributes that should be hidden for arrays.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -42,7 +42,7 @@ class User extends Authenticatable implements JWTSubject
     /**
      * The attributes that should be cast to native types.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
@@ -95,6 +95,9 @@ class User extends Authenticatable implements JWTSubject
         if (empty($user)) {
             throw new \Exception('User not auth');
         }
+        if (! ($user instanceof User)) {
+            throw new \Exception('User not authenticated or not an instance of User');
+        }
 
         return $user->getTokenClient();
     }
@@ -125,6 +128,11 @@ class User extends Authenticatable implements JWTSubject
         if (empty($user)) {
             throw new \Exception('User not auth - for check');
         }
+
+        if (! ($user instanceof User)) {
+            throw new \Exception('User not authenticated or not an instance of User');
+        }
+
         if (! $user->checkClientByToken($token)) {
             throw new \Exception('User not valid - check');
         }
