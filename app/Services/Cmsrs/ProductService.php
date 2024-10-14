@@ -18,7 +18,7 @@ class ProductService extends BaseService
 
     public $productFields;
 
-    public function __construct(array $attributes = [])
+    public function __construct()
     {
         $this->translate = new TranslateService;
         $this->content = new ContentService;

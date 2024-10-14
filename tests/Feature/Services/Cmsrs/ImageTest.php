@@ -128,10 +128,19 @@ class ImageTest extends Base
 
     public function test_it_will_get_page_with_images_with_auth_docs()
     {
+
         $response0 = $this->get('api/pages/'.$this->pageId.'?token='.$this->token);
         $res0 = $response0->getData();
-
         $this->assertTrue($res0->success);
+
+        $pageFields = (new PageService )->pageFields;
+        $this->assertFalse(in_array('created_at', $pageFields ));
+        $this->assertTrue(in_array('id', $pageFields ));
+
+        $this->assertFalse(property_exists($res0->data, 'created_at'), 'Property created_at should not exists');
+        $this->assertFalse(property_exists($res0->data, 'updated_at'), 'Property updated_at should not exists');
+        $this->assertTrue(property_exists($res0->data, 'id'), 'Property id should exists');
+
         $this->assertNotEmpty($res0->data->id);
         $this->assertNotEmpty($res0->data->images);
     }

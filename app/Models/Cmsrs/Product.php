@@ -39,7 +39,7 @@ class Product extends Model
         return $this->hasOne('App\Models\Cmsrs\Page', 'id', 'page_id');
     }
 
-    public function images()
+    public function images(): HasMany
     {
         return $this->hasMany('App\Models\Cmsrs\Image');
     }
@@ -49,7 +49,7 @@ class Product extends Model
         return $this->hasMany('App\Models\Cmsrs\Translate'); //it should be work without params , 'product_id', 'id' - phpstan
     }
 
-    public function translatesPage()
+    public function translatesPage(): HasMany
     {
         return $this->hasMany('App\Models\Cmsrs\Translate', 'page_id', 'page_id');
     }

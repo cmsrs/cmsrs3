@@ -530,10 +530,10 @@ class PageService extends BaseService implements TranslateInterface
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
             $ret = cache()->remember('pagebytype_'.$type, CacheService::setTime(), function () use ($type) {
-                return Page::where('type', '=', $type)->where('published', '=', 1)->get()->first();
+                return Page::where('type', '=', $type)->where('published', '=', 1)->first();
             });
         } else {
-            $ret = Page::where('type', '=', $type)->where('published', '=', 1)->get()->first();
+            $ret = Page::where('type', '=', $type)->where('published', '=', 1)->first();
         }
 
         return $ret;
@@ -624,9 +624,9 @@ class PageService extends BaseService implements TranslateInterface
 
     public function getAllPagesWithImagesOneItem(Page $mPage, ?string $simple = null)
     {
-        $page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->get($this->pageFields)->first()->toArray();
+        $page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->first()->toArray();        
+        //$page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->get($this->pageFields)->first()->toArray(); //phpstan fix
 
-        //dd($page);
         $formatPage = $this->getPageDataFormat($page);
         if (! $simple) {
             $formatPage['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
@@ -691,7 +691,8 @@ class PageService extends BaseService implements TranslateInterface
             throw new \Exception('Wrong type : '.$type);
         }
 
-        $page = Page::with(['translates', 'contents'])->where('type', $type)->where('published', true)->where('after_login', false)->orderBy('position', 'asc')->get($this->pageFields)->first(); //->toSql(); ///toArray();
+        //$page = Page::with(['translates', 'contents'])->where('type', $type)->where('published', true)->where('after_login', false)->orderBy('position', 'asc')->get($this->pageFields)->first(); //->toSql(); ///toArray();
+        $page = Page::with(['translates', 'contents'])->where('type', $type)->where('published', true)->where('after_login', false)->orderBy('position', 'asc')->first(); //->toSql(); ///toArray();
 
         $out = [];
         if ($page) {
@@ -792,18 +793,18 @@ class PageService extends BaseService implements TranslateInterface
     public static function getPagesByMenuId($menuId, $pageId)
     {
         $page = [];
-        if (empty($menuId)) {
+        if ($menuId === null ) {
             $page = Page::query()
                 ->whereNull('menu_id')
                 ->orderBy('position', 'asc')
                 ->get();
-        } elseif (! empty($menuId) && empty($pageId)) {
+        } elseif (($menuId !== null) && ($pageId === null )) {
             $page = Page::query()
                 ->where('menu_id', '=', $menuId)
                 ->whereNull('page_id')
                 ->orderBy('position', 'asc')
                 ->get();
-        } elseif (! empty($menuId) && ! empty($pageId)) {
+        } elseif (($menuId !== null) && ($pageId !== null )) {
             $page = Page::query()
                 ->where('menu_id', '=', $menuId)
                 ->where('page_id', '=', $pageId)
@@ -824,8 +825,8 @@ class PageService extends BaseService implements TranslateInterface
         if (! $page) {
             return false;
         }
-        $menuId = $page->menu_id;
-        $pageId = $page->page_id;
+        $menuId = empty( $page->menu_id ) ? null : $page->menu_id;
+        $pageId = empty($page->page_id)  ? null:  $page->page_id;
         $pages = PageService::getPagesByMenuId($menuId, $pageId);
 
         $countPages = count($pages);
