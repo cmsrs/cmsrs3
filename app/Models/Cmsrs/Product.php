@@ -4,6 +4,7 @@ namespace App\Models\Cmsrs;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Product extends Model
 {
@@ -33,7 +34,7 @@ class Product extends Model
         'updated_at',
     ];
 
-    public function page()
+    public function page(): HasOne
     {
         return $this->hasOne('App\Models\Cmsrs\Page', 'id', 'page_id');
     }
@@ -53,7 +54,7 @@ class Product extends Model
         return $this->hasMany('App\Models\Cmsrs\Translate', 'page_id', 'page_id');
     }
 
-    public function contents()
+    public function contents(): HasMany
     {
         return $this->hasMany('App\Models\Cmsrs\Content');
     }

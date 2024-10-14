@@ -3,6 +3,7 @@
 namespace App\Models\Cmsrs;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Page extends Model
 {
@@ -47,17 +48,17 @@ class Page extends Model
         return $this->hasOne('App\Models\Cmsrs\Menu', 'id', 'menu_id');
     }
 
-    public function translates()
+    public function translates() : HasMany
     {
         return $this->hasMany('App\Models\Cmsrs\Translate');
     }
 
-    public function contents()
+    public function contents() : HasMany
     {
         return $this->hasMany('App\Models\Cmsrs\Content');
     }
 
-    public function images()
+    public function images() : HasMany
     {
         return $this->hasMany('App\Models\Cmsrs\Image')->orderBy('position');
     }
