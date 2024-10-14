@@ -816,6 +816,10 @@ class PageService extends BaseService implements TranslateInterface
 
     public static function swapPosition($direction, $id)
     {
+        if ( !in_array( $direction, ['up', 'down'] )  ) {
+            throw new \Exception("Wrong direction (Page). It can be up or down direction = ".$direction );
+        }
+
         $page = Page::find($id);
         if (! $page) {
             return false;
@@ -831,6 +835,8 @@ class PageService extends BaseService implements TranslateInterface
 
         foreach ($pages as $key => $p) {
             if (($p->id == $id)) {
+                $swapKey = null;
+
                 if ($direction === 'up') {
                     $swapKey = ($key === 0) ? $countPages - 1 : $key - 1;
                 }

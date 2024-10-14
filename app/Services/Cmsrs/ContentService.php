@@ -3,8 +3,9 @@
 namespace App\Services\Cmsrs;
 
 use App\Models\Cmsrs\Content;
+use App\Services\Cmsrs\Interfaces\TranslateValueInterface;
 
-class ContentService extends BaseService
+class ContentService extends BaseService implements TranslateValueInterface
 {
     protected $fillable = [
         'lang',
@@ -36,7 +37,7 @@ class ContentService extends BaseService
         return true;
     }
 
-    public function updateRow($row)
+    public function updateRow(Array $row)
     {
         $obj = false;
         if (! empty($row['page_id'])) {

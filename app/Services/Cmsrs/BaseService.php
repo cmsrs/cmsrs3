@@ -4,8 +4,9 @@ namespace App\Services\Cmsrs;
 
 use App\Models\Cmsrs\Content;
 use App\Models\Cmsrs\Translate;
-use App\Services\Cmsrs\Interfaces\TranslateInterface;
 use Illuminate\Support\Number;
+use App\Services\Cmsrs\Interfaces\TranslateInterface;
+use App\Services\Cmsrs\Interfaces\TranslateValueInterface;
 
 abstract class BaseService
 {
@@ -46,7 +47,9 @@ abstract class BaseService
                     if ($create) {
                         $this->createRow($row);
                     } else {
-                        $this->updateRow($row);
+                        if ($this instanceof TranslateValueInterface) {
+                            $this->updateRow($row); //from child
+                        }
                     }
                 }
             }

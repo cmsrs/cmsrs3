@@ -193,6 +193,10 @@ class MenuService extends BaseService implements TranslateInterface
 
     public static function swapPosition($direction, $id)
     {
+        if ( !in_array( $direction, ['up', 'down'] )  ) {
+            throw new \Exception("Wrong direction (Menu). It can be up or down direction = ".$direction );
+        }
+
         $menus = Menu::query()
             ->orderBy('position', 'asc')
             ->get();
@@ -204,6 +208,8 @@ class MenuService extends BaseService implements TranslateInterface
 
         foreach ($menus as $key => $menu) {
             if (($menu->id == $id)) {
+                $swapKey = null;
+
                 if ($direction === 'up') {
                     $swapKey = ($key === 0) ? $countMenus - 1 : $key - 1;
                 }

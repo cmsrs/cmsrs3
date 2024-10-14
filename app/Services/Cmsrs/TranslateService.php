@@ -5,8 +5,9 @@ namespace App\Services\Cmsrs;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Translate;
+use App\Services\Cmsrs\Interfaces\TranslateValueInterface;
 
-class TranslateService extends BaseService
+class TranslateService extends BaseService implements TranslateValueInterface
 {
     public function wrapCreate($data, $create = true)
     {
@@ -35,7 +36,7 @@ class TranslateService extends BaseService
         return true;
     }
 
-    public function updateRow($row)
+    public function updateRow(Array $row)
     {
         $obj = false;
         if (! empty($row['menu_id'])) {
