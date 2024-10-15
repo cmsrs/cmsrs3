@@ -22,7 +22,7 @@
    <script type="application/javascript" src="/js/cmsrs.js"></script>  
 
 
-   <?php if( 'gallery' == $view ){ ?>
+   <?php if( 'cmsrs.gallery' == $view ){ ?>
       <script type="application/javascript">
          var imagesGlobal = JSON.parse('<?php echo json_encode(  (new App\Services\Cmsrs\PageService) ->arrImages($page, $lang)) ?>');    
       </script>
@@ -30,7 +30,7 @@
    <?php } ?>
 
 
-   <?php if( 'cms' == $view ){ ?>      
+   <?php if( 'cmsrs.cms' == $view ){ ?>      
       @if( ($page->type == 'contact') &&  $re_public )
          <script src="https://www.google.com/recaptcha/api.js?render={{ $re_public }}"></script>
          <script>
@@ -39,7 +39,7 @@
       @endif      
    <?php } ?>
 
-   <?php if( 'shoppingsuccess' == $view ){ ?>
+   <?php if( 'cmsrs.shoppingsuccess' == $view ){ ?>
       <script>
          localStorage.removeItem('cart');
          //localStorage.clear();
