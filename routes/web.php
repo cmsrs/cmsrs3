@@ -1,8 +1,14 @@
 <?php
 
-//use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
+use App\Http\Controllers\FrontController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,53 +29,47 @@ if ($demoStatus) {
 }
 
 $langs = ConfigService::arrGetLangsEnv();
-//dd( count($langs));
-//$langs = (new Config)->arrGetLangs();
 
-//Route::group(['middleware' => ['web']], function () {
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', [HomeController::class , 'index'])->name('home');
 //Route::get('/home/basket', 'HomeController@basket')->name('basket');
 //Route::get('/home/orders', 'HomeController@orders')->name('orders');
 
-//depreciate - /home/api/tobank!
-//Route::post('/home/api/tobank', 'HomeController@tobank')->name('tobank');
 if ($isShop) {
-    Route::post('/post/checkout', 'FrontController@postCheckout');
+    Route::post('/post/checkout', [FrontController::class, 'postCheckout']);
 }
 
-Route::get('/changelang/{lang}/{pageId}/{productSlug?}', 'FrontController@changeLang')->name('changelang');
-//});
+Route::get('/changelang/{lang}/{pageId}/{productSlug?}', [FrontController::class,'changeLang'])->name('changelang');
 
 Route::get('/', 'FrontController@index');
 if (empty($langs) || (count($langs) == 1)) {
     if ($isShop) {
-        Route::get('/shoppingsuccess', 'FrontController@shoppingsuccess');
-        Route::get('/search', 'FrontController@search');
-        Route::get('/checkout', 'FrontController@checkout')->name('checkout');
+        Route::get('/shoppingsuccess', [FrontController::class,'shoppingsuccess']);
+        Route::get('/search', [FrontController::class, 'search']);
+        Route::get('/checkout', [FrontController::class, 'checkout'])->name('checkout');
     }
 
-    Route::get('/home', 'HomeController@index')->name('home');
-    Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');
-    Route::get('/register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-    Route::get('/forgot', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('forgot');
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::get('/register', [RegisterController::class,'showRegistrationForm'])->name('register');
+    Route::get('/forgot', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('forgot');
 
-    Route::get('/'.Page::PREFIX_CMS_ONE_PAGE_IN_MENU_URL.'/{menuSlug}', 'FrontController@getPage');
-    Route::get('/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}/{productSlug?}', 'FrontController@getPage');
-    Route::get('/'.Page::PREFIX_IN_URL.'/{pageSlug}', 'FrontController@getSeparatePage');
+    Route::get('/'.Page::PREFIX_CMS_ONE_PAGE_IN_MENU_URL.'/{menuSlug}', [FrontController::class, 'getPage']);
+    Route::get('/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}/{productSlug?}', [FrontController::class,  'getPage']);
+    Route::get('/'.Page::PREFIX_IN_URL.'/{pageSlug}', [FrontController::class,  'getSeparatePage']);
 } else {
     if ($isShop) {
-        Route::get('/{lang}/shoppingsuccess', 'FrontController@shoppingsuccess');
-        Route::get('/{lang}/search', 'FrontController@search');
-        Route::get('/{lang}/checkout', 'FrontController@checkout');
+        Route::get('/{lang}/shoppingsuccess', [FrontController::class, 'shoppingsuccess']);
+        Route::get('/{lang}/search', [FrontController::class, 'search']);
+        Route::get('/{lang}/checkout', [FrontController::class, 'checkout']);
     }
 
-    Route::get('/{lang}/home', 'HomeController@index');
-    Route::get('/{lang}', 'FrontController@index');
-    Route::get('/{lang}/login', 'Auth\LoginController@showLoginForm'); //->name('login');
-    Route::get('/{lang}/register', 'Auth\RegisterController@showRegistrationForm'); // ->name('register');
-    Route::get('/{lang}/forgot', 'Auth\ForgotPasswordController@showLinkRequestForm');
+    Route::get('/{lang}/home', [HomeController::class, 'index']);
+    Route::get('/{lang}', [FrontController::class, 'index']);
+    Route::get('/{lang}/login', [LoginController::class, 'showLoginForm']); //->name('login');
+    Route::get('/{lang}/register', [RegisterController::class, 'showRegistrationForm']); // ->name('register');
+    Route::get('/{lang}/forgot', [ForgotPasswordController::class, 'showLinkRequestForm']);
 
-    Route::get('/{lang}/'.Page::PREFIX_CMS_ONE_PAGE_IN_MENU_URL.'/{menuSlug}', 'FrontController@getPageLangs');
-    Route::get('/{lang}/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}/{productSlug?}', 'FrontController@getPageLangs');
-    Route::get('/{lang}/'.Page::PREFIX_IN_URL.'/{pageSlug}', 'FrontController@getSeparatePageLangs');
+    Route::get('/{lang}/'.Page::PREFIX_CMS_ONE_PAGE_IN_MENU_URL.'/{menuSlug}', [FrontController::class, 'getPageLangs']);
+    Route::get('/{lang}/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}/{productSlug?}', [FrontController::class, 'getPageLangs']);
+    Route::get('/{lang}/'.Page::PREFIX_IN_URL.'/{pageSlug}', [FrontController::class, 'getSeparatePageLangs']);
 }
