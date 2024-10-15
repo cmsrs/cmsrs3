@@ -4,8 +4,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
-use App\Http\Controllers\FrontController;
-use App\Http\Controllers\HomeController;
+
+use App\Http\Controllers\Cmsrs\FrontController;
+use App\Http\Controllers\Cmsrs\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -40,7 +41,7 @@ if ($isShop) {
 
 Route::get('/changelang/{lang}/{pageId}/{productSlug?}', [FrontController::class,'changeLang'])->name('changelang');
 
-Route::get('/', 'FrontController@index');
+Route::get('/', [FrontController::class,'index']);
 if (empty($langs) || (count($langs) == 1)) {
     if ($isShop) {
         Route::get('/shoppingsuccess', [FrontController::class,'shoppingsuccess']);

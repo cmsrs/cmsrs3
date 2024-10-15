@@ -1,28 +1,17 @@
 <?php
+namespace App\Http\Controllers\Cmsrs;
 
-namespace App\Http\Controllers;
-
-use App\Integration\Payu;
-use App\Models\Cmsrs\User;
-use App\Services\Cmsrs\Base;
+use App\Http\Controllers\Controller;
 use App\Services\Cmsrs\BaseService;
-use App\Services\Cmsrs\Basket;
 use App\Services\Cmsrs\CheckoutService;
-use App\Services\Cmsrs\Config;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\MenuService;
-use App\Services\Cmsrs\Order;
 use App\Services\Cmsrs\OrderService;
 use App\Services\Cmsrs\PageService;
-use App\Services\Cmsrs\Product;
 use App\Services\Cmsrs\ProductService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
-//use App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-
-//use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
@@ -83,7 +72,7 @@ class HomeController extends Controller
             'menus' => $this->menus,
         ]);
 
-        return view('home', $data);
+        return view('cmsrs.home', $data);
     }
 
     /*

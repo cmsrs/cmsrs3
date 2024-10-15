@@ -165,7 +165,7 @@ class PageService extends BaseService implements TranslateInterface
             'lang' => $lang,
             'langs' => $dataIn['langs'],
             're_public' => env('GOOGLE_RECAPTCHA_PUBLIC', ''),
-            'view' => $this->getViewNameByType($mPage),
+            'view' => 'cmsrs.'.$this->getViewNameByType($mPage),
         ];
 
         return array_merge($data, $dataIn);

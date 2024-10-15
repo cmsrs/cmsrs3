@@ -1,6 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Cmsrs;
+
+use App\Http\Controllers\Controller;
+
 
 use App\Integration\Payu;
 use App\Models\Cmsrs\Checkout;
@@ -71,7 +74,7 @@ class FrontController extends Controller
             'menus' => $this->menus,
         ]);
 
-        return view('search', $data);
+        return view('cmsrs.search', $data);
     }
 
     public function shoppingsuccess(Request $request, $lang = null)
@@ -107,7 +110,7 @@ class FrontController extends Controller
             'menus' => $this->menus,
         ]);
 
-        return view('shoppingsuccess', $data);
+        return view('cmsrs.shoppingsuccess', $data);
     }
 
     public function checkout(Request $request, $lang = null)
@@ -140,7 +143,7 @@ class FrontController extends Controller
             'menus' => $this->menus,
         ]);
 
-        return view('checkout', $data);
+        return view('cmsrs.checkout', $data);
     }
 
     public function postCheckout(Request $request)
@@ -274,7 +277,7 @@ class FrontController extends Controller
             'menus' => $this->menus,
         ]);
 
-        return view('index', $data);
+        return view('cmsrs.index', $data);
     }
 
     public function getPageLangs($lang, $menuSlug, $pageSlug = null, $productSlug = null)

@@ -3,16 +3,16 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\ImageController;
-use App\Http\Controllers\MenuController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\ConfigController;
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Cmsrs\CheckoutController;
+use App\Http\Controllers\Cmsrs\CommentController;
+use App\Http\Controllers\Cmsrs\AuthController;
+use App\Http\Controllers\Cmsrs\PageController;
+use App\Http\Controllers\Cmsrs\ImageController;
+use App\Http\Controllers\Cmsrs\MenuController;
+use App\Http\Controllers\Cmsrs\UserController;
+use App\Http\Controllers\Cmsrs\ConfigController;
+use App\Http\Controllers\Cmsrs\ContactController;
+use App\Http\Controllers\Cmsrs\ProductController;
 
 /*
 |--------------------------------------------------------------------------

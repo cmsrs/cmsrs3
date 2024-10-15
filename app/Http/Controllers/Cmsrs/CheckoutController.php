@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Cmsrs;
 
+use App\Http\Controllers\Controller;
 use App\Models\Cmsrs\Checkout;
 use App\Services\Cmsrs\CheckoutService;
 use App\Services\Cmsrs\ConfigService;
