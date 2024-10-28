@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Cmsrs;
 
 use App\Http\Controllers\Controller;
-
-
 use App\Models\Cmsrs\Contact;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\ContactService;
@@ -25,7 +23,7 @@ class ContactController extends Controller
     {
         $langs = (new ConfigService)->arrGetLangs();
         if (! in_array($lang, $langs)) {
-            abort(404);            
+            abort(404);
         }
         App::setLocale($lang);
 

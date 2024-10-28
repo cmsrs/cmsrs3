@@ -1,18 +1,16 @@
 <?php
 
-
-use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Cmsrs\AuthController;
 use App\Http\Controllers\Cmsrs\CheckoutController;
 use App\Http\Controllers\Cmsrs\CommentController;
-use App\Http\Controllers\Cmsrs\AuthController;
-use App\Http\Controllers\Cmsrs\PageController;
-use App\Http\Controllers\Cmsrs\ImageController;
-use App\Http\Controllers\Cmsrs\MenuController;
-use App\Http\Controllers\Cmsrs\UserController;
 use App\Http\Controllers\Cmsrs\ConfigController;
 use App\Http\Controllers\Cmsrs\ContactController;
+use App\Http\Controllers\Cmsrs\ImageController;
+use App\Http\Controllers\Cmsrs\MenuController;
+use App\Http\Controllers\Cmsrs\PageController;
 use App\Http\Controllers\Cmsrs\ProductController;
+use App\Http\Controllers\Cmsrs\UserController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,14 +42,14 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::get($apiSecret.'logout', [AuthController::class, 'logout']);
 
     Route::get($apiSecret.'pages', [PageController::class, 'index']);
-    Route::get($apiSecret.'pages/{id}/{simple?}', [PageController::class, 'oneItemAdmin'])->where('id', '[0-9]+' );
+    Route::get($apiSecret.'pages/{id}/{simple?}', [PageController::class, 'oneItemAdmin'])->where('id', '[0-9]+');
     Route::post($apiSecret.'pages', [PageController::class, 'create']);
     Route::put($apiSecret.'pages/{id}', [PageController::class, 'update']);
     Route::delete($apiSecret.'pages/{id}', [PageController::class, 'delete']);
     Route::patch($apiSecret.'pages/position/{direction}/{id}', [PageController::class, 'position']);
     Route::get($apiSecret.'pages/type/{type}', [PageController::class, 'getPagesByType']);
 
-    Route::get($apiSecret.'images/{type}/{pageId}',  [ImageController::class, 'getItemByTypeAndRefId']); //getItemByPageId, it can be pageId or productId
+    Route::get($apiSecret.'images/{type}/{pageId}', [ImageController::class, 'getItemByTypeAndRefId']); //getItemByPageId, it can be pageId or productId
     Route::post($apiSecret.'image/{type}/{pageId}', [ImageController::class, 'uploadImageByTypeAndRefId']); //it can be pageId or productId
     Route::delete($apiSecret.'images/{id}', [ImageController::class, 'delete']);
     Route::patch($apiSecret.'images/position/{direction}/{id}', [ImageController::class, 'position']); //only for type page and product is working
