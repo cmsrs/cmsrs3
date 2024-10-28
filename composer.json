@@ -27,6 +27,7 @@
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.12",
+        "fakerphp/faker": "^1.23",
         "larastan/larastan": "^2.0",
         "laravel/pint": "^1.18",
         "mockery/mockery": "^1.6",
@@ -45,20 +46,20 @@
             "dont-discover": []
         }
     },
+
     "autoload": {
         "psr-4": {
-            "App\\": "app/"
-        },
-        "classmap": [
-            "database/seeds",
-            "database/factories"
-        ]
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
     },
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
         }
     },
+
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {

@@ -25,7 +25,7 @@ class ContactController extends Controller
     {
         $langs = (new ConfigService)->arrGetLangs();
         if (! in_array($lang, $langs)) {
-            abort(404);
+            abort(404);            
         }
         App::setLocale($lang);
 
@@ -44,7 +44,7 @@ class ContactController extends Controller
 
         $rePriv = env('GOOGLE_RECAPTCHA_PRIV', '');
         $rePublic = env('GOOGLE_RECAPTCHA_PUBLIC', '');
-        //google recaptcvha
+        //google recaptcha
         if (! empty($rePriv) && ! empty($rePublic)) {
             $googleAns = empty($token) ? '0' : $token;
             $secret = $rePriv;
@@ -67,7 +67,7 @@ class ContactController extends Controller
 
             $googleReposnse = json_decode($server_output);
             if (empty($googleReposnse->success)) {
-                return response()->json(['success' => false, 'error' => 'Wrong reCatchap'], 200);
+                return response()->json(['success' => false, 'error' => 'Wrong recaptcha'], 200);
             }
         }
 

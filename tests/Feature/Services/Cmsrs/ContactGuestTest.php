@@ -25,6 +25,21 @@ class ContactGuestTest extends TestCase
         parent::setUp();
     }
 
+    public function test_it_will_create_pl_contact_docs()
+    {
+        $content = [
+            'email' => 'test@example.com',
+            'message' => 'test message - test123',
+        ];
+
+        $response = $this->post('api/contact/pl', $content);
+        $res = $response->getData();
+
+        $this->assertTrue($res->success);
+        $msgPl = $res->message;
+        $this->assertNotEmpty($msgPl);
+    }
+
     public function test_it_will_create_contact_docs()
     {
         $content = [
