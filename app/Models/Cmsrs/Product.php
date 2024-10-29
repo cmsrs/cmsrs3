@@ -48,6 +48,11 @@ class Product extends Model
         'updated_at',
     ];
 
+    //phpstan - need it, see: test_search_products_by_many_columns_pagination_docs
+    public $product_name = null;
+
+    public $page_short_title = null;
+
     public function page(): HasOne
     {
         return $this->hasOne('App\Models\Cmsrs\Page', 'id', 'page_id');

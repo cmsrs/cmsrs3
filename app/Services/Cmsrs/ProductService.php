@@ -111,19 +111,18 @@ class ProductService extends BaseService
 
         $products->each(function ($product) {
             $firstTranslation = $product->translates->first();
+            $product->setAttribute('product_name', $firstTranslation ? $firstTranslation->value : null);
             unset($product['translates']);
-            $product->product_name = $firstTranslation ? $firstTranslation->value : null;
 
             $firstTranslationPage = $product->translatesPage->first();
+            $product->setAttribute('page_short_title', $firstTranslationPage ? $firstTranslationPage->value : null);
             unset($product['translatesPage']);
-            $product->page_short_title = $firstTranslationPage ? $firstTranslationPage->value : null;
-            //$product->images = Image::getImagesAndThumbsByTypeAndRefId('product', $product->id);
         });
 
         if ($search) {
             $search = trim($search);
             $products = $products->filter(function ($product) use ($search) {
-                $productNameContainsSearch = str_contains(trim($product->product_name), $search);
+                $productNameContainsSearch = str_contains(trim($product->getAttribute('product_name')), $search); //126
                 $skuContainsSearch = str_contains(trim($product->sku), $search);
 
                 return $productNameContainsSearch || $skuContainsSearch;

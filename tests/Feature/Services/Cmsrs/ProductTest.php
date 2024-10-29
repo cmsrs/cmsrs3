@@ -2370,10 +2370,16 @@ class ProductTest extends Base
         $product1b = $this->createProduct(2);
         $product2 = $this->createProduct2();
 
-        $sku1a = $product1a->data->sku;
-        $sku1b = $product1b->data->sku;
+        //$sku1a = $product1a->data->sku;
+        //$sku1b = $product1b->data->sku;
         $sku2 = $product2->data->sku;
-        //dd($sku1a, $sku1b, $sku2);
+
+        $pName1a = $product1a->data->product_name->en;
+        //$pName1b = $product1b->data->product_name->en;
+        //$pName2 = $product2->data->product_name->en;
+
+        $this->assertEquals('app_1_1', $sku2);
+        $this->assertEquals('php3 db app_1', $pName1a);
 
         $lang = 'en';
         $column = 'sku';
@@ -2385,9 +2391,6 @@ class ProductTest extends Base
         $response = $this->get($url);
 
         $res = $response->getData();
-
-        //print_r($url."\n");
-        //print_r($res);
 
         $this->assertTrue($res->success);
         $dd = $res->data->data;
