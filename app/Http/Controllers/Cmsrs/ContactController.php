@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Validator;
 
 class ContactController extends Controller
 {
+    public function __construct(
+        protected ContactService $contactService,
+        protected ConfigService $configService,
+    ) {}
+
     private $validationRules = [
         'email' => 'required|regex:/^[a-zA-Z0-9\.\-_]+\@[a-zA-Z0-9\.\-_]+\.[a-z]{2,4}$/D',
         'message' => 'max:500|required',
@@ -21,7 +26,7 @@ class ContactController extends Controller
 
     public function create(Request $request, $lang)
     {
-        $langs = (new ConfigService)->arrGetLangs();
+        $langs = $this->configService->arrGetLangs();
         if (! in_array($lang, $langs)) {
             abort(404);
         }
@@ -63,8 +68,8 @@ class ContactController extends Controller
 
             curl_close($ch);
 
-            $googleReposnse = json_decode($server_output);
-            if (empty($googleReposnse->success)) {
+            $googleResponse = json_decode($server_output);
+            if (empty($googleResponse->success)) {
                 return response()->json(['success' => false, 'error' => 'Wrong recaptcha'], 200);
             }
         }
@@ -103,7 +108,7 @@ message: '.$data['message'];
 
     public function index()
     {
-        $contact = (new ContactService)->getAllData();
+        $contact = $this->contactService->getAllData();
 
         return response()->json(['success' => true, 'data' => $contact], 200);
     }

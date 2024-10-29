@@ -25,14 +25,21 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct(
+        // protected CheckoutService $checkoutService,
+        // protected OrderService $orderService,
+        protected ConfigService $configService,
+        protected MenuService $menuService,
+        protected PageService $pageService,
+        protected ProductService $productService,
+
+    ) {
         //$lang = Config::getLangFromSession();  //not workking proper
         //App::setLocale($lang);
 
         $this->middleware('auth');
         $this->menus = MenuService::getMenu(); //$menus;
-        $this->langs = (new ConfigService)->arrGetLangs();
+        $this->langs = $this->configService->arrGetLangs();
     }
 
     /**
@@ -65,7 +72,7 @@ class HomeController extends Controller
         $objCheckouts = CheckoutService::findActiveOrders()->get();
         $checkouts = CheckoutService::printCheckouts($objCheckouts, $lang);
 
-        $data = (new PageService)->getDataToView($page, [
+        $data = $this->pageService->getDataToView($page, [
             'checkouts' => $checkouts,
             'orders' => $orders,
             'lang' => $lang,

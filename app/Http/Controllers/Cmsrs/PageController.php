@@ -13,11 +13,14 @@ use Illuminate\Support\Facades\Validator;
 
 class PageController extends Controller
 {
-    public function __construct()
-    {
+    public function __construct(
+        protected ConfigService $configService,
+        //protected ImageService $imageService,
+        protected PageService $pageService,
+    ) {
         $this->validationRules['type'] = 'in:'.ConfigService::getPageTypes();
 
-        $langs = (new ConfigService)->arrGetLangs();
+        $langs = $this->configService->arrGetLangs();
         foreach ($langs as $lang) {
             $this->validationRules['title.'.$lang] = 'max:255|required';
             $this->validationRules['short_title.'.$lang] = 'max:128|required';
@@ -40,7 +43,7 @@ class PageController extends Controller
         }
 
         try {
-            $page = (new PageService)->getPageWithImages($page, $lang);
+            $page = $this->pageService->getPageWithImages($page, $lang);
         } catch (\Exception $e) {
             Log::error('page add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile().' for: '.var_export($e, true));
 
@@ -58,14 +61,14 @@ class PageController extends Controller
             return response()->json(['success' => false, 'error' => 'Page not find'], 404);
         }
 
-        $onePage = (new PageService)->getAllPagesWithImagesOneItem($page, $simple);
+        $onePage = $this->pageService->getAllPagesWithImagesOneItem($page, $simple);
 
         return response()->json(['success' => true, 'data' => $onePage], 200);
     }
 
     public function index()
     {
-        $pages = (new PageService)->getAllPagesWithImages();
+        $pages = $this->pageService->getAllPagesWithImages();
 
         return response()->json(['success' => true, 'data' => $pages], 200);
     }
@@ -76,14 +79,14 @@ class PageController extends Controller
             return response()->json(['success' => false, 'error' => 'wrong type'], 200);
         }
 
-        $page = (new PageService)->getFirstPageWithImagesForGuest($type);
+        $page = $this->pageService->getFirstPageWithImagesForGuest($type);
 
         return response()->json(['success' => true, 'data' => $page], 200);
     }
 
     public function getPagesByType(Request $request, $type)
     {
-        $pages = (new PageService)->getAllPagesWithImages($type);
+        $pages = $this->pageService->getAllPagesWithImages($type);
 
         return response()->json(['success' => true, 'data' => $pages], 200);
     }
@@ -110,7 +113,7 @@ class PageController extends Controller
         }
 
         try {
-            $page = (new PageService)->wrapCreate($data);
+            $page = $this->pageService->wrapCreate($data);
         } catch (\Exception $e) {
             Log::error('page add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); //.' for: '.var_export($data, true )
 
@@ -141,12 +144,11 @@ class PageController extends Controller
         }
 
         try {
-            $pageService = new PageService;
             $data = PageService::validateMainPage($data, false);
             if (empty($data['published'])) {
-                $pageService->unpublishedChildren($page);
+                $this->pageService->unpublishedChildren($page);
             }
-            $res = $pageService->wrapUpdate($page, $data);
+            $res = $this->pageService->wrapUpdate($page, $data);
             if (! empty($data['images']) && is_array($data['images'])) {
                 ImageService::createImagesAndUpdateAlt($data['images'], 'page', $page->id);
                 ImageService::updatePositionImages($data['images']);

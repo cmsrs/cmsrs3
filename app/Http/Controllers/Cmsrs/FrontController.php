@@ -24,10 +24,16 @@ class FrontController extends Controller
 
     private $langs;
 
-    public function __construct()
-    {
+    public function __construct(
+        protected ConfigService $configService,
+        protected DeliverService $deliverService,
+        protected MenuService $menuService,
+        protected PageService $pageService,
+        protected PaymentService $paymentService,
+        protected ProductService $productService,
+    ) {
         $this->menus = MenuService::getMenu(); //$menus;
-        $this->langs = (new ConfigService)->arrGetLangs();
+        $this->langs = $this->configService->arrGetLangs();
     }
 
     private function validatePage($page)
@@ -36,7 +42,7 @@ class FrontController extends Controller
             abort(404);
         }
 
-        if (! (new PageService)->checkAuth($page)) {
+        if (! $this->pageService->checkAuth($page)) {
             abort(401);
         }
     }
@@ -57,13 +63,12 @@ class FrontController extends Controller
             Log::error('if you want this page you have to add page in type search');
             abort(404);
         }
-        $urlSearch = (new PageService)->getUrl($page, $lang);
-        //dd($urlSearch);
+        $urlSearch = $this->pageService->getUrl($page, $lang);
 
         $key = $request->input('key');
-        $products = (new ProductService)->wrapSearchProducts($lang, $key);
+        $products = $this->productService->wrapSearchProducts($lang, $key);
 
-        $data = (new PageService)->getDataToView($page, [
+        $data = $this->pageService->getDataToView($page, [
             'key' => $key,
             'url_search' => $urlSearch,
             'products' => $products,
@@ -101,7 +106,7 @@ class FrontController extends Controller
             abort(404);
         }
 
-        $data = (new PageService)->getDataToView($page, [
+        $data = $this->pageService->getDataToView($page, [
             'checkout' => $objCheckout,
             'lang' => $lang,
             'langs' => $this->langs,
@@ -132,7 +137,7 @@ class FrontController extends Controller
 
         //$token =  '123todo'; // User::getTokenForClient(); //todo - when user not auth
 
-        $data = (new PageService)->getDataToView($page, [
+        $data = $this->pageService->getDataToView($page, [
             //'token' => $token,
             'payments' => $payments,
             'delivers' => $delivers,
@@ -184,7 +189,7 @@ class FrontController extends Controller
             'productsDataAndTotalAmount' => $productsDataAndTotalAmount,
             'checkout' => $checkout,
             'objCheckout' => $objCheckout
-        ] = (new ProductService)->saveCheckout($data, (Auth::check() ? Auth::user()->id : null), session()->getId());
+        ] = $this->productService->saveCheckout($data, (Auth::check() ? Auth::user()->id : null), session()->getId());
 
         if ($data['payment'] == PaymentService::KEY_PAYU) {
             //redirect to payU
@@ -212,7 +217,7 @@ class FrontController extends Controller
                 throw new \Exception('you should add page type = shoppingsuccess');
             }
 
-            $urlShoppingSuccess = (new PageService)->getUrl($pShoppingSuccess, $lang);
+            $urlShoppingSuccess = $this->pageService->getUrl($pShoppingSuccess, $lang);
             //$request->session()->flash('status', 'Task was successful!');
             //$request->session()->keep(['checkout_id' => $objCheckout->id]);
             $request->session()->flash('checkout_id', $objCheckout->id);
@@ -228,7 +233,7 @@ class FrontController extends Controller
         if (empty($page)) {
             abort(404);
         }
-        $url = (new PageService)->getUrl($page, $lang, $productSlug);
+        $url = $this->pageService->getUrl($page, $lang, $productSlug);
         ConfigService::saveLangToSession($lang);
 
         return redirect($url);
@@ -263,9 +268,9 @@ class FrontController extends Controller
         //slider_main
         //$sliderData = (new Page)->getFirstPageWithImagesForGuestCache( 'slider_main' );
         //$sliderDataImages = empty($sliderData['images']) ? false : $sliderData['images'];
-        $sliderDataImages = (new PageService)->getPageDataByShortTitleCache('main_page_slider', 'images');
+        $sliderDataImages = $this->pageService->getPageDataByShortTitleCache('main_page_slider', 'images');
 
-        $data = (new PageService)->getDataToView($page, [
+        $data = $this->pageService->getDataToView($page, [
             //'url_search' =>  $urlSearch,
             'view' => 'index',
             'is_new_orders' => $isNewOrders,
@@ -297,7 +302,7 @@ class FrontController extends Controller
 
         $menus = $this->menus;
 
-        $isCache = (new ConfigService)->isCacheEnable();
+        $isCache = $this->configService->isCacheEnable();
         if ($isCache) {
             $pageOut = cache()->remember('page_'.$menuSlug.'_'.$pageSlug.'_'.$lang, CacheService::setTime(), function () use ($menus, $menuSlug, $pageSlug, $lang) {
                 return PageService::getPageBySlug($menus, $menuSlug, $pageSlug, $lang);
@@ -309,15 +314,14 @@ class FrontController extends Controller
         $this->validatePage($pageOut);
 
         //$data = $this->getData($pageOut, $lang);
-        $data = (new PageService)->getDataToView($pageOut, [
+        $data = $this->pageService->getDataToView($pageOut, [
             'lang' => $lang,
             'langs' => $this->langs,
             'menus' => $this->menus,
         ]);
 
         if ($productSlug) { //product page
-            $objProduct = new ProductService;
-            $product = $objProduct->getProductBySlug($productSlug, $lang);
+            $product = $this->productService->getProductBySlug($productSlug, $lang);
             if (empty($product)) {
                 abort(404);
             }
@@ -325,10 +329,10 @@ class FrontController extends Controller
                 abort(404);
             }
 
-            $urls = (new ProductService)->getProductUrls($product);
+            $urls = $this->productService->getProductUrls($product);
             $data['url_category'] = $urls['url_category'];
             //$data['url_product'] = $urls['url_product'];
-            $product = $objProduct->getProductDataByProductArr($product);
+            $product = $this->productService->getProductDataByProductArr($product);
             $data['product'] = $product;
             $data['h1'] = $product['product_name'][$lang];
             $data['product_name'] = $product['product_name'];
@@ -363,9 +367,8 @@ class FrontController extends Controller
 
         $pageOut = null;
         $pages = Page::all();
-        $pageService = new PageService;
         foreach ($pages as $page) {
-            if ($pageService->getSlugByLang($page, $lang) == $pageSlug) {
+            if ($this->pageService->getSlugByLang($page, $lang) == $pageSlug) {
                 $pageOut = $page;
                 break;
             }
@@ -374,7 +377,7 @@ class FrontController extends Controller
 
         //$data = $this->getData($pageOut, $lang);
 
-        $data = (new PageService)->getDataToView($pageOut, [
+        $data = $this->pageService->getDataToView($pageOut, [
             'lang' => $lang,
             'langs' => $this->langs,
             'menus' => $this->menus,

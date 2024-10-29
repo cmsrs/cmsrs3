@@ -6,9 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Cmsrs\Image;
 //use JWTAuth;
 
-//it is depend on type
-//it is depend on type
-
 use App\Services\Cmsrs\ImageService;
 use Illuminate\Http\Request;
 
@@ -17,6 +14,10 @@ class ImageController extends Controller
     // private $validationRules = [
     //     'name' => 'max:255',
     // ];
+
+    public function __construct(
+        protected ImageService $imageService,
+    ) {}
 
     public function getItemByTypeAndRefId(Request $request, $type, $refId)
     {
@@ -38,8 +39,7 @@ class ImageController extends Controller
         }
 
         $dataImage = $request->only('data', 'name');
-        $objImage = new ImageService;
-        $objImage->createImages([$dataImage], $type, $refId);
+        $this->imageService->createImages([$dataImage], $type, $refId);
 
         return response()->json(['success' => true], 200);
     }
@@ -54,7 +54,6 @@ class ImageController extends Controller
     public function delete(Request $request, $id)
     {
         $ids = explode(',', $id);
-        $imageService = new ImageService;
 
         foreach ($ids as $itemId) {
             $image = Image::find($itemId);
@@ -63,7 +62,7 @@ class ImageController extends Controller
                 return response()->json(['success' => false, 'error' => 'Image not find id='.$itemId], 200);
             }
 
-            $res = $imageService->delete($image);
+            $res = $this->imageService->delete($image);
             if (empty($res)) {
                 return response()->json(['success' => false, 'error' => 'Image delete problem id='.$itemId], 200);
             }

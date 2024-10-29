@@ -10,19 +10,22 @@ use Illuminate\Support\Facades\Log;
 
 class ConfigController extends Controller
 {
+    public function __construct(
+        protected ConfigService $configService,
+    ) {}
+
     public function index()
     {
-        $objConfig = new ConfigService;
         try {
             $config = [];
             $config['page_types'] = ConfigService::arrGetPageTypes();
-            $config['langs'] = $objConfig->arrGetLangs();
+            $config['langs'] = $this->configService->arrGetLangs();
             $config['cache_enable'] = env('CACHE_ENABLE', false);
-            $config['is_cache_enable'] = $objConfig->isCacheEnable();
-            $config['default_lang'] = $objConfig->getDefaultLang();
-            $config['currency'] = $objConfig->getCurrency();
-            $config['demo_status'] = $objConfig->getDemoStatus();
-            $config['is_shop'] = $objConfig->getIsShop();
+            $config['is_cache_enable'] = $this->configService->isCacheEnable();
+            $config['default_lang'] = $this->configService->getDefaultLang();
+            $config['currency'] = $this->configService->getCurrency();
+            $config['demo_status'] = $this->configService->getDemoStatus();
+            $config['is_shop'] = $this->configService->getIsShop();
         } catch (\Exception $e) {
             Log::error('config ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile());
 
@@ -34,13 +37,12 @@ class ConfigController extends Controller
 
     public function clearCache()
     {
-        $objConfig = new ConfigService;
-        if (! $objConfig->getConfigCacheEnable()) {
+        if (! $this->configService->getConfigCacheEnable()) {
             return response()->json(['success' => false, 'error' => ['clear_cache' => "don't allowed, because cache_enable is false"]]);
         }
 
         try {
-            $objConfig->clearCache();
+            $this->configService->clearCache();
             //Artisan::call('cache:clear');
         } catch (\Exception $e) {
             Log::error('config ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile());
@@ -67,22 +69,21 @@ class ConfigController extends Controller
     public function toggleCacheEnableFile(Request $request)
     {
         $action = $request->input('action', null);
-        $objConfig = new ConfigService;
-        if (! $objConfig->getConfigCacheEnable()) {
+        if (! $this->configService->getConfigCacheEnable()) {
             return response()->json(['success' => false, 'error' => ['toggle_cache_enable_file' => "don't allowed, because cache_enable is false"]]);
         }
 
         if ($action == 'enable') {
-            if ($objConfig->createFileCacheEnableIfNotExist()) {
-                $objConfig->clearCache();
+            if ($this->configService->createFileCacheEnableIfNotExist()) {
+                $this->configService->clearCache();
 
                 return response()->json(['success' => true, 'data' => ['value' => true, 'message' => 'Cache enabled']]);
             }
 
             return response()->json(['success' => false, 'error' => ['toggle_cache_enable_file' => 'Cache was already enabled']]);
         } elseif ($action == 'disable') {
-            if ($objConfig->deleteFileCacheEnableIfExist()) {
-                $objConfig->clearCache();
+            if ($this->configService->deleteFileCacheEnableIfExist()) {
+                $this->configService->clearCache();
 
                 return response()->json(['success' => true, 'data' => ['value' => false, 'message' => 'Cache disabled']]);
             }
@@ -96,7 +97,7 @@ class ConfigController extends Controller
     public function isCacheEnable()
     {
         try {
-            $ret = (new ConfigService)->isCacheEnable();
+            $ret = $this->configService->isCacheEnable();
         } catch (\Exception $e) {
             Log::error('is cache enable ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile());
 

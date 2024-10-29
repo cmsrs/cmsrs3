@@ -17,10 +17,16 @@ class CheckoutController extends Controller
         'is_pay' => 'boolean',
     ];
 
+    public function __construct(
+        protected CheckoutService $checkoutService,
+        protected ConfigService $configService,
+    ) {}
+
     public function index()
     {
         $lang = ConfigService::getDefaultLang();
         $objCheckouts = Checkout::All();
+        //$checkouts = CheckoutService::printCheckouts($objCheckouts, $lang);
         $checkouts = CheckoutService::printCheckouts($objCheckouts, $lang);
 
         return response()->json(['success' => true, 'data' => $checkouts], 200);
@@ -30,9 +36,7 @@ class CheckoutController extends Controller
     {
         $search = $request->input('search', null);
 
-        $objCheckout = new CheckoutService;
-
-        if (! in_array($lang, (new ConfigService)->arrGetLangs())) {
+        if (! in_array($lang, $this->configService->arrGetLangs())) {
             return response()->json([
                 'success' => false,
                 'error' => 'wrong lang in url',
@@ -54,7 +58,7 @@ class CheckoutController extends Controller
             ], 404);
         }
 
-        $checkouts = $objCheckout->getPaginationItems($lang, $column, $direction, $search);
+        $checkouts = $this->checkoutService->getPaginationItems($lang, $column, $direction, $search);
 
         return response()->json(['success' => true, 'data' => $checkouts], 200);
     }

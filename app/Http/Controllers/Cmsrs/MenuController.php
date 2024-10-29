@@ -12,9 +12,11 @@ use Illuminate\Support\Facades\Validator;
 
 class MenuController extends Controller
 {
-    public function __construct()
-    {
-        $langs = (new ConfigService)->arrGetLangs();
+    public function __construct(
+        //protected ConfigService $configService,
+        protected MenuService $menuService,
+    ) {
+        $langs = $this->configService->arrGetLangs();
         foreach ($langs as $lang) {
             $this->validationRules['name.'.$lang] = 'max:255|required'; //|unique:App\Translate,value,null,menu_id';
         }
@@ -54,7 +56,7 @@ class MenuController extends Controller
         }
 
         try {
-            (new MenuService)->wrapCreate($data);
+            $this->menuService->wrapCreate($data);
         } catch (\Exception $e) {
             Log::error('menu add ex: '.$e->getMessage());
 
@@ -86,7 +88,7 @@ class MenuController extends Controller
         }
 
         try {
-            $res = (new MenuService)->wrapUpdate($menu, $data);
+            $res = $this->menuService->wrapUpdate($menu, $data);
         } catch (\Exception $e) {
             Log::error('menu update ex: '.$e->getMessage().' for: '.var_export($e, true));
 

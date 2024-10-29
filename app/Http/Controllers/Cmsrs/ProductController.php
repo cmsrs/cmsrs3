@@ -20,12 +20,15 @@ class ProductController extends Controller
         //'description' => 'max:1280'
     ];
 
-    public function __construct()
-    {
+    public function __construct(
+        protected ConfigService $configService,
+        //protected ImageService $imageService,
+        protected ProductService $productService,
+    ) {
         $this->validationRules['type'] = 'in:'.ConfigService::getPageTypes();
         $this->validationRules['published'] = 'boolean';
 
-        $langs = (new ConfigService)->arrGetLangs();
+        $langs = $this->configService->arrGetLangs();
         foreach ($langs as $lang) {
             $this->validationRules['product_name.'.$lang] = 'max:255|required';  //|unique:translates
             $this->validationRules['product_description.'.$lang] = 'max:1280';
@@ -39,7 +42,7 @@ class ProductController extends Controller
             return response()->json(['success' => false, 'error' => 'Product no found'], 404);
         }
 
-        $data = (new ProductService)->getProductWithTranslatesContentsAndImages($product);
+        $data = $this->productService->getProductWithTranslatesContentsAndImages($product);
 
         return response()->json(['success' => true, 'data' => $data], 200);
     }
@@ -50,7 +53,7 @@ class ProductController extends Controller
 
         $objProduct = new Product;
 
-        if (! in_array($lang, (new ConfigService)->arrGetLangs())) {
+        if (! in_array($lang, $this->configService->arrGetLangs())) {
             return response()->json([
                 'success' => false,
                 'error' => 'wrong lang in url',
@@ -71,14 +74,14 @@ class ProductController extends Controller
             ], 404);
         }
 
-        $products = (new ProductService)->getPaginationItems($lang, $column, $direction, $search);
+        $products = $this->productService->getPaginationItems($lang, $column, $direction, $search);
 
         return response()->json(['success' => true, 'data' => $products], 200);
     }
 
     public function index()
     {
-        $products = (new ProductService)->getAllProductsWithImages();
+        $products = $this->productService->getAllProductsWithImages();
 
         return response()->json(['success' => true, 'data' => $products], 200);
     }
@@ -101,13 +104,13 @@ class ProductController extends Controller
         }
 
         //check unique
-        $valid = (new ProductService)->checkIsDuplicateName($data);
+        $valid = $this->productService->checkIsDuplicateName($data);
         if (empty($valid['success'])) {
             return response()->json($valid, 200);
         }
 
         try {
-            $product = (new ProductService)->wrapCreate($data);
+            $product = $this->productService->wrapCreate($data);
         } catch (\Exception $e) {
 
             Log::error('product add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); //.' for: '.var_export($data, true )
@@ -143,13 +146,13 @@ class ProductController extends Controller
         }
 
         //check unique
-        $valid = (new ProductService)->checkIsDuplicateName($data, $product->id);
+        $valid = $this->productService->checkIsDuplicateName($data, $product->id);
         if (empty($valid['success'])) {
             return response()->json($valid, 200);
         }
 
         try {
-            $res = (new ProductService)->wrapUpdate($product, $data);
+            $res = $this->productService->wrapUpdate($product, $data);
             if (! empty($data['images']) && is_array($data['images'])) {
                 ImageService::createImagesAndUpdateAlt($data['images'], 'product', $product->id);
                 ImageService::updatePositionImages($data['images']);
@@ -175,7 +178,7 @@ class ProductController extends Controller
             return response()->json(['success' => false, 'error' => 'Product not find'], 200);
         }
 
-        $res = (new ProductService)->delete($product);
+        $res = $this->productService->delete($product);
         if (empty($res)) {
             return response()->json(['success' => false, 'error' => 'product delete problem'], 200);
         }
@@ -189,7 +192,7 @@ class ProductController extends Controller
             $lang = ConfigService::getDefaultLang();
         }
 
-        $products = (new ProductService)->getAllProductsWithImagesByLangCache($lang);
+        $products = $this->productService->getAllProductsWithImagesByLangCache($lang);
 
         return response()->json(['success' => true, 'data' => $products]);
     }
