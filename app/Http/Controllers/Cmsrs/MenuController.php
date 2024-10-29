@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
 class MenuController extends Controller
 {
     public function __construct(
-        //protected ConfigService $configService,
+        protected ConfigService $configService,
         protected MenuService $menuService,
     ) {
         $langs = $this->configService->arrGetLangs();
