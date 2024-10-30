@@ -6,13 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Cmsrs\Menu;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\PageService;
-//use App\Page;
-//use App\Config;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
-//use App;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
+
+//use Illuminate\Support\Facades\Mail;
 
 class ForgotPasswordController extends Controller
 {
@@ -43,8 +41,10 @@ class ForgotPasswordController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct(
+        protected ConfigService $configService,
+        protected PageService $pageService,
+    ) {
         $demoStatus = env('DEMO_STATUS', false);
         if ($demoStatus) {
             echo 'Not permission';
@@ -52,7 +52,7 @@ class ForgotPasswordController extends Controller
         }
 
         $this->menus = Menu::all()->sortBy('position'); //TODO cached
-        $this->langs = (new ConfigService)->arrGetLangs();
+        $this->langs = $this->configService->arrGetLangs();
 
         $this->middleware('guest');
     }
@@ -86,7 +86,7 @@ class ForgotPasswordController extends Controller
         }
         App::setLocale($lang);
 
-        $data = (new PageService)->getDataToView($page, [
+        $data = $this->pageService->getDataToView($page, [
             'view' => 'forgot',
             'lang' => $lang,
             'langs' => $this->langs,

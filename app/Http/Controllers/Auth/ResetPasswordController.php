@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Services\Cmsrs\ConfigService;
-//use App\Config;
-
 use App\Services\Cmsrs\PageService;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 
@@ -42,8 +40,9 @@ class ResetPasswordController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct(
+        protected PageService $pageService,
+    ) {
         $demoStatus = env('DEMO_STATUS', false);
         if ($demoStatus) {
             echo 'Not permission';
@@ -55,7 +54,7 @@ class ResetPasswordController extends Controller
         $this->langs = (new ConfigService)->arrGetLangs();
         $pHome = PageService::getFirstPageByType('home');
         if ($pHome) {
-            $this->redirectTo = (new PageService)->getUrl($pHome, $this->langs[0]);
+            $this->redirectTo = $this->pageService->getUrl($pHome, $this->langs[0]);
         }
 
     }

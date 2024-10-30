@@ -46,20 +46,19 @@ class LoginController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct(
+        protected ConfigService $configService,
+        protected PageService $pageService,
+    ) {
         $this->middleware('guest')->except('logout');
         //$this->langs = (new Config)->arrGetLangs();
         $this->menus = Menu::all()->sortBy('position'); //TODO cached
 
-        //$locale = App::getLocale();
-        //dd($locale);
-        //dump('____________________'.$this->lang);
-        $this->langs = (new ConfigService)->arrGetLangs();
+        $this->langs = $this->configService->arrGetLangs();
 
         $pHome = PageService::getFirstPageByType('home');
         if ($pHome) {
-            $this->redirectTo = (new PageService)->getUrl($pHome, $this->langs[0]);
+            $this->redirectTo = $this->pageService->getUrl($pHome, $this->langs[0]);
         }
     }
 
@@ -78,7 +77,7 @@ class LoginController extends Controller
 
         $pForgot = PageService::getFirstPageByType('forgot');
 
-        $data = (new PageService)->getDataToView($page, [
+        $data = $this->pageService->getDataToView($page, [
             'view' => 'login',
             'pforgot' => $pForgot,
             'lang' => $lang,

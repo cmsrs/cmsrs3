@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Cmsrs\User;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\PageService;
 use Illuminate\Foundation\Auth\VerifiesEmails;
@@ -41,8 +40,10 @@ class VerificationController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct(
+        protected ConfigService $configService,
+        protected PageService $pageService,
+    ) {
         $demoStatus = env('DEMO_STATUS', false);
         if ($demoStatus) {
             echo 'Not permission';
@@ -53,10 +54,10 @@ class VerificationController extends Controller
         $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
 
-        $this->langs = (new ConfigService)->arrGetLangs();
+        $this->langs = $this->configService->arrGetLangs();
         $pHome = PageService::getFirstPageByType('home');
         if ($pHome) {
-            $this->redirectTo = $pHome->getUrl($this->langs[0]);
+            $this->redirectTo = $this->pageService->getUrl($pHome, $this->langs[0]);
         }
 
     }

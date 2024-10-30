@@ -2,21 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
-//use App\User;
 use App\Http\Controllers\Controller;
 use App\Models\Cmsrs\Menu;
-//use Illuminate\Support\Facades\Validator;
 use App\Models\Cmsrs\User;
 use App\Services\Cmsrs\ConfigService;
-//use App\Page;
-//use App\Config;
-//use App\Menu;
-//use App;
-
 use App\Services\Cmsrs\PageService;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class RegisterController extends Controller
@@ -52,18 +44,18 @@ class RegisterController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct(
+        protected ConfigService $configService,
+        protected PageService $pageService,
+    ) {
         //abort(404); //TODO
         $this->middleware('guest');
-        $this->langs = (new ConfigService)->arrGetLangs();
+        $this->langs = $this->configService->arrGetLangs();
         $this->menus = Menu::all()->sortBy('position'); //TODO cached
-
-        //$this->langs = (new Config)->arrGetLangs();
 
         $pHome = PageService::getFirstPageByType('home');
         if ($pHome) {
-            $this->redirectTo = (new PageService)->getUrl($pHome, $this->langs[0]);
+            $this->redirectTo = $this->pageService->getUrl($pHome, $this->langs[0]);
         }
 
     }
@@ -134,7 +126,7 @@ class RegisterController extends Controller
         ];
         */
 
-        $data = $page->getDataToView($page, [
+        $data = $this->pageService->getDataToView($page, [
             'view' => 'register',
             'lang' => $lang,
             'langs' => $this->langs,
