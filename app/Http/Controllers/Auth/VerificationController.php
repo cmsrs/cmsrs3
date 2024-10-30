@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\PageService;
 use Illuminate\Foundation\Auth\VerifiesEmails;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class VerificationController extends Controller
+class VerificationController extends Controller implements HasMiddleware
 {
     /*
     |--------------------------------------------------------------------------
@@ -50,9 +52,9 @@ class VerificationController extends Controller
             exit();
         }
 
-        $this->middleware('auth');
-        $this->middleware('signed')->only('verify');
-        $this->middleware('throttle:6,1')->only('verify', 'resend');
+        //$this->middleware('auth');
+        //$this->middleware('signed')->only('verify');
+        //$this->middleware('throttle:6,1')->only('verify', 'resend');
 
         $this->langs = $this->configService->arrGetLangs();
         $pHome = PageService::getFirstPageByType('home');
@@ -60,5 +62,17 @@ class VerificationController extends Controller
             $this->redirectTo = $this->pageService->getUrl($pHome, $this->langs[0]);
         }
 
+    }
+
+    /**
+     * Get the middleware that should be assigned to the controller.
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth'),
+            new Middleware('signed', only: ['verify']),
+            new Middleware('throttle:6,1', except: ['verify', 'resend']),
+        ];
     }
 }

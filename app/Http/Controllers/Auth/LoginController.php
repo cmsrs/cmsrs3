@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Config;
 use App\Http\Controllers\Controller;
 use App\Models\Cmsrs\Menu;
 use App\Services\Cmsrs\ConfigService;
-//use App\Menu;
-//use App;
 use App\Services\Cmsrs\PageService;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
-class LoginController extends Controller
+class LoginController extends Controller implements HasMiddleware
 {
     /*
     |--------------------------------------------------------------------------
@@ -50,7 +49,7 @@ class LoginController extends Controller
         protected ConfigService $configService,
         protected PageService $pageService,
     ) {
-        $this->middleware('guest')->except('logout');
+        //$this->middleware('guest')->except('logout');
         //$this->langs = (new Config)->arrGetLangs();
         $this->menus = Menu::all()->sortBy('position'); //TODO cached
 
@@ -60,6 +59,16 @@ class LoginController extends Controller
         if ($pHome) {
             $this->redirectTo = $this->pageService->getUrl($pHome, $this->langs[0]);
         }
+    }
+
+    /**
+     * Get the middleware that should be assigned to the controller.
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('guest', except: ['logout']),
+        ];
     }
 
     public function showLoginForm($lang = null)

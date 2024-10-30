@@ -10,11 +10,13 @@ use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\OrderService;
 use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\ProductService;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
-class HomeController extends Controller
+class HomeController extends Controller implements HasMiddleware
 {
     private $menus;
 
@@ -37,9 +39,19 @@ class HomeController extends Controller
         //$lang = Config::getLangFromSession();  //not workking proper
         //App::setLocale($lang);
 
-        $this->middleware('auth');
+        //$this->middleware('auth');
         $this->menus = MenuService::getMenu(); //$menus;
         $this->langs = $this->configService->arrGetLangs();
+    }
+
+    /**
+     * Get the middleware that should be assigned to the controller.
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth'),
+        ];
     }
 
     /**

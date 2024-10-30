@@ -63,7 +63,11 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        $this->validate($request, ['token' => 'required']);
+        $request->validate([
+            'token' => 'required',
+        ]);
+
+        //$this->validate($request, ['token' => 'required']);
 
         try {
             JWTAuth::invalidate($request->input('token'));

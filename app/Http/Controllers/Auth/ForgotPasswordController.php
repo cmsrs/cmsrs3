@@ -7,12 +7,14 @@ use App\Models\Cmsrs\Menu;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\PageService;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
 //use Illuminate\Support\Facades\Mail;
 
-class ForgotPasswordController extends Controller
+class ForgotPasswordController extends Controller implements HasMiddleware
 {
     /*
     |--------------------------------------------------------------------------
@@ -54,7 +56,17 @@ class ForgotPasswordController extends Controller
         $this->menus = Menu::all()->sortBy('position'); //TODO cached
         $this->langs = $this->configService->arrGetLangs();
 
-        $this->middleware('guest');
+        //$this->middleware('guest');
+    }
+
+    /**
+     * Get the middleware that should be assigned to the controller.
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('guest'),
+        ];
     }
 
     /**

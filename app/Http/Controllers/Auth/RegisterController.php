@@ -8,10 +8,12 @@ use App\Models\Cmsrs\User;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\PageService;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
-class RegisterController extends Controller
+class RegisterController extends Controller implements HasMiddleware
 {
     /*
     |--------------------------------------------------------------------------
@@ -49,7 +51,7 @@ class RegisterController extends Controller
         protected PageService $pageService,
     ) {
         //abort(404); //TODO
-        $this->middleware('guest');
+        //$this->middleware('guest');
         $this->langs = $this->configService->arrGetLangs();
         $this->menus = Menu::all()->sortBy('position'); //TODO cached
 
@@ -58,6 +60,16 @@ class RegisterController extends Controller
             $this->redirectTo = $this->pageService->getUrl($pHome, $this->langs[0]);
         }
 
+    }
+
+    /**
+     * Get the middleware that should be assigned to the controller.
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('guest'),
+        ];
     }
 
     /**

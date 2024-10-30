@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\PageService;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class ResetPasswordController extends Controller
+class ResetPasswordController extends Controller implements HasMiddleware
 {
     /*
     |--------------------------------------------------------------------------
@@ -49,7 +51,7 @@ class ResetPasswordController extends Controller
             exit();
         }
 
-        $this->middleware('guest');
+        //$this->middleware('guest');
 
         $this->langs = (new ConfigService)->arrGetLangs();
         $pHome = PageService::getFirstPageByType('home');
@@ -57,5 +59,15 @@ class ResetPasswordController extends Controller
             $this->redirectTo = $this->pageService->getUrl($pHome, $this->langs[0]);
         }
 
+    }
+
+    /**
+     * Get the middleware that should be assigned to the controller.
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('guest'),
+        ];
     }
 }
