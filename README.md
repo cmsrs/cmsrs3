@@ -201,7 +201,7 @@ CUSTOMER_IP="123.123.123.123"
 **I highly recommend running this script to understand how my CMS works. (Remember to leave the default values in the .env file.)**
 
 ```bash
-./rs/go/go_clear_and_load_demo.sh
+./rs/go/__warning____go_clear_and_load_demo.sh 
 ```
 
 * create sitemap (it is recommended to put this command in the crontab file): 
@@ -241,3 +241,4 @@ https://www.cmsrs.pl/en/cms/cmsrs/about-cmsrs
 ## VUE.JS SOURCE CODE 
 
 https://github.com/cmsrs/cmsrs3-vuejs
+
