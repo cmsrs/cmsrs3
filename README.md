@@ -70,7 +70,7 @@ php artisan serve
 * prepare .env.testing file, and change db connection:
 
 ```bash
-cp  .env.example .env.testing 
+cp  .env .env.testing 
 ```
 
 change db connection, for example:
