@@ -52,10 +52,6 @@ class VerificationController extends Controller implements HasMiddleware
             exit();
         }
 
-        //$this->middleware('auth');
-        //$this->middleware('signed')->only('verify');
-        //$this->middleware('throttle:6,1')->only('verify', 'resend');
-
         $this->langs = $this->configService->arrGetLangs();
         $pHome = PageService::getFirstPageByType('home');
         if ($pHome) {

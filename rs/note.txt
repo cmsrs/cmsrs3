@@ -270,3 +270,226 @@ todo 240615
 # trzeba zbadac
 CACHE_ENABLE=true
 
+
+/******************************************
+* old code, maybe it would be useful:
+*******************************************/
+
+1. send email:
+
+
+//use Illuminate\Support\Facades\Mail;
+    /**
+     * helper function
+     */
+    /*
+    public function mailTestRs()
+    {
+        $to_name = 'R S';
+        $to_email = 'test@yahoo.com';
+        $data = array('name'=>"Sam Jose", "body" => "Test mail");
+        Mail::send('emails', $data, function($message) use ($to_name, $to_email) {
+            $message->to($to_email, $to_name)->subject('Artisans Web Testing Mail');
+            $message->from('test@gmail.com','Artisans Web');
+        });
+    }
+    */
+
+
+
+2. in homeContrller.php
+
+    /*
+    public function basket()
+    {
+        $token = User::getTokenForClient();
+
+        return view('basket', [
+            'token' => $token,
+            //'tab' => 'basket'
+        ]);
+    }
+
+    public function orders()
+    {
+        $user = Auth::user();
+        $arrOrders = Order::inOrdersByUserId($user->id)->toArray();
+        $orders = [];
+        if( !empty($arrOrders) ){
+            $arrOrdersReindex = Base::reIndexArr($arrOrders, 'product_id');
+            $baskets = false;
+            Product::getDataToPayment( $arrOrdersReindex, $baskets, $orders);
+        }
+
+        //$orders = [];
+
+        return view('orders', [
+            'orders' => $orders,
+            //'tab' => 'order'
+        ]);
+    }
+    */
+
+    /*
+    public function tobank(Request $request)
+    {
+        User::checkApiClientByToken($request->token);
+
+        $data = $request->only('cart');
+
+        if( empty($data['cart']) || !is_array($data['cart']) ){
+            throw new \Exception("Wrong data from post");
+        }
+
+        $demoStatus = env('DEMO_STATUS', false);
+        if( $demoStatus ){
+            return response()->json(['success'=> false, 'error'=> 'No access (set DEMO_STATUS on false)'], 200);
+        }
+
+
+        $arrCart = Base::reIndexArr($data['cart']);
+
+        $baskets = [];
+        $productsDataAndTotalAmount = Product::getDataToPayment( $arrCart, $baskets );
+
+        $user = Auth::user();
+        Basket::deleteBasketAndAddNewData($user->id, $baskets);
+
+        $payu = new Payu;
+        $data = $payu->dataToSend( $productsDataAndTotalAmount );
+
+        Log::debug(' data sended to payu: '.var_export($data, true ) );
+
+        $redirectUri = $payu->getOrder($data);
+        if( empty($redirectUri) ){
+            //throw new \Exception("Somthing wrong with payu - i cant obtain the redirectUri");
+            Log::debug("Somthing wrong with payu - i cant obtain the redirectUri");
+            return response()->json(['success'=> false, 'error'=> 'Somthing wrong with payu - try later.'], 200);
+        }
+        Log::debug('payu redirect url: '.$redirectUri );
+        return response()->json(['success' => true, 'data'=> $redirectUri], 200);
+        //return redirect($redirectUri);
+    }
+    */
+
+
+PageService.php:
+
+    /*
+    public function getPageWithImagesByIdCache($pageId)
+    {
+        $isCache =  (new Config)->isCacheEnable();
+        if ($isCache) {
+            $ret = cache()->remember('page_with_images_page_id_'.$pageId, CacheService::setTime(), function () use ($pageId) {
+                return  (new Page)->getPageWithImagesById($pageId);
+            });
+        } else {
+            $ret = (new Page)->getPageWithImagesById($pageId);
+        }
+
+        return $ret;
+    }
+
+    public function getPageWithImagesById($pageId)
+    {
+        $page = Page::with(['translates', 'contents'])->where('id', $pageId)->where('published', true)->where('after_login', false)->orderBy('position', 'asc')->get($this->pageFields)->first(); //->toSql(); ///toArray();
+
+        $out = [];
+        if($page){
+            $page = $page->toArray();
+            $out = $this->getPageDataFormat($page);
+            $out['images'] = Image::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
+        }
+
+        return $out;
+    }
+    */
+
+    /**
+     * todo
+     * this method not use
+     */
+    /*
+    public function getFirstPageWithImagesForGuestCache($type)
+    {
+        $isCache =  (new ConfigService)->isCacheEnable();
+        if ($isCache) {
+            $ret = cache()->remember('page_with_images_by_type_'.$type, CacheService::setTime(), function () use ($type) {
+                return  (new PageService()  )->getFirstPageWithImagesForGuest($type);
+            });
+        } else {
+            $ret = (new PageService()  )->getFirstPageWithImagesForGuest($type);
+        }
+
+        return $ret;
+    }
+    */
+
+
+
+ProductService.php
+
+    /**
+     * this function is similar to: getDataToPayment
+     */
+    /*
+    static public function getDataToOrders( $arrCart )
+    {
+        $user = Auth::user();
+        if( empty($user) ){
+            throw new \Exception("User not auth - this exception is impossible");
+        }
+
+        $ids = array_keys($arrCart);
+        $arrProducts = Product::with(['translates'])->whereIn('id', $ids)->orderBy('id', 'asc')->get()->toArray();
+
+        $out = [];
+        $totalAmount = 0;
+        foreach($arrProducts as $arrProduct){
+
+            $itemIn = $arrCart[$arrProduct['id']];
+            $out["products"][] = [
+                "name" => Product::getDefaultProductName($arrProduct['translates']),
+                "unitPrice" => $arrProduct['price'],
+                "quantity" => $itemIn['qty']
+            ];
+            $baskets[] = [
+                "qty" => $itemIn['qty'],
+                "user_id" => $user->id,
+                "product_id" => $arrProduct['id']
+            ];
+
+            $totalAmount += $arrProduct['price'] * $itemIn['qty'];
+        }
+        $out['totalAmount'] =  $totalAmount;
+
+        return  $out;
+    }
+    */
+
+    // public function setTranslate($objTranslate)
+    // {
+    //     if (!empty($objTranslate)) {
+    //         $this->translate = $objTranslate;
+    //     }
+    // }
+
+    /*
+    // not use
+    public function getProductDataByProductId( $productId )
+    {
+        $product = Product::with(['translates', 'contents'])->where('id', $productId)->orderBy('id', 'asc')->get()->first();
+        $out = $this->getProductDataByProductArr( $product );
+
+        return $out;
+    }
+    */
+
+
+
+
+
+
+
+
+

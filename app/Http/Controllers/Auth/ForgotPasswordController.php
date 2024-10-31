@@ -12,8 +12,6 @@ use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
-//use Illuminate\Support\Facades\Mail;
-
 class ForgotPasswordController extends Controller implements HasMiddleware
 {
     /*
@@ -26,7 +24,6 @@ class ForgotPasswordController extends Controller implements HasMiddleware
     | your application to your users. Feel free to explore this trait.
     |
     */
-
     use SendsPasswordResetEmails;
     /*
     use SendsPasswordResetEmails{
@@ -55,8 +52,6 @@ class ForgotPasswordController extends Controller implements HasMiddleware
 
         $this->menus = Menu::all()->sortBy('position'); //TODO cached
         $this->langs = $this->configService->arrGetLangs();
-
-        //$this->middleware('guest');
     }
 
     /**
@@ -68,22 +63,6 @@ class ForgotPasswordController extends Controller implements HasMiddleware
             new Middleware('guest'),
         ];
     }
-
-    /**
-     * helper function
-     */
-    /*
-    public function mailTestRs()
-    {
-        $to_name = 'R S';
-        $to_email = 'test@yahoo.com';
-        $data = array('name'=>"Sam Jose", "body" => "Test mail");
-        Mail::send('emails', $data, function($message) use ($to_name, $to_email) {
-            $message->to($to_email, $to_name)->subject('Artisans Web Testing Mail');
-            $message->from('test@gmail.com','Artisans Web');
-        });
-    }
-    */
 
     public function showLinkRequestForm($lang = null)
     {

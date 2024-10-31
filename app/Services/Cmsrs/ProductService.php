@@ -178,52 +178,12 @@ class ProductService extends BaseService
         return $defaultProductName;
     }
 
-    /**
-     * this function is similar to: getDataToPayment
-     */
-    /*
-    static public function getDataToOrders( $arrCart )
-    {
-        $user = Auth::user();
-        if( empty($user) ){
-            throw new \Exception("User not auth - this exception is impossible");
-        }
-
-        $ids = array_keys($arrCart);
-        $arrProducts = Product::with(['translates'])->whereIn('id', $ids)->orderBy('id', 'asc')->get()->toArray();
-
-        $out = [];
-        $totalAmount = 0;
-        foreach($arrProducts as $arrProduct){
-
-            $itemIn = $arrCart[$arrProduct['id']];
-            $out["products"][] = [
-                "name" => Product::getDefaultProductName($arrProduct['translates']),
-                "unitPrice" => $arrProduct['price'],
-                "quantity" => $itemIn['qty']
-            ];
-            $baskets[] = [
-                "qty" => $itemIn['qty'],
-                "user_id" => $user->id,
-                "product_id" => $arrProduct['id']
-            ];
-
-            $totalAmount += $arrProduct['price'] * $itemIn['qty'];
-        }
-        $out['totalAmount'] =  $totalAmount;
-
-        return  $out;
-    }
-    */
-
     public static function getDataToPayment($arrCart, &$baskets, bool|array &$orders = false)
     {
-        /*
-        $user = Auth::user();
-        if( empty($user) ){
-            throw new \Exception("User not auth - this exception is impossible");
-        }
-        */
+        // $user = Auth::user();
+        // if( empty($user) ){
+        //     throw new \Exception("User not auth - this exception is impossible");
+        // }
 
         $ids = array_keys($arrCart);
         $arrProducts = Product::with(['translates'])->whereIn('id', $ids)->orderBy('id', 'asc')->get(); //->toArray();
@@ -264,7 +224,7 @@ class ProductService extends BaseService
                     'unitPrice' => $product->price,
                     'qty' => $qty,
                     'product_id' => $product->id,
-                    'product_url' => (new ProductService)->getProductUrl($product, $lang, $productName), //zmiana_1007
+                    'product_url' => (new ProductService)->getProductUrl($product, $lang, $productName),
                     'product_img' => empty($productImage[0]) ? '' : $productImage[0]['fs']['small'],
                 ];
             }
@@ -301,13 +261,6 @@ class ProductService extends BaseService
 
         return $out;
     }
-
-    // public function setTranslate($objTranslate)
-    // {
-    //     if (!empty($objTranslate)) {
-    //         $this->translate = $objTranslate;
-    //     }
-    // }
 
     /**
      * use also in script to load demo (test) data
@@ -502,17 +455,6 @@ class ProductService extends BaseService
         return $products;
     }
 
-    /*
-    // not use
-    public function getProductDataByProductId( $productId )
-    {
-        $product = Product::with(['translates', 'contents'])->where('id', $productId)->orderBy('id', 'asc')->get()->first();
-        $out = $this->getProductDataByProductArr( $product );
-
-        return $out;
-    }
-    */
-
     /**
      * It is needed for sitemap
      */
@@ -574,13 +516,13 @@ class ProductService extends BaseService
         return $out;
     }
 
-    public function delete(Product $mProduct) //to_jest_duza_zmiana!!!
+    public function delete(Product $mProduct)
     {
         $imageService = new ImageService;
         foreach ($mProduct->images()->get() as $img) {
             $imageService->delete($img);
         }
 
-        return $mProduct->delete(); // parent::delete();
+        return $mProduct->delete(); //parent::delete();
     }
 }

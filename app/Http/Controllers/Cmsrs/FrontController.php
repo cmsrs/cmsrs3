@@ -266,8 +266,6 @@ class FrontController extends Controller
         // }
 
         //slider_main
-        //$sliderData = (new Page)->getFirstPageWithImagesForGuestCache( 'slider_main' );
-        //$sliderDataImages = empty($sliderData['images']) ? false : $sliderData['images'];
         $sliderDataImages = $this->pageService->getPageDataByShortTitleCache('main_page_slider', 'images');
 
         $data = $this->pageService->getDataToView($page, [
@@ -313,7 +311,6 @@ class FrontController extends Controller
 
         $this->validatePage($pageOut);
 
-        //$data = $this->getData($pageOut, $lang);
         $data = $this->pageService->getDataToView($pageOut, [
             'lang' => $lang,
             'langs' => $this->langs,
@@ -374,8 +371,6 @@ class FrontController extends Controller
             }
         }
         $this->validatePage($pageOut);
-
-        //$data = $this->getData($pageOut, $lang);
 
         $data = $this->pageService->getDataToView($pageOut, [
             'lang' => $lang,

@@ -39,7 +39,6 @@ class AuthController extends Controller
         try {
             // attempt to verify the credentials and create a token for the user
             if (! $token = JWTAuth::attempt($credentials)) {
-                //return response()->json(['success' => false, 'error' => 'We cant find an account with this credentials. Please make sure you entered the right information and you have verified your email address.'], 404);
                 return response()->json(['success' => false, 'error' => 'We cant find an account with this credentials.'], 200);
             }
         } catch (JWTException $e) {
@@ -66,8 +65,6 @@ class AuthController extends Controller
         $request->validate([
             'token' => 'required',
         ]);
-
-        //$this->validate($request, ['token' => 'required']);
 
         try {
             JWTAuth::invalidate($request->input('token'));

@@ -7,15 +7,17 @@ use App\Models\Cmsrs\User;
 
 class OrderService extends BaseService
 {
+    /**
+     * another and old approach:
+     *   // $checkout = Checkout::findActiveOrder();
+     *   // if(empty($checkout)){
+     *   //     return false;
+     *   // }
+     *   //$checkout->is_pay = 1;
+     *   //$checkout->save();
+     */
     public static function copyDataFromBasketToOrderForUser($checkout)
     {
-        // $checkout = Checkout::findActiveOrder();
-        // if(empty($checkout)){
-        //     return false;
-        // }
-
-        //$checkout->is_pay = 1;
-        //$checkout->save();
 
         $userId = $checkout->user_id;
         if (empty($userId)) {

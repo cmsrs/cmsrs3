@@ -17,9 +17,8 @@ abstract class BaseService
         if ($this->arrLangs) {
             return $this->arrLangs;
         }
-        $config = new ConfigService;
 
-        return $config->arrGetLangs();
+        return (new ConfigService)->arrGetLangs();
     }
 
     public function setArrLangs($arrLangs)

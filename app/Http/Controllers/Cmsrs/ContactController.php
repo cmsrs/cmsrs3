@@ -89,7 +89,7 @@ class ContactController extends Controller
             $contactEmail = env('CONTACT_EMAIL', '');
             if (! empty($contactEmail)) {
 
-                //UWAGA!! - specjalnie zaczyna ten string od lewej!!!!
+                //WARNING!! - this string intentionally starts from the left!!!!
                 $bodyMsg = 'email: '.$data['email'].'
 message: '.$data['message'];
 

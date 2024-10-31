@@ -12,17 +12,7 @@ class CheckoutService extends BaseService
     {
         $orders = self::findActiveOrders();
 
-        return $orders->first();
-
-        // $user = Auth::user();
-        // $sessionId = session()->getId();
-        // if(empty($user)){
-        //     //where('session_id', '=', $sessionId)->
-        //     //return Checkout::where( 'is_pay', '=', 0)->first();
-        //     return false;
-        // }
-        // //where('session_id', '=', $sessionId)->
-        // return Checkout::where('user_id', '=', $user->id)->where( 'is_pay', '=', 0)->first();
+        return $orders?->first();
     }
 
     public static function findActiveOrders()
@@ -118,7 +108,7 @@ class CheckoutService extends BaseService
             $out[$j]['price'] = self::formatCurrency($basket->price);
             $out[$j]['product_id'] = $basket['product_id'];
             $out[$j]['product_name'] = $productName;
-            $out[$j]['product_url'] = (new ProductService)->getProductUrl($product, $lang, $productName); //zmiana_1007
+            $out[$j]['product_url'] = (new ProductService)->getProductUrl($product, $lang, $productName);
             $j++;
         }
 

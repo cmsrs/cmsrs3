@@ -78,11 +78,6 @@ class RegisterController extends Controller implements HasMiddleware
     protected function validator(array $data)
     {
         return User::clientValidator($data);
-        // return Validator::make($data, [
-        //     'name' => ['required', 'string', 'max:255'],
-        //     'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-        //     'password' => ['required', 'string', 'min:8', 'confirmed'],
-        // ]);
     }
 
     /**
@@ -98,13 +93,6 @@ class RegisterController extends Controller implements HasMiddleware
         }
 
         return User::createClient($data);
-        // return User::create([
-        //     'name' => $data['name'],
-        //     'email' => $data['email'],
-        //     'role' => User::$role['client'],
-        //     'password' => $data['password']   //Hash::make($data['password']),
-        // ]);
-
     }
 
     /**
@@ -125,18 +113,6 @@ class RegisterController extends Controller implements HasMiddleware
         }
 
         App::setLocale($lang);
-
-        /*
-        $data = [
-            'view' => 'register',
-            'menus' => $this->menus,
-            'page' => $page,
-            'lang' => $lang,
-            'langs' => $this->langs,
-            'page_title' => $page->translatesByColumnAndLang( 'title', $lang ) ?? config('app.name', 'cmsRS'),
-            'seo_description' =>  $page->translatesByColumnAndLang( 'description', $lang ) ?? config('app.name', 'cmsRS')
-        ];
-        */
 
         $data = $this->pageService->getDataToView($page, [
             'view' => 'register',

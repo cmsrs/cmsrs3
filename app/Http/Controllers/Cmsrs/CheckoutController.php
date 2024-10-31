@@ -26,7 +26,6 @@ class CheckoutController extends Controller
     {
         $lang = ConfigService::getDefaultLang();
         $objCheckouts = Checkout::All();
-        //$checkouts = CheckoutService::printCheckouts($objCheckouts, $lang);
         $checkouts = CheckoutService::printCheckouts($objCheckouts, $lang);
 
         return response()->json(['success' => true, 'data' => $checkouts], 200);

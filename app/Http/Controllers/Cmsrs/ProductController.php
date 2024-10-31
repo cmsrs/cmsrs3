@@ -22,7 +22,6 @@ class ProductController extends Controller
 
     public function __construct(
         protected ConfigService $configService,
-        //protected ImageService $imageService,
         protected ProductService $productService,
     ) {
         $this->validationRules['type'] = 'in:'.ConfigService::getPageTypes();

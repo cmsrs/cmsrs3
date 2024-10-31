@@ -18,7 +18,6 @@ class PageService extends BaseService implements TranslateInterface
     private $content;
 
     public $pageFields;
-    //private $langs;
 
     public function __construct()
     {
@@ -35,7 +34,6 @@ class PageService extends BaseService implements TranslateInterface
 
         $this->translate = new TranslateService;
         $this->content = new ContentService;
-        //$this->langs = $this->getArrLangs();
     }
 
     public function getPageDataByShortTitleCache($shortTitle, $data = 'content', $lang = null)
@@ -173,8 +171,8 @@ class PageService extends BaseService implements TranslateInterface
 
     public static function getPageBySlug($menus, $menuSlug, $pageSlug, $lang) //todo - change static
     {
-        $menuService = new MenuService; //todo
-        $pageService = new PageService; //todo
+        $menuService = new MenuService;
+        $pageService = new PageService;
         $pageOut = null;
         foreach ($menus as $menu) {
             if ($menuSlug == $menuService->getSlugByLang($menu, $lang)) {
@@ -634,56 +632,6 @@ class PageService extends BaseService implements TranslateInterface
 
         return $formatPage;
     }
-
-    /*
-    public function getPageWithImagesByIdCache($pageId)
-    {
-        $isCache =  (new Config)->isCacheEnable();
-        if ($isCache) {
-            $ret = cache()->remember('page_with_images_page_id_'.$pageId, CacheService::setTime(), function () use ($pageId) {
-                return  (new Page)->getPageWithImagesById($pageId);
-            });
-        } else {
-            $ret = (new Page)->getPageWithImagesById($pageId);
-        }
-
-        return $ret;
-    }
-
-    public function getPageWithImagesById($pageId)
-    {
-        $page = Page::with(['translates', 'contents'])->where('id', $pageId)->where('published', true)->where('after_login', false)->orderBy('position', 'asc')->get($this->pageFields)->first(); //->toSql(); ///toArray();
-
-        $out = [];
-        if($page){
-            $page = $page->toArray();
-            $out = $this->getPageDataFormat($page);
-            $out['images'] = Image::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
-        }
-
-        return $out;
-    }
-    */
-
-    /**
-     * todo
-     * this method not use
-     */
-    /*
-    public function getFirstPageWithImagesForGuestCache($type)
-    {
-        $isCache =  (new ConfigService)->isCacheEnable();
-        if ($isCache) {
-            $ret = cache()->remember('page_with_images_by_type_'.$type, CacheService::setTime(), function () use ($type) {
-                return  (new PageService()  )->getFirstPageWithImagesForGuest($type);
-            });
-        } else {
-            $ret = (new PageService()  )->getFirstPageWithImagesForGuest($type);
-        }
-
-        return $ret;
-    }
-    */
 
     public function getFirstPageWithImagesForGuest($type)
     {

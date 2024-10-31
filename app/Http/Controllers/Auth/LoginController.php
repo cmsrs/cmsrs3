@@ -49,8 +49,6 @@ class LoginController extends Controller implements HasMiddleware
         protected ConfigService $configService,
         protected PageService $pageService,
     ) {
-        //$this->middleware('guest')->except('logout');
-        //$this->langs = (new Config)->arrGetLangs();
         $this->menus = Menu::all()->sortBy('position'); //TODO cached
 
         $this->langs = $this->configService->arrGetLangs();

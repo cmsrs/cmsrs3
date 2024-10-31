@@ -15,7 +15,6 @@ class PageController extends Controller
 {
     public function __construct(
         protected ConfigService $configService,
-        //protected ImageService $imageService,
         protected PageService $pageService,
     ) {
         $this->validationRules['type'] = 'in:'.ConfigService::getPageTypes();

@@ -51,8 +51,6 @@ class ResetPasswordController extends Controller implements HasMiddleware
             exit();
         }
 
-        //$this->middleware('guest');
-
         $this->langs = (new ConfigService)->arrGetLangs();
         $pHome = PageService::getFirstPageByType('home');
         if ($pHome) {
