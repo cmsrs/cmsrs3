@@ -151,7 +151,6 @@ class TranslateTest extends Base
         $numOfLangs = (new TranslateService)->getArrLangs();
         $this->assertEquals(2, count($numOfLangs));
 
-        //dump($data1p);
         $p = (new PageService)->wrapCreate($data1p);
         $this->assertNotEmpty($p->id);
 
@@ -234,7 +233,7 @@ class TranslateTest extends Base
     public function test_page_translate_wrap_create_wrong_2()
     {
         $data1p = $this->getPageTestData();
-        $data1p['title'] = ['pl' => 'polska'];
+        $data1p['title'] = ['pl' => 'Polska'];
 
         $this->expectException(\Exception::class);
         $p = (new PageService)->wrapCreate($data1p);

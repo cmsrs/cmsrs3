@@ -176,7 +176,6 @@ class FrontLangsTest extends Base
 
     public function test_it_will_get_main_page_langs()
     {
-        //$this->assertTrue( true );
         $response = $this->get('/');
         $response->assertStatus(404);
 
@@ -338,7 +337,6 @@ class FrontLangsTest extends Base
 
         $pages = Page::All();
 
-        //dd($pages->toArray() );
         foreach ($pages as $page) {
 
             foreach ($langs as $lang) {
@@ -351,7 +349,6 @@ class FrontLangsTest extends Base
                 }
 
                 //echo " url=".$url." s=".$response->status()."\n";
-
                 $response->assertStatus($status);
             }
 

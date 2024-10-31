@@ -68,7 +68,6 @@ class ConfigTest extends Base
             $in = true;
 
             $url = (new PageService)->getUrl($p, 'en');
-            //dump($url);
             $response = $this->get($url);
 
             $status = (($page_type === 'login') || ($page_type === 'register') || ($page_type === 'forgot')) ? 302 : 200; //I don't understand - todo (why register and forgot??)
@@ -76,9 +75,7 @@ class ConfigTest extends Base
                 $status = 404;
             }
 
-            //dump($page_type);
             $response->assertStatus($status);
-            //break;
         }
         $this->assertTrue($in);
         $pagesNum = Page::all()->count();
@@ -139,7 +136,6 @@ class ConfigTest extends Base
         $response = $this->put('api/config/clearcache?token='.$this->token);
         $res = $response->getData();
         $this->assertTrue($res->success);
-        //print_r($res);
     }
 
     public function test_it_will_create_sitemap_docs()
@@ -147,7 +143,6 @@ class ConfigTest extends Base
         $response = $this->put('api/config/createsitemap?token='.$this->token);
         $res = $response->getData();
         $this->assertTrue($res->success);
-        //print_r($res);
     }
 
     public function test_get_test_cache_enable_file()
@@ -166,7 +161,6 @@ class ConfigTest extends Base
     public function test_api_it_will_create_cache_enable_file_two_times_docs()
     {
         $post = ['action' => 'enable'];
-        //print_r($post);
         $response = $this->post('api/config/toggle-cache-enable-file?token='.$this->token, $post);
         $response->assertStatus(200);
         $res = $response->getData();
@@ -174,11 +168,9 @@ class ConfigTest extends Base
         $this->assertTrue((new ConfigService)->isExistCacheFileEnable());
         $this->assertEquals('Cache enabled', $res->data->message);
         $this->assertEquals(true, $res->data->value);
-        //print_r($res);
 
         $response2 = $this->post('api/config/toggle-cache-enable-file?token='.$this->token, $post);
         $res2 = $response2->getData();
-        //print_r($res2);
         $this->assertFalse($res2->success);
         $this->assertTrue((new ConfigService)->isExistCacheFileEnable());
         $this->assertEquals('Cache was already enabled', $res2->error->toggle_cache_enable_file);
@@ -199,7 +191,6 @@ class ConfigTest extends Base
     {
         $post = ['action' => 'enable'];
         $response = $this->post('api/config/toggle-cache-enable-file?token='.$this->token, $post);
-        //dd($response);
         $res = $response->getData();
         $this->assertTrue($res->success);
         $this->assertTrue((new ConfigService)->isExistCacheFileEnable());
@@ -214,7 +205,6 @@ class ConfigTest extends Base
         $this->assertTrue(! (new ConfigService)->isExistCacheFileEnable());
         $this->assertEquals('Cache disabled', $res2->data->message);
         $this->assertEquals(false, $res2->data->value);
-        //print_r($res2);
 
         $post3 = ['action' => 'disable'];
         $response3 = $this->post('api/config/toggle-cache-enable-file?token='.$this->token, $post3);
@@ -222,7 +212,6 @@ class ConfigTest extends Base
         $this->assertFalse($res3->success);
         $this->assertTrue(! (new ConfigService)->isExistCacheFileEnable());
         $this->assertEquals('Cache was already disabled', $res3->error->toggle_cache_enable_file);
-        //print_r($res3);
     }
 
     public function test_api_toggle_cache_enable_file_with_fake_param()
@@ -276,7 +265,6 @@ class ConfigTest extends Base
         $response = $this->get('api/config/is-cache-enable?token='.$this->token);
         $response->assertStatus(200);
         $res = $response->getData();
-        //print_r($res);
         $this->assertTrue($res->success);
         $this->assertFalse($res->data->is_cache_enable);
     }

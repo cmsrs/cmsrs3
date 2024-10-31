@@ -74,7 +74,6 @@ class MenuDemoTest extends Base
 
         $response = $this->put('api/menus/'.$objMenu2->id.'?token='.$this->token, $testData1);
         $this->checkMethodInDemoVersion($response);
-
         //$this->assertFalse($res->success);
     }
 
@@ -127,7 +126,7 @@ class MenuDemoTest extends Base
         $mMenu = Menu::find($data['id']);
         $this->assertEquals((new MenuService)->translatesByColumnAndLang($mMenu, 'name', 'en'), $data['name']->en);
         $this->assertSame((new MenuService)->translatesByColumnAndLang($mMenu, 'name', 'en'), $this->testData['name']['en']);
-        $this->assertSame($data['position'], 1/*$this->testData['position']*/);
+        $this->assertSame($data['position'], 1); //instead 1 use $this->testData['position']
 
         $this->assertIsInt($data['position']);
         $this->assertIsInt($data['id']);

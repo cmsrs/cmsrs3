@@ -74,8 +74,8 @@ class MenuTest extends Base
         $this->assertTrue($res->success);
 
         $response2ttt = $this->post('api/menus?token='.$this->token, ['name' => ['en' => $ttt]]);
-        $resttt = $response2ttt->getData();
-        $this->assertTrue($resttt->success);
+        $res1 = $response2ttt->getData();
+        $this->assertTrue($res1->success);
 
         $response2 = $this->post('api/menus?token='.$this->token, $testData1);
 
@@ -107,7 +107,7 @@ class MenuTest extends Base
         $this->assertFalse($res->success);
     }
 
-    public function test_it_will_wron_add()
+    public function test_it_will_wrong_add()
     {
         $testData2 =
       [
@@ -121,7 +121,7 @@ class MenuTest extends Base
         $this->assertNotEmpty($response->getData()->error->{'name.en'}[0]);
     }
 
-    public function test_it_will_wron_update()
+    public function test_it_will_wrong_update()
     {
         $this->setTestData();
         $testData2 =
@@ -242,7 +242,7 @@ class MenuTest extends Base
 
         $this->assertEquals((new MenuService)->translatesByColumnAndLang(Menu::find($data['id']), 'name', 'en'), $data['name']->en);
         $this->assertSame((new MenuService)->translatesByColumnAndLang(Menu::find($data['id']), 'name', 'en'), $this->testData['name']['en']);
-        $this->assertSame($data['position'], 1/*$this->testData['position']*/);
+        $this->assertSame($data['position'], 1); //instead 1 use $this->testData['position']
 
         $this->assertIsInt($data['position']);
         $this->assertIsInt($data['id']);
@@ -263,7 +263,7 @@ class MenuTest extends Base
         $res = $response->getData();
         $this->assertTrue($res->success);
 
-        //sprawdzamy rekordy w db
+        //check rows in db
         $response2 = $this->get('api/menus?token='.$this->token);
 
         $res2 = $response2->getData();
@@ -280,7 +280,7 @@ class MenuTest extends Base
 
         $this->assertSame($data2['position'], $testData2['position']);
 
-        //wrond data
+        //wrong data
         $testData22 =
       [
           'name' => ['en' => 'test menu22'],
@@ -296,7 +296,7 @@ class MenuTest extends Base
         //wrong lang
         $testData44 =
       [
-          'namefake' => ['en' => 'test menu2222'],
+          'name_fake' => ['en' => 'test menu2222'],
           'position' => '3a12',
           'fake' => 234,
       ];
@@ -344,7 +344,7 @@ class MenuTest extends Base
         $res0 = $response0->getData();
         $this->assertTrue($res0->success);
 
-        //pobieramy $menus
+        //retrieve $menus
         $response = $this->get('api/menus?token='.$this->token);
         $res = $response->getData();
         $this->assertTrue($res->success);
@@ -356,7 +356,7 @@ class MenuTest extends Base
         $this->assertNotEmpty($data['position']);
         $this->assertFalse(isset($testData3['position']));
 
-        //wrond data
+        //wrong data
         $testData33 =
       [
           'id' => $id,
@@ -389,7 +389,7 @@ class MenuTest extends Base
     public function test_it_will_delete_menu_fake()
     {
         $this->setTestData();
-        //fake id - obluga bledow
+        //fake id - error handling
         $responseFake = $this->delete('api/menus/rs_I_eW23423fsd?token='.$this->token);
         $resFake = $responseFake->getData();
         $this->assertFalse($resFake->success);

@@ -95,7 +95,6 @@ class UserTest extends Base
         $response = $this->get('api/clients/id/asc?token='.$this->token);
         $res = $response->getData();
         $this->assertTrue($res->success);
-        //dd($res->data);
 
         $firstClient = $this->getTestClient();
 
@@ -297,8 +296,6 @@ class UserTest extends Base
         ];
 
         $response = $this->put("api/clients/$userId?token=".$this->token, $testClient);
-
-        //dd($response);
         $res = $response->getData();
 
         $this->assertTrue($res->success);
@@ -311,8 +308,6 @@ class UserTest extends Base
         $this->assertEquals($testClient['name'], $usersAfter[$index]['name']);
         $this->assertEquals($users[$index]['email'], $usersAfter[$index]['email']); //email is not changeable!
         $this->assertNotEquals($emailAdmin, $usersAfter[$index]['email']); //email is not changeable!
-
-        //dd($usersAfter[$index]);
     }
 
     public function test_delete_client_docs()

@@ -84,13 +84,13 @@ class PageSecretTest extends Base
           'commented' => 0,
           'after_login' => 1,
           'type' => 'main_page',
-          'content' => ['en' => 'aaa ffdfds'],
+          'content' => ['en' => 'aaa test1234234'],
           'menu_id' => null, //it must be null for type main_page
           'page_id' => null, //it must be null for type main_page
       ];
-        $alipUrl = 'api/'.$this->apiSecret.'/pages?token='.$this->token;
+        $apiUrl = 'api/'.$this->apiSecret.'/pages?token='.$this->token;
         $this->assertNotEmpty($this->apiSecret);
-        $response = $this->post($alipUrl, $testData2);
+        $response = $this->post($apiUrl, $testData2);
 
         $res = $response->getData();
         $this->assertTrue($res->success);

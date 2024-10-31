@@ -47,7 +47,7 @@ class ProductTest extends Base
 
     const STR_DESC_IMG1 = 'description img1 - product image';
 
-    const STR_PRODUCT_DESCRIPION_EN = 'book desc';
+    const STR_PRODUCT_DESCRIPTION_EN = 'book desc';
 
     const STR_PRODUCT_NAME_EN = 'php3 db app';
 
@@ -121,7 +121,7 @@ class ProductTest extends Base
             'product_name' => ['en' => self::STR_PRODUCT_NAME_EN],
             'sku' => 'AN/34534',
             'price' => 123,
-            'product_description' => ['en' => self::STR_PRODUCT_DESCRIPION_EN],
+            'product_description' => ['en' => self::STR_PRODUCT_DESCRIPTION_EN],
             'page_id' => $this->pageId,
             'published' => 1,
             'images' => [
@@ -137,7 +137,6 @@ class ProductTest extends Base
     private function setTestData2($arrD = null)
     {
         //$menu = (new Menu)->wrapCreate($this->testMenu);
-
         //$this->menuObj = $menu; //$menu->all()->first();
         //$this->menuId = $menu->id;  // $this->menuObj->id;
         //$this->assertNotEmpty($this->menuId);
@@ -169,13 +168,11 @@ class ProductTest extends Base
                 break;
             }
         }
-        //dd($pageId);
 
         $this->assertNotEmpty($pageId);
 
         //$data->data[1]
         //$pageId = $data->data[1]->id; //!!
-
         //$this->assertNotEmpty($this->pageId);
         //$this->assertEquals($p->id, $this->pageId);
 
@@ -183,7 +180,7 @@ class ProductTest extends Base
             'product_name' => ['en' => self::STR_PRODUCT_NAME_EN.' 2'],
             'sku' => ! empty($arrD['sku']) ? $arrD['sku'] : 'AN/34534_22',
             'price' => 123,
-            'product_description' => ['en' => self::STR_PRODUCT_DESCRIPION_EN.' 2'],
+            'product_description' => ['en' => self::STR_PRODUCT_DESCRIPTION_EN.' 2'],
             'page_id' => $pageId,
             'published' => 1,
             'images' => [
@@ -210,7 +207,6 @@ class ProductTest extends Base
 
         $products = (new ProductService)->wrapSearchProducts($lang, $key);
         $this->assertEquals(1, count($products));
-        //dd($products);
     }
 
     /**
@@ -295,7 +291,6 @@ class ProductTest extends Base
         $this->assertNotEmpty($p2->id);
 
         $response0 = $this->post('/post/checkout', $data);
-        //dd($response0);
         $response0->assertStatus(302);
 
         $c1 = Checkout::all()->count();
@@ -308,7 +303,6 @@ class ProductTest extends Base
         /*** start testing */
 
         $response = $this->get('api/checkouts?token='.$this->token);
-        //dd($response);
 
         $res = $response->getData();
         $this->assertTrue($res->success);
@@ -338,7 +332,6 @@ class ProductTest extends Base
         ];
 
         $response2 = $this->patch('api/checkouts/'.$ch->id.'?token='.$this->token, $dataUpdate);
-        //dd($response2);
         $res2 = $response2->getData();
 
         $this->assertTrue($res2->success);
@@ -363,7 +356,6 @@ class ProductTest extends Base
 
         //second time update
         $response2b = $this->patch('api/checkouts/'.$ch->id.'?token='.$this->token, $dataUpdate);
-        //dd($response2);
         $res2b = $response2b->getData();
         $this->assertTrue($res2b->success);
 
@@ -381,7 +373,7 @@ class ProductTest extends Base
             } elseif ($o['product_id'] == $ids['id2']) {
                 $this->assertEquals($qty1a, $o['qty']);
             } else {
-                $this->assertTrue(false); //this case is imposible
+                $this->assertTrue(false); //this case is impossible
             }
         }
 
@@ -401,10 +393,8 @@ class ProductTest extends Base
         $chLast = Checkout::all()->reverse()->first();
 
         $this->assertNotEquals($ch->id, $chLast->id);
-        //dd($chLast);
 
         $response2c = $this->patch('api/checkouts/'.$chLast->id.'?token='.$this->token, $dataUpdate);
-        //dd($response2);
         $res2c = $response2c->getData();
         $this->assertTrue($res2c->success);
 
@@ -618,7 +608,6 @@ class ProductTest extends Base
         $this->assertEquals(0, $c100);
 
         $response0 = $this->post('/post/checkout', $data);
-        //dd($response0);
         $response0->assertStatus(302);
 
         $c1 = Checkout::all()->count();
@@ -652,25 +641,19 @@ class ProductTest extends Base
 
         }
 
-        /*
-        $o0 = Order::all()->count();
-        $this->assertEquals(0, $o0);
-        $isCopy0 =  Order::copyDataFromBasketToOrderForUser($ch);
-        $this->assertTrue($isCopy0);
+        // $o0 = Order::all()->count();
+        // $this->assertEquals(0, $o0);
+        // $isCopy0 =  Order::copyDataFromBasketToOrderForUser($ch);
+        // $this->assertTrue($isCopy0);
 
-
-        $o1count = Order::all()->count();
-        $this->assertEquals(2, $o1count);
-        */
-
+        // $o1count = Order::all()->count();
+        // $this->assertEquals(2, $o1count);
         //print_r(Order::all()->toArray());
 
         $ch1 = Checkout::first(); //->toArray();
         $this->assertEquals(0, $ch1->is_pay);
 
-        /**
-         * second process payment
-         */
+        // second process payment
         $qty1b = 32;
         $data['products'] = [
             [
@@ -693,32 +676,31 @@ class ProductTest extends Base
         $response3 = $this->get($urlShoppingSuccess);
         $response3->assertStatus(200); //because there is checkout_id in session therefore is 200 status
 
-        /*
-        $ret1 =  Order::copyDataFromBasketToOrderForUser();
-        $this->assertTrue($ret1);
-        $ch2 = Checkout::findActiveOrder();
-        $this->assertEmpty($ch2);
+        // $ret1 =  Order::copyDataFromBasketToOrderForUser();
+        // $this->assertTrue($ret1);
+        // $ch2 = Checkout::findActiveOrder();
+        // $this->assertEmpty($ch2);
 
-        $ret1b = Order::copyDataFromBasketToOrderForUser();
-        $this->assertFalse($ret1b);
+        // $ret1b = Order::copyDataFromBasketToOrderForUser();
+        // $this->assertFalse($ret1b);
 
-        $o2count = Order::all()->count();
-        $this->assertEquals($o2count, $o1count);
+        // $o2count = Order::all()->count();
+        // $this->assertEquals($o2count, $o1count);
 
-        $arrOrders = Order::all()->toArray();
-        $this->assertEquals($o2count, count($arrOrders) );
+        // $arrOrders = Order::all()->toArray();
+        // $this->assertEquals($o2count, count($arrOrders) );
 
-        //print_r($arrOrders);
-        foreach($arrOrders as $o){
-            $this->assertTrue( in_array( $o['product_id'], $ids ) );
-            if( $o['product_id'] == $ids['id1'] ){
-                $this->assertEquals($qty0a, $o['qty']);
-            }
-            if( $o['product_id'] == $ids['id2'] ){
-                $this->assertEquals( ($qty1a + $qty1b), $o['qty'] );
-            }
-        }
-        */
+        // //print_r($arrOrders);
+        // foreach($arrOrders as $o){
+        //     $this->assertTrue( in_array( $o['product_id'], $ids ) );
+        //     if( $o['product_id'] == $ids['id1'] ){
+        //         $this->assertEquals($qty0a, $o['qty']);
+        //     }
+        //     if( $o['product_id'] == $ids['id2'] ){
+        //         $this->assertEquals( ($qty1a + $qty1b), $o['qty'] );
+        //     }
+        // }
+
     }
 
     /**
@@ -737,7 +719,6 @@ class ProductTest extends Base
         $this->testData['published'] = 1;
         $this->testData['product_name']['en'] = 'product name uniq en2';
         $response1 = $this->post('api/products?token='.$this->token, $this->testData);
-        //dd($response1 );
         $res1 = $response1->getData();
         $this->assertTrue($res1->success);
 
@@ -745,7 +726,6 @@ class ProductTest extends Base
         $this->assertEquals(2, $countProd);
 
         $productArr = Product::all()->toArray();
-        //dd($productArr);
 
         $pId1 = $productArr[0]['id'];
         $pId2 = $productArr[1]['id'];
@@ -757,7 +737,6 @@ class ProductTest extends Base
         $response = $this->get($url);
 
         $data = $response->getData();
-        //print_r($data);
         $this->assertTrue($data->success);
 
         $dd = (array) $data->data;
@@ -778,201 +757,7 @@ class ProductTest extends Base
         $this->assertTrue($data2->success);
         $this->assertEquals($data, $data2);
 
-        //dd($response);
     }
-
-    /**
-     * it is not test admin
-     */
-    /*
-    public function test_it_will_save_to_basket()
-    {
-        $ids = $this->setAddTwoProducts();
-        $id1 = $ids['id1'];
-        $id2 = $ids['id2'];
-
-        $user = Auth::user();
-
-        $baskets = [
-            0 => [
-              "qty" => 10,
-              "user_id" => $user->id,
-              "product_id" => $id1
-            ],
-            1 => [
-              "qty" => 5,
-              "user_id" => $user->id,
-              "product_id" => $id2
-            ]
-        ];
-
-        $objBaskets = Basket::inBasketByUserId($user->id);
-        $this->assertEmpty($objBaskets);
-
-        Basket::deleteBasketByObjBaskets($objBaskets);
-
-        Basket::saveBaskets($baskets);
-        $objBaskets2 = Basket::inBasketByUserId($user->id);
-        $this->assertNotEmpty($objBaskets2);
-
-        Basket::deleteBasketByObjBaskets($objBaskets2);
-
-        $objBaskets3 = Basket::inBasketByUserId($user->id);
-        $this->assertEmpty($objBaskets3);
-
-        $isNewOrders = Order::moveDataFromBasketToOrderForUser();
-        $this->assertFalse($isNewOrders);
-        $objOrders = Order::inOrdersByUserId($user->id);
-        $this->assertEmpty($objOrders);
-        //dd($basket);
-    }
-    */
-
-    /**
-     * it is not test admin
-     */
-    /*
-    public function test_it_will_save_to_order()
-    {
-        $ids = $this->setAddTwoProducts();
-        $id1 = $ids['id1'];
-        $id2 = $ids['id2'];
-
-        $user = Auth::user();
-
-        $baskets = [
-            0 => [
-              "qty" => 10,
-              "user_id" => $user->id,
-              "product_id" => $id1
-            ],
-            1 => [
-              "qty" => 5,
-              "user_id" => $user->id,
-              "product_id" => $id2
-            ]
-        ];
-
-        Basket::deleteBasketAndAddNewData($user->id, $baskets);
-        $objBaskets4 = Basket::inBasketByUserId($user->id);
-        $this->assertNotEmpty($objBaskets4);
-
-        $isNewOrders2 = Order::moveDataFromBasketToOrderForUser();
-        $this->assertTrue($isNewOrders2);
-
-        $objBaskets5 = Basket::inBasketByUserId($user->id);
-        $this->assertEmpty($objBaskets5);
-
-        $objOrders2 = Order::inOrdersByUserId($user->id);
-        $this->assertNotEmpty($objOrders2);
-
-        $b = $objBaskets4->toArray();
-        $o = $objOrders2->toArray();
-
-        $count = 2;
-        $this->assertEquals($count, count($b));
-        $this->assertEquals($count, count($o));
-
-        for($i =0; $i<$count; $i++){
-            $this->assertEquals($b[$i]["qty"], $o[$i]["qty"]);
-            $this->assertEquals($b[$i]["user_id"], $o[$i]["user_id"]);
-            $this->assertEquals($b[$i]["product_id"], $o[$i]["product_id"]);
-        }
-    }
-    */
-
-    /**
-     * it is not test admin
-     */
-    /*
-    public function test_it_will_save_two_times_to_order()
-    {
-        $ids = $this->setAddTwoProducts();
-        $id1 = $ids['id1'];
-        $id2 = $ids['id2'];
-
-        $user = Auth::user();
-
-        $qty0a = 10;
-        $baskets = [
-            0 => [
-              "qty" => $qty0a,
-              "user_id" => $user->id,
-              "product_id" => $id1
-            ],
-            // 1 => [
-            //   "qty" => 5,
-            //   "user_id" => $user->id,
-            //   "product_id" => $id2
-            // ]
-        ];
-
-        //first time
-        Basket::deleteBasketAndAddNewData($user->id, $baskets);
-        $objBaskets4 = Basket::inBasketByUserId($user->id);
-        $this->assertNotEmpty($objBaskets4);
-
-        $isNewOrders2 = Order::moveDataFromBasketToOrderForUser();
-        $this->assertTrue($isNewOrders2);
-
-        $objBaskets5 = Basket::inBasketByUserId($user->id);
-        $this->assertEmpty($objBaskets5);
-
-        $objOrders2 = Order::inOrdersByUserId($user->id);
-        $this->assertNotEmpty($objOrders2);
-
-        $b = $objBaskets4->toArray();
-        $o = $objOrders2->toArray();
-
-        $count = 1;
-        $this->assertEquals($count, count($b));
-        $this->assertEquals($count, count($o));
-
-        for($i =0; $i<$count; $i++){
-            $this->assertEquals($b[$i]["qty"], $o[$i]["qty"]);
-            $this->assertEquals($b[$i]["user_id"], $o[$i]["user_id"]);
-            $this->assertEquals($b[$i]["product_id"], $o[$i]["product_id"]);
-        }
-
-        //second time
-        $qty0b = 22;
-        $qty1 = 7;
-        $baskets[0]['qty'] = $qty0b;
-        $baskets[1] = [
-              "qty" => $qty1,
-              "user_id" => $user->id,
-              "product_id" => $id2
-        ];
-
-        Basket::deleteBasketAndAddNewData($user->id, $baskets);
-        $objBaskets4 = Basket::inBasketByUserId($user->id);
-        $this->assertNotEmpty($objBaskets4);
-
-        $isNewOrders2 = Order::moveDataFromBasketToOrderForUser();
-        $this->assertTrue($isNewOrders2);
-
-        $objBaskets5 = Basket::inBasketByUserId($user->id);
-        $this->assertEmpty($objBaskets5);
-
-        $objOrders2 = Order::inOrdersByUserId($user->id);
-        $this->assertNotEmpty($objOrders2);
-
-        $b2 = $objBaskets4->toArray();
-        $o2 = $objOrders2->toArray();
-
-        $count = 2;
-        $this->assertEquals($count, count($b2));
-        $this->assertEquals($count, count($o2));
-
-        $this->assertEquals($qty0a + $qty0b, $o2[0]["qty"]);
-        $this->assertEquals($user->id, $o2[0]["user_id"]);
-        $this->assertEquals($id1, $o2[0]["product_id"]);
-
-        $this->assertEquals($qty1, $o2[1]["qty"]);
-        $this->assertEquals($user->id, $o2[1]["user_id"]);
-        $this->assertEquals($id2, $o2[1]["product_id"]);
-    }
-    */
 
     private function setAddTwoProducts($price1 = 11200, $price2 = 32100)
     {
@@ -1046,9 +831,6 @@ class ProductTest extends Base
 
         $arrCart = \App\Services\Cmsrs\BaseService::reIndexArr($obj->cart);
 
-        //dd($arrCart);
-        //dd('________ffff_____');
-
         $baskets = [];
         $orders = '';
         $data = ProductService::getDataToPayment($arrCart, $baskets, $orders);
@@ -1079,79 +861,6 @@ class ProductTest extends Base
             $this->assertNotEmpty($order2['product_img']);
         }
     }
-
-    /**
-     * it is not test admin
-     * it tests home/api/tobank
-     */
-    /*
-    public function test_it_will_post_to_bank()
-    {
-        //dd($products);
-
-        $ids = $this->setAddTwoProducts();
-        $id1 = $ids['id1'];
-        $id2 = $ids['id2'];
-
-
-        //name and price is not important in this post
-        $json =
-        '{
-            "cart": [
-                {
-                    "id": '.$id1.',
-                    "name": "PHP3 aplikacje bazodanowe - xxxxxxxxxxxxxxxxxxxxxxxyyyyyyyyyyyyyy",
-                    "price": 119999999999999999999,
-                    "qty": 10
-                },
-                {
-                    "id": '.$id2.',
-                    "name": "PHP5 nott imporstentttttttttttt",
-                    "price": 30999999999999,
-                    "qty": 5
-                }
-            ]
-        }';
-
-        $obj = json_decode($json);
-        $this->assertEquals(2, count($obj->cart));
-
-
-        $this->assertAuthenticated();
-        $token = User::getTokenForClient();
-        $this->assertNotEmpty($token);
-
-        $user = Auth::user();
-        $this->assertTrue(Auth::check()); //I dont understand why becayse we dont use this: //Auth::login($user);
-
-        $response = $this->post('home/api/tobank?token='.$token, ["cart" => $obj->cart] );
-        $response->assertStatus(200);
-        //dd( $response->getData() );
-
-        $res1 = $response->getData();
-        $this->assertTrue($res1->success);
-        $this->assertNotEmpty($res1->data);
-        //dd($res1->data);
-
-        $user = Auth::user();
-        $objBaskets4 = Basket::inBasketByUserId($user->id);
-        $this->assertNotEmpty($objBaskets4);
-
-        $baskets4 = $objBaskets4->toArray();
-
-        //dump($baskets4);
-        //dump($obj->cart);
-        //dd('____00__');
-
-        $i = 0;
-        foreach($obj->cart as $cart ){
-            $this->assertEquals($baskets4[$i]['product_id'], $cart->id  );
-            $this->assertEquals($baskets4[$i]['qty'], $cart->qty  );
-            $i++;
-        }
-
-    }
-    */
 
     public function test_it_will_create_product_with_images_by_page()
     {
@@ -1197,7 +906,6 @@ class ProductTest extends Base
 
         $urls = (new ProductService)->getProductsUrl();
 
-        //dd($urls);
         $this->assertEquals(1, count($urls));
         $prodUrl = $urls[0]['en'];
         $this->assertNotEmpty($prodUrl);
@@ -1217,7 +925,6 @@ class ProductTest extends Base
         $this->assertEquals(0, $products[0]['published']);
         $urls2 = (new ProductService)->getProductsUrl();
         $this->assertEmpty($urls2);
-        //dd($urls);
 
         $response2 = $this->get($prodUrl);
         $response2->assertStatus(404);
@@ -1236,7 +943,6 @@ class ProductTest extends Base
 
         $urls = (new ProductService)->getProductsUrl();
 
-        //dd($urls);
         $this->assertEquals(1, count($urls));
         $prodUrl = $urls[0]['en'];
         $this->assertNotEmpty($prodUrl);
@@ -1256,7 +962,6 @@ class ProductTest extends Base
         $this->assertEquals(0, $products[0]['published']);
         $urls2 = (new ProductService)->getProductsUrl();
         $this->assertEmpty($urls2);
-        //dd($urls);
 
         $response2 = $this->get($prodUrl);
         $response2->assertStatus(404);
@@ -1291,47 +996,6 @@ class ProductTest extends Base
         $response2->assertStatus(404);
     }
 
-    /*
-    public function test_it_will_get_product_data_by_product_id()
-    {
-        $this->setTestData();
-
-        $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
-
-        $res0 = $response0->getData();
-        $this->assertTrue($res0->success);
-
-        $productId = $res0->data->productId;
-        $this->assertNotEmpty($productId);
-
-        $data = (new Product)->getProductDataByProductId( $productId );
-        $this->assertEquals($productId, $data['id']);
-        $this->assertEquals(self::STR_PRODUCT_NAME_EN, $data['product_name']['en']);
-
-        $urlCategory = $data['url_category']['en'];
-        $urlProduct = $data['url_product']['en'];
-
-        $response = $this->get($urlCategory);
-        $response->assertStatus(200);
-
-        $response = $this->get($urlProduct);
-        $response->assertStatus(200);
-
-        //$pos = strpos($response->getContent(), $pageTitle);
-        //$this->assertNotEmpty($pos, $pageTitle);
-
-
-        $this->testData['product_name']['en'] = 'test uniq';
-        $this->testData['sku'] = 'AN/34534_qwe';
-        $this->testData['page_id'] = strval($this->testData['page_id']);
-
-        var_dump($this->testData['page_id']);
-        $response1 = $this->post('api/products?token=' . $this->token, $this->testData);
-        $res1 = $response1->getData();
-        $this->assertTrue($res1->success);
-    }
-    */
-
     /**
      * similar function to: it_will_get_product_by_slug
      * except one page belongs to menu
@@ -1342,7 +1006,6 @@ class ProductTest extends Base
         //$this->setTestData2();
 
         $response0 = $this->post('api/products?token='.$this->token, $this->testData);
-        //dd($response0);
 
         $res0 = $response0->getData();
         $this->assertTrue($res0->success);
@@ -1352,7 +1015,6 @@ class ProductTest extends Base
 
         $lang = 'en';
         $slugProductName = Str::slug(self::STR_PRODUCT_NAME_EN, '-');
-        //dump($slugProductName);
         $product = (new ProductService)->getProductBySlug($slugProductName, $lang);
 
         $this->assertNotEmpty($product);
@@ -1360,8 +1022,6 @@ class ProductTest extends Base
         $this->assertEquals($productId, $product['id']);
 
         $urls = (new ProductService)->getProductUrls($product);
-
-        //dump($urls);
         $this->assertNotEmpty($urls);
 
         $urlCategory = $urls['url_category']['en'];
@@ -1383,7 +1043,6 @@ class ProductTest extends Base
         $this->setTestData2();
 
         $response0 = $this->post('api/products?token='.$this->token, $this->testData);
-        //dd($response0);
 
         $res0 = $response0->getData();
         $this->assertTrue($res0->success);
@@ -1393,7 +1052,6 @@ class ProductTest extends Base
 
         $lang = 'en';
         $slugProductName = Str::slug(self::STR_PRODUCT_NAME_EN, '-');
-        //dump($slugProductName);
         $product = (new ProductService)->getProductBySlug($slugProductName, $lang);
 
         $this->assertNotEmpty($product);
@@ -1457,8 +1115,6 @@ class ProductTest extends Base
 
         $res1 = $response1->getData();
 
-        //print_r($res1);
-
         $this->assertFalse($res1->success);
         $this->assertNotEmpty($res1->error->sku[0]);
         $this->assertNotEmpty($res1->error->price[0]);
@@ -1478,8 +1134,6 @@ class ProductTest extends Base
         $response1 = $this->post('api/products?token='.$this->token, $this->testData);
 
         $res1 = $response1->getData();
-
-        //print_r($res1);
 
         $this->assertFalse($res1->success);
         $this->assertTrue(strpos($res1->error->product_name, 'Duplicate product name') === 0);
@@ -1522,7 +1176,6 @@ class ProductTest extends Base
         $response0 = $this->post('api/products?token='.$this->token, $this->testData);
 
         $res0 = $response0->getData();
-        //dd($res0);
 
         $this->assertTrue($res0->success);
         $this->assertNotEmpty($res0->data->productId);
@@ -1530,7 +1183,6 @@ class ProductTest extends Base
         $products = Product::all()->toArray();
         $this->assertEquals(count($products), 1);
         $this->assertEquals($products[0]['id'], $res0->data->productId);
-        //dd($products);
         $this->assertEquals(0, $products[0]['published']);
         $this->assertEquals(0, $res0->data->data->published);
         $this->assertEquals($products[0]['published'], $res0->data->data->published);
@@ -1540,12 +1192,12 @@ class ProductTest extends Base
         $this->assertEquals(count($trans), 1);
 
         $this->assertNotEmpty($this->testData['product_description']['en']);
-        $this->assertEquals(self::STR_PRODUCT_DESCRIPION_EN, $this->testData['product_description']['en']);
+        $this->assertEquals(self::STR_PRODUCT_DESCRIPTION_EN, $this->testData['product_description']['en']);
 
         $this->assertEquals('en', $trans[0]['lang']);
         $this->assertEquals('product_description', $trans[0]['column']);
         $this->assertEquals($res0->data->productId, $trans[0]['product_id']);
-        $this->assertEquals(self::STR_PRODUCT_DESCRIPION_EN, $trans[0]['value']);
+        $this->assertEquals(self::STR_PRODUCT_DESCRIPTION_EN, $trans[0]['value']);
 
         $trans2 = Translate::query()->where('product_id', $res0->data->productId)->get()->toArray();
         $this->assertEquals(count($trans2), 1);
@@ -1553,8 +1205,7 @@ class ProductTest extends Base
         $this->assertNotEmpty($this->testData['product_name']['en']);
         $this->assertEquals(self::STR_PRODUCT_NAME_EN, $this->testData['product_name']['en']);
 
-        //$this->assertEquals( self::STR_PRODUCT_DESCRIPION_EN, $this->testData['product_description']['en']);
-
+        //$this->assertEquals( self::STR_PRODUCT_DESCRIPTION_EN, $this->testData['product_description']['en']);
         $this->assertEquals('en', $trans2[0]['lang']);
         $this->assertEquals('product_name', $trans2[0]['column']);
         $this->assertEquals($res0->data->productId, $trans2[0]['product_id']);
@@ -1575,13 +1226,11 @@ class ProductTest extends Base
     {
         $this->setTestData();
         $res0 = $this->post('api/products?token='.$this->token, $this->testData);
-        //dd($res0);
         $res = $res0->getData();
 
         $this->assertTrue($res->success);
 
         $response22 = $this->get('api/products?token='.$this->token);
-        //dd($response22);
 
         $res22 = $response22->getData();
 
@@ -1589,7 +1238,7 @@ class ProductTest extends Base
         $this->assertEquals(count($res22->data), 1);
 
         $this->assertTrue(isset($res22->data[0]->product_description));
-        $this->assertEquals(self::STR_PRODUCT_DESCRIPION_EN, $res22->data[0]->product_description->en);
+        $this->assertEquals(self::STR_PRODUCT_DESCRIPTION_EN, $res22->data[0]->product_description->en);
 
         $this->assertEquals(1, $res22->data[0]->published);
 
@@ -1749,8 +1398,8 @@ class ProductTest extends Base
         $productId = $res0->data->productId;
         $this->assertNotEmpty($productId);
 
-        $resprod = $this->get('api/products?token='.$this->token);
-        $res2prod = $resprod->getData();
+        $resProd = $this->get('api/products?token='.$this->token);
+        $res2prod = $resProd->getData();
         $this->assertEquals($res2prod->data[0]->images[0]->name, 'phpunittest1.jpg');
 
         $response2 = $this->get('api/images/product/'.$productId.'?token='.$this->token);
@@ -1985,12 +1634,10 @@ class ProductTest extends Base
         $product1a = $this->createProduct(1);
         $product1b = $this->createProduct(2);
         $product2 = $this->createProduct2();
-        //dump($product2);
 
         //1
         $response = $this->get('api/products/'.$product1a->productId.'?token='.$this->token);
         $res = $response->getData();
-        //dump($res);
 
         $this->assertTrue($res->success);
         $this->assertEquals($product1a->productId, $res->data->id);
@@ -1998,7 +1645,6 @@ class ProductTest extends Base
         //2
         $response2 = $this->get('api/products/'.$product1b->productId.'?token='.$this->token);
         $res2 = $response2->getData();
-        //dump($res2);
 
         $this->assertTrue($res2->success);
         $this->assertEquals($product1b->productId, $res2->data->id);
@@ -2340,7 +1986,6 @@ class ProductTest extends Base
         $sku1a = $product1a->data->sku;
         $sku1b = $product1b->data->sku;
         $sku2 = $product2->data->sku;
-        //dump($sku1a, $sku1b, $sku2);
 
         $lang = 'en';
         $column = 'sku';
@@ -2478,8 +2123,6 @@ class ProductTest extends Base
         $response = $this->get($url);
         $res = $response->getData();
 
-        //print_r($res);
-
         $this->assertNotEmpty($res->data->data[0]->price_total_add_deliver);
         $this->assertNotEmpty($res->data->data[1]->price_total_add_deliver);
         $this->assertNotEmpty($res->data->data[2]->price_total_add_deliver);
@@ -2507,8 +2150,318 @@ class ProductTest extends Base
         $response = $this->get($url);
         $res = $response->getData();
 
-        //print_r($res);
-
         $this->assertEquals(2, count($res->data->data)); //client3, client30
     }
+
+    /**
+     * OLD TESTS
+     */
+
+    /**
+     * it is not test admin
+     */
+    /*
+    public function test_it_will_save_to_basket()
+    {
+        $ids = $this->setAddTwoProducts();
+        $id1 = $ids['id1'];
+        $id2 = $ids['id2'];
+
+        $user = Auth::user();
+
+        $baskets = [
+            0 => [
+              "qty" => 10,
+              "user_id" => $user->id,
+              "product_id" => $id1
+            ],
+            1 => [
+              "qty" => 5,
+              "user_id" => $user->id,
+              "product_id" => $id2
+            ]
+        ];
+
+        $objBaskets = Basket::inBasketByUserId($user->id);
+        $this->assertEmpty($objBaskets);
+
+        Basket::deleteBasketByObjBaskets($objBaskets);
+
+        Basket::saveBaskets($baskets);
+        $objBaskets2 = Basket::inBasketByUserId($user->id);
+        $this->assertNotEmpty($objBaskets2);
+
+        Basket::deleteBasketByObjBaskets($objBaskets2);
+
+        $objBaskets3 = Basket::inBasketByUserId($user->id);
+        $this->assertEmpty($objBaskets3);
+
+        $isNewOrders = Order::moveDataFromBasketToOrderForUser();
+        $this->assertFalse($isNewOrders);
+        $objOrders = Order::inOrdersByUserId($user->id);
+        $this->assertEmpty($objOrders);
+        //dd($basket);
+    }
+    */
+
+    /**
+     * it is not test admin
+     */
+    /*
+    public function test_it_will_save_to_order()
+    {
+        $ids = $this->setAddTwoProducts();
+        $id1 = $ids['id1'];
+        $id2 = $ids['id2'];
+
+        $user = Auth::user();
+
+        $baskets = [
+            0 => [
+              "qty" => 10,
+              "user_id" => $user->id,
+              "product_id" => $id1
+            ],
+            1 => [
+              "qty" => 5,
+              "user_id" => $user->id,
+              "product_id" => $id2
+            ]
+        ];
+
+        Basket::deleteBasketAndAddNewData($user->id, $baskets);
+        $objBaskets4 = Basket::inBasketByUserId($user->id);
+        $this->assertNotEmpty($objBaskets4);
+
+        $isNewOrders2 = Order::moveDataFromBasketToOrderForUser();
+        $this->assertTrue($isNewOrders2);
+
+        $objBaskets5 = Basket::inBasketByUserId($user->id);
+        $this->assertEmpty($objBaskets5);
+
+        $objOrders2 = Order::inOrdersByUserId($user->id);
+        $this->assertNotEmpty($objOrders2);
+
+        $b = $objBaskets4->toArray();
+        $o = $objOrders2->toArray();
+
+        $count = 2;
+        $this->assertEquals($count, count($b));
+        $this->assertEquals($count, count($o));
+
+        for($i =0; $i<$count; $i++){
+            $this->assertEquals($b[$i]["qty"], $o[$i]["qty"]);
+            $this->assertEquals($b[$i]["user_id"], $o[$i]["user_id"]);
+            $this->assertEquals($b[$i]["product_id"], $o[$i]["product_id"]);
+        }
+    }
+    */
+
+    /**
+     * it is not test admin
+     */
+    /*
+    public function test_it_will_save_two_times_to_order()
+    {
+        $ids = $this->setAddTwoProducts();
+        $id1 = $ids['id1'];
+        $id2 = $ids['id2'];
+
+        $user = Auth::user();
+
+        $qty0a = 10;
+        $baskets = [
+            0 => [
+              "qty" => $qty0a,
+              "user_id" => $user->id,
+              "product_id" => $id1
+            ],
+            // 1 => [
+            //   "qty" => 5,
+            //   "user_id" => $user->id,
+            //   "product_id" => $id2
+            // ]
+        ];
+
+        //first time
+        Basket::deleteBasketAndAddNewData($user->id, $baskets);
+        $objBaskets4 = Basket::inBasketByUserId($user->id);
+        $this->assertNotEmpty($objBaskets4);
+
+        $isNewOrders2 = Order::moveDataFromBasketToOrderForUser();
+        $this->assertTrue($isNewOrders2);
+
+        $objBaskets5 = Basket::inBasketByUserId($user->id);
+        $this->assertEmpty($objBaskets5);
+
+        $objOrders2 = Order::inOrdersByUserId($user->id);
+        $this->assertNotEmpty($objOrders2);
+
+        $b = $objBaskets4->toArray();
+        $o = $objOrders2->toArray();
+
+        $count = 1;
+        $this->assertEquals($count, count($b));
+        $this->assertEquals($count, count($o));
+
+        for($i =0; $i<$count; $i++){
+            $this->assertEquals($b[$i]["qty"], $o[$i]["qty"]);
+            $this->assertEquals($b[$i]["user_id"], $o[$i]["user_id"]);
+            $this->assertEquals($b[$i]["product_id"], $o[$i]["product_id"]);
+        }
+
+        //second time
+        $qty0b = 22;
+        $qty1 = 7;
+        $baskets[0]['qty'] = $qty0b;
+        $baskets[1] = [
+              "qty" => $qty1,
+              "user_id" => $user->id,
+              "product_id" => $id2
+        ];
+
+        Basket::deleteBasketAndAddNewData($user->id, $baskets);
+        $objBaskets4 = Basket::inBasketByUserId($user->id);
+        $this->assertNotEmpty($objBaskets4);
+
+        $isNewOrders2 = Order::moveDataFromBasketToOrderForUser();
+        $this->assertTrue($isNewOrders2);
+
+        $objBaskets5 = Basket::inBasketByUserId($user->id);
+        $this->assertEmpty($objBaskets5);
+
+        $objOrders2 = Order::inOrdersByUserId($user->id);
+        $this->assertNotEmpty($objOrders2);
+
+        $b2 = $objBaskets4->toArray();
+        $o2 = $objOrders2->toArray();
+
+        $count = 2;
+        $this->assertEquals($count, count($b2));
+        $this->assertEquals($count, count($o2));
+
+        $this->assertEquals($qty0a + $qty0b, $o2[0]["qty"]);
+        $this->assertEquals($user->id, $o2[0]["user_id"]);
+        $this->assertEquals($id1, $o2[0]["product_id"]);
+
+        $this->assertEquals($qty1, $o2[1]["qty"]);
+        $this->assertEquals($user->id, $o2[1]["user_id"]);
+        $this->assertEquals($id2, $o2[1]["product_id"]);
+    }
+    */
+
+    /**
+     * it is not test admin
+     * it tests home/api/tobank
+     */
+    /*
+    public function test_it_will_post_to_bank()
+    {
+        //dd($products);
+
+        $ids = $this->setAddTwoProducts();
+        $id1 = $ids['id1'];
+        $id2 = $ids['id2'];
+
+
+        //name and price is not important in this post
+        $json =
+        '{
+            "cart": [
+                {
+                    "id": '.$id1.',
+                    "name": "PHP3 aplikacje bazodanowe - xxxxxxxxxxxxxxxxxxxxxxxyyyyyyyyyyyyyy",
+                    "price": 119999999999999999999,
+                    "qty": 10
+                },
+                {
+                    "id": '.$id2.',
+                    "name": "PHP5 nott imporstentttttttttttt",
+                    "price": 30999999999999,
+                    "qty": 5
+                }
+            ]
+        }';
+
+        $obj = json_decode($json);
+        $this->assertEquals(2, count($obj->cart));
+
+
+        $this->assertAuthenticated();
+        $token = User::getTokenForClient();
+        $this->assertNotEmpty($token);
+
+        $user = Auth::user();
+        $this->assertTrue(Auth::check()); //I dont understand why becayse we dont use this: //Auth::login($user);
+
+        $response = $this->post('home/api/tobank?token='.$token, ["cart" => $obj->cart] );
+        $response->assertStatus(200);
+        //dd( $response->getData() );
+
+        $res1 = $response->getData();
+        $this->assertTrue($res1->success);
+        $this->assertNotEmpty($res1->data);
+        //dd($res1->data);
+
+        $user = Auth::user();
+        $objBaskets4 = Basket::inBasketByUserId($user->id);
+        $this->assertNotEmpty($objBaskets4);
+
+        $baskets4 = $objBaskets4->toArray();
+
+        //dump($baskets4);
+        //dump($obj->cart);
+        //dd('____00__');
+
+        $i = 0;
+        foreach($obj->cart as $cart ){
+            $this->assertEquals($baskets4[$i]['product_id'], $cart->id  );
+            $this->assertEquals($baskets4[$i]['qty'], $cart->qty  );
+            $i++;
+        }
+
+    }
+    */
+
+    /*
+    public function test_it_will_get_product_data_by_product_id()
+    {
+        $this->setTestData();
+
+        $response0 = $this->post('api/products?token=' . $this->token, $this->testData);
+
+        $res0 = $response0->getData();
+        $this->assertTrue($res0->success);
+
+        $productId = $res0->data->productId;
+        $this->assertNotEmpty($productId);
+
+        $data = (new Product)->getProductDataByProductId( $productId );
+        $this->assertEquals($productId, $data['id']);
+        $this->assertEquals(self::STR_PRODUCT_NAME_EN, $data['product_name']['en']);
+
+        $urlCategory = $data['url_category']['en'];
+        $urlProduct = $data['url_product']['en'];
+
+        $response = $this->get($urlCategory);
+        $response->assertStatus(200);
+
+        $response = $this->get($urlProduct);
+        $response->assertStatus(200);
+
+        //$pos = strpos($response->getContent(), $pageTitle);
+        //$this->assertNotEmpty($pos, $pageTitle);
+
+
+        $this->testData['product_name']['en'] = 'test uniq';
+        $this->testData['sku'] = 'AN/34534_qwe';
+        $this->testData['page_id'] = strval($this->testData['page_id']);
+
+        var_dump($this->testData['page_id']);
+        $response1 = $this->post('api/products?token=' . $this->token, $this->testData);
+        $res1 = $response1->getData();
+        $this->assertTrue($res1->success);
+    }
+    */
+
 }

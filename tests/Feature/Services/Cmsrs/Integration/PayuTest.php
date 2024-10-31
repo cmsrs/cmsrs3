@@ -91,7 +91,6 @@ class PayuTest extends Base //TestCase
         ];
 
         $data = $this->payu->dataToSend($additionalData, $buyerData);
-        //dd($data);
 
         $redirectUri = $this->payu->getOrder($data);
 

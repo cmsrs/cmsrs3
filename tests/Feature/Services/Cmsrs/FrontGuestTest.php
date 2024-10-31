@@ -185,8 +185,6 @@ class FrontGuestTest extends TestCase
 
         $footerPages = (new PageService)->getFooterPages('en');
 
-        //dd($footerPages);
-
         $this->assertNotEmpty($footerPages['policyUrl']);
         $this->assertNotEmpty($footerPages['policyTitle']);
         $this->assertNotEmpty($footerPages['contactUrl']);
@@ -337,10 +335,9 @@ class FrontGuestTest extends TestCase
         $response1->assertStatus(401);
 
         $url2 = (new PageService)->getUrl($p2, 'en');
-        //$response1 = $this->get((new PageService())->getUrl($p2, 'en'));
         $response1 = $this->get($url2);
         $response1->assertStatus(404);
-        //$response1->assertStatus(401); //moze powinno byc
+        //$response1->assertStatus(401); // This might need to be checked, possibly should be different
     }
 
     public function test_it_will_one_link_in_menu_normal()

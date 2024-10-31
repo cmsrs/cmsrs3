@@ -199,7 +199,7 @@ class FrontTest extends Base
     }
 
     /**
-     * maybe it will be usefull for sitemap
+     * maybe it will be useful for sitemap
      * links without: home, login, logout
      */
     public function test_it_will_get_all_pages_status_one_lang()
@@ -296,8 +296,6 @@ class FrontTest extends Base
         $this->assertNotEmpty($p0);
 
         $url = (new PageService)->getUrl($p0, 'en');
-
-        //dd($url);
 
         $response1 = $this->get($url);
         $response1->assertStatus(200);

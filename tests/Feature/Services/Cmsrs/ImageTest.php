@@ -158,7 +158,7 @@ class ImageTest extends Base
 
     public function test_it_will_get_page_with_images_without_auth_docs()
     {
-        $response0 = $this->get('api/page/'.$this->pageId.'/fr');  //this method doesnt contain ticket - it is available as guest
+        $response0 = $this->get('api/page/'.$this->pageId.'/fr');  //this method doesn't contain ticket - it is available as guest
 
         $this->assertFalse($response0->getData()->success);
 
@@ -270,7 +270,6 @@ class ImageTest extends Base
 
         $objImage = $objPage->images()->first();
         $this->assertNotEmpty($objImage->id);
-        //dd($objImage);
         $altEn = (new ImageService)->translatesByColumnAndLang($objImage, 'alt', 'en'); //For this method (translatesByColumnAndLang) maybe should create new test.
         $this->assertEquals(self::STR_DESC_IMG1, $altEn);
         $this->assertEquals(2, $objPage->images()->get()->count());
@@ -364,7 +363,6 @@ class ImageTest extends Base
 
         $imgDir = ImageService::getImageDir('page', $imgToDel->page_id, $imgToDel->id);
         $file = $imgDir.'/'.$imgToDel->name;
-        //dump($file);
         $this->assertFileExists($file);
 
         $fileName = pathinfo($imgToDel->name, PATHINFO_FILENAME);
@@ -419,7 +417,6 @@ class ImageTest extends Base
 
     public function test_it_will_add_pages_with_the_same_image_name()
     {
-
         //test fake
         $this->testImgData['images'][1]['name'] = $this->name1;
         $this->assertEquals($this->testImgData['images'][0]['name'], $this->testImgData['images'][1]['name']);
@@ -477,8 +474,6 @@ class ImageTest extends Base
         $newImagesPosition['images'][1]['alt']['en'] = 'first';
         $newImagesPosition['images'][1]['position'] = 101;
 
-        //print_r($newImagesPosition);
-
         $response = $this->put('api/pages/'.$this->pageId.'?token='.$this->token, $newImagesPosition);
         $res = $response->getData();
         $this->assertTrue($res->success);
@@ -515,8 +510,6 @@ class ImageTest extends Base
         $this->assertEquals($id1Before, $images2[1]->id);
         $this->assertEquals(202, $images2[1]->position);
         $this->assertEquals('last', $images2[1]->alt->en);
-
-        //dd($res2);
     }
 
     public function test_it_will_update_page_with_images_docs()
@@ -655,7 +648,6 @@ class ImageTest extends Base
         $response3 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
         $res3 = $response3->getData();
         $this->assertTrue($res3->success);
-        //dd($res3);
 
         $this->assertEquals('img2', $res3->data[0]->alt->en); //we swap two items not everything - it is a good approach, because we can set items position as we want.
         $this->assertEquals(null, $res3->data[1]->alt->en);
@@ -688,7 +680,6 @@ class ImageTest extends Base
         $this->assertTrue(count($arrImages) > 1);
 
         $image = ['name' => $this->name2, 'data' => $this->file2];
-        //print_r($image);
 
         $type = 'page';
         $response = $this->post('api/image/'.$type.'/'.$this->pageId.'?token='.$this->token, $image);
@@ -696,7 +687,6 @@ class ImageTest extends Base
         $this->assertEquals(200, $response->status());
 
         $res = $response->getData();
-        //print_r($res);
         $this->assertTrue($res->success);
 
         $page2 = Page::findOrFail($this->pageId);
@@ -754,7 +744,6 @@ class ImageTest extends Base
         $response0 = $this->post('api/products?token='.$this->token, $this->testProductData);
         $res0 = $response0->getData();
         $this->assertTrue($res0->success);
-        //dd($res0);
 
         return $res0->data->productId;
     }
@@ -818,7 +807,6 @@ class ImageTest extends Base
         $this->assertTrue($res2->success);
         $this->assertEquals(3, count($res2->data)); //3 initial image
 
-        //dd($res2->data);
         $this->assertEquals('product_img1', $res2->data[0]->alt->en);
         $this->assertEquals('product_img2', $res2->data[1]->alt->en);
         $this->assertEquals('product_img3', $res2->data[2]->alt->en);
@@ -887,8 +875,6 @@ class ImageTest extends Base
         $newImagesPosition['images'][2]['id'] = $id3Before;
         $newImagesPosition['images'][2]['alt']['en'] = 'middle';
         $newImagesPosition['images'][2]['position'] = 155;
-
-        //print_r($newImagesPosition);
 
         $response = $this->put('api/products/'.$productId2.'?token='.$this->token, $newImagesPosition);
         $res = $response->getData();

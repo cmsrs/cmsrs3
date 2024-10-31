@@ -73,7 +73,7 @@ class AuthenticationTest extends TestCase
         $this->assertNotEmpty($privilege->getData()->testrs);
         $logout = $this->logout_action($response->data->token);
         $this->assertTrue($logout->getData()->success);
-        $privilegeAfterLogout = $this->privilege_action($response->data->token);
+        $this->privilege_action($response->data->token);
     }
 
     public function test_it_will_log_a_user_in_docs()
@@ -91,15 +91,13 @@ class AuthenticationTest extends TestCase
         $this->assertTrue($response->success);
 
         $privilege = $this->privilege_action($response->data->token);
-        //dd($privilege);
-        //dd($privilege->getData());
 
         $this->assertTrue($privilege->getData()->success);
 
         $logout = $this->logout_action($response->data->token);
 
         $this->assertTrue($logout->getData()->success);
-        $privilegeAfterLogout = $this->privilege_action($response->data->token);
+        $this->privilege_action($response->data->token);
     }
 
     public function test_it_will_log_client_in()
@@ -142,7 +140,6 @@ class AuthenticationTest extends TestCase
         ];
         $response = $this->post('api/login', $d);
         $res = $response->getData();
-        //print_r($res);
 
         $this->assertFalse($res->success);
         $this->assertNotEmpty($res->error);

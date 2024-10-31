@@ -213,9 +213,6 @@ class ContactTest extends Base
         $response = $this->get($url);
         $res = $response->getData();
 
-        //print_r($url);
-        //print_r($res);
-
         $this->assertTrue($res->success);
 
         $this->assertEquals(2, count($res->data->data));

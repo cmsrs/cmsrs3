@@ -10,9 +10,6 @@ use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\ProductService;
 use Illuminate\Support\Facades\Auth;
-//use App\Translate;
-//use App\Content;
-
 use Tests\TestCase;
 
 class Base extends TestCase
@@ -110,7 +107,6 @@ class Base extends TestCase
     public function checkProductsPagesByLang($products, $lang)
     {
         $productsDb = (new ProductService)->getAllProductsWithImages();
-        //dd($countProducts);
         $this->assertNotEmpty(count($productsDb));
         $this->assertEquals(count($productsDb), count($products));
 
@@ -168,8 +164,6 @@ class Base extends TestCase
             $urlIn[] = $itemUrlIn;
             $numOfInPages++;
         }
-
-        //dd('________________');
 
         //All Url Related To Menus
         $url = $this->getAllUrlRelatedToMenus($lang);

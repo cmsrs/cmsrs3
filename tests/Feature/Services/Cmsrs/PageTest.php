@@ -139,7 +139,6 @@ class PageTest extends Base
         $url = (new PageService)->getPageDataByShortTitleCache($shortTitle, 'url');
         $this->assertNotEmpty($url);
 
-        //dd($objPage2);
         $response = $this->get('api/pages?token='.$this->token);
         $res = $response->getData();
         $this->assertTrue($res->success);
@@ -456,7 +455,7 @@ class PageTest extends Base
             'commented' => 0,
             'after_login' => 1,
             'type' => 'main_page',
-            'content' => ['en' => 'aaa ffdfds'],
+            'content' => ['en' => 'aaa test111'],
             'menu_id' => $this->menuId, //it must be null for type main_page
             'page_id' => $parentId, //it must be null for type main_page
         ];
@@ -491,7 +490,7 @@ class PageTest extends Base
             'commented' => 1,
             'after_login' => 1,
             'type' => 'main_page',
-            'content' => ['en' => 'aaa ffdfds1111'],
+            'content' => ['en' => 'aaa test111122'],
             'menu_id' => $this->menuId, //it must be null for type main_page
             'page_id' => $parentId, //it must be null for type main_page
         ];
@@ -528,7 +527,7 @@ class PageTest extends Base
             'commented' => 0,
             'after_login' => 1,
             'type' => 'main_page',
-            'content' => ['en' => 'aaa ffdfds'],
+            'content' => ['en' => 'aaa test3343'],
             'menu_id' => null,
             'page_id' => null,
         ];
@@ -550,7 +549,7 @@ class PageTest extends Base
             'commented' => 0,
             'after_login' => 1,
             'type' => 'cms',
-            'content' => ['en' => '2sdafsfsdaf asdfasdf'],
+            'content' => ['en' => '2test xxx'],
             'page_id' => null,
             'menu_id' => $this->menuId,
         ];
@@ -568,7 +567,7 @@ class PageTest extends Base
           'commented' => 0,
           'after_login' => 0,
           'type' => 'cms',
-          'content' => ['en' => '333sdafsfsdaf asdfasdf3435'],
+          'content' => ['en' => '333test test3435'],
           'page_id' => null,
           'menu_id' => $this->menuId,
       ];
@@ -635,7 +634,7 @@ class PageTest extends Base
         $this->assertEquals($pagesChild[0]['page_id'], $parentId);
         $this->assertEquals($pagesChild[1]['page_id'], $parentId);
 
-        $pageToDel = Page::findorfail($parentId);
+        $pageToDel = Page::findOrFail($parentId);
         $this->assertNotEmpty($pageToDel->id);
         $this->assertEquals((new PageService)->translatesByColumnAndLang($pageToDel, 'title', 'en'), PageTest::STR_PARENT_TWO);
         $pageToDel->delete();
@@ -646,8 +645,8 @@ class PageTest extends Base
         $pagesChildAfter = Page::query()->where('page_id', $parentId)->orderBy('position', 'asc')->get()->toArray();
         $this->assertEquals(count($pagesChildAfter), 0);
 
-        $pageAfter1 = Page::findorfail($pagesChild[0]['id']);
-        $pageAfter2 = Page::findorfail($pagesChild[1]['id']);
+        $pageAfter1 = Page::findOrFail($pagesChild[0]['id']);
+        $pageAfter2 = Page::findOrFail($pagesChild[1]['id']);
 
         $this->assertEquals($pageAfter1->page_id, null);
         $this->assertEquals($pageAfter2->page_id, null);
@@ -788,8 +787,7 @@ class PageTest extends Base
         $this->assertEquals(2, count($this->menuObj->pages));
 
         $pagesPublished = (new MenuService)->pagesPublished($this->menuObj);
-        //dd($pagesPublished->count());
-        $this->assertEquals(1, $pagesPublished->count());  //tylko jedno jest z published ===1 dla 'menu_id' =>  $this->menuId
+        $this->assertEquals(1, $pagesPublished->count());  //only one has got published ===1 for 'menu_id' =>  $this->menuId
         $this->assertNotEmpty($pagesPublished->first()->id);
         $this->assertEquals((new PageService)->translatesByColumnAndLang($pagesPublished->first(), 'title', 'en'), $testData2['title']['en']);
     }
@@ -812,7 +810,6 @@ class PageTest extends Base
         $this->assertTrue($res->success);
         $pageId = $res->data->pageId;
         $this->assertTrue(! empty($pageId));
-        //print_r($res);
 
         $response2 = $this->get('api/pages?token='.$this->token);
         $res2 = $response2->getData();
@@ -879,16 +876,14 @@ class PageTest extends Base
 
         $res22firstData = Page::all();
 
-        /*
         //not work  ??
-        $response22cfirst = $this->get('api/pages?token='.$this->token );
-        $res22first = $response22->getData();
-        $this->assertTrue($res22first->success);
+        // $response22 = $this->get('api/pages?token='.$this->token );
+        // $res22first = $response22->getData();
+        // $this->assertTrue($res22first->success);
 
-        //print_r($tmpArr[1]->id);
-        print_r($res22first->data); //po!!!
-        exit;
-        */
+        // //print_r($tmpArr[1]->id);
+        // print_r($res22first->data); //po!!!
+        // exit;
 
         //chose one record
         $item = [];
@@ -960,7 +955,6 @@ class PageTest extends Base
         ];
 
         $response22 = $this->post('api/pages?token='.$this->token, $testData22);
-        //dd($response22);
         $res22 = $response22->getData();
         $this->assertTrue($res22->success);
 
@@ -1078,7 +1072,7 @@ class PageTest extends Base
         $this->assertEquals(1, count($data->data));
         $this->assertEquals($type, $data->data[0]->type);
 
-        $typeErr = 'sasdasd';
+        $typeErr = 'fake123';
         $res = $this->get('api/pages/type/'.$typeErr.'?token='.$this->token);
         $data = $res->getData();
         $this->assertTrue($data->success);
@@ -1177,7 +1171,7 @@ class PageTest extends Base
         $res0 = $response0->getData();
         $this->assertTrue($res0->success);
 
-        //pobieramy $menus
+        //retrieve $menus
         $response = $this->get('api/pages?token='.$this->token);
         $res = $response->getData();
         $this->assertTrue($res->success);
@@ -1186,7 +1180,7 @@ class PageTest extends Base
 
         $this->comparePageFields($testData3, $data);
 
-        //wrond data
+        //wrong data
         $testData33 =
       [
           'id' => $id,
@@ -1213,23 +1207,21 @@ class PageTest extends Base
         $this->assertEquals(4, count($allTranslate));
 
         //$id = 1;
-
         $testData3 =
-      [
-          'id' => $id,
-          'title' => ['en' => 'test p3333'],
-          'short_title' => ['en' => 'p3333'],
-          'description' => ['en' => null],
-          'published' => 1,
-          'commented' => 0,
-          'after_login' => 0,
-          'content' => ['en' => null],
-          'type' => 'cms',
-          'page_id' => null,
-          'menu_id' => 9123,
-          'images' => [],
-
-      ];
+        [
+            'id' => $id,
+            'title' => ['en' => 'test p3333'],
+            'short_title' => ['en' => 'p3333'],
+            'description' => ['en' => null],
+            'published' => 1,
+            'commented' => 0,
+            'after_login' => 0,
+            'content' => ['en' => null],
+            'type' => 'cms',
+            'page_id' => null,
+            'menu_id' => 9123,
+            'images' => [],
+        ];
 
         $responseFake = $this->put('api/pages/'.$id.'?token='.$this->token, $testData3);
 
@@ -1243,7 +1235,7 @@ class PageTest extends Base
         $res0 = $response0->getData();
         $this->assertTrue($res0->success);
 
-        //pobieramy $menus
+        //retrieve $menus
         $response = $this->get('api/pages?token='.$this->token);
         $res = $response->getData();
         $this->assertTrue($res->success);
@@ -1313,7 +1305,7 @@ class PageTest extends Base
 
     public function test_it_will_delete_page_fake()
     {
-        //fake id - obluga bledow
+        //fake id - error handlings
         $responseFake = $this->delete('api/pages/rs_I_eW23423fsd?token='.$this->token);
         $resFake = $responseFake->getData();
         $this->assertFalse($resFake->success);
