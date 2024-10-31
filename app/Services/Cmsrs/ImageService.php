@@ -6,8 +6,8 @@ use App\Models\Cmsrs\Image;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\Helpers\CacheService;
+use App\Services\Cmsrs\Helpers\ImageHelperService;
 use App\Services\Cmsrs\Interfaces\TranslateInterface;
-use Intervention\Image\Laravel\Facades\Image as LibImage;
 
 class ImageService extends BaseService implements TranslateInterface
 {
@@ -46,7 +46,7 @@ class ImageService extends BaseService implements TranslateInterface
      */
     public static function filter($string, $delimiter = '-')
     {
-        $to_replace = ['ą', 'ę', 'ó', 'ś', 'ć', 'ń', 'ł', 'ż', 'ź', 'Ą', 'Ę', 'Ó', 'Ś', 'Ć', 'Ń', 'Ł', 'Ż', 'Ź', //Poish
+        $to_replace = ['ą', 'ę', 'ó', 'ś', 'ć', 'ń', 'ł', 'ż', 'ź', 'Ą', 'Ę', 'Ó', 'Ś', 'Ć', 'Ń', 'Ł', 'Ż', 'Ź', //Polish
             'ä', 'ö', 'ü', 'ß', 'Ä', 'Ö', 'Ü',  //German
             '%20', ' '];
         $replace_with = ['a', 'e', 'o', 's', 'c', 'n', 'l', 'z', 'z', 'A', 'E', 'O', 'S', 'C', 'N', 'L', 'Z', 'Z',
@@ -230,15 +230,8 @@ class ImageService extends BaseService implements TranslateInterface
             if (! file_exists($dirImg)) {
                 mkdir($dirImg, 0777, true);
             }
-            LibImage::read($data)->save($dirImg.'/'.$name);
 
-            $fileName = pathinfo($name, PATHINFO_FILENAME);
-            $fileExt = pathinfo($name, PATHINFO_EXTENSION);
-
-            foreach (Image::$thumbs as $thumbName => $dimension) {
-                $fileThumb = $dirImg.'/'.$fileName.'-'.$thumbName.'.'.$fileExt;
-                LibImage::read($data)->resize($dimension['x'], $dimension['y'])->save($fileThumb);
-            }
+            ImageHelperService::saveImageAndThumbs($data, $dirImg, $name);
         }
 
         return $out;
