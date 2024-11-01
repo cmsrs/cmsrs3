@@ -7,6 +7,7 @@ use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\Helpers\CacheService;
 use App\Services\Cmsrs\Helpers\ImageHelperService;
+use App\Services\Cmsrs\Helpers\StrHelperService;
 use App\Services\Cmsrs\Interfaces\TranslateInterface;
 
 class ImageService extends BaseService implements TranslateInterface
@@ -197,12 +198,38 @@ class ImageService extends BaseService implements TranslateInterface
         }
     }
 
+    private function sanitizeNameImages($images)
+    {
+        $sanitizeNameImages = [];
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif']; //, 'bmp', 'svg', 'webp'];
+        foreach ($images as $key => $image) {
+            $basename = pathinfo($image['name'], PATHINFO_FILENAME);
+            $extension = strtolower(trim(pathinfo($image['name'], PATHINFO_EXTENSION)));
+
+            if (empty($basename)) {
+                throw new \Exception('Wrong file name ='.$basename);
+            }
+
+            if (! in_array($extension, $allowedExtensions)) {
+                throw new \Exception('File is not an image: '.$image['name'].' allowed extension is: '.implode(', ', $allowedExtensions));
+            }
+
+            $sanitizeNameImages[$key] = StrHelperService::filterFileName($basename, $extension);
+
+        }
+
+        return $sanitizeNameImages;
+    }
+
     public function createImages($images, $type, $refId)
     {
         $out = [];
 
+        $sanitizeNameImages = $this->sanitizeNameImages($images);
         foreach ($images as $key => $image) {
-            $name = self::filter($image['name']);
+            if (empty($name = $sanitizeNameImages[$key])) {
+                throw new \Exception('Sth wrong with sanitizeNameImages');
+            }
             $alt = ! empty($image['alt']) ? $image['alt'] : null;
 
             $data = $image['data'];
