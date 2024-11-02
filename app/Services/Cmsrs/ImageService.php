@@ -41,27 +41,6 @@ class ImageService extends BaseService implements TranslateInterface
         return $ret;
     }
 
-    /**
-     * TODO - move function to helper
-     * fix for another language
-     */
-    public static function filter($string, $delimiter = '-')
-    {
-        $to_replace = ['ą', 'ę', 'ó', 'ś', 'ć', 'ń', 'ł', 'ż', 'ź', 'Ą', 'Ę', 'Ó', 'Ś', 'Ć', 'Ń', 'Ł', 'Ż', 'Ź', //Polish
-            'ä', 'ö', 'ü', 'ß', 'Ä', 'Ö', 'Ü',  //German
-            '%20', ' '];
-        $replace_with = ['a', 'e', 'o', 's', 'c', 'n', 'l', 'z', 'z', 'A', 'E', 'O', 'S', 'C', 'N', 'L', 'Z', 'Z',
-            'a', 'o', 'u', 'ss', 'A', 'O', 'U',
-            $delimiter, $delimiter];
-        //$filter = array('!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '=', '+', '[', ']', ';', ':', '"', '\'', '<', '>', '/', '?', '.');
-        $filter = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '=', '+', '[', ']', ';', ':', '"', '\'', '<', '>', '/', '?'];
-
-        $string = str_replace($to_replace, $replace_with, $string);
-        $string = str_replace($filter, '', $string);
-
-        return strtolower(trim($string));
-    }
-
     public function delete(Image $mImage)
     {
         $this->deleteImg($mImage);
@@ -211,7 +190,7 @@ class ImageService extends BaseService implements TranslateInterface
             }
 
             if (! in_array($extension, $allowedExtensions)) {
-                throw new \Exception('File is not an image: '.$image['name'].' allowed extension is: '.implode(', ', $allowedExtensions));
+                throw new \Exception('File is not an image: '.$image['name'].', allowed extension are: '.implode(', ', $allowedExtensions));
             }
 
             $sanitizeNameImages[$key] = StrHelperService::filterFileName($basename, $extension);

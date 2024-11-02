@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Cmsrs;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cmsrs\Image;
-//use JWTAuth;
-
 use App\Services\Cmsrs\ImageService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ImageController extends Controller
 {
@@ -39,7 +38,12 @@ class ImageController extends Controller
         }
 
         $dataImage = $request->only('data', 'name');
-        $this->imageService->createImages([$dataImage], $type, $refId);
+        try{
+            $this->imageService->createImages([$dataImage], $type, $refId);
+        } catch (\Exception $e) {
+            Log::error('upload images: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile().' for: '.var_export($e, true));
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 200);
+        }
 
         return response()->json(['success' => true], 200);
     }
