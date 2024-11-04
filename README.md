@@ -185,15 +185,15 @@ CURRENCY=PLN
 
 * (optionally) set is_shop, the default is true:
 
+```bash
+IS_SHOP=true
+```
+
 * (optionally) set the allowed file extensions for uploads:
 
 The default file extensions for uploads are:
 ```bash
 PAGE_TYPES="jpg,jpeg,png,gif"
-```
-
-```bash
-IS_SHOP=true
 ```
 
 * (optionally) PayU integration:
