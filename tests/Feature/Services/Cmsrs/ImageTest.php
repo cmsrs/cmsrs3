@@ -47,6 +47,10 @@ class ImageTest extends Base
         ini_set('memory_limit', '256M');
         $this->createUser();
 
+    }
+
+    private function prepareTestPage()
+    {
         $this->arrPageId = [];
 
         $this->name1 = 'phpunittest1.jpg';
@@ -115,6 +119,7 @@ class ImageTest extends Base
 
     public function test_it_will_set_translate()
     {
+        $this->prepareTestPage();
 
         //one lang: en, and two images
         $this->assertEquals(2, Translate::query()->whereNotNull('image_id')->where('column', 'alt')->count());
@@ -128,6 +133,7 @@ class ImageTest extends Base
 
     public function test_it_will_get_page_with_images_with_auth_docs()
     {
+        $this->prepareTestPage();
 
         $response0 = $this->get('api/pages/'.$this->pageId.'?token='.$this->token);
         $res0 = $response0->getData();
@@ -147,6 +153,8 @@ class ImageTest extends Base
 
     public function test_it_will_get_page_without_images_with_auth_simple()
     {
+        $this->prepareTestPage();
+
         $response0 = $this->get('api/pages/'.$this->pageId.'/simple?token='.$this->token);
         $res0 = $response0->getData();
 
@@ -158,6 +166,8 @@ class ImageTest extends Base
 
     public function test_it_will_get_page_with_images_without_auth_docs()
     {
+        $this->prepareTestPage();
+
         $response0 = $this->get('api/page/'.$this->pageId.'/fr');  //this method doesn't contain ticket - it is available as guest
 
         $this->assertFalse($response0->getData()->success);
@@ -198,6 +208,8 @@ class ImageTest extends Base
 
     public function test_it_will_get_pages_with_images_docs()
     {
+        $this->prepareTestPage(); 
+
         $response2 = $this->get('api/pages?token='.$this->token);
 
         $res2 = $response2->getData();
@@ -250,6 +262,8 @@ class ImageTest extends Base
 
     public function test_it_will_delete_page_with_images_docs()
     {
+        $this->prepareTestPage();
+
         $responseAllBefore = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
         $resAllBefore = $responseAllBefore->getData();
 
@@ -307,6 +321,7 @@ class ImageTest extends Base
 
     public function test_it_will_delete_many_images()
     {
+        $this->prepareTestPage();
         $file1 = $this->getFixtureBase64($this->name1);
         $numbersTestImages = 3;
 
@@ -354,6 +369,7 @@ class ImageTest extends Base
 
     public function test_it_will_delete_image_docs()
     {
+        $this->prepareTestPage();
         //delete first image
         $response2 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
         $res2 = $response2->getData();
@@ -399,6 +415,7 @@ class ImageTest extends Base
 
     public function test_it_will_get_images_by_page_id_docs()
     {
+        $this->prepareTestPage();
         $response2 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
 
         $res2 = $response2->getData();
@@ -417,6 +434,7 @@ class ImageTest extends Base
 
     public function test_it_will_add_pages_with_the_same_image_name()
     {
+        $this->prepareTestPage();
         //test fake
         $this->testImgData['images'][1]['name'] = $this->name1;
         $this->assertEquals($this->testImgData['images'][0]['name'], $this->testImgData['images'][1]['name']);
@@ -448,6 +466,7 @@ class ImageTest extends Base
      */
     public function test_it_will_update_page_with_images_position_and_without_upload_new_imgs_case2_docs()
     {
+        $this->prepareTestPage();
         $response0 = $this->get('api/pages/'.$this->pageId.'?token='.$this->token);
         $res0 = $response0->getData();
         $this->assertTrue($res0->success);
@@ -514,6 +533,7 @@ class ImageTest extends Base
 
     public function test_it_will_update_page_with_images_docs()
     {
+        $this->prepareTestPage();
         $this->assertEquals(count((array) $this->pageData->images), 2);
         $this->assertEquals($this->pageData->title->en, $this->testImgData['title']['en']);
 
@@ -593,6 +613,7 @@ class ImageTest extends Base
 
     public function test_it_will_get_change_position_images_docs()
     {
+        $this->prepareTestPage();
         $response2 = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
         $res2 = $response2->getData();
         $this->assertTrue($res2->success);
@@ -617,6 +638,7 @@ class ImageTest extends Base
 
     public function test_it_will_get_change_position_images_for_many_items()
     {
+        $this->prepareTestPage();
         $file1 = $this->getFixtureBase64($this->name1);
         $numbersTestImages = 3;
 
@@ -674,6 +696,7 @@ class ImageTest extends Base
 
     public function test_it_will_save_one_image_docs()
     {
+        $this->prepareTestPage();
         $page = Page::findOrFail($this->pageId);
         $images = $page->images;
         $arrImages = $images->toArray();
@@ -695,8 +718,35 @@ class ImageTest extends Base
         $this->assertEquals(count($arrImages) + 1, count($arrImages2));
     }
 
+    public function test_it_will_try_to_save_one_wrong_image_docs()
+    {
+        $this->prepareTestPage();
+        //dd('-------------');
+        $page = Page::findOrFail($this->pageId);
+        $images = $page->images;
+        $arrImages = $images->toArray();
+        $this->assertTrue(count($arrImages) > 1);
+
+        $image = ['name' => 'fake_name', 'data' => $this->file2];
+
+        $type = 'page';
+        $response = $this->post('api/image/'.$type.'/'.$this->pageId.'?token='.$this->token, $image);
+        //dd($response);
+
+        $this->assertEquals(200, $response->status());
+
+        $res = $response->getData();
+        $this->assertTrue($res->success);
+
+        $page2 = Page::findOrFail($this->pageId);
+        $images2 = $page2->images;
+        $arrImages2 = $images2->toArray();
+        $this->assertEquals(count($arrImages) + 1, count($arrImages2));
+    }
+
     public function test_it_will_save_one_image_with_err_type()
     {
+        $this->prepareTestPage();
         $image = ['name' => $this->name2, 'data' => $this->file2];
 
         $response = $this->post('api/image/pageee/'.$this->pageId.'?token='.$this->token, $image);
@@ -711,6 +761,7 @@ class ImageTest extends Base
 
     public function test_it_will_save_one_image_with_err_page()
     {
+        $this->prepareTestPage();
         $image = ['name' => $this->name2, 'data' => $this->file2];
 
         $pageIdFake = 123456;
@@ -750,6 +801,8 @@ class ImageTest extends Base
 
     public function test_check_images_numbers_given_product()
     {
+        $this->prepareTestPage();
+
         $productId = $this->createProductBelongsToTestPage(1);
         $this->assertNotEmpty($productId);
         $productId2 = $this->createProductBelongsToTestPage(2);
@@ -769,6 +822,7 @@ class ImageTest extends Base
 
     public function test_upload_images_to_given_product()
     {
+        $this->prepareTestPage();
         $productId = $this->createProductBelongsToTestPage(1);
         $this->assertNotEmpty($productId);
         $productId2 = $this->createProductBelongsToTestPage(2);
@@ -796,6 +850,7 @@ class ImageTest extends Base
 
     public function test_position_image_product()
     {
+        $this->prepareTestPage();
         $productId = $this->createProductBelongsToTestPage(1);
         $this->assertNotEmpty($productId);
         $productId2 = $this->createProductBelongsToTestPage(2);
@@ -836,6 +891,7 @@ class ImageTest extends Base
      */
     public function test_it_will_update_product_with_images_position_and_without_upload_new_imgs_case2_docs()
     {
+        $this->prepareTestPage();
         $productId = $this->createProductBelongsToTestPage(1);
         $this->assertNotEmpty($productId);
         $productId2 = $this->createProductBelongsToTestPage(2);
