@@ -142,11 +142,19 @@ PAGE_TYPES="cms,gallery,shop,contact,main_page,privacy_policy,login,projects,cle
 ```
 
 
-    - cms - appear Wyswig editor in administration area
-    - clear - without Wyswig editor, it require write pure html code
-    - inner - it is text box in existing page require hardcode in layout page, where key is short_title, example using in code: (new \app\Page)->getPageDataByShortTitleCache( 'main_page_box1', 'content' )
-    - gallery - page with photos
-    - projects - the same content in each langs
+    - **cms** - appear Wyswig editor in administration area
+    - **clear** - without Wyswig editor, it require write pure html code
+    - **inner** - it is text box in existing page require hardcode in layout page, where key is short_title, example using in code: 
+    ```php
+    (new PageService)->getPageDataByShortTitleCache( 'main_page_box1', 'content' )
+    ```
+    The following short_title values are predefined:
+        - main_page_box1, main_page_box2, main_page_box3 – these represent three content boxes on the main page
+        - company_data – displays company information on the contact page
+        - main_page_slider – contains images displayed in the slider on the main page
+        
+    - **gallery** - page with photos
+    - **projects** - the same content in each langs
 
 
 * (optionally) additionally sending an e-mail with information from the contact form.
