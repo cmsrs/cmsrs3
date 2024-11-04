@@ -21,7 +21,7 @@ class ConfigService
 
     const CACHE_ENABLE_FILE_DEFAULT = 'app/cache_enable.txt';
 
-    const ALLOWED_UPLOAD_FILE_EXT_DEFAULT =  'jpg,jpeg,png,gif';
+    const ALLOWED_UPLOAD_FILE_EXT_DEFAULT = 'jpg,jpeg,png,gif';
 
     private $langs;
 
@@ -38,13 +38,13 @@ class ConfigService
 
     public function arrAllowedUploadFileExt()
     {
-        return explode( ',', $this->allowedUploadFileExt() );
+        return explode(',', $this->allowedUploadFileExt());
     }
 
     private function allowedUploadFileExt()
     {
         return env('ALLOWED_UPLOAD_FILE_EXT', ConfigService::ALLOWED_UPLOAD_FILE_EXT_DEFAULT);
-    }    
+    }
 
     public function getCacheFilePath()
     {

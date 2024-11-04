@@ -194,7 +194,6 @@ class ImageService extends BaseService implements TranslateInterface
             }
 
             $sanitizeNameImages[$key] = StrHelperService::filterFileName($basename, $extension);
-
         }
 
         return $sanitizeNameImages;

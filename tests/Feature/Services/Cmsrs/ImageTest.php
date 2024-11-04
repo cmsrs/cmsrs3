@@ -5,9 +5,9 @@ namespace Tests\Feature\Services\Cmsrs;
 use App\Models\Cmsrs\Image;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Translate;
+use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\PageService;
-use App\Services\Cmsrs\ConfigService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ImageTest extends Base
@@ -742,8 +742,8 @@ class ImageTest extends Base
         $this->assertStringStartsWith($expectedStart, $res->error);
 
         $arrAllowedUploadFileExt = (new ConfigService)->arrAllowedUploadFileExt();
-        $expectedEnding = implode(', ', $arrAllowedUploadFileExt );
-        $this->assertTrue(str_ends_with($res->error, $expectedEnding), "---The message does not end with the allowed extensions.---");
+        $expectedEnding = implode(', ', $arrAllowedUploadFileExt);
+        $this->assertTrue(str_ends_with($res->error, $expectedEnding), '---The message does not end with the allowed extensions.---');
 
         $page2 = Page::findOrFail($this->pageId);
         $images2 = $page2->images;
@@ -751,7 +751,7 @@ class ImageTest extends Base
         $this->assertEquals(0, count($arrImages2));
     }
 
-    public function test_it_will_try_to_save_wrong2_image_docs()
+    public function test_it_will_try_to_save_wrong2_image()
     {
         $this->prepareTestPage(false);
         $page = Page::findOrFail($this->pageId);
