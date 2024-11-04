@@ -49,7 +49,7 @@ class ImageTest extends Base
 
     }
 
-    private function prepareTestPage( $withImages = true )
+    private function prepareTestPage($withImages = true)
     {
         $this->arrPageId = [];
 
@@ -208,7 +208,7 @@ class ImageTest extends Base
 
     public function test_it_will_get_pages_with_images_docs()
     {
-        $this->prepareTestPage(); 
+        $this->prepareTestPage();
 
         $response2 = $this->get('api/pages?token='.$this->token);
 
@@ -734,10 +734,10 @@ class ImageTest extends Base
         $this->assertEquals(200, $response->status());
 
         $res = $response->getData();
-        $this->assertEquals( false, $res->success);
-        $this->assertNotEmpty( $res->error);
+        $this->assertEquals(false, $res->success);
+        $this->assertNotEmpty($res->error);
 
-        $expectedStart = "File is not an image:";
+        $expectedStart = 'File is not an image:';
         $this->assertStringStartsWith($expectedStart, $res->error);
 
         $page2 = Page::findOrFail($this->pageId);
@@ -762,10 +762,10 @@ class ImageTest extends Base
         $this->assertEquals(200, $response->status());
 
         $res = $response->getData();
-        $this->assertEquals( false, $res->success);
-        $this->assertNotEmpty( $res->error);
+        $this->assertEquals(false, $res->success);
+        $this->assertNotEmpty($res->error);
 
-        $expectedStart = "Wrong file name";
+        $expectedStart = 'Wrong file name';
         $this->assertStringStartsWith($expectedStart, $res->error);
     }
 

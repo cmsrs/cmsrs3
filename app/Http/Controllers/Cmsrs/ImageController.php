@@ -38,10 +38,11 @@ class ImageController extends Controller
         }
 
         $dataImage = $request->only('data', 'name');
-        try{
+        try {
             $this->imageService->createImages([$dataImage], $type, $refId);
         } catch (\Exception $e) {
             Log::error('upload images: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile().' for: '.var_export($e, true));
+
             return response()->json(['success' => false, 'error' => $e->getMessage()], 200);
         }
 
