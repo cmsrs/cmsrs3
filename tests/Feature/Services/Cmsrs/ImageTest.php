@@ -49,7 +49,7 @@ class ImageTest extends Base
 
     }
 
-    private function prepareTestPage()
+    private function prepareTestPage( $withImages = true )
     {
         $this->arrPageId = [];
 
@@ -77,7 +77,7 @@ class ImageTest extends Base
             'content' => ['en' => 'lorem ipsum'],
             'menu_id' => null,
             'page_id' => null,
-            'images' => $images,
+            'images' => $withImages ? $images : null,
         ];
 
         $response = $this->post('api/pages?token='.$this->token, $this->testImgData);
@@ -718,30 +718,55 @@ class ImageTest extends Base
         $this->assertEquals(count($arrImages) + 1, count($arrImages2));
     }
 
-    public function test_it_will_try_to_save_one_wrong_image_docs()
+    public function test_it_will_try_to_save_wrong1_image_docs()
     {
-        $this->prepareTestPage();
-        //dd('-------------');
+        $this->prepareTestPage(false);
         $page = Page::findOrFail($this->pageId);
         $images = $page->images;
         $arrImages = $images->toArray();
-        $this->assertTrue(count($arrImages) > 1);
+        $this->assertEquals(0, count($arrImages));
 
         $image = ['name' => 'fake_name', 'data' => $this->file2];
 
         $type = 'page';
         $response = $this->post('api/image/'.$type.'/'.$this->pageId.'?token='.$this->token, $image);
-        //dd($response);
 
         $this->assertEquals(200, $response->status());
 
         $res = $response->getData();
-        $this->assertTrue($res->success);
+        $this->assertEquals( false, $res->success);
+        $this->assertNotEmpty( $res->error);
+
+        $expectedStart = "File is not an image:";
+        $this->assertStringStartsWith($expectedStart, $res->error);
 
         $page2 = Page::findOrFail($this->pageId);
         $images2 = $page2->images;
         $arrImages2 = $images2->toArray();
-        $this->assertEquals(count($arrImages) + 1, count($arrImages2));
+        $this->assertEquals(0, count($arrImages2));
+    }
+
+    public function test_it_will_try_to_save_wrong2_image_docs()
+    {
+        $this->prepareTestPage(false);
+        $page = Page::findOrFail($this->pageId);
+        $images = $page->images;
+        $arrImages = $images->toArray();
+        $this->assertEquals(0, count($arrImages));
+
+        $image = ['name' => '.png', 'data' => $this->file2];
+
+        $type = 'page';
+        $response = $this->post('api/image/'.$type.'/'.$this->pageId.'?token='.$this->token, $image);
+
+        $this->assertEquals(200, $response->status());
+
+        $res = $response->getData();
+        $this->assertEquals( false, $res->success);
+        $this->assertNotEmpty( $res->error);
+
+        $expectedStart = "Wrong file name";
+        $this->assertStringStartsWith($expectedStart, $res->error);
     }
 
     public function test_it_will_save_one_image_with_err_type()
