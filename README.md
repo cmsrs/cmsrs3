@@ -152,7 +152,7 @@ PAGE_TYPES="cms,gallery,shop,contact,main_page,privacy_policy,login,projects,cle
         - main_page_box1, main_page_box2, main_page_box3 – these represent three content boxes on the main page
         - company_data – displays company information on the contact page
         - main_page_slider – contains images displayed in the slider on the main page
-        
+
     - **gallery** - page with photos
     - **projects** - the same content in each langs
 
@@ -184,6 +184,13 @@ CURRENCY=PLN
 ```
 
 * (optionally) set is_shop, the default is true:
+
+* (optionally) set the allowed file extensions for uploads:
+
+The default file extensions for uploads are:
+```bash
+PAGE_TYPES="jpg,jpeg,png,gif"
+```
 
 ```bash
 IS_SHOP=true
