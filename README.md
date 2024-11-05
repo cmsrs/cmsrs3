@@ -210,7 +210,7 @@ NOTIFY_URL=http://domain/home/orders
 CUSTOMER_IP="123.123.123.123"
 ```
 
-## Sample .env Configuration for Company Profile Page
+## SAMPLE .env CONFIGURATION FOR COMPANY PROFILE PAGE
 
 If you want to create a company profile page, I suggest setting the following CMS parameters:
 
