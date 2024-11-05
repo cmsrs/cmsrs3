@@ -173,7 +173,7 @@ class PageController extends Controller
             return response()->json(['success' => false, 'error' => 'Page not find'], 200);
         }
 
-        $res = $page->delete();
+        $res = $this->pageService->delete($page);
         if (empty($res)) {
             return response()->json(['success' => false, 'error' => 'Page delete problem'], 200);
         }

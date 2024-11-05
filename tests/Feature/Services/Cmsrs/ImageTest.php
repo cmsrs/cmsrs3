@@ -265,16 +265,26 @@ class ImageTest extends Base
     {
         $this->prepareTestPage();
 
+        $allPages = Page::All()->toArray();
+        $this->assertEquals(1, count($allPages));
+
         $responseAllBefore = $this->get('api/images/page/'.$this->pageId.'?token='.$this->token);
         $resAllBefore = $responseAllBefore->getData();
 
+        $i = 0;
+        $ImagesInFs = [];
         foreach ($resAllBefore->data as $img) {
             $imagesFs = ImageService::getAllImage($img);
-
+            $j = 0;
             foreach ($imagesFs as $imgFs) {
+                $ImagesInFs[$i][$j] = $imgFs;
                 $this->assertFileExists($imgFs);
+                $j++;
             }
+            $this->assertEquals(3, $j); //org, small, medium
+            $i++;
         }
+        $this->assertEquals(2, $i);
 
         $translateBefore = Translate::query()->whereNotNull('image_id')->where('column', 'alt')->get()->toArray();
         $this->assertEquals(2, count($translateBefore));
@@ -309,14 +319,21 @@ class ImageTest extends Base
 
         foreach ($resAllBefore->data as $img) {
             $imagesFs = ImageService::getAllImage($img);
-
-            if ($imagesFs) {
-                foreach ($imagesFs as $imgFs) {
-                    //$this->assertFileNotExists($imgFs);
-                    $this->assertFileDoesNotExist($imgFs);
-                }
-            }
+            $this->assertFalse($imagesFs); //because object not exist
         }
+
+        $ii = 0;
+        foreach ($ImagesInFs as $imageByPage) {
+            $jj = 0;
+            foreach ($imageByPage as $imgFs) {
+                $this->assertFileDoesNotExist($imgFs);
+                $jj++;
+            }
+            $this->assertEquals(3, $jj); //org, small, medium
+            $ii++;
+        }
+        $this->assertEquals(2, $ii);
+
         //$this->clear_imgs();
     }
 
