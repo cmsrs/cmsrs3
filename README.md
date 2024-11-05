@@ -212,11 +212,10 @@ CUSTOMER_IP="123.123.123.123"
 
 ## SAMPLE .env CONFIGURATION FOR COMPANY PROFILE PAGE
 
-If you want to create a company profile page, I suggest setting the following CMS parameters:
+If you want to create a company profile page, I suggest setting the following CMS parameters, for example:
 
 ```bash
 IS_SHOP=false
-CACHE_ENABLE=false
 LANGS="en"
 API_SECRET="string123"
 PAGE_TYPES="cms,gallery,contact,main_page,privacy_policy,inner,clear"
