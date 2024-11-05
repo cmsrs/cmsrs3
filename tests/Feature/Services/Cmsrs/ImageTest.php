@@ -114,7 +114,7 @@ class ImageTest extends Base
         $objPage = Page::find($pageId);
 
         if ($objPage) {  //delete img from fs.
-            $objPage->delete();
+            (new PageService)->delete($objPage);
         }
     }
 
