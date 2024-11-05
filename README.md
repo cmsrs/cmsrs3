@@ -49,7 +49,7 @@ php artisan key:generate && php artisan jwt:secret
     - client (email/login: client@cmsrs.pl, pass: cmsrs456) 
 
 ```bash
-php artisan migrate  && php artisan db:seed
+php artisan migrate && php artisan db:seed
 ```
  
 * (optionally) set permission 
@@ -147,7 +147,7 @@ PAGE_TYPES="cms,gallery,shop,contact,main_page,privacy_policy,login,projects,cle
     - clear - without Wyswig editor, it require write pure html code
     - inner - it is text box in existing page require hardcode in layout page, 
         where key is short_title, example using in code: 
-        (new PageService)->getPageDataByShortTitleCache( 'main_page_box1', 'content' )
+        (new PageService)->getPageDataByShortTitleCache('main_page_box1', 'content');
 
     The following short_title values are predefined:
         - main_page_box1, main_page_box2, main_page_box3 – these represent three content boxes on the main page
