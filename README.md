@@ -149,7 +149,7 @@ PAGE_TYPES="cms,gallery,shop,contact,main_page,privacy_policy,login,projects,cle
         where key is short_title, example using in code: 
         (new PageService)->getPageDataByShortTitleCache('main_page_box1', 'content');
 
-    The following short_title values are predefined:
+        The following short_title values are predefined:
         - main_page_box1, main_page_box2, main_page_box3 – these represent three content boxes on the main page
         - company_data – displays company information on the contact page
         - main_page_slider – contains images displayed in the slider on the main page
@@ -210,7 +210,7 @@ NOTIFY_URL=http://domain/home/orders
 CUSTOMER_IP="123.123.123.123"
 ```
 
-## Example CONFIGURATION .env FILE
+## Sample .env Configuration for Company Profile Page
 
 If you want to create a company profile page, I suggest setting the following CMS parameters:
 
