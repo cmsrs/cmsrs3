@@ -117,16 +117,18 @@ It is recommended to run tests on a clean instance (without images)
  
 ## CONFIGURATION .env FILE
 
-*  (optionally) set up langs, example:
+**After each change to a configuration value, it is necessary to log in to the admin panel again.**
+
+*  set up langs, default is:
 
 ```bash
-LANGS="pl,en"
+LANGS="en,pl"
 ```
 
 The first one will be default language.
 If you don't set up this directive it will be 'en,pl'
 
-* (optionally) add api secret, the default is '':
+* add api secret, the default is '':
 ```bash
 API_SECRET=""
 ```
@@ -134,69 +136,69 @@ API_SECRET=""
 It must be the same like in the admin config file (see Vue.js).
 It can be empty string.
 
-* (optionally) set available page type that appear in the administration area: 
+* set available page type that appear in the administration area: 
 
 The default page types are:
 ```bash
 PAGE_TYPES="cms,gallery,shop,contact,main_page,privacy_policy,login,projects,clear,checkout,register,home,shoppingsuccess,search,forgot,inner"
 ```
 
-
-    - **cms** - appear Wyswig editor in administration area
-    - **clear** - without Wyswig editor, it require write pure html code
-    - **inner** - it is text box in existing page require hardcode in layout page, where key is short_title, example using in code: 
-    ```php
+    - cms - appear Wyswig editor in administration area
+    - clear - without Wyswig editor, it require write pure html code
+    - inner - it is text box in existing page require hardcode in layout page, where key is short_title, example using in code: 
+    ```bash
     (new PageService)->getPageDataByShortTitleCache( 'main_page_box1', 'content' )
     ```
+
     The following short_title values are predefined:
         - main_page_box1, main_page_box2, main_page_box3 – these represent three content boxes on the main page
         - company_data – displays company information on the contact page
         - main_page_slider – contains images displayed in the slider on the main page
 
-    - **gallery** - page with photos
-    - **projects** - the same content in each langs
+    - gallery - page with photos
+    - projects - the same content in each langs
 
 
-* (optionally) additionally sending an e-mail with information from the contact form.
+* additionally sending an e-mail with information from the contact form.
 If the value is empty, the text of the message will appear only in the administration panel in the contact tab
 
 ```bash
 CONTACT_EMAIL=""
 ```
 
-* (optionally) for google v3 reCaptcha in the contact form: 
+* for google v3 reCaptcha in the contact form: 
 
 ```bash
 GOOGLE_RECAPTCHA_PRIV
 GOOGLE_RECAPTCHA_PUBLIC
 ```
  
-* (optionally) enable database cache, the default is false: 
+* enable database cache, the default is false: 
 
 ```bash
-CACHE_ENABLE=true
+CACHE_ENABLE=false
 ```
 
-* (optionally) set the currency, the default is USD:
+* set the currency, the default is USD:
 
 ```bash
-CURRENCY=PLN
+CURRENCY=USD
 ```
 
-* (optionally) set is_shop, the default is true:
+* set is_shop, the default is true:
 
 ```bash
 IS_SHOP=true
 ```
 
-* (optionally) set the allowed file extensions for uploads:
+* set the allowed file extensions for uploads:
 
 The default file extensions for uploads are:
 ```bash
 PAGE_TYPES="jpg,jpeg,png,gif"
 ```
 
-* (optionally) PayU integration:
+* PayU integration:
 
 ```bash
 #https://merch-prod.snd.payu.com - sandbox
@@ -207,6 +209,18 @@ PAYU_CLIENT_ID=123
 PAYU_CLIENT_SECRET=zzz
 NOTIFY_URL=http://domain/home/orders
 CUSTOMER_IP="123.123.123.123"
+```
+
+## Example CONFIGURATION .env FILE
+
+If you want to create a company profile page, I suggest setting the following CMS parameters:
+
+```bash
+IS_SHOP=false
+CACHE_ENABLE=false
+LANGS="en"
+API_SECRET="string123"
+PAGE_TYPES="cms,gallery,contact,main_page,privacy_policy,inner,clear"
 ```
 
 ## CLI COMMANDS 
@@ -234,7 +248,7 @@ php artisan command:create-client {user} {password}
 * change admin password:
 
 ```bash
-php artisan command:change-admin-pass {newpassword}
+php artisan command:change-admin-pass {new-password}
 ```
 
 ## DEMO - Frontend
