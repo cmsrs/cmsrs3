@@ -119,7 +119,7 @@ It is recommended to run tests on a clean instance (without images)
 
 **After each change to a configuration value, it is necessary to log in to the admin panel again.**
 
-*  set up langs, default is:
+*  set up langs, the default is 'en,pl':
 
 ```bash
 LANGS="en,pl"
