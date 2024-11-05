@@ -165,7 +165,7 @@ If the value is empty, the text of the message will appear only in the administr
 CONTACT_EMAIL=""
 ```
 
-* for google v3 reCaptcha in the contact form: 
+* for Google reCAPTCHA v3 in the contact form, set up the following parameters:
 
 ```bash
 GOOGLE_RECAPTCHA_PRIV
