@@ -145,10 +145,9 @@ PAGE_TYPES="cms,gallery,shop,contact,main_page,privacy_policy,login,projects,cle
 
     - cms - appear Wyswig editor in administration area
     - clear - without Wyswig editor, it require write pure html code
-    - inner - it is text box in existing page require hardcode in layout page, where key is short_title, example using in code: 
-    ```bash
-    (new PageService)->getPageDataByShortTitleCache( 'main_page_box1', 'content' )
-    ```
+    - inner - it is text box in existing page require hardcode in layout page, 
+        where key is short_title, example using in code: 
+        (new PageService)->getPageDataByShortTitleCache( 'main_page_box1', 'content' )
 
     The following short_title values are predefined:
         - main_page_box1, main_page_box2, main_page_box3 – these represent three content boxes on the main page
