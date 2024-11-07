@@ -97,7 +97,7 @@ class FrontLangsTest extends Base
         (new PageService)->wrapCreate($this->testData);
     }
 
-    public function test_it_will_change_lang()
+    public function test_it_will_change_lang_0()
     {
         $this->setTestData('shop');
         $this->setTestData2('shop');
@@ -120,7 +120,7 @@ class FrontLangsTest extends Base
             'product_name' => ['en' => 'STR_PRODUCT_NAME_EN', 'pl' => 'STR_PRODUCT_NAME_PL'],
             'sku' => 'AN/34534',
             'price' => 123,
-            'product_description' => ['en' => 'STR_PRODUCT_DESCRIPION_EN',  'pl' => 'STR_PRODUCT_DESCRIPION_PL'],
+            'product_description' => ['en' => 'STR_PRODUCT_DESCRIPTION_EN',  'pl' => 'STR_PRODUCT_DESCRIPTION_PL'],
             'page_id' => $pageId,
             'published' => 1,
         ];
@@ -139,6 +139,25 @@ class FrontLangsTest extends Base
         $response22 = $this->get('/changelang/pl/'.$pageId.'/'.$productNameSlugPl);
         $response22->assertStatus(302);
         $response22->assertRedirect('/pl/cms/test-men7-zolc/strona-testowa/'.$productNameSlugPl);
+    }
+
+    public function test_it_will_change_lang_and_get_lang_from_session()
+    {
+        $this->setTestData('shop');
+        $this->setTestData2('shop');
+        $pages = Page::all()->toArray();
+
+        $this->assertEquals(2, count($pages));
+
+        $this->assertNotEmpty($pages[0]['id']);
+        $pageId = $pages[0]['id'];
+
+        $langIn = 'en';
+        $response1 = $this->get("/changelang/$langIn/".$pageId);
+        $response1->assertStatus(302);
+
+        $langOut = ConfigService::getLangFromSession();
+        $this->assertEquals($langIn, $langOut);
     }
 
     /**

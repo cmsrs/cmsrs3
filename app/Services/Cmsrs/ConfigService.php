@@ -169,9 +169,9 @@ class ConfigService
     {
         $langs = ConfigService::arrGetLangsEnv();
         if (empty($langs) || empty($langs[0])) {
-            $langs = [];
-            $langs[0] = ConfigService::LANG_DEFAULT;
-            //throw new \Exception("You must set at least one language in the .env file (default lang)");
+            //$langs = [];
+            //$langs[0] =  'en';//ConfigService::LANG_DEFAULT;
+            throw new \Exception('You must set at least one language in the .env file (default lang)');
         }
 
         return $langs[0];

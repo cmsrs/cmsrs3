@@ -252,7 +252,7 @@ class FrontController extends Controller
         }
         App::setLocale($lang);
 
-        //todo - http_reffer - i don't know how to obtain this value - it should be from payu
+        //todo - http_referer - i don't know how to obtain this value - it should be from payu
         //it make sense only for payU - it my opinion
         $isNewOrders = false; //Order::copyDataFromBasketToOrderForUser();
 
