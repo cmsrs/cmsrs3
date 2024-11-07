@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\Services\Cmsrs;
 
-//use App\Base;
-use App\Models\Cmsrs\Basket;
 use App\Models\Cmsrs\Checkout;
 use App\Models\Cmsrs\Content;
 use App\Models\Cmsrs\Image;
@@ -18,7 +16,6 @@ use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\PaymentService;
 use App\Services\Cmsrs\ProductService;
-use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -793,8 +790,6 @@ class ProductTest extends Base
      */
     public function test_it_will_get_products_and_total_amount()
     {
-        //dd($products);
-
         $price1 = 11200;
         $price2 = 32100;
 
@@ -1219,7 +1214,6 @@ class ProductTest extends Base
         $this->assertNotEmpty($res->error);
         $this->assertNotEmpty($res->error->sku);
 
-        $this->clear_imgs($res0->data->productId);
     }
 
     public function test_it_will_read_product_docs()
@@ -1271,7 +1265,6 @@ class ProductTest extends Base
 
         $this->assertEquals(null, $res22->data[0]->images[1]->alt->en);
 
-        $this->clear_imgs($res->data->productId);
     }
 
     public function test_it_will_update_product_docs()
@@ -1329,7 +1322,6 @@ class ProductTest extends Base
         $this->assertEquals($res222->data[0]->images[1]->alt->en, 'alt2');
         $this->assertEquals($res222->data[0]->images[2]->alt->en, null);
 
-        $this->clear_imgs($res->data->productId);
     }
 
     public function test_it_will_delete_product_docs()
@@ -1374,20 +1366,12 @@ class ProductTest extends Base
         $this->assertEmpty(count($res222->data));
 
         $testFileDirname = pathinfo($testFile, PATHINFO_DIRNAME);
-        $this->assertFileExists($testFileDirname);
-        //$this->assertFileNotExists($testFile);
+        //$this->assertFileExists($testFileDirname);
+        $this->assertFileDoesNotExist($testFileDirname);
         $this->assertFileDoesNotExist($testFile);
     }
 
-    private function clear_imgs($productId)
-    {
-        $obj = Product::find($productId);
-        if ($obj) {  //delete img from fs.
-            (new ProductService)->delete($obj);
-        }
-    }
-
-    public function test_it_will_get_change_position_product_images()
+    public function test_it_will_get_change_position_product_images_0()
     {
         $this->setTestData();
         $response0 = $this->post('api/products?token='.$this->token, $this->testData);
@@ -1437,8 +1421,6 @@ class ProductTest extends Base
         $res4prod = $resprod4->getData();
         $this->assertEquals($res4prod->data[0]->images[0]->name, 'phpunittest1.jpg');
 
-        //clear images!
-        $this->clear_imgs($productId);
     }
 
     /**
@@ -1562,9 +1544,6 @@ class ProductTest extends Base
         $resG = $resGet->getData();
         $this->assertTrue($resG->success);
 
-        foreach ($resG->data as $product) {
-            $this->clear_imgs($res0->data->productId);
-        }
     }
 
     private function createProduct($i = 1)
@@ -1603,7 +1582,7 @@ class ProductTest extends Base
     private function createProducts($nu)
     {
         for ($i = 1; $i <= $nu; $i++) {
-            $productId = $this->createProduct($i);
+            $this->createProduct($i);
         }
     }
 

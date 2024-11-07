@@ -41,6 +41,23 @@ class ImageService extends BaseService implements TranslateInterface
         return $ret;
     }
 
+    private static function deleteDirectoryIfEmpty($dirPath)
+    {
+        if (is_dir($dirPath)) {
+            $files = scandir($dirPath);
+
+            $files = array_diff($files, ['.', '..']);
+
+            if (empty($files)) {
+                if (rmdir($dirPath)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public function delete(Image $mImage)
     {
         $this->deleteImg($mImage);
@@ -48,14 +65,23 @@ class ImageService extends BaseService implements TranslateInterface
         return $mImage->delete(); //parent::delete();
     }
 
-    private function deleteImg(Image $mImage)
+    public function deleteImg(Image $mImage)
     {
         $allImg = self::getAllImage($mImage);
-        foreach ($allImg as $key => $path) {
+        foreach ($allImg as $path) {
             if (file_exists($path)) {
                 unlink($path);
             }
         }
+        self::removeTwoDirectoryIfEmpty($mImage);
+    }
+
+    private static function removeTwoDirectoryIfEmpty(Image $mImage)
+    {
+        $dirImgs = self::getImgDir($mImage);
+        self::deleteDirectoryIfEmpty($dirImgs);
+        $higherDirectory = dirname($dirImgs);
+        self::deleteDirectoryIfEmpty($higherDirectory);
     }
 
     public function getHtmlImage(Image $mImage, $type = Image::IMAGE_THUMB_TYPE_MEDIUM)
@@ -89,6 +115,13 @@ class ImageService extends BaseService implements TranslateInterface
         return null;
     }
 
+    public static function getImgDir(Image $objImg, $isAbs = true)
+    {
+        $imageService = new ImageService;
+
+        return self::getImageDir($imageService->getRefType($objImg), $imageService->getRefId($objImg), $objImg->id, $isAbs);
+    }
+
     /**
      *  return all thumbs and main img
      */
@@ -99,13 +132,12 @@ class ImageService extends BaseService implements TranslateInterface
         if (empty($objImg)) {
             return false;
         }
-        $imageService = new ImageService;
-        $imgDir = self::getImageDir($imageService->getRefType($objImg), $imageService->getRefId($objImg), $img->id, $isAbs);
+        $imgDir = self::getImgDir($objImg, $isAbs);
         $fileName = pathinfo($img->name, PATHINFO_FILENAME);
         $fileExt = pathinfo($img->name, PATHINFO_EXTENSION);
 
         $out[Image::IMAGE_ORG] = $imgDir.'/'.$img->name;
-        foreach (Image::$thumbs as $imgName => $dimention) {
+        foreach (array_keys(Image::$thumbs) as $imgName) {
             $out[$imgName] = $imgDir.'/'.$fileName.'-'.$imgName.'.'.$fileExt;
         }
 

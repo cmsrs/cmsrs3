@@ -96,26 +96,7 @@ class ImageTest extends Base
 
     protected function tearDown(): void
     {
-        if (empty($this->arrPageId)) {
-            $this->clear_imgs();
-        } else {
-            foreach ($this->arrPageId as $pageId) {
-                $this->pageId = $pageId;
-                $this->clear_imgs();
-            }
-        }
         parent::tearDown();
-    }
-
-    private function clear_imgs()
-    {
-        $pageId = $this->pageId;
-
-        $objPage = Page::find($pageId);
-
-        if ($objPage) {  //delete img from fs.
-            (new PageService)->delete($objPage);
-        }
     }
 
     public function test_it_will_set_translate()

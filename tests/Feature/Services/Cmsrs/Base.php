@@ -59,7 +59,42 @@ class Base extends TestCase
 
     protected function tearDown(): void
     {
+        $this->deleteImagesFromFs();
         parent::tearDown();
+    }
+
+    private function deleteImagesFromFs()
+    {
+        if (Page::count()) {
+            foreach (Page::all() as $page) {
+                $this->clear_imgs_pages($page->id);
+            }
+        }
+
+        if (Product::count()) {
+            foreach (Product::all() as $product) {
+                $this->clear_imgs_products($product->id);
+            }
+        }
+    }
+
+    private function clear_imgs_pages($pageId)
+    {
+        $objPage = Page::find($pageId);
+
+        if ($objPage) {  //delete img from fs.
+            (new PageService)->deleteImagesFs($objPage);
+        }
+    }
+
+    private function clear_imgs_products($productId)
+    {
+
+        $objProduct = Product::find($productId);
+
+        if ($objProduct) {  //delete img from fs.
+            (new ProductService)->deleteImagesFs($objProduct);
+        }
     }
 
     public function getAllUrlRelatedToMenus($lang)
@@ -312,7 +347,7 @@ class Base extends TestCase
         $r = $res->getData();
         $this->assertTrue($r->success);
 
-        //find parenent page
+        //find parent page
         $parentId = null;
         $pages = Page::all();
         foreach ($pages as $p) {
