@@ -228,7 +228,7 @@ PAGE_TYPES="cms,gallery,contact,main_page,privacy_policy,inner,clear"
 **I highly recommend running this script to understand how my CMS works. (Remember to leave the default values in the .env file.)**
 
 ```bash
-./rs/go/__warning____go_clear_and_load_demo.sh 
+./rs/go/go_clear_and_load_demo.sh
 ```
 
 * create sitemap (it is recommended to put this command in the crontab file): 
