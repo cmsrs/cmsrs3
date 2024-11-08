@@ -369,7 +369,7 @@ class UserTest extends Base
             'role' => User::$role['client'],
         ]);
 
-        $response = $this->get('api/clients/id/desc?token='.$this->token.'&search= aBC ');
+        $response = $this->get('api/clients/id/desc?token='.$this->token.'&search=aBC');
         $res = $response->getData();
 
         $this->assertTrue($res->success);
