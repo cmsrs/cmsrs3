@@ -12,14 +12,14 @@ class SendTestEmail extends Command
      *
      * @var string
      */
-    protected $signature = 'app:send-test-email {email}';
+    protected $signature = 'cmsrs:send-test-email {email}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'send test email';
+    protected $description = 'Send test email';
 
     /**
      * Execute the console command.

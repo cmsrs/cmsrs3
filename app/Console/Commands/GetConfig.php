@@ -11,7 +11,7 @@ class GetConfig extends Command
      *
      * @var string
      */
-    protected $signature = 'command:getconfig';
+    protected $signature = 'cmsrs:getconfig';
 
     /**
      * The console command description.

@@ -56,7 +56,7 @@ class ConfigController extends Controller
     public function createSiteMap()
     {
         try {
-            Artisan::call('command:create-site-map');
+            Artisan::call('cmsrs:create-site-map');
         } catch (\Exception $e) {
             Log::error('config ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile());
 

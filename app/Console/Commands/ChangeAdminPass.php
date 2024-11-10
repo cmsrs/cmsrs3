@@ -12,7 +12,7 @@ class ChangeAdminPass extends Command
      *
      * @var string
      */
-    protected $signature = 'command:change-admin-pass {pass}';
+    protected $signature = 'cmsrs:change-admin-pass {pass}';
 
     /**
      * The console command description.

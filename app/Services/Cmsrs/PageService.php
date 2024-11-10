@@ -284,7 +284,7 @@ class PageService extends BaseService implements TranslateInterface
 
     /**
      * use also in script to load demo (test) data
-     * php artisan command:load-demo-data
+     * php artisan cmsrs:load-demo-data
      */
     public function wrapCreate($data)
     {

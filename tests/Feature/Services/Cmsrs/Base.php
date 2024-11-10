@@ -277,7 +277,7 @@ class Base extends TestCase
             }
             $this->assertFileDoesNotExist($sitemapFile);
 
-            $this->artisan('command:create-site-map');
+            $this->artisan('cmsrs:create-site-map');
             $this->assertFileExists($sitemapFile);
 
             $fileContent = file($sitemapFile);

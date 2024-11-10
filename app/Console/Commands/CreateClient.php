@@ -12,7 +12,7 @@ class CreateClient extends Command
      *
      * @var string
      */
-    protected $signature = 'command:create-client {client} {pass}';
+    protected $signature = 'cmsrs:create-client {client} {pass}';
 
     /**
      * The console command description.

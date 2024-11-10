@@ -234,19 +234,19 @@ PAGE_TYPES="cms,gallery,contact,main_page,privacy_policy,inner,clear"
 * create sitemap (it is recommended to put this command in the crontab file): 
 
 ```bash
-php artisan command:create-site-map
+php artisan cmsrs:create-site-map
 ```
 
 * create client user or edit password for user: 
 
 ```bash
-php artisan command:create-client {user} {password}
+php artisan cmsrs:create-client {user} {password}
 ```
 
 * change admin password:
 
 ```bash
-php artisan command:change-admin-pass {new-password}
+php artisan cmsrs:change-admin-pass {new-password}
 ```
 
 ## DEMO - Frontend

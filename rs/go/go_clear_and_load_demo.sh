@@ -9,8 +9,8 @@ php artisan migrate:fresh
 php artisan db:seed
 
 #without demo data - start (comment  this line)
-php artisan command:load-demo-data
+php artisan cmsrs:load-demo-data
 #without demo data - stop
 
-php artisan command:create-cache-enable-file
+php artisan cmsrs:create-cache-enable-file
 

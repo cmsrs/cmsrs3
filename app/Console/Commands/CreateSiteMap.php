@@ -14,7 +14,7 @@ class CreateSiteMap extends Command
      *
      * @var string
      */
-    protected $signature = 'command:create-site-map';
+    protected $signature = 'cmsrs:create-site-map';
 
     /**
      * The console command description.

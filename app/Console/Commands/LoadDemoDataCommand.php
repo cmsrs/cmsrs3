@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Data\Demo;
 use App\Models\Cmsrs\Comment;
 use App\Models\Cmsrs\User;
-use App\Product;
 use App\Services\Cmsrs\ContactService;
 use App\Services\Cmsrs\ContentService;
 use App\Services\Cmsrs\DeliverService;
@@ -21,7 +20,7 @@ class LoadDemoDataCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'command:load-demo-data';
+    protected $signature = 'cmsrs:load-demo-data';
 
     /**
      * The console command description.

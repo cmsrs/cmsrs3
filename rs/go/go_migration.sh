@@ -5,4 +5,4 @@ sudo rm -rf public/images/product
 
 php artisan migrate:fresh
 php artisan db:seed
-php artisan command:migration
+php artisan cmsrs:migration

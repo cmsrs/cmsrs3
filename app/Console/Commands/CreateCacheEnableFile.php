@@ -12,7 +12,7 @@ class CreateCacheEnableFile extends Command
      *
      * @var string
      */
-    protected $signature = 'command:create-cache-enable-file';
+    protected $signature = 'cmsrs:create-cache-enable-file';
 
     /**
      * The console command description.

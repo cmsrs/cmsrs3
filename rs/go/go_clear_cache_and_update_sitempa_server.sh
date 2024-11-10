@@ -1,2 +1,2 @@
 php74 artisan  cache:clear
-php74  artisan command:create-site-map
+php74  artisan cmsrs:create-site-map
