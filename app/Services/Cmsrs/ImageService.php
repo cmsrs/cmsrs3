@@ -65,20 +65,27 @@ class ImageService extends BaseService implements TranslateInterface
         return $mImage->delete(); //parent::delete();
     }
 
-    public function deleteImg(Image $mImage)
+    public static function deleteImagesFromFs($allImg)
     {
-        $allImg = self::getAllImage($mImage);
         foreach ($allImg as $path) {
             if (file_exists($path)) {
                 unlink($path);
             }
         }
-        self::removeTwoDirectoryIfEmpty($mImage);
     }
 
-    private static function removeTwoDirectoryIfEmpty(Image $mImage)
+    public function deleteImg(Image $mImage)
     {
+        $allImg = self::getAllImage($mImage);
+
+        self::deleteImagesFromFs($allImg);
+
         $dirImgs = self::getImgDir($mImage);
+        self::removeTwoDirectoryIfEmpty($dirImgs);
+    }
+
+    public static function removeTwoDirectoryIfEmpty($dirImgs)
+    {
         self::deleteDirectoryIfEmpty($dirImgs);
         $higherDirectory = dirname($dirImgs);
         self::deleteDirectoryIfEmpty($higherDirectory);

@@ -515,22 +515,4 @@ class ProductService extends BaseService
 
         return $out;
     }
-
-    /**
-     * delete images from file system
-     */
-    public function deleteImagesFs(Product $mProduct)
-    {
-        $imageService = new ImageService;
-        foreach ($mProduct->images()->get() as $img) {
-            $imageService->deleteImg($img);
-        }
-    }
-
-    public function delete(Product $mProduct)
-    {
-        $this->deleteImagesFs($mProduct);
-
-        return $mProduct->delete(); //parent::delete();
-    }
 }

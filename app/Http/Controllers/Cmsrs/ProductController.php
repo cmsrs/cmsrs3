@@ -177,9 +177,9 @@ class ProductController extends Controller
             return response()->json(['success' => false, 'error' => 'Product not find'], 200);
         }
 
-        $res = $this->productService->delete($product);
+        $res = $this->productService->deletePageOrProductWithImgs($product);
         if (empty($res)) {
-            return response()->json(['success' => false, 'error' => 'product delete problem'], 200);
+            return response()->json(['success' => false, 'error' => 'Product delete problem'], 200);
         }
 
         return response()->json(['success' => true], 200);

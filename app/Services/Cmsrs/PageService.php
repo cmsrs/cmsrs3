@@ -707,24 +707,6 @@ class PageService extends BaseService implements TranslateInterface
         return $out;
     }
 
-    /**
-     * delete images from file system
-     */
-    public function deleteImagesFs(Page $mPage)
-    {
-        $imageService = new ImageService;
-        foreach ($mPage->images()->get() as $img) {
-            $imageService->deleteImg($img);
-        }
-    }
-
-    public function delete(Page $mPage)
-    {
-        $this->deleteImagesFs($mPage);
-
-        return $mPage->delete();
-    }
-
     public static function getNextPositionByMenuId($menuId)
     {
         if (empty($menuId)) {

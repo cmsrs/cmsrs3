@@ -1324,6 +1324,32 @@ class ProductTest extends Base
 
     }
 
+    public function test_it_will_delete_page_that_belongs_product()
+    {
+        $this->setTestData();
+
+        $res0 = $this->post('api/products?token='.$this->token, $this->testData);
+        $res = $res0->getData();
+        $this->assertTrue($res->success);
+
+        $pages = Page::All()->toArray();
+        $products = Product::All()->toArray();
+
+        $this->assertEquals(1, count($pages));
+        $this->assertEquals(1, count($products));
+        $this->assertEquals(count($products), count($pages));
+
+        $pageId = $pages[0]['id'];
+        $this->assertEquals($products[0]['page_id'], $pageId);
+
+        $response0 = $this->delete('api/pages/'.$pageId.'?token='.$this->token);
+        $res0 = $response0->getData();
+        $this->assertTrue($res0->success);
+
+        //dump($pages);
+        //dump($products);
+    }
+
     public function test_it_will_delete_product_docs()
     {
         $this->setTestData();
@@ -1349,7 +1375,6 @@ class ProductTest extends Base
         $this->assertEquals(null, $translateBefore[1]['value']);
 
         $response33 = $this->delete('api/products/'.$productId.'?token='.$this->token);
-        //dd($response33);
         $res33 = $response33->getData();
 
         $this->assertTrue($res33->success);
