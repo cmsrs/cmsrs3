@@ -1391,8 +1391,10 @@ class ProductTest extends Base
         $this->assertEmpty(count($res222->data));
 
         $testFileDirname = pathinfo($testFile, PATHINFO_DIRNAME);
-        //$this->assertFileExists($testFileDirname);
+        $testFileDirnameDeep = pathinfo($testFileDirname, PATHINFO_DIRNAME);
+
         $this->assertFileDoesNotExist($testFileDirname);
+        $this->assertFileDoesNotExist($testFileDirnameDeep);
         $this->assertFileDoesNotExist($testFile);
     }
 

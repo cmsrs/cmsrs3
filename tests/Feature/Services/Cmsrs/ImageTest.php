@@ -267,6 +267,9 @@ class ImageTest extends Base
         }
         $this->assertEquals(2, $i);
 
+        $testFile = $ImagesInFs[0][0];
+        $this->assertFileExists($testFile);
+
         $translateBefore = Translate::query()->whereNotNull('image_id')->where('column', 'alt')->get()->toArray();
         $this->assertEquals(2, count($translateBefore));
         $this->assertEquals(self::STR_DESC_IMG1, $translateBefore[0]['value']);
@@ -315,7 +318,13 @@ class ImageTest extends Base
         }
         $this->assertEquals(2, $ii);
 
-        //$this->clear_imgs();
+        //checks dir
+        $testFileDirname = pathinfo($testFile, PATHINFO_DIRNAME);
+        $testFileDirnameDeep = pathinfo($testFileDirname, PATHINFO_DIRNAME);
+
+        $this->assertFileDoesNotExist($testFileDirname);
+        $this->assertFileDoesNotExist($testFileDirnameDeep);
+        $this->assertFileDoesNotExist($testFile);
     }
 
     public function test_it_will_delete_many_images()
