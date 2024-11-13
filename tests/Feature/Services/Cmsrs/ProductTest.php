@@ -1346,8 +1346,12 @@ class ProductTest extends Base
         $res0 = $response0->getData();
         $this->assertTrue($res0->success);
 
-        //dump($pages);
-        //dump($products);
+        $pagesAfter = Page::All()->toArray();
+        $productsAfter = Product::All()->toArray();
+
+        $this->assertEquals(0, count($pagesAfter));
+        $this->assertEquals(0, count($productsAfter));
+        $this->assertEquals(count($products), count($pages));
     }
 
     public function test_it_will_delete_product_docs()
