@@ -49,6 +49,12 @@ class LoginController extends Controller implements HasMiddleware
         protected ConfigService $configService,
         protected PageService $pageService,
     ) {
+        $demoStatus = env('DEMO_STATUS', false);
+        if ($demoStatus) {
+            echo 'Not permission';
+            exit();
+        }
+
         $this->menus = Menu::all()->sortBy('position'); //TODO cached
 
         $this->langs = $this->configService->arrGetLangs();

@@ -50,6 +50,12 @@ class RegisterController extends Controller implements HasMiddleware
         protected ConfigService $configService,
         protected PageService $pageService,
     ) {
+        $demoStatus = env('DEMO_STATUS', false);
+        if ($demoStatus) {
+            echo 'Not permission';
+            exit();
+        }
+
         //abort(404); //TODO
         //$this->middleware('guest');
         $this->langs = $this->configService->arrGetLangs();
