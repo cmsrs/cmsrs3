@@ -468,7 +468,7 @@ class ProductService extends BaseService
                 $arrProduct = $this->getProductDataFormat($product);
                 $langs = ConfigService::arrGetLangsEnv();
                 foreach ($langs as $lang) {
-                    $urls[$i][$lang] = $this->getProductUrl($product, $lang, $arrProduct['product_name'][$lang]); //zmiana_1007
+                    $urls[$i][$lang] = $this->getProductUrl($product, $lang, $arrProduct['product_name'][$lang]);
                 }
                 $i++;
             }
