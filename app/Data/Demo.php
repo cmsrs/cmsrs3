@@ -595,6 +595,7 @@ class Demo
             'short_title' => ['en' => 'Home', 'pl' => 'Pulpit'],
             'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
             'published' => 1,
+            'after_login' => 1, //we don't need this page in sitmap
             'commented' => 0,
             'type' => 'home',
             //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
@@ -608,6 +609,7 @@ class Demo
             'short_title' => ['en' => 'Shopping Success', 'pl' => 'Twoje zakupy'],
             'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
             'published' => 1,
+            'after_login' => 1, //we don't need this page in sitmap
             'commented' => 0,
             'type' => 'shoppingsuccess',
             //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],

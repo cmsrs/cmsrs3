@@ -12,5 +12,7 @@ php artisan db:seed
 php artisan cmsrs:load-demo-data
 #without demo data - stop
 
+php artisan cache:clear
+php artisan cmsrs:create-site-map
 php artisan cmsrs:create-cache-enable-file
 
