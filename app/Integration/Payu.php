@@ -5,7 +5,7 @@ namespace App\Integration;
 use App\Services\Cmsrs\ConfigService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
+//use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class Payu extends Model

@@ -76,11 +76,4 @@
 
   </div> <!-- div app -->  
   
-<!--  
-  <script src="/js/lib/vue.js"></script>
-  <script src="/js/lib/axios.js"></script>
-  <script src="/js/shop.js"></script>  
--->  
-
-
 @stop

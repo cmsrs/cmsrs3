@@ -54,8 +54,8 @@
 <?php if( !empty($slider_images) ){ ?>
    <script type="application/javascript" src="/js/slider.js"></script>  
 <?php } ?>
-<script type="application/javascript" src="/js/lib/vue.js"></script>
-<script type="application/javascript" src="/js/lib/axios.js"></script>
+<script type="application/javascript" src="/js/lib/vue.global.min.js"></script>
+<script type="application/javascript" src="/js/lib/axios.min.js"></script>
 <script type="application/javascript" src="/js/cmsrs.js"></script>  
 
 
