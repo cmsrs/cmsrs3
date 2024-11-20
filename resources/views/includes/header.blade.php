@@ -32,14 +32,11 @@ if ($isExists) {
       <?php } else { ?>
         <img id="logo_cmsrs" src="/images/cms/logo_cmsrs.png" alt="{{ config('app.name', 'cmsRS') }}" />
       <?php } ?>
-
     </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-
       <ul class="nav-main-rs  navbar-nav mr-auto">
           <?php foreach ($menus as $menu) { ?>
             <?php $pagesPublishedAndAccess = (new App\Services\Cmsrs\MenuService)->pagesPublishedAndAccess($menu)->get(); ?>    
@@ -139,6 +136,4 @@ if ($isExists) {
         </li>
       <?php } ?>          
      </ul>
-
-
 </nav>
