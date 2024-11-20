@@ -9,5 +9,4 @@
 </div>
 
 
-<script src="/js/lib/jquery-3.7.1.slim.min.js"></script>
 <script src="/js/lib/bootstrap.min.js"></script>
