@@ -23,53 +23,56 @@ if ($mainPage) {
 
 <nav class="navbar navbar-expand-lg navbar-dark  {{ $bg }} fixed-top lead">
     <a class="navbar-brand" href="{{ url($urlMainPage) }}">
-      <?php
-          $path = public_path('images/mysite/logo.png');
-$isExists = file_exists($path);
-if ($isExists) {
-    ?>    
+        @php
+            $path = public_path('images/mysite/logo.png');
+            $isExists = file_exists($path);
+        @endphp
+
+        @if ($isExists)    
         <img id="logo_cmsrs" src="/images/mysite/logo.png" alt="{{ config('app.name', 'cmsRS') }}" />
-      <?php } else { ?>
+        @else
         <img id="logo_cmsrs" src="/images/cms/logo_cmsrs.png" alt="{{ config('app.name', 'cmsRS') }}" />
-      <?php } ?>
+        @endif
     </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
       <ul class="nav-main-rs  navbar-nav mr-auto">
-          <?php foreach ($menus as $menu) { ?>
-            <?php $pagesPublishedAndAccess = (new App\Services\Cmsrs\MenuService)->pagesPublishedAndAccess($menu)->get(); ?>    
+          @foreach ($menus as $menu)
+            @php 
+                $pagesPublishedAndAccess = (new App\Services\Cmsrs\MenuService)->pagesPublishedAndAccess($menu)->get(); 
+            @endphp
             <li class="nav-item dropdown">
-            <?php if ($pagesPublishedAndAccess->count() == 1) {  ?>
+            @if ($pagesPublishedAndAccess->count() == 1)
               <a class=" ml-3 nav-link" href="{{ $pageService->getUrl($pagesPublishedAndAccess->first(),  $lang)}}">
                 {{$pageService->translatesByColumnAndLang(  $pagesPublishedAndAccess->first(), 'short_title', $lang ) }}
               </a>
-            <?php } else { ?>
+            @else
               <a class="nav-link dropdown-toggle ml-3" href="#" id="dropdown{{ $menu->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{ (new App\Services\Cmsrs\MenuService)->translatesByColumnAndLang($menu, 'name', $lang ) }}
               </a>
               <div class="dropdown-menu" aria-labelledby="dropdown{{ $menu->id }}">
-                  <?php foreach ((new App\Services\Cmsrs\MenuService)->pagesPublishedTree($pagesPublishedAndAccess) as $pageMenu) { ?>
+                @foreach ((new App\Services\Cmsrs\MenuService)->pagesPublishedTree($pagesPublishedAndAccess) as $pageMenu)
                     <a class="dropdown-item" href="{{ $pageService->getUrl($pageMenu, $lang)}}">
                       {{  $pageService->translatesByColumnAndLang($pageMenu, 'short_title', $lang ) }}
                     </a>
-                    <?php if (! empty($pageMenu['children']) && ! empty($pageMenu->published)) { ?>
-                        <?php foreach ($pageMenu['children'] as $p) { ?>                    
+                    @if (! empty($pageMenu['children']) && ! empty($pageMenu->published))
+                        @foreach ($pageMenu['children'] as $p)
                             <a class="dropdown-item ml-3" href="{{ $pageService->getUrl($p, $lang)}}">
-                              {{ $pageService->translatesByColumnAndLang($p, 'short_title', $lang ) }}
+                                {{ $pageService->translatesByColumnAndLang($p, 'short_title', $lang ) }}
                             </a>
-                        <?php } ?>
-                    <?php } ?>                  
-                  <?php } ?>
+                        @endforeach
+                    @endif
+                @endforeach
                 </div>
-            <?php } ?>    
+            @endif
             </li>
-          <?php } ?>
+            @endforeach
       </ul>
   </div>
     <ul class="list-unstyled  m-0 p-0">
-      <?php if (env('IS_SHOP', true)) { ?>
+      @if (env('IS_SHOP', true))
         <li class="nav-item ml-1  mr-4 cursor-pointer" v-on:click="toglebasket()">
           <i style="font-size:40px;color:#ff5050" class="fa">&#xf07a;</i>
           <span style="color:#ff5050">@{{ cart_length ? cart_length : '' }}</span>
@@ -90,12 +93,14 @@ if ($isExists) {
             <button class="ml-4 btn" v-on:click="pay()">{{ __('Pay') }}</button>
           </div>      
         </div>          
-      <?php } ?>
+    @endif
     </ul>
     <ul class="nav navbar-nav ml-auto" >
       <!-- Authentication Links -->
-      <?php if ($pLogin && ! env('DEMO_STATUS', false)) { ?>
-        <?php $loginStyle = $manyLangs ? 'mr-4' : ''; ?>          
+      @if ($pLogin && ! env('DEMO_STATUS', false))
+        @php 
+            $loginStyle = $manyLangs ? 'mr-4' : '';
+        @endphp
         @guest            
               <li class="nav-item {{$loginStyle}}">
                   <a class="nav-link" href="{{ $pageService->getUrl($pLogin, $lang) }}">
@@ -122,18 +127,20 @@ if ($isExists) {
                                         <input type="submit" value="{{ __('Log out') }}"  class="nav-link" style="background:none; border-width:0px; cursor: pointer;" />
               </form>
         @endguest
-      <?php } ?>
-      <?php if ($manyLangs) { ?>
+      @endif
+      @if ($manyLangs)
         <li class="d-flex flex-row">
-        <?php foreach ($langs as $ll) {  ?>
-          <?php $classActive = ($ll == $lang) ? 'active' : ''; ?>
-          <div class="ml-2  nav-item {{ $classActive }}">
+        @foreach ($langs as $ll)
+            @php  
+                $classActive = ($ll == $lang) ? 'active' : '';
+            @endphp
+            <div class="ml-2  nav-item {{ $classActive }}">
               <a class="changelang nav-link" href="{{ route('changelang', ['lang' => $ll, 'pageId' => $page->id, 'productSlug' => ($productNameSlug ? $productNameSlug[$ll]  : null)] ) }}">
                 <img src="/images/cms/{{ $ll }}.png" alt="{{ $ll }}" /> {{ strtoupper($ll) }}
               </a>
-          </div>
-        <?php } ?>
+            </div>
+          @endforeach
         </li>
-      <?php } ?>          
+       @endif
      </ul>
 </nav>

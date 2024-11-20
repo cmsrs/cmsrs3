@@ -384,7 +384,7 @@ class PageTest extends Base
         $testData =
         [
             'title' => ['en' => 'test unpublished'],
-            'short_title' => ['en' => 'unpuplish'],
+            'short_title' => ['en' => 'unpublish'],
             'published' => 0,
             'type' => 'cms',
             'content' => ['en' => 'pppppppp'],
@@ -395,7 +395,7 @@ class PageTest extends Base
         $testDataChild =
         [
             'title' => ['en' => 'test child'],
-            'short_title' => ['en' => 'child unpuplish parent'],
+            'short_title' => ['en' => 'child unpublish parent'],
             'published' => 1,
             'type' => 'cms',
             'content' => ['en' => 'pppppppp2'],
@@ -406,6 +406,73 @@ class PageTest extends Base
 
         $this->assertNotEquals($testDataChild['published'], $pChild->published);
         $this->assertEquals(0, $pChild->published);
+    }
+
+    public function test_pages_in_header_it_is_in_menu()
+    {
+        $this->setTestData();
+
+        $short_title_parent = 'test_parent_x123';
+        $testData =
+        [
+            'title' => ['en' => 'test'],
+            'short_title' => ['en' => $short_title_parent],
+            'published' => 1,
+            'type' => 'cms',
+            'content' => ['en' => 'pppppppp'],
+            'menu_id' => $this->menuId,
+        ];
+        $p = (new PageService)->wrapCreate($testData);
+
+        $short_title_child1 = 'test_child1_x123';
+        $testDataChild1 =
+        [
+            'title' => ['en' => 'test child1'],
+            'short_title' => ['en' => $short_title_child1],
+            'published' => 1,
+            'type' => 'cms',
+            'content' => ['en' => 'pppppppp2'],
+            'page_id' => $p->id,
+            'menu_id' => $this->menuId,
+        ];
+        (new PageService)->wrapCreate($testDataChild1);
+
+        $short_title_child2 = 'test_child2_x123';
+        $testDataChild2 =
+        [
+            'title' => ['en' => 'test child2'],
+            'short_title' => ['en' => $short_title_child2],
+            'published' => 0, //!
+            'type' => 'cms',
+            'content' => ['en' => 'pppppppp2'],
+            'page_id' => $p->id,
+            'menu_id' => $this->menuId,
+        ];
+        (new PageService)->wrapCreate($testDataChild2);
+
+        $short_title_child3 = 'test_child3_x123';
+        $testDataChild3 =
+        [
+            'title' => ['en' => 'test child2'],
+            'short_title' => ['en' => $short_title_child3],
+            'published' => 1,
+            'after_login' => 1, //!
+            'type' => 'cms',
+            'content' => ['en' => 'pppppppp2'],
+            'page_id' => $p->id,
+            'menu_id' => $this->menuId,
+        ];
+        (new PageService)->wrapCreate($testDataChild3);
+
+        $url2 = (new PageService)->getUrl($p, 'en');
+        $response2 = $this->get($url2);
+        $response2->assertStatus(200);
+
+        $content = $response2->getContent();
+        $this->assertStringContainsString($short_title_parent, $content, "String doesn't contain text=$short_title_parent in menu - header");
+        $this->assertStringContainsString($short_title_child1, $content, "String doesn't contain text=$short_title_child1 in menu - header");
+        $this->assertStringNotContainsString($short_title_child2, $content, "String does contain text=$short_title_child2 in menu - header");
+        $this->assertStringContainsString($short_title_child3, $content, "String does contain text=$short_title_child3 in menu - header"); //TODO we are login as admin (not client)
     }
 
     public function test_it_will_unpublished_children_by_update()

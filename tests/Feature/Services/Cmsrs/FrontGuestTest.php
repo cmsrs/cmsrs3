@@ -11,6 +11,10 @@ use Tests\TestCase;
 
 class FrontGuestTest extends TestCase
 {
+    const SHORT_TITLE1 = 'About me short_x123';
+
+    const SHORT_TITLE2 = 'About page short_x123';
+
     public function setUp(): void
     {
         putenv('LANGS="en"');
@@ -74,7 +78,7 @@ class FrontGuestTest extends TestCase
         $response3b->assertStatus(404);
     }
 
-    public function test_it_will_get_as_guest_forbiden()
+    public function test_it_will_get_as_guest_forbidden()
     {
         $response = $this->get('/pl/cms/test/dsas');
         $response->assertStatus(404);
@@ -89,7 +93,7 @@ class FrontGuestTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_it_will_get_main_page_as_guest_forbiden()
+    public function test_it_will_get_main_page_as_guest_forbidden()
     {
         $response = $this->get('/');
         $response->assertStatus(404);
@@ -202,9 +206,10 @@ class FrontGuestTest extends TestCase
         $testDataMenu = ['name' => ['en' => 'About']];
         $m1 = (new MenuService)->wrapCreate($testDataMenu);
 
+        $short1 = self::SHORT_TITLE1;
         $data1p = [
             'title' => ['en' => 'About me'],
-            'short_title' => ['en' => 'About me'],
+            'short_title' => ['en' => $short1],
             'description' => ['en' => 'Description... Needed for google'],
             'published' => 1,
             'commented' => 0,
@@ -215,9 +220,10 @@ class FrontGuestTest extends TestCase
             ],
         ];
 
+        $short2 = self::SHORT_TITLE2;
         $data2p = [
             'title' => ['en' => 'About page'],
-            'short_title' => ['en' => 'About page'],
+            'short_title' => ['en' => $short2],
             'description' => ['en' => 'Description... Needed for google'],
             'published' => 1,
             'commented' => 0,
@@ -245,6 +251,11 @@ class FrontGuestTest extends TestCase
         $this->assertSame('/'.Page::PREFIX_CMS_URL.'/'.(new MenuService)->getSlugByLang($m1, 'en').'/'.$page2Slug, $url2);
         $response2 = $this->get($url2);
         $response2->assertStatus(200);
+
+        $content = $response2->getContent();
+        $this->assertStringContainsString($short1, $content, "String doesn't contain text=$short1");
+        $this->assertStringContainsString($short2, $content, "String doesn't contain text=$short2");
+
     }
 
     public function test_it_will_link_forbid()
@@ -287,6 +298,12 @@ class FrontGuestTest extends TestCase
         $response1->assertStatus(401);
         $response2 = $this->get((new PageService)->getUrl($p2, 'en'));
         $response2->assertStatus(401);
+
+        $content = $response2->getContent();
+        $short1 = self::SHORT_TITLE1;
+        $short2 = self::SHORT_TITLE2;
+        $this->assertStringNotContainsString($short1, $content, "String does contain text=$short1 in menu - header");
+        $this->assertStringNotContainsString($short2, $content, "String does contain text=$short2 in menu - header");
     }
 
     public function test_it_will_one_link_in_menu_forbid()
@@ -345,9 +362,10 @@ class FrontGuestTest extends TestCase
         $testDataMenu = ['name' => ['en' => 'Contact']];
         $m1 = (new MenuService)->wrapCreate($testDataMenu);
 
+        $short1 = 'Contact me short1xyz';
         $data1p = [
             'title' => ['en' => 'Contact me'],
-            'short_title' => ['en' => 'Contact me'],
+            'short_title' => ['en' => $short1],
             'description' => ['en' => 'Description... Needed for google'],
             'published' => 1,
             'commented' => 0,
@@ -387,5 +405,8 @@ class FrontGuestTest extends TestCase
 
         $response2 = $this->get((new PageService)->getUrl($p2, 'en'));
         $response2->assertStatus(200);
+
+        $content = $response2->getContent();
+        $this->assertStringContainsString($short1, $content, "String doesn't contain text=$short1");
     }
 }
