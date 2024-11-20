@@ -34,22 +34,22 @@ if ($mainPage) {
         <img id="logo_cmsrs" src="/images/cms/logo_cmsrs.png" alt="{{ config('app.name', 'cmsRS') }}" />
         @endif
     </a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-      <ul class="nav-main-rs  navbar-nav mr-auto">
+      <ul class="nav-main-rs  navbar-nav me-auto">
           @foreach ($menus as $menu)
             @php 
                 $pagesPublishedAndAccess = (new App\Services\Cmsrs\MenuService)->pagesPublishedAndAccess($menu)->get(); 
             @endphp
             <li class="nav-item dropdown">
             @if ($pagesPublishedAndAccess->count() == 1)
-              <a class=" ml-3 nav-link" href="{{ $pageService->getUrl($pagesPublishedAndAccess->first(),  $lang)}}">
+              <a class=" ms-3 nav-link" href="{{ $pageService->getUrl($pagesPublishedAndAccess->first(),  $lang)}}">
                 {{$pageService->translatesByColumnAndLang(  $pagesPublishedAndAccess->first(), 'short_title', $lang ) }}
               </a>
             @else
-              <a class="nav-link dropdown-toggle ml-3" href="#" id="dropdown{{ $menu->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <a class="nav-link dropdown-toggle ms-3" href="#" id="dropdown{{ $menu->id }}" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{ (new App\Services\Cmsrs\MenuService)->translatesByColumnAndLang($menu, 'name', $lang ) }}
               </a>
               <div class="dropdown-menu" aria-labelledby="dropdown{{ $menu->id }}">
@@ -59,7 +59,7 @@ if ($mainPage) {
                     </a>
                     @if (! empty($pageMenu['children']) && ! empty($pageMenu->published))
                         @foreach ($pageMenu['children'] as $p)
-                            <a class="dropdown-item ml-3" href="{{ $pageService->getUrl($p, $lang)}}">
+                            <a class="dropdown-item ms-3" href="{{ $pageService->getUrl($p, $lang)}}">
                                 {{ $pageService->translatesByColumnAndLang($p, 'short_title', $lang ) }}
                             </a>
                         @endforeach
@@ -73,11 +73,11 @@ if ($mainPage) {
   </div>
     <ul class="list-unstyled  m-0 p-0">
       @if (env('IS_SHOP', true))
-        <li class="nav-item ml-1  mr-4 cursor-pointer" v-on:click="toglebasket()">
+        <li class="nav-item ms-1  me-4 cursor-pointer" v-on:click="toglebasket()">
           <i style="font-size:40px;color:#ff5050" class="fa">&#xf07a;</i>
           <span style="color:#ff5050">@{{ cart_length ? cart_length : '' }}</span>
         </li>        
-        <div class="p-4 mr-3" id="appbasket" style="display: none" >
+        <div class="p-4 me-3" id="appbasket" style="display: none" >
           <div v-if="cart_length === 0" >{{ __('There are no products in the cart') }}</div>
           <div v-if="cart_length !== 0" >{{ __('SHOPPING CART') }}</div>          
           <ul>
@@ -89,17 +89,17 @@ if ($mainPage) {
             </li>
           </ul>
           <div v-if="cart.length">
-            <div class="ml-4 cart-total">{{ __('Total') }}: @{{ total_sanit }} zł</div>
-            <button class="ml-4 btn" v-on:click="pay()">{{ __('Pay') }}</button>
+            <div class="ms-4 cart-total">{{ __('Total') }}: @{{ total_sanit }} zł</div>
+            <button class="ms-4 btn" v-on:click="pay()">{{ __('Pay') }}</button>
           </div>      
         </div>          
     @endif
     </ul>
-    <ul class="nav navbar-nav ml-auto" >
+    <ul class="nav navbar-nav ms-auto" >
       <!-- Authentication Links -->
       @if ($pLogin && ! env('DEMO_STATUS', false))
         @php 
-            $loginStyle = $manyLangs ? 'mr-4' : '';
+            $loginStyle = $manyLangs ? 'me-4' : '';
         @endphp
         @guest            
               <li class="nav-item {{$loginStyle}}">
@@ -134,7 +134,7 @@ if ($mainPage) {
             @php  
                 $classActive = ($ll == $lang) ? 'active' : '';
             @endphp
-            <div class="ml-2  nav-item {{ $classActive }}">
+            <div class="ms-2  nav-item {{ $classActive }}">
               <a class="changelang nav-link" href="{{ route('changelang', ['lang' => $ll, 'pageId' => $page->id, 'productSlug' => ($productNameSlug ? $productNameSlug[$ll]  : null)] ) }}">
                 <img src="/images/cms/{{ $ll }}.png" alt="{{ $ll }}" /> {{ strtoupper($ll) }}
               </a>
@@ -144,3 +144,5 @@ if ($mainPage) {
        @endif
      </ul>
 </nav>
+
+<script src="/js/lib/popper.min.js"></script>
