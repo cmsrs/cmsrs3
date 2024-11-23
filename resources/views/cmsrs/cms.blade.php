@@ -81,7 +81,7 @@
       <button v-on:click="addComment( $event )" class="add-to-cart btn">{{ __('Add comment') }}</button>
     </form>
     <h5 class="mb-2 mt-3">{{ __('Comments') }}: </h5>
-    <li v-for="item in comments" :key="item.content"  style="list-style: none;" class="ml-3 mb-2 mt-2">
+    <li v-for="item in comments" :key="item.content"  style="list-style: none;" class="ms-3 mb-2 mt-2">
       @{{ item.content }}
     </li>
   @endif      

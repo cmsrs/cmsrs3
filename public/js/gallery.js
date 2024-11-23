@@ -47,9 +47,6 @@ function scrollImg() {
     }
 }
 
-//document.getElementById(document.body).on('touchmove', scrollImg); // for mobile
-//$(window).on('scroll', scrollImg);
-
 window.onscroll = scrollImg;
 //document.body.addEventListener('touchmove', scrollImg, false);
 window.addEventListener("touchmove", scrollImg, false);

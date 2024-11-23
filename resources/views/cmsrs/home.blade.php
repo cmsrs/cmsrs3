@@ -20,7 +20,7 @@
                         <?php }else{ ?>
                             <ul  class="mt-3 list-group">
                             <?php foreach($orders as $order){ ?>
-                                <li class="list-group-item"><a href="{{$order['product_url']}}" ><img src="{{$order['product_img']}}"  alt="{{$order['name']}}" ></a><span class="ml-3"> <a href="{{$order['product_url']}}" > {{$order['name']}} </a> <span class="ml-3">{{$order['unitPrice'] / 100 }} zł x {{$order['qty'] }}</span> </span> </li>
+                                <li class="list-group-item"><a href="{{$order['product_url']}}" ><img src="{{$order['product_img']}}"  alt="{{$order['name']}}" ></a><span class="ms-3"> <a href="{{$order['product_url']}}" > {{$order['name']}} </a> <span class="ms-3">{{$order['unitPrice'] / 100 }} zł x {{$order['qty'] }}</span> </span> </li>
                             <?php } ?>
                             </ul>
                         <?php } ?>
@@ -31,10 +31,10 @@
                 {{ __('TO PAY') }}:            
                 <ul  class="mt-3 list-group">
                     <?php foreach($checkouts as $checkout){ ?>
-                        <li class="ml-4" >{{  __('Order number') }} : {{ $checkout['id'] }}. {{  __('Amount to pay') }}  <strong> {{ $checkout['price_total_add_deliver'] }} zł</strong>  = {{ $checkout['price_total']  }} zł + {{  __('deliver') }} : {{ $checkout['price_deliver'] }} zł</li>
+                        <li class="ms-4" >{{  __('Order number') }} : {{ $checkout['id'] }}. {{  __('Amount to pay') }}  <strong> {{ $checkout['price_total_add_deliver'] }} zł</strong>  = {{ $checkout['price_total']  }} zł + {{  __('deliver') }} : {{ $checkout['price_deliver'] }} zł</li>
                         <ul>
                         <?php foreach($checkout['baskets'] as $basket){ ?>
-                            <li class="ml-4" ><a href="{{ $basket['product_url'] }}"> {{ $basket['product_name'] }}</a> {{ $basket['qty'] }} x {{ $basket['price'] }} zł </li>
+                            <li class="ms-4" ><a href="{{ $basket['product_url'] }}"> {{ $basket['product_name'] }}</a> {{ $basket['qty'] }} x {{ $basket['price'] }} zł </li>
                         <?php } ?>
                         </ul>
                     <?php } ?>
@@ -57,7 +57,7 @@
                     <div v-if="cart.length">
                         <div class="cart-total">{{ __('Total') }}: @{{ total_sanit }} zł</div>
                         <br/><br/>
-                        <button class="ml-4 btn" v-on:click="pay()">{{ __('Pay') }}</button>
+                        <button class="ms-4 btn" v-on:click="pay()">{{ __('Pay') }}</button>
                     </div>
                 </div>
 

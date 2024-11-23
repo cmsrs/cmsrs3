@@ -84,10 +84,15 @@ createApp({
                         total_sanit.value = total.value / 100;
                         cart_length.value = cart.length;
                         saveCartToPost(cart);
-                        const deliver_price = parseInt(
-                            $("#deliver-old-price").val(),
-                            10,
-                        );                        
+
+                        const deliverOldPrice = document.getElementById("deliver-old-price");
+                        let deliver_price = 0.00;
+                        if(deliverOldPrice){
+                            deliver_price = parseInt(
+                                deliverOldPrice.value,
+                                10,
+                            );    
+                        }
                         total_add_deliver_sanit.value =
                             calculateTotalAddDeliverSanit(
                                 total.value,

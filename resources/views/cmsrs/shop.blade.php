@@ -20,7 +20,7 @@
                   @endif
 <!--                  </div>
                   <div class="col">-->
-                    <ul class="ml-3  ist-unstyled">
+                    <ul class="ms-3  ist-unstyled">
                       <li>{{ __('Name') }}: {{$product['product_name'][$lang] }}</li>
                       <li>Sku: {{$product['sku']}}</li>
                       <li>{{ __('Price') }}: {{$product['price'] / 100}} zł</li>
@@ -80,7 +80,7 @@
                   @endif
 <!--                  </div>
                   <div class="col">-->
-                    <ul class="ml-3 list-unstyled">
+                    <ul class="ms-3 list-unstyled">
                       <li>{{ __('Name') }}: <a href="{{$product['url_product'][$lang] }}">{{$product['product_name'][$lang] }}</a></li>
                       <li>Sku: {{$product['sku']}}</li>
                       <li>{{ __('Price') }}: {{$product['price'] / 100}} zł</li>

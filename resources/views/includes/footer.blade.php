@@ -8,5 +8,4 @@
     </span>
 </div>
 
-
-<script src="/js/lib/bootstrap.min.js"></script>
+<script type="application/javascript" src="/js/lib/bootstrap.bundle.min.js"></script>

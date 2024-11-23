@@ -144,5 +144,3 @@ if ($mainPage) {
        @endif
      </ul>
 </nav>
-
-<script src="/js/lib/popper.min.js"></script>

@@ -355,3 +355,20 @@ table.table  th{
   width: 16px;
   height: 11px;
 } 
+
+
+/*bootstrap 4 -> 5 migration */
+.btn {
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.btn:hover {
+  color: #fff;
+  background-color: #868e96;
+  border-color: #868e96;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
