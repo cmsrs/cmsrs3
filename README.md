@@ -73,7 +73,7 @@ php artisan serve
 cp  .env .env.testing 
 ```
 
-change db connection, for example:
+change db connection, for example (see file rs/go/go_create_test_db.sh):
 
 Attention! DB_DATABASE should be different than the one in the .env file.
 
