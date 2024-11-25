@@ -26,7 +26,7 @@ composer install
 cp .env.example .env
 ```
 
-change db connection, for example (see file ``` ./rs/go/go_create_user_and_db.sh ```):
+change db connection in .env file, for example :
 
 ```bash
 DB_CONNECTION=mysql
@@ -36,6 +36,8 @@ DB_DATABASE=cmsrs
 DB_USERNAME=rs
 DB_PASSWORD="secret102*"
 ```
+
+You can create a MySQL user and database using the script: ``` ./rs/go/go_create_user_and_db.sh ```
 
 * laravel and jwt config (create tokens):
 
@@ -72,9 +74,7 @@ php artisan serve
 cp  .env .env.testing 
 ```
 
-change db connection, for example (see file ``` ./rs/go/go_create_test_db.sh ```):
-
-Attention! DB_DATABASE should be different than the one in the .env file.
+change db connection in .env.testing file, for example:
 
 ```bash
 DB_CONNECTION=mysql
@@ -84,6 +84,10 @@ DB_DATABASE=cmsrs_testing
 DB_USERNAME=rs
 DB_PASSWORD="secret102*"
 ```
+
+Attention! DB_DATABASE should be different than the one in the .env file.
+
+You can create a MySQL database using the script ``` ./rs/go/go_create_test_db.sh ```
 
 * (optionally) set permission 
  
