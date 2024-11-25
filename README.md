@@ -26,7 +26,7 @@ composer install
 cp .env.example .env
 ```
 
-change db connection, for example (see file ```bash ./rs/go/go_create_user_and_db.sh ```):
+change db connection, for example (see file ``` ./rs/go/go_create_user_and_db.sh ```):
 
 ```bash
 DB_CONNECTION=mysql
@@ -72,7 +72,7 @@ php artisan serve
 cp  .env .env.testing 
 ```
 
-change db connection, for example (see file ```bash ./rs/go/go_create_test_db.sh ```):
+change db connection, for example (see file ``` ./rs/go/go_create_test_db.sh ```):
 
 Attention! DB_DATABASE should be different than the one in the .env file.
 
