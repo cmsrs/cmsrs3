@@ -14,6 +14,12 @@
 git clone https://github.com/cmsrs/cmsrs3.git && cd cmsrs3
 ```
 
+* install dependency
+
+```bash
+composer install
+```
+
 * prepare .env file, and change db connection:
  
 ```bash
@@ -29,12 +35,6 @@ DB_PORT=3306
 DB_DATABASE=cmsrs
 DB_USERNAME=rs
 DB_PASSWORD="secret102*"
-```
-
-* install dependency
-
-```bash
-composer install
 ```
 
 * laravel and jwt config (create tokens):
