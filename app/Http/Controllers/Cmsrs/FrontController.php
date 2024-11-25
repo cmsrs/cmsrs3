@@ -220,7 +220,10 @@ class FrontController extends Controller
             $urlShoppingSuccess = $this->pageService->getUrl($pShoppingSuccess, $lang);
             //$request->session()->flash('status', 'Task was successful!');
             //$request->session()->keep(['checkout_id' => $objCheckout->id]);
-            $request->session()->flash('checkout_id', $objCheckout->id);
+
+            /** @var \Illuminate\Session\Store $session */
+            $session = $request->session();
+            $session->flash('checkout_id', $objCheckout->id);
 
             return redirect($urlShoppingSuccess);
         }
