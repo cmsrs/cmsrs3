@@ -372,3 +372,17 @@ table.table  th{
   border-color: #868e96;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
+.btn-danger {
+  color: #fff;
+  background-color: #ff5050;
+  border-color: #ff5050;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.btn-danger:hover {
+  color: #fff;
+  background-color: #ff6666;
+  border-color: #ff6666;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
