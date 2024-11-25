@@ -39,21 +39,21 @@
           @{{ messageInfo }}
         </div>
         <form>
-          <div class="form-group">
+          <div class="form-group mt-3">
             <label for="email">{{ __('Email address') }}</label>
             <input type="text" class="form-control" id="email" v-model="email"  @click="clearMessageInfo()">
             <div  v-if="emailErr"  class="invalid-feedback" style="display:block">
               @{{ emailErr }}
             </div>        
           </div>
-          <div class="form-group">
+          <div class="form-group mt-3">
             <label for="message">{{ __('Message') }}</label>
             <textarea class="form-control" id="message" rows="10" v-model="message"  @click="clearMessageInfo()"></textarea>
             <div  v-if="messageErr"  class="invalid-feedback" style="display:block">
               @{{ messageErr }}
             </div>        
           </div>
-          <button type="submit" class="btn btn-primary" v-on:click="contact( $event )">{{ __('Submit') }}</button>
+          <button type="submit" class="btn btn-primary mt-3" v-on:click="contact( $event )">{{ __('Submit') }}</button>
         </form>
 
       </div><!-- col -->

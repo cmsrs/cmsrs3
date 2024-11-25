@@ -7,7 +7,7 @@ use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase; //it must be, because it is problem when db not exists
 
     /**
      * A basic test example.

@@ -134,8 +134,8 @@ if ($mainPage) {
             @php  
                 $classActive = ($ll == $lang) ? 'active' : '';
             @endphp
-            <div class="ms-2  nav-item {{ $classActive }}">
-              <a class="changelang nav-link" href="{{ route('changelang', ['lang' => $ll, 'pageId' => $page->id, 'productSlug' => ($productNameSlug ? $productNameSlug[$ll]  : null)] ) }}">
+            <div class="ms-2  nav-item">
+              <a class="changelang nav-link  {{ $classActive }}" href="{{ route('changelang', ['lang' => $ll, 'pageId' => $page->id, 'productSlug' => ($productNameSlug ? $productNameSlug[$ll]  : null)] ) }}">
                 <img src="/images/cms/{{ $ll }}.png" alt="{{ $ll }}" /> {{ strtoupper($ll) }}
               </a>
             </div>
