@@ -44,8 +44,10 @@
                     <li class="mt-2" v-for="item in cart" v-bind:key="item.id">              
                       <div>@{{ item.name }}</div>
                       <span>@{{ item.price /100 }} zł x @{{ item.qty }}</span>
+                      <div class="button-group">
                       <button class="btn" v-on:click="increment(item)">+</button>
                       <button class="btn" v-on:click="decrement(item)">-</button>
+                      </div>
                     </li>
                   </ul>
 

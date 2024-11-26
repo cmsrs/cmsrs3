@@ -356,6 +356,17 @@ table.table  th{
   height: 11px;
 } 
 
+/*shop button +- Next to each other  */
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.button-group > .btn {
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
 
 /*bootstrap 4 -> 5 migration */
 .btn {

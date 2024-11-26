@@ -23,8 +23,10 @@
                     </div>            
                     <div class="col-sm"> 
                       <span>@{{ item.price / 100 }} zł x @{{ item.qty }}</span>
-                      <button class="btn" v-on:click="increment(item)">+</button>
-                      <button class="btn" v-on:click="decrement(item)">-</button>
+                      <div class="button-group">
+                        <button class="btn" v-on:click="increment(item)">+</button>
+                        <button class="btn" v-on:click="decrement(item)">-</button>
+                      </div>
                     </div>
                   </div>
                 </div>
