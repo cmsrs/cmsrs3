@@ -1,3 +1,11 @@
+current_dir=$(pwd)
+
+# Sprawdź, czy katalog zawiera słowo 'demo'
+if [[ "$current_dir" != *"demo"* ]]; then
+  echo "not allowed!"
+  exit 1
+fi
+
 rm -rf public/images/page
 rm -rf public/images/product
 #./go_privilege.sh 
