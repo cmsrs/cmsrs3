@@ -1,0 +1,32 @@
+---
+name: Deploy on Tag Push
+
+on:
+  push:
+    tags:
+      - '*.*.*'
+
+jobs:
+  deploy:
+    name: Deploy to Server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to Server
+        run: |
+          echo "run srtipt on server"
+          ssh -o StrictHostKeyChecking=no robert04@${{ secrets.SERVER_HOST }} \
+          << EOF
+          cd /home/robert04/domains/demo.cmsrs.pl
+          git checkout master
+          git pull origin master
+          ./rs/go/__warning____go_clear_and_load_demo_server.sh
+          EOF
