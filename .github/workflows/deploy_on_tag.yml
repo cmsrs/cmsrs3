@@ -23,9 +23,9 @@ jobs:
       - name: Deploy to Server
         run: |
           echo "run srtipt on server"
-          ssh -o StrictHostKeyChecking=no robert04@${{ secrets.SERVER_HOST }} \
+          ssh -p ${{ secrets.SERVER_PORT }} -o StrictHostKeyChecking=no  ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
           << EOF
-          cd /home/robert04/domains/demo.cmsrs.pl
+          cd ~/domains/demo.cmsrs.pl
           git checkout master
           git pull origin master
           ./rs/go/__warning____go_clear_and_load_demo_server.sh
