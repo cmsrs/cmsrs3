@@ -3,13 +3,13 @@
     CMS, gallery, and shop based on Laravel and Vue.js
 </p>
 </br>
-</br>
 
 <p align="center">
    <a href="https://www.cmsrs.pl/en/cms/cmsrs/coverage-test"><img src="https://img.shields.io/badge/coverage-90%25-yellowgreen"></a>
-   <a href="https://github.com/cmsrs/cmsrs3?tab=MIT-1-ov-file"><img src="https://img.shields.io/badge/license-MIT-yellowgreen"></a>
+   <a href="https://github.com/cmsrs/cmsrs3?tab=MIT-1-ov-file"><img src="https://img.shields.io/badge/license-MIT-green"></a>
 </p>
 
+</br>
 </br>
 
 ## INSTALLATION
