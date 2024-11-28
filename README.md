@@ -5,7 +5,7 @@
 </br>
 
 <p align="center">
-   <a href="https://www.cmsrs.pl/en/cms/cmsrs/coverage-test" target="_blank">
+   <a href="https://www.cmsrs.pl/en/cms/cmsrs/coverage-test">
     <img src="https://img.shields.io/badge/coverage-90%25-yellowgreen" alt="Coverage 90%">
    </a>
    <a href="https://github.com/cmsrs/cmsrs3/blob/master/LICENSE">
