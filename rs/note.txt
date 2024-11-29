@@ -177,9 +177,15 @@ pozniej na serwerze:
 
 + problem znakiem konca (roznica miedzy plikami lokalnymi a tymi co sa na serwerze)
 0. zaloguj sie na serwer
-1. git rm cache  plik
+1. git rm cache  plik (git checkout -- rs/demo_data/img/gallery/imgc3.jpg)
 2. git commit
 3 git push
+
+
+
++dodanie nowego taga:
+(dodanie) git tag 2.0.4
+(na serwer) git push --tags
 
 
 210126
