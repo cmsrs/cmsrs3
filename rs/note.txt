@@ -60,6 +60,7 @@ UWAGA!!!
 
 
 
+
 20201002
 
 todo
@@ -173,6 +174,12 @@ pozniej na serwerze:
 0. sprawdz wersje laravela: $php artian list
 1. $git pull - pobiora sie nowe pliki composer.json i comploser.lock
 2. $php_ver  ~/script/php_ver/composer install  (przy update - nie dalo sie wykonac polecenia poniewaz byl 'Kill' przy wykonaniau komendy)
+
++ problem znakiem konca (roznica miedzy plikami lokalnymi a tymi co sa na serwerze)
+0. zaloguj sie na serwer
+1. git rm cache  plik
+2. git commit
+3 git push
 
 
 210126
