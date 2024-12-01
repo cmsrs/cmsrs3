@@ -184,8 +184,10 @@ pozniej na serwerze:
 
 
 +dodanie nowego taga:
-(dodanie) git tag 2.0.4
+ (sprawdzenie tagow) git tag
+(dodanie kolejnego nr) git tag 2.0.4
 (na serwer) git push --tags
+(patrz takze git action)
 
 
 210126
