@@ -25,8 +25,8 @@ class CreateContentsTable extends Migration
 
             $table->unsignedBigInteger('product_id')->nullable();
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->unique(['lang', 'column', 'page_id', 'product_id'], 'translates_index_unique'); //it was 241129, sql-lite fix
-            //$table->unique(['lang', 'column', 'page_id', 'product_id'], 'contents_index_unique');
+            //$table->unique(['lang', 'column', 'page_id', 'product_id'], 'translates_index_unique'); //it was 241129, sql-lite fix, it is the sam name in another table
+            $table->unique(['lang', 'column', 'page_id', 'product_id'], 'contents_index_unique');
 
             $table->timestamps();
         });
