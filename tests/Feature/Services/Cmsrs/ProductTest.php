@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Services\Cmsrs;
 
+use App\Models\Cmsrs\Basket;
 use App\Models\Cmsrs\Checkout;
 use App\Models\Cmsrs\Content;
 use App\Models\Cmsrs\Image;
@@ -413,6 +414,117 @@ class ProductTest extends Base
             }
         }
 
+    }
+
+    public function test_delete_page_with_checkouts_belongs_to_product()
+    {
+        /*** set data - fixture */
+
+        $price1 = 11200;
+        $price2 = 32100;
+        $ids = $this->setAddTwoProducts($price1, $price2);
+        $id1 = $ids['id1'];
+        $id2 = $ids['id2'];
+
+        $qty0a = 2;
+        $qty1a = 5;
+        $firstName = 'Jan';
+        $data =
+
+        [
+            '_token' => 'gTXqPBuPTbTz1yKecuMiaX8j5ynB1LiO4ul01PwZ',
+            'products' => [
+                0 => [
+                    'id' => $id1,
+                    'qty' => $qty0a,
+                ],
+
+                1 => [
+                    'id' => $id2,
+                    'qty' => $qty1a,
+                ],
+                2 =>  //fake
+                    [
+                        'id' => 10003,
+                        'qty' => 44,
+                    ],
+            ],
+
+            'lang' => 'en',
+            'email' => 'client@cmsrs.pl',
+            'first_name' => $firstName,
+            'last_name' => 'Kowalski',
+            'address' => 'kolejowa 1 m 2',
+            'country' => 'Polska',
+            'city' => 'Warszawa',
+            'telephone' => '1234567123',
+            'postcode' => '03-456',
+            'deliver' => DeliverService::KEY_DPD_COURIER,
+            'payment' => PaymentService::KEY_CASH,
+        ];
+
+        $pCheckout = [
+            'title' => ['en' => 'Checkout', 'pl' => 'Kasa'],
+            'short_title' => ['en' => 'Checkout', 'pl' => 'Kasa'],
+            'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'checkout',
+            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            'images' => [
+            ],
+        ];
+
+        $pShoppingsuccess = [
+            'title' => ['en' => 'CheckoutSS', 'pl' => 'KasaSS'],
+            'short_title' => ['en' => 'CheckoutSS', 'pl' => 'KasaSS'],
+            'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
+            'published' => 1,
+            'commented' => 0,
+            'type' => 'shoppingsuccess',
+            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            'images' => [
+            ],
+        ];
+
+        $p = (new PageService)->wrapCreate($pCheckout);
+        $this->assertNotEmpty($p->id);
+
+        $p2 = (new PageService)->wrapCreate($pShoppingsuccess);
+        $this->assertNotEmpty($p2->id);
+
+        $response0 = $this->post('/post/checkout', $data);
+        $response0->assertStatus(302);
+
+        $c1 = Checkout::all()->count();
+        $this->assertEquals(1, $c1);
+
+        $ch = Checkout::first();
+        $this->assertEquals(0, $ch->is_pay);
+        $this->assertNotEmpty($ch->id);
+
+        /*** start testing */
+
+        $baskets = Basket::all()->toArray();
+        $this->assertEquals(2, count($baskets));
+
+        $products = Product::all()->toArray();
+        $this->assertEquals(2, count($products));
+        $this->assertEquals($products[0]['page_id'],$products[1]['page_id']);
+        $pageId = $products[0]['page_id'];
+
+        $response0 = $this->delete('api/pages/'.$pageId.'?token='.$this->token);
+        $res0 = $response0->getData();
+        $this->assertTrue($res0->success);
+
+        $c2 = Checkout::all()->count();
+        $this->assertEquals(1, $c2); //?? - TODO in future, maybe it should be 0
+
+        $baskets2 = Basket::all()->toArray();
+        $this->assertEquals(0, count($baskets2));
+
+        $products2 = Product::all()->toArray();
+        $this->assertEquals(0, count($products2));
     }
 
     private function warpSaveTestCheckoutManyTimes($times)

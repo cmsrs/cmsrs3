@@ -29,7 +29,7 @@ class CreateBasketsTable extends Migration
             $table->integer('price')->nullable();
 
             $table->unsignedBigInteger('product_id'); //->notNullable();
-            $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
 
             //$table->unique(['user_id', 'product_id'], 'unique_baskets_index' );
             //DB::statement('ALTER TABLE `baskets` ADD UNIQUE `unique_baskets_index` (`user_id`, `product_id`)'); //it will be delete in futher migration
