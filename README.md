@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="http://www.cmsrs.pl/images/mysite/logo_scale_transparent.png"><br/>
+    <img src="http://www.cmsrs.pl/images/cms/logo_cmsrs.png"><br/>
     CMS, gallery, and shop based on Laravel and Vue.js
 </p>
 </br>
