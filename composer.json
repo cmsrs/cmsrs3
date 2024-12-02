@@ -75,8 +75,7 @@
             "@php artisan jwt:secret",
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php artisan migrate --graceful --ansi",
-            "@php artisan db:seed",
-            "@php artisan serve"
+            "@php artisan db:seed"
         ]
     }
 }
