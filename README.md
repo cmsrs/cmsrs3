@@ -12,27 +12,38 @@
 </br>
 </br>
 
-## INSTALLATION
+## INSTALLATION (QUICK SETUP)
 
-* download
+Run the following command to create the project:
+
+```bash
+composer create-project cmsrs/cmsrs3
+cd cmsrs3 && php artisan serve
+```
+
+Make sure the ```php-sqlite3``` extension is installed and enabled.
+
+## MANUAL INSTALLATION
+
+* Download the source code:
  
 ```bash
 git clone https://github.com/cmsrs/cmsrs3.git && cd cmsrs3
 ```
 
-* install dependency
+* Install dependencies:
 
 ```bash
 composer install
 ```
 
-* prepare .env file, and change db connection:
+* Prepare .env file, and change db connection:
  
 ```bash
 cp .env.example .env
 ```
 
-change db connection in .env file, for example :
+change db connection in .env file, for example:
 
 ```bash
 DB_CONNECTION=mysql
@@ -45,13 +56,13 @@ DB_PASSWORD="secret102*"
 
 You can create a MySQL user and database using the script: ``` ./rs/go/go_create_user_and_db.sh ```
 
-* laravel and jwt config (create tokens):
+* Set up Laravel and JWT (generate the application key and JWT secrets):
 
 ```bash
 php artisan key:generate && php artisan jwt:secret
 ```
  
-* create database tables and seed initial data:
+* Create database tables and seed initial data:
 
     - admin (email/login: adm@cmsrs.pl, pass: cmsrs123) 
     - client (email/login: client@cmsrs.pl, pass: cmsrs456) 
@@ -60,13 +71,13 @@ php artisan key:generate && php artisan jwt:secret
 php artisan migrate && php artisan db:seed
 ```
  
-* (optionally) set permission 
+* (optionally) Set up permission: 
  
 ```bash
 ./rs/go/go_privilege.sh
 ```
  
-* start server
+* Start server
  
 ```bash
 php artisan serve
@@ -74,13 +85,13 @@ php artisan serve
 
 ## RUN TESTS
 
-* prepare .env.testing file, and change db connection:
+* Prepare .env.testing file, and change db connection:
 
 ```bash
 cp  .env .env.testing 
 ```
 
-change db connection in .env.testing file, for example:
+Change db connection in .env.testing file, for example:
 
 ```bash
 DB_CONNECTION=mysql
@@ -111,7 +122,7 @@ It is recommended to run tests on a clean instance (without images)
 
 ## MANAGMENT
 
-* go to the website http://127.0.0.1:8000/admin/
+* Go to the website http://127.0.0.1:8000/admin/
 
     log in as:
 
@@ -119,17 +130,17 @@ It is recommended to run tests on a clean instance (without images)
 
     password: cmsrs123
 
-* create main page (page type: main_page)
+* Create main page (page type: main_page)
 
-* add menu
+* Add menu
     
-* add pages   
+* Add pages   
  
 ## CONFIGURATION .env FILE
 
 **After each change to a configuration value, it is necessary to log in to the admin panel again.**
 
-*  set up langs, the default is 'en,pl':
+*  Set up langs, the default is 'en,pl':
 
 ```bash
 LANGS="en,pl"
@@ -138,7 +149,7 @@ LANGS="en,pl"
 The first one will be default language.
 If you don't set up this directive it will be 'en,pl'
 
-* add api secret, the default is '':
+* Add api secret, the default is '':
 ```bash
 API_SECRET=""
 ```
@@ -146,7 +157,7 @@ API_SECRET=""
 It must be the same like in the admin config file (see Vue.js).
 It can be empty string.
 
-* set available page type that appear in the administration area: 
+* Set available page type that appear in the administration area: 
 
 The default page types are:
 ```bash
@@ -168,39 +179,39 @@ PAGE_TYPES="cms,gallery,shop,contact,main_page,privacy_policy,login,projects,cle
     - projects - the same content in each langs
 
 
-* additionally sending an e-mail with information from the contact form.
+* Additionally sending an e-mail with information from the contact form.
 If the value is empty, the text of the message will appear only in the administration panel in the contact tab
 
 ```bash
 CONTACT_EMAIL=""
 ```
 
-* for Google reCAPTCHA v3 in the contact form, set up the following parameters:
+* For Google reCAPTCHA v3 in the contact form, set up the following parameters:
 
 ```bash
 GOOGLE_RECAPTCHA_PRIV
 GOOGLE_RECAPTCHA_PUBLIC
 ```
  
-* enable database cache, the default is false: 
+* Enable database cache, the default is false: 
 
 ```bash
 CACHE_ENABLE=false
 ```
 
-* set the currency, the default is USD:
+* Set the currency, the default is USD:
 
 ```bash
 CURRENCY=USD
 ```
 
-* set is_shop, the default is true:
+* Set is_shop, the default is true:
 
 ```bash
 IS_SHOP=true
 ```
 
-* set the allowed file extensions for uploads:
+* Set the allowed file extensions for uploads:
 
 The default file extensions for uploads are:
 ```bash
@@ -233,7 +244,7 @@ PAGE_TYPES="cms,gallery,contact,main_page,privacy_policy,inner,clear"
 
 ## CLI COMMANDS 
 
-* load test (demo) data: 
+* Load test (demo) data: 
 
 **I highly recommend running this script to understand how my CMS works. (Remember to leave the default values in the .env file.)**
 
@@ -241,19 +252,19 @@ PAGE_TYPES="cms,gallery,contact,main_page,privacy_policy,inner,clear"
 ./rs/go/go_clear_and_load_demo.sh
 ```
 
-* create sitemap (it is recommended to put this command in the crontab file): 
+* Create sitemap (it is recommended to put this command in the crontab file): 
 
 ```bash
 php artisan cmsrs:create-site-map
 ```
 
-* create client user or edit password for user: 
+* Create client user or edit password for user: 
 
 ```bash
 php artisan cmsrs:create-client {user} {password}
 ```
 
-* change admin password:
+* Change admin password:
 
 ```bash
 php artisan cmsrs:change-admin-pass {new-password}
