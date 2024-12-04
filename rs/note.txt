@@ -1,4 +1,4 @@
-Bug
+Bugs and features
 + (!!!!krytyczny!!!!)  na telefonie nie dziala dynamieczne doladowywanie zdjec w galerii (ten sam problem moze dotyczyc strony z produktami - do sprawdzenia)
 + (poprawione) #uwaga!!! - ja wlacze  cache w .env to jest probvlem z wywwolaniem:  GET http://demo.cmsrs.pl/api/productsGetNameAndPrice/en
 # trzeba zbadac - patrz demo (aktualnie dziala)
@@ -161,35 +161,6 @@ a nie jak to jest do tej pory:
 +(2405 - dziala) - brak zmiany pozycji w panelu dla stron nie powiazanych z menu - kod w laravelu zostal zrobiony a w panelu sie tto nie pojawia - ale i tak tego nie wykorzystuje w wersji produkcyjnej - moze kiedys w przyszlosci sie to przyda.
 
 
-
-+ aktualizacja laravela
-lokalnie na serwerze:
-0. sprawdz wersje laravela: $php artian list
-1. wstaw odpowiednie wersje w composer.json  nie zapomnij zaktualizowac takze wersji php-a w tym pliku
-2. comoser update 
-3. utworzy sie plik composer.lock
-4. przeslij te dwa pliki na serwer
-
-pozniej na serwerze:
-0. sprawdz wersje laravela: $php artian list
-1. $git pull - pobiora sie nowe pliki composer.json i comploser.lock
-2. $php_ver  ~/script/php_ver/composer install  (przy update - nie dalo sie wykonac polecenia poniewaz byl 'Kill' przy wykonaniau komendy)
-
-+ problem znakiem konca (roznica miedzy plikami lokalnymi a tymi co sa na serwerze)
-0. zaloguj sie na serwer
-1. git rm cache  plik (git checkout -- rs/demo_data/img/gallery/imgc3.jpg)
-2. git commit
-3 git push
-
-
-
-+dodanie nowego taga:
- (sprawdzenie tagow) git tag
-(dodanie kolejnego nr) git tag 2.0.4
-(na serwer) git push --tags
-(patrz takze git action)
-
-
 210126
 
 bledy:
@@ -284,6 +255,107 @@ todo 240615
 - #uwaga!!! + ja wlacze ten cache to jest probvlem z wywwolaniem:  GET http://demo.cmsrs.pl/api/productsGetNameAndPrice/en
 # trzeba zbadac
 CACHE_ENABLE=true
+
+
+/******************************************
+uwagi, bledy, propozycje:
+241204
+*******************************************/
+
+- (prawdopodobnie problem po stronie hostingu) - sprawdz maila - formularz kontaktowy - TODO (maile sie nie wysylaja, patrz: php83  artisan cmsrs:send-test-email xxx@xxx.pl)
+- jesli szukam w produktach: 'kierownik programistów' to po ang tego nie znajduje
+(maybe to do in furure) - unpublish img (przydaloby sie) - uzuplenie dokumentacji, dodanie do bazy danych kolumny - zawsze w koncu mozna skosowac dane zdjecie
+- komentarze dla produktow, capture w komentarzach, i w panelu adm. obsluga czy publikowac lub nie komentarz
+- dodanie fasady - obsluga frontu
+- cache ? - po kliknieciu edit page, czyscimy cache - dodac w php - bede testowal w tej konfiguracji (czy jest cache trzymanie w pliku)
+- faktury - pdfy (napisanie zewnetrzengo api)
+- moze skryp z wp-admin
+- moze jakis  nowy modul prosty zrobic i pokazac jak sie tego uzywa
+- dla tabelki moznabylo by zrobic filtr dla pol ktore sie szuka i moze przycisk 'clear searchingh' - np dla pola created_at, name, email - oddzielnie ?? - i animacje jak sie to pokazuje...
+(TODO oblsuga bledu przy upodzie obrazka - gdzie obrazek to pdf np.)
+- komentarze w panelu administratowa + capture na froncie
+- pokazanie wszystkich zdjec dla danego produktu
+- testy dla wielu produktow
+- TODO in future - testy dla wszystkich stron z demo 
+http://localhost:8000/en/register ()
+- waluta w widoku - powinna byc konfigurowanla (konfiguracja jest na usd  a w widoku na sztywno wpisane sa zł) - todo (dotyczy shop)
+- uwaga - do przemyslenia biznesowego - przy kasowaniu produktu kasuje sie checkout (a nie przypadkiem z basket), zrobilem to aby uproscic sobie kasowanie produktu - a co za tym idzie i strony powiazaniej z produktem
+czyli: dodalo 'ON DELETE CASCADE,' do lini: CONSTRAINT baskets_product_id_foreign FOREIGN KEY (product_id) REFERENCES products (id) w tabeli basket
+patrz: database/migrations/2024_11_13_191054_add_on_delete_cascade_to_baskets_product_id_foreign.php
+- cache zapytania... - optymalizacja - todo .. in future 
+- nowy schemat bazy wrzucic (aktualnie mam problem z instalacja pma)
+- js. mrygajace menu (gruby temat)
+- przepisac na breaze cmsRS - do zastanowienia
+- nauka: nuxt.js (vue), breaze, Next.js (react)
+- propozycja: w testach ustawic aby  tworzyly sie fakowe obracki a nie rzeczywiste pliki (niski piorytet - bo i tak usuwam te obracki z fs po kazdym tescie)
+- (to jesat gruby temat) zliwidowaniu tylu dziwych stron (logowanie, forget passs itp) - tu jest duza nota niepewnosci - nie wiadomo co dokladnie robic... - do przemyslenia... przerobienie frontu do nowszej wersji! - chodzi prze wszystkim o logowanie...
++- transkacje dla koszyka (w: Route::post('/post/checkout', 'FrontController@postCheckout'); - jest tranzakajcja - moze to wystarczy na ta chwile) 
+(new feature) - ladne stylkowanie demo ....
+(new feature - dopisac do pliku readme) - komentarze (do przemyslenia biznesowo) - publish/unpublish dla produktow i stron + capture powiazany z google, obluga takze tych komentarzy w panelu administracyjnym i odpowiedzi na komentarze.. , tj.: /comments/type/id (gdzie type moze byc page oraz product)
+
+
+
+/******************************************
+* pomocne komendy
+*******************************************/
+
++ aktualizacja laravela
+lokalnie na serwerze:
+0. sprawdz wersje laravela: $php artian list
+1. wstaw odpowiednie wersje w composer.json  nie zapomnij zaktualizowac takze wersji php-a w tym pliku
+2. comoser update 
+3. utworzy sie plik composer.lock
+4. przeslij te dwa pliki na serwer
+
+pozniej na serwerze:
+0. sprawdz wersje laravela: $php artian list
+1. $git pull - pobiora sie nowe pliki composer.json i comploser.lock
+2. $php_ver  ~/script/php_ver/composer install  (przy update - nie dalo sie wykonac polecenia poniewaz byl 'Kill' przy wykonaniau komendy)
+
++ problem znakiem konca (roznica miedzy plikami lokalnymi a tymi co sa na serwerze)
+0. zaloguj sie na serwer
+1. git rm cache  plik (git checkout -- rs/demo_data/img/gallery/imgc3.jpg)
+2. git commit
+3 git push
+
+
+
++dodanie nowego taga:
+ (sprawdzenie tagow) git tag
+(dodanie kolejnego nr) git tag 2.0.4
+(na serwer) git push --tags
+(patrz takze git action)
+
+
++ preaty js
+rob@skladak:~/js/eslint$ ./node_modules/prettier/bin/prettier.cjs  --write ~/php/cmsrs3/public/js/cmsrs.js
+../../php/cmsrs3/public/js/cmsrs.js 132ms
+rob@skladak:~/js/eslint$ pwd
+/home/rob/js/eslint
+
+
+
+/******************************************
+* brain storm - tekstu:
+*******************************************/
+
+brain storm - tekstu:
+...Customizacja i Rozwój na Zlecenie...
+- w posie napisac ze stosuje laravela - framewrok ktory upraszacza wiele rzeczy i vuejs - sa to proste frameworki
+ewentualny text: 
+ (do duzych sklepow to dedykuje - latywiejszy rozwoj w przyszlosci, optymalizacja zapytan)
+Milosnikow pisania w czystym kodzie..
+dedykuje swoj system przede wszystkim specjalista, ktorzy cenia sobie kod napisane we frameworku laravelu obtestowany i moim zdaniem czytelnie napisany dzieki testoa
+Moim zdaniem zmieny w takim kodzie sa bardzo proste (oddzielnie frontu od backandu w panelu administratora)
+Polecam swoje rozwiazania dla aplikacji, które beda w przyszlosci modyfikowane (a to jest nieuniknione!!!).
+Wyglad i strone frontowa jest stosunkowo latwo zmienic, natomiast logike jaka jest pod maska! juz o wiele trudniej!
+Wybrałm laravela i vuejs - bo uwazam, że te technologie są stosunkowo proste 
+dzieki testa zmiany sa mniej bolesne i produkt njest latwiejszy w utrzymqaniu w prtzyszlosci!, a zmiany sa niuuniknione
+Jesli masz jakies propozycje zmian lub chcialbys dodac nowe funkcjonalnosci, napisz prosze, otwarty jest na wspolprace
+Oferowanie usług customizacji i rozwoju dodatkowych funkcji na zlecenie klientów. 
+Firmy często potrzebują specyficznych funkcji, które nie są dostępne w standardowym CMS-ie, 
+co daje możliwość zarobku na tworzeniu niestandardowych rozwiązań.
+Jestem milosnikiem pisania kodu w metodologii tdd.
 
 
 /******************************************
