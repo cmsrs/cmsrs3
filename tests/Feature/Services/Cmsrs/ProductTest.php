@@ -510,7 +510,7 @@ class ProductTest extends Base
 
         $products = Product::all()->toArray();
         $this->assertEquals(2, count($products));
-        $this->assertEquals($products[0]['page_id'],$products[1]['page_id']);
+        $this->assertEquals($products[0]['page_id'], $products[1]['page_id']);
         $pageId = $products[0]['page_id'];
 
         $response0 = $this->delete('api/pages/'.$pageId.'?token='.$this->token);
