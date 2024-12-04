@@ -312,11 +312,13 @@ table.table  th{
   text-align: center;
 }
 
+/*
 @media(min-width: 500px) {
   .slidecontainer {
     height: 500px;
   }  
 }
+*/
 
 .slidecontainer img {
   width: 100%;
