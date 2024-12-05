@@ -290,6 +290,6 @@ https://www.cmsrs.pl/en/cms/cmsrs/about-cmsrs
 
 https://github.com/cmsrs/cmsrs3-vuejs
 
-## Reporting Issues and Suggestions
+## REPORTING ISSUES AND SUGGESTIONS
 
 If you notice any problems or have ideas to improve the project, please use the Issues section [Issues](https://github.com/cmsrs/cmsrs3/issues) to let me know. Thank you for your support!
