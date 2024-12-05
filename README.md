@@ -292,7 +292,7 @@ https://github.com/cmsrs/cmsrs3-vuejs
 
 ## REPORTING ISSUES AND SUGGESTIONS
 
-If you notice any problems or have ideas to improve the project, please use the Issues section [Issues](https://github.com/cmsrs/cmsrs3/issues) to let me know.
+If you notice any problems or have ideas to improve the project, please use the [Issues](https://github.com/cmsrs/cmsrs3/issues) section to let me know.
 If you like it, give it a star!
 Your support motivates me to keep improving the project. Thank you! :)
 
