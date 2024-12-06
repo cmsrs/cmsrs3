@@ -6,7 +6,7 @@
 </head>
 <body>
 
-   <div id="appall" >
+   <div id="appall" v-cloak>
       
 
       @include('includes.header')
@@ -15,6 +15,11 @@
       @yield('content')
       </main><!-- /.container front -->
    </div>
+   <style>
+      [v-cloak] {
+         display: none !important;
+      }
+   </style>   
 
 
    <script type="application/javascript" src="/js/lib/vue.global.min.js"></script>

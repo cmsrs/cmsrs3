@@ -10,7 +10,7 @@
 </head>
 <body>
 
-   <div id="appall" >
+   <div id="appall" v-cloak>
 
       @include('includes.header')
 
@@ -50,6 +50,11 @@
 
       </main><!-- /.container -->
    </div>
+   <style>
+      [v-cloak] {
+         display: none !important;
+      }
+   </style>   
 
 <?php if( !empty($slider_images) ){ ?>
    <script type="application/javascript" src="/js/slider.js"></script>  
