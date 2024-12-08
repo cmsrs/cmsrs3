@@ -83,6 +83,26 @@ php artisan migrate && php artisan db:seed
 php artisan serve
 ```
 
+## INSTALLATION USING DOCKER
+
+* Download the Dockerfile from the ```cmsrs/cmsrs3``` GitHub repository:
+
+```bash
+wget https://raw.githubusercontent.com/cmsrs/cmsrs3/master/Dockerfile
+```
+
+* Build the image based on the Dockerfile:
+
+```bash
+docker build -t php-cmsrs3 .
+```
+
+* Run the container:
+
+```bash
+docker run -p 8000:8000 php-cmsrs3
+```
+
 ## RUN TESTS
 
 * Prepare .env.testing file, and change db connection:
