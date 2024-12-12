@@ -9,13 +9,24 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 
 RUN apt-get update && apt-get install -y \
     unzip \
+    git \
+    vim \
     && rm -rf /var/lib/apt/lists/*
+    
 
-RUN php composer.phar create-project cmsrs/cmsrs3
+#RUN php composer.phar create-project cmsrs/cmsrs3
+RUN git clone https://github.com/cmsrs/cmsrs3.git
 
 WORKDIR /home/cmsrs3
 
+RUN php /home/composer.phar install
+
+RUN echo "syntax enable" >> ~/.vimrc \
+    && echo "set number" >> ~/.vimrc \
+    && echo "set background=dark" >> ~/.vimrc \
+    && echo "set tabstop=4" >> ~/.vimrc \
+    && echo "set shiftwidth=4" >> ~/.vimrc \
+    && echo "set expandtab" >> ~/.vimrc
+
+
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
-
-
-
