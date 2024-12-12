@@ -1,5 +1,5 @@
 <?php $footerPages = $pageService->getFooterPages($lang);      ?>
-<div   id="fixed-bottom" class="navbar fixed-bottom" style="z-index:-1;">
+<div   id="fixed-bottom" class="navbar fixed-bottom">
     <span class="pull-left">
         <a style="color:grey;"  href="{{ $footerPages['policyUrl'] }}">{{ $footerPages['policyTitle'] }}</a>
     </span>
