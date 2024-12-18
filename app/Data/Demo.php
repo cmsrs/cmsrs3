@@ -545,7 +545,7 @@ class Demo
             'published' => 1,
             'commented' => 0,
             'type' => 'privacy_policy',
-            'content' => ['en' => $this->getPrivacyPolicy(), 'pl' => $this->getPrivacyPolicy()],
+            'content' => ['en' => $this->getDummyTest(),  'pl' => $this->getDummyTestPl()], //['en' => $this->getPrivacyPolicy(), 'pl' => $this->getPrivacyPolicy()],
             'images' => [
             ],
         ];

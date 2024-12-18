@@ -330,7 +330,6 @@ class PageService extends BaseService implements TranslateInterface
         $contactUrl = null;
         $contactTitle = null;
         if (! empty($contact)) {
-
             $contactUrl = $this->getUrl($contact, $lang);
             $contactTitle = $this->translatesByColumnAndLang($contact, 'title', $lang);
         }
@@ -350,8 +349,8 @@ class PageService extends BaseService implements TranslateInterface
             $view = 'projects';
         } elseif ($type == 'clear') {
             $view = 'clear';
-        //} elseif ($type == 'privacy_policy') {
-        //    $view = 'in'; //it will be cms (each language have got own language, not one language in each pages)
+        } elseif ($type == 'privacy_policy') { //it is used in footer, not related in menu
+            $view = 'in'; //(before: 'in' ) it can be cms (each language have got own language, not one language in each pages)
         } elseif ($type == 'gallery') {
             $view = 'gallery';
         } elseif ($type == 'shop') {
