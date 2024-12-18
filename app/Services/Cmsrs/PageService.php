@@ -350,8 +350,8 @@ class PageService extends BaseService implements TranslateInterface
             $view = 'projects';
         } elseif ($type == 'clear') {
             $view = 'clear';
-        } elseif ($type == 'privacy_policy') {
-            $view = 'in';
+        //} elseif ($type == 'privacy_policy') {
+        //    $view = 'in'; //it will be cms (each language have got own language, not one language in each pages)
         } elseif ($type == 'gallery') {
             $view = 'gallery';
         } elseif ($type == 'shop') {
