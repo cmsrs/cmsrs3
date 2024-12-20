@@ -15,6 +15,11 @@ class Install
             throw \RuntimeException(sprintf('Can not read file "%1$s"', $filename));
         }
 
+        $matches = [];
+        if (preg_match("/^APP_KEY\=(.*)$/m", $content, $matches) === 1) {
+            $content = preg_replace("/^APP_KEY\=.*$/m", 'APP_KEY="'.trim($matches[1], '"').'"', $content);
+        }
+
         if (($config = parse_ini_string($content)) === false) {
             throw \RuntimeException(sprintf('Can not parse file "%1$s"', $filename));
         }
