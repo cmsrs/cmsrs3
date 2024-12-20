@@ -32,13 +32,12 @@ class Install
         }
         $config['DB_PASSWORD'] = $io->askAndHideAnswer('- DB_PASSWORD: ', $config['DB_PASSWORD']);
 
-        $io->write('Mail setup');
-        flush();
-
-        foreach (['MAIL_MAILER', 'MAIL_HOST', 'MAIL_PORT', 'MAIL_USERNAME', 'MAIL_ENCRYPTION'] as $key) {
-            $config[$key] = $io->ask('- '.$key.' ('.$config[$key].'): ', $config[$key]);
-        }
-        $config['MAIL_PASSWORD'] = $io->askAndHideAnswer('- MAIL_PASSWORD: ', $config['MAIL_PASSWORD']);
+        // $io->write('Mail setup');
+        // flush();
+        // foreach (['MAIL_MAILER', 'MAIL_HOST', 'MAIL_PORT', 'MAIL_USERNAME', 'MAIL_ENCRYPTION'] as $key) {
+        //     $config[$key] = $io->ask('- '.$key.' ('.$config[$key].'): ', $config[$key]);
+        // }
+        // $config['MAIL_PASSWORD'] = $io->askAndHideAnswer('- MAIL_PASSWORD: ', $config['MAIL_PASSWORD']);
 
         if (file_put_contents($filename, self::createEnvString($config)) === false) {
             throw \RuntimeException(sprintf('Can not write file "%1$s"', $filename));
