@@ -14,7 +14,6 @@
 
 ## INSTALLATION (QUICK SETUP)
 
-We are using SQLite as the database.
 Run the following command to create the project:
 
 ```bash
@@ -22,11 +21,7 @@ composer create-project cmsrs/cmsrs3
 cd cmsrs3 && php artisan serve
 ```
 
-Make sure the ```php-sqlite3``` extension is installed and enabled, as it is used for SQLite databases.
-
-## MANUAL INSTALLATION (RECOMMENDED)
-
-We are using MySQL as the database.
+## MANUAL INSTALLATION
 
 * Download the source code:
  
@@ -87,6 +82,7 @@ php artisan serve
 ```
 
 <!--
+#todo - add mysql auth - automatic
 ## INSTALLATION USING DOCKER
 
 We are using SQLite as the database.
