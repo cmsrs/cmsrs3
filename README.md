@@ -86,6 +86,7 @@ php artisan migrate && php artisan db:seed
 php artisan serve
 ```
 
+<!--
 ## INSTALLATION USING DOCKER
 
 We are using SQLite as the database.
@@ -107,6 +108,7 @@ docker build -t php-cmsrs3 .
 ```bash
 docker run -p 8000:8000 php-cmsrs3
 ```
+-->
 
 ## RUN TESTS
 
