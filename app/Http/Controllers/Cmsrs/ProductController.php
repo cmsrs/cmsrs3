@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Cmsrs;
 use App\Http\Controllers\Controller;
 use App\Models\Cmsrs\Product;
 use App\Services\Cmsrs\ConfigService;
+use App\Services\Cmsrs\Helpers\PriceHelperService;
 use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\ProductService;
 use Illuminate\Http\Request;
@@ -116,6 +117,8 @@ class ProductController extends Controller
 
             return response()->json(['success' => false, 'error' => 'Add product problem, details in the log file.'], 200); //.$e->getMessage()
         }
+
+        $data['price_description'] = PriceHelperService::getPriceDescriptionWrap($data['price']);
 
         return response()->json(['success' => true, 'data' => ['productId' => $product->id, 'data' => $data]]);
     }

@@ -15,7 +15,7 @@ class TranslateTest extends Base
 {
     use RefreshDatabase;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         putenv('LANGS="en,pl"');
         putenv('API_SECRET=""');

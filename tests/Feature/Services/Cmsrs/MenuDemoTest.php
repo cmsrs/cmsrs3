@@ -15,7 +15,7 @@ class MenuDemoTest extends Base
 
     private $objMenu;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         putenv('LANGS="en"');
         putenv('API_SECRET=""');

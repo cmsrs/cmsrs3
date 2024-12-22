@@ -6,6 +6,7 @@ use App\Models\Cmsrs\Basket;
 use App\Models\Cmsrs\Checkout;
 use App\Models\Cmsrs\Product;
 use App\Services\Cmsrs\Helpers\CacheService;
+use App\Services\Cmsrs\Helpers\PriceHelperService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -117,6 +118,9 @@ class ProductService extends BaseService
             $firstTranslationPage = $product->translatesPage->first();
             $product->setAttribute('page_short_title', $firstTranslationPage ? $firstTranslationPage->value : null);
             unset($product['translatesPage']);
+
+            $priceDescription = PriceHelperService::getPriceDescriptionWrap($product->price);
+            $product->setAttribute('price_description', $priceDescription);
         });
 
         if ($search) {
@@ -300,10 +304,13 @@ class ProductService extends BaseService
 
     private function getProductDataFormat($product)
     {
+
         $out = [];
         foreach ($this->productFields as $field) {
             $out[$field] = $product[$field];
         }
+        $price = ! empty($product['price']) ? $product['price'] : 0;
+        $out['price_description'] = PriceHelperService::getPriceDescriptionWrap($price);
         foreach ($product['translates'] as $translate) {
             $out[$translate['column']][$translate['lang']] = $translate['value'];
             if ($translate['column'] == 'product_name') {

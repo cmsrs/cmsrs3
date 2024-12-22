@@ -7,7 +7,7 @@ use Tests\TestCase;
 
 class StrHelperServiceTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         putenv('LANGS="en"');
         putenv('API_SECRET=""');

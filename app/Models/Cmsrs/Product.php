@@ -53,6 +53,8 @@ class Product extends Model
 
     public $page_short_title = null;
 
+    public $price_description = null; // This is not from the database; it is calculated on the fly based on the 'price' value.
+
     public function page(): HasOne
     {
         return $this->hasOne('App\Models\Cmsrs\Page', 'id', 'page_id');

@@ -15,7 +15,7 @@ class ContentTest extends Base
 
     public $numOfLangs;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         putenv('LANGS="en,pl"');
         putenv('API_SECRET=""');

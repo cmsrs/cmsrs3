@@ -34,7 +34,7 @@ class ImageTest extends Base
 
     private $testProductData;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         putenv('LANGS="en"');
         putenv('API_SECRET=""');

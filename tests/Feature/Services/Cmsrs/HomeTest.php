@@ -24,7 +24,7 @@ class HomeTest extends Base
 
     private $langs;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         putenv('LANGS="pl,en"');
         putenv('API_SECRET=""');

@@ -23,7 +23,7 @@ class PageSecretTest extends Base
 
     private $apiSecret;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->apiSecret = '8761';
         putenv('LANGS="en"');

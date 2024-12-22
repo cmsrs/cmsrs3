@@ -13,6 +13,7 @@ use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\CheckoutService;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\DeliverService;
+use App\Services\Cmsrs\Helpers\PriceHelperService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\PaymentService;
@@ -43,6 +44,8 @@ class ProductTest extends Base
 
     private $pageId;
 
+    private $priceDescription;
+
     const STR_DESC_IMG1 = 'description img1 - product image';
 
     const STR_PRODUCT_DESCRIPTION_EN = 'book desc';
@@ -51,7 +54,9 @@ class ProductTest extends Base
 
     const STR_PRODUCT_NAME_EN_1 = 'name11';
 
-    public function setUp(): void
+    const INT_PRODUCT_PRICE = 123;
+
+    protected function setUp(): void
     {
         putenv('LANGS="en"');
         putenv('API_SECRET=""');
@@ -72,6 +77,9 @@ class ProductTest extends Base
         $this->name1 = 'phpunittest1.jpg';
 
         $this->name2 = 'phpunittest2.jpg';
+
+        $this->priceDescription = PriceHelperService::getPriceDescriptionWrap(self::INT_PRODUCT_PRICE);
+        $this->assertNotEmpty($this->priceDescription);
 
         $pagination = ConfigService::getPagination(); //10 - change .env.testing
         $this->assertEquals(10, $pagination);
@@ -118,7 +126,7 @@ class ProductTest extends Base
         $this->testData = [
             'product_name' => ['en' => self::STR_PRODUCT_NAME_EN],
             'sku' => 'AN/34534',
-            'price' => 123,
+            'price' => self::INT_PRODUCT_PRICE,
             'product_description' => ['en' => self::STR_PRODUCT_DESCRIPTION_EN],
             'page_id' => $this->pageId,
             'published' => 1,
@@ -1287,6 +1295,9 @@ class ProductTest extends Base
         $this->assertTrue($res0->success);
         $this->assertNotEmpty($res0->data->productId);
 
+        $this->assertEquals(self::INT_PRODUCT_PRICE, $res0->data->data->price);
+        $this->assertEquals($this->priceDescription, $res0->data->data->price_description);
+
         $products = Product::all()->toArray();
         $this->assertEquals(count($products), 1);
         $this->assertEquals($products[0]['id'], $res0->data->productId);
@@ -1342,6 +1353,9 @@ class ProductTest extends Base
 
         $this->assertTrue($res22->success);
         $this->assertEquals(count($res22->data), 1);
+
+        $this->assertEquals(self::INT_PRODUCT_PRICE, $res22->data[0]->price);
+        $this->assertEquals($this->priceDescription, $res22->data[0]->price_description);
 
         $this->assertTrue(isset($res22->data[0]->product_description));
         $this->assertEquals(self::STR_PRODUCT_DESCRIPTION_EN, $res22->data[0]->product_description->en);
@@ -1742,6 +1756,10 @@ class ProductTest extends Base
 
         $this->assertTrue($res->success);
         $this->assertEquals($d->productId, $res->data->id);
+
+        $this->assertNotEmpty($res->data->price);
+        $this->assertNotEmpty($res->data->price_description);
+
         $this->assertEquals($this->testData['page_id'], $res->data->page_id);
     }
 
@@ -1870,6 +1888,8 @@ class ProductTest extends Base
         $firstEl = reset($res->data->data);
         $this->assertEquals('page2', $firstEl->page_short_title);
         $this->assertEquals('201', $firstEl->price);
+        $this->assertEquals('$2.01', $firstEl->price_description);
+
     }
 
     public function test_it_will_get_next_pagination_page()
@@ -2056,8 +2076,13 @@ class ProductTest extends Base
         $res0 = $response0->getData();
 
         $this->assertEquals($res0->data->data[0]->price, 101);
+        $this->assertEquals($res0->data->data[0]->price_description, '$1.01');
+
         $this->assertEquals($res0->data->data[1]->price, 102);
+        $this->assertEquals($res0->data->data[1]->price_description, '$1.02');
+
         $this->assertEquals($res0->data->data[2]->price, 201);
+        $this->assertEquals($res0->data->data[2]->price_description, '$2.01');
 
         $direction = 'desc';
         $response = $this->get('api/products/pagination/'.$lang.'/'.$column.'/'.$direction.'?token='.$this->token);
@@ -2165,6 +2190,7 @@ class ProductTest extends Base
         $this->assertNotEmpty($dd[0]->id);
         $this->assertNotEmpty($dd[0]->sku);
         $this->assertNotEmpty($dd[0]->price);
+        $this->assertNotEmpty($dd[0]->price_description);
         $this->assertNotEmpty($dd[0]->published);
         $this->assertNotEmpty($dd[0]->page_id);
         $this->assertNotEmpty($dd[0]->created_at);

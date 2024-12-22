@@ -12,7 +12,7 @@ class PayuTest extends Base //TestCase
 
     private $payu;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         putenv('LANGS="en"');
         putenv('API_SECRET=""');
