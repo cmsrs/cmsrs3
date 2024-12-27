@@ -8,7 +8,8 @@ use App\Models\Cmsrs\Product;
 use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\Interfaces\TranslateInterface;
 use App\Services\Cmsrs\Interfaces\TranslateValueInterface;
-use Illuminate\Support\Number;
+
+//use Illuminate\Support\Number;
 
 abstract class BaseService
 {
@@ -132,12 +133,13 @@ abstract class BaseService
         );
     }
 
-    protected static function formatCurrency($number)
-    {
-        $currency = (new ConfigService)->getCurrency();
+    //see: App\Services\Cmsrs\Helpers\PriceHelperService
+    // protected static function formatCurrency($number)
+    // {
+    //     $currency = (new ConfigService)->getCurrency();
 
-        return Number::currency(($number / 100), $currency); //100 - cents
-    }
+    //     return Number::currency(($number / 100), $currency); //100 - cents
+    // }
 
     /**
      * images in fs - start

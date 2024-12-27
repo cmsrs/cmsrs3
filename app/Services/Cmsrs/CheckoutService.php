@@ -4,6 +4,7 @@ namespace App\Services\Cmsrs;
 
 use App\Models\Cmsrs\Checkout;
 use App\Models\Cmsrs\Product;
+use App\Services\Cmsrs\Helpers\PriceHelperService;
 use Illuminate\Support\Facades\Auth;
 
 class CheckoutService extends BaseService
@@ -65,9 +66,15 @@ class CheckoutService extends BaseService
     {
         $out = [];
         $out['id'] = $checkout->id;
-        $out['price_total'] = self::formatCurrency($checkout->price_total);
-        $out['price_deliver'] = self::formatCurrency($checkout->price_deliver);
-        $out['price_total_add_deliver'] = self::formatCurrency($checkout->price_total_add_deliver);
+        $out['price_total'] = $checkout->price_total;
+        $out['price_total_description'] = PriceHelperService::getPriceDescriptionWrap($checkout->price_total);
+
+        $out['price_deliver'] = $checkout->price_deliver;
+        $out['price_deliver_description'] = PriceHelperService::getPriceDescriptionWrap($checkout->price_deliver);
+
+        $out['price_total_add_deliver'] = $checkout->price_total_add_deliver;
+        $out['price_total_add_deliver_description'] = PriceHelperService::getPriceDescriptionWrap($checkout->price_total_add_deliver);
+
         $out['user_id'] = $checkout->user_id;
         $out['email'] = $checkout->email;
         $out['first_name'] = $checkout->first_name;
@@ -105,7 +112,10 @@ class CheckoutService extends BaseService
 
             $productName = ProductService::getDefaultProductName($product->translates, $lang);
             $out[$j]['qty'] = $basket->qty;
-            $out[$j]['price'] = self::formatCurrency($basket->price);
+
+            $out[$j]['price'] = $basket->price;
+            $out[$j]['price_description'] = PriceHelperService::getPriceDescriptionWrap($basket->price);
+
             $out[$j]['product_id'] = $basket['product_id'];
             $out[$j]['product_name'] = $productName;
             $out[$j]['product_url'] = (new ProductService)->getProductUrl($product, $lang, $productName);

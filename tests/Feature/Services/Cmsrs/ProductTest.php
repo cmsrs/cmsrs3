@@ -215,6 +215,42 @@ class ProductTest extends Base
         $this->assertEquals(1, count($products));
     }
 
+    private function simpleTestCheckoutData($data)
+    {
+        $this->assertNotEmpty($data->user_id);
+        $this->assertNotEmpty($data->price_total);
+        $this->assertEquals($data->price_total_description, PriceHelperService::getPriceDescriptionWrap($data->price_total));
+
+        $this->assertNotEmpty($data->price_deliver);
+        $this->assertEquals($data->price_deliver_description, PriceHelperService::getPriceDescriptionWrap($data->price_deliver));
+
+        $this->assertNotEmpty($data->price_total_add_deliver);
+        $this->assertEquals($data->price_total_add_deliver_description, PriceHelperService::getPriceDescriptionWrap($data->price_total_add_deliver));
+
+        $this->assertNotEmpty($data->email);
+        $this->assertNotEmpty($data->first_name);
+        $this->assertNotEmpty($data->last_name);
+        $this->assertNotEmpty($data->address);
+        $this->assertNotEmpty($data->country);
+        $this->assertNotEmpty($data->city);
+        $this->assertNotEmpty($data->telephone);
+        $this->assertNotEmpty($data->postcode);
+        $this->assertEquals(0, $data->is_pay);
+        $this->assertNotEmpty($data->created_at);
+
+        $this->assertNotEmpty($data->baskets);
+        $this->assertTrue(is_array($data->baskets));
+
+        $this->assertNotEmpty($data->baskets[0]->qty);
+        $this->assertNotEmpty($data->baskets[0]->price);
+        $this->assertNotEmpty($data->baskets[0]->price_description);
+        $this->assertEquals($data->baskets[0]->price_description, PriceHelperService::getPriceDescriptionWrap($data->baskets[0]->price));
+
+        $this->assertNotEmpty($data->baskets[0]->product_id);
+        $this->assertNotEmpty($data->baskets[0]->product_name);
+        $this->assertNotEmpty($data->baskets[0]->product_url);
+    }
+
     /**
      * api admin
      * it should be 2 tests - todo - get and update
@@ -316,6 +352,19 @@ class ProductTest extends Base
 
         $this->assertEquals($ch->id, $res->data[0]->id);
         $this->assertEquals(Auth::user()->id, $res->data[0]->user_id);
+
+        $this->simpleTestCheckoutData($res->data[0]);
+        /*
+        $this->assertNotEmpty($res->data[0]->user_id);
+        $this->assertNotEmpty($res->data[0]->price_total);
+        $this->assertEquals($res->data[0]->price_total_description, PriceHelperService::getPriceDescriptionWrap($res->data[0]->price_total) );
+
+        $this->assertNotEmpty($res->data[0]->price_deliver);
+        $this->assertEquals($res->data[0]->price_deliver_description, PriceHelperService::getPriceDescriptionWrap($res->data[0]->price_deliver) );
+
+        $this->assertNotEmpty($res->data[0]->price_total_add_deliver);
+        $this->assertEquals($res->data[0]->price_total_add_deliver_description, PriceHelperService::getPriceDescriptionWrap($res->data[0]->price_total_add_deliver) );
+
         $this->assertNotEmpty($res->data[0]->email);
         $this->assertNotEmpty($res->data[0]->first_name);
         $this->assertNotEmpty($res->data[0]->last_name);
@@ -329,6 +378,16 @@ class ProductTest extends Base
 
         $this->assertNotEmpty($res->data[0]->baskets);
         $this->assertTrue(is_array($res->data[0]->baskets));
+
+        $this->assertNotEmpty($res->data[0]->baskets[0]->qty);
+        $this->assertNotEmpty($res->data[0]->baskets[0]->price);
+        $this->assertNotEmpty($res->data[0]->baskets[0]->price_description);
+        $this->assertEquals($res->data[0]->baskets[0]->price_description, PriceHelperService::getPriceDescriptionWrap($res->data[0]->baskets[0]->price) );
+
+        $this->assertNotEmpty($res->data[0]->baskets[0]->product_id);
+        $this->assertNotEmpty($res->data[0]->baskets[0]->product_name);
+        $this->assertNotEmpty($res->data[0]->baskets[0]->product_url);
+        */
 
         $orders = Order::all()->toArray();
         $this->assertEmpty($orders);
@@ -2271,16 +2330,23 @@ class ProductTest extends Base
         $response = $this->get($url);
         $res = $response->getData();
 
+        $this->assertNotEmpty($res->data->data[0]->price_total);
+        $this->assertNotEmpty($res->data->data[0]->price_deliver);
         $this->assertNotEmpty($res->data->data[0]->price_total_add_deliver);
+
+        $this->assertStringContainsString('$', $res->data->data[0]->price_total_description);
+        $this->assertStringContainsString('$', $res->data->data[0]->price_deliver_description);
+        $this->assertStringContainsString('$', $res->data->data[0]->price_total_add_deliver_description);
+
         $this->assertNotEmpty($res->data->data[1]->price_total_add_deliver);
         $this->assertNotEmpty($res->data->data[2]->price_total_add_deliver);
         $this->assertNotEmpty($res->data->data[3]->price_total_add_deliver);
 
-        $this->assertStringContainsString('$', $res->data->data[0]->price_total_add_deliver);
-
         $this->assertTrue($res->data->data[0]->price_total_add_deliver < $res->data->data[1]->price_total_add_deliver);
         $this->assertTrue($res->data->data[1]->price_total_add_deliver < $res->data->data[2]->price_total_add_deliver);
         $this->assertTrue($res->data->data[2]->price_total_add_deliver < $res->data->data[3]->price_total_add_deliver);
+
+        $this->simpleTestCheckoutData($res->data->data[0]);
     }
 
     public function test_search_and_sort_checkout_by_total_price_docs()
@@ -2299,6 +2365,7 @@ class ProductTest extends Base
         $res = $response->getData();
 
         $this->assertEquals(2, count($res->data->data)); //client3, client30
+        $this->simpleTestCheckoutData($res->data->data[0]);
     }
 
     /**
