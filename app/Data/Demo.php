@@ -101,8 +101,8 @@ class Demo
 
             $imagesSlider = [
                 ['name' => 's1.png', 'data' => $this->getTestPhoto('clothes/sox.jpg'), 'alt' => ['en' => 'slider1', 'pl' => 'pl_slider1']],
-                ['name' => 's2.png', 'data' => $this->getTestPhoto('books/php5.jpg'), 'alt' => ['en' => 'slider2', 'pl' => 'pl_slider2']],
-                ['name' => 's3.png', 'data' => $this->getTestPhoto('books/java.jpg'), 'alt' => ['en' => 'slider3', 'pl' => 'pl_slider3']],
+                //['name' => 's2.png', 'data' => $this->getTestPhoto('books/php5.jpg'), 'alt' => ['en' => 'slider2', 'pl' => 'pl_slider2']],
+                ['name' => 's3.png', 'data' => $this->getTestPhoto('books/java.jpg'), 'alt' => ['en' => 'slider2', 'pl' => 'pl_slider2']],
             ];
 
         } else {

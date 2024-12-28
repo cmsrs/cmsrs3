@@ -84,8 +84,7 @@ createApp({
                                 });
                                 total.value += item.qty * dbNameAndPrice.price;
                             }
-                        });
-                        total_sanit.value = getPriceDescriptionWrap( total.value );
+                        });                        
                         cart_length.value = cart.length;
                         saveCartToPost(cart);
 
@@ -97,6 +96,7 @@ createApp({
                                 10,
                             );    
                         }
+                        total_sanit.value = getPriceDescriptionWrap( total.value );
                         total_add_deliver_sanit.value =
                             calculateTotalAddDeliverSanit(
                                 total.value,
@@ -229,10 +229,10 @@ createApp({
 
         const addToCart = (product) => {
             total.value += product.price;
-            total_add_deliver_sanit.value = calculateTotalAddDeliverSanit(
-                total.value,
-                deliver_price.value,
-            );
+            // total_add_deliver_sanit.value = calculateTotalAddDeliverSanit(
+            //     total.value,
+            //     deliver_price.value,
+            // );
             let found = false;
             for (let i = 0; i < cart.length; i++) {
                 if (cart[i].id === product.id) {
@@ -257,6 +257,7 @@ createApp({
             cart_length.value = cart.length;
             saveCartToPost(cart);
             localStorage.setItem("cart", JSON.stringify(cart));
+            total_sanit.value = getPriceDescriptionWrap( total.value );            
             total_add_deliver_sanit.value = calculateTotalAddDeliverSanit(
                 total.value,
                 deliver_price.value,
@@ -276,6 +277,7 @@ createApp({
             cart_length.value = cart.length;
             saveCartToPost(cart);
             localStorage.setItem("cart", JSON.stringify(cart));
+            total_sanit.value = getPriceDescriptionWrap( total.value );
             total_add_deliver_sanit.value = calculateTotalAddDeliverSanit(
                 total.value,
                 deliver_price.value,
@@ -294,6 +296,7 @@ createApp({
                 cart_length.value = cart.length;
                 saveCartToPost(cart);
                 localStorage.setItem("cart", JSON.stringify(cart));
+                total_sanit.value = getPriceDescriptionWrap( total.value );
                 total_add_deliver_sanit.value = calculateTotalAddDeliverSanit(
                     total.value,
                     deliver_price.value,
@@ -328,6 +331,7 @@ createApp({
 
         const deliver = (deliver) => {
             deliver_price.value = parseInt(deliver, 10);
+            total_sanit.value = getPriceDescriptionWrap( total.value );
             total_add_deliver_sanit.value = calculateTotalAddDeliverSanit(
                 total.value,
                 deliver_price.value,
@@ -335,7 +339,8 @@ createApp({
         };
 
         const calculateTotalAddDeliverSanit = (total, deliverPrice) => {
-            return getPriceDescriptionWrap(total + deliverPrice);
+            const ret = getPriceDescriptionWrap(total + deliverPrice);
+            return ret;
         };
 
         const demoAlert = () => {
