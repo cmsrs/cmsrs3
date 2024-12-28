@@ -22,7 +22,7 @@
                       <div><a v-bind:href="item.url_product" >@{{ item.name }}</a></div>                    
                     </div>            
                     <div class="col-sm"> 
-                      <span>@{{ item.price / 100 }} zł x @{{ item.qty }}</span>
+                      <span>@{{ item.price_description }} x @{{ item.qty }}</span>
                       <div class="button-group">
                         <button class="btn" v-on:click="increment(item)">+</button>
                         <button class="btn" v-on:click="decrement(item)">-</button>
@@ -33,7 +33,7 @@
               </li>
             </ul>
             <div v-if="cart.length">
-                <div class="cart-total">{{ __('Products price') }}: @{{ total_sanit }} zł</div>
+                <div class="cart-total">{{ __('Products price') }}: @{{ total_sanit }} </div>
                 <br/><br/>
   <!--              <button class="btn" v-on:click="tobank()">{{ __('Go to bank') }}</button>-->                                    
             </div>
@@ -173,7 +173,7 @@
               <div class="form-check">
                 <input class="form-check-input" type="radio" name="deliver" id="{{ $key_deliver }}" value="{{ $key_deliver }}"  v-on:change="deliver( '{{ $deliverPrice }}' )"  @if(old("deliver") == $key_deliver ) checked @endif >
                 <label class="form-check-label" for="{{ $key_deliver }}">
-                  {{ __($deliver['name']) }}  ({{ $deliverPrice/100 }} zł)
+                  {{ __($deliver['name']) }} ({{  \App\Services\Cmsrs\Helpers\PriceHelperService::getPriceDescriptionWrap($deliverPrice) }})
                 </label>
               </div>
 
@@ -207,7 +207,7 @@
 
       <div class="d-flex">
         <div v-if="cart.length">
-          <div class="m-4 cart-total font-weight-bold" >{{ __('Total') }}: @{{ total_add_deliver_sanit }} zł</div>                  
+          <div class="m-4 cart-total font-weight-bold" >{{ __('Total') }}: @{{ total_add_deliver_sanit }} </div>                  
         </div>
         <button class="m-3 btn" v-on:click="checkout($event)">{{ __('Go to bank') }}</button>
       <div>

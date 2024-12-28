@@ -54,22 +54,22 @@ class PriceHelperServiceTest extends TestCase
         $price = 12312312;
         $currency = 'PLN';
         $priceDescription = PriceHelperService::getPriceDescription($price, $currency);
-        $this->assertEquals('PLN 123,123.12', $priceDescription);
+        $this->assertEquals('123,123.12 zł', $priceDescription);
     }
 
     public function test_get_price_description_t3()
     {
         $price = 12312312;
         $currency = 'EUR';
-        $priceDescription = PriceHelperService::getPriceDescription($price, $currency, 'pl');
-        $this->assertEquals('123 123,12 €', $priceDescription);
+        $priceDescription = PriceHelperService::getPriceDescription($price, $currency);
+        $this->assertEquals('€123,123.12', $priceDescription);
     }
 
     public function test_get_price_description_t4()
     {
         $price = 12312312;
         $currency = 'PLN';
-        $priceDescription = PriceHelperService::getPriceDescription($price, $currency, 'pl');
-        $this->assertEquals('123 123,12 zł', $priceDescription);
+        $priceDescription = PriceHelperService::getPriceDescription($price, $currency);
+        $this->assertEquals('123,123.12 zł', $priceDescription);
     }
 }

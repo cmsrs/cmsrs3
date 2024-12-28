@@ -148,6 +148,8 @@ class ImageTest extends Base
 
     public function test_it_will_get_page_with_images_without_auth_docs()
     {
+        $this->markTestSkipped('This API is not used in the project');
+
         $this->prepareTestPage();
 
         $response0 = $this->get('api/page/'.$this->pageId.'/fr');  //this method doesn't contain ticket - it is available as guest

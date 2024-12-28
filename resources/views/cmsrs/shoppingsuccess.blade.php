@@ -10,7 +10,7 @@
   </div>
   <ul>
     <li>{{  __('Order number') }} : {{ $checkout->id }}</li>
-    <li>{{  __('Amount to pay') }} : {{ $checkout->price_total_add_deliver /100 }} zł</li> 
+    <li>{{  __('Amount to pay') }} : {{ \App\Services\Cmsrs\Helpers\PriceHelperService::getPriceDescriptionWrap($checkout->price_total_add_deliver) }}</li> 
   <ul>
 </div>
 

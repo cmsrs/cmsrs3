@@ -437,6 +437,7 @@ class ProductService extends BaseService
                 $productId = $product['id'];
                 //$out[$productId]["product_id"] = $productId;
                 $out[$productId]['price'] = $product['price'];
+                $out[$productId]['price_description'] = PriceHelperService::getPriceDescriptionWrap($product['price']);
                 $out[$productId]['name'] = $product['product_name'][$lang];
                 $out[$productId]['url_product'] = $product['url_product'][$lang];
                 if (! empty($product['images']) && ! empty($img = $product['images']->first())) {

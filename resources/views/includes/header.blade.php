@@ -1,3 +1,5 @@
+<?php $configService = new App\Services\Cmsrs\ConfigService; ?>
+<?php $currency = $configService->getCurrency(); ?>
 <?php $manyLangs = (count($langs) > 1); ?>
 <?php $bg = env('DEMO_STATUS', false) ? 'bg-dark' : 'bg-secondary'; ?>
 <?php //$bg = 'bg-secondary';?>
@@ -18,7 +20,7 @@ if ($mainPage) {
 <div id="is_shop" data-is-shop="{{ env('IS_SHOP', true) }}"></div>          
 <div id="is_demo" data-is-demo="{{ env('DEMO_STATUS', false) }}"></div>          
 <div id="commented" data-commented="{{ $page ? $page->commented : '' }}"></div>          
-
+<div id="currency" data-currency="{{ $currency }}"></div>          
 
 
 <nav class="navbar navbar-expand-lg navbar-dark  {{ $bg }} fixed-top lead">
@@ -83,7 +85,7 @@ if ($mainPage) {
           <ul>
             <li class="mt-2" v-for="item in cart" v-bind:key="item.id">              
               <div>@{{ item.name }}</div>
-              <span>@{{ item.price /100 }} zł x @{{ item.qty }}</span>
+              <span>@{{ item.price_description }} x @{{ item.qty }}</span>
               <div class="button-group">
                 <button class="btn" v-on:click="increment(item)">+</button>
                 <button class="btn" v-on:click="decrement(item)">-</button>
@@ -91,7 +93,7 @@ if ($mainPage) {
             </li>
           </ul>
           <div v-if="cart.length">
-            <div class="ms-4 cart-total">{{ __('Total') }}: @{{ total_sanit }} zł</div>
+            <div class="ms-4 cart-total">{{ __('Total') }}: @{{ total_sanit }} </div>
             <button class="ms-4 btn" v-on:click="pay()">{{ __('Pay') }}</button>
           </div>      
         </div>          

@@ -23,7 +23,7 @@
                     <ul class="ms-3  ist-unstyled">
                       <li>{{ __('Name') }}: {{$product['product_name'][$lang] }}</li>
                       <li>Sku: {{$product['sku']}}</li>
-                      <li>{{ __('Price') }}: {{$product['price'] / 100}} zł</li>
+                      <li>{{ __('Price') }}: {{$product['price_description'] }} </li>
                       <li>{{$product['product_description'][$lang] }}</li>
                     </ul>
                     <?php
@@ -43,7 +43,7 @@
                   <ul>
                     <li class="mt-2" v-for="item in cart" v-bind:key="item.id">              
                       <div>@{{ item.name }}</div>
-                      <span>@{{ item.price /100 }} zł x @{{ item.qty }}</span>
+                      <span>@{{ item.price_description }}  x @{{ item.qty }}</span>
                       <div class="button-group">
                       <button class="btn" v-on:click="increment(item)">+</button>
                       <button class="btn" v-on:click="decrement(item)">-</button>
@@ -52,7 +52,7 @@
                   </ul>
 
                   <div v-if="cart.length">
-                    <div class="cart-total">{{ __('Total') }}: @{{ total_sanit }} zł</div>
+                    <div class="cart-total">{{ __('Total') }}: @{{ total_sanit }} </div>
                     <br/><br/>
                     <button class="btn" v-on:click="pay()">{{ __('Pay') }}</button>
                   </div>
@@ -85,7 +85,7 @@
                     <ul class="ms-3 list-unstyled">
                       <li>{{ __('Name') }}: <a href="{{$product['url_product'][$lang] }}">{{$product['product_name'][$lang] }}</a></li>
                       <li>Sku: {{$product['sku']}}</li>
-                      <li>{{ __('Price') }}: {{$product['price'] / 100}} zł</li>
+                      <li>{{ __('Price') }}: {{$product['price_description'] }} </li>
                       <li>{{$product['product_description'][$lang] }}</li>
                     </ul>
                     <?php

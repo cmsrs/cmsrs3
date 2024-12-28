@@ -3,10 +3,12 @@
 namespace App\Services\Cmsrs\Helpers;
 
 use App\Services\Cmsrs\ConfigService;
-use NumberFormatter;
 
 class PriceHelperService
 {
+    /**
+     * this function are used converted in javascript too
+     */
     public static function getPriceDescriptionWrap(int $price): string
     {
         $currency = (new ConfigService)->getCurrency();
@@ -14,14 +16,34 @@ class PriceHelperService
         return self::getPriceDescription($price, $currency);
     }
 
-    public static function getPriceDescription(int $price, string $currency, ?string $locale = null): string
+    /**
+     * this function are used converted in javascript too
+     */
+    public static function getPriceDescription(int $price, string $currency): string
     {
-        $locale = $locale ?? config('app.locale', 'en');
-
-        $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
-
         $priceInUnits = $price / 100;
+        $formattedPrice = number_format($priceInUnits, 2, '.', ',');
 
-        return $formatter->formatCurrency($priceInUnits, $currency);
+        $currencySymbols = [
+            'USD' => '$',
+            'EUR' => '€',
+            'GBP' => '£',
+            'PLN' => 'zł',
+            // Add more currencies as needed
+        ];
+
+        if (array_key_exists($currency, $currencySymbols)) {
+            $symbol = $currencySymbols[$currency];
+        } else {
+            $symbol = $currency;
+        }
+
+        if ($currency === 'USD') {
+            return $symbol.$formattedPrice;
+        } elseif ($currency === 'PLN') {
+            return $formattedPrice.' '.$symbol;
+        } else {
+            return $symbol.$formattedPrice;
+        }
     }
 }

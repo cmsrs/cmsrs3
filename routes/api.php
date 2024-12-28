@@ -23,14 +23,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('productsGetNameAndPrice/{lang?}', [ProductController::class, 'getNameAndPrice']);
+if (env('IS_SHOP', true)) {
+    Route::get('productsGetNameAndPrice/{lang?}', [ProductController::class, 'getNameAndPrice']);
+}
 
 Route::post('login', [AuthController::class, 'login']);
 Route::get('comments/{pageId}', [CommentController::class,  'index']);
 Route::post('comments/{pageId}', [CommentController::class, 'create']);
 Route::post('contact/{lang}', [ContactController::class, 'create']);
 
-Route::get('page/{id}/{lang}', [PageController::class, 'oneItem']);
+//Route::get('page/{id}/{lang}', [PageController::class, 'oneItem']); //This API is not used in the project - uncomment if you want to use it
 //Route::get('page-type/{type}', [PageController::class, 'getFirstPageByTypeForGuest']); - i do not use this api - see skip test that use this api
 
 Route::group(['middleware' => ['jwt.auth']], function () {

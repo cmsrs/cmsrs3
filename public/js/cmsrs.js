@@ -29,7 +29,7 @@ createApp({
         const messageErr = ref("");
         const messageInfo = ref("");
 
-
+        const currency = ref("");
 
         // On mounted, initialize data
         onMounted(() => {
@@ -47,6 +47,9 @@ createApp({
 
             const el5 = document.querySelector("#is_demo");
             is_demo.value = el5 ? el5.dataset.isDemo : false;
+
+            const el6 = document.querySelector("#currency");
+            currency.value = el6 ? el6.dataset.currency : false;
 
             if (page_id.value && commented.value) {
                 axios.get("/api/comments/" + page_id.value).then((response) => {
@@ -75,13 +78,14 @@ createApp({
                                     qty: item.qty,
                                     name: dbNameAndPrice.name,
                                     price: dbNameAndPrice.price,
+                                    price_description: dbNameAndPrice.price_description,
                                     url_product: dbNameAndPrice.url_product,
                                     url_image: dbNameAndPrice.url_image,
                                 });
                                 total.value += item.qty * dbNameAndPrice.price;
                             }
                         });
-                        total_sanit.value = total.value / 100;
+                        total_sanit.value = getPriceDescriptionWrap( total.value );
                         cart_length.value = cart.length;
                         saveCartToPost(cart);
 
@@ -101,8 +105,41 @@ createApp({
                     });
             }
         });
-
+        
         // Methods
+        //see: App\Services\Cmsrs\Helpers\PriceHelperService - start
+        const getPriceDescriptionWrap = (price) => {
+            return getPriceDescription(price, currency.value);
+        };
+
+        const getPriceDescription = (price, currency) => {
+            const priceInUnits = price / 100;
+            const formattedPrice = new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(priceInUnits);
+
+            const currencySymbols = {
+              USD: '$',
+              EUR: '€',
+              GBP: '£',
+              PLN: 'zł',
+              // Add more currencies as needed
+            };
+      
+            const symbol = currencySymbols[currency] || currency;
+            //return `${symbol}${formattedPrice}`;
+      
+            if (currency === 'USD') {
+              return `${symbol}${formattedPrice}`;
+            } else if (currency === 'PLN') {
+              return `${formattedPrice} ${symbol}`;
+            } else {
+              return `${symbol}${formattedPrice}`;
+            }
+        };        
+        //see: App\Services\Cmsrs\Helpers\PriceHelperService - stop
+
         const addComment = (event) => {
             if (is_demo.value) {
                 event.preventDefault();
@@ -210,6 +247,7 @@ createApp({
                         id: product.id,
                         name: dbNameAndPrice.name,
                         price: dbNameAndPrice.price,
+                        price_description: dbNameAndPrice.price_description,
                         qty: 1,
                         url_product: dbNameAndPrice.url_product,
                         url_image: dbNameAndPrice.url_image,
@@ -234,7 +272,7 @@ createApp({
             } 
             //else { cart.push({ ...item, qty: 1 });} //chat propose
             total.value += item.price;
-            total_sanit.value = total.value / 100;
+            total_sanit.value =  getPriceDescriptionWrap( total.value);
             cart_length.value = cart.length;
             saveCartToPost(cart);
             localStorage.setItem("cart", JSON.stringify(cart));
@@ -252,7 +290,7 @@ createApp({
                     cart.splice(index, 1);
                 }
                 total.value -= item.price;
-                total_sanit.value = total.value / 100;
+                total_sanit.value = getPriceDescriptionWrap( total.value );
                 cart_length.value = cart.length;
                 saveCartToPost(cart);
                 localStorage.setItem("cart", JSON.stringify(cart));
@@ -297,7 +335,7 @@ createApp({
         };
 
         const calculateTotalAddDeliverSanit = (total, deliverPrice) => {
-            return (total + deliverPrice) / 100;
+            return getPriceDescriptionWrap(total + deliverPrice);
         };
 
         const demoAlert = () => {
