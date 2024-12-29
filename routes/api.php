@@ -32,7 +32,7 @@ Route::get('comments/{pageId}', [CommentController::class,  'index']);
 Route::post('comments/{pageId}', [CommentController::class, 'create']);
 Route::post('contact/{lang}', [ContactController::class, 'create']);
 
-//Route::get('page/{id}/{lang}', [PageController::class, 'oneItem']); //This API is not used in the project - uncomment if you want to use it
+//Route::get('page/{id}/{lang}', [PageController::class, 'oneItem']); //(not remove this comment see: https://www.cmsrs.pl/pl/cms/cmsrs/rest-api). This API is not used in the project - uncomment if you want to use it
 //Route::get('page-type/{type}', [PageController::class, 'getFirstPageByTypeForGuest']); - i do not use this api - see skip test that use this api
 
 Route::group(['middleware' => ['jwt.auth']], function () {
