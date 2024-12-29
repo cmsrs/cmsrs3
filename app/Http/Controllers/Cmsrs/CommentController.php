@@ -52,6 +52,14 @@ class CommentController extends Controller
 
     public function index(Request $request, $pageId)
     {
+        $p = Page::find($pageId);
+        if (empty($p)) {
+            abort(404);
+        }
+        if (empty($p->commented)) {
+            abort(404);
+        }
+
         $comments = Comment::where('page_id', $pageId)->orderby('created_at', 'desc')->get(['content'])->toArray();
 
         return response()->json(['success' => true, 'data' => $comments], 200);
