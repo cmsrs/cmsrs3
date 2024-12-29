@@ -23,7 +23,9 @@ class CreatePagesTable extends Migration
             $table->boolean('commented')->default(0);
             $table->boolean('after_login')->default(0);
             $table->integer('position')->unsigned()->nullable();
-            $table->enum('type', ['cms', 'gallery', 'shop', 'contact', 'main_page', 'privacy_policy', 'login', 'projects', 'clear', 'checkout', 'register', 'home',  'shoppingsuccess', 'search', 'forgot', 'inner'])->default('cms');
+
+            $table->string('type', 63)->default('cms');
+            //$table->enum('type', ['cms', 'gallery', 'shop', 'contact', 'main_page', 'privacy_policy', 'login', 'projects', 'clear', 'checkout', 'register', 'home',  'shoppingsuccess', 'search', 'forgot', 'inner'])->default('cms');
             //$table->text('content')->nullable();
             //$table->string('slug')->notNullable();
 

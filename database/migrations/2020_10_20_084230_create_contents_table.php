@@ -18,7 +18,8 @@ class CreateContentsTable extends Migration
 
             $table->string('lang', 8); //->notNullable();
             $table->string('column', 32); //->notNullable();
-            $table->text('value')->nullable(); //consider use $table->mediumText('value')
+            //$table->text('value')->nullable(); //consider use $table->mediumText('value')
+            $table->mediumText('value')->nullable();
 
             $table->unsignedBigInteger('page_id')->nullable();
             $table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
