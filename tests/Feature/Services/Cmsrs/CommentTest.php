@@ -144,4 +144,28 @@ class CommentTest extends Base
         $this->assertEquals(2, count($res->data));
         $this->assertEquals($content2['content'], $res->data[1]->content);
     }
+
+    public function test_it_will_get_comment_and_return_404_page_not_found()
+    {
+        $content1 = [
+            'content' => '111 test comment - test123',
+        ];
+
+        $res1 = $this->post('api/comments/'.$this->pageId, $content1);
+        $r1 = $res1->getData();
+        $this->assertTrue($r1->success);
+
+        $response = $this->get('api/comments/'.($this->pageId + 1000));
+        $response->assertStatus(404);
+    }
+
+    public function test_it_will_get_comment_and_return_404_comment_not_found()
+    {
+        $this->testPage['commented'] = 0;
+        $objPage = (new PageService)->wrapCreate($this->testPage);
+        $this->assertNotEmpty($objPage->id);
+
+        $response = $this->get('api/comments/'.($objPage->id));
+        $response->assertStatus(404);
+    }
 }
