@@ -40,6 +40,8 @@ class FrontLangsTest extends Base
         putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');
         putenv('DEMO_STATUS=false');
         putenv('IS_SHOP=true');
+        putenv('IS_LOGIN=true');
+        putenv('IS_REGISTER=true');
 
         parent::setUp();
         $this->createUser();
@@ -362,7 +364,7 @@ class FrontLangsTest extends Base
                 $url = (new PageService)->getUrl($page, $lang);
                 $response = $this->get($url);
 
-                $status =  200; //(($page->type === 'login') || ($page->type === 'register') || ($page->type === 'forgot')) ? 302 : 200;
+                $status = 200; // (($page->type === 'login') || ($page->type === 'register') || ($page->type === 'forgot')) ? 302 : 200;
                 if ($page->type == 'shoppingsuccess') {
                     $status = 404;
                 }
@@ -380,7 +382,7 @@ class FrontLangsTest extends Base
         $response1->assertStatus(302);
 
         $redirectUrl = $response1->headers->get('Location');
-        $this->assertEquals("http://localhost/login?lang=pl",$redirectUrl);
+        $this->assertEquals('http://localhost/login?lang=pl', $redirectUrl);
 
     }
 
@@ -390,7 +392,6 @@ class FrontLangsTest extends Base
         $response1->assertStatus(302);
 
         $redirectUrl = $response1->headers->get('Location');
-        $this->assertEquals("http://localhost/register?lang=pl",$redirectUrl);
+        $this->assertEquals('http://localhost/register?lang=pl', $redirectUrl);
     }
-
 }

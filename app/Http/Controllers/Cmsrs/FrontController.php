@@ -233,13 +233,13 @@ class FrontController extends Controller
     public function changeLang($lang, $pageIdoRRouterName, $productSlug = null)
     {
         $page = Page::find($pageIdoRRouterName);
-        if (!empty($page)) {
+        if (! empty($page)) {
             $url = $this->pageService->getUrl($page, $lang, $productSlug);
 
-            //abort(404);
-        }else{
+            // abort(404);
+        } else {
             $url = route($pageIdoRRouterName, ['lang' => $lang, 'productSlug' => $productSlug]);
-            //dd($url);
+            // dd($url);
         }
         ConfigService::saveLangToSession($lang);
 

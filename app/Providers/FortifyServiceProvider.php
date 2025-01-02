@@ -53,15 +53,27 @@ class FortifyServiceProvider extends ServiceProvider
         // });
 
         Fortify::loginView(function () {
-            // dd('aaaaaaaaa');
+            if (! env('IS_LOGIN', true)) {
+                abort(404);
+            }
+
             return view('auth.login');
         });
 
         Fortify::registerView(function () {
+            // This condition is redundant because it is already defined in the configuration - but it is a good practice to check it
+            if (! env('IS_REGISTER', true)) {
+                abort(404);
+            }
+
             return view('auth.register');
         });
 
         Fortify::authenticateUsing(function (Request $request) {
+            if (! env('IS_LOGIN', true)) {
+                abort(404);
+            }
+
             $user = User::where('email', $request->email)->first();
 
             if ($user &&

@@ -43,6 +43,8 @@ class ImageTest extends Base
         putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');
         putenv('DEMO_STATUS=false');
         putenv('IS_SHOP=true');
+        putenv('IS_LOGIN=true');
+        putenv('IS_REGISTER=true');
 
         parent::setUp();
         ini_set('memory_limit', '256M');

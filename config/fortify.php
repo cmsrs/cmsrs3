@@ -144,7 +144,7 @@ return [
     */
 
     'features' => [
-        Features::registration(),
+        env('IS_REGISTER', true) ? Features::registration() : null,
         /*
         Features::resetPasswords(),
         // Features::emailVerification(),

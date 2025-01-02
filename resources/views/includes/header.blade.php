@@ -10,8 +10,8 @@
   $manyLangs = (count($langs) > 1);
   $bg = env('DEMO_STATUS', false) ? 'bg-dark' : 'bg-secondary'; 
   //$bg = 'bg-secondary';
-  $pLogin =  true;//$pageService::getFirstPageByType('login'); 
-  $pRegister =  true;//$pageService::getFirstPageByType('register'); 
+  $pLogin = env('IS_LOGIN', true);
+  $pRegister =  env('IS_REGISTER', true);
   $pHome = $pageService::getFirstPageByType('home');
 
   $mainPage = $pageService::getFirstPageByType('main_page');
@@ -113,11 +113,13 @@
             $loginStyle = $manyLangs ? 'me-4' : '';
         @endphp
         @guest            
+              @if ( $pLogin )        
               <li class="nav-item {{$loginStyle}}">
                   <a class="nav-link" href="{{ route('login') }}">
                     {{ __('Login') }}
                   </a>
               </li>
+              @endif              
               @if (Route::has('register') && $pRegister )
                   <li class="nav-item  {{$loginStyle}}">
                       <a class="nav-link" href="{{ route('register') }}">

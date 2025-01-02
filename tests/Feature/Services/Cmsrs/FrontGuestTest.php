@@ -7,9 +7,8 @@ use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
-use Tests\TestCase;
 
-class FrontGuestTest extends TestCase
+class FrontGuestTest extends Base
 {
     const SHORT_TITLE1 = 'About me short_x123';
 
@@ -24,6 +23,8 @@ class FrontGuestTest extends TestCase
         putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');
         putenv('DEMO_STATUS=false');
         putenv('IS_SHOP=true');
+        putenv('IS_LOGIN=true');
+        putenv('IS_REGISTER=true');
 
         parent::setUp();
     }
@@ -410,5 +411,62 @@ class FrontGuestTest extends TestCase
 
         $content = $response2->getContent();
         $this->assertStringContainsString($short1, $content, "String doesn't contain text=$short1");
+    }
+
+    public function test_it_launches_login_page_200()
+    {
+        $response = $this->get('/login');
+        $response->assertStatus(200);
+
+        $response2 = $this->get('/login?lang=pl');
+        $response2->assertStatus(200);
+
+        $response3 = $this->get('/login?lang=en');
+        $response3->assertStatus(200);
+    }
+
+    public function test_it_launches_register_page_200()
+    {
+        $response = $this->get('/register');
+        $response->assertStatus(200);
+
+        $response2 = $this->get('/register?lang=pl');
+        $response2->assertStatus(200);
+
+        $response3 = $this->get('/register?lang=en');
+        $response3->assertStatus(200);
+    }
+
+    public function test_it_launches_post_login_page_302()
+    {
+        $this->createClientUser();
+        $data = [
+            '_token' => 'ZmfOpggMnFoJbhqCKYADeTrYcEGlYIHFyLWa89wP',
+            'email' => 'client@email.com',
+            'password' => 'client1234',
+        ];
+
+        $response = $this->post('/login', $data);
+        $response->assertStatus(302);
+
+        $redirectUrl = $response->headers->get('Location');
+        $this->assertEquals('http://localhost/home', $redirectUrl);
+    }
+
+    public function test_it_launches_post_register_page_302()
+    {
+        $data = [
+            '_token' => 'ZmfOpggMnFoJbhqCKYADeTrYcEGlYIHFyLWa89wP',
+            'name' => 'rob',
+            'email' => 'test@example.com',
+            'password' => 'qwerty123',
+            'password_confirmation' => 'qwerty123',
+        ];
+
+        $response = $this->post('/register', $data);
+        $response->assertStatus(302);
+
+        $redirectUrl = $response->headers->get('Location');
+        $this->assertEquals('http://localhost/home', $redirectUrl);
     }
 }

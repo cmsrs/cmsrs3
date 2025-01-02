@@ -234,6 +234,18 @@ CURRENCY=USD
 IS_SHOP=true
 ```
 
+* Set is_login, the default is true:
+
+```bash
+IS_LOGIN=true
+```
+
+* Set is_register, the default is true:
+
+```bash
+IS_REGISTER=true
+```
+
 * Set the allowed file extensions for uploads:
 
 The default file extensions for uploads are:
