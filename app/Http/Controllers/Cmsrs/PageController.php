@@ -46,7 +46,7 @@ class PageController extends Controller
         } catch (\Exception $e) {
             Log::error('page add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile().' for: '.var_export($e, true));
 
-            return response()->json(['success' => false, 'error' => 'Get page with lang problem, details in the log file.'], 200); //.$e->getMessage()
+            return response()->json(['success' => false, 'error' => 'Get page with lang problem, details in the log file.'], 200); // .$e->getMessage()
         }
 
         return response()->json(['success' => true, 'data' => $page], 200);
@@ -105,7 +105,7 @@ class PageController extends Controller
             return response()->json(['success' => false, 'error' => $validator->messages()], 200);
         }
 
-        //check unique
+        // check unique
         $valid = PageService::checkIsDuplicateTitleByMenu($data);
         if (empty($valid['success'])) {
             return response()->json($valid, 200);
@@ -114,9 +114,9 @@ class PageController extends Controller
         try {
             $page = $this->pageService->wrapCreate($data);
         } catch (\Exception $e) {
-            Log::error('page add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); //.' for: '.var_export($data, true )
+            Log::error('page add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); // .' for: '.var_export($data, true )
 
-            return response()->json(['success' => false, 'error' => 'Add page problem, details in the log file.'], 200); //.$e->getMessage()
+            return response()->json(['success' => false, 'error' => 'Add page problem, details in the log file.'], 200); // .$e->getMessage()
         }
 
         return response()->json(['success' => true, 'data' => ['pageId' => $page->id, 'data' => $data]]);
@@ -130,13 +130,13 @@ class PageController extends Controller
             return response()->json(['success' => false, 'error' => 'Page not find'], 200);
         }
 
-        $data = $request->only('title', 'short_title', 'description', 'published', 'commented', 'after_login', 'type', 'content', 'menu_id', 'page_id', 'images'); //'position',
+        $data = $request->only('title', 'short_title', 'description', 'published', 'commented', 'after_login', 'type', 'content', 'menu_id', 'page_id', 'images'); // 'position',
         $validator = Validator::make($data, $this->validationRules);
         if ($validator->fails()) {
             return response()->json(['success' => false, 'error' => $validator->messages()], 200);
         }
 
-        //check unique
+        // check unique
         $valid = PageService::checkIsDuplicateTitleByMenu($data, $page->id);
         if (empty($valid['success'])) {
             return response()->json($valid, 200);

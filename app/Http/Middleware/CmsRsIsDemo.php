@@ -10,8 +10,8 @@ class CmsRsIsDemo
     {
         $isDemo = env('DEMO_STATUS', false);
 
-        //dump($isDemo);
-        //dump($request->getMethod())
+        // dump($isDemo);
+        // dump($request->getMethod())
 
         if ($isDemo) {
             $requestUri = $request->getRequestUri();

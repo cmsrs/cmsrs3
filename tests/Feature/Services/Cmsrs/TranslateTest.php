@@ -189,7 +189,7 @@ class TranslateTest extends Base
         $this->assertEquals(1, Translate::query()->where('page_id', $page->id)->where('column', 'title')->count());
         $this->assertEquals(1, Translate::query()->where('page_id', $page->id)->where('column', 'short_title')->where('lang', 'pl')->count());
         $this->assertEquals(1, Translate::query()->where('page_id', $page->id)->where('column', 'description')->count());
-        $this->assertEquals(2, Content::query()->where('page_id', $page->id)->count()); //not set DI, therefore is 2
+        $this->assertEquals(2, Content::query()->where('page_id', $page->id)->count()); // not set DI, therefore is 2
 
         $this->assertEquals(3, Translate::query()->whereNotNull('image_id')->where('column', 'alt')->count());
     }

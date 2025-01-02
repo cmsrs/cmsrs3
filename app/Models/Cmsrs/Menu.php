@@ -26,6 +26,6 @@ class Menu extends Model
 
     public function translates(): HasMany
     {
-        return $this->hasMany('App\Models\Cmsrs\Translate', 'menu_id', 'id'); //it should be work without params - phpstan
+        return $this->hasMany('App\Models\Cmsrs\Translate', 'menu_id', 'id'); // it should be work without params - phpstan
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Services\Cmsrs;
 
 use App\Models\Cmsrs\Order;
-use App\Models\Cmsrs\User;
+use App\Models\User;
 
 class OrderService extends BaseService
 {
@@ -25,7 +25,7 @@ class OrderService extends BaseService
         }
 
         $user = User::find($userId);
-        //$user = Auth::user();
+        // $user = Auth::user();
         if (empty($user)) {
             return true;
         }
@@ -34,7 +34,7 @@ class OrderService extends BaseService
          * copy basket to orders form login users
          */
         $objBaskets = $checkout->baskets;
-        $objOrders = Order::where('user_id', '=', $user->id)->get();  //->toArray();
+        $objOrders = Order::where('user_id', '=', $user->id)->get();  // ->toArray();
 
         if ($objBaskets->count()) {
             foreach ($objBaskets as $objBasket) {
@@ -45,7 +45,7 @@ class OrderService extends BaseService
                 unset($arrBasket['updated_at']);
                 $productId = $arrBasket['product_id'];
 
-                //find order by product_id
+                // find order by product_id
                 $objOrderByProductId = null;
                 foreach ($objOrders as $objOrder) {
                     if ($objOrder->product_id == $productId) {
@@ -91,6 +91,6 @@ class OrderService extends BaseService
 
     public static function inOrdersByUserId($userId)
     {
-        return Order::where('user_id', '=', $userId)->get(); //->toArray();
+        return Order::where('user_id', '=', $userId)->get(); // ->toArray();
     }
 }

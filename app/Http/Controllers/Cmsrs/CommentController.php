@@ -42,9 +42,9 @@ class CommentController extends Controller
                 throw new \Exception('I cant get comment id');
             }
         } catch (\Exception $e) {
-            Log::error('comment add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); //.' for: '.var_export($data, true )
+            Log::error('comment add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); // .' for: '.var_export($data, true )
 
-            return response()->json(['success' => false, 'error' => 'Add comment problem, details in the log file.'], 200); //.$e->getMessage()
+            return response()->json(['success' => false, 'error' => 'Add comment problem, details in the log file.'], 200); // .$e->getMessage()
         }
 
         return response()->json(['success' => true]);

@@ -23,7 +23,7 @@ class CheckoutService extends BaseService
             return false;
         }
 
-        //where('session_id', '=', $sessionId)->
+        // where('session_id', '=', $sessionId)->
         return Checkout::where('user_id', '=', $user->id)->where('is_pay', '=', 0);
     }
 
@@ -95,7 +95,7 @@ class CheckoutService extends BaseService
         $out = [];
         $j = 0;
 
-        //to optimization purpose
+        // to optimization purpose
         $pIds = [];
         foreach ($baskets as $basket) {
             $pIds[$basket['product_id']] = $basket['product_id'];
@@ -105,7 +105,7 @@ class CheckoutService extends BaseService
         $products = (new Product)->whereIn('id', $pIdsValues)->with(['translates'])->get()->pluck(null, 'id')->all();
 
         foreach ($baskets as $basket) {
-            //$product = Product::with(['translates'])->where('id', $basket['product_id'])->first(); //i don't want sql in foreach
+            // $product = Product::with(['translates'])->where('id', $basket['product_id'])->first(); //i don't want sql in foreach
             if (empty($product = $products[$basket['product_id']])) {
                 throw new \Exception("can't find product id =".$basket['product_id']);
             }

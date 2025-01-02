@@ -32,7 +32,7 @@ class FrontController extends Controller
         protected PaymentService $paymentService,
         protected ProductService $productService,
     ) {
-        $this->menus = MenuService::getMenu(); //$menus;
+        $this->menus = MenuService::getMenu(); // $menus;
         $this->langs = $this->configService->arrGetLangs();
     }
 
@@ -100,7 +100,7 @@ class FrontController extends Controller
             $checkoutId = $request->session()->get('checkout_id');
             $objCheckout = Checkout::find($checkoutId);
             $request->session()->forget('checkout_id');
-            //$request->session()->flush();
+            // $request->session()->flush();
         }
         if (empty($objCheckout)) {
             abort(404);
@@ -135,10 +135,10 @@ class FrontController extends Controller
         $payments = PaymentService::getPayment();
         $delivers = DeliverService::getDeliver();
 
-        //$token =  '123todo'; // User::getTokenForClient(); //todo - when user not auth
+        // $token =  '123todo'; // User::getTokenForClient(); //todo - when user not auth
 
         $data = $this->pageService->getDataToView($page, [
-            //'token' => $token,
+            // 'token' => $token,
             'payments' => $payments,
             'delivers' => $delivers,
             'lang' => $lang,
@@ -192,17 +192,17 @@ class FrontController extends Controller
         ] = $this->productService->saveCheckout($data, (Auth::check() ? Auth::user()->id : null), session()->getId());
 
         if ($data['payment'] == PaymentService::KEY_PAYU) {
-            //redirect to payU
+            // redirect to payU
             $payu = new Payu;
 
-            //dd($checkout);
+            // dd($checkout);
             $data = $payu->dataToSend($productsDataAndTotalAmount, $checkout);
 
             Log::debug(' data sended to payu: '.var_export($data, true));
 
             $redirectUri = $payu->getOrder($data);
             if (empty($redirectUri)) {
-                //throw new \Exception("Something wrong with payu - i cant obtain the redirectUri");
+                // throw new \Exception("Something wrong with payu - i cant obtain the redirectUri");
                 Log::debug('Something wrong with payu - i cant obtain the redirectUri');
 
                 return response()->json(['success' => false, 'error' => 'Something wrong with payu - try later.'], 200);
@@ -218,8 +218,8 @@ class FrontController extends Controller
             }
 
             $urlShoppingSuccess = $this->pageService->getUrl($pShoppingSuccess, $lang);
-            //$request->session()->flash('status', 'Task was successful!');
-            //$request->session()->keep(['checkout_id' => $objCheckout->id]);
+            // $request->session()->flash('status', 'Task was successful!');
+            // $request->session()->keep(['checkout_id' => $objCheckout->id]);
 
             /** @var \Illuminate\Session\Store $session */
             $session = $request->session();
@@ -230,13 +230,17 @@ class FrontController extends Controller
 
     }
 
-    public function changeLang($lang, $pageId, $productSlug = null)
+    public function changeLang($lang, $pageIdoRRouterName, $productSlug = null)
     {
-        $page = Page::find($pageId);
-        if (empty($page)) {
-            abort(404);
+        $page = Page::find($pageIdoRRouterName);
+        if (!empty($page)) {
+            $url = $this->pageService->getUrl($page, $lang, $productSlug);
+
+            //abort(404);
+        }else{
+            $url = route($pageIdoRRouterName, ['lang' => $lang, 'productSlug' => $productSlug]);
+            //dd($url);
         }
-        $url = $this->pageService->getUrl($page, $lang, $productSlug);
         ConfigService::saveLangToSession($lang);
 
         return redirect($url);
@@ -255,9 +259,9 @@ class FrontController extends Controller
         }
         App::setLocale($lang);
 
-        //todo - http_referer - i don't know how to obtain this value - it should be from payu
-        //it make sense only for payU - it my opinion
-        $isNewOrders = false; //Order::copyDataFromBasketToOrderForUser();
+        // todo - http_referer - i don't know how to obtain this value - it should be from payu
+        // it make sense only for payU - it my opinion
+        $isNewOrders = false; // Order::copyDataFromBasketToOrderForUser();
 
         $page = PageService::getMainPage();
         $this->validatePage($page);
@@ -268,11 +272,11 @@ class FrontController extends Controller
         //     $urlSearch = $pSearch->getUrl($lang);
         // }
 
-        //slider_main
+        // slider_main
         $sliderDataImages = $this->pageService->getPageDataByShortTitleCache('main_page_slider', 'images');
 
         $data = $this->pageService->getDataToView($page, [
-            //'url_search' =>  $urlSearch,
+            // 'url_search' =>  $urlSearch,
             'view' => 'index',
             'is_new_orders' => $isNewOrders,
             'slider_images' => $sliderDataImages,
@@ -320,7 +324,7 @@ class FrontController extends Controller
             'menus' => $this->menus,
         ]);
 
-        if ($productSlug) { //product page
+        if ($productSlug) { // product page
             $product = $this->productService->getProductBySlug($productSlug, $lang);
             if (empty($product)) {
                 abort(404);
@@ -331,7 +335,7 @@ class FrontController extends Controller
 
             $urls = $this->productService->getProductUrls($product);
             $data['url_category'] = $urls['url_category'];
-            //$data['url_product'] = $urls['url_product'];
+            // $data['url_product'] = $urls['url_product'];
             $product = $this->productService->getProductDataByProductArr($product);
             $data['product'] = $product;
             $data['h1'] = $product['product_name'][$lang];

@@ -109,7 +109,7 @@ class PageTest extends Base
             'short_title' => ['en' => 'inner short_title 2111'],
             'type' => 'inner',
             'content' => ['en' => 'content test4333 inner 22'],
-            //'content' =>  [],
+            // 'content' =>  [],
             'published' => 1, // true //todo - this condition must be !
         ];
 
@@ -127,7 +127,7 @@ class PageTest extends Base
 
         $url = (new PageService)->getPageDataByShortTitleCache($shortTitle, 'url');
 
-        $this->assertEmpty($url); //because it is inner page
+        $this->assertEmpty($url); // because it is inner page
 
         $shortTitle = $this->testData['short_title']['en'];
         $content = (new PageService)->getPageDataByShortTitleCache($shortTitle);
@@ -154,9 +154,9 @@ class PageTest extends Base
             'title' => ['en' => 'inner title'],
             'short_title' => ['en' => 'inner short_title234333 rs'],
             'type' => 'inner',
-            //'content' =>  ['en' => 'content test4333 inner'],
+            // 'content' =>  ['en' => 'content test4333 inner'],
             'content' => [],
-            //'published' => true
+            // 'published' => true
         ];
         $response = $this->post('api/pages?token='.$this->token, $testData);
         $res = $response->getData();
@@ -168,7 +168,7 @@ class PageTest extends Base
 
         $this->assertEquals($testData['short_title']['en'], $res2->data[0]->short_title->en);
         $this->assertEquals('inner', $res2->data[0]->type);
-        //dd($res2);
+        // dd($res2);
     }
 
     public function test_it_will_save_inner_type_page()
@@ -221,7 +221,7 @@ class PageTest extends Base
 
     public function test_it_will_check_uniq_title_by_empty_menu_add_page()
     {
-        //page not belong to menu
+        // page not belong to menu
         $p1 = (new PageService)->wrapCreate($this->testData);
         $this->assertNotEmpty($p1->id);
 
@@ -240,7 +240,7 @@ class PageTest extends Base
         $this->assertNotEmpty($menu1->id);
         $this->assertNotEmpty($menu2->id);
         $this->testData['menu_id'] = $menu1->id;
-        //page belong to menu
+        // page belong to menu
         $p1 = (new PageService)->wrapCreate($this->testData);
         $this->assertNotEmpty($p1->id);
 
@@ -265,7 +265,7 @@ class PageTest extends Base
         $this->assertNotEmpty($menu1->id);
         $this->assertNotEmpty($menu2->id);
         $this->testData['menu_id'] = $menu1->id;
-        //page belong to menu
+        // page belong to menu
         $p1 = (new PageService)->wrapCreate($this->testData);
         $this->assertNotEmpty($p1->id);
 
@@ -442,7 +442,7 @@ class PageTest extends Base
         [
             'title' => ['en' => 'test child2'],
             'short_title' => ['en' => $short_title_child2],
-            'published' => 0, //!
+            'published' => 0, // !
             'type' => 'cms',
             'content' => ['en' => 'pppppppp2'],
             'page_id' => $p->id,
@@ -456,7 +456,7 @@ class PageTest extends Base
             'title' => ['en' => 'test child2'],
             'short_title' => ['en' => $short_title_child3],
             'published' => 1,
-            'after_login' => 1, //!
+            'after_login' => 1, // !
             'type' => 'cms',
             'content' => ['en' => 'pppppppp2'],
             'page_id' => $p->id,
@@ -472,7 +472,7 @@ class PageTest extends Base
         $this->assertStringContainsString($short_title_parent, $content, "String doesn't contain text=$short_title_parent in menu - header");
         $this->assertStringContainsString($short_title_child1, $content, "String doesn't contain text=$short_title_child1 in menu - header");
         $this->assertStringNotContainsString($short_title_child2, $content, "String does contain text=$short_title_child2 in menu - header");
-        $this->assertStringContainsString($short_title_child3, $content, "String does contain text=$short_title_child3 in menu - header"); //TODO we are login as admin (not client)
+        $this->assertStringContainsString($short_title_child3, $content, "String does contain text=$short_title_child3 in menu - header"); // TODO we are login as admin (not client)
     }
 
     public function test_it_will_unpublished_children_by_update()
@@ -483,7 +483,7 @@ class PageTest extends Base
         [
             'title' => ['en' => PageTest::STR_PARENT_TWO],
             'short_title' => ['en' => 'p22'],
-            'published' => 0, //this change
+            'published' => 0, // this change
             'type' => 'cms',
             'content' => ['en' => 'parent page ppp2'],
             'menu_id' => $this->menuId,
@@ -523,8 +523,8 @@ class PageTest extends Base
             'after_login' => 1,
             'type' => 'main_page',
             'content' => ['en' => 'aaa test111'],
-            'menu_id' => $this->menuId, //it must be null for type main_page
-            'page_id' => $parentId, //it must be null for type main_page
+            'menu_id' => $this->menuId, // it must be null for type main_page
+            'page_id' => $parentId, // it must be null for type main_page
         ];
 
         $response = $this->post('api/pages?token='.$this->token, $testData2);
@@ -558,8 +558,8 @@ class PageTest extends Base
             'after_login' => 1,
             'type' => 'main_page',
             'content' => ['en' => 'aaa test111122'],
-            'menu_id' => $this->menuId, //it must be null for type main_page
-            'page_id' => $parentId, //it must be null for type main_page
+            'menu_id' => $this->menuId, // it must be null for type main_page
+            'page_id' => $parentId, // it must be null for type main_page
         ];
 
         $responseUpdate = $this->put('api/pages/'.$page->id.'?token='.$this->token, $testData2Update);
@@ -854,7 +854,7 @@ class PageTest extends Base
         $this->assertEquals(2, count($this->menuObj->pages));
 
         $pagesPublished = (new MenuService)->pagesPublished($this->menuObj);
-        $this->assertEquals(1, $pagesPublished->count());  //only one has got published ===1 for 'menu_id' =>  $this->menuId
+        $this->assertEquals(1, $pagesPublished->count());  // only one has got published ===1 for 'menu_id' =>  $this->menuId
         $this->assertNotEmpty($pagesPublished->first()->id);
         $this->assertEquals((new PageService)->translatesByColumnAndLang($pagesPublished->first(), 'title', 'en'), $testData2['title']['en']);
     }
@@ -868,7 +868,7 @@ class PageTest extends Base
           'short_title' => ['en' => 'p22'],
           'published' => 0,
           'type' => 'cms',
-          //'content' => null
+          // 'content' => null
           'menu_id' => null,
       ];
 
@@ -935,7 +935,7 @@ class PageTest extends Base
         $this->assertNotEmpty($positionBefore);
         $this->assertEquals($positionBefore, 2);
 
-        //2x change position - and result should be the same.
+        // 2x change position - and result should be the same.
         $res1a = $this->patch('api/pages/position/down/'.$tmpArr[1]->id.'?token='.$this->token);
 
         $res22a = $res1a->getData();
@@ -943,7 +943,7 @@ class PageTest extends Base
 
         $res22firstData = Page::all();
 
-        //not work  ??
+        // not work  ??
         // $response22 = $this->get('api/pages?token='.$this->token );
         // $res22first = $response22->getData();
         // $this->assertTrue($res22first->success);
@@ -952,7 +952,7 @@ class PageTest extends Base
         // print_r($res22first->data); //po!!!
         // exit;
 
-        //chose one record
+        // chose one record
         $item = [];
         foreach ($res22firstData as $page) {
             if ($page->id == $tmpArr[1]->id) {
@@ -1000,7 +1000,7 @@ class PageTest extends Base
         $res = $response->getData();
         $this->assertTrue($res->success);
 
-        //check records in db
+        // check records in db
         $response2 = $this->get('api/pages?token='.$this->token);
         $res2 = $response2->getData();
         $this->assertTrue($res2->success);
@@ -1013,7 +1013,7 @@ class PageTest extends Base
         $data2 = $res2->data[1];
         $this->comparePageFields($testData2, $data2);
 
-        //min data
+        // min data
         $testData22 =
         [
             'title' => ['en' => 'test p2 uniq'],
@@ -1027,7 +1027,7 @@ class PageTest extends Base
 
         $pages = Page::all()->toArray();
         $lastPage = $pages[count($pages) - 1];
-        $this->assertEquals('cms', $lastPage['type']); //cms - it is default value
+        $this->assertEquals('cms', $lastPage['type']); // cms - it is default value
     }
 
     public function test_model_it_will_get_first_page_by_type_without_auth()
@@ -1053,10 +1053,10 @@ class PageTest extends Base
         $this->assertEquals($type, $page['type']);
         $this->assertNotEmpty($page['id']);
 
-        //$pageById = (new Page)->getPageWithImagesById($page['id']);
-        //$this->assertEquals($type, $pageById['type']);
-        //$this->assertNotEmpty($pageById['id']);
-        //$this->assertEquals($page['id'], $pageById['id']);
+        // $pageById = (new Page)->getPageWithImagesById($page['id']);
+        // $this->assertEquals($type, $pageById['type']);
+        // $this->assertNotEmpty($pageById['id']);
+        // $this->assertEquals($page['id'], $pageById['id']);
     }
 
     public function test_model_it_will_get_first_page_by_type_and_not_published_without_auth()
@@ -1123,7 +1123,7 @@ class PageTest extends Base
                 'type' => 'shop',
                 'content' => ['en' => 'aaa ffdfds'],
                 'menu_id' => null,
-                //'images' => []
+                // 'images' => []
             ];
 
         $response = $this->post('api/pages?token='.$this->token, $testData2);
@@ -1160,7 +1160,7 @@ class PageTest extends Base
           'type' => 'cms',
           'content' => ['en' => 'sdafsfsdaf asdfasdf'],
           'page_id' => null,
-          'menu_id' => 2354, //$this->menuId
+          'menu_id' => 2354, // $this->menuId
       ];
 
         $responseFake = $this->post('api/pages?token='.$this->token, $testData2);
@@ -1176,7 +1176,7 @@ class PageTest extends Base
         $res = $response->getData();
         $this->assertTrue($res->success);
 
-        //check records in db
+        // check records in db
         $response2 = $this->get('api/pages?token='.$this->token);
 
         $res2 = $response2->getData();
@@ -1238,7 +1238,7 @@ class PageTest extends Base
         $res0 = $response0->getData();
         $this->assertTrue($res0->success);
 
-        //retrieve $menus
+        // retrieve $menus
         $response = $this->get('api/pages?token='.$this->token);
         $res = $response->getData();
         $this->assertTrue($res->success);
@@ -1247,7 +1247,7 @@ class PageTest extends Base
 
         $this->comparePageFields($testData3, $data);
 
-        //wrong data
+        // wrong data
         $testData33 =
       [
           'id' => $id,
@@ -1273,7 +1273,7 @@ class PageTest extends Base
         $allTranslate = (new PageService)->getAllTranslate(Page::find($id));
         $this->assertEquals(4, count($allTranslate));
 
-        //$id = 1;
+        // $id = 1;
         $testData3 =
         [
             'id' => $id,
@@ -1302,7 +1302,7 @@ class PageTest extends Base
         $res0 = $response0->getData();
         $this->assertTrue($res0->success);
 
-        //retrieve $menus
+        // retrieve $menus
         $response = $this->get('api/pages?token='.$this->token);
         $res = $response->getData();
         $this->assertTrue($res->success);
@@ -1372,7 +1372,7 @@ class PageTest extends Base
 
     public function test_it_will_delete_page_fake()
     {
-        //fake id - error handlings
+        // fake id - error handlings
         $responseFake = $this->delete('api/pages/rs_I_eW23423fsd?token='.$this->token);
         $resFake = $responseFake->getData();
         $this->assertFalse($resFake->success);
@@ -1390,7 +1390,7 @@ class PageTest extends Base
                 'type' => 'shop',
                 'content' => ['en' => 'some test content'],
                 'menu_id' => null,
-                //'images' => []
+                // 'images' => []
             ];
 
         $response = $this->post('api/pages?token='.$this->token, $testData2);

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Models\Cmsrs;
+namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
-//use Illuminate\Contracts\Auth\MustVerifyEmail;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -167,7 +167,7 @@ class User extends Authenticatable implements JWTSubject
             'name' => $data['name'],
             'email' => $data['email'],
             'role' => User::$role['client'],
-            'password' => $data['password'],   //Hash::make($data['password']),
+            'password' => $data['password'],   // Hash::make($data['password']),
         ]);
     }
 }

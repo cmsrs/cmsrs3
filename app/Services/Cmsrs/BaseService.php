@@ -9,7 +9,7 @@ use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\Interfaces\TranslateInterface;
 use App\Services\Cmsrs\Interfaces\TranslateValueInterface;
 
-//use Illuminate\Support\Number;
+// use Illuminate\Support\Number;
 
 abstract class BaseService
 {
@@ -50,7 +50,7 @@ abstract class BaseService
                         $this->createRow($row);
                     } else {
                         if ($this instanceof TranslateValueInterface) {
-                            $this->updateRow($row); //from child
+                            $this->updateRow($row); // from child
                         }
                     }
                 }
@@ -65,7 +65,7 @@ abstract class BaseService
         $out = [];
 
         if ($this instanceof TranslateInterface) {
-            $data = $this->getAllTranslate($model); //from child
+            $data = $this->getAllTranslate($model); // from child
 
             foreach ($data as $d) {
                 $out[$d['column']][$d['lang']] = $d['value'];
@@ -133,7 +133,7 @@ abstract class BaseService
         );
     }
 
-    //see: App\Services\Cmsrs\Helpers\PriceHelperService
+    // see: App\Services\Cmsrs\Helpers\PriceHelperService
     // protected static function formatCurrency($number)
     // {
     //     $currency = (new ConfigService)->getCurrency();
@@ -179,13 +179,13 @@ abstract class BaseService
 
         $ret = $mObj->delete();
         if (! $ret) {
-            return false;  //if sth wrong with delete model we don't delete images from fs
+            return false;  // if sth wrong with delete model we don't delete images from fs
         }
 
         ImageService::deleteImagesFromFs($allImg['files']);
 
         foreach ($allImg['dirs_imgs'] as $dirImgs) {
-            ImageService::removeTwoDirectoryIfEmpty($dirImgs); //Catalogs are left after deleting the images.
+            ImageService::removeTwoDirectoryIfEmpty($dirImgs); // Catalogs are left after deleting the images.
         }
 
         return $ret;

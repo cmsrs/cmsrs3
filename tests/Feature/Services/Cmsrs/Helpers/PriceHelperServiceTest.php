@@ -28,7 +28,7 @@ class PriceHelperServiceTest extends TestCase
     public function test_get_price_description_wrap_t1()
     {
         $price = 123;
-        //$currency = 'USD'; //get it from env file
+        // $currency = 'USD'; //get it from env file
         $priceDescription = PriceHelperService::getPriceDescriptionWrap($price);
         $this->assertEquals('$1.23', $priceDescription);
     }

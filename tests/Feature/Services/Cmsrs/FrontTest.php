@@ -71,7 +71,7 @@ class FrontTest extends Base
 
         $this->assertEquals(1, Menu::All()->count());
         $this->assertEquals(1, Page::All()->count());
-        $this->assertEquals(4, Translate::All()->count()); //1 from menu, 3 from page
+        $this->assertEquals(4, Translate::All()->count()); // 1 from menu, 3 from page
     }
 
     public function test_it_will_get_directly_to_page()
@@ -84,7 +84,7 @@ class FrontTest extends Base
             'published' => 1,
             'type' => 'home',
             'content' => null,
-            'menu_id' => null, //!!!! - contact not related to menu
+            'menu_id' => null, // !!!! - contact not related to menu
         ];
 
         (new PageService)->wrapCreate($testData);
@@ -148,7 +148,7 @@ class FrontTest extends Base
                 $url = (new PageService)->getUrl($page, $lang);
                 $response = $this->get($url);
 
-                $status = (($page->type === 'login') || ($page->type === 'register') || ($page->type === 'forgot')) ? 302 : 200; //why forgot??
+                $status = (($page->type === 'login') || ($page->type === 'register') || ($page->type === 'forgot')) ? 302 : 200; // why forgot??
                 if ($page->type == 'shoppingsuccess') {
                     $status = 404;
                 }
@@ -170,7 +170,7 @@ class FrontTest extends Base
             'published' => 1,
             'type' => 'contact',
             'content' => null,
-            'menu_id' => null, //!!!! - contact not related to menu
+            'menu_id' => null, // !!!! - contact not related to menu
         ];
 
         (new PageService)->wrapCreate($this->testData);
@@ -310,10 +310,10 @@ class FrontTest extends Base
         $menuName = $this->testDataMenu['name']['en'];
         $menuSlug = Str::slug($menuName);
 
-        $p0 = Page::query()->where('menu_id', $this->menuId)->get(); //->toArray();
+        $p0 = Page::query()->where('menu_id', $this->menuId)->get(); // ->toArray();
         $this->assertEquals(1, $p0->count());
 
-        //not working - see this it_will_get_cms_page0 (this work)
+        // not working - see this it_will_get_cms_page0 (this work)
         // $response = $this->get('/c/'.$menuSlug.'/'.$pageSlug);
         // $response->assertStatus(404);
 
@@ -336,7 +336,7 @@ class FrontTest extends Base
         $res = $response->getData();
         $this->assertTrue($res->success);
 
-        $p = Page::query()->where('menu_id', $this->menuId)->get(); //->toArray();
+        $p = Page::query()->where('menu_id', $this->menuId)->get(); // ->toArray();
         $this->assertEquals(2, $p->count());
 
         $i = 0;

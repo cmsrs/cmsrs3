@@ -47,7 +47,7 @@ class ContactController extends Controller
 
         $rePriv = env('GOOGLE_RECAPTCHA_PRIV', '');
         $rePublic = env('GOOGLE_RECAPTCHA_PUBLIC', '');
-        //google recaptcha
+        // google recaptcha
         if (! empty($rePriv) && ! empty($rePublic)) {
             $googleAns = empty($token) ? '0' : $token;
             $secret = $rePriv;
@@ -89,7 +89,7 @@ class ContactController extends Controller
             $contactEmail = env('CONTACT_EMAIL', '');
             if (! empty($contactEmail)) {
 
-                //WARNING!! - this string intentionally starts from the left!!!!
+                // WARNING!! - this string intentionally starts from the left!!!!
                 $bodyMsg = 'email: '.$data['email'].'
 message: '.$data['message'];
 
@@ -99,7 +99,7 @@ message: '.$data['message'];
                 });
             }
         } catch (\Exception $e) {
-            //if mail not send nothing happen - only log
+            // if mail not send nothing happen - only log
             Log::error('contact add (send email) ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile());
         }
 

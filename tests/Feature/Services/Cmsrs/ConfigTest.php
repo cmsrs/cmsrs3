@@ -7,7 +7,7 @@ use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\PageService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-//use Tests\TestCase;
+// use Tests\TestCase;
 
 class ConfigTest extends Base
 {
@@ -37,7 +37,7 @@ class ConfigTest extends Base
     {
         $response = $this->get('api/config?token='.$this->token);
         $res = $response->getData();
-        //print_r($res);
+        // print_r($res);
 
         $this->assertTrue($res->success);
         $this->assertNotEmpty($res->data);
@@ -63,14 +63,15 @@ class ConfigTest extends Base
             ];
 
             $p = (new PageService)->wrapCreate($data);
-            //dump($p->toArray());
+            // dump($p->toArray());
 
             $in = true;
 
             $url = (new PageService)->getUrl($p, 'en');
             $response = $this->get($url);
 
-            $status = (($page_type === 'login') || ($page_type === 'register') || ($page_type === 'forgot')) ? 302 : 200; //I don't understand - todo (why register and forgot??)
+            // $status = (($page_type === 'login') || ($page_type === 'register') || ($page_type === 'forgot')) ? 302 : 200; //I don't understand - todo (why register and forgot??)
+            $status = 200;
             if ($page_type == 'shoppingsuccess') {
                 $status = 404;
             }
@@ -126,7 +127,7 @@ class ConfigTest extends Base
         $this->assertEquals('en', $langs);
 
         $config->setLangs('');
-        //$this->expectException(\Exception::class);
+        // $this->expectException(\Exception::class);
         $langs = $config->getLangsFromEnv();
         $this->assertEquals(ConfigService::LANG_DEFAULT, $langs);
     }
@@ -237,7 +238,7 @@ class ConfigTest extends Base
      */
     public function test_check_is_cache_enable_for_cache_enable_true()
     {
-        $this->assertFalse((new ConfigService)->isExistCacheFileEnable()); //see setup
+        $this->assertFalse((new ConfigService)->isExistCacheFileEnable()); // see setup
         $isCache = (new ConfigService)->isCacheEnable();
         $this->assertFalse($isCache);
     }
@@ -247,7 +248,7 @@ class ConfigTest extends Base
      */
     public function test_is_cache_enable_it_is_only_one_case_when_cache_is_enable()
     {
-        $this->assertFalse((new ConfigService)->isExistCacheFileEnable()); //see setup
+        $this->assertFalse((new ConfigService)->isExistCacheFileEnable()); // see setup
         $post = ['action' => 'enable'];
         $response = $this->post('api/config/toggle-cache-enable-file?token='.$this->token, $post);
         $response->assertStatus(200);
@@ -261,7 +262,7 @@ class ConfigTest extends Base
 
     public function test_api_is_cache_enable_false_docs()
     {
-        $this->assertFalse((new ConfigService)->isExistCacheFileEnable()); //see setup
+        $this->assertFalse((new ConfigService)->isExistCacheFileEnable()); // see setup
         $response = $this->get('api/config/is-cache-enable?token='.$this->token);
         $response->assertStatus(200);
         $res = $response->getData();

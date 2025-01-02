@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Cmsrs;
 
 use App\Http\Controllers\Controller;
-use App\Models\Cmsrs\User;
+use App\Models\User;
 use App\Services\Cmsrs\ConfigService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -57,7 +57,7 @@ class UserController extends Controller
                 return $query->where(function ($query) use ($search) {
                     $query->where('name', 'like', $search)
                         ->orWhere('email', 'like', $search);
-                    //->orWhere('created_at', 'like', $search) //todo - show only date without time and 'T' or 'Z'
+                    // ->orWhere('created_at', 'like', $search) //todo - show only date without time and 'T' or 'Z'
                 });
             })
             // ->where(function($query) use ($search) {
@@ -67,7 +67,7 @@ class UserController extends Controller
             //     }
             // })
             ->orderBy($column, $direction)
-            //->simplePaginate($paginationPerPage)
+            // ->simplePaginate($paginationPerPage)
             ->paginate($paginationPerPage);
 
         return response()->json(['success' => true, 'data' => $clients], 200);
@@ -111,7 +111,7 @@ class UserController extends Controller
 
         $data = $request->only(
             'name',
-            //'email',
+            // 'email',
             'password',
             'password_confirmation'
         );

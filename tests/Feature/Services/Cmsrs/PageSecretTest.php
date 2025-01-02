@@ -85,8 +85,8 @@ class PageSecretTest extends Base
           'after_login' => 1,
           'type' => 'main_page',
           'content' => ['en' => 'aaa test1234234'],
-          'menu_id' => null, //it must be null for type main_page
-          'page_id' => null, //it must be null for type main_page
+          'menu_id' => null, // it must be null for type main_page
+          'page_id' => null, // it must be null for type main_page
       ];
         $apiUrl = 'api/'.$this->apiSecret.'/pages?token='.$this->token;
         $this->assertNotEmpty($this->apiSecret);

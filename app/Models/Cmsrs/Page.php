@@ -11,13 +11,13 @@ class Page extends Model
 
     const PREFIX_CMS_ONE_PAGE_IN_MENU_URL = 'o';
 
-    //const PREFIX_SHOP_URL = 'shop';
-    const PREFIX_IN_URL = 'in'; //(in) independent
+    // const PREFIX_SHOP_URL = 'shop';
+    const PREFIX_IN_URL = 'in'; // (in) independent
 
-    //private $translate;
-    //private $content;
+    // private $translate;
+    // private $content;
     public $pageFields;
-    //private $langs;
+    // private $langs;
 
     protected $fillable = [
         'published',

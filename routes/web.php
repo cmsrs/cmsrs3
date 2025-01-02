@@ -1,13 +1,13 @@
 <?php
 
-use App\Http\Controllers\Auth\ForgotPasswordController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
+//use App\Http\Controllers\Auth\ForgotPasswordController;
+//use App\Http\Controllers\Auth\LoginController;
+//use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Cmsrs\FrontController;
 use App\Http\Controllers\Cmsrs\HomeController;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
-use Illuminate\Support\Facades\Auth;
+//use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,11 +22,11 @@ use Illuminate\Support\Facades\Route;
 */
 $demoStatus = env('DEMO_STATUS', false);
 $isShop = env('IS_SHOP', true);
-if ($demoStatus) {
-    Auth::routes(['register' => false, 'reset' => false]);
-} else {
-    Auth::routes(['register' => true, 'reset' => true]);
-}
+// if ($demoStatus) {
+//     Auth::routes(['register' => false, 'reset' => false]);
+// } else {
+//     Auth::routes(['register' => true, 'reset' => true]);
+// }
 
 $langs = ConfigService::arrGetLangsEnv();
 
@@ -38,7 +38,7 @@ if ($isShop) {
     Route::post('/post/checkout', [FrontController::class, 'postCheckout']);
 }
 
-Route::get('/changelang/{lang}/{pageId}/{productSlug?}', [FrontController::class, 'changeLang'])->name('changelang');
+Route::get('/changelang/{lang}/{pageIdoRRouterName}/{productSlug?}', [FrontController::class, 'changeLang'])->name('changelang');
 
 Route::get('/', [FrontController::class, 'index']);
 if (empty($langs) || (count($langs) == 1)) {
@@ -49,9 +49,9 @@ if (empty($langs) || (count($langs) == 1)) {
     }
 
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::get('/forgot', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('forgot');
+    //Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    //Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+    //Route::get('/forgot', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('forgot');
 
     Route::get('/'.Page::PREFIX_CMS_ONE_PAGE_IN_MENU_URL.'/{menuSlug}', [FrontController::class, 'getPage']);
     Route::get('/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}/{productSlug?}', [FrontController::class,  'getPage']);
@@ -65,9 +65,9 @@ if (empty($langs) || (count($langs) == 1)) {
 
     Route::get('/{lang}/home', [HomeController::class, 'index']);
     Route::get('/{lang}', [FrontController::class, 'index']);
-    Route::get('/{lang}/login', [LoginController::class, 'showLoginForm']); //->name('login');
-    Route::get('/{lang}/register', [RegisterController::class, 'showRegistrationForm']); // ->name('register');
-    Route::get('/{lang}/forgot', [ForgotPasswordController::class, 'showLinkRequestForm']);
+    //Route::get('/{lang}/login', [LoginController::class, 'showLoginForm']); //->name('login');
+    //Route::get('/{lang}/register', [RegisterController::class, 'showRegistrationForm']); // ->name('register');
+    //Route::get('/{lang}/forgot', [ForgotPasswordController::class, 'showLinkRequestForm']);
 
     Route::get('/{lang}/'.Page::PREFIX_CMS_ONE_PAGE_IN_MENU_URL.'/{menuSlug}', [FrontController::class, 'getPageLangs']);
     Route::get('/{lang}/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}/{productSlug?}', [FrontController::class, 'getPageLangs']);

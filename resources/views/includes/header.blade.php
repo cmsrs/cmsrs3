@@ -1,25 +1,32 @@
-<?php $configService = new App\Services\Cmsrs\ConfigService; ?>
-<?php $currency = $configService->getCurrency(); ?>
-<?php $manyLangs = (count($langs) > 1); ?>
-<?php $bg = env('DEMO_STATUS', false) ? 'bg-dark' : 'bg-secondary'; ?>
-<?php //$bg = 'bg-secondary';?>
-<?php $pLogin = $pageService::getFirstPageByType('login'); ?>
-<?php $pRegister = $pageService::getFirstPageByType('register'); ?>
-<?php $pHome = $pageService::getFirstPageByType('home'); ?>
-<?php
-$mainPage = $pageService::getFirstPageByType('main_page');
-$urlMainPage = '/';
-if ($mainPage) {
-    $urlMainPage = $pageService->getUrl($mainPage, $lang);
-}
-?>
-<?php $productNameSlug = ! empty($product_name_slug) ? $product_name_slug : null ?>
+<?php 
+  $configService = new App\Services\Cmsrs\ConfigService;
+  $pageService = new App\Services\Cmsrs\PageService; 
 
-<div id="page_id" data-page-id="{{$page ? $page->id : ''}}"></div>  
+  $lang = request()->route('lang') ?? request('lang') ?? $configService->getDefaultLang();
+  $menus = App\Models\Cmsrs\Menu::all()->sortBy('position');
+
+  $currency = $configService->getCurrency();
+  $langs = $configService->arrGetLangs();  
+  $manyLangs = (count($langs) > 1);
+  $bg = env('DEMO_STATUS', false) ? 'bg-dark' : 'bg-secondary'; 
+  //$bg = 'bg-secondary';
+  $pLogin =  true;//$pageService::getFirstPageByType('login'); 
+  $pRegister =  true;//$pageService::getFirstPageByType('register'); 
+  $pHome = $pageService::getFirstPageByType('home');
+
+  $mainPage = $pageService::getFirstPageByType('main_page');
+  $urlMainPage = '/';
+  if ($mainPage) {
+      $urlMainPage = $pageService->getUrl($mainPage, $lang);
+  }
+
+  $productNameSlug = ! empty($product_name_slug) ? $product_name_slug : null;
+?>
+<div id="page_id" data-page-id="{{ !empty($page) ? $page->id : ''}}"></div>  
 <div id="lang" data-lang="{{$lang ?  $lang : ''}}"></div>    
 <div id="is_shop" data-is-shop="{{ env('IS_SHOP', true) }}"></div>          
 <div id="is_demo" data-is-demo="{{ env('DEMO_STATUS', false) }}"></div>          
-<div id="commented" data-commented="{{ $page ? $page->commented : '' }}"></div>          
+<div id="commented" data-commented="{{ !empty($page) ? $page->commented : '' }}"></div>          
 <div id="currency" data-currency="{{ $currency }}"></div>          
 
 
@@ -107,14 +114,14 @@ if ($mainPage) {
         @endphp
         @guest            
               <li class="nav-item {{$loginStyle}}">
-                  <a class="nav-link" href="{{ $pageService->getUrl($pLogin, $lang) }}">
-                    {{ $pageService->translatesByColumnAndLang($pLogin, 'short_title', $lang ) }}
+                  <a class="nav-link" href="{{ route('login') }}">
+                    {{ __('Login') }}
                   </a>
               </li>
               @if (Route::has('register') && $pRegister )
                   <li class="nav-item  {{$loginStyle}}">
-                      <a class="nav-link" href="{{ $pageService->getUrl($pRegister, $lang) }}">
-                        {{ $pageService->translatesByColumnAndLang($pRegister, 'short_title', $lang ) }}
+                      <a class="nav-link" href="{{ route('register') }}">
+                      {{ __('Register') }}
                       </a>
                   </li>
               @endif
@@ -134,12 +141,15 @@ if ($mainPage) {
       @endif
       @if ($manyLangs)
         <li class="d-flex flex-row">
+        @php        
+          $routeName = request()->route()->getName();
+        @endphp
         @foreach ($langs as $ll)
             @php  
                 $classActive = ($ll == $lang) ? 'active' : '';
             @endphp
             <div class="ms-2  nav-item">
-              <a class="changelang nav-link  {{ $classActive }}" href="{{ route('changelang', ['lang' => $ll, 'pageId' => $page->id, 'productSlug' => ($productNameSlug ? $productNameSlug[$ll]  : null)] ) }}">
+              <a class="changelang nav-link  {{ $classActive }}" href="{{ route('changelang', ['lang' => $ll, 'pageIdoRRouterName' => (empty($page->id) ? $routeName : $page->id), 'productSlug' => ($productNameSlug ? $productNameSlug[$ll]  : null)] ) }}">
                 <img src="/images/cms/{{ $ll }}.png" alt="{{ $ll }}" /> {{ strtoupper($ll) }}
               </a>
             </div>

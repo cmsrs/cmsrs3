@@ -41,7 +41,7 @@ class ImageController extends Controller
         try {
             $this->imageService->createImages([$dataImage], $type, $refId);
         } catch (\Exception $e) {
-            //'Allowed memory size of 134217728 bytes exhausted - therefor i removed: .var_export($e, true) on server
+            // 'Allowed memory size of 134217728 bytes exhausted - therefor i removed: .var_export($e, true) on server
             Log::error('upload images: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile());
 
             return response()->json(['success' => false, 'error' => $e->getMessage()], 200);

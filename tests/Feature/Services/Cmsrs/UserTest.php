@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Services\Cmsrs;
 
-use App\Models\Cmsrs\User;
+use App\Models\User;
 use App\Services\Cmsrs\ConfigService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
@@ -27,9 +27,9 @@ class UserTest extends Base
         $this->createUser();
         $this->createClient();
         $users = User::all()->toArray();
-        $this->assertEquals(2, count($users)); //2 users - one admin, second client
+        $this->assertEquals(2, count($users)); // 2 users - one admin, second client
 
-        $this->pagination = ConfigService::getPagination(); //10 - change .env.testing
+        $this->pagination = ConfigService::getPagination(); // 10 - change .env.testing
         $this->assertEquals(10, $this->pagination);
     }
 
@@ -90,7 +90,7 @@ class UserTest extends Base
         $numbersOfClients = 99;
         $this->createManyClients($numbersOfClients);
         $users = User::all()->toArray();
-        $this->assertEquals(2 + $numbersOfClients, count($users)); //2 users - one admin, second client
+        $this->assertEquals(2 + $numbersOfClients, count($users)); // 2 users - one admin, second client
 
         $response = $this->get('api/clients/id/asc?token='.$this->token);
         $res = $response->getData();
@@ -106,7 +106,7 @@ class UserTest extends Base
         $this->assertNotEmpty($res->data->data[0]->created_at);
         $this->assertNotEmpty($res->data->data[0]->updated_at);
 
-        //$this->assertEquals(1 + $numbersOfClients ,$res->data->total);  //without admin - it is 100, in simplePaginate it is not occur
+        // $this->assertEquals(1 + $numbersOfClients ,$res->data->total);  //without admin - it is 100, in simplePaginate it is not occur
         $this->assertEquals($this->pagination, $res->data->per_page);
 
         $this->assertEquals(1, $res->data->current_page);
@@ -114,7 +114,7 @@ class UserTest extends Base
         $this->assertEquals(null, $res->data->prev_page_url);
         $this->assertTrue(str_contains($res->data->next_page_url, 'api/clients/id/asc?page=2'));
 
-        //get last page
+        // get last page
         $lastPage = ($numbersOfClients + 1) / $res->data->per_page;
         if ($numbersOfClients == 99) {
             $this->assertEquals(10, $lastPage);
@@ -122,11 +122,11 @@ class UserTest extends Base
         $response2 = $this->get('api/clients/id/asc?page='.$lastPage.'&token='.$this->token);
         $res2 = $response2->getData();
         $this->assertTrue($res2->success);
-        //dd($res2->data);
+        // dd($res2->data);
 
         $this->assertEquals($lastPage, $res2->data->current_page);
         $this->assertTrue(str_contains($res2->data->first_page_url, 'api/clients/id/asc?page=1'));
-        $this->assertTrue(str_contains($res2->data->prev_page_url, 'api/clients/id/asc?page='.($lastPage - 1))); //9
+        $this->assertTrue(str_contains($res2->data->prev_page_url, 'api/clients/id/asc?page='.($lastPage - 1))); // 9
         $this->assertEquals(null, $res2->data->next_page_url);
 
         $lastClient = $this->getTestClient($numbersOfClients);
@@ -216,7 +216,7 @@ class UserTest extends Base
         [
             'name' => 'test client',
             'email' => 'test_client_uniq@cmsrs.pl',
-            //'role' => User::$role['client'],
+            // 'role' => User::$role['client'],
             'password' => $pass,
             'password_confirmation' => $pass,
         ];
@@ -234,7 +234,7 @@ class UserTest extends Base
         $pass = 's';
         $testClient =
         [
-            //'name' => 't',
+            // 'name' => 't',
             'email' => $someExistingEmail,
             'password' => '1',
             'password_confirmation' => 'q',
@@ -263,7 +263,7 @@ class UserTest extends Base
         $testClient =
         [
             'name' => 'test client new',
-            'email' => $emailAdmin, //email is not changeable!
+            'email' => $emailAdmin, // email is not changeable!
             'password' => $newPass,
             'password_confirmation' => $newPass,
         ];
@@ -290,7 +290,7 @@ class UserTest extends Base
         $testClient =
         [
             'name' => 'test client new',
-            'email' => $emailAdmin, //email is not changeable!
+            'email' => $emailAdmin, // email is not changeable!
             'password' => $newPass,
             'password_confirmation' => $newPass,
         ];
@@ -306,8 +306,8 @@ class UserTest extends Base
         $this->assertEquals($userId, $usersAfter[$index]['id']);
         $this->assertEquals(User::$role['client'], $usersAfter[$index]['role']);
         $this->assertEquals($testClient['name'], $usersAfter[$index]['name']);
-        $this->assertEquals($users[$index]['email'], $usersAfter[$index]['email']); //email is not changeable!
-        $this->assertNotEquals($emailAdmin, $usersAfter[$index]['email']); //email is not changeable!
+        $this->assertEquals($users[$index]['email'], $usersAfter[$index]['email']); // email is not changeable!
+        $this->assertNotEquals($emailAdmin, $usersAfter[$index]['email']); // email is not changeable!
     }
 
     public function test_delete_client_docs()
@@ -379,7 +379,7 @@ class UserTest extends Base
         $this->assertEquals($name1, $res->data->data[1]->name);
     }
 
-    public function test_get_client_by_given_id_docs() //it can't be admin.
+    public function test_get_client_by_given_id_docs() // it can't be admin.
     {
         $users = User::all()->toArray();
         $index = 1;

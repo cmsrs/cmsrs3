@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Services\Cmsrs;
 
-use App\Models\Cmsrs\User;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -42,7 +42,7 @@ class AuthenticationTest extends TestCase
 
     private function logout_action($token)
     {
-        $response = $this->get('api/logout?token='.$token); //->getData();
+        $response = $this->get('api/logout?token='.$token); // ->getData();
 
         return $response;
     }
@@ -83,7 +83,7 @@ class AuthenticationTest extends TestCase
             'password' => 'cmsrs',
         ];
 
-        $response = $this->post('api/login', $d); //->getData();
+        $response = $this->post('api/login', $d); // ->getData();
 
         $response = $response->getData();
 
@@ -124,7 +124,7 @@ class AuthenticationTest extends TestCase
         $response = $this->post('api/login', [
             'email' => 'test_wrong@email.com',
             'password' => 'wrongpass',
-        ]); //->getData();
+        ]); // ->getData();
         $this->assertEquals(200, $response->status());
         $res = $response->getData();
 

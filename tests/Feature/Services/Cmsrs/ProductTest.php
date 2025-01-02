@@ -81,7 +81,7 @@ class ProductTest extends Base
         $this->priceDescription = PriceHelperService::getPriceDescriptionWrap(self::INT_PRODUCT_PRICE);
         $this->assertNotEmpty($this->priceDescription);
 
-        $pagination = ConfigService::getPagination(); //10 - change .env.testing
+        $pagination = ConfigService::getPagination(); // 10 - change .env.testing
         $this->assertEquals(10, $pagination);
 
     }
@@ -95,7 +95,7 @@ class ProductTest extends Base
     {
         $menu = (new MenuService)->wrapCreate($this->testMenu);
 
-        $this->menuObj = $menu; //$menu->all()->first();
+        $this->menuObj = $menu; // $menu->all()->first();
         $this->menuId = $menu->id;  // $this->menuObj->id;
         $this->assertNotEmpty($this->menuId);
 
@@ -142,10 +142,10 @@ class ProductTest extends Base
      */
     private function setTestData2($arrD = null)
     {
-        //$menu = (new Menu)->wrapCreate($this->testMenu);
-        //$this->menuObj = $menu; //$menu->all()->first();
-        //$this->menuId = $menu->id;  // $this->menuObj->id;
-        //$this->assertNotEmpty($this->menuId);
+        // $menu = (new Menu)->wrapCreate($this->testMenu);
+        // $this->menuObj = $menu; //$menu->all()->first();
+        // $this->menuId = $menu->id;  // $this->menuObj->id;
+        // $this->assertNotEmpty($this->menuId);
 
         $testPage =
         [
@@ -177,10 +177,10 @@ class ProductTest extends Base
 
         $this->assertNotEmpty($pageId);
 
-        //$data->data[1]
-        //$pageId = $data->data[1]->id; //!!
-        //$this->assertNotEmpty($this->pageId);
-        //$this->assertEquals($p->id, $this->pageId);
+        // $data->data[1]
+        // $pageId = $data->data[1]->id; //!!
+        // $this->assertNotEmpty($this->pageId);
+        // $this->assertEquals($p->id, $this->pageId);
 
         $this->testData2 = [
             'product_name' => ['en' => self::STR_PRODUCT_NAME_EN.' 2'],
@@ -282,7 +282,7 @@ class ProductTest extends Base
                     'id' => $id2,
                     'qty' => $qty1a,
                 ],
-                2 =>  //fake
+                2 =>  // fake
                     [
                         'id' => 10003,
                         'qty' => 44,
@@ -309,7 +309,7 @@ class ProductTest extends Base
             'published' => 1,
             'commented' => 0,
             'type' => 'checkout',
-            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
             'images' => [
             ],
         ];
@@ -321,7 +321,7 @@ class ProductTest extends Base
             'published' => 1,
             'commented' => 0,
             'type' => 'shoppingsuccess',
-            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
             'images' => [
             ],
         ];
@@ -406,7 +406,7 @@ class ProductTest extends Base
 
         $this->assertEquals(2, count($orders));
 
-        //the same !!!
+        // the same !!!
         foreach ($orders as $o) {
 
             $this->assertTrue(in_array($o['product_id'], $ids));
@@ -415,11 +415,11 @@ class ProductTest extends Base
             } elseif ($o['product_id'] == $ids['id2']) {
                 $this->assertEquals($qty1a, $o['qty']);
             } else {
-                $this->assertTrue(false); //this case is imposible
+                $this->assertTrue(false); // this case is imposible
             }
         }
 
-        //second time update
+        // second time update
         $response2b = $this->patch('api/checkouts/'.$ch->id.'?token='.$this->token, $dataUpdate);
         $res2b = $response2b->getData();
         $this->assertTrue($res2b->success);
@@ -429,7 +429,7 @@ class ProductTest extends Base
 
         $this->assertEquals(2, count($orders));
 
-        //the same !!!
+        // the same !!!
         foreach ($orders as $o) {
 
             $this->assertTrue(in_array($o['product_id'], $ids));
@@ -438,7 +438,7 @@ class ProductTest extends Base
             } elseif ($o['product_id'] == $ids['id2']) {
                 $this->assertEquals($qty1a, $o['qty']);
             } else {
-                $this->assertTrue(false); //this case is impossible
+                $this->assertTrue(false); // this case is impossible
             }
         }
 
@@ -468,16 +468,16 @@ class ProductTest extends Base
 
         $this->assertEquals(2, count($orders));
 
-        //NOT the same !!!
+        // NOT the same !!!
         foreach ($orders as $o) {
 
             $this->assertTrue(in_array($o['product_id'], $ids));
             if ($o['product_id'] == $ids['id1']) {
-                $this->assertEquals(2 * $qty0a, $o['qty']); //2x
+                $this->assertEquals(2 * $qty0a, $o['qty']); // 2x
             } elseif ($o['product_id'] == $ids['id2']) {
-                $this->assertEquals(2 * $qty1a, $o['qty']); //2x
+                $this->assertEquals(2 * $qty1a, $o['qty']); // 2x
             } else {
-                $this->assertTrue(false); //this case is impossible
+                $this->assertTrue(false); // this case is impossible
             }
         }
 
@@ -510,7 +510,7 @@ class ProductTest extends Base
                     'id' => $id2,
                     'qty' => $qty1a,
                 ],
-                2 =>  //fake
+                2 =>  // fake
                     [
                         'id' => 10003,
                         'qty' => 44,
@@ -537,7 +537,7 @@ class ProductTest extends Base
             'published' => 1,
             'commented' => 0,
             'type' => 'checkout',
-            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
             'images' => [
             ],
         ];
@@ -549,7 +549,7 @@ class ProductTest extends Base
             'published' => 1,
             'commented' => 0,
             'type' => 'shoppingsuccess',
-            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
             'images' => [
             ],
         ];
@@ -585,7 +585,7 @@ class ProductTest extends Base
         $this->assertTrue($res0->success);
 
         $c2 = Checkout::all()->count();
-        $this->assertEquals(1, $c2); //?? - TODO in future, maybe it should be 0
+        $this->assertEquals(1, $c2); // ?? - TODO in future, maybe it should be 0
 
         $baskets2 = Basket::all()->toArray();
         $this->assertEquals(0, count($baskets2));
@@ -600,7 +600,7 @@ class ProductTest extends Base
         $price2 = 32100;
         $ids = $this->setAddTwoProducts($price1, $price2);
 
-        $userId = $this->createClientUser()->id; //Auth::check() ? Auth::user()->id : null;
+        $userId = $this->createClientUser()->id; // Auth::check() ? Auth::user()->id : null;
         $this->assertNotEmpty($userId);
 
         $out = [];
@@ -623,7 +623,7 @@ class ProductTest extends Base
         $data =
 
         [
-            //'_token' => 'gTXqPBuPTbTz1yKecuMiaX8j5ynB1LiO4ul01PwZ',
+            // '_token' => 'gTXqPBuPTbTz1yKecuMiaX8j5ynB1LiO4ul01PwZ',
             'products' => [
                 0 => [
                     'id' => $id1,
@@ -634,7 +634,7 @@ class ProductTest extends Base
                     'id' => $id2,
                     'qty' => $qty1a,
                 ],
-                2 =>  //fake
+                2 =>  // fake
                     [
                         'id' => 10003,
                         'qty' => 44,
@@ -653,7 +653,7 @@ class ProductTest extends Base
             'payment' => PaymentService::KEY_CASH,
         ];
 
-        $sessionId = 123 + $i; //session()->getId()
+        $sessionId = 123 + $i; // session()->getId()
 
         [
             'productsDataAndTotalAmount' => $productsDataAndTotalAmount,
@@ -705,7 +705,7 @@ class ProductTest extends Base
             'published' => 1,
             'commented' => 0,
             'type' => 'shoppingsuccess',
-            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
             'images' => [
             ],
         ];
@@ -728,7 +728,7 @@ class ProductTest extends Base
                     'id' => $id2,
                     'qty' => $qty1a,
                 ],
-                2 =>  //fake
+                2 =>  // fake
                     [
                         'id' => 10003,
                         'qty' => 44,
@@ -755,7 +755,7 @@ class ProductTest extends Base
             'published' => 1,
             'commented' => 0,
             'type' => 'checkout',
-            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
             'images' => [
             ],
         ];
@@ -767,7 +767,7 @@ class ProductTest extends Base
             'published' => 1,
             'commented' => 0,
             'type' => 'shoppingsuccess',
-            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
             'images' => [
             ],
         ];
@@ -789,7 +789,7 @@ class ProductTest extends Base
         $c1 = Checkout::all()->count();
         $this->assertEquals(1, $c1);
 
-        $ch = Checkout::first(); //->toArray();
+        $ch = Checkout::first(); // ->toArray();
 
         $this->assertEquals(0, $ch->is_pay);
         $this->assertEquals($user->id, $ch->user_id);
@@ -824,9 +824,9 @@ class ProductTest extends Base
 
         // $o1count = Order::all()->count();
         // $this->assertEquals(2, $o1count);
-        //print_r(Order::all()->toArray());
+        // print_r(Order::all()->toArray());
 
-        $ch1 = Checkout::first(); //->toArray();
+        $ch1 = Checkout::first(); // ->toArray();
         $this->assertEquals(0, $ch1->is_pay);
 
         // second process payment
@@ -845,12 +845,12 @@ class ProductTest extends Base
         $this->assertNotEmpty($ch);
         $this->assertEquals(0, $ch->is_pay);
 
-        //pShoppingSuccess
+        // pShoppingSuccess
         $pSuc = PageService::getFirstPageByType('shoppingsuccess');
         $this->assertNotEmpty($pSuc);
         $urlShoppingSuccess = (new PageService)->getUrl($pSuc, 'en');
         $response3 = $this->get($urlShoppingSuccess);
-        $response3->assertStatus(200); //because there is checkout_id in session therefore is 200 status
+        $response3->assertStatus(200); // because there is checkout_id in session therefore is 200 status
 
         // $ret1 =  Order::copyDataFromBasketToOrderForUser();
         // $this->assertTrue($ret1);
@@ -923,8 +923,8 @@ class ProductTest extends Base
             $this->assertNotEmpty($data->data->$pId->name);
             $this->assertNotEmpty($data->data->$pId->url_product);
             $this->assertNotEmpty($data->data->$pId->url_image);
-            //$this->assertNotEmpty($data->data->$pId->product_id);
-            //$this->assertEquals($data->data->$pId->product_id, $pId);
+            // $this->assertNotEmpty($data->data->$pId->product_id);
+            // $this->assertEquals($data->data->$pId->product_id, $pId);
         }
 
         $lang = '';
@@ -939,7 +939,7 @@ class ProductTest extends Base
     {
 
         $this->setTestData();
-        //it must be 2 product in this test!!!
+        // it must be 2 product in this test!!!
         $testData1 = $this->testData;
         $testData2 = $this->testData;
 
@@ -1070,7 +1070,7 @@ class ProductTest extends Base
     public function test_it_will_unpublish_one_page_in_menu_product()
     {
         $this->setTestData();
-        //$this->setTestData2();
+        // $this->setTestData2();
 
         $response0 = $this->post('api/products?token='.$this->token, $this->testData);
 
@@ -1163,8 +1163,8 @@ class ProductTest extends Base
         $page->published = 0;
         $page->save();
 
-        //$page2 = Page::all()->toArray();
-        //dd($page2);
+        // $page2 = Page::all()->toArray();
+        // dd($page2);
 
         $response2 = $this->get($prodUrl);
         $response2->assertStatus(404);
@@ -1177,7 +1177,7 @@ class ProductTest extends Base
     public function test_it_will_get_one_product_in_menu_by_slug()
     {
         $this->setTestData();
-        //$this->setTestData2();
+        // $this->setTestData2();
 
         $response0 = $this->post('api/products?token='.$this->token, $this->testData);
 
@@ -1258,7 +1258,7 @@ class ProductTest extends Base
         $this->assertEquals($data->data[0]->title->en, $this->testPage['title']['en']);
     }
 
-    public function test_it_will_check_uniq_product_name_add_action() //error
+    public function test_it_will_check_uniq_product_name_add_action() // error
     {
         $this->setTestData();
         $response0 = $this->post('api/products?token='.$this->token, $this->testData);
@@ -1276,7 +1276,7 @@ class ProductTest extends Base
         $this->assertTrue(strpos($res1->error->product_name, 'Duplicate product name') === 0);
     }
 
-    public function test_it_add_product_case1_error_docs() //error
+    public function test_it_add_product_case1_error_docs() // error
     {
         $this->setTestData();
         $response0 = $this->post('api/products?token='.$this->token, $this->testData);
@@ -1295,7 +1295,7 @@ class ProductTest extends Base
         $this->assertNotEmpty($res1->error->price[1]);
     }
 
-    public function test_it_add_product_case2_error_docs() //error
+    public function test_it_add_product_case2_error_docs() // error
     {
         $this->setTestData();
         $response0 = $this->post('api/products?token='.$this->token, $this->testData);
@@ -1364,7 +1364,7 @@ class ProductTest extends Base
         $this->assertEquals(0, $res0->data->data->published);
         $this->assertEquals($products[0]['published'], $res0->data->data->published);
 
-        //Translate::query()->where('page_id', $p->id)->get()->toArray();
+        // Translate::query()->where('page_id', $p->id)->get()->toArray();
         $trans = Content::query()->where('product_id', $res0->data->productId)->get()->toArray();
         $this->assertEquals(count($trans), 1);
 
@@ -1382,7 +1382,7 @@ class ProductTest extends Base
         $this->assertNotEmpty($this->testData['product_name']['en']);
         $this->assertEquals(self::STR_PRODUCT_NAME_EN, $this->testData['product_name']['en']);
 
-        //$this->assertEquals( self::STR_PRODUCT_DESCRIPTION_EN, $this->testData['product_description']['en']);
+        // $this->assertEquals( self::STR_PRODUCT_DESCRIPTION_EN, $this->testData['product_description']['en']);
         $this->assertEquals('en', $trans2[0]['lang']);
         $this->assertEquals('product_name', $trans2[0]['column']);
         $this->assertEquals($res0->data->productId, $trans2[0]['product_id']);
@@ -1646,7 +1646,7 @@ class ProductTest extends Base
     {
         $this->setTestData();
 
-        //it must be 2 product in this test!!!
+        // it must be 2 product in this test!!!
         $this->testData['sku'] = '11';
         $this->testData['product_name']['en'] = 'name11';
         $r0 = $this->post('api/products?token='.$this->token, $this->testData);
@@ -1684,7 +1684,7 @@ class ProductTest extends Base
             'sku' => 'AN/34534_xx',
             'price' => 123,
             'product_description' => ['en' => 'opis ksiazki'],
-            //'photo' => null,
+            // 'photo' => null,
             'page_id' => $this->pageId,
             'images' => [
                 ['name' => $this->name1, 'data' => $this->getFixtureBase64($this->name1),  'alt' => ['en' => self::STR_DESC_IMG1]],
@@ -1722,7 +1722,7 @@ class ProductTest extends Base
         $this->assertEquals($res0->data->productId, $lastImage['product_id']);
         $this->assertEquals(null, $lastImage['page_id']);
 
-        //for($i = 0; $i < count($allImgsBefore)-1; $i++){
+        // for($i = 0; $i < count($allImgsBefore)-1; $i++){
         $resSwap = $this->patch('api/images/position/up/'.$lastImage['id'].'?token='.$this->token);
         $res = $resSwap->getData();
         $this->assertTrue($res->success);
@@ -1746,7 +1746,7 @@ class ProductTest extends Base
         $resSwap = $this->patch('api/images/position/down/'.$lastImage['id'].'?token='.$this->token);
         $res = $resSwap->getData();
         $this->assertTrue($res->success);
-        //}
+        // }
 
         $allImgsAfter = Image::where('product_id', $res0->data->productId)->orderBy('position')->get()->toArray();
 
@@ -1775,7 +1775,7 @@ class ProductTest extends Base
         $this->assertTrue($res->success);
         $this->assertNotEmpty($res->data->productId);
 
-        return $res->data; //->productId;
+        return $res->data; // ->productId;
     }
 
     private function createProduct2($i = 1)
@@ -1792,7 +1792,7 @@ class ProductTest extends Base
         $this->assertTrue($res->success);
         $this->assertNotEmpty($res->data->productId);
 
-        return $res->data; //->productId;
+        return $res->data; // ->productId;
     }
 
     private function createProducts($nu)
@@ -1834,21 +1834,21 @@ class ProductTest extends Base
         $product1b = $this->createProduct(2);
         $product2 = $this->createProduct2();
 
-        //1
+        // 1
         $response = $this->get('api/products/'.$product1a->productId.'?token='.$this->token);
         $res = $response->getData();
 
         $this->assertTrue($res->success);
         $this->assertEquals($product1a->productId, $res->data->id);
 
-        //2
+        // 2
         $response2 = $this->get('api/products/'.$product1b->productId.'?token='.$this->token);
         $res2 = $response2->getData();
 
         $this->assertTrue($res2->success);
         $this->assertEquals($product1b->productId, $res2->data->id);
 
-        //3
+        // 3
         $response3 = $this->get('api/products/'.$product2->productId.'?token='.$this->token);
         $res3 = $response3->getData();
 
@@ -1874,7 +1874,7 @@ class ProductTest extends Base
         $this->setFakeData();
         $lang = 'en';
 
-        /*product_name test */
+        /* product_name test */
         $column = 'product_name';
         $direction = 'desc';
 
@@ -1886,7 +1886,7 @@ class ProductTest extends Base
         $firstEl = reset($res->data->data);
         $this->assertEquals('php3 db app_9', $firstEl->product_name);
 
-        /*page_short_title test */
+        /* page_short_title test */
         $column = 'page_short_title';
         $direction = 'desc';
 
@@ -1898,7 +1898,7 @@ class ProductTest extends Base
         $firstEl = reset($res->data->data);
         $this->assertEquals('page2', $firstEl->page_short_title);
 
-        /*id test */
+        /* id test */
         $column = 'id';
         $direction = 'desc';
 
@@ -1910,7 +1910,7 @@ class ProductTest extends Base
         $firstEl = reset($res->data->data);
         $this->assertEquals(Product::All()->last()->id, $firstEl->id);
 
-        /*published test */
+        /* published test */
         $column = 'published';
         $direction = 'asc';
 
@@ -1923,7 +1923,7 @@ class ProductTest extends Base
         $this->assertEquals('page2', $firstEl->page_short_title);
         $this->assertEquals('0', $firstEl->published);
 
-        /*sku test */
+        /* sku test */
         $column = 'sku';
         $direction = 'desc';
 
@@ -1935,7 +1935,7 @@ class ProductTest extends Base
         $firstEl = reset($res->data->data);
         $this->assertEquals('AN/34534_9', $firstEl->sku);
 
-        /*price test */
+        /* price test */
         $column = 'price';
         $direction = 'desc';
 
@@ -1955,7 +1955,7 @@ class ProductTest extends Base
     {
         $this->setFakeData();
         $lang = 'en';
-        /*id test */
+        /* id test */
         $column = 'id';
         $direction = 'desc';
 
@@ -1978,12 +1978,12 @@ class ProductTest extends Base
 
         $this->assertEquals(2, $res2->data->current_page);
 
-        //These tests are useless.
-        //$firstEl2 = reset($res2->data->data);
-        //$pagination = getenv('PAGINATION');
-        //dump($pagination);
-        //dump( $id1-$pagination, $firstEl2->id );
-        //$this->assertEquals( $id1-$pagination, $firstEl2->id );
+        // These tests are useless.
+        // $firstEl2 = reset($res2->data->data);
+        // $pagination = getenv('PAGINATION');
+        // dump($pagination);
+        // dump( $id1-$pagination, $firstEl2->id );
+        // $this->assertEquals( $id1-$pagination, $firstEl2->id );
     }
 
     public function test_it_will_get_second_pagination_page_check_index()
@@ -2221,13 +2221,13 @@ class ProductTest extends Base
         $product1b = $this->createProduct(2);
         $product2 = $this->createProduct2();
 
-        //$sku1a = $product1a->data->sku;
-        //$sku1b = $product1b->data->sku;
+        // $sku1a = $product1a->data->sku;
+        // $sku1b = $product1b->data->sku;
         $sku2 = $product2->data->sku;
 
         $pName1a = $product1a->data->product_name->en;
-        //$pName1b = $product1b->data->product_name->en;
-        //$pName2 = $product2->data->product_name->en;
+        // $pName1b = $product1b->data->product_name->en;
+        // $pName2 = $product2->data->product_name->en;
 
         $this->assertEquals('app_1_1', $sku2);
         $this->assertEquals('php3 db app_1', $pName1a);
@@ -2364,7 +2364,7 @@ class ProductTest extends Base
         $response = $this->get($url);
         $res = $response->getData();
 
-        $this->assertEquals(2, count($res->data->data)); //client3, client30
+        $this->assertEquals(2, count($res->data->data)); // client3, client30
         $this->simpleTestCheckoutData($res->data->data[0]);
     }
 

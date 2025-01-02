@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\File;
 
 class ConfigService
 {
-    const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,login,projects,clear,checkout,register,home,shoppingsuccess,search,forgot,inner,slider_main'; //default values
+    // const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,login,projects,clear,checkout,register,home,shoppingsuccess,search,forgot,inner,slider_main'; //default values
+    const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,projects,clear,checkout,home,shoppingsuccess,search,inner,slider_main'; // default values
 
     const LANG_DEFAULT = 'en,pl';
 
@@ -31,7 +32,7 @@ class ConfigService
 
     public function __construct()
     {
-        $this->langs = env('LANGS', ConfigService::LANG_DEFAULT); //empty(env('LANGS')) ? Config::LANG_DEFAULT : env('LANGS');
+        $this->langs = env('LANGS', ConfigService::LANG_DEFAULT); // empty(env('LANGS')) ? Config::LANG_DEFAULT : env('LANGS');
         $this->cacheEnableFile = env('CACHE_ENABLE_FILE', ConfigService::CACHE_ENABLE_FILE_DEFAULT);
         $this->filePath = $this->getCacheEnableFilePath();
     }
@@ -145,7 +146,7 @@ class ConfigService
             $langs = $this->getLangs();
         } else {
             $langs = ConfigService::LANG_DEFAULT;
-            //throw new \Exception("You must set at least one language in the .env file");
+            // throw new \Exception("You must set at least one language in the .env file");
         }
 
         return $langs;
@@ -169,8 +170,8 @@ class ConfigService
     {
         $langs = ConfigService::arrGetLangsEnv();
         if (empty($langs) || empty($langs[0])) {
-            //$langs = [];
-            //$langs[0] =  'en';//ConfigService::LANG_DEFAULT;
+            // $langs = [];
+            // $langs[0] =  'en';//ConfigService::LANG_DEFAULT;
             throw new \Exception('You must set at least one language in the .env file (default lang)');
         }
 
@@ -179,7 +180,7 @@ class ConfigService
 
     public static function saveLangToSession($lang)
     {
-        if (request()->hasSession()) { //it don't session in tests
+        if (request()->hasSession()) { // it don't session in tests
             request()->session()->put('lang', $lang);
         }
     }
@@ -190,7 +191,7 @@ class ConfigService
     public static function getLangFromSession()
     {
         $lang = null;
-        if (request()->hasSession()) { //it don't session in tests
+        if (request()->hasSession()) { // it don't session in tests
             $lang = request()->session()->get('lang');
         }
         if (empty($lang)) {

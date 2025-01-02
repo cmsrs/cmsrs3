@@ -18,21 +18,21 @@ class CreateBasketsTable extends Migration
 
             $table->unsignedInteger('qty');
 
-            //$table->unsignedBigInteger('user_id')->notNullable();
-            //$table->foreign('user_id')->notNullable()->references('id')->on('users');
+            // $table->unsignedBigInteger('user_id')->notNullable();
+            // $table->foreign('user_id')->notNullable()->references('id')->on('users');
 
-            //$table->unsignedBigInteger('product_id')->notNullable();
-            //$table->foreign('product_id')->notNullable()->references('id')->on('products');
+            // $table->unsignedBigInteger('product_id')->notNullable();
+            // $table->foreign('product_id')->notNullable()->references('id')->on('products');
 
-            $table->unsignedBigInteger('checkout_id'); //->notNullable();
+            $table->unsignedBigInteger('checkout_id'); // ->notNullable();
             $table->foreign('checkout_id')->references('id')->on('checkouts')->onDelete('cascade');
             $table->integer('price')->nullable();
 
-            $table->unsignedBigInteger('product_id'); //->notNullable();
+            $table->unsignedBigInteger('product_id'); // ->notNullable();
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
 
-            //$table->unique(['user_id', 'product_id'], 'unique_baskets_index' );
-            //DB::statement('ALTER TABLE `baskets` ADD UNIQUE `unique_baskets_index` (`user_id`, `product_id`)'); //it will be delete in futher migration
+            // $table->unique(['user_id', 'product_id'], 'unique_baskets_index' );
+            // DB::statement('ALTER TABLE `baskets` ADD UNIQUE `unique_baskets_index` (`user_id`, `product_id`)'); //it will be delete in futher migration
 
             $table->timestamps();
         });

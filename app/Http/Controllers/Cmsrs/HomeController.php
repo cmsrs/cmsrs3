@@ -34,10 +34,10 @@ class HomeController extends Controller implements HasMiddleware
         protected ProductService $productService,
 
     ) {
-        //$lang = Config::getLangFromSession();  //not working proper
-        //App::setLocale($lang);
+        // $lang = Config::getLangFromSession();  //not working proper
+        // App::setLocale($lang);
 
-        $this->menus = MenuService::getMenu(); //$menus;
+        $this->menus = MenuService::getMenu(); // $menus;
         $this->langs = $this->configService->arrGetLangs();
     }
 

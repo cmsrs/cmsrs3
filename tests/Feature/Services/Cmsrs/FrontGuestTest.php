@@ -32,6 +32,8 @@ class FrontGuestTest extends TestCase
 
     public function test_it_will_get_login_page()
     {
+        $this->markTestSkipped('login page is not cms page, now it is base on laravel/fortify');
+
         $pLogin = [
             'title' => ['en' => 'login', 'pl' => 'login'],
             'short_title' => ['en' => 'login', 'pl' => 'login'],
@@ -66,13 +68,13 @@ class FrontGuestTest extends TestCase
         $response1->assertStatus(302);
         $response1->assertRedirect('/login');
 
-        //$response2 = $this->get('home/orders');
-        //$response2->assertStatus(302);
-        //$response2->assertRedirect('/login');
+        // $response2 = $this->get('home/orders');
+        // $response2->assertStatus(302);
+        // $response2->assertRedirect('/login');
 
-        //$response3 = $this->get('home/basket');
-        //$response3->assertStatus(302);
-        //$response3->assertRedirect('/login');
+        // $response3 = $this->get('home/basket');
+        // $response3->assertStatus(302);
+        // $response3->assertRedirect('/login');
 
         $response3b = $this->get('home/basketbb');
         $response3b->assertStatus(404);
@@ -237,8 +239,8 @@ class FrontGuestTest extends TestCase
         $p1 = (new PageService)->wrapCreate($data1p);
         $p2 = (new PageService)->wrapCreate($data2p);
 
-        $page1Slug = (new PageService)->getSlugByLang($p1, 'en'); //Str::slug($data1p['title']['en']);
-        $page2Slug = (new PageService)->getSlugByLang($p2, 'en'); //Str::slug($data2p['title']['en']);
+        $page1Slug = (new PageService)->getSlugByLang($p1, 'en'); // Str::slug($data1p['title']['en']);
+        $page2Slug = (new PageService)->getSlugByLang($p2, 'en'); // Str::slug($data2p['title']['en']);
 
         $url1 = (new PageService)->getUrl($p1, 'en');
 
@@ -354,7 +356,7 @@ class FrontGuestTest extends TestCase
         $url2 = (new PageService)->getUrl($p2, 'en');
         $response1 = $this->get($url2);
         $response1->assertStatus(404);
-        //$response1->assertStatus(401); // This might need to be checked, possibly should be different
+        // $response1->assertStatus(401); // This might need to be checked, possibly should be different
     }
 
     public function test_it_will_one_link_in_menu_normal()

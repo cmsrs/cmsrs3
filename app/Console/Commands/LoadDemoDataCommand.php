@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Data\Demo;
 use App\Models\Cmsrs\Comment;
-use App\Models\Cmsrs\User;
+use App\Models\User;
 use App\Services\Cmsrs\ContactService;
 use App\Services\Cmsrs\ContentService;
 use App\Services\Cmsrs\DeliverService;
@@ -89,7 +89,7 @@ class LoadDemoDataCommand extends Command
             'products' => [
                 0 => [
                     'id' => $prod0->id,
-                    'qty' => (($i + 1) % 4) + 1, //we don't  want 0, therefore we add 1 at the end
+                    'qty' => (($i + 1) % 4) + 1, // we don't  want 0, therefore we add 1 at the end
                 ],
 
                 1 => [
@@ -132,42 +132,42 @@ class LoadDemoDataCommand extends Command
         ini_set('memory_limit', '1028M');
         $objDemoData = new Demo;
 
-        /*---------------------*/
-        /*--- pages an menu ---*/
-        /*---------------------*/
+        /* --------------------- */
+        /* --- pages an menu --- */
+        /* --------------------- */
 
         $p = $objDemoData->pagesAndMenu();
 
-        /*---------------------*/
-        /*--- comments --------*/
-        /*---------------------*/
+        /* --------------------- */
+        /* --- comments -------- */
+        /* --------------------- */
         Comment::create(['page_id' => $p['p2']->id,  'content' => 'First test comment - test1']);
         Comment::create(['page_id' => $p['p2']->id,  'content' => 'Second test comment - test2']);
 
-        /*---------------------*/
-        /*--- products --------*/
-        /*---------------------*/
+        /* --------------------- */
+        /* --- products -------- */
+        /* --------------------- */
 
         $products = $objDemoData->product($p);
 
-        /*---------------------*/
-        /*--- contacts --------*/
-        /*---------------------*/
+        /* --------------------- */
+        /* --- contacts -------- */
+        /* --------------------- */
         for ($ii = 1; $ii <= 32; $ii++) {
             (new ContactService)->wrapCreate(['email' => "tt$ii@cmsrs.pl", 'message' => "test contact message$ii"]);
         }
 
-        /*---------------------*/
-        /* ---users -----------*/
-        /*---------------------*/
+        /* --------------------- */
+        /* ---users ----------- */
+        /* --------------------- */
 
         /** and */
 
-        /*---------------------*/
-        /* ---checkout---------*/
-        /*---------------------*/
+        /* --------------------- */
+        /* ---checkout--------- */
+        /* --------------------- */
 
-        //It,s created by the 'seed'
+        // It,s created by the 'seed'
         // $user = new User([
         //     'email'    => 'adm@cmsrs.pl',
         //     'name'     => 'adm',
@@ -217,8 +217,8 @@ class LoadDemoDataCommand extends Command
 
             $sessionId = 'demo123';
             [
-                //'productsDataAndTotalAmount' => $productsDataAndTotalAmount,
-                //'checkout' => $checkout,
+                // 'productsDataAndTotalAmount' => $productsDataAndTotalAmount,
+                // 'checkout' => $checkout,
                 'objCheckout' => $objCheckout
             ] = (new ProductService)->saveCheckout($d, $userId, $sessionId);
             if (empty($objCheckout->id)) {
@@ -226,9 +226,9 @@ class LoadDemoDataCommand extends Command
             }
         }
 
-        /*---------------------*/
-        /* ---orders-----------*/
-        /*---------------------*/
+        /* --------------------- */
+        /* ---orders----------- */
+        /* --------------------- */
         /*
         $uu =  User::where('email', '=', $emailClient)->first();
         $order1 = [

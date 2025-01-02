@@ -26,7 +26,7 @@
    <script type="application/javascript" src="/js/lib/axios.min.js"></script>
    <script type="application/javascript" src="/js/cmsrs.js"></script>  
 
-
+   <?php $view = empty($view) ? '' : $view; ?>
    <?php if( 'cmsrs.gallery' == $view ){ ?>
       <script type="application/javascript">
          var imagesGlobal = JSON.parse('<?php echo json_encode(  (new App\Services\Cmsrs\PageService) ->arrImages($page, $lang)) ?>');    

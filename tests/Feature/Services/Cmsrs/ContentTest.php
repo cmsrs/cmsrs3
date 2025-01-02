@@ -122,7 +122,7 @@ class ContentTest extends Base
         $data1p['content'] = 'str fake';
         $data1p['description'] = 'strereer';
 
-        //$this->expectException(\Exception::class);
+        // $this->expectException(\Exception::class);
         $p = (new PageService)->wrapCreate($data1p);
         $this->assertEquals($this->numOfLangs, Content::query()->where('page_id', $p->id)->where('column', 'content')->whereNull('value')->count());
         $this->assertEquals($this->numOfLangs, Translate::query()->where('page_id', $p->id)->where('column', 'description')->whereNull('value')->count());

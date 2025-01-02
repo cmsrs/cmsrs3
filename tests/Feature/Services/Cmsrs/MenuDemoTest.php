@@ -22,7 +22,7 @@ class MenuDemoTest extends Base
         putenv('CURRENCY="USD"');
         putenv('CACHE_ENABLE=false');
         putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');
-        putenv('DEMO_STATUS=true'); //!!!! it is different from MenuTest
+        putenv('DEMO_STATUS=true'); // !!!! it is different from MenuTest
         putenv('IS_SHOP=true');
 
         parent::setUp();
@@ -74,7 +74,7 @@ class MenuDemoTest extends Base
 
         $response = $this->put('api/menus/'.$objMenu2->id.'?token='.$this->token, $testData1);
         $this->checkMethodInDemoVersion($response);
-        //$this->assertFalse($res->success);
+        // $this->assertFalse($res->success);
     }
 
     public function test_it_will_wrong_add()
@@ -126,7 +126,7 @@ class MenuDemoTest extends Base
         $mMenu = Menu::find($data['id']);
         $this->assertEquals((new MenuService)->translatesByColumnAndLang($mMenu, 'name', 'en'), $data['name']->en);
         $this->assertSame((new MenuService)->translatesByColumnAndLang($mMenu, 'name', 'en'), $this->testData['name']['en']);
-        $this->assertSame($data['position'], 1); //instead 1 use $this->testData['position']
+        $this->assertSame($data['position'], 1); // instead 1 use $this->testData['position']
 
         $this->assertIsInt($data['position']);
         $this->assertIsInt($data['id']);

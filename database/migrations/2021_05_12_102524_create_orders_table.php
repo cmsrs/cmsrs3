@@ -17,13 +17,13 @@ class CreateOrdersTable extends Migration
             $table->bigIncrements('id')->index();
 
             $table->unsignedInteger('qty');
-            $table->unsignedBigInteger('user_id'); //->notNullable();
+            $table->unsignedBigInteger('user_id'); // ->notNullable();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->unsignedBigInteger('product_id'); //->notNullable();
+            $table->unsignedBigInteger('product_id'); // ->notNullable();
             $table->foreign('product_id')->references('id')->on('products');
 
             $table->unique(['user_id', 'product_id'], 'unique_orders_index');
-            //DB::statement('ALTER TABLE `orders`  ADD UNIQUE `unique_orders_index` (`user_id`, `product_id`)');
+            // DB::statement('ALTER TABLE `orders`  ADD UNIQUE `unique_orders_index` (`user_id`, `product_id`)');
 
             $table->timestamps();
         });

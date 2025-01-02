@@ -62,7 +62,7 @@ class ImageService extends BaseService implements TranslateInterface
     {
         $this->deleteImg($mImage);
 
-        return $mImage->delete(); //parent::delete();
+        return $mImage->delete(); // parent::delete();
     }
 
     public static function deleteImagesFromFs($allImg)
@@ -179,7 +179,7 @@ class ImageService extends BaseService implements TranslateInterface
             }
         }
 
-        //the order is important - first update then create
+        // the order is important - first update then create
         if ($imagesUpdate) {
             (new ImageService)->updateImages($imagesUpdate);
         }
@@ -219,7 +219,7 @@ class ImageService extends BaseService implements TranslateInterface
     private function sanitizeNameImages($images)
     {
         $sanitizeNameImages = [];
-        $allowedExtensions = (new ConfigService)->arrAllowedUploadFileExt();  //['jpg', 'jpeg', 'png', 'gif']; //, 'bmp', 'svg', 'webp'];
+        $allowedExtensions = (new ConfigService)->arrAllowedUploadFileExt();  // ['jpg', 'jpeg', 'png', 'gif']; //, 'bmp', 'svg', 'webp'];
         foreach ($images as $key => $image) {
             $basename = pathinfo($image['name'], PATHINFO_FILENAME);
             $extension = strtolower(trim(pathinfo($image['name'], PATHINFO_EXTENSION)));

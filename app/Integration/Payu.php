@@ -5,7 +5,7 @@ namespace App\Integration;
 use App\Services\Cmsrs\ConfigService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-//use Illuminate\Support\Facades\Http;
+// use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class Payu extends Model
@@ -30,7 +30,7 @@ class Payu extends Model
     public function getAccessToken()
     {
         try {
-            //$response = $this->client->post(env('PAYU_URL').'/pl/standard/user/oauth/authorize');
+            // $response = $this->client->post(env('PAYU_URL').'/pl/standard/user/oauth/authorize');
             $response = $this->client->post('/pl/standard/user/oauth/authorize');
             $token = (object) json_decode($response->getBody(), true);
         } catch (\Exception $e) {
@@ -45,7 +45,7 @@ class Payu extends Model
 
     public function dataToSend($additionalData, $checkoutData)
     {
-        //dd( $objCheckout->toArray()  );
+        // dd( $objCheckout->toArray()  );
 
         $user = Auth::user();
         // if( empty($user) ){
@@ -54,19 +54,19 @@ class Payu extends Model
         $lang = ConfigService::getDefaultLang();
 
         $data = [
-            //"notifyUrl" =>  "http://demo.cmsrs.pl/home/orders", //"https://your.eshop.com/notify",
-            'notifyUrl' => env('NOTIFY_URL'),  //"http://demo.cmsrs.pl/home", //"https://your.eshop.com/notify",
+            // "notifyUrl" =>  "http://demo.cmsrs.pl/home/orders", //"https://your.eshop.com/notify",
+            'notifyUrl' => env('NOTIFY_URL'),  // "http://demo.cmsrs.pl/home", //"https://your.eshop.com/notify",
             'customerIp' => env('CUSTOMER_IP'), //  '127.0.0.1', //$_SERVER['REMOTE_ADDR'],
             'currencyCode' => 'PLN',
             'description' => env('APP_NAME'),
             'merchantPosId' => env('PAYU_POS_ID'),
             'buyer' => [
-                'email' => ! empty($user) ? $user->email : $checkoutData['email'], //"john.doe@example.com",
+                'email' => ! empty($user) ? $user->email : $checkoutData['email'], // "john.doe@example.com",
                 'phone' => $checkoutData['telephone'],
                 'firstName' => $checkoutData['first_name'],
                 'lastName' => $checkoutData['last_name'],
 
-                'language' => 'pl', //$lang
+                'language' => 'pl', // $lang
             ],
             /*
             "products" => [
@@ -95,7 +95,7 @@ class Payu extends Model
         $redirectUri = null;
 
         try {
-            //$response = $this->client->post(env('PAYU_URL').'/api/v2_1/orders/', [
+            // $response = $this->client->post(env('PAYU_URL').'/api/v2_1/orders/', [
             $response = $this->client->post('/api/v2_1/orders/', [
                 'headers' => [
                     'Authorization' => 'Bearer '.$accessToken,

@@ -13,14 +13,14 @@ class Product extends Model
      *
      * @var string|null
      */
-    //public $product_name;
+    // public $product_name;
 
     /**
      * it is additional data (not related with db)
      *
      * @var string|null
      */
-    //public $page_short_title;
+    // public $page_short_title;
 
     public $productFields;
 
@@ -40,15 +40,15 @@ class Product extends Model
     public $columnsAllowedToSort = [
         'id',
         'published',
-        'product_name', //from translate
-        'page_short_title', //from translate - derive from page_id
+        'product_name', // from translate
+        'page_short_title', // from translate - derive from page_id
         'sku',
         'price',
         'created_at',
         'updated_at',
     ];
 
-    //phpstan - need it, see: test_search_products_by_many_columns_pagination_docs
+    // phpstan - need it, see: test_search_products_by_many_columns_pagination_docs
     public $product_name = null;
 
     public $page_short_title = null;
@@ -67,7 +67,7 @@ class Product extends Model
 
     public function translates(): HasMany
     {
-        return $this->hasMany('App\Models\Cmsrs\Translate'); //it should be work without params , 'product_id', 'id' - phpstan
+        return $this->hasMany('App\Models\Cmsrs\Translate'); // it should be work without params , 'product_id', 'id' - phpstan
     }
 
     public function translatesPage(): HasMany

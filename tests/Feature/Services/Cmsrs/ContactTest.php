@@ -39,7 +39,7 @@ class ContactTest extends Base
             'message' => 'test2',
         ];
 
-        $this->pagination = ConfigService::getPagination(); //10 - change .env.testing
+        $this->pagination = ConfigService::getPagination(); // 10 - change .env.testing
         $this->assertEquals(10, $this->pagination);
 
     }
@@ -121,7 +121,7 @@ class ContactTest extends Base
                 'message' => "test bulk message - test$ii",
             ];
 
-            //(new Contact)->wrapCreate(["email" => "tt$ii@cmsrs.pl", "message" => "test contact message$ii" ]);
+            // (new Contact)->wrapCreate(["email" => "tt$ii@cmsrs.pl", "message" => "test contact message$ii" ]);
             $response1 = $this->post('api/contact/en', $content);
             $this->assertTrue($response1->getData()->success);
         }
@@ -141,7 +141,7 @@ class ContactTest extends Base
         $this->assertTrue($res->success);
 
         $this->assertEquals($this->pagination, $res->data->per_page);
-        $lastPage = (int) (round(($numbersOfMsg + 1) / $res->data->per_page)); //(25/10 = 2.5 - round to up => 3.0)
+        $lastPage = (int) (round(($numbersOfMsg + 1) / $res->data->per_page)); // (25/10 = 2.5 - round to up => 3.0)
 
         $response2 = $this->get('api/contacts/pagination/id/desc?page='.$lastPage.'&token='.$this->token);
         $res2 = $response2->getData();
@@ -150,7 +150,7 @@ class ContactTest extends Base
         $firstContacts = $contacts[0];
         $lastContacts = $contacts[count($contacts) - 1];
 
-        $firstId = $res2->data->data[3]->id; //10,10,4 (3 = 4 -1)
+        $firstId = $res2->data->data[3]->id; // 10,10,4 (3 = 4 -1)
         $lastId = $res->data->data[0]->id;
 
         $this->assertEquals($firstId, $firstContacts['id']);

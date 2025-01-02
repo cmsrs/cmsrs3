@@ -6,7 +6,7 @@ use App\Integration\Payu;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Feature\Services\Cmsrs\Base;
 
-class PayuTest extends Base //TestCase
+class PayuTest extends Base // TestCase
 {
     use RefreshDatabase;
 
@@ -81,13 +81,13 @@ class PayuTest extends Base //TestCase
             'email' => 'client@cmsrs.pl',
             'first_name' => 'Jan',
             'last_name' => 'Kowalski',
-            //"address" => "kolejowa 1 m 2",
-            //"country" => "Polska",
-            //"city" => "Warszawa",
+            // "address" => "kolejowa 1 m 2",
+            // "country" => "Polska",
+            // "city" => "Warszawa",
             'telephone' => '1234567123',
-            //"postcode" => "03-456",
-            //"user_id" => 1,
-            //"session_id" => "KVyHIQKatIsilQqwBmwxzVToKLlEgNQnb6WdK75V"
+            // "postcode" => "03-456",
+            // "user_id" => 1,
+            // "session_id" => "KVyHIQKatIsilQqwBmwxzVToKLlEgNQnb6WdK75V"
         ];
 
         $data = $this->payu->dataToSend($additionalData, $buyerData);

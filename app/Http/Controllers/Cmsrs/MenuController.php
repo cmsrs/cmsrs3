@@ -18,7 +18,7 @@ class MenuController extends Controller
     ) {
         $langs = $this->configService->arrGetLangs();
         foreach ($langs as $lang) {
-            $this->validationRules['name.'.$lang] = 'max:255|required'; //|unique:App\Translate,value,null,menu_id';
+            $this->validationRules['name.'.$lang] = 'max:255|required'; // |unique:App\Translate,value,null,menu_id';
         }
     }
 
@@ -49,7 +49,7 @@ class MenuController extends Controller
             return response()->json(['success' => false, 'error' => $validator->messages()], 200);
         }
 
-        //check unique
+        // check unique
         $valid = MenuService::checkIsDuplicateName($data);
         if (empty($valid['success'])) {
             return response()->json($valid, 200);
@@ -81,7 +81,7 @@ class MenuController extends Controller
             return response()->json(['success' => false, 'error' => $validator->messages()], 200);
         }
 
-        //check unique
+        // check unique
         $valid = MenuService::checkIsDuplicateName($data, $menu->id);
         if (empty($valid['success'])) {
             return response()->json($valid, 200);

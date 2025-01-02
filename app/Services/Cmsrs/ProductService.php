@@ -57,13 +57,13 @@ class ProductService extends BaseService
 
         unset($data['products']);
         $checkout = $data;
-        $checkout['user_id'] = $userId; //Auth::check() ? Auth::user()->id : null;
-        $checkout['session_id'] = $sessionId; //session()->getId();
+        $checkout['user_id'] = $userId; // Auth::check() ? Auth::user()->id : null;
+        $checkout['session_id'] = $sessionId; // session()->getId();
         $checkout['price_total'] = $productsDataAndTotalAmount['totalAmount'];
         $checkout['price_deliver'] = $deliver['price'];
         $checkout['price_total_add_deliver'] = $checkout['price_total'] + $checkout['price_deliver'];
 
-        //without transaction
+        // without transaction
         // $objCheckout = Checkout::create($checkout);
         // if (empty($objCheckout->id)) {
         //     throw new \Exception("I cant get objCheckout id - problem with save checkout");
@@ -85,13 +85,13 @@ class ProductService extends BaseService
             foreach ($baskets as $basket) {
                 $basket['checkout_id'] = $objCheckout->id;
                 Basket::create($basket);
-                //Log::debug(' create basket: '.var_export( $basket , true ) );
+                // Log::debug(' create basket: '.var_export( $basket , true ) );
             }
             DB::commit();
         } catch (\Exception $e) {
             Log::debug(' transaction problem: '.var_export($e->getMessage(), true));
             DB::rollback();
-            //throw $e;
+            // throw $e;
         }
 
         return [
@@ -126,18 +126,18 @@ class ProductService extends BaseService
         if ($search) {
             $search = trim($search);
             $products = $products->filter(function ($product) use ($search) {
-                $productNameContainsSearch = str_contains(trim($product->getAttribute('product_name')), $search); //126
+                $productNameContainsSearch = str_contains(trim($product->getAttribute('product_name')), $search); // 126
                 $skuContainsSearch = str_contains(trim($product->sku), $search);
 
                 return $productNameContainsSearch || $skuContainsSearch;
             });
-            $products = $products->values(); //reset keys - start from 0
+            $products = $products->values(); // reset keys - start from 0
         }
 
         $products = ($direction == 'desc') ? $products->sortByDesc($column) : $products->sortBy($column);
-        $productsPagination = $this->getPaginationFromCollection($products->values()); //values() - reset keys
+        $productsPagination = $this->getPaginationFromCollection($products->values()); // values() - reset keys
 
-        //For optimization purposes, we only retrieve images for products on the given page.
+        // For optimization purposes, we only retrieve images for products on the given page.
         $productsPagination->each(function ($product) {
             $product->images = ImageService::getImagesAndThumbsByTypeAndRefId('product', $product->id);
         });
@@ -190,7 +190,7 @@ class ProductService extends BaseService
         // }
 
         $ids = array_keys($arrCart);
-        $arrProducts = Product::with(['translates'])->whereIn('id', $ids)->orderBy('id', 'asc')->get(); //->toArray();
+        $arrProducts = Product::with(['translates'])->whereIn('id', $ids)->orderBy('id', 'asc')->get(); // ->toArray();
 
         $out = [];
         $totalAmount = 0;
@@ -214,10 +214,10 @@ class ProductService extends BaseService
             if (is_array($baskets)) {
                 $baskets[] = [
                     'qty' => $qty,
-                    //"user_id" => $user->id,
+                    // "user_id" => $user->id,
                     'price' => $product->price,
                     'product_id' => $product->id,
-                    //"checkout_id" => $checkoutId
+                    // "checkout_id" => $checkoutId
                 ];
             }
 
@@ -435,7 +435,7 @@ class ProductService extends BaseService
         foreach ($products as $product) {
             if (! empty($product['published'])) {
                 $productId = $product['id'];
-                //$out[$productId]["product_id"] = $productId;
+                // $out[$productId]["product_id"] = $productId;
                 $out[$productId]['price'] = $product['price'];
                 $out[$productId]['price_description'] = PriceHelperService::getPriceDescriptionWrap($product['price']);
                 $out[$productId]['name'] = $product['product_name'][$lang];
@@ -497,7 +497,7 @@ class ProductService extends BaseService
 
     public function getProductsWithImagesByPage($pageId)
     {
-        $products = Product::with(['translates', 'contents'])->where('page_id', $pageId)->orderBy('id', 'asc')->where('published', '=', 1)->get(); //->toArray();
+        $products = Product::with(['translates', 'contents'])->where('page_id', $pageId)->orderBy('id', 'asc')->where('published', '=', 1)->get(); // ->toArray();
 
         return $this->dataToRender($products);
         // $i = 0;

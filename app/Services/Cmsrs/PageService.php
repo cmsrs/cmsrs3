@@ -85,12 +85,12 @@ class PageService extends BaseService implements TranslateInterface
 
     private function getPageByShortTitle($shortTitle)
     {
-        $translate = Translate::where('value', '=', $shortTitle)->where('column', '=', 'short_title')->first();  //where('lang', '=', $defaultLang )->first();
+        $translate = Translate::where('value', '=', $shortTitle)->where('column', '=', 'short_title')->first();  // where('lang', '=', $defaultLang )->first();
         if (empty($translate)) {
             return false;
         }
 
-        //->where('type', '=', 'inner') //todo why is this condition ? 'published', '=', 1 - is it make sense (see inner page post:/api/pages)? see test: it_will_get_data_page_by_short_title
+        // ->where('type', '=', 'inner') //todo why is this condition ? 'published', '=', 1 - is it make sense (see inner page post:/api/pages)? see test: it_will_get_data_page_by_short_title
         $page = $translate->page()->where('published', '=', 1)->first();
         if (empty($page)) {
             return false;
@@ -140,7 +140,7 @@ class PageService extends BaseService implements TranslateInterface
         }
     }
 
-    public function getDataToView(Page $mPage, $dataIn)   //($pageOut, $lang)
+    public function getDataToView(Page $mPage, $dataIn)   // ($pageOut, $lang)
     {
         $lang = $dataIn['lang'];
         if (empty($lang)) {
@@ -169,7 +169,7 @@ class PageService extends BaseService implements TranslateInterface
         return array_merge($data, $dataIn);
     }
 
-    public static function getPageBySlug($menus, $menuSlug, $pageSlug, $lang) //todo - change static
+    public static function getPageBySlug($menus, $menuSlug, $pageSlug, $lang) // todo - change static
     {
         $menuService = new MenuService;
         $pageService = new PageService;
@@ -177,7 +177,7 @@ class PageService extends BaseService implements TranslateInterface
         foreach ($menus as $menu) {
             if ($menuSlug == $menuService->getSlugByLang($menu, $lang)) {
                 $objPagesPublishedAndAccess = $menuService->pagesPublishedAndAccess($menu);
-                if ($objPagesPublishedAndAccess->count() == 1) { //it is the case for pageSlug = null, 1 page in menu
+                if ($objPagesPublishedAndAccess->count() == 1) { // it is the case for pageSlug = null, 1 page in menu
                     $pageOut = $objPagesPublishedAndAccess->first();
                     break;
                 }
@@ -306,7 +306,7 @@ class PageService extends BaseService implements TranslateInterface
         $this->content->wrapCreate($dd, $create);
     }
 
-    public function wrapUpdate(Page $mPage, $data) //zmiana_1007
+    public function wrapUpdate(Page $mPage, $data) // zmiana_1007
     {
         $mPage->update($data);
         $this->createTranslate(['page_id' => $mPage->id, 'data' => $data], false);
@@ -349,8 +349,8 @@ class PageService extends BaseService implements TranslateInterface
             $view = 'projects';
         } elseif ($type == 'clear') {
             $view = 'clear';
-        } elseif ($type == 'privacy_policy') { //it is used in footer, not related in menu
-            $view = 'in'; //(before: 'in' ) it can be cms (each language have got own language, not one language in each pages)
+        } elseif ($type == 'privacy_policy') { // it is used in footer, not related in menu
+            $view = 'in'; // (before: 'in' ) it can be cms (each language have got own language, not one language in each pages)
         } elseif ($type == 'gallery') {
             $view = 'gallery';
         } elseif ($type == 'shop') {
@@ -385,9 +385,9 @@ class PageService extends BaseService implements TranslateInterface
             return $this->getTypeUrl($type, $lang);
         }
 
-        //elseif ('privacy_policy' == $this->type) {
+        // elseif ('privacy_policy' == $this->type) {
         //    return $this->getIndependentUrl($lang);
-        //}
+        // }
         return $this->getCmsUrl($mPage, $lang, $urlParam);
     }
 
@@ -468,7 +468,7 @@ class PageService extends BaseService implements TranslateInterface
             $url = '/'.Page::PREFIX_CMS_URL.'/'.$menuSlug.'/'.$this->getSlugByLang($mPage, $lang);
         }
         if ($urlParam) {
-            //$url = $url."/".Str::slug($urlParam, '-');
+            // $url = $url."/".Str::slug($urlParam, '-');
             $url = $url.'/'.$urlParam;
         }
         $langs = ConfigService::arrGetLangsEnv();
@@ -482,7 +482,7 @@ class PageService extends BaseService implements TranslateInterface
     private function getMainUrl($lang)
     {
         $langs = ConfigService::arrGetLangsEnv();
-        array_shift($langs); //after this langs will be changed. It has rest of langs without first one.
+        array_shift($langs); // after this langs will be changed. It has rest of langs without first one.
 
         if (empty($langs)) {
             $url = '/';
@@ -581,7 +581,7 @@ class PageService extends BaseService implements TranslateInterface
             $item = $imageService->getAllImage($image, false);
             $item['id'] = $image->id;
             $item['alt'] = $imageService->getAltImg($image);
-            $item['altlang'] = ! empty($item['alt'][$lang]) ? $item['alt'][$lang] : ''; //it neeeds to javascript - to modal window in gallery
+            $item['altlang'] = ! empty($item['alt'][$lang]) ? $item['alt'][$lang] : ''; // it neeeds to javascript - to modal window in gallery
             $out[] = $item;
         }
 
@@ -622,7 +622,7 @@ class PageService extends BaseService implements TranslateInterface
     public function getAllPagesWithImagesOneItem(Page $mPage, ?string $simple = null)
     {
         $page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->first()->toArray();
-        //$page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->get($this->pageFields)->first()->toArray(); //phpstan fix
+        // $page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->get($this->pageFields)->first()->toArray(); //phpstan fix
 
         $formatPage = $this->getPageDataFormat($page);
         if (! $simple) {
@@ -638,8 +638,8 @@ class PageService extends BaseService implements TranslateInterface
             throw new \Exception('Wrong type : '.$type);
         }
 
-        //$page = Page::with(['translates', 'contents'])->where('type', $type)->where('published', true)->where('after_login', false)->orderBy('position', 'asc')->get($this->pageFields)->first(); //->toSql(); ///toArray();
-        $page = Page::with(['translates', 'contents'])->where('type', $type)->where('published', true)->where('after_login', false)->orderBy('position', 'asc')->first(); //->toSql(); ///toArray();
+        // $page = Page::with(['translates', 'contents'])->where('type', $type)->where('published', true)->where('after_login', false)->orderBy('position', 'asc')->get($this->pageFields)->first(); //->toSql(); ///toArray();
+        $page = Page::with(['translates', 'contents'])->where('type', $type)->where('published', true)->where('after_login', false)->orderBy('position', 'asc')->first(); // ->toSql(); ///toArray();
 
         $out = [];
         if ($page) {
@@ -788,9 +788,9 @@ class PageService extends BaseService implements TranslateInterface
                 Page::where('id', $p->id)->update(['position' => $pages[$swapKey]->position]);
 
                 Page::where('id', $pages[$swapKey]->id)->update(['position' => $positionKey]);
-                //$obj2 = Page::find($pages[$swapKey]->id);
-                //$obj2->position = 44;  //$positionKey;
-                //$obj2->save();
+                // $obj2 = Page::find($pages[$swapKey]->id);
+                // $obj2->position = 44;  //$positionKey;
+                // $obj2->save();
             }
         }
 

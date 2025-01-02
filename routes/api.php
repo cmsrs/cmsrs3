@@ -32,8 +32,8 @@ Route::get('comments/{pageId}', [CommentController::class,  'index']);
 Route::post('comments/{pageId}', [CommentController::class, 'create']);
 Route::post('contact/{lang}', [ContactController::class, 'create']);
 
-//Route::get('page/{id}/{lang}', [PageController::class, 'oneItem']); //(not remove this comment see: https://www.cmsrs.pl/pl/cms/cmsrs/rest-api). This API is not used in the project - uncomment if you want to use it
-//Route::get('page-type/{type}', [PageController::class, 'getFirstPageByTypeForGuest']); - i do not use this api - see skip test that use this api
+// Route::get('page/{id}/{lang}', [PageController::class, 'oneItem']); //(not remove this comment see: https://www.cmsrs.pl/pl/cms/cmsrs/rest-api). This API is not used in the project - uncomment if you want to use it
+// Route::get('page-type/{type}', [PageController::class, 'getFirstPageByTypeForGuest']); - i do not use this api - see skip test that use this api
 
 Route::group(['middleware' => ['jwt.auth']], function () {
     $apiSecret = env('API_SECRET', '');
@@ -51,10 +51,10 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::patch($apiSecret.'pages/position/{direction}/{id}', [PageController::class, 'position']);
     Route::get($apiSecret.'pages/type/{type}', [PageController::class, 'getPagesByType']);
 
-    Route::get($apiSecret.'images/{type}/{pageId}', [ImageController::class, 'getItemByTypeAndRefId']); //getItemByPageId, it can be pageId or productId
-    Route::post($apiSecret.'image/{type}/{pageId}', [ImageController::class, 'uploadImageByTypeAndRefId']); //it can be pageId or productId
+    Route::get($apiSecret.'images/{type}/{pageId}', [ImageController::class, 'getItemByTypeAndRefId']); // getItemByPageId, it can be pageId or productId
+    Route::post($apiSecret.'image/{type}/{pageId}', [ImageController::class, 'uploadImageByTypeAndRefId']); // it can be pageId or productId
     Route::delete($apiSecret.'images/{id}', [ImageController::class, 'delete']);
-    Route::patch($apiSecret.'images/position/{direction}/{id}', [ImageController::class, 'position']); //only for type page and product is working
+    Route::patch($apiSecret.'images/position/{direction}/{id}', [ImageController::class, 'position']); // only for type page and product is working
 
     Route::get($apiSecret.'users/clients', [UserController::class, 'getClients']);
     Route::get($apiSecret.'clients/{column}/{direction}', [UserController::class, 'getClientsPaginateAndSort']);

@@ -101,7 +101,7 @@ class Demo
 
             $imagesSlider = [
                 ['name' => 's1.png', 'data' => $this->getTestPhoto('clothes/sox.jpg'), 'alt' => ['en' => 'slider1', 'pl' => 'pl_slider1']],
-                //['name' => 's2.png', 'data' => $this->getTestPhoto('books/php5.jpg'), 'alt' => ['en' => 'slider2', 'pl' => 'pl_slider2']],
+                // ['name' => 's2.png', 'data' => $this->getTestPhoto('books/php5.jpg'), 'alt' => ['en' => 'slider2', 'pl' => 'pl_slider2']],
                 ['name' => 's3.png', 'data' => $this->getTestPhoto('books/java.jpg'), 'alt' => ['en' => 'slider2', 'pl' => 'pl_slider2']],
             ];
 
@@ -190,8 +190,8 @@ class Demo
         $images = $this->getTestImg($unitTest);
 
         $p = [];
-        //$appUrl = env('APP_URL');
-        //$admUrl = (strpos($appUrl, 'demo.cmsrs.pl') !== false) ? $appUrl.'/admin-demo' : $appUrl.'/admin/';
+        // $appUrl = env('APP_URL');
+        // $admUrl = (strpos($appUrl, 'demo.cmsrs.pl') !== false) ? $appUrl.'/admin-demo' : $appUrl.'/admin/';
         $admUrl = env('DEMO_STATUS', false) ? '/admin-demo' : '/admin/';
 
         $pInner1 = [
@@ -237,9 +237,9 @@ class Demo
         $pSlider = [
             'title' => ['en' => 'Slider', 'pl' => 'Slider pl'],
             'short_title' => ['en' => 'main_page_slider', 'pl' => 'main_page_slider'],
-            //'content' => [ "en" =>,  "pl" =>$this->getDummyTestPl()],
+            // 'content' => [ "en" =>,  "pl" =>$this->getDummyTestPl()],
             'published' => 1,
-            //'type' => 'slider_main',
+            // 'type' => 'slider_main',
             'type' => 'inner',
             'images' => $images['slider'],
         ];
@@ -254,7 +254,7 @@ class Demo
             'published' => 1,
             'commented' => 0,
             'after_login' => 0,
-            'type' => 'main_page', //!!
+            'type' => 'main_page', // !!
             'content' => ['en' => "
             <div class='container pt-5 starter-template  mt-4 mb-4'>
                 <h1>cmsRS demo version</h1>
@@ -345,11 +345,11 @@ class Demo
             "],
             'menu_id' => null,
             'page_id' => null,
-            //'images' => []
+            // 'images' => []
         ];
 
         $p['p1'] = $this->getPageObj()->wrapCreate($mainPage);
-        //Page::wrapCreate($mainPage);
+        // Page::wrapCreate($mainPage);
 
         $m1 = $this->getMenuObj()->wrapCreate(['name' => ['en' => 'About', 'pl' => 'O mnie']]);
 
@@ -439,7 +439,7 @@ class Demo
             'published' => 1,
             'commented' => 0,
             'type' => 'shop',
-            //'content' => [ "en" =>$this->getDummyTest(),  "pl" =>$this->getDummyTestPl()],
+            // 'content' => [ "en" =>$this->getDummyTest(),  "pl" =>$this->getDummyTestPl()],
             'menu_id' => $m3->id,
         ];
         $p['p4'] = $this->getPageObj()->wrapCreate($data4p);
@@ -493,8 +493,8 @@ class Demo
             'content' => ['en' => $this->getDummyTest(),  'pl' => $this->getDummyTestPl()],
             'menu_id' => $m4->id,
         ];
-        //kobieta
-        //woman
+        // kobieta
+        // woman
         $p['p8'] = $this->getPageObj()->wrapCreate($dataM4a);
 
         $data8p = [
@@ -545,37 +545,37 @@ class Demo
             'published' => 1,
             'commented' => 0,
             'type' => 'privacy_policy',
-            'content' => ['en' => $this->getDummyTest(),  'pl' => $this->getDummyTestPl()], //['en' => $this->getPrivacyPolicy(), 'pl' => $this->getPrivacyPolicy()],
+            'content' => ['en' => $this->getDummyTest(),  'pl' => $this->getDummyTestPl()], // ['en' => $this->getPrivacyPolicy(), 'pl' => $this->getPrivacyPolicy()],
             'images' => [
             ],
         ];
         $p['p9'] = $this->getPageObj()->wrapCreate($pPrivacy);
 
-        $pLogin = [
-            'title' => ['en' => 'Login', 'pl' => 'Logowanie'],
-            'short_title' => ['en' => 'Login', 'pl' => 'Logowanie'],
-            'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
-            'published' => 1,
-            'commented' => 0,
-            'type' => 'login',
-            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
-            'images' => [
-            ],
-        ];
-        $p['p10'] = $this->getPageObj()->wrapCreate($pLogin);
+        // $pLogin = [
+        //     'title' => ['en' => 'Login', 'pl' => 'Logowanie'],
+        //     'short_title' => ['en' => 'Login', 'pl' => 'Logowanie'],
+        //     'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
+        //     'published' => 1,
+        //     'commented' => 0,
+        //     'type' => 'login',
+        //     //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+        //     'images' => [
+        //     ],
+        // ];
+        // $p['p10'] = $this->getPageObj()->wrapCreate($pLogin);
 
-        $pRegister = [
-            'title' => ['en' => 'Register', 'pl' => 'Rejestracja'],
-            'short_title' => ['en' => 'Register', 'pl' => 'Rejestracja'],
-            'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
-            'published' => 1,
-            'commented' => 0,
-            'type' => 'register',
-            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
-            'images' => [
-            ],
-        ];
-        $p['p11'] = $this->getPageObj()->wrapCreate($pRegister);
+        // $pRegister = [
+        //     'title' => ['en' => 'Register', 'pl' => 'Rejestracja'],
+        //     'short_title' => ['en' => 'Register', 'pl' => 'Rejestracja'],
+        //     'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
+        //     'published' => 1,
+        //     'commented' => 0,
+        //     'type' => 'register',
+        //     //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+        //     'images' => [
+        //     ],
+        // ];
+        // $p['p11'] = $this->getPageObj()->wrapCreate($pRegister);
 
         $pCheckout = [
             'title' => ['en' => 'Checkout', 'pl' => 'Kasa'],
@@ -584,7 +584,7 @@ class Demo
             'published' => 1,
             'commented' => 0,
             'type' => 'checkout',
-            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
             'images' => [
             ],
         ];
@@ -595,10 +595,10 @@ class Demo
             'short_title' => ['en' => 'Home', 'pl' => 'Pulpit'],
             'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
             'published' => 1,
-            'after_login' => 1, //we don't need this page in sitmap
+            'after_login' => 1, // we don't need this page in sitmap
             'commented' => 0,
             'type' => 'home',
-            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
             'images' => [
             ],
         ];
@@ -609,10 +609,10 @@ class Demo
             'short_title' => ['en' => 'Shopping Success', 'pl' => 'Twoje zakupy'],
             'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
             'published' => 1,
-            'after_login' => 1, //we don't need this page in sitmap
+            'after_login' => 1, // we don't need this page in sitmap
             'commented' => 0,
             'type' => 'shoppingsuccess',
-            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
             'images' => [
             ],
         ];
@@ -625,24 +625,24 @@ class Demo
             'published' => 1,
             'commented' => 0,
             'type' => 'search',
-            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+            // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
             'images' => [
             ],
         ];
         $p['p15'] = $this->getPageObj()->wrapCreate($pSearch);
 
-        $pForgot = [
-            'title' => ['en' => 'Forgot password', 'pl' => 'Przypomnij hasło'],
-            'short_title' => ['en' => 'Forgot password', 'pl' => 'Przypomnij hasło'],
-            'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
-            'published' => 1,
-            'commented' => 0,
-            'type' => 'forgot',
-            //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
-            'images' => [
-            ],
-        ];
-        $p['p16'] = $this->getPageObj()->wrapCreate($pForgot);
+        // $pForgot = [
+        //     'title' => ['en' => 'Forgot password', 'pl' => 'Przypomnij hasło'],
+        //     'short_title' => ['en' => 'Forgot password', 'pl' => 'Przypomnij hasło'],
+        //     'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
+        //     'published' => 1,
+        //     'commented' => 0,
+        //     'type' => 'forgot',
+        //     //'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+        //     'images' => [
+        //     ],
+        // ];
+        // $p['p16'] = $this->getPageObj()->wrapCreate($pForgot);
 
         return $p;
     }
@@ -752,7 +752,7 @@ class Demo
             'price' => 5700,
             'published' => 1,
             'product_description' => ['en' => 'programme managers', 'pl' => 'kierownik programistów'],
-            'page_id' => $p['p4']->id, //$p['p4']
+            'page_id' => $p['p4']->id, // $p['p4']
             'images' => $images['product11'],
         ];
 
@@ -762,7 +762,7 @@ class Demo
             'price' => 500,
             'published' => 1,
             'product_description' => ['en' => 'socks', 'pl' => 'skarpety'],
-            'page_id' => $p['p8b']->id, //$p['p4']
+            'page_id' => $p['p8b']->id, // $p['p4']
             'images' => $images['product12'],
         ];
 
@@ -783,7 +783,7 @@ class Demo
         $out[] = $this->getProductObj()->wrapCreate($products['product12']);
 
         return $out;
-        //return $products;
+        // return $products;
     }
 
     private function getTestPhoto($imgPath)

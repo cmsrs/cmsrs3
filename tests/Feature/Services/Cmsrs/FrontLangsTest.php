@@ -3,12 +3,12 @@
 namespace Tests\Feature\Services\Cmsrs;
 
 use App\Data\Demo;
-//use App\Page;
+// use App\Page;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
-//use App\Menu;
+// use App\Menu;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
@@ -206,12 +206,12 @@ class FrontLangsTest extends Base
             'published' => 1,
             'commented' => 0,
             'after_login' => 1,
-            //'position' => 3,
+            // 'position' => 3,
             'type' => 'main_page',
             'content' => ['en' => 'main page', 'pl' => 'cmsRS'],
             'menu_id' => null,
             'page_id' => null,
-            //'images' => []
+            // 'images' => []
         ];
 
         $response = $this->post('api/pages?token='.$this->token, $testData2);
@@ -222,7 +222,7 @@ class FrontLangsTest extends Base
         $response1 = $this->get('/');
         $response1->assertStatus(200);
 
-        //dd($response1->getContent());
+        // dd($response1->getContent());
         $this->assertNotEmpty(strpos($response1->getContent(), $this->titlePl));
 
         $response2 = $this->get('/en');
@@ -257,10 +257,10 @@ class FrontLangsTest extends Base
         $menuName = $this->testDataMenu['name']['en'];
         $menuSlug = Str::slug($menuName);
 
-        $p0 = Page::query()->where('menu_id', $this->menuId)->get(); //->toArray();
+        $p0 = Page::query()->where('menu_id', $this->menuId)->get(); // ->toArray();
         $this->assertEquals(1, $p0->count());
 
-        //not working - see this it_will_get_cms_page0 (this work)
+        // not working - see this it_will_get_cms_page0 (this work)
         // $response = $this->get('/c/'.$menuSlug.'/'.$pageSlug);
         // $response->assertStatus(404);
 
@@ -283,7 +283,7 @@ class FrontLangsTest extends Base
         $res = $response->getData();
         $this->assertTrue($res->success);
 
-        $p = Page::query()->where('menu_id', $this->menuId)->get(); //->toArray();
+        $p = Page::query()->where('menu_id', $this->menuId)->get(); // ->toArray();
         $this->assertEquals(2, $p->count());
 
         $i = 0;
@@ -362,16 +362,35 @@ class FrontLangsTest extends Base
                 $url = (new PageService)->getUrl($page, $lang);
                 $response = $this->get($url);
 
-                $status = (($page->type === 'login') || ($page->type === 'register') || ($page->type === 'forgot')) ? 302 : 200;
+                $status =  200; //(($page->type === 'login') || ($page->type === 'register') || ($page->type === 'forgot')) ? 302 : 200;
                 if ($page->type == 'shoppingsuccess') {
                     $status = 404;
                 }
 
-                //echo " url=".$url." s=".$response->status()."\n";
+                // echo " url=".$url." s=".$response->status()."\n";
                 $response->assertStatus($status);
             }
 
         }
+    }
+
+    public function test_it_will_change_lang_login_page()
+    {
+        $response1 = $this->get('/changelang/pl/login');
+        $response1->assertStatus(302);
+
+        $redirectUrl = $response1->headers->get('Location');
+        $this->assertEquals("http://localhost/login?lang=pl",$redirectUrl);
 
     }
+
+    public function test_it_will_change_lang_register_page()
+    {
+        $response1 = $this->get('/changelang/pl/register');
+        $response1->assertStatus(302);
+
+        $redirectUrl = $response1->headers->get('Location');
+        $this->assertEquals("http://localhost/register?lang=pl",$redirectUrl);
+    }
+
 }

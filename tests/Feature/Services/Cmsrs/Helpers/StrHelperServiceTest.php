@@ -34,16 +34,16 @@ class StrHelperServiceTest extends TestCase
 
     public function test_filter2()
     {
-        //$delimiter = '-';
-        $to_replace = ['ą', 'ę', 'ó', 'ś', 'ć', 'ń', 'ł', 'ż', 'ź', 'Ą', 'Ę', 'Ó', 'Ś', 'Ć', 'Ń', 'Ł', 'Ż', 'Ź', //Polish
-            'ä', 'ö', 'ü', 'ß', 'Ä', 'Ö', 'Ü',  //German
-            //'%20',
-            //' '
+        // $delimiter = '-';
+        $to_replace = ['ą', 'ę', 'ó', 'ś', 'ć', 'ń', 'ł', 'ż', 'ź', 'Ą', 'Ę', 'Ó', 'Ś', 'Ć', 'Ń', 'Ł', 'Ż', 'Ź', // Polish
+            'ä', 'ö', 'ü', 'ß', 'Ä', 'Ö', 'Ü',  // German
+            // '%20',
+            // ' '
         ];
         $replace_with = ['a', 'e', 'o', 's', 'c', 'n', 'l', 'z', 'z', 'A', 'E', 'O', 'S', 'C', 'N', 'L', 'Z', 'Z',
             'a', 'o', 'u', 'ss', 'A', 'O', 'U',
-            //$delimiter,
-            //$delimiter
+            // $delimiter,
+            // $delimiter
         ];
 
         $ii = 0;

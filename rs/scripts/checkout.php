@@ -1,8 +1,8 @@
 <?php
 
-//change  /app/Http/Middleware/VerifyCsrfToken.php
-//disable-csrf-token-in-laravel
-//https://stackoverflow.com/questions/37806762/how-to-disable-csrf-token-in-laravel-and-why-we-have-to-disable-it
+// change  /app/Http/Middleware/VerifyCsrfToken.php
+// disable-csrf-token-in-laravel
+// https://stackoverflow.com/questions/37806762/how-to-disable-csrf-token-in-laravel-and-why-we-have-to-disable-it
 
 $id1 = 1;
 $qty0a = 12;
@@ -13,7 +13,7 @@ $qty1a = 24;
 $data =
 
 [
-    //'_token' => 'gTXqPBuPTbTz1yKecuMiaX8j5ynB1LiO4ul01PwZ',
+    // '_token' => 'gTXqPBuPTbTz1yKecuMiaX8j5ynB1LiO4ul01PwZ',
     '_token' => 'QZu4Otv3ecTWdCpgaEgRozpYNSpi8zm4LvqzEmPY',
     'products' => [
         0 => [

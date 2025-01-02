@@ -43,7 +43,7 @@ class ConfigController extends Controller
 
         try {
             $this->configService->clearCache();
-            //Artisan::call('cache:clear');
+            // Artisan::call('cache:clear');
         } catch (\Exception $e) {
             Log::error('config ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile());
 

@@ -15,10 +15,10 @@ use Illuminate\Support\Facades\Validator;
 class ProductController extends Controller
 {
     private $validationRules = [
-        //'name' => 'max:255|required',
+        // 'name' => 'max:255|required',
         'sku' => 'max:128|required|unique:products',
         'price' => 'integer|required',
-        //'description' => 'max:1280'
+        // 'description' => 'max:1280'
     ];
 
     public function __construct(
@@ -30,7 +30,7 @@ class ProductController extends Controller
 
         $langs = $this->configService->arrGetLangs();
         foreach ($langs as $lang) {
-            $this->validationRules['product_name.'.$lang] = 'max:255|required';  //|unique:translates
+            $this->validationRules['product_name.'.$lang] = 'max:255|required';  // |unique:translates
             $this->validationRules['product_description.'.$lang] = 'max:1280';
         }
     }
@@ -103,7 +103,7 @@ class ProductController extends Controller
             return response()->json(['success' => false, 'error' => $validator->messages()], 200);
         }
 
-        //check unique
+        // check unique
         $valid = $this->productService->checkIsDuplicateName($data);
         if (empty($valid['success'])) {
             return response()->json($valid, 200);
@@ -113,9 +113,9 @@ class ProductController extends Controller
             $product = $this->productService->wrapCreate($data);
         } catch (\Exception $e) {
 
-            Log::error('product add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); //.' for: '.var_export($data, true )
+            Log::error('product add ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile()); // .' for: '.var_export($data, true )
 
-            return response()->json(['success' => false, 'error' => 'Add product problem, details in the log file.'], 200); //.$e->getMessage()
+            return response()->json(['success' => false, 'error' => 'Add product problem, details in the log file.'], 200); // .$e->getMessage()
         }
 
         $data['price_description'] = PriceHelperService::getPriceDescriptionWrap($data['price']);
@@ -141,13 +141,13 @@ class ProductController extends Controller
             'images'
         );
 
-        $this->validationRules['sku'] = $this->validationRules['sku'].',sku,'.$id; //sku during update - have to be uniq for productId
+        $this->validationRules['sku'] = $this->validationRules['sku'].',sku,'.$id; // sku during update - have to be uniq for productId
         $validator = Validator::make($data, $this->validationRules);
         if ($validator->fails()) {
             return response()->json(['success' => false, 'error' => $validator->messages()], 200);
         }
 
-        //check unique
+        // check unique
         $valid = $this->productService->checkIsDuplicateName($data, $product->id);
         if (empty($valid['success'])) {
             return response()->json($valid, 200);
@@ -160,7 +160,7 @@ class ProductController extends Controller
                 ImageService::updatePositionImages($data['images']);
             }
         } catch (\Exception $e) {
-            Log::error('product update ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile().' for: '.var_export($e, true)); //var_export($data, true )
+            Log::error('product update ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile().' for: '.var_export($e, true)); // var_export($data, true )
 
             return response()->json(['success' => false, 'error' => 'Update product problem - exception'], 200);
         }

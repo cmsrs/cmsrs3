@@ -28,12 +28,12 @@ class DeliverService
             ],
             self::KEY_DPD_COURIER => [
                 'name' => 'DPD courier',
-                'price' => self::PRICE_DPD_COURIER, //1400,
+                'price' => self::PRICE_DPD_COURIER, // 1400,
                 'price_description' => PriceHelperService::getPriceDescriptionWrap(self::PRICE_DPD_COURIER),
             ],
             self::KEY_PARCEL_LOCKERS => [
                 'name' => 'Parcel lockers',
-                'price' => self::PRICE_PARCEL_LOCKERS, //1100,
+                'price' => self::PRICE_PARCEL_LOCKERS, // 1100,
                 'price_description' => PriceHelperService::getPriceDescriptionWrap(self::PRICE_PARCEL_LOCKERS),
             ],
         ];

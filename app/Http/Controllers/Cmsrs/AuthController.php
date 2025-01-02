@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Cmsrs;
 
 use App\Http\Controllers\Controller;
-use App\Models\Cmsrs\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
@@ -30,7 +30,7 @@ class AuthController extends Controller
             return response()->json(['success' => false, 'error' => $validator->messages()], 200);
         }
 
-        //$credentials['is_verified'] = 1;
+        // $credentials['is_verified'] = 1;
         return $this->getTokenByCredentials($credentials);
     }
 
@@ -85,8 +85,8 @@ class AuthController extends Controller
     {
         $demoStatus = env('DEMO_STATUS', false);
         if ($demoStatus) {
-            //echo 'Not permission';
-            return response()->json(['success' => false, 'error' => 'Not permission']); //phpstan fix
+            // echo 'Not permission';
+            return response()->json(['success' => false, 'error' => 'Not permission']); // phpstan fix
         } else {
             if ($request->ip() !== '127.0.0.1' || ($request->input('secret') !== $_ENV['RS_SECRET'])) {
                 return response()->json(['success' => false, 'error' => 'no access']);

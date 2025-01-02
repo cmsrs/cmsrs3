@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Services\Cmsrs;
 
-use App\Models\Cmsrs\User;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 
@@ -35,7 +35,7 @@ class HomeTest extends Base
         putenv('IS_SHOP=true');
 
         parent::setUp();
-        //$this->createUser();
+        // $this->createUser();
         $this->createClientUser();
     }
 

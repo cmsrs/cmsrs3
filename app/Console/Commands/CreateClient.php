@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Cmsrs\User;
+use App\Models\User;
 use Illuminate\Console\Command;
 
 class CreateClient extends Command
