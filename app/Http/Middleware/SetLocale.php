@@ -6,19 +6,19 @@ use App\Services\Cmsrs\ConfigService;
 use Closure;
 use Illuminate\Support\Facades\App;
 
-/**
-dont use now!!
- */
 class SetLocale
 {
     public function handle($request, Closure $next)
     {
-        $defaultLang = ConfigService::getDefaultLang();
+        $configService = new ConfigService;
 
-        $lang = $request->get('lang', $defaultLang);
+        $lang = $configService->getLangFromRequest();
+        // if (! in_array($lang, $configService->arrGetLangs())) {
+        //     abort(404);
+        // }
 
-        // App::setLocale($locale);
-        // dd('__________test__SetLocale__'.$lang);
+        App::setLocale($lang);
+
         return $next($request);
     }
 }

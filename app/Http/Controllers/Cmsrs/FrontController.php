@@ -232,6 +232,10 @@ class FrontController extends Controller
 
     public function changeLang($lang, $pageIdoRRouterName, $productSlug = null)
     {
+        if (! in_array($lang, $this->langs)) {
+            abort(404);
+        }
+
         $page = Page::find($pageIdoRRouterName);
         if (! empty($page)) {
             $url = $this->pageService->getUrl($page, $lang, $productSlug);

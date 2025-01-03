@@ -2,7 +2,7 @@
   $configService = new App\Services\Cmsrs\ConfigService;
   $pageService = new App\Services\Cmsrs\PageService; 
 
-  $lang = request()->route('lang') ?? request('lang') ?? $configService->getDefaultLang();
+  $lang =  $configService->getLangFromRequest(); //request()->route('lang') ?? request('lang') ?? $configService->getDefaultLang();
   $menus = App\Models\Cmsrs\Menu::all()->sortBy('position');
 
   $currency = $configService->getCurrency();
@@ -115,14 +115,14 @@
         @guest            
               @if ( $pLogin )        
               <li class="nav-item {{$loginStyle}}">
-                  <a class="nav-link" href="{{ route('login') }}">
+                  <a class="nav-link" href="{{ $manyLangs ? route('login', ['lang' => $lang ]) : route('login') }}">
                     {{ __('Login') }}
                   </a>
               </li>
               @endif              
               @if (Route::has('register') && $pRegister )
                   <li class="nav-item  {{$loginStyle}}">
-                      <a class="nav-link" href="{{ route('register') }}">
+                      <a class="nav-link" href="{{ $manyLangs ? route('register', ['lang' => $lang ]) : route('register') }}">
                       {{ __('Register') }}
                       </a>
                   </li>
@@ -149,9 +149,11 @@
         @foreach ($langs as $ll)
             @php  
                 $classActive = ($ll == $lang) ? 'active' : '';
+                $productSlug = $productNameSlug ? $productNameSlug[$ll]  : null;
+                $changeLang = (! empty($page)) ? $pageService->getUrl($page, $lang, $productSlug) : route($routeName, ['lang' => $ll ]);
             @endphp
             <div class="ms-2  nav-item">
-              <a class="changelang nav-link  {{ $classActive }}" href="{{ route('changelang', ['lang' => $ll, 'pageIdoRRouterName' => (empty($page->id) ? $routeName : $page->id), 'productSlug' => ($productNameSlug ? $productNameSlug[$ll]  : null)] ) }}">
+              <a class="changelang nav-link  {{ $classActive }}" href="{{ $changeLang }}">
                 <img src="/images/cms/{{ $ll }}.png" alt="{{ $ll }}" /> {{ strtoupper($ll) }}
               </a>
             </div>

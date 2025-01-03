@@ -213,4 +213,11 @@ class ConfigService
 
         return $formEnv && $isFileExist;
     }
+
+    public function getLangFromRequest()
+    {
+        $lang = request()->route('lang') ?? request('lang') ?? $this->getDefaultLang();
+
+        return $lang;
+    }
 }

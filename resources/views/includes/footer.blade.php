@@ -1,6 +1,10 @@
-<?php $pageService = new App\Services\Cmsrs\PageService; ?>
-<?php $lang = 'en'; ?>
-<?php $footerPages = $pageService->getFooterPages($lang);      ?>
+<?php 
+$pageService = new App\Services\Cmsrs\PageService;
+$configService = new App\Services\Cmsrs\ConfigService;
+
+$lang =  $configService->getLangFromRequest(); 
+$footerPages = $pageService->getFooterPages($lang);      
+?>
 <div   id="fixed-bottom" class="navbar fixed-bottom">
     <span class="pull-left">
         <a style="color:grey;"  href="{{ $footerPages['policyUrl'] }}">{{ $footerPages['policyTitle'] }}</a>

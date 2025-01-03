@@ -34,7 +34,7 @@ class CommentTest extends Base
         putenv('DEMO_STATUS=false');
         putenv('IS_SHOP=true');
         putenv('IS_LOGIN=true');
-        putenv('IS_REGISTER=true');                
+        putenv('IS_REGISTER=true');
 
         parent::setUp();
         $this->createUser();
