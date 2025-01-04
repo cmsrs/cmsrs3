@@ -99,14 +99,13 @@ class FrontLangsTest extends Base
         return (new PageService)->wrapCreate($this->testData);
     }
 
-    
-    //we dont use change lang controller
-    //instead we use
-    //getUrlByPageOrRouteName(Page|null $mPage, $lang, $productSlug = null, $routeName = null)
+    // we dont use change lang controller
+    // instead we use
+    // getUrlByPageOrRouteName(Page|null $mPage, $lang, $productSlug = null, $routeName = null)
     public function test_it_will_change_lang_0()
     {
         $mPage1 = $this->setTestData('shop');
-        //dd($mPage1);
+        // dd($mPage1);
         $mPage2 = $this->setTestData2('shop');
         $pages = Page::all()->toArray();
 
@@ -116,16 +115,16 @@ class FrontLangsTest extends Base
         $pageId = $pages[0]['id'];
 
         $pageService = new PageService;
-        $urlEn = $pageService->getUrlByPageOrRouteName($mPage1, 'en' );
+        $urlEn = $pageService->getUrlByPageOrRouteName($mPage1, 'en');
         $this->assertEquals('/en/cms/menu-test/page-1-test-test-slug', $urlEn);
-        //$response1 = $this->get('/changelang/en/'.$pageId);
-        //$response1->assertStatus(302);
-        //$response1->assertRedirect('/en/cms/menu-test/page-1-test-test-slug');
+        // $response1 = $this->get('/changelang/en/'.$pageId);
+        // $response1->assertStatus(302);
+        // $response1->assertRedirect('/en/cms/menu-test/page-1-test-test-slug');
 
-        $urlPl = $pageService->getUrlByPageOrRouteName($mPage1, 'pl' );
+        $urlPl = $pageService->getUrlByPageOrRouteName($mPage1, 'pl');
         $this->assertEquals('/pl/cms/test-men7-zolc/strona-testowa', $urlPl);
 
-        //dd('__END__');
+        // dd('__END__');
         // $response2 = $this->get('/changelang/pl/'.$pageId);
         // $response2->assertStatus(302);
         // $response2->assertRedirect('/pl/cms/test-men7-zolc/strona-testowa');
@@ -144,20 +143,20 @@ class FrontLangsTest extends Base
         $this->assertTrue($res0->success);
 
         $productNameSlug = Str::slug($productTestData['product_name']['en'], '-');
-        $urlEn = $pageService->getUrlByPageOrRouteName($mPage1, 'en', $productNameSlug );
+        $urlEn = $pageService->getUrlByPageOrRouteName($mPage1, 'en', $productNameSlug);
         $this->assertEquals('/en/cms/menu-test/page-1-test-test-slug/'.$productNameSlug, $urlEn);
 
-        //$response11 = $this->get('/changelang/en/'.$pageId.'/'.$productNameSlug);
-        //$response11->assertStatus(302);
-        //$response11->assertRedirect('/en/cms/menu-test/page-1-test-test-slug/'.$productNameSlug);
+        // $response11 = $this->get('/changelang/en/'.$pageId.'/'.$productNameSlug);
+        // $response11->assertStatus(302);
+        // $response11->assertRedirect('/en/cms/menu-test/page-1-test-test-slug/'.$productNameSlug);
 
         $productNameSlugPl = Str::slug($productTestData['product_name']['pl'], '-');
-        $urlPl = $pageService->getUrlByPageOrRouteName($mPage1, 'pl', $productNameSlugPl );
+        $urlPl = $pageService->getUrlByPageOrRouteName($mPage1, 'pl', $productNameSlugPl);
         $this->assertEquals('/pl/cms/test-men7-zolc/strona-testowa/'.$productNameSlugPl, $urlPl);
 
-        //$response22 = $this->get('/changelang/pl/'.$pageId.'/'.$productNameSlugPl);
-        //$response22->assertStatus(302);
-        //$response22->assertRedirect('/pl/cms/test-men7-zolc/strona-testowa/'.$productNameSlugPl);
+        // $response22 = $this->get('/changelang/pl/'.$pageId.'/'.$productNameSlugPl);
+        // $response22->assertStatus(302);
+        // $response22->assertRedirect('/pl/cms/test-men7-zolc/strona-testowa/'.$productNameSlugPl);
     }
 
     // public function test_it_will_change_lang_and_get_lang_from_session()
@@ -386,7 +385,7 @@ class FrontLangsTest extends Base
                     $status = 404;
                 }
 
-                //echo " url=".$url." s=".$response->status()."\n";
+                // echo " url=".$url." s=".$response->status()."\n";
                 $response->assertStatus($status);
             }
 
@@ -396,13 +395,13 @@ class FrontLangsTest extends Base
     public function test_it_will_change_lang_home_page_pl()
     {
         $response1 = $this->get('/home?lang=pl');
-        $response1->assertStatus(200);        
+        $response1->assertStatus(200);
     }
 
     public function test_it_will_change_lang_home_page_ch()
     {
         $response1 = $this->get('/home?lang=ch');
-        $response1->assertStatus(404);        
+        $response1->assertStatus(404);
     }
 
     public function test_it_will_change_lang_login_page()
@@ -410,35 +409,34 @@ class FrontLangsTest extends Base
         $response1 = $this->get('/login');
         $response1->assertStatus(302); //
         $redirectUrl = $response1->headers->get('Location');
-        $this->assertEquals('http://localhost/home', $redirectUrl); //no session in test
+        $this->assertEquals('http://localhost/home', $redirectUrl); // no session in test
 
     }
 
     public function test_it_will_change_lang_login_page_pl()
     {
         $response1 = $this->get('/login?lang=pl');
-        $response1->assertStatus(302);        
+        $response1->assertStatus(302);
 
-        //dd($response1);
+        // dd($response1);
         $redirectUrl = $response1->headers->get('Location');
-        $this->assertEquals('http://localhost/home', $redirectUrl);//no session in test
+        $this->assertEquals('http://localhost/home', $redirectUrl); // no session in test
     }
 
     public function test_it_will_change_lang_login_page_en()
     {
         $response1 = $this->get('/login?lang=en');
-        $response1->assertStatus(302);        
+        $response1->assertStatus(302);
         $redirectUrl = $response1->headers->get('Location');
-        $this->assertEquals('http://localhost/home', $redirectUrl);//no session in test
+        $this->assertEquals('http://localhost/home', $redirectUrl); // no session in test
     }
-
 
     public function test_it_will_change_lang_register_page()
     {
         $response1 = $this->get('/register');
         $response1->assertStatus(302);
         $redirectUrl = $response1->headers->get('Location');
-        $this->assertEquals('http://localhost/home', $redirectUrl);//no session in test
+        $this->assertEquals('http://localhost/home', $redirectUrl); // no session in test
     }
 
     public function test_it_will_change_lang_register_page_pl()
@@ -446,7 +444,7 @@ class FrontLangsTest extends Base
         $response1 = $this->get('/register?lang=pl');
         $response1->assertStatus(302);
         $redirectUrl = $response1->headers->get('Location');
-        $this->assertEquals('http://localhost/home', $redirectUrl);//no session in test
+        $this->assertEquals('http://localhost/home', $redirectUrl); // no session in test
     }
 
     public function test_it_will_change_lang_register_page_en()
@@ -454,7 +452,6 @@ class FrontLangsTest extends Base
         $response1 = $this->get('/register?lang=en');
         $response1->assertStatus(302);
         $redirectUrl = $response1->headers->get('Location');
-        $this->assertEquals('http://localhost/home', $redirectUrl);//no session in test
+        $this->assertEquals('http://localhost/home', $redirectUrl); // no session in test
     }
-
 }

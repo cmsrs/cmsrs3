@@ -393,9 +393,9 @@ class PageService extends BaseService implements TranslateInterface
         return $this->getCmsUrl($mPage, $lang, $urlParam);
     }
 
-    public function getUrlByPageOrRouteName(Page|null $mPage, $lang, $productSlug = null, $routeName = null)
+    public function getUrlByPageOrRouteName(?Page $mPage, $lang, $productSlug = null, $routeName = null)
     {
-        return (! empty($mPage)) ? $this->getUrl($mPage, $lang, $productSlug) : route($routeName, ['lang' => $lang ]);
+        return (! empty($mPage)) ? $this->getUrl($mPage, $lang, $productSlug) : route($routeName, ['lang' => $lang]);
     }
 
     private function getTypeUrl($type, $lang)

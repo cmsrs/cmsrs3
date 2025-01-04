@@ -229,7 +229,7 @@ class FrontController extends Controller
         }
 
     }
-    
+
     // public function changeLang($lang, $pageIdoRRouterName, $productSlug = null)
     // {
     //     if (! in_array($lang, $this->langs)) {
@@ -249,7 +249,6 @@ class FrontController extends Controller
 
     //     return redirect($url);
     // }
-    
 
     public function index($lang = null)
     {

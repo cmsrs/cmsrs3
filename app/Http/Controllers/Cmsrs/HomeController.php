@@ -10,12 +10,11 @@ use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\OrderService;
 use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\ProductService;
-//use Illuminate\Routing\Controllers\HasMiddleware;
-//use Illuminate\Routing\Controllers\Middleware;
+// use Illuminate\Routing\Controllers\HasMiddleware;
+// use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Request;
 
 class HomeController extends Controller // implements HasMiddleware
 {
@@ -54,14 +53,13 @@ class HomeController extends Controller // implements HasMiddleware
 
     /**
      * Show the application dashboard.
-     *
      */
     public function index(Request $request)
     {
         $lang = App::getLocale();
-        
+
         $user = Auth::user();
-        if(empty($user)){
+        if (empty($user)) {
             return redirect()->route('login');
         }
 
@@ -76,9 +74,8 @@ class HomeController extends Controller // implements HasMiddleware
         $objCheckouts = CheckoutService::findActiveOrders()->get();
         $checkouts = CheckoutService::printCheckouts($objCheckouts, $lang);
 
-
-        //$data = $this->pageService->getDataToView($page, [
-        $data =  [            
+        // $data = $this->pageService->getDataToView($page, [
+        $data = [
             'checkouts' => $checkouts,
             'orders' => $orders,
             'lang' => $lang,

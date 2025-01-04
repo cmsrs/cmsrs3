@@ -4,7 +4,6 @@ namespace App\Services\Cmsrs;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\App;
 
 class ConfigService
 {
@@ -214,8 +213,8 @@ class ConfigService
 
     public function getLangFromRequest()
     {
-        $lang = request()->route('lang') ?? request('lang') ??  $this->getDefaultLang();
-        if ( ! in_array($lang, $this->arrGetLangs()) ) {
+        $lang = request()->route('lang') ?? request('lang') ?? $this->getDefaultLang();
+        if (! in_array($lang, $this->arrGetLangs())) {
             abort(404);
         }
 

@@ -423,13 +423,12 @@ class FrontGuestTest extends Base
     public function test_it_will_change_lang_home_page()
     {
         $response1 = $this->get('/home');
-        //dd($response1);
-        $response1->assertStatus(302);      
+        // dd($response1);
+        $response1->assertStatus(302);
 
         $redirectUrl = $response1->headers->get('Location');
-        $this->assertEquals('http://localhost/login', $redirectUrl);        
+        $this->assertEquals('http://localhost/login', $redirectUrl);
     }
-
 
     public function test_it_launches_login_one_lang_200()
     {
@@ -442,7 +441,6 @@ class FrontGuestTest extends Base
         $response2 = $this->get('/login?lang=pl');
         $response2->assertStatus(404);
     }
-
 
     public function test_it_launches_register_page_200()
     {

@@ -16,8 +16,8 @@ class FrontGuestTwoTest extends TestCase
         putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');
         putenv('DEMO_STATUS=false');
         putenv('IS_SHOP=true');
-        putenv('IS_LOGIN=false'); //!!
-        putenv('IS_REGISTER=false');//!!
+        putenv('IS_LOGIN=false'); // !!
+        putenv('IS_REGISTER=false'); // !!
 
         parent::setUp();
     }
@@ -57,7 +57,7 @@ class FrontGuestTwoTest extends TestCase
         ];
 
         $response = $this->post('/login', $data);
-        $response->assertStatus(404);        
+        $response->assertStatus(404);
     }
 
     public function test_it_launches_post_register_page_404()

@@ -6,6 +6,7 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
+use App\Http\Controllers\Auth\CustomAuthenticatedSessionController;
 use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -17,12 +18,9 @@ use Laravel\Fortify\Actions\AttemptToAuthenticate;
 use Laravel\Fortify\Actions\CanonicalizeUsername;
 use Laravel\Fortify\Actions\EnsureLoginIsNotThrottled;
 use Laravel\Fortify\Actions\PrepareAuthenticatedSession;
-use Laravel\Fortify\Fortify;
-use App\Http\Controllers\Auth\CustomAuthenticatedSessionController;
-
-use Laravel\Fortify\Contracts\LogoutResponse;
 use Laravel\Fortify\Contracts\LoginResponse;
-
+use Laravel\Fortify\Contracts\LogoutResponse;
+use Laravel\Fortify\Fortify;
 
 // use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
 // use Laravel\Fortify\Features;
@@ -85,7 +83,7 @@ class FortifyServiceProvider extends ServiceProvider
         $this->app->singleton(
             \Laravel\Fortify\Http\Controllers\AuthenticatedSessionController::class,
             CustomAuthenticatedSessionController::class
-        );        
+        );
 
         Fortify::registerView(function () {
             // This condition is redundant because it is already defined in the configuration - but it is a good practice to check it

@@ -192,7 +192,7 @@ class Base extends TestCase
 
                 continue; // we don't need $numOfInPages - because this page has 404
             } else {
-                //dump($page->type);
+                // dump($page->type);
                 $response->assertStatus(200);
                 $pos = strpos($response->getContent(), $pageTitle);
                 $this->assertNotEmpty($pos, $pageTitle);
@@ -239,10 +239,10 @@ class Base extends TestCase
         $url[] = $urlCheckout;
 
         // home
-        //$urlHome = $pageService->getUrl(PageService::getFirstPageByType('home'), $lang);
-        //$response3 = $this->get($urlHome);
-        //$response3->assertStatus(200);
-        //$url[] = $urlHome;
+        // $urlHome = $pageService->getUrl(PageService::getFirstPageByType('home'), $lang);
+        // $response3 = $this->get($urlHome);
+        // $response3->assertStatus(200);
+        // $url[] = $urlHome;
 
         // pShoppingSuccess
         $urlShoppingSuccess = $pageService->getUrl(PageService::getFirstPageByType('shoppingsuccess'), $lang);
