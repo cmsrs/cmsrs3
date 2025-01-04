@@ -8,9 +8,22 @@ use Illuminate\Support\Facades\App;
 use Laravel\Fortify\Contracts\LoginViewResponse;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use Laravel\Fortify\Http\Requests\LoginRequest;
+use Laravel\Fortify\Contracts\LogoutResponse;
 
 class CustomAuthenticatedSessionController extends AuthenticatedSessionController
 {
+
+    /*
+    public function destroy(Request $request): LogoutResponse
+    {
+        if (! env('IS_LOGIN', true)) {
+            abort(404);
+        }
+        return parent::destroy($request);
+    }
+    */
+
+
     public function create(Request $request): LoginViewResponse
     {
         if (! env('IS_LOGIN', true)) {
@@ -19,6 +32,7 @@ class CustomAuthenticatedSessionController extends AuthenticatedSessionControlle
 
         $lang = (new ConfigService)->getLangFromRequest();
 
+        //cookie()->queue(cookie('lang', $lang, 60));
         $request->session()->put('lang', $lang);
         App::setLocale($lang);
 
@@ -32,6 +46,7 @@ class CustomAuthenticatedSessionController extends AuthenticatedSessionControlle
         }
 
         $lang = $request->session()->get('lang');
+        //$lang = $request->cookie('lang');
         $configService = new ConfigService;
 
         if ($lang && (! in_array($lang, $configService->arrGetLangs()))) {

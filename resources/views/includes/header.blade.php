@@ -12,7 +12,7 @@
   //$bg = 'bg-secondary';
   $pLogin = env('IS_LOGIN', true);
   $pRegister =  env('IS_REGISTER', true);
-  $pHome = $pageService::getFirstPageByType('home');
+  //$pHome = $pageService::getFirstPageByType('home');
 
   $mainPage = $pageService::getFirstPageByType('main_page');
   $urlMainPage = '/';
@@ -128,13 +128,11 @@
                   </li>
               @endif
         @else
-              @if ( $pHome )
               <li class="nav-item active {{$loginStyle}}">
-                    <a class="nav-link" href="{{ $pageService->getUrl($pHome, $lang) }}">
-                      {{ $pageService->translatesByColumnAndLang($pHome, 'short_title', $lang ) }}
+                    <a class="nav-link" href="{{ $manyLangs ? route('home', ['lang' => $lang ]) : route('home') }}">
+                    {{ __('Home') }}
                     </a>
               </li>
-              @endif
               <form id="logout-form" action="{{ route('logout') }}" method="POST" >
                                         @csrf
                                         <input type="submit" value="{{ __('Log out') }}"  class="nav-link" style="background:none; border-width:0px; cursor: pointer;" />

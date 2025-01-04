@@ -18,12 +18,10 @@ use Laravel\Fortify\Actions\AttemptToAuthenticate;
 use Laravel\Fortify\Actions\CanonicalizeUsername;
 use Laravel\Fortify\Actions\EnsureLoginIsNotThrottled;
 use Laravel\Fortify\Actions\PrepareAuthenticatedSession;
-use Laravel\Fortify\Contracts\LoginResponse;
 use Laravel\Fortify\Contracts\LogoutResponse;
 use Laravel\Fortify\Fortify;
+use App\Services\Cmsrs\ConfigService;
 
-// use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
-// use Laravel\Fortify\Features;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -31,25 +29,34 @@ class FortifyServiceProvider extends ServiceProvider
      * Register any application services.
      */
     public function register(): void
-    {
-        /*
+    {        
         $this->app->instance(LogoutResponse::class, new class implements LogoutResponse {
             public function toResponse($request)
             {
-                return redirect('/');
-            }
-        });
+                if (! env('IS_LOGIN', true)) {
+                    abort(404);
+                }
+        
+                $configService = new ConfigService;
+                if( !$configService->isManyLangs() ){
+                    return redirect('/');    
+                }
 
-        $this->app->instance(LoginResponse::class, new class implements LoginResponse {
-            public function toResponse($request)
-            {
-                $l = app()->getLocale();
-                dump('_____'.$l.'_________');
-                dd($request);
-                return redirect('/');
+                $lang = $request->cookie('lang'); 
+                $langs = $configService->arrGetLangs();
+                if ($lang && (! in_array($lang, $langs))) {
+                    abort(404);
+                }
+        
+                $defaultLang = $configService->getDefaultLang();
+                if (empty($lang)) {
+                    $lang = $configService->getDefaultLang();
+                }
+
+                $redirect = ( $lang == $defaultLang ) ? '/' : '/'.$lang;        
+                return redirect($redirect);
             }
         });
-        */
     }
 
     /**

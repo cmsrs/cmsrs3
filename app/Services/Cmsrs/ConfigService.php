@@ -159,6 +159,11 @@ class ConfigService
         return explode(',', $strLangs);
     }
 
+    public function isManyLangs()
+    {
+        return count($this->arrGetLangs()) > 1;
+    }
+
     public static function arrGetLangsEnv()
     {
         $langs = explode(',', env('LANGS', ConfigService::LANG_DEFAULT));

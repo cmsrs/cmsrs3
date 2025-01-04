@@ -14,6 +14,9 @@ class SetLocale
 
         $lang = $configService->getLangFromRequest();
         App::setLocale($lang);
+        if($configService->isManyLangs()){
+            cookie()->queue(cookie('lang', $lang, 60)); //60 minutes
+        }
 
         return $next($request);
     }
