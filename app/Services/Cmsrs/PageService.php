@@ -381,6 +381,8 @@ class PageService extends BaseService implements TranslateInterface
             return false;
         } elseif ($type == 'main_page') {
             return $this->getMainUrl($lang);
+
+            // TODO!!! - it should be removed
         } elseif (($type == 'login') || ($type == 'checkout') || ($type == 'register') || ($type == 'home') || ($type == 'shoppingsuccess') || ($type == 'search') || ($type == 'forgot')) {
             return $this->getTypeUrl($type, $lang);
         }
@@ -389,6 +391,11 @@ class PageService extends BaseService implements TranslateInterface
         //    return $this->getIndependentUrl($lang);
         // }
         return $this->getCmsUrl($mPage, $lang, $urlParam);
+    }
+
+    public function getUrlByPageOrRouteName(Page|null $mPage, $lang, $productSlug = null, $routeName = null)
+    {
+        return (! empty($mPage)) ? $this->getUrl($mPage, $lang, $productSlug) : route($routeName, ['lang' => $lang ]);
     }
 
     private function getTypeUrl($type, $lang)

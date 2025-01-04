@@ -16,6 +16,6 @@
 <!-- Custom styles for this template -->
 <link href="/css/front.css" rel="stylesheet">
 <script>
-    var lang = '{{ !empty($lang) ? $lang : '' }}';
+    var lang = '{{ !empty($lang) ? $lang : "" }}';
 </script>
 

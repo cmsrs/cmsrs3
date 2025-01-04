@@ -150,7 +150,7 @@
             @php  
                 $classActive = ($ll == $lang) ? 'active' : '';
                 $productSlug = $productNameSlug ? $productNameSlug[$ll]  : null;
-                $changeLang = (! empty($page)) ? $pageService->getUrl($page, $lang, $productSlug) : route($routeName, ['lang' => $ll ]);
+                $changeLang = $pageService->getUrlByPageOrRouteName(($page ?? null), $ll, $productSlug, $routeName);
             @endphp
             <div class="ms-2  nav-item">
               <a class="changelang nav-link  {{ $classActive }}" href="{{ $changeLang }}">

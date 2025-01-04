@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\File;
 class ConfigService
 {
     // const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,login,projects,clear,checkout,register,home,shoppingsuccess,search,forgot,inner,slider_main'; //default values
-    const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,projects,clear,checkout,home,shoppingsuccess,search,inner,slider_main'; // default values
+    const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,projects,clear,checkout,shoppingsuccess,search,inner,slider_main'; // default values
 
     const LANG_DEFAULT = 'en,pl';
 
@@ -178,28 +178,25 @@ class ConfigService
         return $langs[0];
     }
 
-    public static function saveLangToSession($lang)
-    {
-        if (request()->hasSession()) { // it don't session in tests
-            request()->session()->put('lang', $lang);
-        }
-    }
+    // public static function saveLangToSession($lang)
+    // {
+    //     if (request()->hasSession()) { // it don't session in tests
+    //         request()->session()->put('lang', $lang);
+    //     }
+    // }
 
-    /**
-     * this function not working properly - for example i homeController
-     */
-    public static function getLangFromSession()
-    {
-        $lang = null;
-        if (request()->hasSession()) { // it don't session in tests
-            $lang = request()->session()->get('lang');
-        }
-        if (empty($lang)) {
-            $lang = ConfigService::getDefaultLang();
-        }
+    // public static function getLangFromSession()
+    // {
+    //     $lang = null;
+    //     if (request()->hasSession()) { // it don't session in tests
+    //         $lang = request()->session()->get('lang');
+    //     }
+    //     if (empty($lang)) {
+    //         $lang = ConfigService::getDefaultLang();
+    //     }
 
-        return $lang;
-    }
+    //     return $lang;
+    // }
 
     public function getConfigCacheEnable()
     {
@@ -217,7 +214,6 @@ class ConfigService
     public function getLangFromRequest()
     {
         $lang = request()->route('lang') ?? request('lang') ?? $this->getDefaultLang();
-
         return $lang;
     }
 }

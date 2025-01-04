@@ -63,7 +63,7 @@ if (empty($langs) || (count($langs) == 1)) {
         Route::get('/{lang}/checkout', [FrontController::class, 'checkout']);
     }
 
-    Route::get('/{lang}/home', [HomeController::class, 'index']);
+    //Route::get('/{lang}/home', [HomeController::class, 'index']);
     Route::get('/{lang}', [FrontController::class, 'index']);
     // Route::get('/{lang}/login', [LoginController::class, 'showLoginForm']); //->name('login');
     // Route::get('/{lang}/register', [RegisterController::class, 'showRegistrationForm']); // ->name('register');

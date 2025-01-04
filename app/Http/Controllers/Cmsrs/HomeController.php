@@ -10,13 +10,14 @@ use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\OrderService;
 use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\ProductService;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
+//use Illuminate\Routing\Controllers\HasMiddleware;
+//use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 
-class HomeController extends Controller implements HasMiddleware
+class HomeController extends Controller // implements HasMiddleware
 {
     private $menus;
 
@@ -44,32 +45,48 @@ class HomeController extends Controller implements HasMiddleware
     /**
      * Get the middleware that should be assigned to the controller.
      */
-    public static function middleware(): array
-    {
-        return [
-            new Middleware('auth'),
-        ];
-    }
+    // public static function middleware(): array
+    // {
+    //     return [
+    //         new Middleware('auth'),
+    //     ];
+    // }
 
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index($lang = null)
+    public function index(Request $request)
     {
-        $page = PageService::getFirstPageByType('home');
-        if (! $page) {
-            Log::error('if you want this page you have to add page in type home');
+        $lang = $request->query('lang', null);
+        if ( $lang && (! in_array($lang, $this->configService->arrGetLangs()))  ) {
             abort(404);
         }
-
-        if (empty($lang)) {
-            $lang = $this->langs[0];
+        if(empty($lang) ){
+            $lang = App::getLocale();
         }
+        if(empty($lang) ){
+            $lang = $this->configService->getDefaultLang();
+        }
+
+        //dd('______________________HomeController@index_'.$lang);
+
+        // $page = PageService::getFirstPageByType('home');
+        // if (! $page) {
+        //     Log::error('if you want this page you have to add page in type home');
+        //     abort(404);
+        // }
+
+        // if (empty($lang)) {
+        //     $lang = $this->langs[0];
+        // }
         App::setLocale($lang);
 
         $user = Auth::user();
+        if(empty($user)){
+            return redirect()->route('login');
+        }
+
         $arrOrders = OrderService::inOrdersByUserId($user->id)->toArray();
         $orders = [];
         if (! empty($arrOrders)) {
@@ -81,13 +98,16 @@ class HomeController extends Controller implements HasMiddleware
         $objCheckouts = CheckoutService::findActiveOrders()->get();
         $checkouts = CheckoutService::printCheckouts($objCheckouts, $lang);
 
-        $data = $this->pageService->getDataToView($page, [
+        //dd('_____________________________________');
+
+        //$data = $this->pageService->getDataToView($page, [
+        $data =  [            
             'checkouts' => $checkouts,
             'orders' => $orders,
             'lang' => $lang,
             'langs' => $this->langs,
             'menus' => $this->menus,
-        ]);
+        ];
 
         return view('cmsrs.home', $data);
     }

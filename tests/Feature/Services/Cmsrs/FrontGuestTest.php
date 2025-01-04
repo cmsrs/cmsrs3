@@ -418,18 +418,37 @@ class FrontGuestTest extends Base
         $response = $this->get('/login');
         $response->assertStatus(200);
 
-        $response2 = $this->get('/login?lang=pl');
-        $response2->assertStatus(200);
+    }
 
+    public function test_it_will_change_lang_home_page()
+    {
+        $response1 = $this->get('/home');
+        //dd($response1);
+        $response1->assertStatus(302);      
+
+        $redirectUrl = $response1->headers->get('Location');
+        $this->assertEquals('http://localhost/login', $redirectUrl);        
+    }
+
+
+    public function test_it_launches_login_one_lang_200()
+    {
         $response3 = $this->get('/login?lang=en');
         $response3->assertStatus(200);
+
+        $response2 = $this->get('/login?lang=pl');
+        $response2->assertStatus(200);
     }
+
 
     public function test_it_launches_register_page_200()
     {
         $response = $this->get('/register');
         $response->assertStatus(200);
+    }
 
+    public function test_it_launches_register_one_lang_404()
+    {
         $response2 = $this->get('/register?lang=pl');
         $response2->assertStatus(200);
 
