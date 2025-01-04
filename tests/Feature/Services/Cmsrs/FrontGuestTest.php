@@ -433,11 +433,14 @@ class FrontGuestTest extends Base
 
     public function test_it_launches_login_one_lang_200()
     {
+        $response1 = $this->get('/login');
+        $response1->assertStatus(200);
+
         $response3 = $this->get('/login?lang=en');
         $response3->assertStatus(200);
 
         $response2 = $this->get('/login?lang=pl');
-        $response2->assertStatus(200);
+        $response2->assertStatus(404);
     }
 
 
@@ -450,7 +453,7 @@ class FrontGuestTest extends Base
     public function test_it_launches_register_one_lang_404()
     {
         $response2 = $this->get('/register?lang=pl');
-        $response2->assertStatus(200);
+        $response2->assertStatus(404);
 
         $response3 = $this->get('/register?lang=en');
         $response3->assertStatus(200);

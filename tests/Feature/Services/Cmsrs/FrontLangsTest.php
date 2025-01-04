@@ -410,7 +410,7 @@ class FrontLangsTest extends Base
         $response1 = $this->get('/login');
         $response1->assertStatus(302); //
         $redirectUrl = $response1->headers->get('Location');
-        $this->assertEquals('http://localhost/home', $redirectUrl);
+        $this->assertEquals('http://localhost/home', $redirectUrl); //no session in test
 
     }
 
@@ -421,7 +421,7 @@ class FrontLangsTest extends Base
 
         //dd($response1);
         $redirectUrl = $response1->headers->get('Location');
-        $this->assertEquals('http://localhost/home', $redirectUrl);
+        $this->assertEquals('http://localhost/home', $redirectUrl);//no session in test
     }
 
     public function test_it_will_change_lang_login_page_en()
@@ -429,7 +429,7 @@ class FrontLangsTest extends Base
         $response1 = $this->get('/login?lang=en');
         $response1->assertStatus(302);        
         $redirectUrl = $response1->headers->get('Location');
-        $this->assertEquals('http://localhost/home', $redirectUrl);
+        $this->assertEquals('http://localhost/home', $redirectUrl);//no session in test
     }
 
 
@@ -438,7 +438,7 @@ class FrontLangsTest extends Base
         $response1 = $this->get('/register');
         $response1->assertStatus(302);
         $redirectUrl = $response1->headers->get('Location');
-        $this->assertEquals('http://localhost/home', $redirectUrl);
+        $this->assertEquals('http://localhost/home', $redirectUrl);//no session in test
     }
 
     public function test_it_will_change_lang_register_page_pl()
@@ -446,7 +446,7 @@ class FrontLangsTest extends Base
         $response1 = $this->get('/register?lang=pl');
         $response1->assertStatus(302);
         $redirectUrl = $response1->headers->get('Location');
-        $this->assertEquals('http://localhost/home', $redirectUrl);
+        $this->assertEquals('http://localhost/home', $redirectUrl);//no session in test
     }
 
     public function test_it_will_change_lang_register_page_en()
@@ -454,7 +454,7 @@ class FrontLangsTest extends Base
         $response1 = $this->get('/register?lang=en');
         $response1->assertStatus(302);
         $redirectUrl = $response1->headers->get('Location');
-        $this->assertEquals('http://localhost/home', $redirectUrl);
+        $this->assertEquals('http://localhost/home', $redirectUrl);//no session in test
     }
 
 }

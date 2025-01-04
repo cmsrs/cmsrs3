@@ -11,13 +11,9 @@ class SetLocale
     public function handle($request, Closure $next)
     {
         $configService = new ConfigService;
-
+    
         $lang = $configService->getLangFromRequest();
-        // if (! in_array($lang, $configService->arrGetLangs())) {
-        //     abort(404);
-        // }
-
-        App::setLocale($lang);
+        App::setLocale($lang);        
 
         return $next($request);
     }

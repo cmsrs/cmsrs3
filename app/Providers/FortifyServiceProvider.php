@@ -18,6 +18,11 @@ use Laravel\Fortify\Actions\CanonicalizeUsername;
 use Laravel\Fortify\Actions\EnsureLoginIsNotThrottled;
 use Laravel\Fortify\Actions\PrepareAuthenticatedSession;
 use Laravel\Fortify\Fortify;
+use App\Http\Controllers\Auth\CustomAuthenticatedSessionController;
+
+use Laravel\Fortify\Contracts\LogoutResponse;
+use Laravel\Fortify\Contracts\LoginResponse;
+
 
 // use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
 // use Laravel\Fortify\Features;
@@ -29,7 +34,24 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        /*
+        $this->app->instance(LogoutResponse::class, new class implements LogoutResponse {
+            public function toResponse($request)
+            {
+                return redirect('/');
+            }
+        });
+
+        $this->app->instance(LoginResponse::class, new class implements LoginResponse {
+            public function toResponse($request)
+            {
+                $l = app()->getLocale();
+                dump('_____'.$l.'_________');
+                dd($request);
+                return redirect('/');
+            }
+        });
+        */
     }
 
     /**
@@ -59,6 +81,11 @@ class FortifyServiceProvider extends ServiceProvider
 
             return view('auth.login');
         });
+
+        $this->app->singleton(
+            \Laravel\Fortify\Http\Controllers\AuthenticatedSessionController::class,
+            CustomAuthenticatedSessionController::class
+        );        
 
         Fortify::registerView(function () {
             // This condition is redundant because it is already defined in the configuration - but it is a good practice to check it

@@ -58,30 +58,8 @@ class HomeController extends Controller // implements HasMiddleware
      */
     public function index(Request $request)
     {
-        $lang = $request->query('lang', null);
-        if ( $lang && (! in_array($lang, $this->configService->arrGetLangs()))  ) {
-            abort(404);
-        }
-        if(empty($lang) ){
-            $lang = App::getLocale();
-        }
-        if(empty($lang) ){
-            $lang = $this->configService->getDefaultLang();
-        }
-
-        //dd('______________________HomeController@index_'.$lang);
-
-        // $page = PageService::getFirstPageByType('home');
-        // if (! $page) {
-        //     Log::error('if you want this page you have to add page in type home');
-        //     abort(404);
-        // }
-
-        // if (empty($lang)) {
-        //     $lang = $this->langs[0];
-        // }
-        App::setLocale($lang);
-
+        $lang = App::getLocale();
+        
         $user = Auth::user();
         if(empty($user)){
             return redirect()->route('login');
@@ -98,7 +76,6 @@ class HomeController extends Controller // implements HasMiddleware
         $objCheckouts = CheckoutService::findActiveOrders()->get();
         $checkouts = CheckoutService::printCheckouts($objCheckouts, $lang);
 
-        //dd('_____________________________________');
 
         //$data = $this->pageService->getDataToView($page, [
         $data =  [            
