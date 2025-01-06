@@ -1,13 +1,8 @@
 <?php
-
-// use App\Http\Controllers\Auth\ForgotPasswordController;
-// use App\Http\Controllers\Auth\LoginController;
-// use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Cmsrs\FrontController;
 use App\Http\Controllers\Cmsrs\HomeController;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
-// use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,40 +17,29 @@ use Illuminate\Support\Facades\Route;
 */
 $demoStatus = env('DEMO_STATUS', false);
 $isShop = env('IS_SHOP', true);
-// if ($demoStatus) {
-//     Auth::routes(['register' => false, 'reset' => false]);
-// } else {
-//     Auth::routes(['register' => true, 'reset' => true]);
-// }
-
+$isLogin = env('IS_LOGIN', true);
 $langs = ConfigService::arrGetLangsEnv();
+$langRegex = '[a-z]{2}';
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
-// Route::get('/home/basket', 'HomeController@basket')->name('basket');
-// Route::get('/home/orders', 'HomeController@orders')->name('orders');
 
+Route::get('/{lang?}', [FrontController::class, 'index'])->where('lang', $langRegex);
+if($isLogin){
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+}
 if ($isShop) {
     Route::post('/post/checkout', [FrontController::class, 'postCheckout']);
 }
 
-Route::get('/changelang/{lang}/{pageIdoRRouterName}/{productSlug?}', [FrontController::class, 'changeLang'])->name('changelang');
-
-Route::get('/', [FrontController::class, 'index']);
-if (empty($langs) || (count($langs) == 1)) {
+if (empty($langs) || (count($langs) == 1)) {    
     if ($isShop) {
         Route::get('/shoppingsuccess', [FrontController::class, 'shoppingsuccess']);
         Route::get('/search', [FrontController::class, 'search']);
         Route::get('/checkout', [FrontController::class, 'checkout'])->name('checkout');
     }
 
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
-    // Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    // Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-    // Route::get('/forgot', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('forgot');
-
-    Route::get('/'.Page::PREFIX_CMS_ONE_PAGE_IN_MENU_URL.'/{menuSlug}', [FrontController::class, 'getPage']);
-    Route::get('/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}/{productSlug?}', [FrontController::class,  'getPage']);
-    Route::get('/'.Page::PREFIX_IN_URL.'/{pageSlug}', [FrontController::class,  'getSeparatePage']);
+    Route::get('/'.Page::PREFIX_CMS_ONE_PAGE_IN_MENU_URL.'/{menuSlug}', [FrontController::class, 'getPage'])->where('lang', $langRegex);
+    Route::get('/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}/{productSlug?}', [FrontController::class,  'getPage'])->where('lang', $langRegex);
+    Route::get('/'.Page::PREFIX_IN_URL.'/{pageSlug}', [FrontController::class,  'getSeparatePage'])->where('lang', $langRegex);
 } else {
     if ($isShop) {
         Route::get('/{lang}/shoppingsuccess', [FrontController::class, 'shoppingsuccess']);
@@ -63,13 +47,7 @@ if (empty($langs) || (count($langs) == 1)) {
         Route::get('/{lang}/checkout', [FrontController::class, 'checkout']);
     }
 
-    // Route::get('/{lang}/home', [HomeController::class, 'index']);
-    Route::get('/{lang}', [FrontController::class, 'index']);
-    // Route::get('/{lang}/login', [LoginController::class, 'showLoginForm']); //->name('login');
-    // Route::get('/{lang}/register', [RegisterController::class, 'showRegistrationForm']); // ->name('register');
-    // Route::get('/{lang}/forgot', [ForgotPasswordController::class, 'showLinkRequestForm']);
-
-    Route::get('/{lang}/'.Page::PREFIX_CMS_ONE_PAGE_IN_MENU_URL.'/{menuSlug}', [FrontController::class, 'getPageLangs']);
-    Route::get('/{lang}/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}/{productSlug?}', [FrontController::class, 'getPageLangs']);
-    Route::get('/{lang}/'.Page::PREFIX_IN_URL.'/{pageSlug}', [FrontController::class, 'getSeparatePageLangs']);
+    Route::get('/{lang}/'.Page::PREFIX_CMS_ONE_PAGE_IN_MENU_URL.'/{menuSlug}', [FrontController::class, 'getPageLangs'])->where('lang', $langRegex);
+    Route::get('/{lang}/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}/{productSlug?}', [FrontController::class, 'getPageLangs'])->where('lang', $langRegex);
+    Route::get('/{lang}/'.Page::PREFIX_IN_URL.'/{pageSlug}', [FrontController::class, 'getSeparatePageLangs'])->where('lang', $langRegex);
 }
