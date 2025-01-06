@@ -22,6 +22,7 @@ use Laravel\Fortify\Actions\EnsureLoginIsNotThrottled;
 use Laravel\Fortify\Actions\PrepareAuthenticatedSession;
 use Laravel\Fortify\Contracts\LoginResponse;
 use Laravel\Fortify\Contracts\LogoutResponse;
+use Laravel\Fortify\Contracts\RegisterResponse;
 use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
@@ -71,6 +72,27 @@ class FortifyServiceProvider extends ServiceProvider
                 return redirect()->route('home', ['lang' => $lang]);
             }
         });
+
+        $this->app->instance(RegisterResponse::class, new class implements RegisterResponse
+        {
+            public function toResponse($request)
+            {
+                if (! env('IS_REGISTER', true)) {
+                    abort(404);
+                }
+
+                $configService = new ConfigService;
+                if (! $configService->isManyLangs()) {
+                    return redirect()->route('home');
+                }
+
+                $lang = $configService->getLangFromCookie();
+                App::setLocale($lang);
+
+                return redirect()->route('home', ['lang' => $lang]);
+            }
+        });
+
 
     }
 
