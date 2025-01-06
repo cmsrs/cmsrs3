@@ -7,7 +7,7 @@
 
   $currency = $configService->getCurrency();
   $langs = $configService->arrGetLangs();  
-  $manyLangs = (count($langs) > 1);
+  $manyLangs = $configService->isManyLangs(); //(count($langs) > 1);
   $bg = env('DEMO_STATUS', false) ? 'bg-dark' : 'bg-secondary'; 
   //$bg = 'bg-secondary';
   $pLogin = env('IS_LOGIN', true);

@@ -6,10 +6,12 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
-use App\Http\Controllers\Auth\CustomAuthenticatedSessionController;
+// use App\Http\Controllers\Auth\CustomAuthenticatedSessionController;
 use App\Models\User;
+use App\Services\Cmsrs\ConfigService;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
@@ -18,10 +20,9 @@ use Laravel\Fortify\Actions\AttemptToAuthenticate;
 use Laravel\Fortify\Actions\CanonicalizeUsername;
 use Laravel\Fortify\Actions\EnsureLoginIsNotThrottled;
 use Laravel\Fortify\Actions\PrepareAuthenticatedSession;
+use Laravel\Fortify\Contracts\LoginResponse;
 use Laravel\Fortify\Contracts\LogoutResponse;
 use Laravel\Fortify\Fortify;
-use App\Services\Cmsrs\ConfigService;
-
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -29,34 +30,48 @@ class FortifyServiceProvider extends ServiceProvider
      * Register any application services.
      */
     public function register(): void
-    {        
-        $this->app->instance(LogoutResponse::class, new class implements LogoutResponse {
+    {
+        $this->app->instance(LogoutResponse::class, new class implements LogoutResponse
+        {
             public function toResponse($request)
             {
                 if (! env('IS_LOGIN', true)) {
                     abort(404);
                 }
-        
+
                 $configService = new ConfigService;
-                if( !$configService->isManyLangs() ){
-                    return redirect('/');    
+                if (! $configService->isManyLangs()) {
+                    return redirect('/');
                 }
 
-                $lang = $request->cookie('lang'); 
-                $langs = $configService->arrGetLangs();
-                if ($lang && (! in_array($lang, $langs))) {
-                    abort(404);
-                }
-        
-                $defaultLang = $configService->getDefaultLang();
-                if (empty($lang)) {
-                    $lang = $configService->getDefaultLang();
-                }
+                $lang = $configService->getLangFromCookie();
+                App::setLocale($lang);
+                $redirect = ($lang == $configService->getDefaultLang()) ? '/' : '/'.$lang;
 
-                $redirect = ( $lang == $defaultLang ) ? '/' : '/'.$lang;        
                 return redirect($redirect);
             }
         });
+
+        $this->app->instance(LoginResponse::class, new class implements LoginResponse
+        {
+            public function toResponse($request)
+            {
+                if (! env('IS_LOGIN', true)) {
+                    abort(404);
+                }
+
+                $configService = new ConfigService;
+                if (! $configService->isManyLangs()) {
+                    return redirect()->route('home');
+                }
+
+                $lang = $configService->getLangFromCookie();
+                App::setLocale($lang);
+
+                return redirect()->route('home', ['lang' => $lang]);
+            }
+        });
+
     }
 
     /**
@@ -86,11 +101,6 @@ class FortifyServiceProvider extends ServiceProvider
 
             return view('auth.login');
         });
-
-        $this->app->singleton(
-            \Laravel\Fortify\Http\Controllers\AuthenticatedSessionController::class,
-            CustomAuthenticatedSessionController::class
-        );
 
         Fortify::registerView(function () {
             // This condition is redundant because it is already defined in the configuration - but it is a good practice to check it

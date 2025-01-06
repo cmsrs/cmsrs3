@@ -71,6 +71,7 @@
     "Search" : "Szukaj",
 
     "Reset Password" : "Resetuj hasło",
-    "Send Password Reset Link" : "Wyślij link do zmiany hasła"
+    "Send Password Reset Link" : "Wyślij link do zmiany hasła",
+    "The login details you entered are incorrect." : "Podane dane logowania są nieprawidłowe."
 
 }

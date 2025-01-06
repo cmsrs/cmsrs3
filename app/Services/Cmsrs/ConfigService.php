@@ -24,6 +24,8 @@ class ConfigService
 
     const ALLOWED_UPLOAD_FILE_EXT_DEFAULT = 'jpg,jpeg,png,gif';
 
+    const COOKIE_FRONT_LOGIN_LANG_NAME = 'front_login_lang';
+
     private $langs;
 
     private $cacheEnableFile;
@@ -218,9 +220,25 @@ class ConfigService
 
     public function getLangFromRequest()
     {
+        // \Illuminate\Support\Facades\Log::info('1='  .  request()->route('lang') .' 2='. request('lang') );
         $lang = request()->route('lang') ?? request('lang') ?? $this->getDefaultLang();
+
         if (! in_array($lang, $this->arrGetLangs())) {
             abort(404);
+        }
+
+        return $lang;
+    }
+
+    public function getLangFromCookie()
+    {
+        $lang = request()->cookie(ConfigService::COOKIE_FRONT_LOGIN_LANG_NAME);
+        if ($lang && (! in_array($lang, $this->arrGetLangs()))) {
+            abort(404);
+        }
+
+        if (empty($lang)) {
+            $lang = $this->getDefaultLang();
         }
 
         return $lang;
