@@ -1,9 +1,9 @@
 @extends('layouts.default')
 @section('content')
 
-  <h1 class="mb-4 mt-3">{{$h1}}</h1>
+  <h1 class="mb-4 mt-3">{{__("Search products") }}</h1>
 
-  <form  class='mt-4 mb-4' action='{{  $url_search }}' method='get' >
+  <form  class='mt-4 mb-4' method='get' >
                     <div class='mt-4 mb-4 input-group'>
                         <input type='search' name='key' value='{{ $key }}' class='form-control rounded' placeholder='{{ __("Search products") }}' aria-label='{{ __("Search") }}'
                         aria-describedby='search-addon' />

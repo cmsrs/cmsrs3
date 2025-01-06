@@ -618,18 +618,18 @@ class Demo
         ];
         $p['p14'] = $this->getPageObj()->wrapCreate($pShoppingSuccess);
 
-        $pSearch = [
-            'title' => ['en' => 'Search product', 'pl' => 'Wyszukiwarka produktów'],
-            'short_title' => ['en' => 'Search product', 'pl' => 'Wyszukiwarka produktów'],
-            'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
-            'published' => 1,
-            'commented' => 0,
-            'type' => 'search',
-            // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
-            'images' => [
-            ],
-        ];
-        $p['p15'] = $this->getPageObj()->wrapCreate($pSearch);
+        // $pSearch = [
+        //     'title' => ['en' => 'Search product', 'pl' => 'Wyszukiwarka produktów'],
+        //     'short_title' => ['en' => 'Search product', 'pl' => 'Wyszukiwarka produktów'],
+        //     'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
+        //     'published' => 1,
+        //     'commented' => 0,
+        //     'type' => 'search',
+        //     // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+        //     'images' => [
+        //     ],
+        // ];
+        // $p['p15'] = $this->getPageObj()->wrapCreate($pSearch);
 
         // $pForgot = [
         //     'title' => ['en' => 'Forgot password', 'pl' => 'Przypomnij hasło'],

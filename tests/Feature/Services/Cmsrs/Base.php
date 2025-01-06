@@ -251,10 +251,10 @@ class Base extends TestCase
         $url[] = $urlShoppingSuccess;
 
         // pSearch
-        $urlSearch = $pageService->getUrl(PageService::getFirstPageByType('search'), $lang);
-        $response3 = $this->get($urlSearch);
-        $response3->assertStatus(200);
-        $url[] = $urlSearch;
+        // $urlSearch = $pageService->getUrl(PageService::getFirstPageByType('search'), $lang);
+        // $response3 = $this->get($urlSearch);
+        // $response3->assertStatus(200);
+        // $url[] = $urlSearch;
 
         // pForgot
         // $urlForgot = $pageService->getUrl(PageService::getFirstPageByType('forgot'), $lang);

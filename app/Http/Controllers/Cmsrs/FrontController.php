@@ -58,24 +58,25 @@ class FrontController extends Controller
         }
         App::setLocale($lang);
 
-        $page = PageService::getFirstPageByType('search');
-        if (! $page) {
-            Log::error('if you want this page you have to add page in type search');
-            abort(404);
-        }
-        $urlSearch = $this->pageService->getUrl($page, $lang);
+        // $page = PageService::getFirstPageByType('search');
+        // if (! $page) {
+        //     Log::error('if you want this page you have to add page in type search');
+        //     abort(404);
+        // }
+        //$urlSearch = $this->pageService->getUrl($page, $lang);
 
         $key = $request->input('key');
         $products = $this->productService->wrapSearchProducts($lang, $key);
 
-        $data = $this->pageService->getDataToView($page, [
+        //$data = $this->pageService->getDataToView($page, [
+        $data = [            
             'key' => $key,
-            'url_search' => $urlSearch,
+            //'url_search' => $urlSearch,
             'products' => $products,
             'lang' => $lang,
             'langs' => $this->langs,
             'menus' => $this->menus,
-        ]);
+        ];
 
         return view('cmsrs.search', $data);
     }
