@@ -91,6 +91,7 @@ class ConfigService
     {
         if (File::exists($this->filePath)) {
             File::delete($this->filePath);
+
             return true;
         }
 
@@ -101,6 +102,7 @@ class ConfigService
     {
         if (! File::exists($this->filePath)) {
             File::put($this->filePath, '');
+
             return true;
         }
 
@@ -167,6 +169,7 @@ class ConfigService
     public static function arrGetLangsEnv()
     {
         $langs = explode(',', env('LANGS', ConfigService::LANG_DEFAULT));
+
         return $langs;
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\Cmsrs\FrontController;
 use App\Http\Controllers\Cmsrs\HomeController;
 use App\Models\Cmsrs\Page;
@@ -21,16 +22,15 @@ $isLogin = env('IS_LOGIN', true);
 $langs = ConfigService::arrGetLangsEnv();
 $langRegex = '[a-z]{2}';
 
-
 Route::get('/{lang?}', [FrontController::class, 'index'])->where('lang', $langRegex);
-if($isLogin){
+if ($isLogin) {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 }
 if ($isShop) {
     Route::post('/post/checkout', [FrontController::class, 'postCheckout']);
 }
 
-if (empty($langs) || (count($langs) == 1)) {    
+if (empty($langs) || (count($langs) == 1)) {
     if ($isShop) {
         Route::get('/shoppingsuccess', [FrontController::class, 'shoppingsuccess'])->name('shoppingsuccess');
         Route::get('/search', [FrontController::class, 'search'])->name('search');

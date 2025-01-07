@@ -328,11 +328,11 @@ class ProductTest extends Base
         //     ],
         // ];
 
-        //$p = (new PageService)->wrapCreate($pCheckout);
-        //$this->assertNotEmpty($p->id);
+        // $p = (new PageService)->wrapCreate($pCheckout);
+        // $this->assertNotEmpty($p->id);
 
-        //$p2 = (new PageService)->wrapCreate($pShoppingsuccess);
-        //$this->assertNotEmpty($p2->id);
+        // $p2 = (new PageService)->wrapCreate($pShoppingsuccess);
+        // $this->assertNotEmpty($p2->id);
 
         $response0 = $this->post('/post/checkout', $data);
         $response0->assertStatus(302);
@@ -848,9 +848,9 @@ class ProductTest extends Base
         $this->assertEquals(0, $ch->is_pay);
 
         // pShoppingSuccess
-        //$pSuc = PageService::getFirstPageByType('shoppingsuccess');
-        //$this->assertNotEmpty($pSuc);
-        $urlShoppingSuccess =   route( 'shoppingsuccess', ['lang' => 'en'] );  //(new PageService)->getUrl($pSuc, 'en');
+        // $pSuc = PageService::getFirstPageByType('shoppingsuccess');
+        // $this->assertNotEmpty($pSuc);
+        $urlShoppingSuccess = route('shoppingsuccess', ['lang' => 'en']);  // (new PageService)->getUrl($pSuc, 'en');
         $response3 = $this->get($urlShoppingSuccess);
         $response3->assertStatus(200); // because there is checkout_id in session therefore is 200 status
 

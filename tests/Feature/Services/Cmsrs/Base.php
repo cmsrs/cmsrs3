@@ -233,10 +233,10 @@ class Base extends TestCase
         // $url[] = $urlRegister;
 
         // checkout
-        //$urlCheckout = $pageService->getUrl(PageService::getFirstPageByType('checkout'), $lang);
-        //$response3 = $this->get($urlCheckout);
-        //$response3->assertStatus(200);
-        //$url[] = $urlCheckout;
+        // $urlCheckout = $pageService->getUrl(PageService::getFirstPageByType('checkout'), $lang);
+        // $response3 = $this->get($urlCheckout);
+        // $response3->assertStatus(200);
+        // $url[] = $urlCheckout;
 
         // home
         // $urlHome = $pageService->getUrl(PageService::getFirstPageByType('home'), $lang);
@@ -245,10 +245,10 @@ class Base extends TestCase
         // $url[] = $urlHome;
 
         // pShoppingSuccess
-        //$urlShoppingSuccess = $pageService->getUrl(PageService::getFirstPageByType('shoppingsuccess'), $lang);
-        //$response3 = $this->get($urlShoppingSuccess);
-        //$response3->assertStatus(404); // because there is no checkout_id in session
-        //$url[] = $urlShoppingSuccess;
+        // $urlShoppingSuccess = $pageService->getUrl(PageService::getFirstPageByType('shoppingsuccess'), $lang);
+        // $response3 = $this->get($urlShoppingSuccess);
+        // $response3->assertStatus(404); // because there is no checkout_id in session
+        // $url[] = $urlShoppingSuccess;
 
         // pSearch
         // $urlSearch = $pageService->getUrl(PageService::getFirstPageByType('search'), $lang);
@@ -285,7 +285,7 @@ class Base extends TestCase
 
             $otherURLs = 4; // login, register, checkout, search
 
-            //dump($fileContent);
+            // dump($fileContent);
             $this->assertEquals($numOfInPages - $numOfInAfterLoginPages + $otherURLs, count($fileContent));
         }
     }

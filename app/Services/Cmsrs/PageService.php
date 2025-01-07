@@ -355,18 +355,18 @@ class PageService extends BaseService implements TranslateInterface
             $view = 'gallery';
         } elseif ($type == 'shop') {
             $view = 'shop';
-        // } elseif ($type == 'checkout') {
-        //     $view = 'checkout';
-        // } elseif ($type == 'register') {
-        //     $view = 'register';
-        // } elseif ($type == 'home') {
-        //     $view = 'home';
-        // } elseif ($type == 'shoppingsuccess') {
-        //     $view = 'shoppingsuccess';
-        // } elseif ($type == 'search') {
-        //     $view = 'search';
-        // } elseif ($type == 'forgot') {
-        //     $view = 'forgot';
+            // } elseif ($type == 'checkout') {
+            //     $view = 'checkout';
+            // } elseif ($type == 'register') {
+            //     $view = 'register';
+            // } elseif ($type == 'home') {
+            //     $view = 'home';
+            // } elseif ($type == 'shoppingsuccess') {
+            //     $view = 'shoppingsuccess';
+            // } elseif ($type == 'search') {
+            //     $view = 'search';
+            // } elseif ($type == 'forgot') {
+            //     $view = 'forgot';
         } else {
             $view = 'cms';
         }
@@ -382,9 +382,9 @@ class PageService extends BaseService implements TranslateInterface
         } elseif ($type == 'main_page') {
             return $this->getMainUrl($lang);
 
-        // TODO!!! - it should be removed
-        //} elseif (($type == 'login') || ($type == 'checkout') || ($type == 'register') || ($type == 'home') || ($type == 'shoppingsuccess') || ($type == 'search') || ($type == 'forgot')) {
-        //    return $this->getTypeUrl($type, $lang);
+            // TODO!!! - it should be removed
+            // } elseif (($type == 'login') || ($type == 'checkout') || ($type == 'register') || ($type == 'home') || ($type == 'shoppingsuccess') || ($type == 'search') || ($type == 'forgot')) {
+            //    return $this->getTypeUrl($type, $lang);
         }
 
         // elseif ('privacy_policy' == $this->type) {
@@ -398,16 +398,16 @@ class PageService extends BaseService implements TranslateInterface
         return (! empty($mPage)) ? $this->getUrl($mPage, $lang, $productSlug) : route($routeName, ['lang' => $lang]);
     }
 
-    private function getTypeUrl($type, $lang)
-    {
-        $url = '/'.$type;
-        $langs = ConfigService::arrGetLangsEnv();
-        if (count($langs) > 1) {
-            $url = '/'.$lang.$url;
-        }
+    // private function getTypeUrl($type, $lang)
+    // {
+    //     $url = '/'.$type;
+    //     $langs = ConfigService::arrGetLangsEnv();
+    //     if (count($langs) > 1) {
+    //         $url = '/'.$lang.$url;
+    //     }
 
-        return $url;
-    }
+    //     return $url;
+    // }
 
     private function getMenuSlugByLang(Page $mPage, $lang)
     {

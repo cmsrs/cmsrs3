@@ -61,9 +61,9 @@ class FrontController extends Controller
         $key = $request->input('key');
         $products = $this->productService->wrapSearchProducts($lang, $key);
 
-        $data = [            
+        $data = [
             'key' => $key,
-            //'url_search' => $urlSearch,
+            // 'url_search' => $urlSearch,
             'products' => $products,
             'lang' => $lang,
             'langs' => $this->langs,
@@ -99,7 +99,7 @@ class FrontController extends Controller
             'lang' => $lang,
             'langs' => $this->langs,
             'menus' => $this->menus,
-            'view' => 'cmsrs.shoppingsuccess' //it must be here because we clear localstorage cart
+            'view' => 'cmsrs.shoppingsuccess', // it must be here because we clear localstorage cart
         ];
 
         return view('cmsrs.shoppingsuccess', $data);
@@ -119,7 +119,7 @@ class FrontController extends Controller
         $delivers = DeliverService::getDeliver();
 
         // $token =  '123todo'; // User::getTokenForClient(); //todo - when user not auth
-        $data = [            
+        $data = [
             // 'token' => $token,
             'payments' => $payments,
             'delivers' => $delivers,
