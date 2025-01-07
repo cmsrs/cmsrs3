@@ -62,7 +62,6 @@ class HomeController extends Controller
         $objCheckouts = CheckoutService::findActiveOrders()->get();
         $checkouts = CheckoutService::printCheckouts($objCheckouts, $lang);
 
-        // $data = $this->pageService->getDataToView($page, [
         $data = [
             'checkouts' => $checkouts,
             'orders' => $orders,

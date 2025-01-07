@@ -1,15 +1,15 @@
 <?php
 
-use App\Http\Controllers\Cmsrs\AuthController;
-use App\Http\Controllers\Cmsrs\CheckoutController;
-use App\Http\Controllers\Cmsrs\CommentController;
-use App\Http\Controllers\Cmsrs\ConfigController;
-use App\Http\Controllers\Cmsrs\ContactController;
-use App\Http\Controllers\Cmsrs\ImageController;
-use App\Http\Controllers\Cmsrs\MenuController;
-use App\Http\Controllers\Cmsrs\PageController;
-use App\Http\Controllers\Cmsrs\ProductController;
-use App\Http\Controllers\Cmsrs\UserController;
+use App\Http\Controllers\Cmsrs\Api\AuthController;
+use App\Http\Controllers\Cmsrs\Api\CheckoutController;
+use App\Http\Controllers\Cmsrs\Api\CommentController;
+use App\Http\Controllers\Cmsrs\Api\ConfigController;
+use App\Http\Controllers\Cmsrs\Api\ContactController;
+use App\Http\Controllers\Cmsrs\Api\ImageController;
+use App\Http\Controllers\Cmsrs\Api\MenuController;
+use App\Http\Controllers\Cmsrs\Api\PageController;
+use App\Http\Controllers\Cmsrs\Api\ProductController;
+use App\Http\Controllers\Cmsrs\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*

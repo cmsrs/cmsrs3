@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Cmsrs;
+namespace App\Http\Controllers\Cmsrs\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cmsrs\Contact;

@@ -21,8 +21,6 @@
   }
 
   $productNameSlug = ! empty($product_name_slug) ? $product_name_slug : null;
-
-  //dump(session()->all());
 ?>
 <div id="page_id" data-page-id="{{ !empty($page) ? $page->id : ''}}"></div>  
 <div id="lang" data-lang="{{$lang ?  $lang : ''}}"></div>    
