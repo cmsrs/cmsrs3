@@ -269,8 +269,8 @@ class Demo
                 
 
 
-                    <div class='alert alert-secondary' role='alert'>
-                     The demo version was created for demonstration purposes.
+                    <div class='alert alert-danger' role='alert'>
+                     This demo version was created solely for demonstration purposes. All products in the store are test products, and the store does not sell real products.
                     </div>
 
                     <br><br>
@@ -312,8 +312,8 @@ class Demo
 
 
 
-                    <div class='alert alert-secondary' role='alert'>
-                    Wersja demo została stworzona tylko dla celów demonstarcyjnych.
+                    <div class='alert alert-danger' role='alert'>
+                    Ta wersja demo została stworzona wyłącznie w celach demonstracyjnych. Wszystkie produkty w sklepie są produktami testowymi, a sklep nie prowadzi sprzedaży rzeczywistych produktów.
                     </div>
 
                     <br><br>

@@ -73,5 +73,6 @@
     "Reset Password" : "Resetuj hasło",
     "Send Password Reset Link" : "Wyślij link do zmiany hasła",
     "The login details you entered are incorrect." : "Podane dane logowania są nieprawidłowe.",
-    "Shopping Success": "Zakupy zakończone sukcesem"
+    "Shopping Success": "Zakupy zakończone sukcesem",
+    "Test Product" : "Produkt testowy"
 }

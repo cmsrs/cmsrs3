@@ -21,6 +21,9 @@
 <!--                  </div>
                   <div class="col">-->
                     <ul class="ms-3  ist-unstyled">
+                      @if( env('DEMO_STATUS', false) )
+                      <li class="product-test">{{ __('Test Product') }}</li>
+                      @endif
                       <li>{{ __('Name') }}: {{$product['product_name'][$lang] }}</li>
                       <li>Sku: {{$product['sku']}}</li>
                       <li>{{ __('Price') }}: {{$product['price_description'] }} </li>
@@ -83,6 +86,9 @@
 <!--                  </div>
                   <div class="col">-->
                     <ul class="ms-3 list-unstyled">
+                      @if( env('DEMO_STATUS', false) )                      
+                      <li class="product-test">{{ __('Test Product') }}</li>
+                      @endif
                       <li>{{ __('Name') }}: <a href="{{$product['url_product'][$lang] }}">{{$product['product_name'][$lang] }}</a></li>
                       <li>Sku: {{$product['sku']}}</li>
                       <li>{{ __('Price') }}: {{$product['price_description'] }} </li>

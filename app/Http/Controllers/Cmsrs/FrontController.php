@@ -205,26 +205,6 @@ class FrontController extends Controller
 
     }
 
-    // public function changeLang($lang, $pageIdoRRouterName, $productSlug = null)
-    // {
-    //     if (! in_array($lang, $this->langs)) {
-    //         abort(404);
-    //     }
-
-    //     $page = Page::find($pageIdoRRouterName);
-    //     if (! empty($page)) {
-    //         $url = $this->pageService->getUrl($page, $lang, $productSlug);
-
-    //         // abort(404);
-    //     } else {
-    //         $url = route($pageIdoRRouterName, ['lang' => $lang, 'productSlug' => $productSlug]);
-    //         // dd($url);
-    //     }
-    //     ConfigService::saveLangToSession($lang);
-
-    //     return redirect($url);
-    // }
-
     public function index($lang = null)
     {
         if ((count($this->langs) > 1) && $lang == $this->langs[0]) {
