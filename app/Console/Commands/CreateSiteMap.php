@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\ProductService;
+use App\Services\Cmsrs\ConfigService;
 use Illuminate\Console\Command;
 
 class CreateSiteMap extends Command
@@ -54,6 +55,35 @@ class CreateSiteMap extends Command
             foreach ($prodUrls as $prodUrl) {
                 $strUrls .= $appUrl.$prodUrl[$lang]."\n";
             }
+        }
+
+        $isManyLangs = (new ConfigService)->isManyLangs();
+        if($isManyLangs){
+            if( env('IS_LOGIN', true) ){
+                foreach ($langs as $lang) {
+                    $strUrls .= route('login', ['lang' => $lang])."\n";
+                }
+            }
+            if( env('IS_REGISTER', true) ){
+                foreach ($langs as $lang) {
+                    $strUrls .= route('register', ['lang' => $lang])."\n";
+                }
+            }
+            foreach ($langs as $lang) {
+                //$strUrls .= $appUrl.route('shoppingsuccess', ['lang' => $lang])."\n";//after login
+                $strUrls .= route('checkout', ['lang' => $lang])."\n";
+                $strUrls .= route('search', ['lang' => $lang])."\n";
+            }            
+        }else{
+            if( env('IS_LOGIN', true) ){
+                $strUrls .= route('login')."\n"; 
+            }
+            if( env('IS_REGISTER', true) ){
+                $strUrls .= route('register')."\n";
+            }
+            //$strUrls .= $appUrl.route('shoppingsuccess')."\n"; //after login
+            $strUrls .= route('checkout')."\n";
+            $strUrls .= route('search')."\n";
         }
 
         $siteMapPath = public_path().'/sitemap.txt';

@@ -327,6 +327,7 @@ createApp({
 
         const pay = () => {
             window.location.pathname = `/${lang.value}/checkout`; // Adjust `lang` if necessary
+            //window.location.pathname = lang.value ? `/${lang.value}/checkout` : `/checkout`; // Adjust `lang` if necessary
         };
 
         const deliver = (deliver) => {

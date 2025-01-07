@@ -577,18 +577,18 @@ class Demo
         // ];
         // $p['p11'] = $this->getPageObj()->wrapCreate($pRegister);
 
-        $pCheckout = [
-            'title' => ['en' => 'Checkout', 'pl' => 'Kasa'],
-            'short_title' => ['en' => 'Checkout', 'pl' => 'Kasa'],
-            'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
-            'published' => 1,
-            'commented' => 0,
-            'type' => 'checkout',
-            // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
-            'images' => [
-            ],
-        ];
-        $p['p12'] = $this->getPageObj()->wrapCreate($pCheckout);
+        // $pCheckout = [
+        //     'title' => ['en' => 'Checkout', 'pl' => 'Kasa'],
+        //     'short_title' => ['en' => 'Checkout', 'pl' => 'Kasa'],
+        //     'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
+        //     'published' => 1,
+        //     'commented' => 0,
+        //     'type' => 'checkout',
+        //     // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+        //     'images' => [
+        //     ],
+        // ];
+        // $p['p12'] = $this->getPageObj()->wrapCreate($pCheckout);
 
         // $pHome = [
         //     'title' => ['en' => 'Home', 'pl' => 'Pulpit'],
@@ -604,19 +604,19 @@ class Demo
         // ];
         // $p['p13'] = $this->getPageObj()->wrapCreate($pHome);
 
-        $pShoppingSuccess = [
-            'title' => ['en' => 'Shopping Success', 'pl' => 'Twoje zakupy'],
-            'short_title' => ['en' => 'Shopping Success', 'pl' => 'Twoje zakupy'],
-            'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
-            'published' => 1,
-            'after_login' => 1, // we don't need this page in sitmap
-            'commented' => 0,
-            'type' => 'shoppingsuccess',
-            // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
-            'images' => [
-            ],
-        ];
-        $p['p14'] = $this->getPageObj()->wrapCreate($pShoppingSuccess);
+        // $pShoppingSuccess = [
+        //     'title' => ['en' => 'Shopping Success', 'pl' => 'Twoje zakupy'],
+        //     'short_title' => ['en' => 'Shopping Success', 'pl' => 'Twoje zakupy'],
+        //     'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
+        //     'published' => 1,
+        //     'after_login' => 1, // we don't need this page in sitmap
+        //     'commented' => 0,
+        //     'type' => 'shoppingsuccess',
+        //     // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+        //     'images' => [
+        //     ],
+        // ];
+        // $p['p14'] = $this->getPageObj()->wrapCreate($pShoppingSuccess);
 
         // $pSearch = [
         //     'title' => ['en' => 'Search product', 'pl' => 'Wyszukiwarka produktów'],

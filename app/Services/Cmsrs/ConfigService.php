@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\File;
 class ConfigService
 {
     // const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,login,projects,clear,checkout,register,home,shoppingsuccess,search,forgot,inner,slider_main'; //default values
-    const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,projects,clear,checkout,shoppingsuccess,inner,slider_main'; // default values
+    const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,projects,clear,inner,slider_main'; // default values
 
     const LANG_DEFAULT = 'en,pl';
 
@@ -91,7 +91,6 @@ class ConfigService
     {
         if (File::exists($this->filePath)) {
             File::delete($this->filePath);
-
             return true;
         }
 
@@ -102,7 +101,6 @@ class ConfigService
     {
         if (! File::exists($this->filePath)) {
             File::put($this->filePath, '');
-
             return true;
         }
 
@@ -169,7 +167,6 @@ class ConfigService
     public static function arrGetLangsEnv()
     {
         $langs = explode(',', env('LANGS', ConfigService::LANG_DEFAULT));
-
         return $langs;
     }
 
@@ -222,7 +219,6 @@ class ConfigService
     {
         // \Illuminate\Support\Facades\Log::info('1='  .  request()->route('lang') .' 2='. request('lang') );
         $lang = request()->route('lang') ?? request('lang') ?? $this->getDefaultLang();
-
         if (! in_array($lang, $this->arrGetLangs())) {
             abort(404);
         }
@@ -236,7 +232,6 @@ class ConfigService
         if ($lang && (! in_array($lang, $this->arrGetLangs()))) {
             abort(404);
         }
-
         if (empty($lang)) {
             $lang = $this->getDefaultLang();
         }

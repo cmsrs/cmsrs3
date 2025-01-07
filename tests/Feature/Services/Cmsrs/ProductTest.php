@@ -700,18 +700,18 @@ class ProductTest extends Base
         $user = Auth::user();
         $this->assertNotEmpty($user->id);
 
-        $pShoppingSuccess = [
-            'title' => ['en' => 'Shopping Success', 'pl' => 'Twoje zakupy'],
-            'short_title' => ['en' => 'Shopping Success', 'pl' => 'Twoje zakupy'],
-            'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
-            'published' => 1,
-            'commented' => 0,
-            'type' => 'shoppingsuccess',
-            // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
-            'images' => [
-            ],
-        ];
-        (new PageService)->wrapCreate($pShoppingSuccess);
+        // $pShoppingSuccess = [
+        //     'title' => ['en' => 'Shopping Success', 'pl' => 'Twoje zakupy'],
+        //     'short_title' => ['en' => 'Shopping Success', 'pl' => 'Twoje zakupy'],
+        //     'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
+        //     'published' => 1,
+        //     'commented' => 0,
+        //     'type' => 'shoppingsuccess',
+        //     // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+        //     'images' => [
+        //     ],
+        // ];
+        // (new PageService)->wrapCreate($pShoppingSuccess);
 
         $qty0a = 2;
         $qty1a = 5;
@@ -750,40 +750,40 @@ class ProductTest extends Base
             'payment' => PaymentService::KEY_CASH,
         ];
 
-        $pCheckout = [
-            'title' => ['en' => 'Checkout', 'pl' => 'Kasa'],
-            'short_title' => ['en' => 'Checkout', 'pl' => 'Kasa'],
-            'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
-            'published' => 1,
-            'commented' => 0,
-            'type' => 'checkout',
-            // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
-            'images' => [
-            ],
-        ];
+        // $pCheckout = [
+        //     'title' => ['en' => 'Checkout', 'pl' => 'Kasa'],
+        //     'short_title' => ['en' => 'Checkout', 'pl' => 'Kasa'],
+        //     'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
+        //     'published' => 1,
+        //     'commented' => 0,
+        //     'type' => 'checkout',
+        //     // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+        //     'images' => [
+        //     ],
+        // ];
 
-        $pShoppingsuccess = [
-            'title' => ['en' => 'CheckoutSS', 'pl' => 'KasaSS'],
-            'short_title' => ['en' => 'CheckoutSS', 'pl' => 'KasaSS'],
-            'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
-            'published' => 1,
-            'commented' => 0,
-            'type' => 'shoppingsuccess',
-            // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
-            'images' => [
-            ],
-        ];
+        // $pShoppingsuccess = [
+        //     'title' => ['en' => 'CheckoutSS', 'pl' => 'KasaSS'],
+        //     'short_title' => ['en' => 'CheckoutSS', 'pl' => 'KasaSS'],
+        //     'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
+        //     'published' => 1,
+        //     'commented' => 0,
+        //     'type' => 'shoppingsuccess',
+        //     // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+        //     'images' => [
+        //     ],
+        // ];
 
         $c0 = Checkout::all()->count();
         $this->assertEquals(0, $c0);
 
-        $p = (new PageService)->wrapCreate($pCheckout);
-        $this->assertNotEmpty($p->id);
-        $p2 = (new PageService)->wrapCreate($pShoppingsuccess);
-        $this->assertNotEmpty($p2->id);
+        // $p = (new PageService)->wrapCreate($pCheckout);
+        // $this->assertNotEmpty($p->id);
+        // $p2 = (new PageService)->wrapCreate($pShoppingsuccess);
+        // $this->assertNotEmpty($p2->id);
 
-        $c100 = Checkout::all()->count();
-        $this->assertEquals(0, $c100);
+        // $c100 = Checkout::all()->count();
+        // $this->assertEquals(0, $c100);
 
         $response0 = $this->post('/post/checkout', $data);
         $response0->assertStatus(302);
@@ -848,9 +848,9 @@ class ProductTest extends Base
         $this->assertEquals(0, $ch->is_pay);
 
         // pShoppingSuccess
-        $pSuc = PageService::getFirstPageByType('shoppingsuccess');
-        $this->assertNotEmpty($pSuc);
-        $urlShoppingSuccess = (new PageService)->getUrl($pSuc, 'en');
+        //$pSuc = PageService::getFirstPageByType('shoppingsuccess');
+        //$this->assertNotEmpty($pSuc);
+        $urlShoppingSuccess =   route( 'shoppingsuccess', ['lang' => 'en'] );  //(new PageService)->getUrl($pSuc, 'en');
         $response3 = $this->get($urlShoppingSuccess);
         $response3->assertStatus(200); // because there is checkout_id in session therefore is 200 status
 

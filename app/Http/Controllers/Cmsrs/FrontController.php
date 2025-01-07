@@ -58,17 +58,9 @@ class FrontController extends Controller
         }
         App::setLocale($lang);
 
-        // $page = PageService::getFirstPageByType('search');
-        // if (! $page) {
-        //     Log::error('if you want this page you have to add page in type search');
-        //     abort(404);
-        // }
-        //$urlSearch = $this->pageService->getUrl($page, $lang);
-
         $key = $request->input('key');
         $products = $this->productService->wrapSearchProducts($lang, $key);
 
-        //$data = $this->pageService->getDataToView($page, [
         $data = [            
             'key' => $key,
             //'url_search' => $urlSearch,
@@ -91,28 +83,24 @@ class FrontController extends Controller
         }
         App::setLocale($lang);
 
-        $page = PageService::getFirstPageByType('shoppingsuccess');
-        if (! $page) {
-            Log::error('if you want this page you have to add page in type shoppingsuccess');
-            abort(404);
-        }
-
+        $objCheckout = null;
         if ($request->session()->has('checkout_id')) {
             $checkoutId = $request->session()->get('checkout_id');
             $objCheckout = Checkout::find($checkoutId);
             $request->session()->forget('checkout_id');
-            // $request->session()->flush();
         }
+
         if (empty($objCheckout)) {
             abort(404);
         }
 
-        $data = $this->pageService->getDataToView($page, [
+        $data = [
             'checkout' => $objCheckout,
             'lang' => $lang,
             'langs' => $this->langs,
             'menus' => $this->menus,
-        ]);
+            'view' => 'cmsrs.shoppingsuccess' //it must be here because we clear localstorage cart
+        ];
 
         return view('cmsrs.shoppingsuccess', $data);
     }
@@ -127,25 +115,18 @@ class FrontController extends Controller
         }
         App::setLocale($lang);
 
-        $page = PageService::getFirstPageByType('checkout');
-        if (! $page) {
-            Log::error('if you want this page you have to add page in type checkout');
-            abort(404);
-        }
-
         $payments = PaymentService::getPayment();
         $delivers = DeliverService::getDeliver();
 
         // $token =  '123todo'; // User::getTokenForClient(); //todo - when user not auth
-
-        $data = $this->pageService->getDataToView($page, [
+        $data = [            
             // 'token' => $token,
             'payments' => $payments,
             'delivers' => $delivers,
             'lang' => $lang,
             'langs' => $this->langs,
             'menus' => $this->menus,
-        ]);
+        ];
 
         return view('cmsrs.checkout', $data);
     }
@@ -196,7 +177,6 @@ class FrontController extends Controller
             // redirect to payU
             $payu = new Payu;
 
-            // dd($checkout);
             $data = $payu->dataToSend($productsDataAndTotalAmount, $checkout);
 
             Log::debug(' data sended to payu: '.var_export($data, true));
@@ -213,14 +193,8 @@ class FrontController extends Controller
             return redirect($redirectUri);
 
         } else {
-            $pShoppingSuccess = PageService::getFirstPageByType('shoppingsuccess');
-            if (empty($pShoppingSuccess)) {
-                throw new \Exception('you should add page type = shoppingsuccess');
-            }
-
-            $urlShoppingSuccess = $this->pageService->getUrl($pShoppingSuccess, $lang);
-            // $request->session()->flash('status', 'Task was successful!');
-            // $request->session()->keep(['checkout_id' => $objCheckout->id]);
+            $isManyLangs = (new ConfigService)->isManyLangs();
+            $urlShoppingSuccess = $isManyLangs ? route('shoppingsuccess', ['lang' => $lang]) : route('shoppingsuccess');
 
             /** @var \Illuminate\Session\Store $session */
             $session = $request->session();
@@ -270,12 +244,6 @@ class FrontController extends Controller
 
         $page = PageService::getMainPage();
         $this->validatePage($page);
-
-        // $pSearch = App\Page::getFirstPageByType('search');
-        // $urlSearch = null;
-        // if($pSearch){
-        //     $urlSearch = $pSearch->getUrl($lang);
-        // }
 
         // slider_main
         $sliderDataImages = $this->pageService->getPageDataByShortTitleCache('main_page_slider', 'images');

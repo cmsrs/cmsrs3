@@ -21,6 +21,8 @@
   }
 
   $productNameSlug = ! empty($product_name_slug) ? $product_name_slug : null;
+
+  //dump(session()->all());
 ?>
 <div id="page_id" data-page-id="{{ !empty($page) ? $page->id : ''}}"></div>  
 <div id="lang" data-lang="{{$lang ?  $lang : ''}}"></div>    
@@ -139,11 +141,11 @@
               </form>
         @endguest
       @endif
-      @if ($manyLangs)
-        <li class="d-flex flex-row">
-        @php        
+      @php        
           $routeName = request()->route()->getName();
-        @endphp
+      @endphp
+      @if ($manyLangs &&  ($routeName != 'shoppingsuccess') )
+        <li class="d-flex flex-row">
         @foreach ($langs as $ll)
             @php  
                 $classActive = ($ll == $lang) ? 'active' : '';

@@ -382,9 +382,9 @@ class PageService extends BaseService implements TranslateInterface
         } elseif ($type == 'main_page') {
             return $this->getMainUrl($lang);
 
-            // TODO!!! - it should be removed
-        } elseif (($type == 'login') || ($type == 'checkout') || ($type == 'register') || ($type == 'home') || ($type == 'shoppingsuccess') || ($type == 'search') || ($type == 'forgot')) {
-            return $this->getTypeUrl($type, $lang);
+        // TODO!!! - it should be removed
+        //} elseif (($type == 'login') || ($type == 'checkout') || ($type == 'register') || ($type == 'home') || ($type == 'shoppingsuccess') || ($type == 'search') || ($type == 'forgot')) {
+        //    return $this->getTypeUrl($type, $lang);
         }
 
         // elseif ('privacy_policy' == $this->type) {

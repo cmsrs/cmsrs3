@@ -185,9 +185,9 @@ class Base extends TestCase
             //     $response->assertStatus(302);   //redirect to home page, because user is log in
             //     $pos = strpos($response->getContent(), 'home');
             //     $this->assertNotEmpty($pos, $pageTitle);
-            if ($page->type == 'shoppingsuccess') {
-                $response->assertStatus(404);
-            } elseif (! $page->published) {
+            // if ($page->type == 'shoppingsuccess') {
+            //     $response->assertStatus(404);
+            if (! $page->published) {
                 $response->assertStatus(404);
 
                 continue; // we don't need $numOfInPages - because this page has 404
@@ -233,10 +233,10 @@ class Base extends TestCase
         // $url[] = $urlRegister;
 
         // checkout
-        $urlCheckout = $pageService->getUrl(PageService::getFirstPageByType('checkout'), $lang);
-        $response3 = $this->get($urlCheckout);
-        $response3->assertStatus(200);
-        $url[] = $urlCheckout;
+        //$urlCheckout = $pageService->getUrl(PageService::getFirstPageByType('checkout'), $lang);
+        //$response3 = $this->get($urlCheckout);
+        //$response3->assertStatus(200);
+        //$url[] = $urlCheckout;
 
         // home
         // $urlHome = $pageService->getUrl(PageService::getFirstPageByType('home'), $lang);
@@ -245,10 +245,10 @@ class Base extends TestCase
         // $url[] = $urlHome;
 
         // pShoppingSuccess
-        $urlShoppingSuccess = $pageService->getUrl(PageService::getFirstPageByType('shoppingsuccess'), $lang);
-        $response3 = $this->get($urlShoppingSuccess);
-        $response3->assertStatus(404); // because there is no checkout_id in session
-        $url[] = $urlShoppingSuccess;
+        //$urlShoppingSuccess = $pageService->getUrl(PageService::getFirstPageByType('shoppingsuccess'), $lang);
+        //$response3 = $this->get($urlShoppingSuccess);
+        //$response3->assertStatus(404); // because there is no checkout_id in session
+        //$url[] = $urlShoppingSuccess;
 
         // pSearch
         // $urlSearch = $pageService->getUrl(PageService::getFirstPageByType('search'), $lang);
@@ -283,7 +283,10 @@ class Base extends TestCase
 
             $fileContent = file($sitemapFile);
 
-            $this->assertEquals($numOfInPages - $numOfInAfterLoginPages, count($fileContent));
+            $otherURLs = 4; // login, register, checkout, search
+
+            //dump($fileContent);
+            $this->assertEquals($numOfInPages - $numOfInAfterLoginPages + $otherURLs, count($fileContent));
         }
     }
 

@@ -2,7 +2,7 @@
 @section('content')
 
 
-<h1 class="mb-4 mt-3">{{$h1}}</h1>
+<h1 class="mb-4 mt-3">{{  __('Shopping Success') }}</h1>
 
 <div class="content">
   <div class="alert alert-success">

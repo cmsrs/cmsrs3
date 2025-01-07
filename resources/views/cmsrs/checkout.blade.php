@@ -1,7 +1,7 @@
 @extends('layouts.default')
 @section('content')
   
-  <h1 class="mb-4 mt-3">{{$h1}}</h1>
+  <h1 class="mb-4 mt-3">{{__('Checkout')}}</h1>
 
     <div class="container">
         <div class="col">
