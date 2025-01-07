@@ -304,35 +304,35 @@ class ProductTest extends Base
             'payment' => PaymentService::KEY_CASH,
         ];
 
-        $pCheckout = [
-            'title' => ['en' => 'Checkout', 'pl' => 'Kasa'],
-            'short_title' => ['en' => 'Checkout', 'pl' => 'Kasa'],
-            'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
-            'published' => 1,
-            'commented' => 0,
-            'type' => 'checkout',
-            // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
-            'images' => [
-            ],
-        ];
+        // $pCheckout = [
+        //     'title' => ['en' => 'Checkout', 'pl' => 'Kasa'],
+        //     'short_title' => ['en' => 'Checkout', 'pl' => 'Kasa'],
+        //     'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
+        //     'published' => 1,
+        //     'commented' => 0,
+        //     'type' => 'checkout',
+        //     // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+        //     'images' => [
+        //     ],
+        // ];
 
-        $pShoppingsuccess = [
-            'title' => ['en' => 'CheckoutSS', 'pl' => 'KasaSS'],
-            'short_title' => ['en' => 'CheckoutSS', 'pl' => 'KasaSS'],
-            'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
-            'published' => 1,
-            'commented' => 0,
-            'type' => 'shoppingsuccess',
-            // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
-            'images' => [
-            ],
-        ];
+        // $pShoppingsuccess = [
+        //     'title' => ['en' => 'CheckoutSS', 'pl' => 'KasaSS'],
+        //     'short_title' => ['en' => 'CheckoutSS', 'pl' => 'KasaSS'],
+        //     'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
+        //     'published' => 1,
+        //     'commented' => 0,
+        //     'type' => 'shoppingsuccess',
+        //     // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+        //     'images' => [
+        //     ],
+        // ];
 
-        $p = (new PageService)->wrapCreate($pCheckout);
-        $this->assertNotEmpty($p->id);
+        //$p = (new PageService)->wrapCreate($pCheckout);
+        //$this->assertNotEmpty($p->id);
 
-        $p2 = (new PageService)->wrapCreate($pShoppingsuccess);
-        $this->assertNotEmpty($p2->id);
+        //$p2 = (new PageService)->wrapCreate($pShoppingsuccess);
+        //$this->assertNotEmpty($p2->id);
 
         $response0 = $this->post('/post/checkout', $data);
         $response0->assertStatus(302);
@@ -532,35 +532,35 @@ class ProductTest extends Base
             'payment' => PaymentService::KEY_CASH,
         ];
 
-        $pCheckout = [
-            'title' => ['en' => 'Checkout', 'pl' => 'Kasa'],
-            'short_title' => ['en' => 'Checkout', 'pl' => 'Kasa'],
-            'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
-            'published' => 1,
-            'commented' => 0,
-            'type' => 'checkout',
-            // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
-            'images' => [
-            ],
-        ];
+        // $pCheckout = [
+        //     'title' => ['en' => 'Checkout', 'pl' => 'Kasa'],
+        //     'short_title' => ['en' => 'Checkout', 'pl' => 'Kasa'],
+        //     'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
+        //     'published' => 1,
+        //     'commented' => 0,
+        //     'type' => 'checkout',
+        //     // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+        //     'images' => [
+        //     ],
+        // ];
 
-        $pShoppingsuccess = [
-            'title' => ['en' => 'CheckoutSS', 'pl' => 'KasaSS'],
-            'short_title' => ['en' => 'CheckoutSS', 'pl' => 'KasaSS'],
-            'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
-            'published' => 1,
-            'commented' => 0,
-            'type' => 'shoppingsuccess',
-            // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
-            'images' => [
-            ],
-        ];
+        // $pShoppingsuccess = [
+        //     'title' => ['en' => 'CheckoutSS', 'pl' => 'KasaSS'],
+        //     'short_title' => ['en' => 'CheckoutSS', 'pl' => 'KasaSS'],
+        //     'description' => ['en' => 'Description... Needed for google', 'pl' => 'Opis..... Potrzebne dla googla'],
+        //     'published' => 1,
+        //     'commented' => 0,
+        //     'type' => 'shoppingsuccess',
+        //     // 'content' => [ "en" => $this->getPrivacyPolicy(), "pl" => $this->getPrivacyPolicy() ],
+        //     'images' => [
+        //     ],
+        // ];
 
-        $p = (new PageService)->wrapCreate($pCheckout);
-        $this->assertNotEmpty($p->id);
+        // $p = (new PageService)->wrapCreate($pCheckout);
+        // $this->assertNotEmpty($p->id);
 
-        $p2 = (new PageService)->wrapCreate($pShoppingsuccess);
-        $this->assertNotEmpty($p2->id);
+        // $p2 = (new PageService)->wrapCreate($pShoppingsuccess);
+        // $this->assertNotEmpty($p2->id);
 
         $response0 = $this->post('/post/checkout', $data);
         $response0->assertStatus(302);

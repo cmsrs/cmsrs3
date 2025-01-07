@@ -74,9 +74,9 @@ class ConfigTest extends Base
 
             // $status = (($page_type === 'login') || ($page_type === 'register') || ($page_type === 'forgot')) ? 302 : 200; //I don't understand - todo (why register and forgot??)
             $status = 200;
-            if ($page_type == 'shoppingsuccess') {
-                $status = 404;
-            }
+            // if ($page_type == 'shoppingsuccess') {
+            //     $status = 404;
+            // }
 
             $response->assertStatus($status);
         }

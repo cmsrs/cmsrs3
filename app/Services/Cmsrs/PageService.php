@@ -355,18 +355,18 @@ class PageService extends BaseService implements TranslateInterface
             $view = 'gallery';
         } elseif ($type == 'shop') {
             $view = 'shop';
-        } elseif ($type == 'checkout') {
-            $view = 'checkout';
-        } elseif ($type == 'register') {
-            $view = 'register';
-        } elseif ($type == 'home') {
-            $view = 'home';
-        } elseif ($type == 'shoppingsuccess') {
-            $view = 'shoppingsuccess';
-        } elseif ($type == 'search') {
-            $view = 'search';
-        } elseif ($type == 'forgot') {
-            $view = 'forgot';
+        // } elseif ($type == 'checkout') {
+        //     $view = 'checkout';
+        // } elseif ($type == 'register') {
+        //     $view = 'register';
+        // } elseif ($type == 'home') {
+        //     $view = 'home';
+        // } elseif ($type == 'shoppingsuccess') {
+        //     $view = 'shoppingsuccess';
+        // } elseif ($type == 'search') {
+        //     $view = 'search';
+        // } elseif ($type == 'forgot') {
+        //     $view = 'forgot';
         } else {
             $view = 'cms';
         }

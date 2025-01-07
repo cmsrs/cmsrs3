@@ -150,10 +150,11 @@ class FrontTest extends Base
                 $url = (new PageService)->getUrl($page, $lang);
                 $response = $this->get($url);
 
-                $status = (($page->type === 'login') || ($page->type === 'register') || ($page->type === 'forgot')) ? 302 : 200; // why forgot??
-                if ($page->type == 'shoppingsuccess') {
-                    $status = 404;
-                }
+                $status = 200;
+                // $status = (($page->type === 'login') || ($page->type === 'register') || ($page->type === 'forgot')) ? 302 : 200; // why forgot??
+                // if ($page->type == 'shoppingsuccess') {
+                //     $status = 404;
+                // }
 
                 $response->assertStatus($status);
                 $in = true;

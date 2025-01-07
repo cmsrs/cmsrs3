@@ -381,9 +381,9 @@ class FrontLangsTest extends Base
                 $response = $this->get($url);
 
                 $status = 200; // (($page->type === 'login') || ($page->type === 'register') || ($page->type === 'forgot')) ? 302 : 200;
-                if ($page->type == 'shoppingsuccess') {
-                    $status = 404;
-                }
+                // if ($page->type == 'shoppingsuccess') {
+                //     $status = 404;
+                // }
 
                 // echo " url=".$url." s=".$response->status()."\n";
                 $response->assertStatus($status);
