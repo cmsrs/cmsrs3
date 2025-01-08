@@ -595,6 +595,8 @@ class PageService extends BaseService implements TranslateInterface
         return $out;
     }
 
+    /*
+    //not remove this comment see: https://www.cmsrs.pl/pl/cms/cmsrs/rest-api
     public function getPageWithImages(Page $mPage, $lang)
     {
         $langs = $this->getArrLangs();
@@ -609,6 +611,7 @@ class PageService extends BaseService implements TranslateInterface
 
         return $p;
     }
+    */
 
     private function getPageDataFormat($page)
     {
@@ -639,6 +642,7 @@ class PageService extends BaseService implements TranslateInterface
         return $formatPage;
     }
 
+    /*
     public function getFirstPageWithImagesForGuest($type)
     {
         if (! in_array($type, ConfigService::arrGetPageTypes())) {
@@ -657,6 +661,7 @@ class PageService extends BaseService implements TranslateInterface
 
         return $out;
     }
+    */
 
     public function getAllPagesWithImages($type = null)
     {

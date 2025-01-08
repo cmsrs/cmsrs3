@@ -7,6 +7,8 @@ use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\PageService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
+// use Illuminate\Support\Facades\Cookie;
+
 // use Tests\TestCase;
 
 class ConfigTest extends Base
@@ -284,5 +286,14 @@ class ConfigTest extends Base
         $res = $response->getData();
         $this->assertTrue($res->success);
         $this->assertTrue($res->data->is_cache_enable);
+    }
+
+    public function test_get_lang_from_cookie()
+    {
+        $defaultLang = (new ConfigService)->getDefaultLang();
+        $this->assertEquals('en', $defaultLang);
+
+        $langFromCookie = (new ConfigService)->getLangFromCookie();
+        $this->assertEquals($defaultLang, $langFromCookie);
     }
 }

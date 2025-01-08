@@ -33,6 +33,8 @@ class PageController extends Controller
         'after_login' => 'boolean',
     ];
 
+    /*
+    //not remove this comment
     public function oneItem(Request $request, $id, $lang)
     {
         $page = Page::find($id);
@@ -51,6 +53,7 @@ class PageController extends Controller
 
         return response()->json(['success' => true, 'data' => $page], 200);
     }
+    */
 
     public function oneItemAdmin(Request $request, $id, ?string $simple = null)
     {

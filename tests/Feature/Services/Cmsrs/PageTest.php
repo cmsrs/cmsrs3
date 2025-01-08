@@ -1053,9 +1053,9 @@ class PageTest extends Base
         $res = $response->getData();
         $this->assertTrue($res->success);
 
-        $page = (new PageService)->getFirstPageWithImagesForGuest($type);
-        $this->assertEquals($type, $page['type']);
-        $this->assertNotEmpty($page['id']);
+        // $page = (new PageService)->getFirstPageWithImagesForGuest($type);
+        // $this->assertEquals($type, $page['type']);
+        // $this->assertNotEmpty($page['id']);
 
         // $pageById = (new Page)->getPageWithImagesById($page['id']);
         // $this->assertEquals($type, $pageById['type']);
@@ -1084,8 +1084,8 @@ class PageTest extends Base
         $res = $response->getData();
         $this->assertTrue($res->success);
 
-        $page = (new PageService)->getFirstPageWithImagesForGuest($type);
-        $this->assertEmpty($page);
+        // $page = (new PageService)->getFirstPageWithImagesForGuest($type);
+        // $this->assertEmpty($page);
     }
 
     /**

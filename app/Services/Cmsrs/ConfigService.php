@@ -211,6 +211,7 @@ class ConfigService
     public function getLangFromCookie()
     {
         $lang = request()->cookie(ConfigService::COOKIE_FRONT_LOGIN_LANG_NAME);
+
         if ($lang && (! in_array($lang, $this->arrGetLangs()))) {
             abort(404);
         }

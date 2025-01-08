@@ -8,8 +8,6 @@ use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
-// use App\Menu;
-
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 
@@ -453,5 +451,23 @@ class FrontLangsTest extends Base
         $response1->assertStatus(302);
         $redirectUrl = $response1->headers->get('Location');
         $this->assertEquals('http://localhost/home', $redirectUrl); // no session in test
+    }
+
+    // todo - separate test works, but runs with other tests not working
+    // public function test_set_lang_cookie()
+    // {
+    //     $response1 = $this->withCookie(ConfigService::COOKIE_FRONT_LOGIN_LANG_NAME, 'en')->get('/en');
+    //     $response1->assertStatus(200);
+    //     $langFromCookie = (new ConfigService)->getLangFromCookie();
+    //     $this->assertEquals('en', $langFromCookie);
+
+    //     $defaultLang = (new ConfigService)->getDefaultLang();
+    //     $this->assertEquals('pl', $defaultLang);
+    // }
+
+    public function test_set_lang_wrong_cookie()
+    {
+        $response1 = $this->withCookie(ConfigService::COOKIE_FRONT_LOGIN_LANG_NAME, 'ch')->get('/en');
+        $response1->assertStatus(404);
     }
 }
