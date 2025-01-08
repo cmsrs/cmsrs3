@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\File;
 
 class ConfigService
 {
-    const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,projects,clear,inner,slider_main'; // default values
+    const PAGE_TYPES_STR_DEFAULT = 'cms,gallery,shop,contact,main_page,privacy_policy,projects,clear,inner'; // default values
 
     const LANG_DEFAULT = 'en,pl';
 

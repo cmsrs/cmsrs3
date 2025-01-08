@@ -20,7 +20,7 @@
                   @endif
 <!--                  </div>
                   <div class="col">-->
-                    <ul class="ms-3  ist-unstyled">
+                    <ul class="ms-3 list-unstyled">
                       @if( env('DEMO_STATUS', false) )
                       <li class="product-test">{{ __('Test Product') }}</li>
                       @endif

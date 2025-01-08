@@ -184,22 +184,23 @@ It can be empty string.
 
 The default page types are:
 ```bash
-PAGE_TYPES="cms,gallery,shop,contact,main_page,privacy_policy,login,projects,clear,checkout,register,home,shoppingsuccess,search,forgot,inner"
+PAGE_TYPES="cms,gallery,shop,contact,main_page,privacy_policy,projects,clear,inner"
 ```
 
-    - cms - appear Wyswig editor in administration area
-    - clear - without Wyswig editor, it require write pure html code
-    - inner - it is text box in existing page require hardcode in layout page, 
-        where key is short_title, example using in code: 
+    - cms: Displays a WYSIWYG editor in the administration area.
+    - gallery: A page for showcasing photos.
+    - shop: A page for displaying products.
+    - contact: A page with contact information.
+    - main_page: The main page, which requires writing pure HTML code.
+    - privacy_policy: A page containing the privacy policy.
+    - projects: Displays the same content across all languages.
+    - clear: A page without a WYSIWYG editor; requires writing pure HTML code.
+    - inner: Represents a text box on an existing page that requires hardcoding in the layout. The key is the short_title. For example, in the code:
         (new PageService)->getPageDataByShortTitleCache('main_page_box1', 'content');
-
         The following short_title values are predefined:
-        - main_page_box1, main_page_box2, main_page_box3 – these represent three content boxes on the main page
-        - company_data – displays company information on the contact page
-        - main_page_slider – contains images displayed in the slider on the main page
-
-    - gallery - page with photos
-    - projects - the same content in each langs
+            main_page_box1, main_page_box2, main_page_box3: Represent three content boxes on the main page.
+            company_data: Displays company information on the contact page.
+            main_page_slider: Contains images displayed in the slider on the main page, It requires adding a <div class='slidecontainer'></div> element to the main page.
 
 
 * Additionally sending an e-mail with information from the contact form.
@@ -272,9 +273,11 @@ If you want to create a company profile page, I suggest setting the following CM
 
 ```bash
 IS_SHOP=false
+IS_LOGIN=false
+IS_REGISTER=false
 LANGS="en"
 API_SECRET="string123"
-PAGE_TYPES="cms,gallery,contact,main_page,privacy_policy,inner,clear"
+PAGE_TYPES="cms,gallery,contact,main_page,privacy_policy,inner"
 ```
 
 ## CLI COMMANDS 

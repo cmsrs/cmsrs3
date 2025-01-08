@@ -72,6 +72,10 @@ class PageController extends Controller
         return response()->json(['success' => true, 'data' => $pages], 200);
     }
 
+    /**
+     * we don't use this method
+     */
+    /*
     public function getFirstPageByTypeForGuest(Request $request, $type)
     {
         if (! in_array($type, ConfigService::arrGetPageTypes())) {
@@ -82,6 +86,7 @@ class PageController extends Controller
 
         return response()->json(['success' => true, 'data' => $page], 200);
     }
+    */
 
     public function getPagesByType(Request $request, $type)
     {
