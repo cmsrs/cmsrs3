@@ -172,7 +172,7 @@ table.table  th{
 }
  
 
-@media(max-width: 1250px) {
+@media(max-width: 1350px) {
   .nav-main-rs{
     margin-left: 1px;
   }
@@ -188,7 +188,7 @@ table.table  th{
 }
 
 
-@media(max-width: 1250px) {
+@media(max-width: 1350px) {
   main.pt-5 {
     padding-top: 0.7rem !important;
   }
