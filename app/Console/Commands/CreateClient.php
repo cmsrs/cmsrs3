@@ -38,7 +38,7 @@ class CreateClient extends Command
         } else {
             $this->info("Create user {$client} with password: {$pass}");
             $user = new User;
-            $user->role = User::$role['client'];
+            $user->role = User::$role_dict['client'];
             $user->email = $client;
             $user->name = 'Guest';
             $user->password = $pass;

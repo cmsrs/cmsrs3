@@ -53,7 +53,7 @@ class UserTest extends Base
             'name' => 'Robert Test'.$prefix,
             'email' => 'rob'.$prefix.'@unittest.com',
             'password' => 'unittest123',
-            'role' => User::$role['client'],
+            'role' => User::$role_dict['client'],
         ];
     }
 
@@ -143,7 +143,7 @@ class UserTest extends Base
     {
         $numbersOfClients = 99;
         $this->createManyClients($numbersOfClients);
-        $users = User::where('role', User::$role['client'])->orderBy('id', 'asc')->get()->toArray();
+        $users = User::where('role', User::$role_dict['client'])->orderBy('id', 'asc')->get()->toArray();
 
         $response = $this->get('api/clients/id/desc?token='.$this->token);
         $res = $response->getData();
@@ -197,7 +197,7 @@ class UserTest extends Base
         $objUser = new User;
         $this->assertNotEmpty(count($objUser->columnsAllowedToSort));
         foreach ($objUser->columnsAllowedToSort as $columnName) {
-            $users = User::where('role', User::$role['client'])->orderBy($columnName, 'desc')->get()->toArray();
+            $users = User::where('role', User::$role_dict['client'])->orderBy($columnName, 'desc')->get()->toArray();
             $firstClient = $users[0];
 
             $response = $this->get("api/clients/$columnName/desc?token=".$this->token);
@@ -256,7 +256,7 @@ class UserTest extends Base
         $index = 0;
         $users = User::all()->toArray();
         $emailAdmin = $users[0]['email'];
-        $this->assertEquals(User::$role['admin'], $users[$index]['role']);
+        $this->assertEquals(User::$role_dict['admin'], $users[$index]['role']);
 
         $userId = $users[$index]['id'];
         $this->assertNotEmpty($userId);
@@ -283,7 +283,7 @@ class UserTest extends Base
         $index = 1;
         $users = User::all()->toArray();
         $emailAdmin = $users[0]['email'];
-        $this->assertEquals(User::$role['client'], $users[$index]['role']);
+        $this->assertEquals(User::$role_dict['client'], $users[$index]['role']);
 
         $userId = $users[$index]['id'];
         $this->assertNotEmpty($userId);
@@ -306,7 +306,7 @@ class UserTest extends Base
         $usersAfter = User::all()->toArray();
 
         $this->assertEquals($userId, $usersAfter[$index]['id']);
-        $this->assertEquals(User::$role['client'], $usersAfter[$index]['role']);
+        $this->assertEquals(User::$role_dict['client'], $usersAfter[$index]['role']);
         $this->assertEquals($testClient['name'], $usersAfter[$index]['name']);
         $this->assertEquals($users[$index]['email'], $usersAfter[$index]['email']); // email is not changeable!
         $this->assertNotEquals($emailAdmin, $usersAfter[$index]['email']); // email is not changeable!
@@ -319,7 +319,7 @@ class UserTest extends Base
         $usersCount = count($users);
         $this->assertNotEmpty($usersCount);
 
-        $this->assertEquals(User::$role['client'], $users[$index]['role']);
+        $this->assertEquals(User::$role_dict['client'], $users[$index]['role']);
         $userId = $users[$index]['id'];
         $this->assertNotEmpty($userId);
 
@@ -339,7 +339,7 @@ class UserTest extends Base
         $usersCount = count($users);
         $this->assertNotEmpty($usersCount);
 
-        $this->assertEquals(User::$role['admin'], $users[$index]['role']);
+        $this->assertEquals(User::$role_dict['admin'], $users[$index]['role']);
         $userId = $users[$index]['id'];
         $this->assertNotEmpty($userId);
 
@@ -361,14 +361,14 @@ class UserTest extends Base
             'name' => $name1,
             'email' => 'fake@example.com',
             'password' => Hash::make('password'),
-            'role' => User::$role['client'],
+            'role' => User::$role_dict['client'],
         ]);
 
         User::create([
             'name' => $name2,
             'email' => 'sth@abc-example.com',
             'password' => Hash::make('password'),
-            'role' => User::$role['client'],
+            'role' => User::$role_dict['client'],
         ]);
 
         $response = $this->get('api/clients/id/desc?token='.$this->token.'&search=aBC');
@@ -387,7 +387,7 @@ class UserTest extends Base
         $index = 1;
         $userId = $users[$index]['id'];
         $this->assertTrue(! empty($userId));
-        $this->assertEquals(User::$role['client'], $users[$index]['role']);
+        $this->assertEquals(User::$role_dict['client'], $users[$index]['role']);
 
         $response = $this->get("api/clients/$userId?token=".$this->token);
         $this->assertEquals(200, $response->status());
@@ -398,7 +398,7 @@ class UserTest extends Base
         $this->assertNotEmpty($res->data->name);
         $this->assertNotEmpty($res->data->email);
         $this->assertEquals($userId, $res->data->id);
-        $this->assertEquals(User::$role['client'], $res->data->role);
+        $this->assertEquals(User::$role_dict['client'], $res->data->role);
     }
 
     public function test_get_admin_by_given_id()
@@ -407,7 +407,7 @@ class UserTest extends Base
         $index = 0;
         $userId = $users[$index]['id'];
         $this->assertTrue(! empty($userId));
-        $this->assertEquals(User::$role['admin'], $users[$index]['role']);
+        $this->assertEquals(User::$role_dict['admin'], $users[$index]['role']);
 
         $response = $this->get("api/clients/$userId?token=".$this->token);
         $this->assertEquals(404, $response->status());

@@ -15,7 +15,7 @@ class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
-    public static $role = [
+    public static $role_dict = [
         'admin' => 'admin',
         'client' => 'client',
     ];
@@ -166,7 +166,7 @@ class User extends Authenticatable implements JWTSubject
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'role' => User::$role['client'],
+            'role' => User::$role_dict['client'],
             'password' => $data['password'],   // Hash::make($data['password']),
         ]);
     }

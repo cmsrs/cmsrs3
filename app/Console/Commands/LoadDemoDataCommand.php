@@ -58,7 +58,7 @@ class LoadDemoDataCommand extends Command
         $user32 = new User([
             'name' => $name,
             'email' => $emailClient,
-            'role' => User::$role['client'],
+            'role' => User::$role_dict['client'],
         ]);
         $user32->password = 'cmsrs456';
         $user32->save();
@@ -171,7 +171,7 @@ class LoadDemoDataCommand extends Command
         // $user = new User([
         //     'email'    => 'adm@cmsrs.pl',
         //     'name'     => 'adm',
-        //     'role' => User::$role['admin']
+        //     'role' => User::$role_dict['admin']
         // ]);
         // $user->password = 'cmsrs123';
         // $user->save();
@@ -184,7 +184,7 @@ class LoadDemoDataCommand extends Command
         $user2 = new User([
             'email'    => $emailClient,
             'name'     => 'client',
-            'role' => User::$role['client']
+            'role' => User::$role_dict['client']
         ]);
         $user2->password = 'cmsrs456';
         $user2->save();
@@ -199,7 +199,7 @@ class LoadDemoDataCommand extends Command
             $user32 = new User([
                 'name' => $name,
                 'email' => $emailClient,
-                'role' => User::$role['client']
+                'role' => User::$role_dict['client']
             ]);
             $user32->password = 'cmsrs456';
             $user32->save();

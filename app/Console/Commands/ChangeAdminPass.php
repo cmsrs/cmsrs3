@@ -33,7 +33,7 @@ class ChangeAdminPass extends Command
             exit;
         }
 
-        $roleAdm = User::$role['admin'];
+        $roleAdm = User::$role_dict['admin'];
         $user = User::where('role', $roleAdm)->first();
         if ($user) {
             $user->password = $pass;

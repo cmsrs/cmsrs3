@@ -21,7 +21,7 @@ class Base extends TestCase
         $user = new User([
             'email' => 'test@email.com',
             'name' => 'test testowy',
-            'role' => User::$role['admin'],
+            'role' => User::$role_dict['admin'],
         ]);
 
         $user->password = 'cmsrs';
@@ -37,7 +37,7 @@ class Base extends TestCase
         $user = new User([
             'email' => 'client@email.com',
             'name' => 'client testowy',
-            'role' => User::$role['client'],
+            'role' => User::$role_dict['client'],
         ]);
 
         $user->password = 'client1234';

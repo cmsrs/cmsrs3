@@ -47,7 +47,7 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', '=', $credentials['email'])->firstOrFail();
-        if ($user->role != User::$role['admin']) {
+        if ($user->role != User::$role_dict['admin']) {
             return response()->json(['success' => false, 'error' => 'No access.'], 401);
         }
 
@@ -109,7 +109,7 @@ class AuthController extends Controller
             $user = new User([
                 'email' => $email,
                 'name' => $name,
-                'role' => User::$role['admin'],
+                'role' => User::$role_dict['admin'],
             ]);
 
             $user->password = $password;

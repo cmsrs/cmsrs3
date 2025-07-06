@@ -12,14 +12,14 @@ class UserController extends Controller
 {
     public function getClients()
     {
-        $clients = User::query()->where('role', User::$role['client'])->orderBy('id', 'asc')->get(['id', 'name', 'email', 'created_at', 'updated_at'])->toArray();
+        $clients = User::query()->where('role', User::$role_dict['client'])->orderBy('id', 'asc')->get(['id', 'name', 'email', 'created_at', 'updated_at'])->toArray();
 
         return response()->json(['success' => true, 'data' => $clients], 200);
     }
 
     public function getClient(Request $request, $id)
     {
-        $client = User::query()->where('role', User::$role['client'])->where('id', $id)->first();
+        $client = User::query()->where('role', User::$role_dict['client'])->where('id', $id)->first();
         if (empty($client)) {
             return response()->json(['error' => 'Client not found'], 404);
         }
@@ -52,7 +52,7 @@ class UserController extends Controller
 
         $paginationPerPage = ConfigService::getPagination();
         $clients = $objUser
-            ->where('role', User::$role['client'])
+            ->where('role', User::$role_dict['client'])
             ->when($search, function ($query) use ($search) {
                 return $query->where(function ($query) use ($search) {
                     $query->where('name', 'like', $search)
@@ -105,7 +105,7 @@ class UserController extends Controller
             return response()->json(['success' => false, 'error' => 'User no found'], 404);
         }
 
-        if (User::$role['admin'] == $user->role) {
+        if (User::$role_dict['admin'] == $user->role) {
             return response()->json(['success' => false, 'error' => 'update admin is prohibited'], 403);
         }
 
@@ -143,7 +143,7 @@ class UserController extends Controller
             return response()->json(['success' => false, 'error' => 'User no found'], 404);
         }
 
-        if (User::$role['admin'] == $user->role) {
+        if (User::$role_dict['admin'] == $user->role) {
             return response()->json(['success' => false, 'error' => 'delete admin is prohibited'], 403);
         }
 
