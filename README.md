@@ -12,6 +12,23 @@
 </br>
 </br>
 
+## REQUIRED PACKAGES
+
+```php-cli``` – PHP command-line interface
+
+```php-dom``` and ```php-xml``` – for XML parsing (used in layouts and configs)
+
+```php-curl``` – for HTTP requests
+
+```php-mysql``` – for MySQL database connection
+
+```php-mbstring``` – for multibyte string support (required by PHPUnit and some packages)
+
+```php-gd``` – for image processing (used in gallery, sliders, etc.)
+
+⚠️ Note: Make sure all extensions match your installed PHP version (e.g., php8.3-mysql, php8.3-mbstring, etc.)
+
+
 ## INSTALLATION (QUICK SETUP)
 
 Run the following command to create the project:
@@ -251,7 +268,7 @@ IS_REGISTER=true
 
 The default file extensions for uploads are:
 ```bash
-PAGE_TYPES="jpg,jpeg,png,gif"
+ALLOWED_UPLOAD_EXTENSIONS="jpg,jpeg,png,gif"
 ```
 
 * PayU integration:
@@ -266,6 +283,34 @@ PAYU_CLIENT_SECRET=zzz
 NOTIFY_URL=http://domain/home/orders
 CUSTOMER_IP="123.123.123.123"
 ```
+
+* Administrator Credentials
+
+These credentials can be used to create the initial admin user during system installation (database seeding).
+
+```bash
+ADM_EMAIL="adm@cmsrs.pl"
+ADM_PASS="cmsrs123"
+```
+
+```ADM_EMAIL```: The default email address of the admin account.
+```ADM_PASS```: The default password for the admin account.
+
+⚠️ Warning: Do not use the default credentials (adm@cmsrs.pl / cmsrs123) in production.
+Always update them for security reasons before deploying.
+
+
+* DEMO Mode
+
+Use this variable to enable demo mode, for example at http://demo.cmsrs.pl/
+Used to block saving changes or modifying sensitive data on public demo instances.
+
+```bash
+DEMO_STATUS=false
+```
+
+Default is false (disabled).
+
 
 ## SAMPLE .env CONFIGURATION FOR COMPANY PROFILE PAGE
 

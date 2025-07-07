@@ -37,8 +37,8 @@ class GetConfig extends Command
      */
     public function handle()
     {
-        $admEmail = env('ADM_EMAIL', 'adm@cmsrs.pl');
-        $admPass = env('ADM_PASS', 'cmsrs123');
+        $admEmail = config('cmsrs.admin.email'); // env('ADM_EMAIL', 'adm@cmsrs.pl');
+        $admPass = config('cmsrs.admin.password'); // env('ADM_PASS', 'cmsrs123');
 
         $cmdLogin = 'curl  -H "Accept:application/json" -H "Content-Type:application/json" -XPOST  "http://127.0.0.1:8000/api/login" -d \'{ 
             "email": "'.$admEmail.'", 

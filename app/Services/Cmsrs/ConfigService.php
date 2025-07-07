@@ -45,7 +45,7 @@ class ConfigService
 
     private function allowedUploadFileExt()
     {
-        return env('ALLOWED_UPLOAD_FILE_EXT', ConfigService::ALLOWED_UPLOAD_FILE_EXT_DEFAULT);
+        return env('ALLOWED_UPLOAD_EXTENSIONS', ConfigService::ALLOWED_UPLOAD_FILE_EXT_DEFAULT);
     }
 
     public function getCacheFilePath()

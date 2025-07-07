@@ -192,7 +192,8 @@ class Demo
         $p = [];
         // $appUrl = env('APP_URL');
         // $admUrl = (strpos($appUrl, 'demo.cmsrs.pl') !== false) ? $appUrl.'/admin-demo' : $appUrl.'/admin/';
-        $admUrl = env('DEMO_STATUS', false) ? '/admin-demo' : '/admin/';
+        // $admUrl = env('DEMO_STATUS', false) ? '/admin-demo' : '/admin/';
+        $admUrl = config('cmsrs.demo') ? '/admin-demo' : '/admin/';
 
         $pInner1 = [
             'title' => ['en' => 'Box1 test en', 'pl' => 'Box1 test pl'],

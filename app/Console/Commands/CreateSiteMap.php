@@ -42,7 +42,8 @@ class CreateSiteMap extends Command
     public function handle()
     {
         $pageService = new PageService;
-        $appUrl = env('APP_URL');
+        // $appUrl = env('APP_URL');
+        $appUrl = config('app.url');
         $langs = $pageService->getArrLangs();
         $pages = Page::where('after_login', '=', 0)->where('published', '=', 1)->where('type', '!=', 'inner')->get();
         $prodUrls = (new ProductService)->getProductsUrl();
@@ -57,14 +58,16 @@ class CreateSiteMap extends Command
             }
         }
 
+        $isLogin = config('cmsrs.features.login');  // env('IS_LOGIN', true);
+        $isRegister = config('cmsrs.features.register');  // env('IS_REGISTER', true);
         $isManyLangs = (new ConfigService)->isManyLangs();
         if ($isManyLangs) {
-            if (env('IS_LOGIN', true)) {
+            if ($isLogin) {
                 foreach ($langs as $lang) {
                     $strUrls .= route('login', ['lang' => $lang])."\n";
                 }
             }
-            if (env('IS_REGISTER', true)) {
+            if ($isRegister) {
                 foreach ($langs as $lang) {
                     $strUrls .= route('register', ['lang' => $lang])."\n";
                 }
@@ -75,10 +78,10 @@ class CreateSiteMap extends Command
                 $strUrls .= route('search', ['lang' => $lang])."\n";
             }
         } else {
-            if (env('IS_LOGIN', true)) {
+            if ($isLogin) {
                 $strUrls .= route('login')."\n";
             }
-            if (env('IS_REGISTER', true)) {
+            if ($isRegister) {
                 $strUrls .= route('register')."\n";
             }
             // $strUrls .= $appUrl.route('shoppingsuccess')."\n"; //after login
