@@ -238,6 +238,7 @@ GOOGLE_RECAPTCHA_PUBLIC
 
 ```bash
 CACHE_ENABLE=false
+CACHE_ENABLE_FILE='app/cache_enable.txt'
 ```
 
 * Set the currency, the default is USD:
@@ -299,6 +300,21 @@ ADM_PASS="cmsrs123"
 ⚠️ Warning: Do not use the default credentials (adm@cmsrs.pl / cmsrs123) in production.
 Always update them for security reasons before deploying.
 
+* Client Account Credentials
+
+These credentials can be used to create a default client account during system installation (e.g., for seeding or demo purposes).
+
+```
+CLIENT_EMAIL="client@cmsrs.pl"
+CLIENT_PASS="cmsrs456"
+```
+
+```CLIENT_EMAIL```: The default email address for the client account.
+```CLIENT_PASS```: The default password for the client account.
+
+⚠️ Warning: Do not use the default client credentials (client@cmsrs.pl / cmsrs456) in production environments.
+Always change them to secure values before deployment.
+
 
 * DEMO Mode
 
@@ -310,6 +326,15 @@ DEMO_STATUS=false
 ```
 
 Default is false (disabled).
+
+* Pagination
+
+```bash
+PAGINATION=10
+```
+
+Number of items per page in the admin panel. The default value is 10.
+
 
 
 ## SAMPLE .env CONFIGURATION FOR COMPANY PROFILE PAGE

@@ -45,8 +45,8 @@ class ContactController extends Controller
             return response()->json(['success' => false, 'error' => $validator->messages()], 200);
         }
 
-        $rePriv = env('GOOGLE_RECAPTCHA_PRIV', '');
-        $rePublic = env('GOOGLE_RECAPTCHA_PUBLIC', '');
+        $rePriv = config('cmsrs.recaptcha.private');   // env('GOOGLE_RECAPTCHA_PRIV', '');
+        $rePublic = config('cmsrs.recaptcha.public'); // env('GOOGLE_RECAPTCHA_PUBLIC', '');
         // google recaptcha
         if (! empty($rePriv) && ! empty($rePublic)) {
             $googleAns = empty($token) ? '0' : $token;
@@ -54,7 +54,7 @@ class ContactController extends Controller
             $ch = curl_init();
 
             curl_setopt($ch, CURLOPT_URL, 'https://www.google.com/recaptcha/api/siteverify');
-            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt(
                 $ch,
                 CURLOPT_POSTFIELDS,
@@ -86,7 +86,7 @@ class ContactController extends Controller
         }
 
         try {
-            $contactEmail = env('CONTACT_EMAIL', '');
+            $contactEmail = config('cmsrs.contact_email'); // env('CONTACT_EMAIL', '');
             if (! empty($contactEmail)) {
 
                 // WARNING!! - this string intentionally starts from the left!!!!

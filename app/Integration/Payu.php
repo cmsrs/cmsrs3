@@ -17,12 +17,12 @@ class Payu extends Model
         parent::__construct($attributes);
 
         $this->client = new \GuzzleHttp\Client([
-            'base_uri' => env('PAYU_URL'),
+            'base_uri' => config('cmsrs.payu.url'), // env('PAYU_URL'),
             'allow_redirects' => false,
             'form_params' => [
                 'grant_type' => 'client_credentials',
-                'client_id' => env('PAYU_CLIENT_ID'),
-                'client_secret' => env('PAYU_CLIENT_SECRET'),
+                'client_id' => config('cmsrs.payu.client_id'),  // env('PAYU_CLIENT_ID'),
+                'client_secret' => config('cmsrs.payu.client_secret'),  // env('PAYU_CLIENT_SECRET'),
             ],
         ]);
     }
@@ -55,11 +55,11 @@ class Payu extends Model
 
         $data = [
             // "notifyUrl" =>  "http://demo.cmsrs.pl/home/orders", //"https://your.eshop.com/notify",
-            'notifyUrl' => env('NOTIFY_URL'),  // "http://demo.cmsrs.pl/home", //"https://your.eshop.com/notify",
-            'customerIp' => env('CUSTOMER_IP'), //  '127.0.0.1', //$_SERVER['REMOTE_ADDR'],
+            'notifyUrl' => config('cmsrs.payu.notify_url'), // env('NOTIFY_URL'),  // "http://demo.cmsrs.pl/home", //"https://your.eshop.com/notify",
+            'customerIp' => config('cmsrs.payu.customer_ip'), // env('CUSTOMER_IP'), //  '127.0.0.1', //$_SERVER['REMOTE_ADDR'],
             'currencyCode' => 'PLN',
-            'description' => env('APP_NAME'),
-            'merchantPosId' => env('PAYU_POS_ID'),
+            'description' => config('app.name'), // env('APP_NAME'),
+            'merchantPosId' => config('cmsrs.payu.pos_id'), // env('PAYU_POS_ID'),
             'buyer' => [
                 'email' => ! empty($user) ? $user->email : $checkoutData['email'], // "john.doe@example.com",
                 'phone' => $checkoutData['telephone'],

@@ -8,7 +8,7 @@ class CmsRsIsDemo
 {
     public function handle($request, Closure $next, $guard = null)
     {
-        $isDemo = env('DEMO_STATUS', false);
+        $isDemo = config('cmsrs.demo');  // env('DEMO_STATUS', false);
 
         // dump($isDemo);
         // dump($request->getMethod())

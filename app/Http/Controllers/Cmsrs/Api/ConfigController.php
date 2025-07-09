@@ -20,7 +20,7 @@ class ConfigController extends Controller
             $config = [];
             $config['page_types'] = ConfigService::arrGetPageTypes();
             $config['langs'] = $this->configService->arrGetLangs();
-            $config['cache_enable'] = env('CACHE_ENABLE', false);
+            $config['cache_enable'] = config('cmsrs.cache_enabled');  // env('CACHE_ENABLE', false);
             $config['is_cache_enable'] = $this->configService->isCacheEnable();
             $config['default_lang'] = $this->configService->getDefaultLang();
             $config['currency'] = $this->configService->getCurrency();

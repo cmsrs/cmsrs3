@@ -36,7 +36,8 @@ class FortifyServiceProvider extends ServiceProvider
         {
             public function toResponse($request)
             {
-                if (! env('IS_LOGIN', true)) {
+                // if (! env('IS_LOGIN', true)) {
+                if (! config('cmsrs.features.login')) {
                     abort(404);
                 }
 
@@ -57,7 +58,8 @@ class FortifyServiceProvider extends ServiceProvider
         {
             public function toResponse($request)
             {
-                if (! env('IS_LOGIN', true)) {
+                // if (! env('IS_LOGIN', true)) {
+                if (! config('cmsrs.features.login')) {
                     abort(404);
                 }
 
@@ -77,7 +79,8 @@ class FortifyServiceProvider extends ServiceProvider
         {
             public function toResponse($request)
             {
-                if (! env('IS_REGISTER', true)) {
+                if (! config('cmsrs.features.register')) {
+                    // if (! env('IS_REGISTER', true)) {
                     abort(404);
                 }
 
@@ -116,7 +119,8 @@ class FortifyServiceProvider extends ServiceProvider
         // });
 
         Fortify::loginView(function () {
-            if (! env('IS_LOGIN', true)) {
+            // if (! env('IS_LOGIN', true)) {
+            if (! config('cmsrs.features.login')) {
                 abort(404);
             }
 
@@ -125,7 +129,8 @@ class FortifyServiceProvider extends ServiceProvider
 
         Fortify::registerView(function () {
             // This condition is redundant because it is already defined in the configuration - but it is a good practice to check it
-            if (! env('IS_REGISTER', true)) {
+            // if (! env('IS_REGISTER', true)) {
+            if (! config('cmsrs.features.register')) {
                 abort(404);
             }
 
@@ -133,7 +138,8 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         Fortify::authenticateUsing(function (Request $request) {
-            if (! env('IS_LOGIN', true)) {
+            // if (! env('IS_LOGIN', true)) {
+            if (! config('cmsrs.features.login')) {
                 abort(404);
             }
 

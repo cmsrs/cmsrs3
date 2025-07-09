@@ -83,7 +83,7 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        $demoStatus = env('DEMO_STATUS', false);
+        $demoStatus = config('cmsrs.demo'); // env('DEMO_STATUS', false);
         if ($demoStatus) {
             // echo 'Not permission';
             return response()->json(['success' => false, 'error' => 'Not permission']); // phpstan fix

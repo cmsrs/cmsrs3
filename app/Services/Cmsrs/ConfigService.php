@@ -33,8 +33,8 @@ class ConfigService
 
     public function __construct()
     {
-        $this->langs = env('LANGS', ConfigService::LANG_DEFAULT); // empty(env('LANGS')) ? Config::LANG_DEFAULT : env('LANGS');
-        $this->cacheEnableFile = env('CACHE_ENABLE_FILE', ConfigService::CACHE_ENABLE_FILE_DEFAULT);
+        $this->langs = config('cmsrs.langs');  // env('LANGS', ConfigService::LANG_DEFAULT); // empty(env('LANGS')) ? Config::LANG_DEFAULT : env('LANGS');
+        $this->cacheEnableFile = config('cmsrs.cache_enable_file'); // env('CACHE_ENABLE_FILE', ConfigService::CACHE_ENABLE_FILE_DEFAULT);
         $this->filePath = $this->getCacheEnableFilePath();
     }
 
@@ -45,7 +45,8 @@ class ConfigService
 
     private function allowedUploadFileExt()
     {
-        return env('ALLOWED_UPLOAD_EXTENSIONS', ConfigService::ALLOWED_UPLOAD_FILE_EXT_DEFAULT);
+        return config('cmsrs.allowed_upload_extensions');
+        // return env('ALLOWED_UPLOAD_EXTENSIONS', ConfigService::ALLOWED_UPLOAD_FILE_EXT_DEFAULT);
     }
 
     public function getCacheFilePath()
@@ -63,17 +64,17 @@ class ConfigService
 
     public function getIsShop()
     {
-        return env('IS_SHOP', true);
+        return config('cmsrs.features.shop'); // env('IS_SHOP', true);
     }
 
     public function getDemoStatus()
     {
-        return env('DEMO_STATUS', false);
+        return config('cmsrs.demo'); // env('DEMO_STATUS', false);
     }
 
     public function getCurrency()
     {
-        return env('CURRENCY', ConfigService::CURRENCY_DEFAULT);
+        return config('cmsrs.currency'); // env('CURRENCY', ConfigService::CURRENCY_DEFAULT);
     }
 
     public function getCacheEnableFilePath()
@@ -125,12 +126,12 @@ class ConfigService
 
     public static function getPagination()
     {
-        return env('PAGINATION', ConfigService::PAGINATION_DEFAULT);
+        return config('cmsrs.pagination'); // env('PAGINATION', ConfigService::PAGINATION_DEFAULT);
     }
 
     public static function getPageTypes()
     {
-        return env('PAGE_TYPES', ConfigService::PAGE_TYPES_STR_DEFAULT);
+        return config('cmsrs.page_types'); // env('PAGE_TYPES', ConfigService::PAGE_TYPES_STR_DEFAULT);
     }
 
     public static function arrGetPageTypes()
@@ -167,7 +168,8 @@ class ConfigService
 
     public static function arrGetLangsEnv()
     {
-        $langs = explode(',', env('LANGS', ConfigService::LANG_DEFAULT));
+        // env('LANGS', ConfigService::LANG_DEFAULT)
+        $langs = explode(',', config('cmsrs.langs'));
 
         return $langs;
     }
@@ -186,7 +188,7 @@ class ConfigService
 
     public function getConfigCacheEnable()
     {
-        return env('CACHE_ENABLE', false);
+        return config('cmsrs.cache_enabled'); // env('CACHE_ENABLE', false);
     }
 
     public function isCacheEnable()

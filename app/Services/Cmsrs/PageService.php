@@ -162,7 +162,7 @@ class PageService extends BaseService implements TranslateInterface
             'products' => $products,
             'lang' => $lang,
             'langs' => $dataIn['langs'],
-            're_public' => env('GOOGLE_RECAPTCHA_PUBLIC', ''),
+            're_public' => config('cmsrs.recaptcha.public'),  // env('GOOGLE_RECAPTCHA_PUBLIC', ''),
             'view' => 'cmsrs.'.$this->getViewNameByType($mPage),
         ];
 

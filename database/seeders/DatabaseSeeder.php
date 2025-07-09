@@ -16,8 +16,8 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // $this->call(UsersTableSeeder::class);
-        $admEmail = env('ADM_EMAIL', 'adm@cmsrs.pl');
-        $admPass = env('ADM_PASS', 'cmsrs123');
+        $admEmail = config('cmsrs.admin.email'); // env('ADM_EMAIL', 'adm@cmsrs.pl');
+        $admPass = config('cmsrs.admin.password'); // env('ADM_PASS', 'cmsrs123');
 
         DB::table('users')->insert([
             'name' => 'adm',
@@ -26,8 +26,8 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
         ]);
 
-        $emailClient = env('CLIENT_EMAIL', 'client@cmsrs.pl');
-        $passClient = env('CLIENT_PASS', 'cmsrs456');
+        $emailClient = config('cmsrs.client.email');  // env('CLIENT_EMAIL', 'client@cmsrs.pl');
+        $passClient = config('cmsrs.client.password'); // env('CLIENT_PASS', 'cmsrs456');
         DB::table('users')->insert([
             'name' => 'client',
             'email' => $emailClient,

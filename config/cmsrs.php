@@ -1,5 +1,7 @@
 <?php
 
+use App\Services\Cmsrs\ConfigService;
+
 return [
 
     /*
@@ -10,7 +12,8 @@ return [
     | The first one will be used as the default.
     | Default: 'en,pl'
     */
-    'langs' => explode(',', env('LANGS', 'en,pl')),
+    // 'langs' => explode(',', env('LANGS', ConfigService::LANG_DEFAULT)),
+    'langs' => env('LANGS', ConfigService::LANG_DEFAULT),
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +45,8 @@ return [
     |       - company_data: Company info on contact page.
     |       - main_page_slider: Slider images on homepage.
     */
-    'page_types' => explode(',', env('PAGE_TYPES', 'cms,gallery,shop,contact,main_page,privacy_policy,projects,clear,inner')),
+    // 'page_types' => explode(',', env('PAGE_TYPES', 'cms,gallery,shop,contact,main_page,privacy_policy,projects,clear,inner')),
+    'page_types' => env('PAGE_TYPES', ConfigService::PAGE_TYPES_STR_DEFAULT),
 
     /*
     |--------------------------------------------------------------------------
@@ -80,7 +84,7 @@ return [
     | Default currency used in the system.
     | Example: USD, EUR
     */
-    'currency' => env('CURRENCY', 'USD'),
+    'currency' => env('CURRENCY', ConfigService::CURRENCY_DEFAULT), // ConfigService::CURRENCY_DEFAULT
 
     /*
     |--------------------------------------------------------------------------
@@ -101,7 +105,8 @@ return [
     | File types allowed for file uploads.
     | Default: jpg,jpeg,png,gif
     */
-    'allowed_upload_extensions' => explode(',', env('ALLOWED_UPLOAD_EXTENSIONS', 'jpg,jpeg,png,gif')),
+    // 'allowed_upload_extensions' => explode(',', env('ALLOWED_UPLOAD_EXTENSIONS', 'jpg,jpeg,png,gif')),
+    'allowed_upload_extensions' => env('ALLOWED_UPLOAD_EXTENSIONS', 'jpg,jpeg,png,gif'),
 
     /*
     |--------------------------------------------------------------------------
@@ -135,6 +140,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Client Account Credentials
+    |--------------------------------------------------------------------------
+    | Default credentials for the client account.
+    | These can be used to automatically create a client user during installation.
+    | WARNING: Never use default credentials on production without changing them.
+    */
+    'client' => [
+        'email' => env('CLIENT_EMAIL', 'client@cmsrs.pl'),
+        'password' => env('CLIENT_PASS', 'cmsrs456'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Demo Mode Status
     |--------------------------------------------------------------------------
     | Enables or disables demo mode. When true, some features like saving
@@ -142,5 +160,23 @@ return [
     | Default is false.
     */
     'demo' => env('DEMO_STATUS', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Panel Pagination Limit
+    |--------------------------------------------------------------------------
+    | Controls how many items are displayed per page in admin panel listings.
+    | Default is 10.
+    */
+    'pagination' => env('PAGINATION', ConfigService::PAGINATION_DEFAULT),
+
+    /*
+    |--------------------------------------------------------------------------
+    | File-Based Cache Toggle
+    |--------------------------------------------------------------------------
+    | Enables or disables file-based caching for selected operations (e.g. page data).
+    | Default value is defined in ConfigService::CACHE_ENABLE_FILE_DEFAULT.
+    */
+    'cache_enable_file' => env('CACHE_ENABLE_FILE', ConfigService::CACHE_ENABLE_FILE_DEFAULT),
 
 ];

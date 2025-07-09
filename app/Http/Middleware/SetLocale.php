@@ -21,7 +21,8 @@ class SetLocale
         }
 
         App::setLocale($lang);
-        if ($configService->isManyLangs() && env('IS_LOGIN', true)) {
+        // env('IS_LOGIN', true)
+        if ($configService->isManyLangs() && config('cmsrs.features.login')) {
             Cookie::queue(Cookie::make(ConfigService::COOKIE_FRONT_LOGIN_LANG_NAME, $lang, 60)); // 60 minutes
         }
 
