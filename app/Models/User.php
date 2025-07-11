@@ -98,7 +98,7 @@ class User extends Authenticatable implements JWTSubject
         }
 
         if (! $user->id) {
-           throw new \Exception('Empty user id - check if user is authenticated');
+            throw new \Exception('Empty user id - check if user is authenticated');
         }
 
         return $user->getTokenClient();
@@ -106,7 +106,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function getTokenClient()
     {
-        $appKey = config('app.key'); //env('APP_KEY');
+        $appKey = config('app.key'); // env('APP_KEY');
         if (empty($appKey)) {
             throw new \Exception('empty APP_KEY in config file');
         }
@@ -133,9 +133,8 @@ class User extends Authenticatable implements JWTSubject
         }
 
         if (! $user->id) {
-           throw new \Exception('Empty user id - check if user is authenticated');
+            throw new \Exception('Empty user id - check if user is authenticated');
         }
-
 
         if (! $user->checkClientByToken($token)) {
             throw new \Exception('User not valid - check');

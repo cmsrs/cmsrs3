@@ -152,6 +152,9 @@ abstract class BaseService
     {
         $imageService = new ImageService;
         foreach ($mObj->images()->get() as $img) {
+            if (! $img instanceof \App\Models\Cmsrs\Image) {
+                throw new \Exception('image is not instance of \\App\\Models\\Cmsrs\\Image - case deleteImagesFs');
+            }
             $imageService->deleteImg($img);
         }
     }
@@ -162,6 +165,9 @@ abstract class BaseService
         $files = [];
         $dirsImgs = [];
         foreach ($mObj->images()->get() as $img) {
+            if (! $img instanceof \App\Models\Cmsrs\Image) {
+                throw new \Exception('image is not instance of \\App\\Models\\Cmsrs\\Image - case getImagesFsFiles');
+            }
             $images = $imageService->getAllImage($img);
 
             if (is_array($images) && ! empty($images)) {
