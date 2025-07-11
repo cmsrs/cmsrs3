@@ -23,7 +23,7 @@ class User extends Authenticatable implements JWTSubject
     /**
      * The attributes that are mass assignable.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'name', 'email', 'password', 'role',
@@ -32,7 +32,7 @@ class User extends Authenticatable implements JWTSubject
     /**
      * The attributes that should be hidden for arrays.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $hidden = [
         'password',
@@ -92,11 +92,13 @@ class User extends Authenticatable implements JWTSubject
     public static function getTokenForClient()
     {
         $user = Auth::user();
-        if (empty($user)) {
-            throw new \Exception('User not auth');
-        }
+
         if (! ($user instanceof User)) {
             throw new \Exception('User not authenticated or not an instance of User');
+        }
+
+        if (! $user->id) {
+           throw new \Exception('Empty user id - check if user is authenticated');
         }
 
         return $user->getTokenClient();
@@ -104,7 +106,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function getTokenClient()
     {
-        $appKey = env('APP_KEY');
+        $appKey = config('app.key'); //env('APP_KEY');
         if (empty($appKey)) {
             throw new \Exception('empty APP_KEY in config file');
         }
@@ -125,13 +127,15 @@ class User extends Authenticatable implements JWTSubject
     public static function checkApiClientByToken($token)
     {
         $user = Auth::user();
-        if (empty($user)) {
-            throw new \Exception('User not auth - for check');
-        }
 
         if (! ($user instanceof User)) {
             throw new \Exception('User not authenticated or not an instance of User');
         }
+
+        if (! $user->id) {
+           throw new \Exception('Empty user id - check if user is authenticated');
+        }
+
 
         if (! $user->checkClientByToken($token)) {
             throw new \Exception('User not valid - check');

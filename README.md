@@ -38,7 +38,7 @@ composer create-project cmsrs/cmsrs3
 cd cmsrs3 && php artisan serve
 ```
 
-## MANUAL INSTALLATION
+## MANUAL INSTALLATION (RECOMMENDED)
 
 * Download the source code:
  
