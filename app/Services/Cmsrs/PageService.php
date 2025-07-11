@@ -585,6 +585,11 @@ class PageService extends BaseService implements TranslateInterface
         $out = [];
         $imageService = new ImageService;
         foreach ($mPage->images as $image) {
+
+            if (! ($image instanceof Image)) {
+                throw new \Exception('ImageService::arrImages - image is not instance of Image');
+            }
+
             $item = $imageService->getAllImage($image, false);
             $item['id'] = $image->id;
             $item['alt'] = $imageService->getAltImg($image);
@@ -747,13 +752,13 @@ class PageService extends BaseService implements TranslateInterface
                 ->whereNull('menu_id')
                 ->orderBy('position', 'asc')
                 ->get();
-        } elseif (($menuId !== null) && ($pageId === null)) {
+        } elseif ($pageId === null) {
             $page = Page::query()
                 ->where('menu_id', '=', $menuId)
                 ->whereNull('page_id')
                 ->orderBy('position', 'asc')
                 ->get();
-        } elseif (($menuId !== null) && ($pageId !== null)) {
+        } elseif ($pageId !== null) {
             $page = Page::query()
                 ->where('menu_id', '=', $menuId)
                 ->where('page_id', '=', $pageId)

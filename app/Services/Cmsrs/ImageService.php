@@ -132,7 +132,7 @@ class ImageService extends BaseService implements TranslateInterface
     /**
      *  return all thumbs and main img
      */
-    public static function getAllImage($img, $isAbs = true)
+    public static function getAllImage(object $img, $isAbs = true)
     {
         $out = [];
         $objImg = Image::find($img->id);

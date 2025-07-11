@@ -5,6 +5,7 @@ namespace App\Services\Cmsrs;
 use App\Models\Cmsrs\Basket;
 use App\Models\Cmsrs\Checkout;
 use App\Models\Cmsrs\Product;
+// use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\Helpers\CacheService;
 use App\Services\Cmsrs\Helpers\PriceHelperService;
 use Illuminate\Support\Facades\DB;
@@ -112,11 +113,13 @@ class ProductService extends BaseService
 
         $products->each(function ($product) {
             $firstTranslation = $product->translates->first();
-            $product->setAttribute('product_name', $firstTranslation ? $firstTranslation->value : null);
+            $productName = $firstTranslation instanceof \App\Models\Cmsrs\Translate ? $firstTranslation->value : null;
+            $product->setAttribute('product_name', $productName);
             unset($product['translates']);
 
             $firstTranslationPage = $product->translatesPage->first();
-            $product->setAttribute('page_short_title', $firstTranslationPage ? $firstTranslationPage->value : null);
+            $pageShortTitle = $firstTranslationPage instanceof \App\Models\Cmsrs\Translate ? $firstTranslationPage->value : null;
+            $product->setAttribute('page_short_title', $pageShortTitle);
             unset($product['translatesPage']);
 
             $priceDescription = PriceHelperService::getPriceDescriptionWrap($product->price);
@@ -343,14 +346,22 @@ class ProductService extends BaseService
     {
         $mPage = $mProduct->page()->first();
 
-        return (new PageService)->getUrl($mPage, $lang);
+        if ($mPage instanceof \App\Models\Cmsrs\Page) { // phpstan fix
+            return (new PageService)->getUrl($mPage, $lang);
+        }
+
+        return null; // todo - handle this case properly, maybe throw an exception or return a default URL
     }
 
     public function getProductUrl(Product $mProduct, $lang, $productName)
     {
         $mPage = $mProduct->page()->first();
 
-        return (new PageService)->getUrl($mPage, $lang, Str::slug($productName, '-'));
+        if ($mPage instanceof \App\Models\Cmsrs\Page) { // phpstan fix
+            return (new PageService)->getUrl($mPage, $lang, Str::slug($productName, '-'));
+        }
+
+        return null; // todo - handle this case properly, maybe throw an exception or return a default URL
     }
 
     public function getProductUrls(Product $productWithTranslate)
