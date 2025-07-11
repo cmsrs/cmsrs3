@@ -297,7 +297,7 @@ ADM_PASS="cmsrs123"
 ```ADM_EMAIL```: The default email address of the admin account.
 ```ADM_PASS```: The default password for the admin account.
 
-⚠️ Warning: Do not use the default credentials (adm@cmsrs.pl / cmsrs123) in production.
+Warning: Do not use the default credentials (adm@cmsrs.pl / cmsrs123) in production.
 Always update them for security reasons before deploying.
 
 * Client Account Credentials
@@ -312,7 +312,7 @@ CLIENT_PASS="cmsrs456"
 ```CLIENT_EMAIL```: The default email address for the client account.
 ```CLIENT_PASS```: The default password for the client account.
 
-⚠️ Warning: Do not use the default client credentials (client@cmsrs.pl / cmsrs456) in production environments.
+Warning: Do not use the default client credentials (client@cmsrs.pl / cmsrs456) in production environments.
 Always change them to secure values before deployment.
 
 
