@@ -133,6 +133,11 @@ body {
   cursor: pointer;
 }
 
+#logo_cmsrs{
+  margin-left: 10px;
+  height: 20px;
+}
+
 /* 100% Image Width on Smaller Screens */
 @media only screen and (max-width: 700px){
   .modal-content {
@@ -181,9 +186,11 @@ table.table  th{
     font-size: 0.95rem;
     font-weight: 400;  
   }
+  /*
   #logo_cmsrs{
     height: 20px;
   }
+  */
 
 }
 
@@ -216,10 +223,11 @@ table.table  th{
     font-size: 0.63rem;
     font-weight: 400;  
   }
-*/
+
   #logo_cmsrs{
     height: 20px;
   }
+*/    
 
 }
 

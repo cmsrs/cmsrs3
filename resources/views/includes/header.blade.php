@@ -33,14 +33,14 @@
 <nav class="navbar navbar-expand-lg navbar-dark  {{ $bg }} fixed-top lead">
     <a class="navbar-brand" href="{{ url($urlMainPage) }}">
         @php
-            $path = public_path('images/mysite/logo.png');
+            $path = public_path('images/mysite/logo.svg');
             $isExists = file_exists($path);
         @endphp
 
         @if ($isExists)    
-        <img id="logo_cmsrs" src="/images/mysite/logo.png" alt="{{ config('app.name', 'cmsRS') }}" />
+        <img id="logo_cmsrs" src="/images/mysite/logo.svg" alt="{{ config('app.name', 'cmsRS') }}" />
         @else
-        <img id="logo_cmsrs" src="/images/cms/logo_cmsrs.png" alt="{{ config('app.name', 'cmsRS') }}" />
+        <img id="logo_cmsrs" src="/images/cms/logo_cmsrs.svg" alt="{{ config('app.name', 'cmsRS') }}" />
         @endif
     </a>
   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
