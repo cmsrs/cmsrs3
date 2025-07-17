@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-if (env('IS_SHOP', true)) {
+if (config('cmsrs.features.shop')) {
     Route::get('productsGetNameAndPrice/{lang?}', [ProductController::class, 'getNameAndPrice']);
 }
 
@@ -36,7 +36,7 @@ Route::post('contact/{lang}', [ContactController::class, 'create']);
 // Route::get('page-type/{type}', [PageController::class, 'getFirstPageByTypeForGuest']); - i do not use this api - see skip test that use this api
 
 Route::group(['middleware' => ['jwt.auth']], function () {
-    $apiSecret = env('API_SECRET', '');
+    $apiSecret = config('cmsrs.api_secret');
     if ($apiSecret) {
         $apiSecret = $apiSecret.'/';
     }
@@ -80,7 +80,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::get($apiSecret.'config/is-cache-enable', [ConfigController::class, 'isCacheEnable']);
 
     /* shop start */
-    if (env('IS_SHOP', true)) {
+    if (config('cmsrs.features.shop')) {
         Route::get($apiSecret.'products', [ProductController::class, 'index']);
         Route::post($apiSecret.'products', [ProductController::class, 'create']);
         Route::get($apiSecret.'products/{id}', [ProductController::class, 'getItem']);

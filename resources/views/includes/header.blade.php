@@ -8,10 +8,10 @@
   $currency = $configService->getCurrency();
   $langs = $configService->arrGetLangs();  
   $manyLangs = $configService->isManyLangs(); //(count($langs) > 1);
-  $bg = env('DEMO_STATUS', false) ? 'bg-dark' : 'bg-secondary'; 
+  $bg = config('cmsrs.demo') ? 'bg-dark' : 'bg-secondary'; 
   //$bg = 'bg-secondary';
-  $pLogin = env('IS_LOGIN', true);
-  $pRegister =  env('IS_REGISTER', true);
+  $pLogin = config('cmsrs.features.login');
+  $pRegister =  config('cmsrs.features.register');
   //$pHome = $pageService::getFirstPageByType('home');
 
   $mainPage = $pageService::getFirstPageByType('main_page');
@@ -24,8 +24,8 @@
 ?>
 <div id="page_id" data-page-id="{{ !empty($page) ? $page->id : ''}}"></div>  
 <div id="lang" data-lang="{{$lang ?  $lang : ''}}"></div>    
-<div id="is_shop" data-is-shop="{{ env('IS_SHOP', true) }}"></div>          
-<div id="is_demo" data-is-demo="{{ env('DEMO_STATUS', false) }}"></div>          
+<div id="is_shop" data-is-shop="{{ config('cmsrs.features.shop') }}"></div>          
+<div id="is_demo" data-is-demo="{{ config('cmsrs.demo') }}"></div>          
 <div id="commented" data-commented="{{ !empty($page) ? $page->commented : '' }}"></div>          
 <div id="currency" data-currency="{{ $currency }}"></div>          
 
@@ -81,7 +81,7 @@
       </ul>
   </div>
     <ul class="list-unstyled  m-0 p-0">
-      @if (env('IS_SHOP', true))
+      @if (config('cmsrs.features.shop'))
         <li class="nav-item ms-1  me-4 cursor-pointer" v-on:click="toglebasket()">
           <i style="font-size:40px;color:#ff5050" class="fa">&#xf07a;</i>
           <span style="color:#ff5050">@{{ cart_length ? cart_length : '' }}</span>
@@ -108,7 +108,7 @@
     </ul>
     <ul class="nav navbar-nav ms-auto" >
       <!-- Authentication Links -->
-      @if ($pLogin && ! env('DEMO_STATUS', false))
+      @if ($pLogin && ! config('cmsrs.demo'))
         @php 
             $loginStyle = $manyLangs ? 'me-4' : '';
         @endphp

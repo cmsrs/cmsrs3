@@ -16,9 +16,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-$demoStatus = env('DEMO_STATUS', false);
-$isShop = env('IS_SHOP', true);
-$isLogin = env('IS_LOGIN', true);
+$demoStatus = config('cmsrs.demo', false);
+$isShop = config('cmsrs.features.shop');
+$isLogin = config('cmsrs.features.login');
 $langs = ConfigService::arrGetLangsEnv();
 $langRegex = '[a-z]{2}';
 

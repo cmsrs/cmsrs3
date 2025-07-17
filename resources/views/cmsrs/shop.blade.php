@@ -5,7 +5,6 @@
 
   <div id="app">
 
-
       <div class="container">
         <div class="row">
           <div class="col">
@@ -21,7 +20,7 @@
 <!--                  </div>
                   <div class="col">-->
                     <ul class="ms-3 list-unstyled">
-                      @if( env('DEMO_STATUS', false) )
+                      @if( config('cmsrs.demo') )
                       <li class="product-test">{{ __('Test Product') }}</li>
                       @endif
                       <li>{{ __('Name') }}: {{$product['product_name'][$lang] }}</li>
@@ -86,7 +85,7 @@
 <!--                  </div>
                   <div class="col">-->
                     <ul class="ms-3 list-unstyled">
-                      @if( env('DEMO_STATUS', false) )                      
+                      @if( config('cmsrs.demo') )                      
                       <li class="product-test">{{ __('Test Product') }}</li>
                       @endif
                       <li>{{ __('Name') }}: <a href="{{$product['url_product'][$lang] }}">{{$product['product_name'][$lang] }}</a></li>

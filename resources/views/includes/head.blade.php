@@ -13,7 +13,7 @@
 <!-- Bootstrap core CSS -->
 <link href="/css/lib/bootstrap.min.css" rel="stylesheet">
 
-<?php if(  env('IS_SHOP', true) ){ ?>
+<?php if(  config('cmsrs.features.shop') ){ ?>
     <?php //it is only use for display basket - maybe it is not worth to use this big library to one task - todo ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <?php } ?>
