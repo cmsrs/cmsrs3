@@ -13,6 +13,15 @@
 </br>
 </br>
 
+<p>
+    <b>cmsRS</b> is a modern, open-source CMS built for developers who value clean code and maintainability. It combines the power of <b>Laravel</b> and <b>Vue.js</b> into a lightweight, fully-tested framework—offering a refreshing alternative to bloated systems. Whether you need a multi-language site, a gallery, or an online store with PayU integration, cmsRS provides a <b>transparent and predictable foundation that respects your time</b>. The architecture is simple, the database schema is logical, and updates are predictable thanks to extensive test coverage.
+</p>
+<p>
+    <a target="_blank" href="http://demo.cms.pl/">🌐 Live Demo</a> | 
+    <a target="_blank" href="https://www.cmsrs.pl/en/cms/cmsrs/cmsrs-video-tutorial">🎬 Video Tutorials</a> | 
+    <a href="#installation-quick-setup">🚀 Quick Install</a>
+</p>
+
 ## REQUIRED PACKAGES
 
 ```php-cli``` – PHP command-line interface
