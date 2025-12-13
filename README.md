@@ -22,6 +22,21 @@
     <a href="#installation-quick-setup">🚀 Quick Install</a>
 </p>
 
+</br>
+<p align="center">
+    <img alt="admin panel - cmsRS" src="./rs/intro_imgs/s1.png">
+</p>
+
+<p align="center">
+    <img alt="frontend - cmsRS" src="./rs/intro_imgs/s1.png">
+</p>
+
+
+</br>
+
+
+
+
 ## REQUIRED PACKAGES
 
 ```php-cli``` – PHP command-line interface
