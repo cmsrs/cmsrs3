@@ -23,12 +23,9 @@
 </p>
 
 </br>
-<p align="center">
+<p>
     <img alt="admin panel - cmsRS" src="./rs/intro_imgs/s1.png">
-</p>
-
-<p align="center">
-    <img alt="frontend - cmsRS" src="./rs/intro_imgs/s1.png">
+    <img alt="frontend - cmsRS" src="./rs/intro_imgs/s6.png">
 </p>
 
 
