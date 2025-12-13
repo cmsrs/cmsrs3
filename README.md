@@ -24,8 +24,8 @@
 
 </br>
 <p>
-    <img alt="admin panel - cmsRS" src="./rs/intro_imgs/s1.png">
-    <img alt="frontend - cmsRS" src="./rs/intro_imgs/s6.png">
+    <img width="400" alt="admin panel - cmsRS" src="./rs/intro_imgs/s1.png">
+    <img width="400" alt="frontend - cmsRS" src="./rs/intro_imgs/s6.png">
 </p>
 
 
