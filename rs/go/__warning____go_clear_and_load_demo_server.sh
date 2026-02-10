@@ -12,11 +12,11 @@ rm -rf public/images/product
 
 
 ./rs/go/go_clear_all_cache_server.sh
-php84 artisan migrate:fresh
-php84 artisan db:seed
-php84 artisan cmsrs:load-demo-data
+php85 artisan migrate:fresh
+php85 artisan db:seed
+php85 artisan cmsrs:load-demo-data
 
-php84 artisan cache:clear
-php84 artisan cmsrs:create-site-map
-php84 artisan cmsrs:create-cache-enable-file
+php85 artisan cache:clear
+php85 artisan cmsrs:create-site-map
+php85 artisan cmsrs:create-cache-enable-file
 
