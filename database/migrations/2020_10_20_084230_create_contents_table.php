@@ -21,11 +21,15 @@ class CreateContentsTable extends Migration
             // $table->text('value')->nullable(); //consider use $table->mediumText('value')
             $table->mediumText('value')->nullable();
 
-            $table->unsignedBigInteger('page_id')->nullable();
-            $table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
+            //$table->unsignedBigInteger('page_id')->nullable();
+            //$table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
+            $table->foreignId('page_id')->nullable()->constrained()->cascadeOnDelete();
 
-            $table->unsignedBigInteger('product_id')->nullable();
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            //$table->unsignedBigInteger('product_id')->nullable();
+            //$table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreignId('product_id')->nullable()->constrained()->cascadeOnDelete();
+
+
             // $table->unique(['lang', 'column', 'page_id', 'product_id'], 'translates_index_unique'); //it was 241129, sql-lite fix, it is the sam name in another table
             $table->unique(['lang', 'column', 'page_id', 'product_id'], 'contents_index_unique');
 
