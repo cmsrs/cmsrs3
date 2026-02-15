@@ -647,26 +647,53 @@ class PageService extends BaseService implements TranslateInterface
         return $formatPage;
     }
 
-    /*
-    public function getFirstPageWithImagesForGuest($type)
+    
+    public function getPagesByShortTitleWithImagesForGuest($shortTitle)
+    {        
+        $defaultLang = ConfigService::getDefaultLang();
+
+        $pages = Page::with(['translates', 'contents'])
+            ->where('published', true)
+            ->where('after_login', false)
+            ->whereHas('translates', function ($query) use ($shortTitle, $defaultLang) {
+                $query->where('lang', $defaultLang)
+                    ->where('column', 'short_title')
+                    ->where('value', 'like', "%$shortTitle%");
+            })
+            ->orderBy('position', 'asc')
+            ->get($this->pageFields)
+            ->toArray();
+
+        $i = 0;
+        $out = [];
+        foreach ($pages as $page) {
+            $out[$i] = $this->getPageDataFormat($page);
+            $out[$i]['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
+            $i++;
+        }
+
+        return $out;
+    }
+
+
+    public function  getAllPagesWithImagesForGuest($type)
     {
         if (! in_array($type, ConfigService::arrGetPageTypes())) {
             throw new \Exception('Wrong type : '.$type);
         }
 
-        // $page = Page::with(['translates', 'contents'])->where('type', $type)->where('published', true)->where('after_login', false)->orderBy('position', 'asc')->get($this->pageFields)->first(); //->toSql(); ///toArray();
-        $page = Page::with(['translates', 'contents'])->where('type', $type)->where('published', true)->where('after_login', false)->orderBy('position', 'asc')->first(); // ->toSql(); ///toArray();
+        $pages = Page::with(['translates', 'contents'])->where('type', $type)->where('published', true)->where('after_login', false)->orderBy('position', 'asc')->get($this->pageFields)->toArray();
 
+        $i = 0;
         $out = [];
-        if ($page) {
-            $page = $page->toArray();
-            $out = $this->getPageDataFormat($page);
-            $out['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
+        foreach ($pages as $page) {
+            $out[$i] = $this->getPageDataFormat($page);
+            $out[$i]['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
+            $i++;
         }
 
         return $out;
-    }
-    */
+    }        
 
     public function getAllPagesWithImages($type = null)
     {

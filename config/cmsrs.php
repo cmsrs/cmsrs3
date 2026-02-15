@@ -179,4 +179,14 @@ return [
     */
     'cache_enable_file' => env('CACHE_ENABLE_FILE', ConfigService::CACHE_ENABLE_FILE_DEFAULT),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Frontend Mode
+    |--------------------------------------------------------------------------
+    | Determines the method of frontend rendering.
+    | - 'false' => traditional SSR on the PHP server side
+    | - 'true'   => headless, Nuxt.js frontend, page is not rendered on the server side (Nuxt.js/SPA mode)
+    */
+    'is_headless' => env('IS_HEADLESS', false),
+
 ];
