@@ -19,6 +19,7 @@ class PageHeadlessTest extends Base
         putenv('IS_SHOP=true');
         putenv('IS_LOGIN=true');
         putenv('IS_REGISTER=true');
+        putenv('IS_HEADLESS=true');
 
         parent::setUp();
 
@@ -29,28 +30,6 @@ class PageHeadlessTest extends Base
     {
         parent::tearDown();
     }
-
-    private function prepareTestDataForGetByType($type, $predefinedShortTitle)
-    {
-    
-        foreach ($predefinedShortTitle as $shortTitle) {                             
-            $testData =
-                [
-                    'title' => ['en' => "title $shortTitle"],
-                    'short_title' => ['en' => $shortTitle],
-                    'published' => 1,
-                    'after_login' => 0,
-                    //'type' => 'slider_main',
-                    'type' => $type,
-                    'content' => ['en' => "content $shortTitle"],
-                    'menu_id' => null,
-                    'images' => [],
-                ];
-            $response = $this->post('api/pages?token='.$this->token, $testData);
-            $res = $response->getData();
-            $this->assertTrue($res->success);
-        }
-    }    
 
     public function test_it_will_get_first_page_by_short_title_without_auth_docs()
     {

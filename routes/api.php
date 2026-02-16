@@ -32,9 +32,12 @@ Route::get('comments/{pageId}', [CommentController::class,  'index']);
 Route::post('comments/{pageId}', [CommentController::class, 'create']);
 Route::post('contact/{lang}', [ContactController::class, 'create']);
 
-// TODO: Add documentation to cmsrs.pl
-Route::get('pages-short-title/{shortTitle}', [PageController::class, 'getPagesByShortTitleForGuest']); 
-Route::get('pages-type/{type}', [PageController::class, 'getAllPagesByTypeForGuest']);
+/* is_headless start */
+if (config('cmsrs.is_headless')) {
+    Route::get('pages-short-title/{shortTitle}', [PageController::class, 'getPagesByShortTitleForGuest']); 
+    Route::get('pages-type/{type}', [PageController::class, 'getAllPagesByTypeForGuest']);
+}
+/* is_headless stop */
 
 Route::group(['middleware' => ['jwt.auth']], function () {
     $apiSecret = config('cmsrs.api_secret');

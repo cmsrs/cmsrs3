@@ -26,6 +26,7 @@ class TranslateTest extends Base
         putenv('IS_SHOP=true');
         putenv('IS_LOGIN=true');
         putenv('IS_REGISTER=true');
+        putenv('IS_HEADLESS=false');
 
         parent::setUp();
 

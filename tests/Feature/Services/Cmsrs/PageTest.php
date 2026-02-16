@@ -46,6 +46,7 @@ class PageTest extends Base
         putenv('IS_SHOP=true');
         putenv('IS_LOGIN=true');
         putenv('IS_REGISTER=true');
+        putenv('IS_HEADLESS=false');
 
         parent::setUp();
 
@@ -1321,4 +1322,27 @@ class PageTest extends Base
         $this->assertEquals(1, count($pages));
         $this->assertEquals($shortTitleTest, $pages[0]['short_title']['en']);
     }
+
+    public function test_it_will_get_all_pages_by_type_without_auth_forbidden()
+    {
+        $type = 'inner';        
+        $predefinedShortTitle = [ 'main_page_box1','main_page_box2','main_page_box3', 'company_data', 'main_page_slider' ];
+        $this->prepareTestDataForGetByType($type, $predefinedShortTitle);
+
+        $response = $this->get('api/pages-type/'.$type);
+        $this->assertEquals(404, $response->status());
+    }
+
+    public function test_it_will_get_first_page_by_short_title_without_auth_forbidden()
+    {
+        $type = 'inner';        
+        $shortTitle = 'main_page_box';
+        $predefinedShortTitle = [ $shortTitle.'1',$shortTitle.'2',$shortTitle.'3', 'company_data', 'main_page_slider' ];
+        $this->prepareTestDataForGetByType($type, $predefinedShortTitle);
+
+
+        $res = $this->get('api/pages-short-title/'.$shortTitle);        
+        $this->assertEquals(404, $res->status());
+    }
+
 }

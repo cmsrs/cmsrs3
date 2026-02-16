@@ -19,6 +19,7 @@ class ProductNotShopTest extends Base
         putenv('IS_SHOP=false'); // !!!!!
         putenv('IS_LOGIN=true');
         putenv('IS_REGISTER=true');
+        putenv('IS_HEADLESS=false');
 
         parent::setUp();
         $this->createUser();

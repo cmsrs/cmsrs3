@@ -18,6 +18,7 @@ class FrontGuestTwoTest extends TestCase
         putenv('IS_SHOP=true');
         putenv('IS_LOGIN=false'); // !!
         putenv('IS_REGISTER=false'); // !!
+        putenv('IS_HEADLESS=false');
 
         parent::setUp();
     }
