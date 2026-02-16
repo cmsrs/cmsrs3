@@ -75,28 +75,6 @@ class PageController extends Controller
         return response()->json(['success' => true, 'data' => $pages], 200);
     }
 
-    public function getPagesByShortTitleForGuest(Request $request, $shortTitle)
-    {
-        if (empty($shortTitle)) {
-            return response()->json(['success' => false, 'error' => 'Short title is required'], 200);
-        }
-
-        $pages = $this->pageService->getPagesByShortTitleWithImagesForGuest($shortTitle);
-
-        return response()->json(['success' => true, 'data' => $pages], 200);
-    }
-
-    public function getAllPagesByTypeForGuest(Request $request, $type)
-    {
-        if (! in_array($type, ConfigService::arrGetPageTypes())) {
-            return response()->json(['success' => false, 'error' => 'wrong type'], 200);
-        }
-
-        $pages = $this->pageService->getAllPagesWithImagesForGuest($type);
-
-        return response()->json(['success' => true, 'data' => $pages], 200);
-    }
-
     public function getPagesByType(Request $request, $type)
     {
         $pages = $this->pageService->getAllPagesWithImages($type);
