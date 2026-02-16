@@ -77,11 +77,10 @@ class PageHeadlessTest extends Base
         $objPage = (new PageService)->wrapCreate($testData);
         $this->assertNotEmpty($objPage->id);
         $res = $this->get('api/page/'.$objPage->id);
-        //dd($res->getContent());
+        // dd($res->getContent());
         $data = $res->getData();
         $this->assertTrue($data->success);
         $this->assertEquals($testData['title']['en'], $data->data->title->en);
         $this->assertEquals($testData['content']['en'], $data->data->content->en);
     }
-
 }
