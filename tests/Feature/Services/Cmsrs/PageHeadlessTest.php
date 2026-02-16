@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Services\Cmsrs;
 
+use App\Services\Cmsrs\PageService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PageHeadlessTest extends Base
@@ -60,5 +61,24 @@ class PageHeadlessTest extends Base
 
         $this->assertEquals(count($predefinedShortTitle), count($data->data));
         $this->assertEquals($predefinedShortTitle[0], $data->data[0]->short_title->en);
+    }
+
+    public function test_it_will_get_one_page_without_auth_docs()
+    {
+        $testData =
+        [
+            'title' => ['en' => 'inner title'],
+            'short_title' => ['en' => 'inner short_title'],
+            'type' => 'inner',
+            'content' => ['en' => 'content test4333 inner'],
+        ];
+
+        $objPage = (new PageService)->wrapCreate($testData);
+        $this->assertNotEmpty($objPage->id);
+        $res = $this->get('api/page/'.$objPage->id);
+        $data = $res->getData();
+        $this->assertTrue($data->success);
+        $this->assertEquals($testData['title']['en'], $data->data->title->en);
+        $this->assertEquals($testData['content']['en'], $data->data->content->en);
     }
 }

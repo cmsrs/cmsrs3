@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Cmsrs\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\PageService;
 use Illuminate\Http\Request;
@@ -12,10 +13,9 @@ class PageHeadlessController extends Controller
     public function __construct(
         protected ConfigService $configService,
         protected PageService $pageService,
-    ) {
-    }
+    ) {}
 
-    public function getPagesByShortTitleForGuest(Request $request, $shortTitle)
+    public function getPagesByShortTitle(Request $request, $shortTitle)
     {
         if (empty($shortTitle)) {
             return response()->json(['success' => false, 'error' => 'Short title is required'], 200);
@@ -26,7 +26,7 @@ class PageHeadlessController extends Controller
         return response()->json(['success' => true, 'data' => $pages], 200);
     }
 
-    public function getAllPagesByTypeForGuest(Request $request, $type)
+    public function getAllPagesByType(Request $request, $type)
     {
         if (! in_array($type, ConfigService::arrGetPageTypes())) {
             return response()->json(['success' => false, 'error' => 'wrong type'], 200);
@@ -37,4 +37,16 @@ class PageHeadlessController extends Controller
         return response()->json(['success' => true, 'data' => $pages], 200);
     }
 
+    public function oneItem(Request $request, $id)
+    {
+        $page = Page::find($id);
+
+        if (empty($page)) {
+            return response()->json(['success' => false, 'error' => 'Page not find'], 404);
+        }
+
+        $onePage = $this->pageService->getAllPagesWithImagesOneItem($page, null);
+
+        return response()->json(['success' => true, 'data' => $onePage], 200);
+    }
 }

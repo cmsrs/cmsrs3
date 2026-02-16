@@ -1323,6 +1323,7 @@ class PageTest extends Base
         $this->assertEquals($shortTitleTest, $pages[0]['short_title']['en']);
     }
 
+    /** start - headless - forbidden */
     public function test_it_will_get_all_pages_by_type_without_auth_forbidden()
     {
         $type = 'inner';
@@ -1343,4 +1344,21 @@ class PageTest extends Base
         $res = $this->get('api/pages-short-title/'.$shortTitle);
         $this->assertEquals(404, $res->status());
     }
+
+    public function test_it_will_get_one_page_without_auth_forbidden()
+    {
+        $testData =
+        [
+            'title' => ['en' => 'inner title'],
+            'short_title' => ['en' => 'inner short_title'],
+            'type' => 'inner',
+            'content' => ['en' => 'content test4333 inner'],
+        ];
+
+        $objPage = (new PageService)->wrapCreate($testData);
+        $this->assertNotEmpty($objPage->id);
+        $res = $this->get('api/page/'.$objPage->id);
+        $this->assertEquals(404, $res->status());
+    }
+    /** stop - headless - forbidden */
 }
