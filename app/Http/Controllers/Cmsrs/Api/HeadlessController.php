@@ -8,7 +8,7 @@ use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\PageService;
 use Illuminate\Http\Request;
 
-class PageHeadlessController extends Controller
+class HeadlessController extends Controller
 {
     public function __construct(
         protected ConfigService $configService,
@@ -37,7 +37,7 @@ class PageHeadlessController extends Controller
         return response()->json(['success' => true, 'data' => $pages], 200);
     }
 
-    public function oneItem(Request $request, $id)
+    public function onePageItem(Request $request, $id)
     {
         $page = Page::find($id);
 
@@ -45,8 +45,16 @@ class PageHeadlessController extends Controller
             return response()->json(['success' => false, 'error' => 'Page not find'], 404);
         }
 
+        if ($page->after_login){
+            return response()->json(['success' => false, 'error' => 'Unauthorized access'], 403);
+        }
+
+        if(!$page->published){
+            return response()->json(['success' => false, 'error' => 'Page not published'], 403);
+        }
+
         $onePage = $this->pageService->getAllPagesWithImagesOneItem($page, null);
 
         return response()->json(['success' => true, 'data' => $onePage], 200);
-    }
+    }    
 }

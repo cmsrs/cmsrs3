@@ -69,6 +69,7 @@ class PageHeadlessTest extends Base
         [
             'title' => ['en' => 'inner title'],
             'short_title' => ['en' => 'inner short_title'],
+            'published' => 1,
             'type' => 'inner',
             'content' => ['en' => 'content test4333 inner'],
         ];
@@ -76,9 +77,11 @@ class PageHeadlessTest extends Base
         $objPage = (new PageService)->wrapCreate($testData);
         $this->assertNotEmpty($objPage->id);
         $res = $this->get('api/page/'.$objPage->id);
+        //dd($res->getContent());
         $data = $res->getData();
         $this->assertTrue($data->success);
         $this->assertEquals($testData['title']['en'], $data->data->title->en);
         $this->assertEquals($testData['content']['en'], $data->data->content->en);
     }
+
 }

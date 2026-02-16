@@ -8,7 +8,7 @@ use App\Http\Controllers\Cmsrs\Api\ContactController;
 use App\Http\Controllers\Cmsrs\Api\ImageController;
 use App\Http\Controllers\Cmsrs\Api\MenuController;
 use App\Http\Controllers\Cmsrs\Api\PageController;
-use App\Http\Controllers\Cmsrs\Api\PageHeadlessController;
+use App\Http\Controllers\Cmsrs\Api\HeadlessController;
 use App\Http\Controllers\Cmsrs\Api\ProductController;
 use App\Http\Controllers\Cmsrs\Api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -35,10 +35,9 @@ Route::post('contact/{lang}', [ContactController::class, 'create']);
 
 /* is_headless start */
 if (config('cmsrs.is_headless')) {
-    Route::get('pages-short-title/{shortTitle}', [PageHeadlessController::class, 'getPagesByShortTitle']);
-    Route::get('pages-type/{type}', [PageHeadlessController::class, 'getAllPagesByType']);
-    Route::get('page/{id}', [PageHeadlessController::class, 'oneItem']);
-
+    Route::get('pages-short-title/{shortTitle}', [HeadlessController::class, 'getPagesByShortTitle']);
+    Route::get('pages-type/{type}', [HeadlessController::class, 'getAllPagesByType']);
+    Route::get('page/{id}', [HeadlessController::class, 'onePageItem']);
 }
 /* is_headless stop */
 
