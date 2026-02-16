@@ -647,9 +647,8 @@ class PageService extends BaseService implements TranslateInterface
         return $formatPage;
     }
 
-    
     public function getPagesByShortTitleWithImagesForGuest($shortTitle)
-    {        
+    {
         $defaultLang = ConfigService::getDefaultLang();
 
         $pages = Page::with(['translates', 'contents'])
@@ -675,8 +674,7 @@ class PageService extends BaseService implements TranslateInterface
         return $out;
     }
 
-
-    public function  getAllPagesWithImagesForGuest($type)
+    public function getAllPagesWithImagesForGuest($type)
     {
         if (! in_array($type, ConfigService::arrGetPageTypes())) {
             throw new \Exception('Wrong type : '.$type);
@@ -693,7 +691,7 @@ class PageService extends BaseService implements TranslateInterface
         }
 
         return $out;
-    }        
+    }
 
     public function getAllPagesWithImages($type = null)
     {

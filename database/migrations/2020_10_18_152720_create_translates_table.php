@@ -19,24 +19,24 @@ class CreateTranslatesTable extends Migration
             $table->string('column', 32); // ->notNullable();
             $table->string('value', 510)->nullable();
 
-            //$table->unsignedBigInteger('product_id')->nullable();
-            //$table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            // $table->unsignedBigInteger('product_id')->nullable();
+            // $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->foreignId('product_id')->nullable()->constrained()->cascadeOnDelete();
 
             $table->unique(['lang', 'column', 'menu_id', 'page_id', 'image_id', 'product_id'], 'translates_index_unique');
 
             // $table->dropUnique('translates_lang_column_menu_id_page_id_image_id_unique');
 
-            //$table->unsignedBigInteger('menu_id')->nullable();
-            //$table->foreign('menu_id')->references('id')->on('menus')->onDelete('cascade');
+            // $table->unsignedBigInteger('menu_id')->nullable();
+            // $table->foreign('menu_id')->references('id')->on('menus')->onDelete('cascade');
             $table->foreignId('menu_id')->nullable()->constrained()->cascadeOnDelete();
 
-            //$table->unsignedBigInteger('page_id')->nullable();
-            //$table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
+            // $table->unsignedBigInteger('page_id')->nullable();
+            // $table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
             $table->foreignId('page_id')->nullable()->constrained()->cascadeOnDelete();
 
-            //$table->unsignedBigInteger('image_id')->nullable();
-            //$table->foreign('image_id')->references('id')->on('images')->onDelete('cascade');
+            // $table->unsignedBigInteger('image_id')->nullable();
+            // $table->foreign('image_id')->references('id')->on('images')->onDelete('cascade');
             $table->foreignId('image_id')->nullable()->constrained()->cascadeOnDelete();
 
             // $table->unique(['lang', 'column', 'menu_id', 'page_id', 'image_id' ]);

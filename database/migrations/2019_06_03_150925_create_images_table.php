@@ -18,13 +18,12 @@ class CreateImagesTable extends Migration
             $table->string('name')->nullable();
             // $table->string('alt')->nullable();
             $table->integer('position')->unsigned()->nullable();
-            //$table->unsignedBigInteger('page_id')->nullable();
-            //$table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');            
+            // $table->unsignedBigInteger('page_id')->nullable();
+            // $table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
             $table->foreignId('page_id')->nullable()->constrained()->cascadeOnDelete();
 
-
-            //$table->unsignedBigInteger('product_id')->nullable();
-            //$table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            // $table->unsignedBigInteger('product_id')->nullable();
+            // $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->foreignId('product_id')->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });

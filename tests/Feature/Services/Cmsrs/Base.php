@@ -429,15 +429,15 @@ class Base extends TestCase
 
     protected function prepareTestDataForGetByType($type, $predefinedShortTitle)
     {
-    
-        foreach ($predefinedShortTitle as $shortTitle) {                             
+
+        foreach ($predefinedShortTitle as $shortTitle) {
             $testData =
                 [
                     'title' => ['en' => "title $shortTitle"],
                     'short_title' => ['en' => $shortTitle],
                     'published' => 1,
                     'after_login' => 0,
-                    //'type' => 'slider_main',
+                    // 'type' => 'slider_main',
                     'type' => $type,
                     'content' => ['en' => "content $shortTitle"],
                     'menu_id' => null,
@@ -447,6 +447,5 @@ class Base extends TestCase
             $res = $response->getData();
             $this->assertTrue($res->success);
         }
-    }    
-    
+    }
 }

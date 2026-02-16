@@ -79,7 +79,7 @@ class PageController extends Controller
     {
         if (empty($shortTitle)) {
             return response()->json(['success' => false, 'error' => 'Short title is required'], 200);
-        }        
+        }
 
         $pages = $this->pageService->getPagesByShortTitleWithImagesForGuest($shortTitle);
 
@@ -96,7 +96,6 @@ class PageController extends Controller
 
         return response()->json(['success' => true, 'data' => $pages], 200);
     }
-
 
     public function getPagesByType(Request $request, $type)
     {

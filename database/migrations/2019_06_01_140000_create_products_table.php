@@ -21,8 +21,8 @@ class CreateProductsTable extends Migration
             // $table->text('description')->nullable();
             // $table->string('photo')->nullable();
             $table->boolean('published')->default(0);
-            //$table->unsignedBigInteger('page_id')->nullable();
-            //$table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
+            // $table->unsignedBigInteger('page_id')->nullable();
+            // $table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
             $table->foreignId('page_id')->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });

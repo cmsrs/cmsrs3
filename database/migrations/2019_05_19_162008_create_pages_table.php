@@ -31,13 +31,12 @@ class CreatePagesTable extends Migration
 
             // DB::statement("ALTER TABLE pages MODIFY COLUMN  type ENUM('cms','gallery','shop','contact','main_page','privacy_policy','login','projects','clear') not null");
 
-            //$table->unsignedBigInteger('page_id')->nullable();
-            //$table->foreign('page_id')->references('id')->on('pages')->onDelete('set null');
+            // $table->unsignedBigInteger('page_id')->nullable();
+            // $table->foreign('page_id')->references('id')->on('pages')->onDelete('set null');
             $table->foreignId('page_id')->nullable()->constrained()->nullOnDelete();
 
-
-            //$table->unsignedBigInteger('menu_id')->nullable();
-            //$table->foreign('menu_id')->references('id')->on('menus')->onDelete('cascade');
+            // $table->unsignedBigInteger('menu_id')->nullable();
+            // $table->foreign('menu_id')->references('id')->on('menus')->onDelete('cascade');
             $table->foreignId('menu_id')->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
