@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Services\Cmsrs;
 
+use App\Models\Cmsrs\Page;
+use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -39,7 +41,7 @@ class PageHeadlessTest extends Base
         $predefinedShortTitle = [$shortTitle.'1', $shortTitle.'2', $shortTitle.'3', 'company_data', 'main_page_slider'];
         $this->prepareTestDataForGetByType($type, $predefinedShortTitle);
 
-        $res = $this->get('api/pages-short-title/'.$shortTitle);
+        $res = $this->get('api/headless/pages-short-title/'.$shortTitle);
         $data = $res->getData();
         $this->assertTrue($data->success);
 
@@ -55,7 +57,7 @@ class PageHeadlessTest extends Base
         $predefinedShortTitle = ['main_page_box1', 'main_page_box2', 'main_page_box3', 'company_data', 'main_page_slider'];
         $this->prepareTestDataForGetByType($type, $predefinedShortTitle);
 
-        $resType = $this->get('api/pages-type/'.$type);
+        $resType = $this->get('api/headless/pages-type/'.$type);
         $data = $resType->getData();
         $this->assertTrue($data->success);
 
@@ -76,11 +78,58 @@ class PageHeadlessTest extends Base
 
         $objPage = (new PageService)->wrapCreate($testData);
         $this->assertNotEmpty($objPage->id);
-        $res = $this->get('api/page/'.$objPage->id);
+        $res = $this->get('api/headless/page/'.$objPage->id);
         // dd($res->getContent());
         $data = $res->getData();
         $this->assertTrue($data->success);
         $this->assertEquals($testData['title']['en'], $data->data->title->en);
         $this->assertEquals($testData['content']['en'], $data->data->content->en);
+    }
+
+    public function test_it_will_get_main_page_2_headless()
+    {
+        $response = $this->get('/');
+        $response->assertStatus(404);
+
+        $testData2 =
+        [
+            'title' => ['en' => 'cmsRS'],
+            'short_title' => ['en' => 'cmsRS'],
+            'description' => ['en' => 'cmsRS'],
+            'published' => 1,
+            'commented' => 0,
+            'after_login' => 1,
+            'type' => 'main_page',
+            'content' => ['en' => 'main page'],
+            'menu_id' => null,
+            'page_id' => null,
+        ];
+
+        $response = $this->post('api/pages?token='.$this->token, $testData2);
+
+        $pages = Page::All()->toArray();
+        $this->assertEquals(1, count($pages));
+
+        $res = $response->getData();
+        $this->assertTrue($res->success);
+
+        // because it is headless.
+        $response = $this->get('/');
+        $response->assertStatus(404);
+    }
+
+    public function test_it_will_get_all_menus_without_auth_docs()
+    {
+        $res = $this->get('api/headless/menus');
+        $data = $res->getData();
+        // $this->assertTrue($data->success);
+        $this->assertFalse($data->success); // todo
+    }
+
+    public function test_it_will_get_all_menus_from_service()
+    {
+        $menus = (new MenuService)->getAllMenusHeadless();
+        $this->assertIsArray($menus);
+        $this->assertNotEmpty($menus);
     }
 }

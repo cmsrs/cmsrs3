@@ -16,6 +16,12 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+if (config('cmsrs.is_headless')) {
+    // In headless mode, we do not serve any frontend routes. All routes are handled by the API.
+    return;
+}
+
 $demoStatus = config('cmsrs.demo', false);
 $isShop = config('cmsrs.features.shop');
 $isLogin = config('cmsrs.features.login');

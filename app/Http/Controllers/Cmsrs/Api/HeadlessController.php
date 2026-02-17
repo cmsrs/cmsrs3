@@ -60,9 +60,9 @@ class HeadlessController extends Controller
         return response()->json(['success' => true, 'data' => $onePage], 200);
     }
 
-    public function index()
+    public function getMenus()
     {
-        $menus = MenuService::getAllMenus();
+        $menus = $this->menuService->getAllMenusHeadless();
 
         return response()->json(['success' => true, 'data' => $menus], 200);
     }

@@ -135,6 +135,24 @@ class MenuService extends BaseService implements TranslateInterface
         return $tree;
     }
 
+    public static function getAllMenusHeadless()
+    {
+        $menus = Menu::with('translates')->orderBy('position', 'asc')->get()->toArray();
+
+        $out = [];
+        $i = 0;
+        foreach ($menus as $menu) {
+            $out[$i]['id'] = $menu['id'];
+            $out[$i]['position'] = $menu['position'];
+            foreach ($menu['translates'] as $translate) {
+                $out[$i][$translate['column']][$translate['lang']] = $translate['value'];
+            }
+            $i++;
+        }
+
+        return $out;
+    }
+
     public static function getAllMenus()
     {
         $menus = Menu::with('translates')->orderBy('position', 'asc')->get()->toArray();
