@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\Services\Cmsrs;
 
+use App\Data\Demo;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
-use App\Data\Demo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PageHeadlessTest extends Base
@@ -133,7 +133,7 @@ class PageHeadlessTest extends Base
         $p = $objDemo->pagesAndMenu(true);
 
         $lang = 'en';
-        $menuUrls =  (new MenuService)->getAllUrlRelatedToMenus($lang);
+        $menuUrls = (new MenuService)->getAllUrlRelatedToMenus($lang);
 
         $this->assertEquals(5, count($menuUrls));
 
@@ -143,7 +143,7 @@ class PageHeadlessTest extends Base
             if (isset($menuUrl['url'])) {
                 $this->assertNotEmpty($menuUrl['url']);
                 $this->assertNotEmpty($menuUrl['page_id']);
-                $this->assertEmpty($menuUrl['pages']); //!!
+                $this->assertEmpty($menuUrl['pages']); // !!
             }
             if (isset($menuUrl['pages'])) {
                 foreach ($menuUrl['pages'] as $page) {
@@ -163,11 +163,11 @@ class PageHeadlessTest extends Base
         }
 
         $this->assertTrue($tt);
-        $this->assertEquals(2, count($menuUrls[0]['pages'])); //one is secret
+        $this->assertEquals(2, count($menuUrls[0]['pages'])); // one is secret
 
         $this->assertNotEmpty($menuUrls[4]['url']);
         $this->assertNotEmpty($menuUrls[4]['page_id']);
-        $this->assertNotEmpty($menuUrls[4]['menu_name']);        
-        $this->assertEmpty($menuUrls[4]['pages']);    //menu is connected with page, so pages is empty    
+        $this->assertNotEmpty($menuUrls[4]['menu_name']);
+        $this->assertEmpty($menuUrls[4]['pages']);    // menu is connected with page, so pages is empty
     }
 }
