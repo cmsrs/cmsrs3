@@ -102,12 +102,17 @@ class MenuService extends BaseService implements TranslateInterface
         return $pages;
     }
 
+    public function pagesPublishedAndAccessNotAuth(Menu $mMenu)
+    {
+        return $mMenu->pages()->where('published', '=', 1)->where('after_login', '=', 0)->orderBy('position', 'asc');
+    }    
+
     public function pagesPublishedAndAccess(Menu $mMenu)
     {
         if (Auth::check()) {
             $pages = $mMenu->pages()->where('published', '=', 1)->orderBy('position', 'asc');
         } else {
-            $pages = $mMenu->pages()->where('published', '=', 1)->where('after_login', '=', 0)->orderBy('position', 'asc');
+            $pages = $this->pagesPublishedAndAccessNotAuth($mMenu);    
         }
 
         return $pages;
@@ -135,22 +140,48 @@ class MenuService extends BaseService implements TranslateInterface
         return $tree;
     }
 
-    public static function getAllMenusHeadless()
-    {
-        $menus = Menu::with('translates')->orderBy('position', 'asc')->get()->toArray();
 
-        $out = [];
-        $i = 0;
+    public function getAllUrlRelatedToMenus($lang)
+    {
+        // cms link
+        // see in: resources/views/includes/header.blade.php
+        $pageService = new PageService;
+
+        $urlInMenu = [];        
+        $menus = Menu::orderBy('position', 'asc')->get();
+        $j = 0;
         foreach ($menus as $menu) {
-            $out[$i]['id'] = $menu['id'];
-            $out[$i]['position'] = $menu['position'];
-            foreach ($menu['translates'] as $translate) {
-                $out[$i][$translate['column']][$translate['lang']] = $translate['value'];
+            $pagesPublishedAndAccess = $this->pagesPublishedAndAccessNotAuth($menu)->get();
+            // dump($pagesPublishedAndAccess->published);
+            if ($pagesPublishedAndAccess->count() == 1) {
+                $urlInMenu[ $j ]['menu_name'] = $pageService->translatesByColumnAndLang(  $pagesPublishedAndAccess->first(), 'short_title', $lang ); //to nie jest blad                
+                $urlInMenu[ $j ]['url'] = $pageService->getUrl($pagesPublishedAndAccess->first(), $lang);
+                $urlInMenu[ $j ]['page_id'] = $pagesPublishedAndAccess->first()->id;                
+                $urlInMenu[ $j ]['pages'] = [];
+            } else {
+                $urlInMenu[ $j ]['menu_name'] =$this->translatesByColumnAndLang($menu, 'name', $lang );
+                $i = 0;
+                foreach ($this->pagesPublishedTree($pagesPublishedAndAccess) as $pageMenu) {
+                    // dump($page->published);
+                    $urlInMenu[ $j ]['pages'][$i]['url'] = $pageService->getUrl($pageMenu, $lang);
+                    $urlInMenu[ $j ]['pages'][$i]['short_title'] = $pageService->translatesByColumnAndLang($pageMenu, 'short_title', $lang );
+                    $urlInMenu[ $j ]['pages'][$i]['page_id'] = $pageMenu->id;
+                    if (! empty($pageMenu['children']) && ! empty($pageMenu->published)) {
+                        $ii  = 0;
+                        foreach ($pageMenu['children'] as $p) {
+                            $urlInMenu[ $j]['pages'][$i]['children'][$ii]['url'] = $pageService->getUrl($p, $lang);
+                            $urlInMenu[ $j]['pages'][$i]['children'][$ii]['short_title'] = $pageService->translatesByColumnAndLang($p, 'short_title', $lang );
+                            $urlInMenu[ $j]['pages'][$i]['children'][$ii]['page_id'] = $p->id;
+                            $ii++;
+                        }
+                    }
+                    $i++;
+                }
             }
-            $i++;
+            $j++;
         }
 
-        return $out;
+        return $urlInMenu;
     }
 
     public static function getAllMenus()

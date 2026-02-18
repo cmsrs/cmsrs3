@@ -97,11 +97,13 @@ class Base extends TestCase
         }
     }
 
+    /*
+    // I will put this function in the code (MenuService) - maybe letter remove this function in that test
+    */
     public function getAllUrlRelatedToMenus($lang)
     {
         // cms link
         // see in: resources/views/includes/header.blade.php
-        // this function only use in tests - maybe it will use in code in the future
         $pageService = new PageService;
         $menuService = new MenuService;
 

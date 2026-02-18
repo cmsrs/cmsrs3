@@ -5,6 +5,7 @@ namespace Tests\Feature\Services\Cmsrs;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
+use App\Data\Demo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PageHeadlessTest extends Base
@@ -128,8 +129,45 @@ class PageHeadlessTest extends Base
 
     public function test_it_will_get_all_menus_from_service()
     {
-        $menus = (new MenuService)->getAllMenusHeadless();
-        $this->assertIsArray($menus);
-        $this->assertNotEmpty($menus);
+        $objDemo = new Demo;
+        $p = $objDemo->pagesAndMenu(true);
+
+        $lang = 'en';
+        $menuUrls =  (new MenuService)->getAllUrlRelatedToMenus($lang);
+
+        $this->assertEquals(5, count($menuUrls));
+
+        $tt = false;
+        foreach ($menuUrls as $menuUrl) {
+            $this->assertNotEmpty($menuUrl['menu_name']);
+            if (isset($menuUrl['url'])) {
+                $this->assertNotEmpty($menuUrl['url']);
+                $this->assertNotEmpty($menuUrl['page_id']);
+                $this->assertEmpty($menuUrl['pages']); //!!
+            }
+            if (isset($menuUrl['pages'])) {
+                foreach ($menuUrl['pages'] as $page) {
+                    $this->assertNotEmpty($page['short_title']);
+                    $this->assertNotEmpty($page['url']);
+                    $this->assertNotEmpty($page['page_id']);
+                    if (isset($page['children'])) {
+                        foreach ($page['children'] as $child) {
+                            $this->assertNotEmpty($child['short_title']);
+                            $this->assertNotEmpty($child['url']);
+                            $this->assertNotEmpty($child['page_id']);
+                            $tt = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        $this->assertTrue($tt);
+        $this->assertEquals(2, count($menuUrls[0]['pages'])); //one is secret
+
+        $this->assertNotEmpty($menuUrls[4]['url']);
+        $this->assertNotEmpty($menuUrls[4]['page_id']);
+        $this->assertNotEmpty($menuUrls[4]['menu_name']);        
+        $this->assertEmpty($menuUrls[4]['pages']);    //menu is connected with page, so pages is empty    
     }
 }
