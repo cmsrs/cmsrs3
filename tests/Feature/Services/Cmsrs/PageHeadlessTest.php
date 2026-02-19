@@ -121,22 +121,29 @@ class PageHeadlessTest extends Base
 
     public function test_it_will_get_all_menus_without_auth_docs()
     {
-        $res = $this->get('api/headless/menus');
+        (new Demo)->pagesAndMenu(true);
+        $lang = 'en';
+        $res = $this->get("api/headless/menus/{$lang}");
         $data = $res->getData();
         // $this->assertTrue($data->success);
-        $this->assertFalse($data->success); // todo
+        $this->assertTrue($data->success); // todo
+
+        $this->assertEquals(5, count($data->data));
     }
 
     public function test_it_will_get_all_menus_from_service()
     {
-        $objDemo = new Demo;
-        $p = $objDemo->pagesAndMenu(true);
+        (new Demo)->pagesAndMenu(true);
 
         $lang = 'en';
         $menuUrls = (new MenuService)->getAllUrlRelatedToMenus($lang);
 
-        $this->assertEquals(5, count($menuUrls));
+        $this->assertHelper($menuUrls);
+    }
 
+    private function assertHelper($menuUrls)
+    {
+        $this->assertEquals(5, count($menuUrls));
         $tt = false;
         foreach ($menuUrls as $menuUrl) {
             $this->assertNotEmpty($menuUrl['menu_name']);

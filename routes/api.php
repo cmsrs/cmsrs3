@@ -38,7 +38,7 @@ if (config('cmsrs.is_headless')) {
     Route::get('headless/pages-short-title/{shortTitle}', [HeadlessController::class, 'getPagesByShortTitle']);
     Route::get('headless/pages-type/{type}', [HeadlessController::class, 'getAllPagesByType']);
     Route::get('headless/page/{id}', [HeadlessController::class, 'onePageItem']);
-    Route::get('headless/menus', [HeadlessController::class, 'getMenus']);
+    Route::get('headless/menus/{lang}', [HeadlessController::class, 'getMenus']);
 }
 /* is_headless stop */
 
