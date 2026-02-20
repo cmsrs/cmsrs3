@@ -76,6 +76,7 @@ class HeadlessTest extends Base
             'published' => 1,
             'type' => 'inner',
             'content' => ['en' => 'content test4333 inner'],
+            'description' => ['en' => 'description test4333 inner'],
         ];
 
         $objPage = (new PageService)->wrapCreate($testData);
@@ -84,8 +85,10 @@ class HeadlessTest extends Base
         // dd($res->getContent());
         $data = $res->getData();
         $this->assertTrue($data->success);
-        $this->assertEquals($testData['title']['en'], $data->data->title->en);
-        $this->assertEquals($testData['content']['en'], $data->data->content->en);
+        $this->assertEquals($testData['title']['en'], $data->data->title);
+        $this->assertEquals($testData['content']['en'], $data->data->content);
+        $this->assertEquals($testData['description']['en'], $data->data->description);
+        $this->assertEquals($testData['short_title']['en'], $data->data->short_title);
     }
 
     public function test_it_will_get_one_page_by_lang_without_auth_service()
@@ -97,14 +100,18 @@ class HeadlessTest extends Base
             'published' => 1,
             'type' => 'inner',
             'content' => ['en' => 'content test4333 inner'],
+            'description' => ['en' => 'description test4333 inner'],
         ];
 
         $objPage = (new PageService)->wrapCreate($testData);
         $this->assertNotEmpty($objPage->id);
 
         $page = (new HeadlessService)->getAllPagesWithImagesOneItemByLang($objPage, 'en');
-        $this->assertEquals($testData['title']['en'], $page['title']['en']);
-        $this->assertEquals($testData['content']['en'], $page['content']['en']);
+
+        $this->assertEquals($testData['title']['en'], $page['title']);
+        $this->assertEquals($testData['short_title']['en'], $page['short_title']);
+        $this->assertEquals($testData['content']['en'], $page['content']);
+        $this->assertEquals($testData['description']['en'], $page['description']);
     }
 
     /**

@@ -41,7 +41,7 @@ abstract class BaseService
         $this->arrLangs = $arrLangs;
     }
 
-    protected function getPageDataFormat($page)
+    protected function getPageDataFormat($page, $lang = null)
     {
         $out = [];
         foreach ($this->pageFields as $field) {
@@ -49,9 +49,15 @@ abstract class BaseService
         }
         foreach ($page['translates'] as $translate) {
             $out[$translate['column']][$translate['lang']] = $translate['value'];
+            if ($lang && $translate['lang'] == $lang) {
+                $out[$translate['column']] = $translate['value'];
+            }
         }
         foreach ($page['contents'] as $translate) {
             $out[$translate['column']][$translate['lang']] = $translate['value'];
+            if ($lang && $translate['lang'] == $lang) {
+                $out[$translate['column']] = $translate['value'];
+            }
         }
 
         return $out;

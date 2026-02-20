@@ -43,6 +43,10 @@ class HeadlessController extends Controller
 
     public function onePageItemByLang(Request $request, $id, $lang)
     {
+        if (! in_array($lang, ConfigService::arrGetLangsEnv())) {
+            return response()->json(['success' => false, 'error' => 'wrong lang'], 200);
+        }
+
         $page = Page::find($id);
 
         if (empty($page)) {
@@ -57,7 +61,7 @@ class HeadlessController extends Controller
             return response()->json(['success' => false, 'error' => 'Page not published'], 403);
         }
 
-        $onePage = $this->pageService->getAllPagesWithImagesOneItem($page, null);
+        $onePage = (new HeadlessService)->getAllPagesWithImagesOneItemByLang($page, $lang);
 
         return response()->json(['success' => true, 'data' => $onePage], 200);
     }

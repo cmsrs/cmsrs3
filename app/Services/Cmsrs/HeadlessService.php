@@ -119,7 +119,7 @@ class HeadlessService extends BaseService
     {
         $page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->first()->toArray();
 
-        $formatPage = $this->getPageDataFormat($page);
+        $formatPage = $this->getPageDataFormat($page, $lang);
         $formatPage['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
 
         return $formatPage;
