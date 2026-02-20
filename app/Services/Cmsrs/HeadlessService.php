@@ -9,12 +9,15 @@ class HeadlessService extends BaseService
 {
     private $pageService;
 
+    private $menuService;
+
     public function __construct()
     {
         $this->pageService = new PageService;
+        $this->menuService = new MenuService;
     }
 
-    public function getPagesByShortTitleWithImagesForGuest($shortTitle)
+    public function getPagesByShortTitleWithImages($shortTitle)
     {
         $defaultLang = ConfigService::getDefaultLang();
 
@@ -41,7 +44,7 @@ class HeadlessService extends BaseService
         return $out;
     }
 
-    public function getAllPagesWithImagesForGuest($type)
+    public function getAllPagesWithImages($type)
     {
         if (! in_array($type, ConfigService::arrGetPageTypes())) {
             throw new \Exception('Wrong type : '.$type);
@@ -82,7 +85,7 @@ class HeadlessService extends BaseService
                 $urlInMenu[$j]['page_id'] = $pagesPublishedAndAccess->first()->id;
                 $urlInMenu[$j]['pages'] = [];
             } else {
-                $urlInMenu[$j]['menu_name'] = $this->translatesByColumnAndLang($menu, 'name', $lang);
+                $urlInMenu[$j]['menu_name'] = $this->menuService->translatesByColumnAndLang($menu, 'name', $lang);
                 $i = 0;
                 foreach ($this->pagesPublishedTree($pagesPublishedAndAccess) as $pageMenu) {
                     $urlInMenu[$j]['pages'][$i] = $this->getPageData($pageMenu, $lang);

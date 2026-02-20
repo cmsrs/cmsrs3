@@ -68,6 +68,7 @@ class HeadlessTest extends Base
 
     public function test_it_will_get_one_page_by_lang_without_auth_docs()
     {
+        $lang = 'en';
         $testData =
         [
             'title' => ['en' => 'inner title'],
@@ -79,7 +80,7 @@ class HeadlessTest extends Base
 
         $objPage = (new PageService)->wrapCreate($testData);
         $this->assertNotEmpty($objPage->id);
-        $res = $this->get('api/headless/page/'.$objPage->id);
+        $res = $this->get('api/headless/page/'.$objPage->id.'/'.$lang);
         // dd($res->getContent());
         $data = $res->getData();
         $this->assertTrue($data->success);

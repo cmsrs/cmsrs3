@@ -25,7 +25,7 @@ class HeadlessController extends Controller
             return response()->json(['success' => false, 'error' => 'Short title is required'], 200);
         }
 
-        $pages = $this->headlessService->getPagesByShortTitleWithImagesForGuest($shortTitle);
+        $pages = $this->headlessService->getPagesByShortTitleWithImages($shortTitle);
 
         return response()->json(['success' => true, 'data' => $pages], 200);
     }
@@ -36,12 +36,12 @@ class HeadlessController extends Controller
             return response()->json(['success' => false, 'error' => 'wrong type'], 200);
         }
 
-        $pages = $this->headlessService->getAllPagesWithImagesForGuest($type);
+        $pages = $this->headlessService->getAllPagesWithImages($type);
 
         return response()->json(['success' => true, 'data' => $pages], 200);
     }
 
-    public function onePageItem(Request $request, $id)
+    public function onePageItemByLang(Request $request, $id, $lang)
     {
         $page = Page::find($id);
 
@@ -62,7 +62,7 @@ class HeadlessController extends Controller
         return response()->json(['success' => true, 'data' => $onePage], 200);
     }
 
-    public function getMenus(Request $request, $lang)
+    public function getMenusByLang(Request $request, $lang)
     {
         if (! in_array($lang, ConfigService::arrGetLangsEnv())) {
             return response()->json(['success' => false, 'error' => 'wrong lang'], 200);
