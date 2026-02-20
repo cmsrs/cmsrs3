@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Cmsrs\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
+use App\Services\Cmsrs\HeadlessService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
 use Illuminate\Http\Request;
@@ -15,6 +16,7 @@ class HeadlessController extends Controller
         protected ConfigService $configService,
         protected PageService $pageService,
         protected MenuService $menuService,
+        protected HeadlessService $headlessService,
     ) {}
 
     public function getPagesByShortTitle(Request $request, $shortTitle)
@@ -23,7 +25,7 @@ class HeadlessController extends Controller
             return response()->json(['success' => false, 'error' => 'Short title is required'], 200);
         }
 
-        $pages = $this->pageService->getPagesByShortTitleWithImagesForGuest($shortTitle);
+        $pages = $this->headlessService->getPagesByShortTitleWithImagesForGuest($shortTitle);
 
         return response()->json(['success' => true, 'data' => $pages], 200);
     }
@@ -34,7 +36,7 @@ class HeadlessController extends Controller
             return response()->json(['success' => false, 'error' => 'wrong type'], 200);
         }
 
-        $pages = $this->pageService->getAllPagesWithImagesForGuest($type);
+        $pages = $this->headlessService->getAllPagesWithImagesForGuest($type);
 
         return response()->json(['success' => true, 'data' => $pages], 200);
     }
@@ -66,7 +68,7 @@ class HeadlessController extends Controller
             return response()->json(['success' => false, 'error' => 'wrong lang'], 200);
         }
 
-        $menus = $this->menuService->getAllUrlRelatedToMenus($lang);
+        $menus = $this->headlessService->getAllUrlRelatedToMenusByLang($lang);
 
         return response()->json(['success' => true, 'data' => $menus], 200);
     }

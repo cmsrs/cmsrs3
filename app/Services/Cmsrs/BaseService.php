@@ -3,6 +3,7 @@
 namespace App\Services\Cmsrs;
 
 use App\Models\Cmsrs\Content;
+use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Product;
 use App\Models\Cmsrs\Translate;
@@ -14,6 +15,17 @@ use App\Services\Cmsrs\Interfaces\TranslateValueInterface;
 abstract class BaseService
 {
     private $arrLangs;
+
+    public $pageFields = [
+        'id',
+        'published',
+        'commented',
+        'after_login',
+        'position',
+        'type',
+        'menu_id',
+        'page_id',
+    ];
 
     public function getArrLangs()
     {
@@ -27,6 +39,49 @@ abstract class BaseService
     public function setArrLangs($arrLangs)
     {
         $this->arrLangs = $arrLangs;
+    }
+
+    protected function getPageDataFormat($page)
+    {
+        $out = [];
+        foreach ($this->pageFields as $field) {
+            $out[$field] = $page[$field];
+        }
+        foreach ($page['translates'] as $translate) {
+            $out[$translate['column']][$translate['lang']] = $translate['value'];
+        }
+        foreach ($page['contents'] as $translate) {
+            $out[$translate['column']][$translate['lang']] = $translate['value'];
+        }
+
+        return $out;
+    }
+
+    protected function pagesPublishedAndAccessNotAuth(Menu $mMenu)
+    {
+        return $mMenu->pages()->where('published', '=', 1)->where('after_login', '=', 0)->orderBy('position', 'asc');
+    }
+
+    public function pagesPublishedTree($pagesByMenu)
+    {
+        $tree = [];
+        foreach ($pagesByMenu as $page) {
+            if (empty($page->page_id)) {
+                $tree[$page->id] = $page;
+            }
+        }
+
+        foreach ($pagesByMenu as $page) {
+            if (! empty($page->page_id)) {
+                $children = empty($tree[$page->page_id]['children']) ? [] : $tree[$page->page_id]['children'];
+                array_push($children, $page);
+                if (! empty($tree[$page->page_id])) {
+                    $tree[$page->page_id]->setAttribute('children', $children);
+                }
+            }
+        }
+
+        return $tree;
     }
 
     public function genericCreateTranslate($d, $refName, $columns, $create = true)

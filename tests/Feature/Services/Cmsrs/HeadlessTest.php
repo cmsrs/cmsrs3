@@ -4,11 +4,11 @@ namespace Tests\Feature\Services\Cmsrs;
 
 use App\Data\Demo;
 use App\Models\Cmsrs\Page;
-use App\Services\Cmsrs\MenuService;
+use App\Services\Cmsrs\HeadlessService;
 use App\Services\Cmsrs\PageService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class PageHeadlessTest extends Base
+class HeadlessTest extends Base
 {
     use RefreshDatabase;
 
@@ -66,7 +66,7 @@ class PageHeadlessTest extends Base
         $this->assertEquals($predefinedShortTitle[0], $data->data[0]->short_title->en);
     }
 
-    public function test_it_will_get_one_page_without_auth_docs()
+    public function test_it_will_get_one_page_by_lang_without_auth_docs()
     {
         $testData =
         [
@@ -87,6 +87,28 @@ class PageHeadlessTest extends Base
         $this->assertEquals($testData['content']['en'], $data->data->content->en);
     }
 
+    public function test_it_will_get_one_page_by_lang_without_auth_service()
+    {
+        $testData =
+        [
+            'title' => ['en' => 'inner title'],
+            'short_title' => ['en' => 'inner short_title'],
+            'published' => 1,
+            'type' => 'inner',
+            'content' => ['en' => 'content test4333 inner'],
+        ];
+
+        $objPage = (new PageService)->wrapCreate($testData);
+        $this->assertNotEmpty($objPage->id);
+
+        $page = (new HeadlessService)->getAllPagesWithImagesOneItemByLang($objPage, 'en');
+        $this->assertEquals($testData['title']['en'], $page['title']['en']);
+        $this->assertEquals($testData['content']['en'], $page['content']['en']);
+    }
+
+    /**
+     * test ssr and headless together, because if it is headless
+     */
     public function test_it_will_get_main_page_2_headless()
     {
         $response = $this->get('/');
@@ -99,7 +121,7 @@ class PageHeadlessTest extends Base
             'description' => ['en' => 'cmsRS'],
             'published' => 1,
             'commented' => 0,
-            'after_login' => 1,
+            'after_login' => 0,
             'type' => 'main_page',
             'content' => ['en' => 'main page'],
             'menu_id' => null,
@@ -136,7 +158,7 @@ class PageHeadlessTest extends Base
         (new Demo)->pagesAndMenu(true);
 
         $lang = 'en';
-        $menuUrls = (new MenuService)->getAllUrlRelatedToMenus($lang);
+        $menuUrls = (new HeadlessService)->getAllUrlRelatedToMenusByLang($lang);
 
         $this->assertHelper($menuUrls);
     }

@@ -17,21 +17,8 @@ class PageService extends BaseService implements TranslateInterface
 
     private $content;
 
-    public $pageFields;
-
     public function __construct()
     {
-        $this->pageFields = [
-            'id',
-            'published',
-            'commented',
-            'after_login',
-            'position',
-            'type',
-            'menu_id',
-            'page_id',
-        ];
-
         $this->translate = new TranslateService;
         $this->content = new ContentService;
     }
@@ -618,22 +605,6 @@ class PageService extends BaseService implements TranslateInterface
     }
     */
 
-    private function getPageDataFormat($page)
-    {
-        $out = [];
-        foreach ($this->pageFields as $field) {
-            $out[$field] = $page[$field];
-        }
-        foreach ($page['translates'] as $translate) {
-            $out[$translate['column']][$translate['lang']] = $translate['value'];
-        }
-        foreach ($page['contents'] as $translate) {
-            $out[$translate['column']][$translate['lang']] = $translate['value'];
-        }
-
-        return $out;
-    }
-
     public function getAllPagesWithImagesOneItem(Page $mPage, ?string $simple = null)
     {
         $page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->first()->toArray();
@@ -645,52 +616,6 @@ class PageService extends BaseService implements TranslateInterface
         }
 
         return $formatPage;
-    }
-
-    public function getPagesByShortTitleWithImagesForGuest($shortTitle)
-    {
-        $defaultLang = ConfigService::getDefaultLang();
-
-        $pages = Page::with(['translates', 'contents'])
-            ->where('published', true)
-            ->where('after_login', false)
-            ->whereHas('translates', function ($query) use ($shortTitle, $defaultLang) {
-                $query->where('lang', $defaultLang)
-                    ->where('column', 'short_title')
-                    ->where('value', 'like', "%$shortTitle%");
-            })
-            ->orderBy('position', 'asc')
-            ->get($this->pageFields)
-            ->toArray();
-
-        $i = 0;
-        $out = [];
-        foreach ($pages as $page) {
-            $out[$i] = $this->getPageDataFormat($page);
-            $out[$i]['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
-            $i++;
-        }
-
-        return $out;
-    }
-
-    public function getAllPagesWithImagesForGuest($type)
-    {
-        if (! in_array($type, ConfigService::arrGetPageTypes())) {
-            throw new \Exception('Wrong type : '.$type);
-        }
-
-        $pages = Page::with(['translates', 'contents'])->where('type', $type)->where('published', true)->where('after_login', false)->orderBy('position', 'asc')->get($this->pageFields)->toArray();
-
-        $i = 0;
-        $out = [];
-        foreach ($pages as $page) {
-            $out[$i] = $this->getPageDataFormat($page);
-            $out[$i]['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
-            $i++;
-        }
-
-        return $out;
     }
 
     public function getAllPagesWithImages($type = null)
