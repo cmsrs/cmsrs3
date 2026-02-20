@@ -14,12 +14,9 @@ class MenuService extends BaseService implements TranslateInterface
 {
     private $translate;
 
-    private $pageService;
-
     public function __construct()
     {
         $this->translate = new TranslateService;
-        $this->pageService = new PageService;
     }
 
     public function setTranslate($objTranslate)

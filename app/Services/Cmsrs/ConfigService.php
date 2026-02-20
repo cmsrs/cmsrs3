@@ -169,9 +169,7 @@ class ConfigService
     public static function arrGetLangsEnv()
     {
         // env('LANGS', ConfigService::LANG_DEFAULT)
-        $langs = explode(',', config('cmsrs.langs'));
-
-        return $langs;
+        return explode(',', config('cmsrs.langs'));
     }
 
     public static function getDefaultLang()

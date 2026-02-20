@@ -4,6 +4,7 @@ namespace Tests\Feature\Services\Cmsrs;
 
 use App\Data\Demo;
 use App\Models\Cmsrs\Page;
+use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\HeadlessService;
 use App\Services\Cmsrs\PageService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -206,5 +207,15 @@ class HeadlessTest extends Base
         $this->assertNotEmpty($menuUrls[4]['page_id']);
         $this->assertNotEmpty($menuUrls[4]['menu_name']);
         $this->assertEmpty($menuUrls[4]['pages']);    // menu is connected with page, so pages is empty
+    }
+
+    public function test_it_will_get_config()
+    {
+        $res = $this->get('api/headless/config');
+        $data = $res->getData();
+        $this->assertTrue($data->success);
+
+        $this->assertEquals((new ConfigService)->getDefaultLang(), $data->data->default_lang);
+        $this->assertEquals((new ConfigService)->arrGetLangs(), $data->data->langs);
     }
 }

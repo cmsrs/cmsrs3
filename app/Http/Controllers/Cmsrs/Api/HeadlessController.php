@@ -9,6 +9,7 @@ use App\Services\Cmsrs\HeadlessService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class HeadlessController extends Controller
 {
@@ -75,5 +76,23 @@ class HeadlessController extends Controller
         $menus = $this->headlessService->getAllUrlRelatedToMenusByLang($lang);
 
         return response()->json(['success' => true, 'data' => $menus], 200);
+    }
+
+    public function config()
+    {
+        try {
+            $config = [];
+            $config['langs'] = $this->configService->arrGetLangs();
+            $config['default_lang'] = $this->configService->getDefaultLang();
+            // $config['currency'] = $this->configService->getCurrency();
+            // $config['demo_status'] = $this->configService->getDemoStatus();
+            // $config['is_shop'] = $this->configService->getIsShop();
+        } catch (\Exception $e) {
+            Log::error('headless config ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile());
+
+            return response()->json(['success' => false, 'error' => $e->getMessage().' Details in the log file.'], 200);
+        }
+
+        return response()->json(['success' => true, 'data' => $config], 200);
     }
 }
