@@ -364,6 +364,8 @@ IS_HEADLESS=false
 ```
 
 Enables headless mode. The default option is false.
+
+
 ```false```: Traditional SSR (Server-Side Rendering) on the PHP server side
 ```true```: Headless mode with Nuxt.js frontend; pages are not rendered on the server side (Nuxt.js/SPA mode)
 
