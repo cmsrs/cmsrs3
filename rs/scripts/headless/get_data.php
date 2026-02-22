@@ -52,9 +52,6 @@ $example_page = "curl -s -H 'Accept:application/json' -H 'Content-Type:applicati
 $out = [];
 exec($example_page, $out);
 
-print_r($out);
-exit;
-
 $res4 = json_decode($out[0]);
 if ($res4->success) {
     $example_page_data = $res4->data;
@@ -69,5 +66,5 @@ print_r($menus_data);
 print_r("main_page_data: \n");
 print_r($main_page_data);
 
-print_r("example_page_data: \n");
+print_r("example_page_data - for page_id $example_page_id : \n");
 print_r($example_page_data);
