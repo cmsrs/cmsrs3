@@ -47,16 +47,18 @@ abstract class BaseService
         foreach ($this->pageFields as $field) {
             $out[$field] = $page[$field];
         }
-        foreach ($page['translates'] as $translate) {
+        foreach ($page['translates'] ?? [] as $translate) {
             $out[$translate['column']][$translate['lang']] = $translate['value'];
-            if ($lang && $translate['lang'] == $lang) {
-                $out[$translate['column']] = $translate['value'];
-            }
         }
-        foreach ($page['contents'] as $translate) {
+        foreach ($page['contents'] ?? [] as $translate) {
             $out[$translate['column']][$translate['lang']] = $translate['value'];
-            if ($lang && $translate['lang'] == $lang) {
-                $out[$translate['column']] = $translate['value'];
+        }
+
+        if ($lang) {
+            foreach ($out as $key => $value) {
+                if (is_array($value)) {
+                    $out[$key] = isset($value[$lang]) ? $value[$lang] : null;
+                }
             }
         }
 
