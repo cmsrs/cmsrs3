@@ -14,6 +14,8 @@ class HeadlessTest extends Base
 {
     use RefreshDatabase;
 
+    private const STR_DESC_IMG1 = 'description image 1';
+
     protected function setUp(): void
     {
         putenv('LANGS="en"');
@@ -35,6 +37,18 @@ class HeadlessTest extends Base
     protected function tearDown(): void
     {
         parent::tearDown();
+    }
+
+    private function prepareTestImages()
+    {
+        $name1 = 'phpunittest1.jpg';
+        $file1 = $this->getFixtureBase64($name1);
+
+        $images = [
+            ['name' => $name1, 'data' => $file1, 'alt' => ['en' => self::STR_DESC_IMG1]],
+        ];
+
+        return $images;
     }
 
     public function test_it_will_get_first_page_by_short_title_without_auth_docs()
@@ -91,11 +105,12 @@ class HeadlessTest extends Base
         $this->assertEquals($testData['content']['en'], $data->data->content);
         $this->assertEquals($testData['description']['en'], $data->data->description);
         $this->assertEquals($testData['short_title']['en'], $data->data->short_title);
-        $this->assertTrue(!property_exists($data->data, 'products'));  // because it is not shop page, so products is empty  (type => inner)
+        $this->assertTrue(! property_exists($data->data, 'products'));  // because it is not shop page, so products is empty  (type => inner)
     }
 
-    public function test_it_will_get_one_page_by_lang_with_products_without_auth()
+    public function test_it_will_get_one_page_by_lang_with_products_without_auth_docs()
     {
+        $images = $this->prepareTestImages();
         $lang = 'en';
         $testData =
         [
@@ -105,31 +120,39 @@ class HeadlessTest extends Base
             'type' => 'shop',
             'content' => ['en' => 'content test4333 inner'],
             'description' => ['en' => 'description test4333 inner'],
+            'images' => $images,
         ];
 
         $objPage = (new PageService)->wrapCreate($testData);
         $this->assertNotEmpty($objPage->id);
 
         $testProduct = [
-            'product_name' => ['en' => 'sportline socks', 'pl' => 'skarpety sportowe'],
+            'product_name' => ['en' => 'sportline socks'],
             'sku' => '1/234/100',
             'price' => 500,
             'published' => 1,
             'product_description' => ['en' => 'socks', 'pl' => 'skarpety'],
             'page_id' => $objPage->id,
-            // 'images' => $images['product12'],
+            'images' => $images,
         ];
 
         $objProduct = (new ProductService)->wrapCreate($testProduct);
         $this->assertNotEmpty($objProduct->id);
 
         $res = $this->get('api/headless/page/'.$objPage->id.'/'.$lang);
-        // dd($res->getContent());
         $data = $res->getData();
+
         $this->assertTrue($data->success);
         $this->assertTrue(property_exists($data->data, 'products'));
         $this->assertNotEmpty($data->data->products);
         $this->assertNotEmpty($data->data->products[0]);
+        $this->assertEquals($testProduct['product_name']['en'], $data->data->products[0]->product_name);
+        $this->assertEquals($testProduct['product_description']['en'], $data->data->products[0]->product_description);
+        $this->assertEquals('sportline-socks', $data->data->products[0]->product_name_slag);
+        $this->assertEquals($testProduct['price'], $data->data->products[0]->price);
+        $this->assertEquals($testProduct['sku'], $data->data->products[0]->sku);
+        $this->assertEquals(self::STR_DESC_IMG1, $data->data->images[0]->alt);
+        $this->assertEquals(self::STR_DESC_IMG1, $data->data->images[0]->alt);
     }
 
     public function test_it_will_get_one_page_by_lang_without_auth_service()
