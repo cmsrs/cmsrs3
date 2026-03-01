@@ -7,6 +7,7 @@ use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\HeadlessService;
 use App\Services\Cmsrs\PageService;
+use App\Services\Cmsrs\ProductService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class HeadlessTest extends Base
@@ -90,6 +91,45 @@ class HeadlessTest extends Base
         $this->assertEquals($testData['content']['en'], $data->data->content);
         $this->assertEquals($testData['description']['en'], $data->data->description);
         $this->assertEquals($testData['short_title']['en'], $data->data->short_title);
+        $this->assertTrue(!property_exists($data->data, 'products'));  // because it is not shop page, so products is empty  (type => inner)
+    }
+
+    public function test_it_will_get_one_page_by_lang_with_products_without_auth()
+    {
+        $lang = 'en';
+        $testData =
+        [
+            'title' => ['en' => 'shop title'],
+            'short_title' => ['en' => ' short_title'],
+            'published' => 1,
+            'type' => 'shop',
+            'content' => ['en' => 'content test4333 inner'],
+            'description' => ['en' => 'description test4333 inner'],
+        ];
+
+        $objPage = (new PageService)->wrapCreate($testData);
+        $this->assertNotEmpty($objPage->id);
+
+        $testProduct = [
+            'product_name' => ['en' => 'sportline socks', 'pl' => 'skarpety sportowe'],
+            'sku' => '1/234/100',
+            'price' => 500,
+            'published' => 1,
+            'product_description' => ['en' => 'socks', 'pl' => 'skarpety'],
+            'page_id' => $objPage->id,
+            // 'images' => $images['product12'],
+        ];
+
+        $objProduct = (new ProductService)->wrapCreate($testProduct);
+        $this->assertNotEmpty($objProduct->id);
+
+        $res = $this->get('api/headless/page/'.$objPage->id.'/'.$lang);
+        // dd($res->getContent());
+        $data = $res->getData();
+        $this->assertTrue($data->success);
+        $this->assertTrue(property_exists($data->data, 'products'));
+        $this->assertNotEmpty($data->data->products);
+        $this->assertNotEmpty($data->data->products[0]);
     }
 
     public function test_it_will_get_one_page_by_lang_without_auth_service()

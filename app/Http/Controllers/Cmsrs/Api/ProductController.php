@@ -79,6 +79,13 @@ class ProductController extends Controller
         return response()->json(['success' => true, 'data' => $products], 200);
     }
 
+    public function getProductsByPageId(Request $request, $id, $lang)
+    {
+        $products = $this->productService->getGivenProductsWithImagesByPageId($id);
+
+        return response()->json(['success' => true, 'data' => $products], 200);
+    }
+
     public function index()
     {
         $products = $this->productService->getAllProductsWithImages();

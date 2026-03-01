@@ -8,6 +8,7 @@ use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\HeadlessService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
+use App\Services\Cmsrs\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -18,6 +19,7 @@ class HeadlessController extends Controller
         protected PageService $pageService,
         protected MenuService $menuService,
         protected HeadlessService $headlessService,
+        protected ProductService $productService,
     ) {}
 
     public function getPagesByShortTitle(Request $request, $shortTitle)
@@ -63,6 +65,10 @@ class HeadlessController extends Controller
         }
 
         $onePage = (new HeadlessService)->getAllPagesWithImagesOneItemByLang($page, $lang);
+
+        if ($onePage['type'] == 'shop') {
+            $onePage['products'] = $this->productService->getGivenProductsWithImagesByPageId($page->id, true);
+        }
 
         return response()->json(['success' => true, 'data' => $onePage], 200);
     }

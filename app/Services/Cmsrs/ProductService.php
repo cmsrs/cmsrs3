@@ -410,6 +410,13 @@ class ProductService extends BaseService
         return Product::with(['translates', 'contents'])->orderBy('id', 'asc')->get();
     }
 
+    public function getGivenProductsWithImagesByPageId($pageId, $withUrls = false)
+    {
+        $products = $this->getDataProductsWithImagesByPage($pageId);
+
+        return $this->getAllProductsWithImagesArr($products, $withUrls);
+    }
+
     public function getAllProductsWithImages($withUrls = false)
     {
         $products = $this->getAllProductsWithTranslates();
@@ -506,9 +513,14 @@ class ProductService extends BaseService
         return $this->dataToRender($products);
     }
 
+    private function getDataProductsWithImagesByPage($pageId)
+    {
+        return Product::with(['translates', 'contents'])->where('page_id', $pageId)->orderBy('id', 'asc')->where('published', '=', 1)->get(); // ->toArray();
+    }
+
     public function getProductsWithImagesByPage($pageId)
     {
-        $products = Product::with(['translates', 'contents'])->where('page_id', $pageId)->orderBy('id', 'asc')->where('published', '=', 1)->get(); // ->toArray();
+        $products = $this->getDataProductsWithImagesByPage($pageId);
 
         return $this->dataToRender($products);
         // $i = 0;
