@@ -385,15 +385,18 @@ class ProductService extends BaseService
         return $arrProductFormat['product_name'][$lang];
     }
 
-    public function getProductDataByProductArr($product)
+    public function getProductDataByProductArr($product, $lang = null)
     {
         $arrProduct = $product->toArray();
 
         $out = [];
         $out = $this->getProductDataFormat($arrProduct);
         $out['product_name_default_lang'] = $this->getProductNameDefaultLang($out);
+        if ($lang) {
+            $out = $this->removeKeyLangInArr($out, $lang);
+        }
 
-        $out['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('product', $arrProduct['id']);
+        $out['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('product', $arrProduct['id'], $lang);
 
         return $out;
     }
@@ -410,11 +413,11 @@ class ProductService extends BaseService
         return Product::with(['translates', 'contents'])->orderBy('id', 'asc')->get();
     }
 
-    public function getGivenProductsWithImagesByPageId($pageId, $withUrls = false)
+    public function getGivenProductsWithImagesByPageId($pageId, $withUrls = false, $lang = null)
     {
         $products = $this->getDataProductsWithImagesByPage($pageId);
 
-        return $this->getAllProductsWithImagesArr($products, $withUrls);
+        return $this->getAllProductsWithImagesArr($products, $withUrls, $lang);
     }
 
     public function getAllProductsWithImages($withUrls = false)
@@ -424,12 +427,12 @@ class ProductService extends BaseService
         return $this->getAllProductsWithImagesArr($products, $withUrls);
     }
 
-    public function getAllProductsWithImagesArr($products, $withUrls = false)
+    public function getAllProductsWithImagesArr($products, $withUrls = false, $lang = null)
     {
         $i = 0;
         $out = [];
         foreach ($products as $product) {
-            $out[$i] = $this->getProductDataByProductArr($product);
+            $out[$i] = $this->getProductDataByProductArr($product, $lang);
 
             if ($withUrls) {
                 $urls = $this->getProductUrls($product);

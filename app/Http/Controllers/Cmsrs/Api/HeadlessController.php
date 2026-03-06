@@ -67,7 +67,7 @@ class HeadlessController extends Controller
         $onePage = (new HeadlessService)->getAllPagesWithImagesOneItemByLang($page, $lang);
 
         if ($onePage['type'] == 'shop') {
-            $onePage['products'] = $this->productService->getGivenProductsWithImagesByPageId($page->id, true);
+            $onePage['products'] = $this->productService->getGivenProductsWithImagesByPageId($page->id, true, $lang);
         }
 
         return response()->json(['success' => true, 'data' => $onePage], 200);

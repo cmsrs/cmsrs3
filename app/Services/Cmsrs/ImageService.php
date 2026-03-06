@@ -307,12 +307,12 @@ class ImageService extends BaseService implements TranslateInterface
         return $image->position + 1;
     }
 
-    public static function getImagesAndThumbsByTypeAndRefId($type, $refId = null)
+    public static function getImagesAndThumbsByTypeAndRefId($type, $refId = null, $lang = null)
     {
         $images = ImageService::getImagesByTypeAndRefId($type, $refId);
 
         foreach ($images as $k => $img) {
-            $images[$k]['alt'] = ImageService::getAltImg($img);
+            $images[$k]['alt'] = ImageService::getAltImg($img, $lang);
             $images[$k]['fs'] = ImageService::getAllImage($img, false);
             unset($img['translates']);
         }
@@ -320,7 +320,7 @@ class ImageService extends BaseService implements TranslateInterface
         return $images;
     }
 
-    public static function getAltImg($objImg)
+    public static function getAltImg($objImg, $lang = null)
     {
         $out = [];
         $translates = $objImg->translates->toArray();
@@ -328,6 +328,10 @@ class ImageService extends BaseService implements TranslateInterface
             if ($translate['column'] == 'alt') {
                 $out[$translate['lang']] = $translate['value'];
             }
+        }
+
+        if ($lang) {
+            return isset($out[$lang]) ? $out[$lang] : null;
         }
 
         return $out;

@@ -53,16 +53,22 @@ abstract class BaseService
         foreach ($page['contents'] ?? [] as $translate) {
             $out[$translate['column']][$translate['lang']] = $translate['value'];
         }
-
         if ($lang) {
-            foreach ($out as $key => $value) {
-                if (is_array($value)) {
-                    $out[$key] = isset($value[$lang]) ? $value[$lang] : null;
-                }
-            }
+            return $this->removeKeyLangInArr($out, $lang);
         }
 
         return $out;
+    }
+
+    public function removeKeyLangInArr($arr, $lang)
+    {
+        foreach ($arr as $key => $value) {
+            if (is_array($value)) {
+                $arr[$key] = isset($value[$lang]) ? $value[$lang] : null;
+            }
+        }
+
+        return $arr;
     }
 
     protected function pagesPublishedAndAccessNotAuth(Menu $mMenu)

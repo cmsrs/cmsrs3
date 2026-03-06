@@ -82,7 +82,7 @@ class HeadlessTest extends Base
         $this->assertEquals($predefinedShortTitle[0], $data->data[0]->short_title->en);
     }
 
-    public function test_it_will_get_one_page_by_lang_without_auth_docs()
+    public function test_it_will_get_one_page_by_lang_without_auth() // old _docs
     {
         $lang = 'en';
         $testData =
@@ -148,11 +148,11 @@ class HeadlessTest extends Base
         $this->assertNotEmpty($data->data->products[0]);
         $this->assertEquals($testProduct['product_name']['en'], $data->data->products[0]->product_name);
         $this->assertEquals($testProduct['product_description']['en'], $data->data->products[0]->product_description);
-        $this->assertEquals('sportline-socks', $data->data->products[0]->product_name_slag);
+        $this->assertEquals('sportline-socks', $data->data->products[0]->product_name_slug);
         $this->assertEquals($testProduct['price'], $data->data->products[0]->price);
         $this->assertEquals($testProduct['sku'], $data->data->products[0]->sku);
         $this->assertEquals(self::STR_DESC_IMG1, $data->data->images[0]->alt);
-        $this->assertEquals(self::STR_DESC_IMG1, $data->data->images[0]->alt);
+        $this->assertEquals(self::STR_DESC_IMG1, $data->data->products[0]->images[0]->alt);
     }
 
     public function test_it_will_get_one_page_by_lang_without_auth_service()
