@@ -67,7 +67,7 @@ class HeadlessController extends Controller
         $onePage = (new HeadlessService)->getAllPagesWithImagesOneItemByLang($page, $lang);
 
         if ($onePage['type'] == 'shop') {
-            $onePage['products'] = $this->productService->getGivenProductsWithImagesByPageId($page->id, true, $lang);
+            $onePage['products'] = $this->productService->getGivenProductsWithImagesByPageId($page->id, false, $lang);
         }
 
         return response()->json(['success' => true, 'data' => $onePage], 200);
@@ -90,9 +90,11 @@ class HeadlessController extends Controller
             $config = [];
             $config['langs'] = $this->configService->arrGetLangs();
             $config['default_lang'] = $this->configService->getDefaultLang();
-            // $config['currency'] = $this->configService->getCurrency();
-            // $config['demo_status'] = $this->configService->getDemoStatus();
-            // $config['is_shop'] = $this->configService->getIsShop();
+            $config['cache_enable'] = config('cmsrs.cache_enabled');  // env('CACHE_ENABLE', false);
+            $config['is_cache_enable'] = $this->configService->isCacheEnable();
+            $config['currency'] = $this->configService->getCurrency();
+            $config['demo_status'] = $this->configService->getDemoStatus();
+            $config['is_shop'] = $this->configService->getIsShop();
         } catch (\Exception $e) {
             Log::error('headless config ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile());
 
