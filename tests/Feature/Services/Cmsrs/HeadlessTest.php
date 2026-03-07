@@ -272,7 +272,7 @@ class HeadlessTest extends Base
         $this->assertEmpty($menuUrls[4]['pages']);    // menu is connected with page, so pages is empty
     }
 
-    public function test_it_will_get_config_docs()
+    public function test_it_will_get_config_headless_docs()
     {
         $res = $this->get('api/headless/config');
         $data = $res->getData();
