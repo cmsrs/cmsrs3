@@ -45,7 +45,7 @@ if ($res3->success) {
     exit('something wrong with main page data');
 }
 
-// get example page data
+// get example page data 1 - without shop
 $example_page_id = $menus_data[0]->pages[0]->page_id;
 $example_page = "curl -s -H 'Accept:application/json' -H 'Content-Type:application/json' $domain/api/headless/page/$example_page_id/$default_lang";
 
@@ -59,6 +59,23 @@ if ($res4->success) {
     exit('something wrong with example page data');
 }
 
+// get example page data 2 - with shop
+$example_page_shop_id = $menus_data[2]->pages[1]->page_id;
+$example_page_shop = "curl -s -H 'Accept:application/json' -H 'Content-Type:application/json' $domain/api/headless/page/$example_page_shop_id/$default_lang";
+
+$out = [];
+exec($example_page_shop, $out);
+
+$res5 = json_decode($out[0]);
+if ($res5->success) {
+    $example_page_data_shop = $res5->data;
+} else {
+    exit('something wrong with example page data - shop');
+}
+
+
+
+
 print_r('default_lang: '.$default_lang."\n");
 print_r("menus: \n");
 print_r($menus_data);
@@ -66,5 +83,8 @@ print_r($menus_data);
 print_r("main_page_data: \n");
 print_r($main_page_data);
 
-print_r("example_page_data - for page_id $example_page_id : \n");
+print_r("example_page_data - for page_id $example_page_id : (without shop) \n");
 print_r($example_page_data);
+
+print_r("example_page_data - for page_id $example_page_shop_id : (with shop) \n");
+print_r($example_page_data_shop);
