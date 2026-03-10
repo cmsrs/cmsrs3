@@ -18,7 +18,7 @@ if ($res1->success) {
 }
 
 // get menus
-$menus = "curl -s -H 'Accept:application/json' -H 'Content-Type:application/json' $domain/api/headless/menus/$default_lang";
+$menus = "curl -s -H 'Accept:application/json' -H 'Content-Type:application/json' $domain/api/headless/menus";
 
 $out = [];
 exec($menus, $out);
