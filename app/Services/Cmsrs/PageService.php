@@ -361,6 +361,20 @@ class PageService extends BaseService implements TranslateInterface
         return $view;
     }
 
+    /**
+     * use in headless
+     */
+    public function getUrls(Page $mPage, $urlParam = null)
+    {
+        $urls = [];
+        $langs = $this->getArrLangs();
+        foreach ($langs as $l) {
+            $urls[$l] = $this->getUrl($mPage, $l, $urlParam);
+        }
+
+        return $urls;
+    }
+
     public function getUrl(Page $mPage, $lang, $urlParam = null)
     {
         $type = $mPage->type;

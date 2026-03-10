@@ -73,13 +73,9 @@ class HeadlessController extends Controller
         return response()->json(['success' => true, 'data' => $onePage], 200);
     }
 
-    public function getMenusByLang(Request $request, $lang)
+    public function getMenus(Request $request)
     {
-        if (! in_array($lang, ConfigService::arrGetLangsEnv())) {
-            return response()->json(['success' => false, 'error' => 'wrong lang'], 200);
-        }
-
-        $menus = $this->headlessService->getAllUrlRelatedToMenusByLang($lang);
+        $menus = $this->headlessService->getAllUrlRelatedToMenus();
 
         return response()->json(['success' => true, 'data' => $menus], 200);
     }

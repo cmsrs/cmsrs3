@@ -69,7 +69,7 @@ class HeadlessService extends BaseService
      * and in tests (the same name)
      * it is always not auth - it is different
      */
-    public function getAllUrlRelatedToMenusByLang($lang)
+    public function getAllUrlRelatedToMenus()
     {
         // cms link
         // see in: resources/views/includes/header.blade.php
@@ -80,19 +80,19 @@ class HeadlessService extends BaseService
         foreach ($menus as $menu) {
             $pagesPublishedAndAccess = $this->pagesPublishedAndAccessNotAuth($menu)->get(); // !! it is different getAllUrlRelatedToMenus in tests
             if ($pagesPublishedAndAccess->count() == 1) {
-                $urlInMenu[$j]['menu_name'] = $this->pageService->translatesByColumnAndLang($pagesPublishedAndAccess->first(), 'short_title', $lang); // to nie jest blad
-                $urlInMenu[$j]['url'] = $this->pageService->getUrl($pagesPublishedAndAccess->first(), $lang);
+                $urlInMenu[$j]['menu_name'] = $this->pageService->translatesByColumn($pagesPublishedAndAccess->first(), 'short_title'); // to nie jest blad
+                $urlInMenu[$j]['url'] = $this->pageService->getUrls($pagesPublishedAndAccess->first());
                 $urlInMenu[$j]['page_id'] = $pagesPublishedAndAccess->first()->id;
                 $urlInMenu[$j]['pages'] = [];
             } else {
-                $urlInMenu[$j]['menu_name'] = $this->menuService->translatesByColumnAndLang($menu, 'name', $lang);
+                $urlInMenu[$j]['menu_name'] = $this->menuService->translatesByColumn($menu, 'name');
                 $i = 0;
                 foreach ($this->pagesPublishedTree($pagesPublishedAndAccess) as $pageMenu) {
-                    $urlInMenu[$j]['pages'][$i] = $this->getPageData($pageMenu, $lang);
+                    $urlInMenu[$j]['pages'][$i] = $this->getPageData($pageMenu);
                     if (! empty($pageMenu['children']) && ! empty($pageMenu->published)) {
                         $ii = 0;
                         foreach ($pageMenu['children'] as $p) {
-                            $urlInMenu[$j]['pages'][$i]['children'][$ii] = $this->getPageData($p, $lang);
+                            $urlInMenu[$j]['pages'][$i]['children'][$ii] = $this->getPageData($p);
                             $ii++;
                         }
                     }
@@ -105,11 +105,11 @@ class HeadlessService extends BaseService
         return $urlInMenu;
     }
 
-    private function getPageData($page, $lang)
+    private function getPageData($page)
     {
         $PageData = [];
-        $PageData['url'] = $this->pageService->getUrl($page, $lang);
-        $PageData['short_title'] = $this->pageService->translatesByColumnAndLang($page, 'short_title', $lang);
+        $PageData['url'] = $this->pageService->getUrls($page);
+        $PageData['short_title'] = $this->pageService->translatesByColumn($page, 'short_title');
         $PageData['page_id'] = $page->id;
 
         return $PageData;

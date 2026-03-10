@@ -216,8 +216,7 @@ class HeadlessTest extends Base
     public function test_it_will_get_all_menus_without_auth_docs()
     {
         (new Demo)->pagesAndMenu(true);
-        $lang = 'en';
-        $res = $this->get("api/headless/menus/{$lang}");
+        $res = $this->get('api/headless/menus');
         $data = $res->getData();
         // $this->assertTrue($data->success);
         $this->assertTrue($data->success); // todo
@@ -229,8 +228,7 @@ class HeadlessTest extends Base
     {
         (new Demo)->pagesAndMenu(true);
 
-        $lang = 'en';
-        $menuUrls = (new HeadlessService)->getAllUrlRelatedToMenusByLang($lang);
+        $menuUrls = (new HeadlessService)->getAllUrlRelatedToMenus();
 
         $this->assertHelper($menuUrls);
     }
@@ -241,20 +239,25 @@ class HeadlessTest extends Base
         $tt = false;
         foreach ($menuUrls as $menuUrl) {
             $this->assertNotEmpty($menuUrl['menu_name']);
+            $this->assertNotEmpty($menuUrl['menu_name']['en']);
             if (isset($menuUrl['url'])) {
                 $this->assertNotEmpty($menuUrl['url']);
+                $this->assertNotEmpty($menuUrl['url']['en']);
                 $this->assertNotEmpty($menuUrl['page_id']);
                 $this->assertEmpty($menuUrl['pages']); // !!
             }
             if (isset($menuUrl['pages'])) {
                 foreach ($menuUrl['pages'] as $page) {
                     $this->assertNotEmpty($page['short_title']);
+                    $this->assertNotEmpty($page['short_title']['en']);
                     $this->assertNotEmpty($page['url']);
                     $this->assertNotEmpty($page['page_id']);
                     if (isset($page['children'])) {
                         foreach ($page['children'] as $child) {
                             $this->assertNotEmpty($child['short_title']);
+                            $this->assertNotEmpty($child['short_title']['en']);
                             $this->assertNotEmpty($child['url']);
+                            $this->assertNotEmpty($child['url']['en']);
                             $this->assertNotEmpty($child['page_id']);
                             $tt = true;
                         }

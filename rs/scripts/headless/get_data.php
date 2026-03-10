@@ -73,9 +73,6 @@ if ($res5->success) {
     exit('something wrong with example page data - shop');
 }
 
-
-
-
 print_r('default_lang: '.$default_lang."\n");
 print_r("menus: \n");
 print_r($menus_data);

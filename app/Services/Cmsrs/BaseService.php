@@ -144,6 +144,20 @@ abstract class BaseService
         return $out;
     }
 
+    /*
+    * use in headless
+    */
+    public function translatesByColumn($model, $column)
+    {
+        $langs = $this->getArrLangs();
+        $out = [];
+        foreach ($langs as $lang) {
+            $out[$lang] = $this->translatesByColumnAndLang($model, $column, $lang);
+        }
+
+        return $out;
+    }
+
     public function translatesByColumnAndLang($model, $column, $lang)
     {
         $data = $this->getAllTranslateByColumn($model);
