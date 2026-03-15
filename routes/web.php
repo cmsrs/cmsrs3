@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-if (config('cmsrs.is_headless')) {
+if (! config('cmsrs.is_ssr')) {
     // In headless mode, we do not serve any frontend routes. All routes are handled by the API.
     return;
 }
