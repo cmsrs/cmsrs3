@@ -365,6 +365,10 @@ IS_HEADLESS=false
 
 Enables headless API. The default option is false.
 
+```true```: Enables headless API. Headless mode with Nuxt frontend; pages are not rendered on the server side (Nuxt/SPA mode).
+
+```false```: Disables headless API.
+
 * SSR Mode
 
 ```bash
@@ -373,11 +377,9 @@ IS_SSR=true
 
 Enables SSR mode. The default option is true.
 
+```true```: Enable traditional SSR (Server-Side Rendering) on the PHP server side.
 
-
-```false```: Traditional SSR (Server-Side Rendering) on the PHP server side
-
-```true```: Headless mode with Nuxt.js frontend; pages are not rendered on the server side (Nuxt.js/SPA mode)
+```false```: Disables SSR (Server-Side Rendering) on the PHP server side
 
 
 ## SAMPLE .env CONFIGURATION FOR COMPANY PROFILE PAGE
