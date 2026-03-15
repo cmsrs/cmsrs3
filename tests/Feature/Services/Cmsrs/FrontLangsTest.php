@@ -41,7 +41,7 @@ class FrontLangsTest extends Base
         putenv('IS_LOGIN=true');
         putenv('IS_REGISTER=true');
         putenv('IS_HEADLESS=false');
-        putenv('IS_SSR=true');        
+        putenv('IS_SSR=true');
 
         parent::setUp();
         $this->createUser();

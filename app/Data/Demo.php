@@ -228,7 +228,7 @@ class Demo
         $pInner200 = [
             'title' => ['en' => 'Company data', 'pl' => 'Dane firmy'],
             'short_title' => ['en' => 'company_data', 'pl' => 'company_data'],
-            'content' => ['en' => '<b>Company Data:</b><br><br> ul. Kolejowa 800/900<br>00-999 Kacze Doły<br>Poland',  'pl' => '<b>Siedziba firmy:</b><br><br> ul. Kolejowa 800/900<br>00-999 Kacze Doły<br>Polska'],
+            'content' => ['en' => '<b>Company Data:</b><br><br> ul. Kolejowa 1/1000<br>00-123 Warsaw<br>Poland',  'pl' => '<b>Siedziba firmy:</b><br><br> ul. Kolejowa 1/1000<br>00-123 Warszawa<br>Polska'],
             'published' => 1,
             'type' => 'inner',
         ];

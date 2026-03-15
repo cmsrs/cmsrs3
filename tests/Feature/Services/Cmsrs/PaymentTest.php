@@ -20,7 +20,7 @@ class PaymentTest extends TestCase
         putenv('IS_LOGIN=false'); // !!
         putenv('IS_REGISTER=false'); // !!
         putenv('IS_HEADLESS=false');
-        putenv('IS_SSR=true');        
+        putenv('IS_SSR=true');
 
         parent::setUp();
     }
