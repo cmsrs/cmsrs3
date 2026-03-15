@@ -363,7 +363,16 @@ Number of items per page in the admin panel. The default value is 10.
 IS_HEADLESS=false
 ```
 
-Enables headless mode. The default option is false.
+Enables headless API. The default option is false.
+
+* SSR Mode
+
+```bash
+IS_SSR=true
+```
+
+Enables SSR mode. The default option is true.
+
 
 
 ```false```: Traditional SSR (Server-Side Rendering) on the PHP server side
