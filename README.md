@@ -192,7 +192,7 @@ It is recommended to run tests on a clean instance (without images)
 
     password: cmsrs123
 
-* **Create main page (page type: main_page)**
+* Create main page (page type: **main_page**)
 
 * Add menu
     
