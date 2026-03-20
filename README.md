@@ -192,7 +192,7 @@ It is recommended to run tests on a clean instance (without images)
 
     password: cmsrs123
 
-* Create main page (page type: main_page)
+* **Create main page (page type: main_page)**
 
 * Add menu
     
@@ -439,9 +439,13 @@ https://www.cmsrs.pl/en/cms/cmsrs/cmsrs-video-tutorial
 
 https://www.cmsrs.pl/en/cms/cmsrs/about-cmsrs
 
-## VUE.JS SOURCE CODE 
+## ADMIN PANEL - VUE.JS - SOURCE CODE 
 
 https://github.com/cmsrs/cmsrs3-vuejs
+
+## FRONTEND - NUXT - SOURCE CODE 
+
+https://github.com/cmsrs/cmsrs3-nuxt
 
 ## REPORTING ISSUES AND SUGGESTIONS
 
