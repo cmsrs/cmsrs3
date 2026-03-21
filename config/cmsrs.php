@@ -181,12 +181,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Frontend Mode
+    | Frontend Mode - Headless
     |--------------------------------------------------------------------------
-    | Determines the method of frontend rendering.
-    | - 'false' => traditional SSR on the PHP server side
-    | - 'true'   => headless, Nuxt.js frontend, page is not rendered on the server side (Nuxt.js/SPA mode)
+    | Determines the method of frontend rendering. (Nuxt/SPA mode)
+    | - 'false' =>  disable headless API mode in this case
+    | - 'true'   => enable headless API mode in this case
     */
     'is_headless' => env('IS_HEADLESS', false),
+
+    /**
+     * |--------------------------------------------------------------------------
+     * | Server-Side Rendering (SSR) Toggle
+     *   traditional SSR on the PHP server side
+     * - 'true' => enable SSR, page is rendered on the server side (traditional SSR mode)
+     * - 'false' => disable SSR, page is rendered on the client side (SPA mode)
+     * |--------------------------------------------------------------------------
+     */
+    'is_ssr' => env('IS_SSR', true),
 
 ];

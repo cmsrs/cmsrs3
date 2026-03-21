@@ -28,6 +28,7 @@ class HeadlessTest extends Base
         putenv('IS_LOGIN=true');
         putenv('IS_REGISTER=true');
         putenv('IS_HEADLESS=true');
+        putenv('IS_SSR=false');
 
         parent::setUp();
 

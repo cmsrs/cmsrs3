@@ -47,6 +47,7 @@ class PageTest extends Base
         putenv('IS_LOGIN=true');
         putenv('IS_REGISTER=true');
         putenv('IS_HEADLESS=false');
+        putenv('IS_SSR=true');
 
         parent::setUp();
 

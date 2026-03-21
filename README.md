@@ -192,7 +192,7 @@ It is recommended to run tests on a clean instance (without images)
 
     password: cmsrs123
 
-* Create main page (page type: main_page)
+* Create main page (page type: **main_page**)
 
 * Add menu
     
@@ -363,12 +363,23 @@ Number of items per page in the admin panel. The default value is 10.
 IS_HEADLESS=false
 ```
 
-Enables headless mode. The default option is false.
+Enables headless API. The default option is false.
 
+```true```: Enables headless API. Headless mode with Nuxt frontend; pages are not rendered on the server side (Nuxt/SPA mode).
 
-```false```: Traditional SSR (Server-Side Rendering) on the PHP server side
+```false```: Disables headless API.
 
-```true```: Headless mode with Nuxt.js frontend; pages are not rendered on the server side (Nuxt.js/SPA mode)
+* SSR Mode
+
+```bash
+IS_SSR=true
+```
+
+Enables SSR mode. The default option is true.
+
+```true```: Enable traditional SSR (Server-Side Rendering) on the PHP server side.
+
+```false```: Disables SSR (Server-Side Rendering) on the PHP server side
 
 
 ## SAMPLE .env CONFIGURATION FOR COMPANY PROFILE PAGE
@@ -428,9 +439,13 @@ https://www.cmsrs.pl/en/cms/cmsrs/cmsrs-video-tutorial
 
 https://www.cmsrs.pl/en/cms/cmsrs/about-cmsrs
 
-## VUE.JS SOURCE CODE 
+## ADMIN PANEL - VUE.JS - SOURCE CODE 
 
 https://github.com/cmsrs/cmsrs3-vuejs
+
+## FRONTEND - NUXT - SOURCE CODE 
+
+https://github.com/cmsrs/cmsrs3-nuxt
 
 ## REPORTING ISSUES AND SUGGESTIONS
 
