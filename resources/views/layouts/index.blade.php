@@ -56,7 +56,7 @@
       }
    </style>   
 
-<?php if( !empty($slider_images) ){ ?>
+<?php if( false &&  !empty($slider_images) ){ ?>
    <script type="application/javascript" src="/js/slider.js"></script>  
 <?php } ?>
 <script type="application/javascript" src="/js/lib/vue.global.min.js"></script>
