@@ -32,7 +32,7 @@ if ($res2->success) {
     exit('something wrong with menus');
 }
 
-#main_page content
+// main_page content
 $main_page_content = "curl -s -H 'Accept:application/json' -H 'Content-Type:application/json' $domain/api/headless/pages-type/main_page";
 echo $main_page_content;
 $out = [];
@@ -44,10 +44,8 @@ if ($res34->success) {
     exit('something wrong with main page datai 0');
 }
 
-print_r($main_page_content_data );
-//exit;
-
-
+print_r($main_page_content_data);
+// exit;
 
 // get data to main page
 $main_page = "curl -s -H 'Accept:application/json' -H 'Content-Type:application/json' $domain/api/headless/pages-type/inner";

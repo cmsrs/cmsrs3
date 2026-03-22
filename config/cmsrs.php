@@ -184,10 +184,10 @@ return [
     | Frontend Mode - Headless
     |--------------------------------------------------------------------------
     | Determines the method of frontend rendering. (Nuxt/SPA mode)
-    | - 'false' =>  disable headless API mode in this case
     | - 'true'   => enable headless API mode in this case
+    | - 'false' =>  disable headless API mode in this case
     */
-    'is_headless' => env('IS_HEADLESS', false),
+    'is_headless' => env('IS_HEADLESS', true),
 
     /**
      * |--------------------------------------------------------------------------

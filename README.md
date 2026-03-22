@@ -17,9 +17,8 @@
     <b>cmsRS</b> is a modern, open-source CMS built for developers who value clean code and maintainability. It combines the power of <b>Laravel</b> and <b>Vue.js</b> into a lightweight, fully-tested framework—offering a refreshing alternative to bloated systems. Whether you need a multi-language site, a gallery, or an online store with PayU integration, cmsRS provides a <b>transparent and predictable foundation that respects your time</b>. The architecture is simple, the database schema is logical, and updates are predictable thanks to extensive test coverage.
 </p>
 <p>
-    <a target="_blank" href="http://demo.cmsrs.pl/">🌐 Live Demo</a> | 
-    <a target="_blank" href="https://www.cmsrs.pl/en/cms/cmsrs/cmsrs-video-tutorial">🎬 Video Tutorials</a> | 
-    <a href="#installation-quick-setup">🚀 Quick Install</a>
+    <a href="https://www.cmsrs.pl/en/cms/cmsrs/cmsrs-installation">🚀 Install</a>
+    <a target="_blank" href="https://www.cmsrs.pl/en/cms/cmsrs/demo-version">🌐 Demo</a> | 
 </p>
 
 </br>
@@ -49,16 +48,6 @@
 ```php-gd``` – for image processing (used in gallery, sliders, etc.)
 
 Make sure all extensions match your installed PHP version (e.g., php8.5-mysql, php8.5-mbstring, etc.)
-
-
-## INSTALLATION (QUICK SETUP)
-
-Run the following command to create the project:
-
-```bash
-composer create-project cmsrs/cmsrs3
-cd cmsrs3 && php artisan serve
-```
 
 ## MANUAL INSTALLATION (RECOMMENDED)
 
@@ -118,6 +107,15 @@ php artisan migrate && php artisan db:seed
  
 ```bash
 php artisan serve
+```
+
+## INSTALLATION (QUICK SETUP)
+
+Run the following command to create the project:
+
+```bash
+composer create-project cmsrs/cmsrs3
+cd cmsrs3 && php artisan serve
 ```
 
 <!--
@@ -360,10 +358,10 @@ Number of items per page in the admin panel. The default value is 10.
 * Headless Mode
 
 ```bash
-IS_HEADLESS=false
+IS_HEADLESS=true
 ```
 
-Enables headless API. The default option is false.
+Enables headless API. The default option is true.
 
 ```true```: Enables headless API. Headless mode with Nuxt frontend; pages are not rendered on the server side (Nuxt/SPA mode).
 
