@@ -14,6 +14,7 @@ use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\PaymentService;
 use App\Services\Cmsrs\ProductService;
 use Illuminate\Http\Request;
+use Illuminate\Session\Store;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -196,7 +197,7 @@ class FrontController extends Controller
             $isManyLangs = (new ConfigService)->isManyLangs();
             $urlShoppingSuccess = $isManyLangs ? route('shoppingsuccess', ['lang' => $lang]) : route('shoppingsuccess');
 
-            /** @var \Illuminate\Session\Store $session */
+            /** @var Store $session */
             $session = $request->session();
             $session->flash('checkout_id', $objCheckout->id);
 

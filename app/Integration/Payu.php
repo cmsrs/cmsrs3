@@ -3,9 +3,10 @@
 namespace App\Integration;
 
 use App\Services\Cmsrs\ConfigService;
+use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 // use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class Payu extends Model
@@ -16,7 +17,7 @@ class Payu extends Model
     {
         parent::__construct($attributes);
 
-        $this->client = new \GuzzleHttp\Client([
+        $this->client = new Client([
             'base_uri' => config('cmsrs.payu.url'), // env('PAYU_URL'),
             'allow_redirects' => false,
             'form_params' => [

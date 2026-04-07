@@ -4,8 +4,10 @@ namespace App\Services\Cmsrs;
 
 use App\Models\Cmsrs\Basket;
 use App\Models\Cmsrs\Checkout;
-use App\Models\Cmsrs\Product;
+use App\Models\Cmsrs\Page;
 // use App\Models\Cmsrs\Translate;
+use App\Models\Cmsrs\Product;
+use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\Helpers\CacheService;
 use App\Services\Cmsrs\Helpers\PriceHelperService;
 use Illuminate\Support\Facades\DB;
@@ -113,12 +115,12 @@ class ProductService extends BaseService
 
         $products->each(function ($product) {
             $firstTranslation = $product->translates->first();
-            $productName = $firstTranslation instanceof \App\Models\Cmsrs\Translate ? $firstTranslation->value : null;
+            $productName = $firstTranslation instanceof Translate ? $firstTranslation->value : null;
             $product->setAttribute('product_name', $productName);
             unset($product['translates']);
 
             $firstTranslationPage = $product->translatesPage->first();
-            $pageShortTitle = $firstTranslationPage instanceof \App\Models\Cmsrs\Translate ? $firstTranslationPage->value : null;
+            $pageShortTitle = $firstTranslationPage instanceof Translate ? $firstTranslationPage->value : null;
             $product->setAttribute('page_short_title', $pageShortTitle);
             unset($product['translatesPage']);
 
@@ -346,7 +348,7 @@ class ProductService extends BaseService
     {
         $mPage = $mProduct->page()->first();
 
-        if ($mPage instanceof \App\Models\Cmsrs\Page) { // phpstan fix
+        if ($mPage instanceof Page) { // phpstan fix
             return (new PageService)->getUrl($mPage, $lang);
         }
 
@@ -357,7 +359,7 @@ class ProductService extends BaseService
     {
         $mPage = $mProduct->page()->first();
 
-        if ($mPage instanceof \App\Models\Cmsrs\Page) { // phpstan fix
+        if ($mPage instanceof Page) { // phpstan fix
             return (new PageService)->getUrl($mPage, $lang, Str::slug($productName, '-'));
         }
 

@@ -6,6 +6,7 @@ use App\Services\Cmsrs\ConfigService;
 use Closure;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Log;
 
 class SetLocale
 {
@@ -16,7 +17,7 @@ class SetLocale
         $lang = $configService->getLangFromRequest();
 
         if (! in_array($lang, $configService->arrGetLangs())) {
-            \Illuminate\Support\Facades\Log::info('all langs: '.json_encode($configService->arrGetLangs()).'Invalid language detected: '.$lang.' | Action: abort(404) | URL: '.$request->fullUrl().' | Request: '.json_encode($request->all()));
+            Log::info('all langs: '.json_encode($configService->arrGetLangs()).'Invalid language detected: '.$lang.' | Action: abort(404) | URL: '.$request->fullUrl().' | Request: '.json_encode($request->all()));
             abort(404);
         }
 

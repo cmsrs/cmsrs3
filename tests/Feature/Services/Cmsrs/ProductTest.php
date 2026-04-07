@@ -10,6 +10,7 @@ use App\Models\Cmsrs\Order;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Product;
 use App\Models\Cmsrs\Translate;
+use App\Services\Cmsrs\BaseService;
 use App\Services\Cmsrs\CheckoutService;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\DeliverService;
@@ -1007,7 +1008,7 @@ class ProductTest extends Base
         $obj = json_decode($json);
         $this->assertEquals(2, count($obj->cart));
 
-        $arrCart = \App\Services\Cmsrs\BaseService::reIndexArr($obj->cart);
+        $arrCart = BaseService::reIndexArr($obj->cart);
 
         $baskets = [];
         $orders = '';

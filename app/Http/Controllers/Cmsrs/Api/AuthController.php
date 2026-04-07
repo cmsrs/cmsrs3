@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Cmsrs\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
@@ -14,7 +15,7 @@ class AuthController extends Controller
     /**
      * API Login, on success return JWT Auth token
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function login(Request $request)
     {
@@ -79,7 +80,7 @@ class AuthController extends Controller
     /**
      * API Register
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function register(Request $request)
     {

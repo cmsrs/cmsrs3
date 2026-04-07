@@ -3,12 +3,15 @@
 namespace App\Services\Cmsrs;
 
 use App\Models\Cmsrs\Content;
+use App\Models\Cmsrs\Image;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Product;
 use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\Interfaces\TranslateInterface;
 use App\Services\Cmsrs\Interfaces\TranslateValueInterface;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 
 // use Illuminate\Support\Number;
 
@@ -205,9 +208,9 @@ abstract class BaseService
     protected function getPaginationFromCollection($collection)
     {
         $perPage = ConfigService::getPagination();
-        $page = \Illuminate\Pagination\Paginator::resolveCurrentPage() ?: 1;
+        $page = Paginator::resolveCurrentPage() ?: 1;
 
-        return new \Illuminate\Pagination\LengthAwarePaginator(
+        return new LengthAwarePaginator(
             $collection->forPage($page, $perPage)->values(),
             $collection->count(),
             $perPage,
@@ -235,7 +238,7 @@ abstract class BaseService
     {
         $imageService = new ImageService;
         foreach ($mObj->images()->get() as $img) {
-            if (! $img instanceof \App\Models\Cmsrs\Image) {
+            if (! $img instanceof Image) {
                 throw new \Exception('image is not instance of \\App\\Models\\Cmsrs\\Image - case deleteImagesFs');
             }
             $imageService->deleteImg($img);
@@ -248,7 +251,7 @@ abstract class BaseService
         $files = [];
         $dirsImgs = [];
         foreach ($mObj->images()->get() as $img) {
-            if (! $img instanceof \App\Models\Cmsrs\Image) {
+            if (! $img instanceof Image) {
                 throw new \Exception('image is not instance of \\App\\Models\\Cmsrs\\Image - case getImagesFsFiles');
             }
             $images = $imageService->getAllImage($img);
