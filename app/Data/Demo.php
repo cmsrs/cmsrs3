@@ -247,6 +247,9 @@ class Demo
         $p100 = $this->getPageObj()->wrapCreate($pSlider);
         $p['p100'] = $p100;
 
+        // <div class='row'>
+        //     <div class='slidecontainer m-4'></div>
+        // </div>            
         $mainPage =
         [
             'title' => ['en' => 'cmsRS demo site', 'pl' => 'cmsRS wersja demo'],
@@ -291,10 +294,6 @@ class Demo
             </div> 
             
             <div class='mt-5 container'><!-- container -->      
-
-            <div class='row'>
-                <div class='slidecontainer m-4'></div>
-            </div>
             
           </div><!-- container -->
 
@@ -336,9 +335,6 @@ class Demo
 
             <div class='mt-5 container'><!-- container -->    
 
-            <div class='row'>
-                <div class='slidecontainer m-4'></div>
-            </div>            
             
           </div><!-- container -->
 
