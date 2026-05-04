@@ -9,7 +9,7 @@ use App\Services\Cmsrs\Interfaces\TranslateValueInterface;
 
 class TranslateService extends BaseService implements TranslateValueInterface
 {
-    public function wrapCreate($data, $create = true)
+    public function wrapCreate(array $data, bool $create = true): bool
     {
         if (! empty($data['menu_id'])) {
             $requiredColumn = (new Menu)->requiredColumn;
@@ -36,7 +36,7 @@ class TranslateService extends BaseService implements TranslateValueInterface
         return true;
     }
 
-    public function updateRow(array $row)
+    public function updateRow(array $row): bool
     {
         $obj = false;
         if (! empty($row['menu_id'])) {
