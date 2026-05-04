@@ -9,6 +9,12 @@ use App\Services\Cmsrs\Interfaces\TranslateValueInterface;
 
 class TranslateService extends BaseService implements TranslateValueInterface
 {
+
+    /**
+     * @param array<string, mixed> $data
+     * @param bool $create
+     * @return bool
+     */
     public function wrapCreate(array $data, bool $create = true): bool
     {
         if (! empty($data['menu_id'])) {
@@ -36,6 +42,10 @@ class TranslateService extends BaseService implements TranslateValueInterface
         return true;
     }
 
+    /**
+     * @param array<string, mixed> $row
+     * @return bool
+     */
     public function updateRow(array $row): bool
     {
         $obj = false;
