@@ -9,35 +9,31 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Product extends Model
 {
     /**
+     * phpstan - need it, see: test_search_products_by_many_columns_pagination_docs
      * it is additional data (not related with db)
-     *
-     * @var string|null
      */
-    // public $product_name;
+    public ?string $product_name = null;
 
     /**
      * it is additional data (not related with db)
-     *
-     * @var string|null
      */
-    // public $page_short_title;
+    public ?string $page_short_title = null;
 
-    public $productFields;
+    /**
+     * This is not from the database; it is calculated on the fly based on the 'price' value.
+     * This is not from the database; it is calculated on the fly based on the 'price' value.
+     */
+    public ?string $price_description = null;
 
-    protected $fillable = [
-        'sku',
-        'price',
-        'published',
-        'page_id',
-    ];
+    /**
+     * @var array<string>
+     */
+    public array $productFields = [];
 
-    protected $casts = [
-        'published' => 'integer',
-        'price' => 'integer',
-        'page_id' => 'integer',
-    ];
-
-    public $columnsAllowedToSort = [
+    /**
+     * @var array<string>
+     */
+    public array $columnsAllowedToSort = [
         'id',
         'published',
         'product_name', // from translate
@@ -48,33 +44,60 @@ class Product extends Model
         'updated_at',
     ];
 
-    // phpstan - need it, see: test_search_products_by_many_columns_pagination_docs
-    public $product_name = null;
+    /**
+     * @var array<string>
+     */
+    protected $fillable = [
+        'sku',
+        'price',
+        'published',
+        'page_id',
+    ];
 
-    public $page_short_title = null;
+    /**
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'published' => 'integer',
+        'price' => 'integer',
+        'page_id' => 'integer',
+    ];
 
-    public $price_description = null; // This is not from the database; it is calculated on the fly based on the 'price' value.
-
+    /**
+     * @return HasOne<Page>
+     */
     public function page(): HasOne
     {
         return $this->hasOne('App\Models\Cmsrs\Page', 'id', 'page_id');
     }
 
+    /**
+     * @return HasMany<Image>
+     */
     public function images(): HasMany
     {
         return $this->hasMany('App\Models\Cmsrs\Image');
     }
 
+    /**
+     * @return HasMany<Translate>
+     */
     public function translates(): HasMany
     {
         return $this->hasMany('App\Models\Cmsrs\Translate'); // it should be work without params , 'product_id', 'id' - phpstan
     }
 
+    /**
+     * @return HasMany<Translate>
+     */
     public function translatesPage(): HasMany
     {
         return $this->hasMany('App\Models\Cmsrs\Translate', 'page_id', 'page_id');
     }
 
+    /**
+     * @return HasMany<Content>
+     */
     public function contents(): HasMany
     {
         return $this->hasMany('App\Models\Cmsrs\Content');

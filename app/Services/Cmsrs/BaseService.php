@@ -205,6 +205,9 @@ abstract class BaseService
         return $out;
     }
 
+    /**
+     * @return LengthAwarePaginator
+     */
     protected function getPaginationFromCollection($collection)
     {
         $perPage = ConfigService::getPagination();

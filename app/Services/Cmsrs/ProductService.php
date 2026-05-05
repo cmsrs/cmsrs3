@@ -10,17 +10,19 @@ use App\Models\Cmsrs\Product;
 use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\Helpers\CacheService;
 use App\Services\Cmsrs\Helpers\PriceHelperService;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ProductService extends BaseService
 {
-    private $translate;
+    private TranslateService $translate;
 
-    private $content;
+    private ContentService $content;
 
-    public $productFields;
+    public array $productFields;
 
     public function __construct()
     {
@@ -36,7 +38,11 @@ class ProductService extends BaseService
         ];
     }
 
-    public function saveCheckout($data, $userId, $sessionId)
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    public function saveCheckout(array $data, string|int|null $userId, ?string $sessionId): array
     {
         if (empty($data['products']) || ! is_array($data['products'])) {
             throw new \Exception('No products in post - checkout');
@@ -104,7 +110,7 @@ class ProductService extends BaseService
         ];
     }
 
-    public function getPaginationItems($lang, $column, $direction, $search)
+    public function getPaginationItems(string $lang, string $column, string $direction, ?string $search): LengthAwarePaginator
     {
         $products = (new Product)->with(['translates' => function ($query) use ($lang) {
             $query->where('lang', $lang)->where('column', 'product_name');
@@ -150,12 +156,19 @@ class ProductService extends BaseService
         return $productsPagination;
     }
 
-    public static function searchProducts($lang, $key)
+    /**
+     * @return array<int, mixed>
+     */
+    public static function searchProducts(string $lang, string $key): array
     {
         return DB::select("select distinct product_id from translates where (`product_id` is not null) and (`lang` = :lang) and (`column` = 'product_name') and (`value` like  :key )", ['lang' => $lang, 'key' => '%'.$key.'%']);
     }
 
-    public static function objToArray($obj)
+    /**
+     * @param  array<int, mixed>  $obj
+     * @return array<int, mixed>
+     */
+    public static function objToArray(array $obj): array
     {
         $out = [];
         foreach ($obj as $o) {
@@ -165,7 +178,10 @@ class ProductService extends BaseService
         return $out;
     }
 
-    public function wrapSearchProducts($lang, $key)
+    /**
+     * @return array<int, mixed>
+     */
+    public function wrapSearchProducts(string $lang, string $key): array
     {
         $objProducts = ProductService::searchProducts($lang, $key);
         $arrProducts = ProductService::objToArray($objProducts);
@@ -173,13 +189,21 @@ class ProductService extends BaseService
         return $this->getProductsWithImagesByIds($arrProducts);
     }
 
-    public static function getDefaultProductName($productTranslates, $lang)
+    /**
+     * @param  Collection<int, Translate>|array<int, array<string, mixed>>  $productTranslates
+     */
+    public static function getDefaultProductName(Collection|array $productTranslates, string $lang): string
     {
         $defaultProductName = '';
 
         foreach ($productTranslates as $translate) {
-            if (($translate['column'] == 'product_name') && ($translate['lang'] == $lang)) {
-                $defaultProductName = $translate['value'];
+            // Obsługuje zarówno Translate object jak i array
+            $column = $translate instanceof Translate ? $translate->column : $translate['column'];
+            $langVal = $translate instanceof Translate ? $translate->lang : $translate['lang'];
+            $value = $translate instanceof Translate ? $translate->value : $translate['value'];
+
+            if (($column == 'product_name') && ($langVal == $lang)) {
+                $defaultProductName = $value;
                 break;
             }
         }
@@ -187,7 +211,13 @@ class ProductService extends BaseService
         return $defaultProductName;
     }
 
-    public static function getDataToPayment($arrCart, &$baskets, bool|array &$orders = false)
+    /**
+     * @param  array<string, mixed>  $arrCart
+     * @param  array<int, array<string, mixed>>|false  $baskets
+     * @param  array<int, array<string, mixed>>|false|string  $orders
+     * @return array<string, mixed>
+     */
+    public static function getDataToPayment(array $arrCart, array|false &$baskets, array|false|string &$orders = false): array
     {
         // $user = Auth::user();
         // if( empty($user) ){
@@ -245,7 +275,11 @@ class ProductService extends BaseService
         return $out;
     }
 
-    public function checkIsDuplicateName($data, $id = '')
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    public function checkIsDuplicateName(array $data, string|int $id = ''): array
     {
         $out = ['success' => true];
         $products = $this->getAllProductsWithImages();
@@ -274,8 +308,10 @@ class ProductService extends BaseService
     /**
      * use also in script to load demo (test) data
      * php artisan cmsrs:load-demo-data
+     *
+     * @param  array<string, mixed>  $data
      */
-    public function wrapCreate($data)
+    public function wrapCreate(array $data): Product
     {
         $product = Product::create($data);
 
@@ -293,13 +329,19 @@ class ProductService extends BaseService
         return $product;
     }
 
-    public function createTranslate($dd, $create = true)
+    /**
+     * @param  array<string, mixed>  $dd
+     */
+    public function createTranslate(array $dd, bool $create = true): void
     {
         $this->translate->wrapCreate($dd, $create);
         $this->content->wrapCreate($dd, $create);
     }
 
-    public function wrapUpdate(Product $mProduct, $data)
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    public function wrapUpdate(Product $mProduct, array $data): bool
     {
         $res = $mProduct->update($data);
         $this->createTranslate(['product_id' => $mProduct->id, 'data' => $data], false);
@@ -307,7 +349,11 @@ class ProductService extends BaseService
         return $res;
     }
 
-    private function getProductDataFormat($product)
+    /**
+     * @param  Product|array<string, mixed>  $product
+     * @return array<string, mixed>
+     */
+    private function getProductDataFormat(Product|array $product): array
     {
 
         $out = [];
@@ -329,7 +375,7 @@ class ProductService extends BaseService
         return $out;
     }
 
-    public function getProductBySlug($productSlug, $lang)
+    public function getProductBySlug(string $productSlug, string $lang): ?Product
     {
         $productOut = null;
         $products = $this->getAllProductsWithTranslates();
@@ -344,7 +390,7 @@ class ProductService extends BaseService
         return $productOut;
     }
 
-    public function getCategoryUrl(Product $mProduct, $lang)
+    public function getCategoryUrl(Product $mProduct, string $lang): ?string
     {
         $mPage = $mProduct->page()->first();
 
@@ -355,7 +401,7 @@ class ProductService extends BaseService
         return null; // todo - handle this case properly, maybe throw an exception or return a default URL
     }
 
-    public function getProductUrl(Product $mProduct, $lang, $productName)
+    public function getProductUrl(Product $mProduct, string $lang, string $productName): ?string
     {
         $mPage = $mProduct->page()->first();
 
@@ -366,7 +412,10 @@ class ProductService extends BaseService
         return null; // todo - handle this case properly, maybe throw an exception or return a default URL
     }
 
-    public function getProductUrls(Product $productWithTranslate)
+    /**
+     * @return array<string, array<string, string|null>>
+     */
+    public function getProductUrls(Product $productWithTranslate): array
     {
         $out = [];
         $arrProduct = $this->getProductDataFormat($productWithTranslate);
@@ -380,14 +429,20 @@ class ProductService extends BaseService
         return $out;
     }
 
-    private function getProductNameDefaultLang($arrProductFormat)
+    /**
+     * @param  array<string, mixed>  $arrProductFormat
+     */
+    private function getProductNameDefaultLang(array $arrProductFormat): string
     {
         $lang = ConfigService::getDefaultLang();
 
         return $arrProductFormat['product_name'][$lang];
     }
 
-    public function getProductDataByProductArr($product, $lang = null)
+    /**
+     * @return array<string, mixed>
+     */
+    public function getProductDataByProductArr(Product $product, ?string $lang = null): array
     {
         $arrProduct = $product->toArray();
 
@@ -403,33 +458,49 @@ class ProductService extends BaseService
         return $out;
     }
 
-    public function getProductWithTranslatesContentsAndImages(Product $mProduct)
+    /**
+     * @return array<string, mixed>
+     */
+    public function getProductWithTranslatesContentsAndImages(Product $mProduct): array
     {
         $productOut = Product::with(['translates', 'contents'])->find($mProduct->id);
 
         return $this->getProductDataByProductArr($productOut);
     }
 
-    private function getAllProductsWithTranslates()
+    /**
+     * @return Collection<int, Product>
+     */
+    private function getAllProductsWithTranslates(): Collection
     {
         return Product::with(['translates', 'contents'])->orderBy('id', 'asc')->get();
     }
 
-    public function getGivenProductsWithImagesByPageId($pageId, $withUrls = false, $lang = null)
+    /**
+     * @return array<int, mixed>
+     */
+    public function getGivenProductsWithImagesByPageId(int $pageId, bool $withUrls = false, ?string $lang = null): array
     {
         $products = $this->getDataProductsWithImagesByPage($pageId);
 
         return $this->getAllProductsWithImagesArr($products, $withUrls, $lang);
     }
 
-    public function getAllProductsWithImages($withUrls = false)
+    /**
+     * @return array<int, mixed>
+     */
+    public function getAllProductsWithImages(bool $withUrls = false): array
     {
         $products = $this->getAllProductsWithTranslates();
 
         return $this->getAllProductsWithImagesArr($products, $withUrls);
     }
 
-    public function getAllProductsWithImagesArr($products, $withUrls = false, $lang = null)
+    /**
+     * @param  Collection<int, Product>|array<int, Product>  $products
+     * @return array<int, array<string, mixed>>
+     */
+    public function getAllProductsWithImagesArr(Collection|array $products, bool $withUrls = false, ?string $lang = null): array
     {
         $i = 0;
         $out = [];
@@ -449,8 +520,10 @@ class ProductService extends BaseService
     /**
      * function use on the frontend
      * it should be cached
+     *
+     * @return array<int, array<string, mixed>>
      */
-    public function getAllProductsWithImagesByLang($lang)
+    public function getAllProductsWithImagesByLang(string $lang): array
     {
         $products = $this->getAllProductsWithImages(true);
 
@@ -472,7 +545,10 @@ class ProductService extends BaseService
         return $out;
     }
 
-    public function getAllProductsWithImagesByLangCache($lang)
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function getAllProductsWithImagesByLangCache(string $lang): array
     {
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
@@ -488,8 +564,10 @@ class ProductService extends BaseService
 
     /**
      * It is needed for sitemap
+     *
+     * @return array<int, array<string, string|null>>
      */
-    public function getProductsUrl()
+    public function getProductsUrl(): array
     {
         $urls = [];
         $products = Product::with(['translates', 'contents', 'page'])->where('published', '=', 1)->orderBy('id', 'asc')->get();
@@ -510,20 +588,29 @@ class ProductService extends BaseService
 
     /**
      * it is needed to search
+     *
+     * @param  array<int, int>  $ids
+     * @return array<int, mixed>
      */
-    public function getProductsWithImagesByIds($ids)
+    public function getProductsWithImagesByIds(array $ids): array
     {
         $products = Product::with(['translates', 'contents'])->whereIn('id', $ids)->orderBy('id', 'asc')->where('published', '=', 1)->get();
 
         return $this->dataToRender($products);
     }
 
-    private function getDataProductsWithImagesByPage($pageId)
+    /**
+     * @return Collection<int, Product>
+     */
+    private function getDataProductsWithImagesByPage(int $pageId): Collection
     {
         return Product::with(['translates', 'contents'])->where('page_id', $pageId)->orderBy('id', 'asc')->where('published', '=', 1)->get(); // ->toArray();
     }
 
-    public function getProductsWithImagesByPage($pageId)
+    /**
+     * @return array<int, mixed>
+     */
+    public function getProductsWithImagesByPage(int $pageId): array
     {
         $products = $this->getDataProductsWithImagesByPage($pageId);
 
@@ -538,7 +625,11 @@ class ProductService extends BaseService
         // return $out;
     }
 
-    private function dataToRender($products)
+    /**
+     * @param  Collection<int, Product>|array<int, Product>  $products
+     * @return array<int, array<string, mixed>>
+     */
+    private function dataToRender(Collection|array $products): array
     {
         $i = 0;
         $out = [];

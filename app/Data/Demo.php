@@ -249,7 +249,7 @@ class Demo
 
         // <div class='row'>
         //     <div class='slidecontainer m-4'></div>
-        // </div>            
+        // </div>
         $mainPage =
         [
             'title' => ['en' => 'cmsRS demo site', 'pl' => 'cmsRS wersja demo'],

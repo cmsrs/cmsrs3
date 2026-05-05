@@ -9,11 +9,8 @@ use App\Services\Cmsrs\Interfaces\TranslateValueInterface;
 
 class TranslateService extends BaseService implements TranslateValueInterface
 {
-
     /**
-     * @param array<string, mixed> $data
-     * @param bool $create
-     * @return bool
+     * @param  array<string, mixed>  $data
      */
     public function wrapCreate(array $data, bool $create = true): bool
     {
@@ -43,8 +40,7 @@ class TranslateService extends BaseService implements TranslateValueInterface
     }
 
     /**
-     * @param array<string, mixed> $row
-     * @return bool
+     * @param  array<string, mixed>  $row
      */
     public function updateRow(array $row): bool
     {
