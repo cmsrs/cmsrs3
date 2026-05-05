@@ -22,6 +22,7 @@ class ProductService extends BaseService
 
     private ContentService $content;
 
+    /** @var array<int, string> */
     public array $productFields;
 
     public function __construct()
@@ -110,6 +111,9 @@ class ProductService extends BaseService
         ];
     }
 
+    /**
+     * @return LengthAwarePaginator<int, array<string, mixed>>
+     */
     public function getPaginationItems(string $lang, string $column, string $direction, ?string $search): LengthAwarePaginator
     {
         $products = (new Product)->with(['translates' => function ($query) use ($lang) {
@@ -137,7 +141,8 @@ class ProductService extends BaseService
         if ($search) {
             $search = trim($search);
             $products = $products->filter(function ($product) use ($search) {
-                $productNameContainsSearch = str_contains(trim($product->getAttribute('product_name')), $search); // 126
+                $productName = $product->getAttribute('product_name');
+                $productNameContainsSearch = $productName !== null && str_contains(trim($productName), $search);
                 $skuContainsSearch = str_contains(trim($product->sku), $search);
 
                 return $productNameContainsSearch || $skuContainsSearch;
@@ -212,7 +217,7 @@ class ProductService extends BaseService
     }
 
     /**
-     * @param  array<string, mixed>  $arrCart
+     * @param  array<int, mixed>  $arrCart
      * @param  array<int, array<string, mixed>>|false  $baskets
      * @param  array<int, array<string, mixed>>|false|string  $orders
      * @return array<string, mixed>
