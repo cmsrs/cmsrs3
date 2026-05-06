@@ -120,21 +120,33 @@ class PageService extends BaseService implements TranslateInterface
         return empty($contents[$lang]) ? '' : $contents[$lang];
     }
 
+    /**
+     * @return void
+     */
     public function setTranslate(TranslateService $objTranslate)
     {
+        // ---phpstan-ignore-next-line empty() on object always false – but logic stays
         if (! empty($objTranslate)) {
             $this->translate = $objTranslate;
         }
     }
 
+    /**
+     * @return void
+     */
     public function setContent(ContentService $objContent)
     {
+        // ---phpstan-ignore-next-line empty() on object always false – but logic stays
         if (! empty($objContent)) {
             $this->content = $objContent;
         }
     }
 
-    public function getDataToView(Page $mPage, array $dataIn): array   // ($pageOut, $lang)
+    /**
+     * @param array<string, mixed> $dataIn
+     * @return array<string, mixed>
+     */
+    public function getDataToView(Page $mPage, array $dataIn): array
     {
         $lang = $dataIn['lang'];
         if (empty($lang)) {
@@ -163,7 +175,11 @@ class PageService extends BaseService implements TranslateInterface
         return array_merge($data, $dataIn);
     }
 
-    public static function getPageBySlug(Collection|array $menus, string $menuSlug, ?string $pageSlug, string $lang): ?Page // todo - change static
+    /**
+     * @param Collection<int, Menu>|array<Menu> $menus
+     * @return Page|null
+     */
+    public static function getPageBySlug(Collection|array $menus, string $menuSlug, ?string $pageSlug, string $lang): ?Page
     {
         $menuService = new MenuService;
         $pageService = new PageService;
@@ -189,6 +205,10 @@ class PageService extends BaseService implements TranslateInterface
         return $pageOut;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @return array{success: bool, error?: string}
+     */
     public static function checkIsDuplicateTitleByMenu(array $data, string $id = ''): array
     {
         $menuId = empty($data['menu_id']) ? 0 : $data['menu_id'];
@@ -233,6 +253,9 @@ class PageService extends BaseService implements TranslateInterface
         return Str::slug($name, '-');
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public function getAllTranslate(Page|Image|Menu $mPage): array
     {
         $pageId = $mPage->id;
@@ -251,6 +274,7 @@ class PageService extends BaseService implements TranslateInterface
 
     /**
      * todo refactor
+     * @return array<int, array<string, mixed>>
      */
     public function getTranslateMerge(Page $mPage, int $pageId): array
     {
@@ -261,6 +285,9 @@ class PageService extends BaseService implements TranslateInterface
         return $ret;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public static function CreatePage(array $data): Page
     {
         $menuId = empty($data['menu_id']) ? null : $data['menu_id'];
@@ -279,6 +306,8 @@ class PageService extends BaseService implements TranslateInterface
     /**
      * use also in script to load demo (test) data
      * php artisan cmsrs:load-demo-data
+     *
+     * @param array<string, mixed> $data
      */
     public function wrapCreate(array $data): Page
     {
@@ -294,12 +323,18 @@ class PageService extends BaseService implements TranslateInterface
         return $page;
     }
 
+    /**
+     * @param array{page_id: int, data: array<string, mixed>} $dd
+     */
     public function createTranslate(array $dd, ?bool $create = true): void
     {
         $this->translate->wrapCreate($dd, $create);
         $this->content->wrapCreate($dd, $create);
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function wrapUpdate(Page $mPage, array $data): bool
     {
         $mPage->update($data);
@@ -308,6 +343,9 @@ class PageService extends BaseService implements TranslateInterface
         return true;
     }
 
+    /**
+     * @return array{policyUrl: ?string, policyTitle: ?string, contactUrl: ?string, contactTitle: ?string}
+     */
     public function getFooterPages(string $lang): array
     {
         $privacyPolicy = PageService::getFirstPageByType('privacy_policy');
@@ -370,6 +408,8 @@ class PageService extends BaseService implements TranslateInterface
 
     /**
      * use in headless
+     *
+     * @return array<string, string>
      */
     public function getUrls(Page $mPage, ?string $urlParam = null): array
     {
@@ -382,6 +422,9 @@ class PageService extends BaseService implements TranslateInterface
         return $urls;
     }
 
+    /**
+     * @return string|false
+     */
     public function getUrl(Page $mPage, string $lang, ?string $urlParam = null): string
     {
         $type = $mPage->type;
@@ -425,6 +468,7 @@ class PageService extends BaseService implements TranslateInterface
             return null;
         }
 
+        // ---phpstan-ignore-next-line parameter expects Menu, got Model – but $menu is Menu
         return (new MenuService)->getSlugByLang($menu, $lang);
     }
 
@@ -435,6 +479,7 @@ class PageService extends BaseService implements TranslateInterface
             return null;
         }
 
+        // ---phpstan-ignore-next-line parameter expects Menu, got Model
         return (new MenuService)->pagesPublishedAndAccess($menu)->count();
     }
 
@@ -551,11 +596,18 @@ class PageService extends BaseService implements TranslateInterface
         return $ret;
     }
 
+    /**
+     * @return Page|null
+     */
     public static function getMainPage()
     {
         return PageService::getFirstPageByType('main_page');
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
     public static function validateMainPage(array $data, ?bool $create = true): array
     {
         if (isset($data['type']) && ($data['type'] == 'main_page')) {
@@ -575,6 +627,9 @@ class PageService extends BaseService implements TranslateInterface
 
     /**
      * if parent page.published == 0 then child this page.published = 0
+     *
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
      */
     public static function validateParentPublished(array $data): array
     {
@@ -588,6 +643,9 @@ class PageService extends BaseService implements TranslateInterface
         return $data;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public function arrImages(Page $mPage, string $lang): array
     {
         $out = [];
@@ -626,8 +684,12 @@ class PageService extends BaseService implements TranslateInterface
     }
     */
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getAllPagesWithImagesOneItem(Page $mPage, ?string $simple = null)
     {
+        // ---phpstan-ignore-next-line unnecessary collection call – but code kept as is
         $page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->first()->toArray();
         // $page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->get($this->pageFields)->first()->toArray(); //phpstan fix
 
@@ -639,6 +701,9 @@ class PageService extends BaseService implements TranslateInterface
         return $formatPage;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public function getAllPagesWithImages(?string $type = null): array
     {
         if ($type) {
@@ -666,6 +731,8 @@ class PageService extends BaseService implements TranslateInterface
      * this method is writeln by new manner, and gets many pages, not one (but i use getPageDataByShortTitleCache this method instead)
      * don't use this method
      * maybe in the future i will use it
+     *
+     * @return array<int, array<string, mixed>>
      */
     public function getAllPagesWithImagesByShortTitleForDefaultLang(string $shortTitle): array
     {
@@ -715,6 +782,9 @@ class PageService extends BaseService implements TranslateInterface
         return $page->position + 1;
     }
 
+    /**
+     * @return Collection<int, Page>|array<int, Page>
+     */
     public static function getPagesByMenuId(?int $menuId, ?int $pageId): Collection|array
     {
         $page = [];
