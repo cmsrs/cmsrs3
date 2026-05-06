@@ -52,11 +52,11 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::get($apiSecret.'logout', [AuthController::class, 'logout']);
 
     Route::get($apiSecret.'pages', [PageController::class, 'index']);
-    Route::get($apiSecret.'pages/{id}/{simple?}', [PageController::class, 'oneItemAdmin'])->where('id', '[0-9]+');
+    Route::get($apiSecret.'pages/{page}/{simple?}', [PageController::class, 'oneItemAdmin'])->whereNumber('page'); // ->where('id', '[0-9]+');
     Route::post($apiSecret.'pages', [PageController::class, 'create']);
-    Route::put($apiSecret.'pages/{id}', [PageController::class, 'update']);
-    Route::delete($apiSecret.'pages/{id}', [PageController::class, 'delete']);
-    Route::patch($apiSecret.'pages/position/{direction}/{id}', [PageController::class, 'position']);
+    Route::put($apiSecret.'pages/{page}', [PageController::class, 'update'])->whereNumber('page');
+    Route::delete($apiSecret.'pages/{page}', [PageController::class, 'delete'])->whereNumber('page');
+    Route::patch($apiSecret.'pages/position/{direction}/{page}', [PageController::class, 'position'])->whereNumber('page');
     Route::get($apiSecret.'pages/type/{type}', [PageController::class, 'getPagesByType']);
 
     Route::get($apiSecret.'images/{type}/{pageId}', [ImageController::class, 'getItemByTypeAndRefId']); // getItemByPageId, it can be pageId or productId

@@ -21,7 +21,6 @@ class Product extends Model
 
     /**
      * This is not from the database; it is calculated on the fly based on the 'price' value.
-     * This is not from the database; it is calculated on the fly based on the 'price' value.
      */
     public ?string $price_description = null;
 

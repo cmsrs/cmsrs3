@@ -10,7 +10,7 @@ class PaymentService
 
     const KEY_PAYU = 'payu';
 
-    public static function getPayment($key = null)
+    public static function getPayment(?string $key = null): array
     {
         $payments = [
             self::KEY_CASH => ['name' => 'Cash on delivery'],

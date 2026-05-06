@@ -1053,6 +1053,7 @@ class PageTest extends Base
 
         $type = 'shop';
         $res = $this->get('api/pages/type/'.$type.'?token='.$this->token);
+        // dd($res->getContent());
 
         $data = $res->getData();
         $this->assertTrue($data->success);
@@ -1293,11 +1294,18 @@ class PageTest extends Base
 
     public function test_it_will_delete_page_fake()
     {
-        // fake id - error handlings
+
         $responseFake = $this->delete('api/pages/rs_I_eW23423fsd?token='.$this->token);
-        $resFake = $responseFake->getData();
-        $this->assertFalse($resFake->success);
-        $this->assertNotEmpty($resFake->error);
+        $responseFake->assertStatus(404);
+        $data = $responseFake->json();
+        $this->assertArrayHasKey('message', $data);
+
+        // fake id - error handlings
+        // $responseFake = $this->delete('api/pages/rs_I_eW23423fsd?token='.$this->token);
+        // dd($responseFake->getContent());
+        // $resFake = $responseFake->getData();
+        // $this->assertFalse($resFake->success);
+        // $this->assertNotEmpty($resFake->error);
     }
 
     public function test_it_will_get_pages_by_short_title_default_lang()

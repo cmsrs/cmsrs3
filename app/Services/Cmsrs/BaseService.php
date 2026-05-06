@@ -44,7 +44,7 @@ abstract class BaseService
         $this->arrLangs = $arrLangs;
     }
 
-    protected function getPageDataFormat($page, $lang = null)
+    protected function getPageDataFormat(array $page, ?string $lang = null)
     {
         $out = [];
         foreach ($this->pageFields as $field) {
@@ -63,7 +63,7 @@ abstract class BaseService
         return $out;
     }
 
-    public function removeKeyLangInArr($arr, $lang)
+    public function removeKeyLangInArr(array $arr, string $lang): array
     {
         foreach ($arr as $key => $value) {
             if (is_array($value)) {

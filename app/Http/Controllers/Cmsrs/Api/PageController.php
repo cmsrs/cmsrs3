@@ -7,6 +7,7 @@ use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\PageService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -55,41 +56,39 @@ class PageController extends Controller
     }
     */
 
-    public function oneItemAdmin(Request $request, $id, ?string $simple = null)
+    public function oneItemAdmin(Request $request, Page $page, ?string $simple = null): JsonResponse
     {
-        $page = Page::find($id);
-
-        if (empty($page)) {
-            return response()->json(['success' => false, 'error' => 'Page not find'], 404);
-        }
+        // if (empty($page)) {
+        //    return response()->json(['success' => false, 'error' => 'Page not find'], 404);
+        // }
 
         $onePage = $this->pageService->getAllPagesWithImagesOneItem($page, $simple);
 
         return response()->json(['success' => true, 'data' => $onePage], 200);
     }
 
-    public function index()
+    public function index(): JsonResponse
     {
         $pages = $this->pageService->getAllPagesWithImages();
 
         return response()->json(['success' => true, 'data' => $pages], 200);
     }
 
-    public function getPagesByType(Request $request, $type)
+    public function getPagesByType(Request $request, string $type): JsonResponse
     {
         $pages = $this->pageService->getAllPagesWithImages($type);
 
         return response()->json(['success' => true, 'data' => $pages], 200);
     }
 
-    public function position(Request $request, $direction, $id)
+    public function position(Request $request, string $direction, Page $page): JsonResponse
     {
-        $ret = PageService::swapPosition($direction, $id);
+        $ret = PageService::swapPosition($direction, $page->id);
 
         return response()->json(['success' => $ret]);
     }
 
-    public function create(Request $request)
+    public function create(Request $request): JsonResponse
     {
         $data = $request->only('title', 'short_title', 'description', 'published', 'commented', 'after_login', 'type', 'content', 'menu_id', 'page_id', 'images');
         $validator = Validator::make($data, $this->validationRules);
@@ -114,13 +113,13 @@ class PageController extends Controller
         return response()->json(['success' => true, 'data' => ['pageId' => $page->id, 'data' => $data]]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Page $page): JsonResponse
     {
-        $page = Page::find($id);
+        // $page = Page::find($id);
 
-        if (empty($page)) {
-            return response()->json(['success' => false, 'error' => 'Page not find'], 200);
-        }
+        // if (empty($page)) {
+        //    return response()->json(['success' => false, 'error' => 'Page not find'], 200);
+        // }
 
         $data = $request->only('title', 'short_title', 'description', 'published', 'commented', 'after_login', 'type', 'content', 'menu_id', 'page_id', 'images'); // 'position',
         $validator = Validator::make($data, $this->validationRules);
@@ -157,13 +156,13 @@ class PageController extends Controller
         return response()->json(['success' => true], 200);
     }
 
-    public function delete(Request $request, $id)
+    public function delete(Request $request, Page $page): JsonResponse
     {
-        $page = Page::find($id);
+        // $page = Page::find($id);
 
-        if (empty($page)) {
-            return response()->json(['success' => false, 'error' => 'Page not find'], 200);
-        }
+        // if (empty($page)) {
+        //    return response()->json(['success' => false, 'error' => 'Page not find'], 200);
+        // }
 
         $res = $this->pageService->deletePageOrProductWithImgs($page);
         if (empty($res)) {

@@ -8,13 +8,20 @@ use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\Helpers\CacheService;
 use App\Services\Cmsrs\Interfaces\TranslateInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class PageService extends BaseService implements TranslateInterface
 {
+    /**
+     * @var TranslateService
+     */
     private $translate;
 
+    /**
+     * @var ContentService
+     */
     private $content;
 
     public function __construct()
@@ -23,7 +30,7 @@ class PageService extends BaseService implements TranslateInterface
         $this->content = new ContentService;
     }
 
-    public function getPageDataByShortTitleCache($shortTitle, $data = 'content', $lang = null)
+    public function getPageDataByShortTitleCache(string $shortTitle, string $data = 'content', ?string $lang = null): string|bool
     {
         if (empty($lang)) {
             $lang = ConfigService::getDefaultLang();
@@ -40,7 +47,7 @@ class PageService extends BaseService implements TranslateInterface
         return $ret;
     }
 
-    public function getPageDataByShortTitle($shortTitle, $data = 'content', $lang = null)
+    public function getPageDataByShortTitle(string $shortTitle, string $data = 'content', ?string $lang = null): string|bool
     {
         if (! in_array($data, ['content', 'title', 'images', 'url'])) {
             throw new \Exception('second param is: content title images and url allowed, but now is: '.$data);
@@ -70,7 +77,7 @@ class PageService extends BaseService implements TranslateInterface
         return empty($dataByLang[$lang]) ? '' : $dataByLang[$lang];
     }
 
-    private function getPageByShortTitle($shortTitle)
+    private function getPageByShortTitle(string $shortTitle): Page|bool
     {
         $translate = Translate::where('value', '=', $shortTitle)->where('column', '=', 'short_title')->first();  // where('lang', '=', $defaultLang )->first();
         if (empty($translate)) {
@@ -86,7 +93,7 @@ class PageService extends BaseService implements TranslateInterface
         return $page;
     }
 
-    public function getContentInnerPageByIdCache($pageId, $lang = null)
+    public function getContentInnerPageByIdCache(int $pageId, ?string $lang = null): string
     {
         if (empty($lang)) {
             $lang = ConfigService::getDefaultLang();
@@ -104,7 +111,7 @@ class PageService extends BaseService implements TranslateInterface
         return $ret;
     }
 
-    private function getContentInnerPageByPageIdAndLang($pageId, $lang)
+    private function getContentInnerPageByPageIdAndLang(int $pageId, string $lang): string
     {
         $page = Page::findOrFail($pageId);
 
@@ -113,21 +120,21 @@ class PageService extends BaseService implements TranslateInterface
         return empty($contents[$lang]) ? '' : $contents[$lang];
     }
 
-    public function setTranslate($objTranslate)
+    public function setTranslate(TranslateService $objTranslate)
     {
         if (! empty($objTranslate)) {
             $this->translate = $objTranslate;
         }
     }
 
-    public function setContent($objContent)
+    public function setContent(ContentService $objContent)
     {
         if (! empty($objContent)) {
             $this->content = $objContent;
         }
     }
 
-    public function getDataToView(Page $mPage, $dataIn)   // ($pageOut, $lang)
+    public function getDataToView(Page $mPage, array $dataIn): array   // ($pageOut, $lang)
     {
         $lang = $dataIn['lang'];
         if (empty($lang)) {
@@ -156,7 +163,7 @@ class PageService extends BaseService implements TranslateInterface
         return array_merge($data, $dataIn);
     }
 
-    public static function getPageBySlug($menus, $menuSlug, $pageSlug, $lang) // todo - change static
+    public static function getPageBySlug(Collection|array $menus, string $menuSlug, ?string $pageSlug, string $lang): ?Page // todo - change static
     {
         $menuService = new MenuService;
         $pageService = new PageService;
@@ -182,7 +189,7 @@ class PageService extends BaseService implements TranslateInterface
         return $pageOut;
     }
 
-    public static function checkIsDuplicateTitleByMenu($data, $id = '')
+    public static function checkIsDuplicateTitleByMenu(array $data, string $id = ''): array
     {
         $menuId = empty($data['menu_id']) ? 0 : $data['menu_id'];
 
@@ -214,7 +221,7 @@ class PageService extends BaseService implements TranslateInterface
         return $out;
     }
 
-    public function getSlugByLang(Page $model, $lang)
+    public function getSlugByLang(Page $model, string $lang): ?string
     {
         $column = 'title';
         $name = $this->translatesByColumnAndLang($model, $column, $lang);
@@ -226,7 +233,7 @@ class PageService extends BaseService implements TranslateInterface
         return Str::slug($name, '-');
     }
 
-    public function getAllTranslate(Page|Image|Menu $mPage)
+    public function getAllTranslate(Page|Image|Menu $mPage): array
     {
         $pageId = $mPage->id;
 
@@ -245,7 +252,7 @@ class PageService extends BaseService implements TranslateInterface
     /**
      * todo refactor
      */
-    public function getTranslateMerge(Page $mPage, $pageId)
+    public function getTranslateMerge(Page $mPage, int $pageId): array
     {
         $translates = $mPage->translates()->where('page_id', $pageId)->get(['lang', 'column', 'value'])->toArray();
         $contents = $mPage->contents()->where('page_id', $pageId)->get(['lang', 'column', 'value'])->toArray();
@@ -254,7 +261,7 @@ class PageService extends BaseService implements TranslateInterface
         return $ret;
     }
 
-    public static function CreatePage($data)
+    public static function CreatePage(array $data): Page
     {
         $menuId = empty($data['menu_id']) ? null : $data['menu_id'];
         $data['position'] = PageService::getNextPositionByMenuId($menuId);
@@ -273,7 +280,7 @@ class PageService extends BaseService implements TranslateInterface
      * use also in script to load demo (test) data
      * php artisan cmsrs:load-demo-data
      */
-    public function wrapCreate($data)
+    public function wrapCreate(array $data): Page
     {
         $page = PageService::CreatePage($data);
         $this->createTranslate(['page_id' => $page->id, 'data' => $data]);
@@ -287,13 +294,13 @@ class PageService extends BaseService implements TranslateInterface
         return $page;
     }
 
-    public function createTranslate($dd, $create = true)
+    public function createTranslate(array $dd, ?bool $create = true): void
     {
         $this->translate->wrapCreate($dd, $create);
         $this->content->wrapCreate($dd, $create);
     }
 
-    public function wrapUpdate(Page $mPage, $data) // zmiana_1007
+    public function wrapUpdate(Page $mPage, array $data): bool
     {
         $mPage->update($data);
         $this->createTranslate(['page_id' => $mPage->id, 'data' => $data], false);
@@ -301,7 +308,7 @@ class PageService extends BaseService implements TranslateInterface
         return true;
     }
 
-    public function getFooterPages($lang)
+    public function getFooterPages(string $lang): array
     {
         $privacyPolicy = PageService::getFirstPageByType('privacy_policy');
         $contact = PageService::getFirstPageByType('contact');
@@ -329,7 +336,7 @@ class PageService extends BaseService implements TranslateInterface
         return $out;
     }
 
-    public function getViewNameByType($mPage)
+    public function getViewNameByType(Page $mPage): string
     {
         $type = $mPage->type;
         if ($type == 'projects') {
@@ -364,7 +371,7 @@ class PageService extends BaseService implements TranslateInterface
     /**
      * use in headless
      */
-    public function getUrls(Page $mPage, $urlParam = null)
+    public function getUrls(Page $mPage, ?string $urlParam = null): array
     {
         $urls = [];
         $langs = $this->getArrLangs();
@@ -375,7 +382,7 @@ class PageService extends BaseService implements TranslateInterface
         return $urls;
     }
 
-    public function getUrl(Page $mPage, $lang, $urlParam = null)
+    public function getUrl(Page $mPage, string $lang, ?string $urlParam = null): string
     {
         $type = $mPage->type;
         if ($type == 'inner') {
@@ -394,7 +401,7 @@ class PageService extends BaseService implements TranslateInterface
         return $this->getCmsUrl($mPage, $lang, $urlParam);
     }
 
-    public function getUrlByPageOrRouteName(?Page $mPage, $lang, $productSlug = null, $routeName = null)
+    public function getUrlByPageOrRouteName(?Page $mPage, string $lang, ?string $productSlug = null, ?string $routeName = null): string
     {
         return (! empty($mPage)) ? $this->getUrl($mPage, $lang, $productSlug) : route($routeName, ['lang' => $lang]);
     }
@@ -410,7 +417,7 @@ class PageService extends BaseService implements TranslateInterface
     //     return $url;
     // }
 
-    private function getMenuSlugByLang(Page $mPage, $lang)
+    private function getMenuSlugByLang(Page $mPage, string $lang): ?string
     {
         $menu = $mPage->menu()->get()->first();
 
@@ -421,7 +428,7 @@ class PageService extends BaseService implements TranslateInterface
         return (new MenuService)->getSlugByLang($menu, $lang);
     }
 
-    public function getNumPagesBelongsToThisMenu(Page $mPage)
+    public function getNumPagesBelongsToThisMenu(Page $mPage): ?int
     {
         $menu = $mPage->menu()->get()->first();
         if (empty($menu)) {
@@ -431,7 +438,7 @@ class PageService extends BaseService implements TranslateInterface
         return (new MenuService)->pagesPublishedAndAccess($menu)->count();
     }
 
-    public function getNumPagesBelongsToThisMenuCache(Page $mPage)
+    public function getNumPagesBelongsToThisMenuCache(Page $mPage): ?int
     {
         $pageId = $mPage->id;
         $isCache = (new ConfigService)->isCacheEnable();
@@ -446,7 +453,7 @@ class PageService extends BaseService implements TranslateInterface
         return $countPages;
     }
 
-    private function getMenuSlugByLangCache(Page $mPage, $lang)
+    private function getMenuSlugByLangCache(Page $mPage, string $lang): ?string
     {
         $pageId = $mPage->id;
         $isCache = (new ConfigService)->isCacheEnable();
@@ -461,7 +468,7 @@ class PageService extends BaseService implements TranslateInterface
         return $menuSlug;
     }
 
-    private function getCmsUrl(Page $mPage, $lang, $urlParam = null)
+    private function getCmsUrl(Page $mPage, string $lang, ?string $urlParam = null): string
     {
         $menuSlug = $this->getMenuSlugByLangCache($mPage, $lang);
 
@@ -487,7 +494,7 @@ class PageService extends BaseService implements TranslateInterface
         return $url;
     }
 
-    private function getMainUrl($lang)
+    private function getMainUrl(string $lang): string
     {
         $langs = ConfigService::arrGetLangsEnv();
         array_shift($langs); // after this langs will be changed. It has rest of langs without first one.
@@ -501,7 +508,7 @@ class PageService extends BaseService implements TranslateInterface
         return $url;
     }
 
-    private function getIndependentUrl(Page $mPage, $lang)
+    private function getIndependentUrl(Page $mPage, string $lang): string
     {
         $url = '/'.Page::PREFIX_IN_URL.'/'.$this->getSlugByLang($mPage, $lang);
         $langs = ConfigService::arrGetLangsEnv();
@@ -512,7 +519,7 @@ class PageService extends BaseService implements TranslateInterface
         return $url;
     }
 
-    public function unpublishedChildren(Page $mPage)
+    public function unpublishedChildren(Page $mPage): void
     {
         $pages = Page::where('page_id', '=', $mPage->id)->get();
         foreach ($pages as $page) {
@@ -521,7 +528,7 @@ class PageService extends BaseService implements TranslateInterface
         }
     }
 
-    public function checkAuth(Page $mPage)
+    public function checkAuth(Page $mPage): bool
     {
         if ($mPage->after_login && ! (Auth::check())) {
             return false;
@@ -530,7 +537,7 @@ class PageService extends BaseService implements TranslateInterface
         return true;
     }
 
-    public static function getFirstPageByType($type)
+    public static function getFirstPageByType(string $type): ?Page
     {
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
@@ -549,7 +556,7 @@ class PageService extends BaseService implements TranslateInterface
         return PageService::getFirstPageByType('main_page');
     }
 
-    public static function validateMainPage($data, $create = true)
+    public static function validateMainPage(array $data, ?bool $create = true): array
     {
         if (isset($data['type']) && ($data['type'] == 'main_page')) {
             if ($create) {
@@ -569,7 +576,7 @@ class PageService extends BaseService implements TranslateInterface
     /**
      * if parent page.published == 0 then child this page.published = 0
      */
-    public static function validateParentPublished($data)
+    public static function validateParentPublished(array $data): array
     {
         if (! empty($data['page_id'])) {
             $p = Page::findOrFail($data['page_id']);
@@ -581,7 +588,7 @@ class PageService extends BaseService implements TranslateInterface
         return $data;
     }
 
-    public function arrImages(Page $mPage, $lang)
+    public function arrImages(Page $mPage, string $lang): array
     {
         $out = [];
         $imageService = new ImageService;
@@ -632,7 +639,7 @@ class PageService extends BaseService implements TranslateInterface
         return $formatPage;
     }
 
-    public function getAllPagesWithImages($type = null)
+    public function getAllPagesWithImages(?string $type = null): array
     {
         if ($type) {
             $pages = Page::with(['translates', 'contents'])->where('type', $type)->orderBy('position', 'asc')->get($this->pageFields)->toArray();
@@ -660,7 +667,7 @@ class PageService extends BaseService implements TranslateInterface
      * don't use this method
      * maybe in the future i will use it
      */
-    public function getAllPagesWithImagesByShortTitleForDefaultLang($shortTitle)
+    public function getAllPagesWithImagesByShortTitleForDefaultLang(string $shortTitle): array
     {
         $lang = ConfigService::getDefaultLang();
 
@@ -687,7 +694,7 @@ class PageService extends BaseService implements TranslateInterface
         return $out;
     }
 
-    public static function getNextPositionByMenuId($menuId)
+    public static function getNextPositionByMenuId(?int $menuId): int
     {
         if (empty($menuId)) {
             $page = Page::query()
@@ -708,7 +715,7 @@ class PageService extends BaseService implements TranslateInterface
         return $page->position + 1;
     }
 
-    public static function getPagesByMenuId($menuId, $pageId)
+    public static function getPagesByMenuId(?int $menuId, ?int $pageId): Collection|array
     {
         $page = [];
         if ($menuId === null) {
@@ -733,7 +740,7 @@ class PageService extends BaseService implements TranslateInterface
         return $page;
     }
 
-    public static function swapPosition($direction, $id)
+    public static function swapPosition(string $direction, int $id): bool
     {
         if (! in_array($direction, ['up', 'down'])) {
             throw new \Exception('Wrong direction (Page). It can be up or down direction = '.$direction);

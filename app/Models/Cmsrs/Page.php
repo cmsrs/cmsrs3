@@ -4,6 +4,7 @@ namespace App\Models\Cmsrs;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Page extends Model
 {
@@ -16,7 +17,11 @@ class Page extends Model
 
     // private $translate;
     // private $content;
-    public $pageFields;
+
+    /*
+     * @var array<string>
+     */
+    public array $pageFields = [];
     // private $langs;
 
     protected $fillable = [
@@ -43,7 +48,7 @@ class Page extends Model
         'page_id' => 'integer',
     ];
 
-    public function menu()
+    public function menu(): HasOne
     {
         return $this->hasOne('App\Models\Cmsrs\Menu', 'id', 'menu_id');
     }
