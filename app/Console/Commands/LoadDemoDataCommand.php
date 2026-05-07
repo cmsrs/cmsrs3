@@ -220,7 +220,7 @@ class LoadDemoDataCommand extends Command
                 // 'productsDataAndTotalAmount' => $productsDataAndTotalAmount,
                 // 'checkout' => $checkout,
                 'objCheckout' => $objCheckout
-            ] = (new ProductService)->saveCheckout($d, $userId, $sessionId);
+            ] = app(ProductService::class)->saveCheckout($d, $userId, $sessionId); //TODO DI
             if (empty($objCheckout->id)) {
                 exit('sth wrong with create checkout');
             }

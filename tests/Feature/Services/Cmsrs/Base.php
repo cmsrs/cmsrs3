@@ -93,7 +93,7 @@ class Base extends TestCase
         $objProduct = Product::find($productId);
 
         if ($objProduct) {  // delete img from fs.
-            (new ProductService)->deleteImagesFs($objProduct);
+            app(ProductService::class)->deleteImagesFs($objProduct);
         }
     }
 
@@ -143,7 +143,7 @@ class Base extends TestCase
 
     public function checkProductsPagesByLang($products, $lang)
     {
-        $productsDb = (new ProductService)->getAllProductsWithImages();
+        $productsDb = app(ProductService::class)->getAllProductsWithImages();
         $this->assertNotEmpty(count($productsDb));
         $this->assertEquals(count($productsDb), count($products));
 
@@ -151,7 +151,7 @@ class Base extends TestCase
             $productName = $product['product_name'][$lang];
 
             $objProduct = Product::find($product['id']);
-            $url = (new ProductService)->getProductUrl($objProduct, $lang, $productName);
+            $url = app(ProductService::class)->getProductUrl($objProduct, $lang, $productName);
             $response = $this->get($url);
             $response->assertStatus(empty($objProduct->published) ? 404 : 200);
         }

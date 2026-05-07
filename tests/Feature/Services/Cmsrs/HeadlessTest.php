@@ -137,7 +137,7 @@ class HeadlessTest extends Base
             'images' => $images,
         ];
 
-        $objProduct = (new ProductService)->wrapCreate($testProduct);
+        $objProduct = app(ProductService::class)->wrapCreate($testProduct);
         $this->assertNotEmpty($objProduct->id);
 
         $res = $this->get('api/headless/page/'.$objPage->id.'/'.$lang);

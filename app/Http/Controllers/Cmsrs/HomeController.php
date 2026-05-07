@@ -56,7 +56,7 @@ class HomeController extends Controller
         if (! empty($arrOrders)) {
             $arrOrdersReindex = BaseService::reIndexArr($arrOrders, 'product_id');
             $baskets = false;
-            ProductService::getDataToPayment($arrOrdersReindex, $baskets, $orders);
+            $this->productService->getDataToPayment($arrOrdersReindex, $baskets, $orders);
         }
 
         $objCheckouts = CheckoutService::findActiveOrders()->get();

@@ -25,7 +25,7 @@ class ProductService extends BaseService
     /** @var array<int, string> */
     public array $productFields;
 
-    public function __construct()
+    public function __construct( private PageService $pageService )
     {
         $this->translate = new TranslateService;
         $this->content = new ContentService;
@@ -60,7 +60,7 @@ class ProductService extends BaseService
 
         $reindexBaskets = BaseService::reIndexArr($data['products']);
         $baskets = [];
-        $productsDataAndTotalAmount = ProductService::getDataToPayment($reindexBaskets, $baskets);
+        $productsDataAndTotalAmount = $this->getDataToPayment($reindexBaskets, $baskets);
         if (empty($baskets)) {
             throw new \Exception('No data in basket (not found data in db)');
         }
@@ -222,7 +222,7 @@ class ProductService extends BaseService
      * @param  array<int, array<string, mixed>>|false|string  $orders
      * @return array<string, mixed>
      */
-    public static function getDataToPayment(array $arrCart, array|false &$baskets, array|false|string &$orders = false): array
+    public function getDataToPayment(array $arrCart, array|false &$baskets, array|false|string &$orders = false): array
     {
         // $user = Auth::user();
         // if( empty($user) ){
@@ -268,7 +268,7 @@ class ProductService extends BaseService
                     'unitPrice' => $product->price,
                     'qty' => $qty,
                     'product_id' => $product->id,
-                    'product_url' => (new ProductService)->getProductUrl($product, $lang, $productName),
+                    'product_url' => $this->getProductUrl($product, $lang, $productName),
                     'product_img' => empty($productImage[0]) ? '' : $productImage[0]['fs']['small'],
                 ];
             }
@@ -400,7 +400,7 @@ class ProductService extends BaseService
         $mPage = $mProduct->page()->first();
 
         if ($mPage instanceof Page) { // phpstan fix
-            return (new PageService)->getUrl($mPage, $lang);
+            return $this->pageService->getUrl($mPage, $lang);
         }
 
         return null; // todo - handle this case properly, maybe throw an exception or return a default URL
@@ -411,7 +411,7 @@ class ProductService extends BaseService
         $mPage = $mProduct->page()->first();
 
         if ($mPage instanceof Page) { // phpstan fix
-            return (new PageService)->getUrl($mPage, $lang, Str::slug($productName, '-'));
+            return $this->pageService->getUrl($mPage, $lang, Str::slug($productName, '-'));
         }
 
         return null; // todo - handle this case properly, maybe throw an exception or return a default URL
@@ -558,10 +558,10 @@ class ProductService extends BaseService
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
             $products = cache()->remember('products_name_price_'.$lang, CacheService::setTime(), function () use ($lang) {
-                return (new ProductService)->getAllProductsWithImagesByLang($lang);
+                return $this->getAllProductsWithImagesByLang($lang);
             });
         } else {
-            $products = (new ProductService)->getAllProductsWithImagesByLang($lang);
+            $products = $this->getAllProductsWithImagesByLang($lang);
         }
 
         return $products;

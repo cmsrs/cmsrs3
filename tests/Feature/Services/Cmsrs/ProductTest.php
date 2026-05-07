@@ -216,7 +216,7 @@ class ProductTest extends Base
         $this->assertEquals(1, count($arrProducts));
         $this->assertNotEmpty($arrProducts[0]);
 
-        $products = (new ProductService)->wrapSearchProducts($lang, $key);
+        $products = app(ProductService::class)->wrapSearchProducts($lang, $key);
         $this->assertEquals(1, count($products));
     }
 
@@ -664,7 +664,7 @@ class ProductTest extends Base
             'productsDataAndTotalAmount' => $productsDataAndTotalAmount,
             'checkout' => $checkout,
             'objCheckout' => $objCheckout
-        ] = (new ProductService)->saveCheckout($data, $userId, $sessionId);
+        ] = app(ProductService::class)->saveCheckout($data, $userId, $sessionId);
         $this->assertNotEmpty($objCheckout->id);
 
         return [
@@ -1012,7 +1012,8 @@ class ProductTest extends Base
 
         $baskets = [];
         $orders = '';
-        $data = ProductService::getDataToPayment($arrCart, $baskets, $orders);
+        $productService  = app(ProductService::class);
+        $data = $productService->getDataToPayment($arrCart, $baskets, $orders);
         $this->assertEquals(2, count($baskets));
         $this->assertEmpty($orders);
 
@@ -1030,7 +1031,7 @@ class ProductTest extends Base
 
         $baskets2 = false;
         $orders2 = [];
-        ProductService::getDataToPayment($arrCart, $baskets2, $orders2);
+        $productService->getDataToPayment($arrCart, $baskets2, $orders2);
         $this->assertEmpty($baskets2);
 
         $this->assertTrue(is_array($orders2));
@@ -1059,7 +1060,7 @@ class ProductTest extends Base
         $countProd = Product::all()->count();
         $this->assertEquals(2, $countProd);
 
-        $products = (new ProductService)->getProductsWithImagesByPage($this->pageId);
+        $products = app(ProductService::class)->getProductsWithImagesByPage($this->pageId);
         $this->assertEquals(1, count($products));
         $this->assertEquals($this->pageId, $products[0]['page_id']);
         $this->assertEquals(1, $products[0]['published']);
@@ -1083,7 +1084,7 @@ class ProductTest extends Base
 
         $this->assertTrue($res0->success);
 
-        $urls = (new ProductService)->getProductsUrl();
+        $urls = app(ProductService::class)->getProductsUrl();
 
         $this->assertEquals(1, count($urls));
         $prodUrl = $urls[0]['en'];
@@ -1102,7 +1103,7 @@ class ProductTest extends Base
 
         $products = Product::all()->toArray();
         $this->assertEquals(0, $products[0]['published']);
-        $urls2 = (new ProductService)->getProductsUrl();
+        $urls2 = app(ProductService::class)->getProductsUrl();
         $this->assertEmpty($urls2);
 
         $response2 = $this->get($prodUrl);
@@ -1120,7 +1121,7 @@ class ProductTest extends Base
 
         $this->assertTrue($res0->success);
 
-        $urls = (new ProductService)->getProductsUrl();
+        $urls = app(ProductService::class)->getProductsUrl();
 
         $this->assertEquals(1, count($urls));
         $prodUrl = $urls[0]['en'];
@@ -1139,7 +1140,7 @@ class ProductTest extends Base
 
         $products = Product::all()->toArray();
         $this->assertEquals(0, $products[0]['published']);
-        $urls2 = (new ProductService)->getProductsUrl();
+        $urls2 = app(ProductService::class)->getProductsUrl();
         $this->assertEmpty($urls2);
 
         $response2 = $this->get($prodUrl);
@@ -1156,7 +1157,7 @@ class ProductTest extends Base
 
         $this->assertTrue($res0->success);
 
-        $urls = (new ProductService)->getProductsUrl();
+        $urls = app(ProductService::class)->getProductsUrl();
         $this->assertEquals(1, count($urls));
         $prodUrl = $urls[0]['en'];
         $this->assertNotEmpty($prodUrl);
@@ -1181,6 +1182,7 @@ class ProductTest extends Base
      */
     public function test_it_will_get_one_product_in_menu_by_slug()
     {
+        $productService = app(ProductService::class);
         $this->setTestData();
         // $this->setTestData2();
 
@@ -1194,13 +1196,13 @@ class ProductTest extends Base
 
         $lang = 'en';
         $slugProductName = Str::slug(self::STR_PRODUCT_NAME_EN, '-');
-        $product = (new ProductService)->getProductBySlug($slugProductName, $lang);
+        $product = $productService->getProductBySlug($slugProductName, $lang);
 
         $this->assertNotEmpty($product);
 
         $this->assertEquals($productId, $product['id']);
 
-        $urls = (new ProductService)->getProductUrls($product);
+        $urls = $productService->getProductUrls($product);
         $this->assertNotEmpty($urls);
 
         $urlCategory = $urls['url_category']['en'];
@@ -1212,7 +1214,7 @@ class ProductTest extends Base
         $response = $this->get($urlProduct);
         $response->assertStatus(200);
 
-        $product2 = (new ProductService)->getProductBySlug('fake', $lang);
+        $product2 = $productService->getProductBySlug('fake', $lang);
         $this->assertEquals(null, $product2);
     }
 
@@ -1231,13 +1233,13 @@ class ProductTest extends Base
 
         $lang = 'en';
         $slugProductName = Str::slug(self::STR_PRODUCT_NAME_EN, '-');
-        $product = (new ProductService)->getProductBySlug($slugProductName, $lang);
+        $product = app(ProductService::class)->getProductBySlug($slugProductName, $lang);
 
         $this->assertNotEmpty($product);
 
         $this->assertEquals($productId, $product['id']);
 
-        $urls = (new ProductService)->getProductUrls($product);
+        $urls = app(ProductService::class)->getProductUrls($product);
         $this->assertNotEmpty($urls);
 
         $urlCategory = $urls['url_category']['en'];
@@ -1249,7 +1251,7 @@ class ProductTest extends Base
         $response = $this->get($urlProduct);
         $response->assertStatus(200);
 
-        $product2 = (new ProductService)->getProductBySlug('fake', $lang);
+        $product2 = app(ProductService::class)->getProductBySlug('fake', $lang);
         $this->assertEquals(null, $product2);
     }
 

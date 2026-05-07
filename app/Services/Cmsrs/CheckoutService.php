@@ -118,7 +118,7 @@ class CheckoutService extends BaseService
 
             $out[$j]['product_id'] = $basket['product_id'];
             $out[$j]['product_name'] = $productName;
-            $out[$j]['product_url'] = (new ProductService)->getProductUrl($product, $lang, $productName);
+            $out[$j]['product_url'] = app(ProductService::class)->getProductUrl($product, $lang, $productName); //TODO DI
             $j++;
         }
 

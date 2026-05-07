@@ -155,7 +155,7 @@ class PageService extends BaseService implements TranslateInterface
 
         $products = null;
         if ($mPage->type === 'shop') {
-            $products = (new ProductService)->getProductsWithImagesByPage($mPage->id);
+            $products = app(ProductService::class)->getProductsWithImagesByPage($mPage->id);
         }
 
         $data = [

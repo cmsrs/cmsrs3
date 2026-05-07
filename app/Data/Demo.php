@@ -27,7 +27,7 @@ class Demo
 
     private function getProductObj()
     {
-        $productObj = new ProductService;
+        $productObj = app(ProductService::class); //TODO DI
 
         // $productObj->setTranslate($this->translate);
         return $productObj;
