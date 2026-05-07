@@ -35,13 +35,8 @@ class ProductController extends Controller
         }
     }
 
-    public function getItem(Request $request, $id)
+    public function getItem(Request $request, Product $product)
     {
-        $product = Product::find($id);
-        if (empty($product)) {
-            return response()->json(['success' => false, 'error' => 'Product no found'], 404);
-        }
-
         $data = $this->productService->getProductWithTranslatesContentsAndImages($product);
 
         return response()->json(['success' => true, 'data' => $data], 200);
@@ -79,6 +74,9 @@ class ProductController extends Controller
         return response()->json(['success' => true, 'data' => $products], 200);
     }
 
+    /**
+     * i can't find this method in routes/api.php - todo
+     */
     public function getProductsByPageId(Request $request, $id, $lang)
     {
         $products = $this->productService->getGivenProductsWithImagesByPageId($id);
@@ -130,13 +128,8 @@ class ProductController extends Controller
         return response()->json(['success' => true, 'data' => ['productId' => $product->id, 'data' => $data]]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Product $product)
     {
-        $product = Product::find($id);
-
-        if (empty($product)) {
-            return response()->json(['success' => false, 'error' => 'Product not find'], 200);
-        }
 
         $data = $request->only(
             'product_name',
@@ -148,7 +141,7 @@ class ProductController extends Controller
             'images'
         );
 
-        $this->validationRules['sku'] = $this->validationRules['sku'].',sku,'.$id; // sku during update - have to be uniq for productId
+        $this->validationRules['sku'] = $this->validationRules['sku'].',sku,'.$product->id; // sku during update - have to be uniq for productId
         $validator = Validator::make($data, $this->validationRules);
         if ($validator->fails()) {
             return response()->json(['success' => false, 'error' => $validator->messages()], 200);
@@ -179,14 +172,8 @@ class ProductController extends Controller
         return response()->json(['success' => true], 200);
     }
 
-    public function delete(Request $request, $id)
+    public function delete(Request $request, Product $product)
     {
-        $product = Product::find($id);
-
-        if (empty($product)) {
-            return response()->json(['success' => false, 'error' => 'Product not find'], 200);
-        }
-
         $res = $this->productService->deletePageOrProductWithImgs($product);
         if (empty($res)) {
             return response()->json(['success' => false, 'error' => 'Product delete problem'], 200);

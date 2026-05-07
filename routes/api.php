@@ -91,10 +91,10 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     if (config('cmsrs.features.shop')) {
         Route::get($apiSecret.'products', [ProductController::class, 'index']);
         Route::post($apiSecret.'products', [ProductController::class, 'create']);
-        Route::get($apiSecret.'products/{id}', [ProductController::class, 'getItem']);
+        Route::get($apiSecret.'products/{product}', [ProductController::class, 'getItem'])->whereNumber('product');
         Route::get($apiSecret.'products/pagination/{lang}/{column}/{direction}', [ProductController::class, 'getItemsWithPaginateAndSort']);
-        Route::put($apiSecret.'products/{id}', [ProductController::class, 'update']);
-        Route::delete($apiSecret.'products/{id}', [ProductController::class, 'delete']);
+        Route::put($apiSecret.'products/{product}', [ProductController::class, 'update'])->whereNumber('product');
+        Route::delete($apiSecret.'products/{product}', [ProductController::class, 'delete'])->whereNumber('product');
 
         Route::get($apiSecret.'checkouts', [CheckoutController::class, 'index']);
         Route::get($apiSecret.'checkouts/pagination/{lang}/{column}/{direction}', [CheckoutController::class, 'getItemsWithPaginateAndSort']);
