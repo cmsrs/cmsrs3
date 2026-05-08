@@ -12,17 +12,12 @@ use Illuminate\Support\Str;
 
 class MenuService extends BaseService implements TranslateInterface
 {
-    private $translate;
-
-    public function __construct()
-    {
-        $this->translate = new TranslateService;
-    }
+    public function __construct(private TranslateService $translateService) {}
 
     public function setTranslate($objTranslate)
     {
         if (! empty($objTranslate)) {
-            $this->translate = $objTranslate;
+            $this->translateService = $objTranslate;
         }
     }
 
@@ -55,7 +50,7 @@ class MenuService extends BaseService implements TranslateInterface
     public function wrapUpdate(Menu $mMenu, $data)
     {
         $mMenu->update($data);
-        $this->translate->wrapCreate(['menu_id' => $mMenu->id, 'data' => $data], false);
+        $this->translateService->wrapCreate(['menu_id' => $mMenu->id, 'data' => $data], false);
 
         return true;
     }
@@ -67,7 +62,7 @@ class MenuService extends BaseService implements TranslateInterface
     public function wrapCreate($data)
     {
         $menu = MenuService::CreateMenu($data);
-        $this->translate->wrapCreate(['menu_id' => $menu->id, 'data' => $data], true);
+        $this->translateService->wrapCreate(['menu_id' => $menu->id, 'data' => $data], true);
 
         return $menu;
     }

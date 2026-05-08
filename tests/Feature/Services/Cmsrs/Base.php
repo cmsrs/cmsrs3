@@ -113,7 +113,7 @@ class Base extends TestCase
         $f1 = false;
         $f2 = false;
         // print_r($menus->toArray());
-        $mS = new MenuService;
+        $mS = app(MenuService::class);
         foreach ($menus as $menu) {
             $pagesPublishedAndAccess = $mS->pagesPublishedAndAccess($menu)->get();
             // dump($pagesPublishedAndAccess->published);
@@ -408,7 +408,7 @@ class Base extends TestCase
 
     protected function getPageTestData()
     {
-        $m = (new MenuService)->wrapCreate(['name' => ['en' => 'About cmsRS', 'pl' => 'O cmsRS']]);
+        $m = (app(MenuService::class))->wrapCreate(['name' => ['en' => 'About cmsRS', 'pl' => 'O cmsRS']]);
         $this->assertNotEmpty($m->id);
 
         $data1p = [

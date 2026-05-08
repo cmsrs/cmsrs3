@@ -71,7 +71,7 @@ class PageSecretTest extends Base
     {
         $this->objPage = (app(PageService::class))->wrapCreate($this->testData);
 
-        $menu = (new MenuService)->wrapCreate($this->testDataMenu);
+        $menu = (app(MenuService::class))->wrapCreate($this->testDataMenu);
 
         $this->menuObj = $menu->all()->first();
         $this->menuId = $this->menuObj->id;

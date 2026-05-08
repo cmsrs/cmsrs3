@@ -1,6 +1,7 @@
 <?php 
   $configService = new App\Services\Cmsrs\ConfigService;
   $pageService = app(App\Services\Cmsrs\PageService::class); 
+  $menuService = app(App\Services\Cmsrs\MenuService::class); 
 
   $lang =  $configService->getLangFromRequest(); //request()->route('lang') ?? request('lang') ?? $configService->getDefaultLang();
   $menus = App\Models\Cmsrs\Menu::all()->sortBy('position');
@@ -50,7 +51,7 @@
       <ul class="nav-main-rs  navbar-nav me-auto">
           @foreach ($menus as $menu)
             @php 
-                $pagesPublishedAndAccess = (new App\Services\Cmsrs\MenuService)->pagesPublishedAndAccess($menu)->get(); 
+                $pagesPublishedAndAccess = $menuService->pagesPublishedAndAccess($menu)->get(); 
             @endphp
             <li class="nav-item dropdown">
             @if ($pagesPublishedAndAccess->count() == 1)
@@ -59,10 +60,10 @@
               </a>
             @else
               <a class="nav-link dropdown-toggle ms-3" href="#" id="dropdown{{ $menu->id }}" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{ (new App\Services\Cmsrs\MenuService)->translatesByColumnAndLang($menu, 'name', $lang ) }}
+                {{ $menuService->translatesByColumnAndLang($menu, 'name', $lang ) }}
               </a>
               <div class="dropdown-menu" aria-labelledby="dropdown{{ $menu->id }}">
-                @foreach ((new App\Services\Cmsrs\MenuService)->pagesPublishedTree($pagesPublishedAndAccess) as $pageMenu)
+                @foreach ($menuService->pagesPublishedTree($pagesPublishedAndAccess) as $pageMenu)
                     <a class="dropdown-item" href="{{ $pageService->getUrl($pageMenu, $lang)}}">
                       {{  $pageService->translatesByColumnAndLang($pageMenu, 'short_title', $lang ) }}
                     </a>

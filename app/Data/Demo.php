@@ -19,7 +19,7 @@ class Demo
 
     private function getMenuObj()
     {
-        $menuObj = new MenuService;
+        $menuObj = app(MenuService::class); // TODO DI
 
         // $menuObj->setTranslate($this->translate);
         return $menuObj;

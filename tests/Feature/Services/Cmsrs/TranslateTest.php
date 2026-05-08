@@ -65,7 +65,7 @@ class TranslateTest extends Base
 
     public function test_menu_wrap_create()
     {
-        $m = (new MenuService)->wrapCreate(['name' => ['en' => 'About cmsRS', 'pl' => 'O cmsRS']]);
+        $m = (app(MenuService::class))->wrapCreate(['name' => ['en' => 'About cmsRS', 'pl' => 'O cmsRS']]);
         $this->assertNotEmpty($m->id);
     }
 
@@ -73,7 +73,7 @@ class TranslateTest extends Base
     {
         $data = ['name' => ['en' => 'About cmsRS', 'pl' => 'O cmsRS', 'es' => 'Fake']];
 
-        $menu = (new MenuService)->wrapCreate($data);
+        $menu = (app(MenuService::class))->wrapCreate($data);
 
         $translate = new TranslateService;
         $translate->setArrLangs(['en', 'pl']);
@@ -88,7 +88,7 @@ class TranslateTest extends Base
         $translate = new TranslateService;
         $translate->setArrLangs(['pl']);
 
-        $objMenu = new MenuService;
+        $objMenu = app(MenuService::class);
         $objMenu->setTranslate($translate);
 
         $menu = $objMenu->wrapCreate($data);
@@ -102,7 +102,7 @@ class TranslateTest extends Base
         $data = ['name' => ['en' => 'About cmsRS']];
 
         $this->expectException(\Exception::class);
-        $menu = (new MenuService)->wrapCreate($data);
+        $menu = (app(MenuService::class))->wrapCreate($data);
     }
 
     public function test_menu_translate_wrap_create_wrong_2()
@@ -110,7 +110,7 @@ class TranslateTest extends Base
         $data = ['name' => ['en' => 'About cmsRS', 'ppllll' => 'O cmsrs']];
 
         $this->expectException(\Exception::class);
-        $menu = (new MenuService)->wrapCreate($data);
+        $menu = (app(MenuService::class))->wrapCreate($data);
     }
 
     public function test_menu_translate_wrap_create_wrong_3()
@@ -118,7 +118,7 @@ class TranslateTest extends Base
         $data = ['nameFake' => ['en' => 'About cmsRS', 'pl' => 'O cmsrs']];
 
         $this->expectException(\Exception::class);
-        $menu = (new MenuService)->wrapCreate($data);
+        $menu = (app(MenuService::class))->wrapCreate($data);
     }
 
     /*******************/
@@ -127,7 +127,7 @@ class TranslateTest extends Base
 
     public function test_page_translate_string_data()
     {
-        $m = (new MenuService)->wrapCreate(['name' => ['en' => 'About cmsRS', 'pl' => 'O cmsRS']]);
+        $m = (app(MenuService::class))->wrapCreate(['name' => ['en' => 'About cmsRS', 'pl' => 'O cmsRS']]);
         $this->assertNotEmpty($m->id);
 
         $data1p = [

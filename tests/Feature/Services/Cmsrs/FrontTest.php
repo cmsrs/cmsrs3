@@ -54,7 +54,7 @@ class FrontTest extends Base
 
     private function setTestData()
     {
-        $menu = (new MenuService)->wrapCreate($this->testDataMenu);
+        $menu = (app(MenuService::class))->wrapCreate($this->testDataMenu);
 
         $this->menuObj = $menu;
         $this->menuId = $menu->id;
@@ -119,7 +119,7 @@ class FrontTest extends Base
             'name' => ['en' => 'menu test'],
         ];
 
-        $menu = (new MenuService)->wrapCreate($testDataMenu);
+        $menu = (app(MenuService::class))->wrapCreate($testDataMenu);
         $this->assertNotEmpty($menu->id);
 
         $pageTypes = ConfigService::arrGetPageTypes();

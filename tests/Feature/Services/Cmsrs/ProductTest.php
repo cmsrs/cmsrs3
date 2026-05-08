@@ -98,7 +98,7 @@ class ProductTest extends Base
 
     private function setTestData()
     {
-        $menu = (new MenuService)->wrapCreate($this->testMenu);
+        $menu = (app(MenuService::class))->wrapCreate($this->testMenu);
 
         $this->menuObj = $menu; // $menu->all()->first();
         $this->menuId = $menu->id;  // $this->menuObj->id;

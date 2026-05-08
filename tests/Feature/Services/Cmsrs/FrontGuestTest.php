@@ -174,7 +174,7 @@ class FrontGuestTest extends Base
             ],
         ];
 
-        $mContact = (new MenuService)->wrapCreate(['name' => ['en' => 'Contact']]);
+        $mContact = (app(MenuService::class))->wrapCreate(['name' => ['en' => 'Contact']]);
         $pContact = [
             'title' => ['en' => 'Contact form'],
             'short_title' => ['en' => 'Contact'],
@@ -209,7 +209,7 @@ class FrontGuestTest extends Base
     public function test_it_will_link_0()
     {
         $testDataMenu = ['name' => ['en' => 'About']];
-        $m1 = (new MenuService)->wrapCreate($testDataMenu);
+        $m1 = (app(MenuService::class))->wrapCreate($testDataMenu);
 
         $short1 = self::SHORT_TITLE1;
         $data1p = [
@@ -247,7 +247,7 @@ class FrontGuestTest extends Base
 
         $url1 = (app(PageService::class))->getUrl($p1, 'en');
 
-        $this->assertSame('/'.Page::PREFIX_CMS_URL.'/'.(new MenuService)->getSlugByLang($m1, 'en').'/'.$page1Slug, $url1);
+        $this->assertSame('/'.Page::PREFIX_CMS_URL.'/'.(app(MenuService::class))->getSlugByLang($m1, 'en').'/'.$page1Slug, $url1);
 
         $response1 = $this->get($url1);
         $response1->assertStatus(200);
@@ -266,7 +266,7 @@ class FrontGuestTest extends Base
     public function test_it_will_link_forbid()
     {
         $testDataMenu = ['name' => ['en' => 'About']];
-        $m1 = (new MenuService)->wrapCreate($testDataMenu);
+        $m1 = (app(MenuService::class))->wrapCreate($testDataMenu);
 
         $data1p = [
             'title' => ['en' => 'About me'],
@@ -314,7 +314,7 @@ class FrontGuestTest extends Base
     public function test_it_will_one_link_in_menu_forbid()
     {
         $testDataMenu = ['name' => ['en' => 'Contact']];
-        $m1 = (new MenuService)->wrapCreate($testDataMenu);
+        $m1 = (app(MenuService::class))->wrapCreate($testDataMenu);
 
         $data1p = [
             'title' => ['en' => 'Contact me'],

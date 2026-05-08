@@ -60,7 +60,7 @@ class FrontLangsTest extends Base
 
     private function setTestData($pageType = 'cms')
     {
-        $menu = (new MenuService)->wrapCreate($this->testDataMenu);
+        $menu = (app(MenuService::class))->wrapCreate($this->testDataMenu);
 
         $this->menuObj = $menu;
         $this->menuId = $menu->id;
@@ -344,7 +344,7 @@ class FrontLangsTest extends Base
 
     public function test_it_will_get_all_pages_by_type()
     {
-        $menu = (new MenuService)->wrapCreate($this->testDataMenu);
+        $menu = (app(MenuService::class))->wrapCreate($this->testDataMenu);
         $this->assertNotEmpty($menu->id);
         $langs = ConfigService::arrGetLangsEnv();
         $this->assertEquals(2, count($langs));

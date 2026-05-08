@@ -14,16 +14,6 @@ use Illuminate\Support\Str;
 
 class PageService extends BaseService implements TranslateInterface
 {
-    /**
-     * @var TranslateService
-     */
-    private $translate;
-
-    /**
-     * @var ContentService
-     */
-    private $content;
-
     public function __construct(private MenuService $menuService, private TranslateService $translateService, private ContentService $contentService) {}
 
     public function getPageDataByShortTitleCache(string $shortTitle, string $data = 'content', ?string $lang = null): string|bool
@@ -462,8 +452,7 @@ class PageService extends BaseService implements TranslateInterface
             return null;
         }
 
-        // ---phpstan-ignore-next-line parameter expects Menu, got Model – but $menu is Menu
-        return (new MenuService)->getSlugByLang($menu, $lang);
+        return $this->menuService->getSlugByLang($menu, $lang);
     }
 
     public function getNumPagesBelongsToThisMenu(Page $mPage): ?int
@@ -473,8 +462,7 @@ class PageService extends BaseService implements TranslateInterface
             return null;
         }
 
-        // ---phpstan-ignore-next-line parameter expects Menu, got Model
-        return (new MenuService)->pagesPublishedAndAccess($menu)->count();
+        return $this->menuService->pagesPublishedAndAccess($menu)->count();
     }
 
     public function getNumPagesBelongsToThisMenuCache(Page $mPage): ?int

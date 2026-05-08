@@ -84,7 +84,7 @@ class PageTest extends Base
     {
         $this->objPage = (app(PageService::class))->wrapCreate($this->testData);
 
-        $menu = (new MenuService)->wrapCreate($this->testDataMenu);
+        $menu = (app(MenuService::class))->wrapCreate($this->testDataMenu);
 
         $this->menuObj = $menu->all()->first();
         $this->menuId = $this->menuObj->id;
@@ -238,8 +238,8 @@ class PageTest extends Base
 
     public function test_it_will_check_uniq_title_by_menu_add_page()
     {
-        $menu1 = (new MenuService)->wrapCreate($this->testDataMenu);
-        $menu2 = (new MenuService)->wrapCreate(['name' => ['en' => $this->strTestTitle]]);
+        $menu1 = (app(MenuService::class))->wrapCreate($this->testDataMenu);
+        $menu2 = (app(MenuService::class))->wrapCreate(['name' => ['en' => $this->strTestTitle]]);
 
         $this->assertNotEmpty($menu1->id);
         $this->assertNotEmpty($menu2->id);
@@ -263,8 +263,8 @@ class PageTest extends Base
 
     public function test_it_will_check_uniq_title_by_menu_update_page()
     {
-        $menu1 = (new MenuService)->wrapCreate($this->testDataMenu);
-        $menu2 = (new MenuService)->wrapCreate(['name' => ['en' => $this->strTestTitle]]);
+        $menu1 = (app(MenuService::class))->wrapCreate($this->testDataMenu);
+        $menu2 = (app(MenuService::class))->wrapCreate(['name' => ['en' => $this->strTestTitle]]);
 
         $this->assertNotEmpty($menu1->id);
         $this->assertNotEmpty($menu2->id);
@@ -661,7 +661,7 @@ class PageTest extends Base
         $this->assertEquals($res2->data[2]->content->en, $testData3['content']['en']);
 
         $menu = Menu::findOrFail($this->menuId);
-        $pagePublish = (new MenuService)->pagesPublishedAndAccess($menu)->get()->toArray();
+        $pagePublish = (app(MenuService::class))->pagesPublishedAndAccess($menu)->get()->toArray();
 
         $this->assertEquals(2, count($pagePublish));
     }
@@ -817,7 +817,7 @@ class PageTest extends Base
 
         $this->assertEquals(1, $this->menuObj->pages->count());
 
-        $pagesPublished = (new MenuService)->pagesPublished($this->menuObj);
+        $pagesPublished = (app(MenuService::class))->pagesPublished($this->menuObj);
         $this->assertEquals(0, $pagesPublished->count());
     }
 
@@ -857,7 +857,7 @@ class PageTest extends Base
 
         $this->assertEquals(2, count($this->menuObj->pages));
 
-        $pagesPublished = (new MenuService)->pagesPublished($this->menuObj);
+        $pagesPublished = (app(MenuService::class))->pagesPublished($this->menuObj);
         $this->assertEquals(1, $pagesPublished->count());  // only one has got published ===1 for 'menu_id' =>  $this->menuId
         $this->assertNotEmpty($pagesPublished->first()->id);
         $this->assertEquals((app(PageService::class))->translatesByColumnAndLang($pagesPublished->first(), 'title', 'en'), $testData2['title']['en']);
@@ -1239,7 +1239,7 @@ class PageTest extends Base
 
     public function test_it_will_update_empty_val()
     {
-        $menu = (new MenuService)->wrapCreate($this->testDataMenu);
+        $menu = (app(MenuService::class))->wrapCreate($this->testDataMenu);
         $this->assertNotEmpty($menu->id);
 
         $testData =
