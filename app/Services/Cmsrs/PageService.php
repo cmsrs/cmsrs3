@@ -179,7 +179,7 @@ class PageService extends BaseService implements TranslateInterface
      * @param Collection<int, Menu>|array<Menu> $menus
      * @return Page|null
      */
-    public static function getPageBySlug(Collection|array $menus, string $menuSlug, ?string $pageSlug, string $lang): ?Page
+    public function getPageBySlug(Collection|array $menus, string $menuSlug, ?string $pageSlug, string $lang): ?Page
     {
         $menuService = new MenuService;
         $pageService = new PageService;

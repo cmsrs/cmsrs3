@@ -264,10 +264,10 @@ class FrontController extends Controller
         $isCache = $this->configService->isCacheEnable();
         if ($isCache) {
             $pageOut = cache()->remember('page_'.$menuSlug.'_'.$pageSlug.'_'.$lang, CacheService::setTime(), function () use ($menus, $menuSlug, $pageSlug, $lang) {
-                return PageService::getPageBySlug($menus, $menuSlug, $pageSlug, $lang);
+                return $this->pageService->getPageBySlug($menus, $menuSlug, $pageSlug, $lang);
             });
         } else {
-            $pageOut = PageService::getPageBySlug($menus, $menuSlug, $pageSlug, $lang);
+            $pageOut = $this->pageService->getPageBySlug($menus, $menuSlug, $pageSlug, $lang);
         }
 
         $this->validatePage($pageOut);
