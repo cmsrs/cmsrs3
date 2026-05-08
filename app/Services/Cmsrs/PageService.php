@@ -24,11 +24,7 @@ class PageService extends BaseService implements TranslateInterface
      */
     private $content;
 
-    public function __construct(private MenuService $menuService)
-    {
-        $this->translate = new TranslateService;
-        $this->content = new ContentService;
-    }
+    public function __construct(private MenuService $menuService, private TranslateService $translateService, private ContentService $contentService) {}
 
     public function getPageDataByShortTitleCache(string $shortTitle, string $data = 'content', ?string $lang = null): string|bool
     {
@@ -127,7 +123,7 @@ class PageService extends BaseService implements TranslateInterface
     {
         // ---phpstan-ignore-next-line empty() on object always false – but logic stays
         if (! empty($objTranslate)) {
-            $this->translate = $objTranslate;
+            $this->translateService = $objTranslate;
         }
     }
 
@@ -138,7 +134,7 @@ class PageService extends BaseService implements TranslateInterface
     {
         // ---phpstan-ignore-next-line empty() on object always false – but logic stays
         if (! empty($objContent)) {
-            $this->content = $objContent;
+            $this->contentService = $objContent;
         }
     }
 
@@ -199,7 +195,6 @@ class PageService extends BaseService implements TranslateInterface
             }
         }
 
-        // dd('_________________________ getPageBySlug in PageService _____________________________');
         return $pageOut;
     }
 
@@ -315,7 +310,7 @@ class PageService extends BaseService implements TranslateInterface
 
         if (! empty($data['images']) && is_array($data['images'])) {
             $objImage = new ImageService;
-            $objImage->setTranslate($this->translate);
+            $objImage->setTranslate($this->translateService);
             $objImage->createImages($data['images'], 'page', $page->id);
         }
 
@@ -327,8 +322,8 @@ class PageService extends BaseService implements TranslateInterface
      */
     public function createTranslate(array $dd, ?bool $create = true): void
     {
-        $this->translate->wrapCreate($dd, $create);
-        $this->content->wrapCreate($dd, $create);
+        $this->translateService->wrapCreate($dd, $create);
+        $this->contentService->wrapCreate($dd, $create);
     }
 
     /**
