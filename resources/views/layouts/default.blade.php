@@ -29,7 +29,7 @@
    <?php $view = empty($view) ? '' : $view; ?>
    <?php if( 'cmsrs.gallery' == $view ){ ?>
       <script type="application/javascript">
-         var imagesGlobal = JSON.parse('<?php echo json_encode(  (new App\Services\Cmsrs\PageService) ->arrImages($page, $lang)) ?>');    
+         var imagesGlobal = JSON.parse('<?php echo json_encode(  ( app(App\Services\Cmsrs\PageService::class)) ->arrImages($page, $lang)) ?>');    
       </script>
       <script type="application/javascript" src="/js/gallery.js"></script>  
    <?php } ?>

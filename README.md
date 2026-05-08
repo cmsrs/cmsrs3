@@ -233,7 +233,7 @@ PAGE_TYPES="cms,gallery,shop,contact,main_page,privacy_policy,projects,clear,inn
     - projects: Displays the same content across all languages.
     - clear: A page without a WYSIWYG editor; requires writing pure HTML code.
     - inner: Represents a text box on an existing page that requires hardcoding in the layout. The key is the short_title. For example, in the code:
-        (new PageService)->getPageDataByShortTitleCache('main_page_box1', 'content');
+        (new PageService)->getPageDataByShortTitleCache('main_page_box1', 'content'); //or DI style
         The following short_title values are predefined:
             - main_page_box1, main_page_box2, main_page_box3: Represent three content boxes on the main page.
             - company_data: Displays company information on the contact page.

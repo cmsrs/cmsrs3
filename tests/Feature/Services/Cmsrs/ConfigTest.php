@@ -68,12 +68,12 @@ class ConfigTest extends Base
                 'menu_id' => null,
             ];
 
-            $p = (new PageService)->wrapCreate($data);
+            $p = (app(PageService::class))->wrapCreate($data);
             // dump($p->toArray());
 
             $in = true;
 
-            $url = (new PageService)->getUrl($p, 'en');
+            $url = (app(PageService::class))->getUrl($p, 'en');
             $response = $this->get($url);
 
             // $status = (($page_type === 'login') || ($page_type === 'register') || ($page_type === 'forgot')) ? 302 : 200; //I don't understand - todo (why register and forgot??)

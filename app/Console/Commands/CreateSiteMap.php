@@ -41,12 +41,12 @@ class CreateSiteMap extends Command
      */
     public function handle()
     {
-        $pageService = new PageService;
+        $pageService = app(PageService::class); // TODO DI
         // $appUrl = env('APP_URL');
         $appUrl = config('app.url');
         $langs = $pageService->getArrLangs();
         $pages = Page::where('after_login', '=', 0)->where('published', '=', 1)->where('type', '!=', 'inner')->get();
-        $prodUrls = app(ProductService::class)->getProductsUrl(); //TODO DI
+        $prodUrls = app(ProductService::class)->getProductsUrl(); // TODO DI
 
         $strUrls = '';
         foreach ($langs as $lang) {

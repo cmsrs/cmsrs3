@@ -1,5 +1,5 @@
 <?php 
-$pageService = new App\Services\Cmsrs\PageService;
+$pageService = app(App\Services\Cmsrs\PageService::class); 
 $configService = new App\Services\Cmsrs\ConfigService;
 
 $lang =  $configService->getLangFromRequest(); 

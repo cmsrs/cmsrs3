@@ -71,7 +71,7 @@ class FrontTest extends Base
             'menu_id' => $this->menuId,
         ];
 
-        (new PageService)->wrapCreate($this->testData);
+        (app(PageService::class))->wrapCreate($this->testData);
 
         $this->assertEquals(1, Menu::All()->count());
         $this->assertEquals(1, Page::All()->count());
@@ -91,7 +91,7 @@ class FrontTest extends Base
             'menu_id' => null, // !!!! - contact not related to menu
         ];
 
-        (new PageService)->wrapCreate($testData);
+        (app(PageService::class))->wrapCreate($testData);
 
         $count = Page::All()->count();
         $this->assertEquals(1, $count);
@@ -135,11 +135,11 @@ class FrontTest extends Base
                 'content' => ['en' => 'test'],
                 'menu_id' => null,
             ];
-            $p = (new PageService)->wrapCreate($data);
+            $p = (app(PageService::class))->wrapCreate($data);
 
             $data['menu_id'] = $menu->id;
             if ($page_type !== 'main_page') {
-                $p = (new PageService)->wrapCreate($data);
+                $p = (app(PageService::class))->wrapCreate($data);
             }
         }
         $pages = Page::All();
@@ -149,7 +149,7 @@ class FrontTest extends Base
         foreach ($pages as $page) {
 
             foreach ($langs as $lang) {
-                $url = (new PageService)->getUrl($page, $lang);
+                $url = (app(PageService::class))->getUrl($page, $lang);
                 $response = $this->get($url);
 
                 $status = 200;
@@ -178,7 +178,7 @@ class FrontTest extends Base
             'menu_id' => null, // !!!! - contact not related to menu
         ];
 
-        (new PageService)->wrapCreate($this->testData);
+        (app(PageService::class))->wrapCreate($this->testData);
 
         $count = Page::All()->count();
         $this->assertEquals(1, $count);
@@ -196,7 +196,7 @@ class FrontTest extends Base
             'menu_id' => null,
             'page_id' => null,
         ];
-        (new PageService)->wrapCreate($testMainPage);
+        (app(PageService::class))->wrapCreate($testMainPage);
         $this->assertEquals(2, Page::All()->count());
 
         $response = $this->get('/');
@@ -300,7 +300,7 @@ class FrontTest extends Base
         $p0 = Page::query()->where('menu_id', $this->menuId)->get()->first();
         $this->assertNotEmpty($p0);
 
-        $url = (new PageService)->getUrl($p0, 'en');
+        $url = (app(PageService::class))->getUrl($p0, 'en');
 
         $response1 = $this->get($url);
         $response1->assertStatus(200);
@@ -346,7 +346,7 @@ class FrontTest extends Base
 
         $i = 0;
         foreach ($p as $pp) {
-            $url0 = (new PageService)->getUrl($pp, 'en');
+            $url0 = (app(PageService::class))->getUrl($pp, 'en');
             $response = $this->get($url0);
             $response->assertStatus(200);
             $i++;
@@ -371,11 +371,11 @@ class FrontTest extends Base
             ],
         ];
 
-        $p = (new PageService)->wrapCreate($pPrivacy);
+        $p = (app(PageService::class))->wrapCreate($pPrivacy);
         $this->assertNotEmpty($p->id);
 
         $lang = 'en';
-        $url = (new PageService)->getUrl($p, $lang);
+        $url = (app(PageService::class))->getUrl($p, $lang);
         $this->assertNotEmpty($url);
         $response1 = $this->get($url);
         $response1->assertStatus(200);

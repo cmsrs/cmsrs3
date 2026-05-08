@@ -13,8 +13,8 @@ class HeadlessService extends BaseService
 
     public function __construct()
     {
-        $this->pageService = new PageService;
-        $this->menuService = new MenuService;
+        $this->pageService = app(PageService::class); // TODO DI
+        $this->menuService = app(MenuService::class); // TODO DI
     }
 
     public function getPagesByShortTitleWithImages($shortTitle)

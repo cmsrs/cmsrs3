@@ -1,6 +1,6 @@
 <?php 
   $configService = new App\Services\Cmsrs\ConfigService;
-  $pageService = new App\Services\Cmsrs\PageService; 
+  $pageService = app(App\Services\Cmsrs\PageService::class); 
 
   $lang =  $configService->getLangFromRequest(); //request()->route('lang') ?? request('lang') ?? $configService->getDefaultLang();
   $menus = App\Models\Cmsrs\Menu::all()->sortBy('position');

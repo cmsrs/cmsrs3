@@ -77,7 +77,7 @@ class FrontLangsTest extends Base
             'menu_id' => $this->menuId,
         ];
 
-        return (new PageService)->wrapCreate($this->testData);
+        return app(PageService::class)->wrapCreate($this->testData);
     }
 
     /**
@@ -96,7 +96,7 @@ class FrontLangsTest extends Base
             'menu_id' => $this->menuId,
         ];
 
-        return (new PageService)->wrapCreate($this->testData);
+        return app(PageService::class)->wrapCreate($this->testData);
     }
 
     // we dont use change lang controller
@@ -114,7 +114,7 @@ class FrontLangsTest extends Base
         $this->assertNotEmpty($pages[0]['id']);
         $pageId = $pages[0]['id'];
 
-        $pageService = new PageService;
+        $pageService = app(PageService::class);
         $urlEn = $pageService->getUrlByPageOrRouteName($mPage1, 'en');
         $this->assertEquals('/en/cms/menu-test/page-1-test-test-slug', $urlEn);
         // $response1 = $this->get('/changelang/en/'.$pageId);
@@ -261,7 +261,7 @@ class FrontLangsTest extends Base
         $this->assertNotEmpty($p0);
 
         foreach ($this->langs as $lang) {
-            $url = (new PageService)->getUrl($p0, $lang);
+            $url = (app(PageService::class))->getUrl($p0, $lang);
             $this->assertNotEmpty($url);
             $response1 = $this->get($url);
             $response1->assertStatus(200);
@@ -306,7 +306,7 @@ class FrontLangsTest extends Base
 
         $i = 0;
         foreach ($p as $pp) {
-            $url0 = (new PageService)->getUrl($pp, 'en');
+            $url0 = (app(PageService::class))->getUrl($pp, 'en');
             $response = $this->get($url0);
             $response->assertStatus(200);
             $i++;
@@ -331,11 +331,11 @@ class FrontLangsTest extends Base
             ],
         ];
 
-        $p = (new PageService)->wrapCreate($pPrivacy);
+        $p = (app(PageService::class))->wrapCreate($pPrivacy);
         $this->assertNotEmpty($p->id);
 
         foreach ($this->langs as $lang) {
-            $url = (new PageService)->getUrl($p, $lang);
+            $url = (app(PageService::class))->getUrl($p, $lang);
             $this->assertNotEmpty($url);
             $response1 = $this->get($url);
             $response1->assertStatus(200);
@@ -363,11 +363,11 @@ class FrontLangsTest extends Base
                 'menu_id' => null,
             ];
 
-            $p = (new PageService)->wrapCreate($data);
+            $p = (app(PageService::class))->wrapCreate($data);
 
             $data['menu_id'] = $menu->id;
             if ($page_type !== 'main_page') {
-                $p = (new PageService)->wrapCreate($data);
+                $p = (app(PageService::class))->wrapCreate($data);
             }
 
         }
@@ -377,7 +377,7 @@ class FrontLangsTest extends Base
         foreach ($pages as $page) {
 
             foreach ($langs as $lang) {
-                $url = (new PageService)->getUrl($page, $lang);
+                $url = (app(PageService::class))->getUrl($page, $lang);
                 $response = $this->get($url);
 
                 $status = 200; // (($page->type === 'login') || ($page->type === 'register') || ($page->type === 'forgot')) ? 302 : 200;

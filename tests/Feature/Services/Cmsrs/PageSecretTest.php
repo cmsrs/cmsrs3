@@ -69,7 +69,7 @@ class PageSecretTest extends Base
 
     private function setTestData()
     {
-        $this->objPage = (new PageService)->wrapCreate($this->testData);
+        $this->objPage = (app(PageService::class))->wrapCreate($this->testData);
 
         $menu = (new MenuService)->wrapCreate($this->testDataMenu);
 

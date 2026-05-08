@@ -10,7 +10,7 @@ class Demo
 {
     private function getPageObj()
     {
-        $pageObj = new PageService;
+        $pageObj = app(PageService::class); // TODO DI
 
         // $pageObj->setTranslate($this->translate);
         // $pageObj->setContent($this->content);
@@ -27,7 +27,7 @@ class Demo
 
     private function getProductObj()
     {
-        $productObj = app(ProductService::class); //TODO DI
+        $productObj = app(ProductService::class); // TODO DI
 
         // $productObj->setTranslate($this->translate);
         return $productObj;

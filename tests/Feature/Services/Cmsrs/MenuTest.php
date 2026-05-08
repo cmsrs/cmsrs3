@@ -168,8 +168,8 @@ class MenuTest extends Base
         $page1 = Page::find($tree[$parentId]['children'][1]->id);
         $this->assertEquals($tree[$parentId]['children'][1]->id, $page1->id);
 
-        $title0 = (new PageService)->translatesByColumnAndLang($page0, 'title', 'en');
-        $title1 = (new PageService)->translatesByColumnAndLang($page1, 'title', 'en');
+        $title0 = (app(PageService::class))->translatesByColumnAndLang($page0, 'title', 'en');
+        $title1 = (app(PageService::class))->translatesByColumnAndLang($page1, 'title', 'en');
 
         $this->assertEquals(PageTest::STR_CHILD_ONE, $title0);
         $this->assertEquals(PageTest::STR_CHILD_TWO, $title1);

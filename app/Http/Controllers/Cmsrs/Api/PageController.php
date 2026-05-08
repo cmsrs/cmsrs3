@@ -97,7 +97,7 @@ class PageController extends Controller
         }
 
         // check unique
-        $valid = PageService::checkIsDuplicateTitleByMenu($data);
+        $valid = $this->pageService->checkIsDuplicateTitleByMenu($data);
         if (empty($valid['success'])) {
             return response()->json($valid, 200);
         }
@@ -128,7 +128,7 @@ class PageController extends Controller
         }
 
         // check unique
-        $valid = PageService::checkIsDuplicateTitleByMenu($data, $page->id);
+        $valid = $this->pageService->checkIsDuplicateTitleByMenu($data, $page->id);
         if (empty($valid['success'])) {
             return response()->json($valid, 200);
         }

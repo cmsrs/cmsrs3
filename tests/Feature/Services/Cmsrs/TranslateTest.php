@@ -146,7 +146,7 @@ class TranslateTest extends Base
         ];
 
         $this->expectException(\Exception::class);
-        $p = (new PageService)->wrapCreate($data1p);
+        $p = (app(PageService::class))->wrapCreate($data1p);
     }
 
     public function test_page_translate_wrap_create_ok_1()
@@ -155,7 +155,7 @@ class TranslateTest extends Base
         $numOfLangs = (new TranslateService)->getArrLangs();
         $this->assertEquals(2, count($numOfLangs));
 
-        $p = (new PageService)->wrapCreate($data1p);
+        $p = (app(PageService::class))->wrapCreate($data1p);
         $this->assertNotEmpty($p->id);
 
         $this->assertEquals(2, Translate::query()->where('page_id', $p->id)->where('column', 'title')->count());
@@ -185,7 +185,7 @@ class TranslateTest extends Base
         $translate = new TranslateService;
         $translate->setArrLangs(['pl']);
 
-        $objPage = new PageService;
+        $objPage = app(PageService::class);
         $objPage->setTranslate($translate);
 
         $page = $objPage->wrapCreate($data, $translate);
@@ -211,7 +211,7 @@ class TranslateTest extends Base
             ['name' => 'phpunittest2.jpg', 'data' => $this->getFixtureBase64('phpunittest2.jpg')],
             ['name' => 'phpunittest2.jpg', 'data' => $this->getFixtureBase64('phpunittest2.jpg'), 'alt' => ['en' => null, 'pl' => null, 'es' => 'Fake2']],
         ];
-        $p = (new PageService)->wrapCreate($data);
+        $p = (app(PageService::class))->wrapCreate($data);
         $this->assertNotEmpty($p->id);
 
         $this->assertEquals($numOfLangs, Translate::query()->where('page_id', $p->id)->where('column', 'title')->count());
@@ -231,7 +231,7 @@ class TranslateTest extends Base
         unset($data1p['title']);
 
         $this->expectException(\Exception::class);
-        $p = (new PageService)->wrapCreate($data1p);
+        $p = (app(PageService::class))->wrapCreate($data1p);
     }
 
     public function test_page_translate_wrap_create_wrong_2()
@@ -240,6 +240,6 @@ class TranslateTest extends Base
         $data1p['title'] = ['pl' => 'Polska'];
 
         $this->expectException(\Exception::class);
-        $p = (new PageService)->wrapCreate($data1p);
+        $p = (app(PageService::class))->wrapCreate($data1p);
     }
 }

@@ -82,7 +82,7 @@ class PageTest extends Base
 
     private function setTestData()
     {
-        $this->objPage = (new PageService)->wrapCreate($this->testData);
+        $this->objPage = (app(PageService::class))->wrapCreate($this->testData);
 
         $menu = (new MenuService)->wrapCreate($this->testDataMenu);
 
@@ -92,7 +92,7 @@ class PageTest extends Base
 
     public function test_it_will_get_data_page_by_short_title()
     {
-        $p1 = (new PageService)->wrapCreate($this->testData);
+        $p1 = (app(PageService::class))->wrapCreate($this->testData);
         $this->assertNotEmpty($p1->id);
 
         $testData =
@@ -104,7 +104,7 @@ class PageTest extends Base
             'published' => 1,
         ];
 
-        $objPage = (new PageService)->wrapCreate($testData);
+        $objPage = (app(PageService::class))->wrapCreate($testData);
         $this->assertNotEmpty($objPage->id);
 
         $testData2 =
@@ -117,30 +117,30 @@ class PageTest extends Base
             'published' => 1, // true //todo - this condition must be !
         ];
 
-        $objPage2 = (new PageService)->wrapCreate($testData2);
+        $objPage2 = (app(PageService::class))->wrapCreate($testData2);
         $this->assertNotEmpty($objPage2->id);
 
         $shortTitle = $testData2['short_title']['en'];
-        $content = (new PageService)->getPageDataByShortTitleCache($shortTitle);
+        $content = (app(PageService::class))->getPageDataByShortTitleCache($shortTitle);
 
         $this->assertEquals($testData2['content']['en'], $content);
 
-        $title = (new PageService)->getPageDataByShortTitleCache($shortTitle, 'title');
+        $title = (app(PageService::class))->getPageDataByShortTitleCache($shortTitle, 'title');
 
         $this->assertEquals($testData2['title']['en'], $title);
 
-        $url = (new PageService)->getPageDataByShortTitleCache($shortTitle, 'url');
+        $url = (app(PageService::class))->getPageDataByShortTitleCache($shortTitle, 'url');
 
         $this->assertEmpty($url); // because it is inner page
 
         $shortTitle = $this->testData['short_title']['en'];
-        $content = (new PageService)->getPageDataByShortTitleCache($shortTitle);
+        $content = (app(PageService::class))->getPageDataByShortTitleCache($shortTitle);
         $this->assertEquals($this->testData['content']['en'], $content);
 
-        $title = (new PageService)->getPageDataByShortTitleCache($shortTitle, 'title');
+        $title = (app(PageService::class))->getPageDataByShortTitleCache($shortTitle, 'title');
         $this->assertEquals($this->testData['title']['en'], $title);
 
-        $url = (new PageService)->getPageDataByShortTitleCache($shortTitle, 'url');
+        $url = (app(PageService::class))->getPageDataByShortTitleCache($shortTitle, 'url');
         $this->assertNotEmpty($url);
 
         $response = $this->get('api/pages?token='.$this->token);
@@ -185,22 +185,22 @@ class PageTest extends Base
             'content' => ['en' => 'content test4333 inner'],
         ];
 
-        $objPage = (new PageService)->wrapCreate($testData);
+        $objPage = (app(PageService::class))->wrapCreate($testData);
         $this->assertNotEmpty($objPage->id);
 
         $content = $objPage->contents->first();
         $this->assertEquals($testData['content']['en'], $content->value);
 
-        $contentValue = (new PageService)->getContentInnerPageByIdCache($objPage->id);
+        $contentValue = (app(PageService::class))->getContentInnerPageByIdCache($objPage->id);
         $this->assertEquals($testData['content']['en'], $contentValue);
     }
 
     public function test_it_will_check_position_page_not_related_to_menu()
     {
-        $p1 = (new PageService)->wrapCreate($this->testData);
+        $p1 = (app(PageService::class))->wrapCreate($this->testData);
         $this->testData['title'] = ['en' => 'uniq'];
         $this->testData['type'] = 'clear';
-        $p2 = (new PageService)->wrapCreate($this->testData);
+        $p2 = (app(PageService::class))->wrapCreate($this->testData);
 
         $this->assertEquals(2, Page::All()->count());
         $page1 = Page::query()
@@ -226,7 +226,7 @@ class PageTest extends Base
     public function test_it_will_check_uniq_title_by_empty_menu_add_page()
     {
         // page not belong to menu
-        $p1 = (new PageService)->wrapCreate($this->testData);
+        $p1 = (app(PageService::class))->wrapCreate($this->testData);
         $this->assertNotEmpty($p1->id);
 
         $response = $this->post('api/pages?token='.$this->token, $this->testData);
@@ -245,7 +245,7 @@ class PageTest extends Base
         $this->assertNotEmpty($menu2->id);
         $this->testData['menu_id'] = $menu1->id;
         // page belong to menu
-        $p1 = (new PageService)->wrapCreate($this->testData);
+        $p1 = (app(PageService::class))->wrapCreate($this->testData);
         $this->assertNotEmpty($p1->id);
 
         $response = $this->post('api/pages?token='.$this->token, $this->testData);
@@ -270,12 +270,12 @@ class PageTest extends Base
         $this->assertNotEmpty($menu2->id);
         $this->testData['menu_id'] = $menu1->id;
         // page belong to menu
-        $p1 = (new PageService)->wrapCreate($this->testData);
+        $p1 = (app(PageService::class))->wrapCreate($this->testData);
         $this->assertNotEmpty($p1->id);
 
         $title = 'uniq title';
         $this->testData['title']['en'] = $title;
-        $p2 = (new PageService)->wrapCreate($this->testData);
+        $p2 = (app(PageService::class))->wrapCreate($this->testData);
         $this->assertNotEmpty($p2->id);
         $this->assertEquals(2, Page::All()->count());
 
@@ -326,7 +326,7 @@ class PageTest extends Base
         $this->assertNotEmpty($data->id);
         $this->assertNotEmpty($data->position);
 
-        $pageFields = (new PageService)->pageFields;
+        $pageFields = (app(PageService::class))->pageFields;
         $this->assertNotEmpty($pageFields);
         foreach ($pageFields as $pageField) {
             if ($pageField != 'id' && $pageField != 'position') {
@@ -345,7 +345,7 @@ class PageTest extends Base
         $this->setTestData();
         $title2 = 'must be uniq';
         $this->testData['title']['en'] = $title2;
-        $objPage2 = (new PageService)->wrapCreate($this->testData);
+        $objPage2 = (app(PageService::class))->wrapCreate($this->testData);
 
         $this->assertNotEmpty($this->objPage->id);
         $this->assertNotEmpty($objPage2->id);
@@ -394,7 +394,7 @@ class PageTest extends Base
             'content' => ['en' => 'pppppppp'],
             'menu_id' => $this->menuId,
         ];
-        $p = (new PageService)->wrapCreate($testData);
+        $p = (app(PageService::class))->wrapCreate($testData);
 
         $testDataChild =
         [
@@ -406,7 +406,7 @@ class PageTest extends Base
             'page_id' => $p->id,
             'menu_id' => $this->menuId,
         ];
-        $pChild = (new PageService)->wrapCreate($testDataChild);
+        $pChild = (app(PageService::class))->wrapCreate($testDataChild);
 
         $this->assertNotEquals($testDataChild['published'], $pChild->published);
         $this->assertEquals(0, $pChild->published);
@@ -426,7 +426,7 @@ class PageTest extends Base
             'content' => ['en' => 'pppppppp'],
             'menu_id' => $this->menuId,
         ];
-        $p = (new PageService)->wrapCreate($testData);
+        $p = (app(PageService::class))->wrapCreate($testData);
 
         $short_title_child1 = 'test_child1_x123';
         $testDataChild1 =
@@ -439,7 +439,7 @@ class PageTest extends Base
             'page_id' => $p->id,
             'menu_id' => $this->menuId,
         ];
-        (new PageService)->wrapCreate($testDataChild1);
+        (app(PageService::class))->wrapCreate($testDataChild1);
 
         $short_title_child2 = 'test_child2_x123';
         $testDataChild2 =
@@ -452,7 +452,7 @@ class PageTest extends Base
             'page_id' => $p->id,
             'menu_id' => $this->menuId,
         ];
-        (new PageService)->wrapCreate($testDataChild2);
+        (app(PageService::class))->wrapCreate($testDataChild2);
 
         $short_title_child3 = 'test_child3_x123';
         $testDataChild3 =
@@ -466,9 +466,9 @@ class PageTest extends Base
             'page_id' => $p->id,
             'menu_id' => $this->menuId,
         ];
-        (new PageService)->wrapCreate($testDataChild3);
+        (app(PageService::class))->wrapCreate($testDataChild3);
 
-        $url2 = (new PageService)->getUrl($p, 'en');
+        $url2 = (app(PageService::class))->getUrl($p, 'en');
         $response2 = $this->get($url2);
         $response2->assertStatus(200);
 
@@ -707,7 +707,7 @@ class PageTest extends Base
 
         $pageToDel = Page::findOrFail($parentId);
         $this->assertNotEmpty($pageToDel->id);
-        $this->assertEquals((new PageService)->translatesByColumnAndLang($pageToDel, 'title', 'en'), PageTest::STR_PARENT_TWO);
+        $this->assertEquals((app(PageService::class))->translatesByColumnAndLang($pageToDel, 'title', 'en'), PageTest::STR_PARENT_TWO);
         $pageToDel->delete();
 
         $pagesAfter = Page::All()->toArray();
@@ -738,8 +738,8 @@ class PageTest extends Base
         $positionBefore1 = $pages[0]['position'];
         $positionBefore2 = $pages[1]['position'];
 
-        $this->assertEquals((new PageService)->translatesByColumnAndLang(Page::find($pages[0]['id']), 'title', 'en'), PageTest::STR_CHILD_ONE);
-        $this->assertEquals((new PageService)->translatesByColumnAndLang(Page::find($pages[1]['id']), 'title', 'en'), PageTest::STR_CHILD_TWO);
+        $this->assertEquals((app(PageService::class))->translatesByColumnAndLang(Page::find($pages[0]['id']), 'title', 'en'), PageTest::STR_CHILD_ONE);
+        $this->assertEquals((app(PageService::class))->translatesByColumnAndLang(Page::find($pages[1]['id']), 'title', 'en'), PageTest::STR_CHILD_TWO);
 
         $res2a = $this->patch('api/pages/position/up/'.$pages[0]['id'].'?token='.$this->token);
 
@@ -757,8 +757,8 @@ class PageTest extends Base
         $this->assertEquals($positionBefore1, $positionAfter1);
         $this->assertEquals($positionBefore2, $positionAfter2);
 
-        $this->assertEquals(PageTest::STR_CHILD_TWO, (new PageService)->translatesByColumnAndLang(Page::find($pages22[0]['id']), 'title', 'en'));
-        $this->assertEquals(PageTest::STR_CHILD_ONE, (new PageService)->translatesByColumnAndLang(Page::find($pages22[1]['id']), 'title', 'en'));
+        $this->assertEquals(PageTest::STR_CHILD_TWO, (app(PageService::class))->translatesByColumnAndLang(Page::find($pages22[0]['id']), 'title', 'en'));
+        $this->assertEquals(PageTest::STR_CHILD_ONE, (app(PageService::class))->translatesByColumnAndLang(Page::find($pages22[1]['id']), 'title', 'en'));
     }
 
     public function test_it_will_add_test_page_id_check_position_parent()
@@ -770,8 +770,8 @@ class PageTest extends Base
 
         $this->assertEquals(count($pages), 3);
 
-        $this->assertEquals((new PageService)->translatesByColumnAndLang(Page::find($pages[1]['id']), 'title', 'en'), PageTest::STR_PARENT_TWO);
-        $this->assertEquals((new PageService)->translatesByColumnAndLang(Page::find($pages[2]['id']), 'title', 'en'), PageTest::STR_PARENT_TREE);
+        $this->assertEquals((app(PageService::class))->translatesByColumnAndLang(Page::find($pages[1]['id']), 'title', 'en'), PageTest::STR_PARENT_TWO);
+        $this->assertEquals((app(PageService::class))->translatesByColumnAndLang(Page::find($pages[2]['id']), 'title', 'en'), PageTest::STR_PARENT_TREE);
 
         $this->assertEquals($pages[1]['page_id'], null);
         $this->assertEquals($pages[2]['page_id'], null);
@@ -795,8 +795,8 @@ class PageTest extends Base
         $this->assertNotEmpty($positionAfter1);
         $this->assertNotEmpty($positionAfter2);
 
-        $this->assertEquals(PageTest::STR_PARENT_TREE, (new PageService)->translatesByColumnAndLang(Page::find($pages22[1]['id']), 'title', 'en'));
-        $this->assertEquals(PageTest::STR_PARENT_TWO, (new PageService)->translatesByColumnAndLang(Page::find($pages22[2]['id']), 'title', 'en'));
+        $this->assertEquals(PageTest::STR_PARENT_TREE, (app(PageService::class))->translatesByColumnAndLang(Page::find($pages22[1]['id']), 'title', 'en'));
+        $this->assertEquals(PageTest::STR_PARENT_TWO, (app(PageService::class))->translatesByColumnAndLang(Page::find($pages22[2]['id']), 'title', 'en'));
     }
 
     public function test_it_will_add3a_with_menu_pages()
@@ -860,7 +860,7 @@ class PageTest extends Base
         $pagesPublished = (new MenuService)->pagesPublished($this->menuObj);
         $this->assertEquals(1, $pagesPublished->count());  // only one has got published ===1 for 'menu_id' =>  $this->menuId
         $this->assertNotEmpty($pagesPublished->first()->id);
-        $this->assertEquals((new PageService)->translatesByColumnAndLang($pagesPublished->first(), 'title', 'en'), $testData2['title']['en']);
+        $this->assertEquals((app(PageService::class))->translatesByColumnAndLang($pagesPublished->first(), 'title', 'en'), $testData2['title']['en']);
     }
 
     public function test_it_will_add_pages_to_check_position_docs()
@@ -980,7 +980,7 @@ class PageTest extends Base
             }
         }
 
-        $this->assertSame($tmpArr[0]->title->en, (new PageService)->translatesByColumnAndLang(Page::find($tmpArr2[0]->id), 'title', 'en'));
+        $this->assertSame($tmpArr[0]->title->en, (app(PageService::class))->translatesByColumnAndLang(Page::find($tmpArr2[0]->id), 'title', 'en'));
     }
 
     public function test_it_will_add_pages0()
@@ -1119,7 +1119,7 @@ class PageTest extends Base
 
         $this->assertNotEmpty($id);
 
-        $slug = (new PageService)->getSlugByLang(Page::find($id), 'en');
+        $slug = (app(PageService::class))->getSlugByLang(Page::find($id), 'en');
         $this->assertEquals($slug, Str::slug($this->testData['title']['en'], '-'));
     }
 
@@ -1132,7 +1132,7 @@ class PageTest extends Base
 
         $this->assertNotEmpty($id);
 
-        $slug = (new PageService)->getSlugByLang(Page::find($id), 'en');
+        $slug = (app(PageService::class))->getSlugByLang(Page::find($id), 'en');
         $this->assertEquals($slug, Str::slug($this->testData['title']['en'], '-'));
 
         $testData3 =
@@ -1153,7 +1153,7 @@ class PageTest extends Base
 
         $response0 = $this->put('api/pages/'.$id.'?token='.$this->token, $testData3);
 
-        $slugAfter = (new PageService)->getSlugByLang(Page::find($id), 'en');
+        $slugAfter = (app(PageService::class))->getSlugByLang(Page::find($id), 'en');
         $this->assertNotEquals($slug, $slugAfter);
         $this->assertEquals($slugAfter, Str::slug($testData3['title']['en'], '-'));
 
@@ -1192,7 +1192,7 @@ class PageTest extends Base
 
         $this->assertNotEmpty($id);
 
-        $allTranslate = (new PageService)->getAllTranslate(Page::find($id));
+        $allTranslate = (app(PageService::class))->getAllTranslate(Page::find($id));
         $this->assertEquals(4, count($allTranslate));
 
         // $id = 1;
@@ -1231,7 +1231,7 @@ class PageTest extends Base
         $this->assertEquals(count($res->data), 1);
         $data = $res->data[0];
 
-        $allTranslate = (new PageService)->getAllTranslate(Page::find($id));
+        $allTranslate = (app(PageService::class))->getAllTranslate(Page::find($id));
         $this->assertEquals(4, count($allTranslate));
 
         $this->comparePageFields($testData3, $data);
@@ -1268,7 +1268,7 @@ class PageTest extends Base
         $data = $res2->data[0];
         $pageId = $data->id;
         $this->assertNotEmpty($pageId);
-        $allTranslate = (new PageService)->getAllTranslate(Page::find($pageId));
+        $allTranslate = (app(PageService::class))->getAllTranslate(Page::find($pageId));
         $this->assertEquals(4, count($allTranslate));
 
         $this->comparePageFields($testData, $data);
@@ -1326,7 +1326,7 @@ class PageTest extends Base
         $res = $response->getData();
         $this->assertTrue($res->success);
 
-        $pages = (new PageService)->getAllPagesWithImagesByShortTitleForDefaultLang($shortTitleTest);
+        $pages = (app(PageService::class))->getAllPagesWithImagesByShortTitleForDefaultLang($shortTitleTest);
 
         $this->assertEquals(1, count($pages));
         $this->assertEquals($shortTitleTest, $pages[0]['short_title']['en']);
@@ -1364,7 +1364,7 @@ class PageTest extends Base
             'content' => ['en' => 'content test4333 inner'],
         ];
 
-        $objPage = (new PageService)->wrapCreate($testData);
+        $objPage = (app(PageService::class))->wrapCreate($testData);
         $this->assertNotEmpty($objPage->id);
         $res = $this->get('api/page/'.$objPage->id);
         $this->assertEquals(404, $res->status());

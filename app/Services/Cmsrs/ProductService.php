@@ -25,7 +25,7 @@ class ProductService extends BaseService
     /** @var array<int, string> */
     public array $productFields;
 
-    public function __construct( private PageService $pageService )
+    public function __construct(private PageService $pageService)
     {
         $this->translate = new TranslateService;
         $this->content = new ContentService;

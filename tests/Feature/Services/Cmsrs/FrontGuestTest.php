@@ -47,17 +47,17 @@ class FrontGuestTest extends Base
             'images' => [
             ],
         ];
-        $p = (new PageService)->wrapCreate($pLogin);
+        $p = (app(PageService::class))->wrapCreate($pLogin);
         $this->assertNotEmpty($p->id);
 
         $lang = 'en';
         $page = PageService::getFirstPageByType('login');
-        $pageTitle = (new PageService)->translatesByColumnAndLang($page, 'title', $lang);
-        $pageShortTitle = (new PageService)->translatesByColumnAndLang($page, 'short_title', $lang);
+        $pageTitle = (app(PageService::class))->translatesByColumnAndLang($page, 'title', $lang);
+        $pageShortTitle = (app(PageService::class))->translatesByColumnAndLang($page, 'short_title', $lang);
         $this->assertNotEmpty($pageTitle);
         $this->assertNotEmpty($pageShortTitle);
 
-        $urlLogin = (new PageService)->getUrl($page, $lang);
+        $urlLogin = (app(PageService::class))->getUrl($page, $lang);
         $response = $this->get($urlLogin);
         $response->assertStatus(200);
 
@@ -116,7 +116,7 @@ class FrontGuestTest extends Base
             'menu_id' => null,
             'page_id' => null,
         ];
-        (new PageService)->wrapCreate($testData2);
+        (app(PageService::class))->wrapCreate($testData2);
 
         $response = $this->get('/');
         $response->assertStatus(401);
@@ -140,7 +140,7 @@ class FrontGuestTest extends Base
             'menu_id' => null,
             'page_id' => null,
         ];
-        (new PageService)->wrapCreate($testData2);
+        (app(PageService::class))->wrapCreate($testData2);
 
         $response = $this->get('/');
         $response->assertStatus(200);
@@ -188,11 +188,11 @@ class FrontGuestTest extends Base
             ],
         ];
 
-        (new PageService)->wrapCreate($testData2);
-        (new PageService)->wrapCreate($pPrivacy);
-        (new PageService)->wrapCreate($pContact);
+        (app(PageService::class))->wrapCreate($testData2);
+        (app(PageService::class))->wrapCreate($pPrivacy);
+        (app(PageService::class))->wrapCreate($pContact);
 
-        $footerPages = (new PageService)->getFooterPages('en');
+        $footerPages = (app(PageService::class))->getFooterPages('en');
 
         $this->assertNotEmpty($footerPages['policyUrl']);
         $this->assertNotEmpty($footerPages['policyTitle']);
@@ -239,21 +239,21 @@ class FrontGuestTest extends Base
             ],
         ];
 
-        $p1 = (new PageService)->wrapCreate($data1p);
-        $p2 = (new PageService)->wrapCreate($data2p);
+        $p1 = (app(PageService::class))->wrapCreate($data1p);
+        $p2 = (app(PageService::class))->wrapCreate($data2p);
 
-        $page1Slug = (new PageService)->getSlugByLang($p1, 'en'); // Str::slug($data1p['title']['en']);
-        $page2Slug = (new PageService)->getSlugByLang($p2, 'en'); // Str::slug($data2p['title']['en']);
+        $page1Slug = (app(PageService::class))->getSlugByLang($p1, 'en'); // Str::slug($data1p['title']['en']);
+        $page2Slug = (app(PageService::class))->getSlugByLang($p2, 'en'); // Str::slug($data2p['title']['en']);
 
-        $url1 = (new PageService)->getUrl($p1, 'en');
+        $url1 = (app(PageService::class))->getUrl($p1, 'en');
 
         $this->assertSame('/'.Page::PREFIX_CMS_URL.'/'.(new MenuService)->getSlugByLang($m1, 'en').'/'.$page1Slug, $url1);
 
         $response1 = $this->get($url1);
         $response1->assertStatus(200);
 
-        $url2 = (new PageService)->getUrl($p2, 'en');
-        $this->assertSame('/'.Page::PREFIX_CMS_URL.'/'.(new MenuService)->getSlugByLang($m1, 'en').'/'.$page2Slug, $url2);
+        $url2 = (app(PageService::class))->getUrl($p2, 'en');
+        $this->assertSame('/'.Page::PREFIX_CMS_URL.'/'.(app(MenuService::class))->getSlugByLang($m1, 'en').'/'.$page2Slug, $url2);
         $response2 = $this->get($url2);
         $response2->assertStatus(200);
 
@@ -296,12 +296,12 @@ class FrontGuestTest extends Base
             ],
         ];
 
-        $p1 = (new PageService)->wrapCreate($data1p);
-        $p2 = (new PageService)->wrapCreate($data2p);
+        $p1 = (app(PageService::class))->wrapCreate($data1p);
+        $p2 = (app(PageService::class))->wrapCreate($data2p);
 
-        $response1 = $this->get((new PageService)->getUrl($p1, 'en'));
+        $response1 = $this->get((app(PageService::class))->getUrl($p1, 'en'));
         $response1->assertStatus(401);
-        $response2 = $this->get((new PageService)->getUrl($p2, 'en'));
+        $response2 = $this->get((app(PageService::class))->getUrl($p2, 'en'));
         $response2->assertStatus(401);
 
         $content = $response2->getContent();
@@ -347,16 +347,16 @@ class FrontGuestTest extends Base
         $menuName = $testDataMenu['name']['en'];
         $menuSlug = Str::slug($menuName);
 
-        $p1 = (new PageService)->wrapCreate($data1p);
-        $p2 = (new PageService)->wrapCreate($data2p);
+        $p1 = (app(PageService::class))->wrapCreate($data1p);
+        $p2 = (app(PageService::class))->wrapCreate($data2p);
 
         $page1Slug = Str::slug($data1p['title']['en']);
         $page2Slug = Str::slug($data2p['title']['en']);
 
-        $response1 = $this->get((new PageService)->getUrl($p1, 'en'));
+        $response1 = $this->get((app(PageService::class))->getUrl($p1, 'en'));
         $response1->assertStatus(401);
 
-        $url2 = (new PageService)->getUrl($p2, 'en');
+        $url2 = (app(PageService::class))->getUrl($p2, 'en');
         $response1 = $this->get($url2);
         $response1->assertStatus(404);
         // $response1->assertStatus(401); // This might need to be checked, possibly should be different
@@ -365,7 +365,7 @@ class FrontGuestTest extends Base
     public function test_it_will_one_link_in_menu_normal()
     {
         $testDataMenu = ['name' => ['en' => 'Contact']];
-        $m1 = (new MenuService)->wrapCreate($testDataMenu);
+        $m1 = (app(MenuService::class))->wrapCreate($testDataMenu);
 
         $short1 = 'Contact me short1xyz';
         $data1p = [
@@ -399,16 +399,16 @@ class FrontGuestTest extends Base
         $menuName = $testDataMenu['name']['en'];
         $menuSlug = Str::slug($menuName);
 
-        $p1 = (new PageService)->wrapCreate($data1p);
-        $p2 = (new PageService)->wrapCreate($data2p);
+        $p1 = (app(PageService::class))->wrapCreate($data1p);
+        $p2 = (app(PageService::class))->wrapCreate($data2p);
 
         $page1Slug = Str::slug($data1p['title']['en']);
         $page2Slug = Str::slug($data2p['title']['en']);
 
-        $response1 = $this->get((new PageService)->getUrl($p1, 'en'));
+        $response1 = $this->get((app(PageService::class))->getUrl($p1, 'en'));
         $response1->assertStatus(200);
 
-        $response2 = $this->get((new PageService)->getUrl($p2, 'en'));
+        $response2 = $this->get((app(PageService::class))->getUrl($p2, 'en'));
         $response2->assertStatus(200);
 
         $content = $response2->getContent();

@@ -67,7 +67,7 @@ class ContentTest extends Base
     public function test_page_content_wrap_create_ok_1()
     {
         $data1p = $this->getPageTestData();
-        $p = (new PageService)->wrapCreate($data1p);
+        $p = (app(PageService::class))->wrapCreate($data1p);
         $this->assertNotEmpty($p->id);
 
         $this->assertEquals(2, Content::query()->where('page_id', $p->id)->count());
@@ -82,7 +82,7 @@ class ContentTest extends Base
         $content = new ContentService;
         $content->setArrLangs(['pl']);
 
-        $objPage = new PageService;
+        $objPage = app(PageService::class);
         $objPage->setTranslate($translate);
         $objPage->setContent($content);
 
@@ -97,7 +97,7 @@ class ContentTest extends Base
         $data1p = $this->getPageTestData();
         unset($data1p['content']);
 
-        $p = (new PageService)->wrapCreate($data1p);
+        $p = (app(PageService::class))->wrapCreate($data1p);
         $this->assertEquals($this->numOfLangs, Content::query()->where('page_id', $p->id)->count());
     }
 
@@ -106,7 +106,7 @@ class ContentTest extends Base
         $data1p = $this->getPageTestData();
         $data1p['content'] = [];
 
-        $p = (new PageService)->wrapCreate($data1p);
+        $p = (app(PageService::class))->wrapCreate($data1p);
         $this->assertEquals($this->numOfLangs, Content::query()->where('page_id', $p->id)->count());
     }
 
@@ -115,7 +115,7 @@ class ContentTest extends Base
         $data1p = $this->getPageTestData();
         $data1p['content'] = ['es' => 'fake'];
 
-        $p = (new PageService)->wrapCreate($data1p);
+        $p = (app(PageService::class))->wrapCreate($data1p);
         $this->assertEquals($this->numOfLangs, Content::query()->where('page_id', $p->id)->where('column', 'content')->whereNull('value')->count());
     }
 
@@ -127,7 +127,7 @@ class ContentTest extends Base
         $data1p['description'] = 'strereer';
 
         // $this->expectException(\Exception::class);
-        $p = (new PageService)->wrapCreate($data1p);
+        $p = (app(PageService::class))->wrapCreate($data1p);
         $this->assertEquals($this->numOfLangs, Content::query()->where('page_id', $p->id)->where('column', 'content')->whereNull('value')->count());
         $this->assertEquals($this->numOfLangs, Translate::query()->where('page_id', $p->id)->where('column', 'description')->whereNull('value')->count());
     }

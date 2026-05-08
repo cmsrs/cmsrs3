@@ -115,7 +115,7 @@ class ProductTest extends Base
             'menu_id' => $this->menuId,
         ];
 
-        $p = (new PageService)->wrapCreate($this->testPage);
+        $p = (app(PageService::class))->wrapCreate($this->testPage);
         $this->assertNotEmpty($p->id);
 
         $type = 'shop';
@@ -163,7 +163,7 @@ class ProductTest extends Base
             'menu_id' => $this->menuId,
         ];
 
-        $p = (new PageService)->wrapCreate($testPage);
+        $p = (app(PageService::class))->wrapCreate($testPage);
         $this->assertNotEmpty($p->id);
 
         $type = 'shop';
@@ -1012,7 +1012,7 @@ class ProductTest extends Base
 
         $baskets = [];
         $orders = '';
-        $productService  = app(ProductService::class);
+        $productService = app(ProductService::class);
         $data = $productService->getDataToPayment($arrCart, $baskets, $orders);
         $this->assertEquals(2, count($baskets));
         $this->assertEmpty($orders);
@@ -1676,14 +1676,14 @@ class ProductTest extends Base
             'content' => ['en' => 'pppppppp'],
             'menu_id' => null,
         ];
-        $p = (new PageService)->wrapCreate($testPage);
+        $p = (app(PageService::class))->wrapCreate($testPage);
         $testPage['title']['en'] = 'uniq1';
-        $p = (new PageService)->wrapCreate($testPage);
+        $p = (app(PageService::class))->wrapCreate($testPage);
         $testPage['title']['en'] = 'uniq2';
-        $p = (new PageService)->wrapCreate($testPage);
+        $p = (app(PageService::class))->wrapCreate($testPage);
         $testPage['title']['en'] = 'uniq3';
         $testPage['menu_id'] = $this->menuId;
-        $p = (new PageService)->wrapCreate($testPage);
+        $p = (app(PageService::class))->wrapCreate($testPage);
 
         $altEnLastImage = 'last image';
         $testData = [

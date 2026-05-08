@@ -69,7 +69,7 @@ class CommentTest extends Base
             'menu_id' => $this->menuId,
         ];
 
-        $objPage = (new PageService)->wrapCreate($this->testPage);
+        $objPage = (app(PageService::class))->wrapCreate($this->testPage);
 
         $res = $this->get('api/pages/type/'.$type.'?token='.$this->token);
 
@@ -102,7 +102,7 @@ class CommentTest extends Base
         ];
 
         $this->testPage['commented'] = 0;
-        $objPage = (new PageService)->wrapCreate($this->testPage);
+        $objPage = (app(PageService::class))->wrapCreate($this->testPage);
         $this->assertNotEmpty($objPage->id);
 
         $response = $this->post('api/comments/'.$objPage->id, $content);
@@ -166,7 +166,7 @@ class CommentTest extends Base
     public function test_it_will_get_comment_and_return_404_comment_not_found()
     {
         $this->testPage['commented'] = 0;
-        $objPage = (new PageService)->wrapCreate($this->testPage);
+        $objPage = (app(PageService::class))->wrapCreate($this->testPage);
         $this->assertNotEmpty($objPage->id);
 
         $response = $this->get('api/comments/'.($objPage->id));

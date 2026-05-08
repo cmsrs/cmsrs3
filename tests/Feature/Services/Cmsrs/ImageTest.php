@@ -125,7 +125,7 @@ class ImageTest extends Base
         $res0 = $response0->getData();
         $this->assertTrue($res0->success);
 
-        $pageFields = (new PageService)->pageFields;
+        $pageFields = app(PageService::class)->pageFields;
         $this->assertFalse(in_array('created_at', $pageFields));
         $this->assertTrue(in_array('id', $pageFields));
 
@@ -173,7 +173,7 @@ class ImageTest extends Base
 
         $page = Page::findOrFail($this->pageId);
 
-        $arrImages = (new PageService)->arrImages($page, 'en');
+        $arrImages = (app(PageService::class))->arrImages($page, 'en');
 
         for ($i = 0; $i < $count; $i++) {
             $this->assertEquals($arrImages[$i]['org'], $res3->data->images[$i]->org);
@@ -236,7 +236,7 @@ class ImageTest extends Base
         }
 
         $page = Page::findOrFail($this->pageId);
-        $arrImages = (new PageService)->arrImages($page, 'en');
+        $arrImages = (app(PageService::class))->arrImages($page, 'en');
         $this->assertEquals(2, count($arrImages));
 
         $this->assertNotEmpty($arrImages[0][Image::IMAGE_ORG]);

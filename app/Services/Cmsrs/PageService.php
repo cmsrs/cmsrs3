@@ -24,7 +24,7 @@ class PageService extends BaseService implements TranslateInterface
      */
     private $content;
 
-    public function __construct()
+    public function __construct(private MenuService $menuService)
     {
         $this->translate = new TranslateService;
         $this->content = new ContentService;
@@ -143,7 +143,7 @@ class PageService extends BaseService implements TranslateInterface
     }
 
     /**
-     * @param array<string, mixed> $dataIn
+     * @param  array<string, mixed>  $dataIn
      * @return array<string, mixed>
      */
     public function getDataToView(Page $mPage, array $dataIn): array
@@ -159,7 +159,7 @@ class PageService extends BaseService implements TranslateInterface
         }
 
         $data = [
-            'pageService' => (new PageService),
+            'pageService' => $this,
             'menus' => isset($dataIn['menus']) ? $dataIn['menus'] : null,
             'page' => $mPage,
             'h1' => $this->translatesByColumnAndLang($mPage, 'title', $lang),
@@ -176,25 +176,22 @@ class PageService extends BaseService implements TranslateInterface
     }
 
     /**
-     * @param Collection<int, Menu>|array<Menu> $menus
-     * @return Page|null
+     * @param  Collection<int, Menu>|array<Menu>  $menus
      */
     public function getPageBySlug(Collection|array $menus, string $menuSlug, ?string $pageSlug, string $lang): ?Page
     {
-        $menuService = new MenuService;
-        $pageService = new PageService;
         $pageOut = null;
         foreach ($menus as $menu) {
-            if ($menuSlug == $menuService->getSlugByLang($menu, $lang)) {
-                $objPagesPublishedAndAccess = $menuService->pagesPublishedAndAccess($menu);
+            if ($menuSlug == $this->menuService->getSlugByLang($menu, $lang)) {
+                $objPagesPublishedAndAccess = $this->menuService->pagesPublishedAndAccess($menu);
                 if ($objPagesPublishedAndAccess->count() == 1) { // it is the case for pageSlug = null, 1 page in menu
                     $pageOut = $objPagesPublishedAndAccess->first();
                     break;
                 }
 
-                $pagesPublished = $menuService->pagesPublished($menu);
+                $pagesPublished = $this->menuService->pagesPublished($menu);
                 foreach ($pagesPublished as $page) {
-                    if ($pageSlug == $pageService->getSlugByLang($page, $lang)) {
+                    if ($pageSlug == $this->getSlugByLang($page, $lang)) {
                         $pageOut = $page;
                         break;
                     }
@@ -202,19 +199,20 @@ class PageService extends BaseService implements TranslateInterface
             }
         }
 
+        // dd('_________________________ getPageBySlug in PageService _____________________________');
         return $pageOut;
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      * @return array{success: bool, error?: string}
      */
-    public static function checkIsDuplicateTitleByMenu(array $data, string $id = ''): array
+    public function checkIsDuplicateTitleByMenu(array $data, string $id = ''): array
     {
         $menuId = empty($data['menu_id']) ? 0 : $data['menu_id'];
 
         $out = ['success' => true];
-        $pages = (new PageService)->getAllPagesWithImages();
+        $pages = $this->getAllPagesWithImages();
         foreach ($pages as $page) {
             $mId = empty($page['menu_id']) ? 0 : $page['menu_id'];
             if ($page['id'] == $id) {
@@ -274,6 +272,7 @@ class PageService extends BaseService implements TranslateInterface
 
     /**
      * todo refactor
+     *
      * @return array<int, array<string, mixed>>
      */
     public function getTranslateMerge(Page $mPage, int $pageId): array
@@ -286,7 +285,7 @@ class PageService extends BaseService implements TranslateInterface
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      */
     public static function CreatePage(array $data): Page
     {
@@ -307,7 +306,7 @@ class PageService extends BaseService implements TranslateInterface
      * use also in script to load demo (test) data
      * php artisan cmsrs:load-demo-data
      *
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      */
     public function wrapCreate(array $data): Page
     {
@@ -324,7 +323,7 @@ class PageService extends BaseService implements TranslateInterface
     }
 
     /**
-     * @param array{page_id: int, data: array<string, mixed>} $dd
+     * @param  array{page_id: int, data: array<string, mixed>}  $dd
      */
     public function createTranslate(array $dd, ?bool $create = true): void
     {
@@ -333,7 +332,7 @@ class PageService extends BaseService implements TranslateInterface
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      */
     public function wrapUpdate(Page $mPage, array $data): bool
     {
@@ -605,7 +604,7 @@ class PageService extends BaseService implements TranslateInterface
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
     public static function validateMainPage(array $data, ?bool $create = true): array
@@ -628,7 +627,7 @@ class PageService extends BaseService implements TranslateInterface
     /**
      * if parent page.published == 0 then child this page.published = 0
      *
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
     public static function validateParentPublished(array $data): array

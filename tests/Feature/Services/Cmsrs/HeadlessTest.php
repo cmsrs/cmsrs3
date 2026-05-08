@@ -96,7 +96,7 @@ class HeadlessTest extends Base
             'description' => ['en' => 'description test4333 inner'],
         ];
 
-        $objPage = (new PageService)->wrapCreate($testData);
+        $objPage = (app(PageService::class))->wrapCreate($testData);
         $this->assertNotEmpty($objPage->id);
         $res = $this->get('api/headless/page/'.$objPage->id.'/'.$lang);
         // dd($res->getContent());
@@ -124,7 +124,7 @@ class HeadlessTest extends Base
             'images' => $images,
         ];
 
-        $objPage = (new PageService)->wrapCreate($testData);
+        $objPage = (app(PageService::class))->wrapCreate($testData);
         $this->assertNotEmpty($objPage->id);
 
         $testProduct = [
@@ -168,7 +168,7 @@ class HeadlessTest extends Base
             'description' => ['en' => 'description test4333 inner'],
         ];
 
-        $objPage = (new PageService)->wrapCreate($testData);
+        $objPage = (app(PageService::class))->wrapCreate($testData);
         $this->assertNotEmpty($objPage->id);
 
         $page = (new HeadlessService)->getAllPagesWithImagesOneItemByLang($objPage, 'en');

@@ -83,7 +83,7 @@ class Base extends TestCase
         $objPage = Page::find($pageId);
 
         if ($objPage) {  // delete img from fs.
-            (new PageService)->deleteImagesFs($objPage);
+            app(PageService::class)->deleteImagesFs($objPage);
         }
     }
 
@@ -104,8 +104,8 @@ class Base extends TestCase
     {
         // cms link
         // see in: resources/views/includes/header.blade.php
-        $pageService = new PageService;
-        $menuService = new MenuService;
+        $pageService = app(PageService::class);
+        $menuService = app(MenuService::class);
 
         $url = [];
         $menus = Menu::All();
@@ -159,7 +159,7 @@ class Base extends TestCase
 
     public function checkAllPagesByLang($p, $lang, $onlyOneLang = false)
     {
-        $pageService = new PageService;
+        $pageService = app(PageService::class);
         $urlIn = [];
         $numOfInPages = 0;
         $numOfInAfterLoginPages = 0;
@@ -357,7 +357,7 @@ class Base extends TestCase
         $parentId = null;
         $pages = Page::all();
         foreach ($pages as $p) {
-            $title = (new PageService)->translatesByColumnAndLang(Page::find($p->id), 'title', 'en');
+            $title = (app(PageService::class))->translatesByColumnAndLang(Page::find($p->id), 'title', 'en');
             if ($title == PageTest::STR_PARENT_TWO) {
                 $parentId = $p->id;
             }
