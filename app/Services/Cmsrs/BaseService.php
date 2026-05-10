@@ -3,10 +3,7 @@
 namespace App\Services\Cmsrs;
 
 use App\Models\Cmsrs\Content;
-use App\Models\Cmsrs\Image;
 use App\Models\Cmsrs\Menu;
-use App\Models\Cmsrs\Page;
-use App\Models\Cmsrs\Product;
 use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\Interfaces\TranslateInterface;
 use App\Services\Cmsrs\Interfaces\TranslateValueInterface;
@@ -230,62 +227,4 @@ abstract class BaseService
     //     return Number::currency(($number / 100), $currency); //100 - cents
     // }
 
-    /**
-     * images in fs - start
-     */
-
-    /**
-     * this function is useful only in tests
-     */
-    public function deleteImagesFs(Page|Product $mObj)
-    {
-        $imageService = new ImageService;
-        foreach ($mObj->images()->get() as $img) {
-            if (! $img instanceof Image) {
-                throw new \Exception('image is not instance of \\App\\Models\\Cmsrs\\Image - case deleteImagesFs');
-            }
-            $imageService->deleteImg($img);
-        }
-    }
-
-    public function getImagesFsFiles(Page|Product $mObj)
-    {
-        $imageService = new ImageService;
-        $files = [];
-        $dirsImgs = [];
-        foreach ($mObj->images()->get() as $img) {
-            if (! $img instanceof Image) {
-                throw new \Exception('image is not instance of \\App\\Models\\Cmsrs\\Image - case getImagesFsFiles');
-            }
-            $images = $imageService->getAllImage($img);
-
-            if (is_array($images) && ! empty($images)) {
-                $dirsImgs[] = ImageService::getImgDir($img);
-                $files = array_merge($files, array_values($images));
-            }
-        }
-
-        return ['files' => $files, 'dirs_imgs' => array_unique($dirsImgs)];
-    }
-
-    public function deletePageOrProductWithImgs(Page|Product $mObj)
-    {
-        $allImg = $this->getImagesFsFiles($mObj);
-
-        $ret = $mObj->delete();
-        if (! $ret) {
-            return false;  // if sth wrong with delete model we don't delete images from fs
-        }
-
-        ImageService::deleteImagesFromFs($allImg['files']);
-
-        foreach ($allImg['dirs_imgs'] as $dirImgs) {
-            ImageService::removeTwoDirectoryIfEmpty($dirImgs); // Catalogs are left after deleting the images.
-        }
-
-        return $ret;
-    }
-    /**
-     * images in fs - stop
-     */
 }

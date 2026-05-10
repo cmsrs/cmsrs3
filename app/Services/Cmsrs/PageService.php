@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
 
 class PageService extends BaseService implements TranslateInterface
 {
-    public function __construct(private MenuService $menuService, private TranslateService $translateService, private ContentService $contentService) {}
+    public function __construct(private MenuService $menuService, private TranslateService $translateService, private ContentService $contentService, private ImageService $imageService) {}
 
     public function getPageDataByShortTitleCache(string $shortTitle, string $data = 'content', ?string $lang = null): string|bool
     {
@@ -299,9 +299,8 @@ class PageService extends BaseService implements TranslateInterface
         $this->createTranslate(['page_id' => $page->id, 'data' => $data]);
 
         if (! empty($data['images']) && is_array($data['images'])) {
-            $objImage = new ImageService;
-            $objImage->setTranslate($this->translateService);
-            $objImage->createImages($data['images'], 'page', $page->id);
+            $this->imageService->setTranslate($this->translateService);
+            $this->imageService->createImages($data['images'], 'page', $page->id);
         }
 
         return $page;
@@ -631,16 +630,15 @@ class PageService extends BaseService implements TranslateInterface
     public function arrImages(Page $mPage, string $lang): array
     {
         $out = [];
-        $imageService = new ImageService;
         foreach ($mPage->images as $image) {
 
             if (! ($image instanceof Image)) {
                 throw new \Exception('ImageService::arrImages - image is not instance of Image');
             }
 
-            $item = $imageService->getAllImage($image, false);
+            $item = $this->imageService->getAllImage($image, false);
             $item['id'] = $image->id;
-            $item['alt'] = $imageService->getAltImg($image);
+            $item['alt'] = $this->imageService->getAltImg($image);
             $item['altlang'] = ! empty($item['alt'][$lang]) ? $item['alt'][$lang] : ''; // it neeeds to javascript - to modal window in gallery
             $out[] = $item;
         }
@@ -677,7 +675,7 @@ class PageService extends BaseService implements TranslateInterface
 
         $formatPage = $this->getPageDataFormat($page);
         if (! $simple) {
-            $formatPage['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
+            $formatPage['images'] = $this->imageService->getImagesAndThumbsByTypeAndRefId('page', $page['id']);
         }
 
         return $formatPage;
@@ -698,7 +696,7 @@ class PageService extends BaseService implements TranslateInterface
         $out = [];
         foreach ($pages as $page) {
             $out[$i] = $this->getPageDataFormat($page);
-            $out[$i]['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
+            $out[$i]['images'] = $this->imageService->getImagesAndThumbsByTypeAndRefId('page', $page['id']);
             $i++;
         }
 
@@ -736,7 +734,7 @@ class PageService extends BaseService implements TranslateInterface
         $out = [];
         foreach ($pages as $page) {
             $out[$i] = $this->getPageDataFormat($page);
-            $out[$i]['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
+            $out[$i]['images'] = $this->imageService->getImagesAndThumbsByTypeAndRefId('page', $page['id']);
             $i++;
         }
 
@@ -792,7 +790,7 @@ class PageService extends BaseService implements TranslateInterface
         return $page;
     }
 
-    public static function swapPosition(string $direction, int $id): bool
+    public function swapPosition(string $direction, int $id): bool
     {
         if (! in_array($direction, ['up', 'down'])) {
             throw new \Exception('Wrong direction (Page). It can be up or down direction = '.$direction);

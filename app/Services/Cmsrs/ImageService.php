@@ -5,6 +5,7 @@ namespace App\Services\Cmsrs;
 use App\Models\Cmsrs\Image;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
+use App\Models\Cmsrs\Product;
 use App\Services\Cmsrs\Helpers\CacheService;
 use App\Services\Cmsrs\Helpers\ImageHelperService;
 use App\Services\Cmsrs\Helpers\StrHelperService;
@@ -12,17 +13,12 @@ use App\Services\Cmsrs\Interfaces\TranslateInterface;
 
 class ImageService extends BaseService implements TranslateInterface
 {
-    private $translate;
-
-    public function __construct()
-    {
-        $this->translate = new TranslateService;
-    }
+    public function __construct(private TranslateService $translateService) {}
 
     public function setTranslate($objTranslate)
     {
         if (! empty($objTranslate)) {
-            $this->translate = $objTranslate;
+            $this->translateService = $objTranslate;
         }
     }
 
@@ -76,11 +72,11 @@ class ImageService extends BaseService implements TranslateInterface
 
     public function deleteImg(Image $mImage)
     {
-        $allImg = self::getAllImage($mImage);
+        $allImg = $this->getAllImage($mImage);
 
         self::deleteImagesFromFs($allImg);
 
-        $dirImgs = self::getImgDir($mImage);
+        $dirImgs = $this->getImgDir($mImage);
         self::removeTwoDirectoryIfEmpty($dirImgs);
     }
 
@@ -93,7 +89,7 @@ class ImageService extends BaseService implements TranslateInterface
 
     public function getHtmlImage(Image $mImage, $type = Image::IMAGE_THUMB_TYPE_MEDIUM)
     {
-        $img = self::getAllImage($mImage, false);
+        $img = $this->getAllImage($mImage, false);
 
         return $img[$type];
     }
@@ -122,17 +118,17 @@ class ImageService extends BaseService implements TranslateInterface
         return null;
     }
 
-    public static function getImgDir(Image $objImg, $isAbs = true)
+    public function getImgDir(Image $objImg, $isAbs = true)
     {
-        $imageService = new ImageService;
+        // $imageService = new ImageService;
 
-        return self::getImageDir($imageService->getRefType($objImg), $imageService->getRefId($objImg), $objImg->id, $isAbs);
+        return $this->getImageDir($this->getRefType($objImg), $this->getRefId($objImg), $objImg->id, $isAbs);
     }
 
     /**
      *  return all thumbs and main img
      */
-    public static function getAllImage(object $img, $isAbs = true)
+    public function getAllImage(object $img, $isAbs = true)
     {
         $out = [];
         $objImg = Image::find($img->id);
@@ -151,7 +147,7 @@ class ImageService extends BaseService implements TranslateInterface
         return $out;
     }
 
-    public static function getImageDir($type, $refId, $imageId, $isAbs = true)
+    public function getImageDir($type, $refId, $imageId, $isAbs = true)
     {
         if (empty(Image::$type[$type])) {
             throw new \Exception("I can't get image type");
@@ -166,7 +162,7 @@ class ImageService extends BaseService implements TranslateInterface
         return '/'.$url;
     }
 
-    public static function createImagesAndUpdateAlt($images, $type, $refId)
+    public function createImagesAndUpdateAlt($images, $type, $refId)
     {
         $imagesCreate = [];
         $imagesUpdate = [];
@@ -181,10 +177,10 @@ class ImageService extends BaseService implements TranslateInterface
 
         // the order is important - first update then create
         if ($imagesUpdate) {
-            (new ImageService)->updateImages($imagesUpdate);
+            $this->updateImages($imagesUpdate);
         }
         if ($imagesCreate) {
-            (new ImageService)->createImages($imagesCreate, $type, $refId);
+            $this->createImages($imagesCreate, $type, $refId);
         }
 
         return true;
@@ -193,11 +189,11 @@ class ImageService extends BaseService implements TranslateInterface
     public function updateImages($images)
     {
         foreach ($images as $image) {
-            $this->translate->wrapCreate(['image_id' => $image['id'], 'data' => $image], false);
+            $this->translateService->wrapCreate(['image_id' => $image['id'], 'data' => $image], false);
         }
     }
 
-    public static function updatePositionImages($images)
+    public function updatePositionImages($images)
     {
         foreach ($images as $image) {
             if (empty($image['id'])) {
@@ -257,7 +253,7 @@ class ImageService extends BaseService implements TranslateInterface
 
             $dbData = [
                 'name' => $name,
-                'position' => self::getNextPositionByTypeAndRefId($type, $refId),
+                'position' => $this->getNextPositionByTypeAndRefId($type, $refId),
                 $strRefId => $refId,
             ];
             $image = Image::create($dbData);
@@ -266,11 +262,11 @@ class ImageService extends BaseService implements TranslateInterface
                 throw new \Exception("I can't get image id");
             }
 
-            $this->translate->wrapCreate(['image_id' => $image->id, 'data' => ['alt' => $alt]]);
+            $this->translateService->wrapCreate(['image_id' => $image->id, 'data' => ['alt' => $alt]]);
 
             $out[$key] = $image;
 
-            $dirImg = self::getImageDir($type, $refId, $image->id);
+            $dirImg = $this->getImageDir($type, $refId, $image->id);
             if (! file_exists($dirImg)) {
                 mkdir($dirImg, 0777, true);
             }
@@ -281,7 +277,7 @@ class ImageService extends BaseService implements TranslateInterface
         return $out;
     }
 
-    public static function getNextPositionByTypeAndRefId($type, $refId)
+    public function getNextPositionByTypeAndRefId($type, $refId)
     {
         if (empty($strRefId = Image::$type[$type])) {
             throw new \Exception("I can't get image type in getNextPositionByTypeAndRefId");
@@ -307,20 +303,20 @@ class ImageService extends BaseService implements TranslateInterface
         return $image->position + 1;
     }
 
-    public static function getImagesAndThumbsByTypeAndRefId($type, $refId = null, $lang = null)
+    public function getImagesAndThumbsByTypeAndRefId($type, $refId = null, $lang = null)
     {
-        $images = ImageService::getImagesByTypeAndRefId($type, $refId);
+        $images = $this->getImagesByTypeAndRefId($type, $refId);
 
         foreach ($images as $k => $img) {
-            $images[$k]['alt'] = ImageService::getAltImg($img, $lang);
-            $images[$k]['fs'] = ImageService::getAllImage($img, false);
+            $images[$k]['alt'] = $this->getAltImg($img, $lang);
+            $images[$k]['fs'] = $this->getAllImage($img, false);
             unset($img['translates']);
         }
 
         return $images;
     }
 
-    public static function getAltImg($objImg, $lang = null)
+    public function getAltImg($objImg, $lang = null)
     {
         $out = [];
         $translates = $objImg->translates->toArray();
@@ -337,7 +333,7 @@ class ImageService extends BaseService implements TranslateInterface
         return $out;
     }
 
-    public static function getImagesByTypeAndRefId($type, $refId = null)
+    public function getImagesByTypeAndRefId($type, $refId = null)
     {
         if (empty($strRefId = Image::$type[$type])) {
             throw new \Exception("I can't get image type in getImagesByTypeAndRefId");
@@ -360,7 +356,7 @@ class ImageService extends BaseService implements TranslateInterface
         return $image;
     }
 
-    public static function swapPosition($direction, $id)
+    public function swapPosition($direction, $id)
     {
         if (! in_array($direction, ['up', 'down'])) {
             throw new \Exception('Wrong direction (Image). It can be up or down direction = '.$direction);
@@ -380,7 +376,7 @@ class ImageService extends BaseService implements TranslateInterface
             }
         }
 
-        $images = ImageService::getImagesByTypeAndRefId($t, $refId);
+        $images = $this->getImagesByTypeAndRefId($t, $refId);
 
         $countImages = count($images);
         if ($countImages < 2) {
@@ -409,4 +405,61 @@ class ImageService extends BaseService implements TranslateInterface
 
         return true;
     }
+
+    /**
+     * it was in BaseService - images in fs - start
+     */
+
+    /**
+     * this function is useful only in tests
+     */
+    public function deleteImagesFs(Page|Product $mObj)
+    {
+        foreach ($mObj->images()->get() as $img) {
+            if (! $img instanceof Image) {
+                throw new \Exception('image is not instance of \\App\\Models\\Cmsrs\\Image - case deleteImagesFs');
+            }
+            $this->deleteImg($img);
+        }
+    }
+
+    public function getImagesFsFiles(Page|Product $mObj)
+    {
+        $files = [];
+        $dirsImgs = [];
+        foreach ($mObj->images()->get() as $img) {
+            if (! $img instanceof Image) {
+                throw new \Exception('image is not instance of \\App\\Models\\Cmsrs\\Image - case getImagesFsFiles');
+            }
+            $images = $this->getAllImage($img);
+
+            if (is_array($images) && ! empty($images)) {
+                $dirsImgs[] = ImageService::getImgDir($img);
+                $files = array_merge($files, array_values($images));
+            }
+        }
+
+        return ['files' => $files, 'dirs_imgs' => array_unique($dirsImgs)];
+    }
+
+    public function deletePageOrProductWithImgs(Page|Product $mObj)
+    {
+        $allImg = $this->getImagesFsFiles($mObj);
+
+        $ret = $mObj->delete();
+        if (! $ret) {
+            return false;  // if sth wrong with delete model we don't delete images from fs
+        }
+
+        ImageService::deleteImagesFromFs($allImg['files']);
+
+        foreach ($allImg['dirs_imgs'] as $dirImgs) {
+            ImageService::removeTwoDirectoryIfEmpty($dirImgs); // Catalogs are left after deleting the images.
+        }
+
+        return $ret;
+    }
+    /**
+     * images in fs - stop
+     */
 }

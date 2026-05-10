@@ -24,6 +24,7 @@ class ProductController extends Controller
     public function __construct(
         protected ConfigService $configService,
         protected ProductService $productService,
+        protected ImageService $imageService,
     ) {
         $this->validationRules['type'] = 'in:'.ConfigService::getPageTypes();
         $this->validationRules['published'] = 'boolean';
@@ -156,8 +157,8 @@ class ProductController extends Controller
         try {
             $res = $this->productService->wrapUpdate($product, $data);
             if (! empty($data['images']) && is_array($data['images'])) {
-                ImageService::createImagesAndUpdateAlt($data['images'], 'product', $product->id);
-                ImageService::updatePositionImages($data['images']);
+                $this->imageService->createImagesAndUpdateAlt($data['images'], 'product', $product->id);
+                $this->imageService->updatePositionImages($data['images']);
             }
         } catch (\Exception $e) {
             Log::error('product update ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile().' for: '.var_export($e, true)); // var_export($data, true )
@@ -174,7 +175,7 @@ class ProductController extends Controller
 
     public function delete(Request $request, Product $product)
     {
-        $res = $this->productService->deletePageOrProductWithImgs($product);
+        $res = $this->imageService->deletePageOrProductWithImgs($product);
         if (empty($res)) {
             return response()->json(['success' => false, 'error' => 'Product delete problem'], 200);
         }

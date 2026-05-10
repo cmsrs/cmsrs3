@@ -6,6 +6,7 @@ use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Product;
 use App\Models\User;
+use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\ProductService;
@@ -83,7 +84,7 @@ class Base extends TestCase
         $objPage = Page::find($pageId);
 
         if ($objPage) {  // delete img from fs.
-            app(PageService::class)->deleteImagesFs($objPage);
+            app(ImageService::class)->deleteImagesFs($objPage);
         }
     }
 
@@ -93,7 +94,7 @@ class Base extends TestCase
         $objProduct = Product::find($productId);
 
         if ($objProduct) {  // delete img from fs.
-            app(ProductService::class)->deleteImagesFs($objProduct);
+            app(ImageService::class)->deleteImagesFs($objProduct);
         }
     }
 

@@ -164,7 +164,7 @@ class MenuService extends BaseService implements TranslateInterface
         return $menu->position + 1;
     }
 
-    public static function swapPosition($direction, $id)
+    public function swapPosition($direction, $id)
     {
         if (! in_array($direction, ['up', 'down'])) {
             throw new \Exception('Wrong direction (Menu). It can be up or down direction = '.$direction);

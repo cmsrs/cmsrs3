@@ -11,10 +11,13 @@ class HeadlessService extends BaseService
 
     private $menuService;
 
+    private $imageService;
+
     public function __construct()
     {
         $this->pageService = app(PageService::class); // TODO DI
         $this->menuService = app(MenuService::class); // TODO DI
+        $this->imageService = app(ImageService::class); // TODO DI
     }
 
     public function getPagesByShortTitleWithImages($shortTitle)
@@ -37,7 +40,7 @@ class HeadlessService extends BaseService
         $out = [];
         foreach ($pages as $page) {
             $out[$i] = $this->getPageDataFormat($page);
-            $out[$i]['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
+            $out[$i]['images'] = $this->imageService->getImagesAndThumbsByTypeAndRefId('page', $page['id']);
             $i++;
         }
 
@@ -56,7 +59,7 @@ class HeadlessService extends BaseService
         $out = [];
         foreach ($pages as $page) {
             $out[$i] = $this->getPageDataFormat($page);
-            $out[$i]['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('page', $page['id']);
+            $out[$i]['images'] = $this->imageService->getImagesAndThumbsByTypeAndRefId('page', $page['id']);
             $i++;
         }
 
@@ -120,7 +123,7 @@ class HeadlessService extends BaseService
         $page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->first()->toArray();
 
         $formatPage = $this->getPageDataFormat($page, $lang);
-        $formatPage['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('page', $page['id'], $lang);
+        $formatPage['images'] = $this->imageService->getImagesAndThumbsByTypeAndRefId('page', $page['id'], $lang);
 
         return $formatPage;
     }

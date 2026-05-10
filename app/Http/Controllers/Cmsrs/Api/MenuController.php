@@ -35,7 +35,7 @@ class MenuController extends Controller
 
     public function position(Request $request, $direction, $id)
     {
-        $ret = MenuService::swapPosition($direction, $id);
+        $ret = $this->menuService->swapPosition($direction, $id);
 
         return response()->json(['success' => $ret]);
     }

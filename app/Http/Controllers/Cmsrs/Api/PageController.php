@@ -17,6 +17,7 @@ class PageController extends Controller
     public function __construct(
         protected ConfigService $configService,
         protected PageService $pageService,
+        protected ImageService $imageService,
     ) {
         $this->validationRules['type'] = 'in:'.ConfigService::getPageTypes();
 
@@ -83,7 +84,7 @@ class PageController extends Controller
 
     public function position(Request $request, string $direction, Page $page): JsonResponse
     {
-        $ret = PageService::swapPosition($direction, $page->id);
+        $ret = $this->pageService->swapPosition($direction, $page->id);
 
         return response()->json(['success' => $ret]);
     }
@@ -140,8 +141,8 @@ class PageController extends Controller
             }
             $res = $this->pageService->wrapUpdate($page, $data);
             if (! empty($data['images']) && is_array($data['images'])) {
-                ImageService::createImagesAndUpdateAlt($data['images'], 'page', $page->id);
-                ImageService::updatePositionImages($data['images']);
+                $this->imageService->createImagesAndUpdateAlt($data['images'], 'page', $page->id);
+                $this->imageService->updatePositionImages($data['images']);
             }
         } catch (\Exception $e) {
             Log::error('page update ex: '.$e->getMessage().' line: '.$e->getLine().'  file: '.$e->getFile().' for: '.var_export($e, true));
@@ -164,7 +165,7 @@ class PageController extends Controller
         //    return response()->json(['success' => false, 'error' => 'Page not find'], 200);
         // }
 
-        $res = $this->pageService->deletePageOrProductWithImgs($page);
+        $res = $this->imageService->deletePageOrProductWithImgs($page);
         if (empty($res)) {
             return response()->json(['success' => false, 'error' => 'Page delete problem'], 200);
         }

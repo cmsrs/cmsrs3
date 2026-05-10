@@ -20,7 +20,7 @@ class ImageController extends Controller
 
     public function getItemByTypeAndRefId(Request $request, $type, $refId)
     {
-        $images = ImageService::getImagesAndThumbsByTypeAndRefId($type, $refId);
+        $images = $this->imageService->getImagesAndThumbsByTypeAndRefId($type, $refId);
 
         return response()->json(['success' => true, 'data' => $images], 200);
     }
@@ -52,7 +52,7 @@ class ImageController extends Controller
 
     public function position(Request $request, $direction, $id)
     {
-        $ret = ImageService::swapPosition($direction, $id);
+        $ret = $this->imageService->swapPosition($direction, $id);
 
         return response()->json(['success' => $ret]);
     }

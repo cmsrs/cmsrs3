@@ -25,7 +25,7 @@ class ProductService extends BaseService
     /** @var array<int, string> */
     public array $productFields;
 
-    public function __construct(private PageService $pageService)
+    public function __construct(private PageService $pageService, private ImageService $imageService)
     {
         $this->translate = new TranslateService;
         $this->content = new ContentService;
@@ -155,7 +155,7 @@ class ProductService extends BaseService
 
         // For optimization purposes, we only retrieve images for products on the given page.
         $productsPagination->each(function ($product) {
-            $product->images = ImageService::getImagesAndThumbsByTypeAndRefId('product', $product->id);
+            $product->images = $this->imageService->getImagesAndThumbsByTypeAndRefId('product', $product->id);
         });
 
         return $productsPagination;
@@ -262,7 +262,7 @@ class ProductService extends BaseService
             }
 
             if (is_array($orders)) {
-                $productImage = ImageService::getImagesAndThumbsByTypeAndRefId('product', $product->id)->toArray();
+                $productImage = $this->imageService->getImagesAndThumbsByTypeAndRefId('product', $product->id)->toArray();
                 $orders[] = [
                     'name' => $productName,
                     'unitPrice' => $product->price,
@@ -326,9 +326,8 @@ class ProductService extends BaseService
         $this->createTranslate(['product_id' => $product->id, 'data' => $data]);
 
         if (! empty($data['images']) && is_array($data['images'])) {
-            $objImage = new ImageService;
-            $objImage->setTranslate($this->translate);
-            $objImage->createImages($data['images'], 'product', $product->id);
+            $this->imageService->setTranslate($this->translate);
+            $this->imageService->createImages($data['images'], 'product', $product->id);
         }
 
         return $product;
@@ -458,7 +457,7 @@ class ProductService extends BaseService
             $out = $this->removeKeyLangInArr($out, $lang);
         }
 
-        $out['images'] = ImageService::getImagesAndThumbsByTypeAndRefId('product', $arrProduct['id'], $lang);
+        $out['images'] = $this->imageService->getImagesAndThumbsByTypeAndRefId('product', $arrProduct['id'], $lang);
 
         return $out;
     }

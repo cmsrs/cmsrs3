@@ -261,7 +261,7 @@ class ImageTest extends Base
         $i = 0;
         $ImagesInFs = [];
         foreach ($resAllBefore->data as $img) {
-            $imagesFs = ImageService::getAllImage($img);
+            $imagesFs = app(ImageService::class)->getAllImage($img);
             $j = 0;
             foreach ($imagesFs as $imgFs) {
                 $ImagesInFs[$i][$j] = $imgFs;
@@ -285,7 +285,7 @@ class ImageTest extends Base
 
         $objImage = $objPage->images()->first();
         $this->assertNotEmpty($objImage->id);
-        $altEn = (new ImageService)->translatesByColumnAndLang($objImage, 'alt', 'en'); // For this method (translatesByColumnAndLang) maybe should create new test.
+        $altEn = app(ImageService::class)->translatesByColumnAndLang($objImage, 'alt', 'en'); // For this method (translatesByColumnAndLang) maybe should create new test.
         $this->assertEquals(self::STR_DESC_IMG1, $altEn);
         $this->assertEquals(2, $objPage->images()->get()->count());
 
@@ -308,7 +308,7 @@ class ImageTest extends Base
         $this->assertEmpty($resAllImgAfter->data);
 
         foreach ($resAllBefore->data as $img) {
-            $imagesFs = ImageService::getAllImage($img);
+            $imagesFs = app(ImageService::class)->getAllImage($img);
             $this->assertFalse($imagesFs); // because object not exist
         }
 
@@ -391,7 +391,7 @@ class ImageTest extends Base
         $imgToDel = $res2->data[0];
         $this->assertNotEmpty($imgToDel->id);
 
-        $imgDir = ImageService::getImageDir('page', $imgToDel->page_id, $imgToDel->id);
+        $imgDir = app(ImageService::class)->getImageDir('page', $imgToDel->page_id, $imgToDel->id);
         $file = $imgDir.'/'.$imgToDel->name;
         $this->assertFileExists($file);
 
@@ -621,7 +621,7 @@ class ImageTest extends Base
         $this->assertEquals($testPage->images[3]->alt->en, null);
 
         $imageObj11 = Image::find($testPage->images[2]->id);
-        $mediumHtml = (new ImageService)->getHtmlImage($imageObj11);
+        $mediumHtml = app(ImageService::class)->getHtmlImage($imageObj11);
         $this->assertEquals($mediumHtml, $testPage->images[2]->fs->medium);
     }
 
