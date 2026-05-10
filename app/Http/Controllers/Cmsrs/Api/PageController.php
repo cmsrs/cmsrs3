@@ -135,7 +135,7 @@ class PageController extends Controller
         }
 
         try {
-            $data = PageService::validateMainPage($data, false);
+            $data = $this->pageService->validateMainPage($data, false);
             if (empty($data['published'])) {
                 $this->pageService->unpublishedChildren($page);
             }

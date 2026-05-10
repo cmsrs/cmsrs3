@@ -212,13 +212,13 @@ class Base extends TestCase
         }
 
         // independent
-        $urlPolicy = $pageService->getUrl(PageService::getFirstPageByType('privacy_policy'), $lang);
+        $urlPolicy = $pageService->getUrl($pageService->getFirstPageByType('privacy_policy'), $lang);
         $response2 = $this->get($urlPolicy);
         $response2->assertStatus(200);
         $url[] = $urlPolicy;
 
         // main page
-        $urlMainPage = $pageService->getUrl(PageService::getFirstPageByType('main_page'), $lang);
+        $urlMainPage = $pageService->getUrl($pageService->getFirstPageByType('main_page'), $lang);
         $response3 = $this->get($urlMainPage);
         $response3->assertStatus(200);
         $url[] = $urlMainPage;

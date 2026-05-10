@@ -272,12 +272,12 @@ class PageService extends BaseService implements TranslateInterface
     /**
      * @param  array<string, mixed>  $data
      */
-    public static function CreatePage(array $data): Page
+    public function createPage(array $data): Page
     {
         $menuId = empty($data['menu_id']) ? null : $data['menu_id'];
-        $data['position'] = PageService::getNextPositionByMenuId($menuId);
-        $data = PageService::validateMainPage($data);
-        $data = PageService::validateParentPublished($data);
+        $data['position'] = $this->getNextPositionByMenuId($menuId);
+        $data = $this->validateMainPage($data);
+        $data = $this->validateParentPublished($data);
 
         $page = Page::create($data);
         if (empty($page->id)) {
@@ -295,7 +295,7 @@ class PageService extends BaseService implements TranslateInterface
      */
     public function wrapCreate(array $data): Page
     {
-        $page = PageService::CreatePage($data);
+        $page = $this->createPage($data);
         $this->createTranslate(['page_id' => $page->id, 'data' => $data]);
 
         if (! empty($data['images']) && is_array($data['images'])) {
@@ -331,8 +331,8 @@ class PageService extends BaseService implements TranslateInterface
      */
     public function getFooterPages(string $lang): array
     {
-        $privacyPolicy = PageService::getFirstPageByType('privacy_policy');
-        $contact = PageService::getFirstPageByType('contact');
+        $privacyPolicy = $this->getFirstPageByType('privacy_policy');
+        $contact = $this->getFirstPageByType('contact');
 
         $out = [];
         $policyUrl = null;
@@ -563,7 +563,7 @@ class PageService extends BaseService implements TranslateInterface
         return true;
     }
 
-    public static function getFirstPageByType(string $type): ?Page
+    public function getFirstPageByType(string $type): ?Page
     {
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
@@ -580,16 +580,16 @@ class PageService extends BaseService implements TranslateInterface
     /**
      * @return Page|null
      */
-    public static function getMainPage()
+    public function getMainPage()
     {
-        return PageService::getFirstPageByType('main_page');
+        return $this->getFirstPageByType('main_page');
     }
 
     /**
      * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
-    public static function validateMainPage(array $data, ?bool $create = true): array
+    public function validateMainPage(array $data, ?bool $create = true): array
     {
         if (isset($data['type']) && ($data['type'] == 'main_page')) {
             if ($create) {
@@ -612,7 +612,7 @@ class PageService extends BaseService implements TranslateInterface
      * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
-    public static function validateParentPublished(array $data): array
+    public function validateParentPublished(array $data): array
     {
         if (! empty($data['page_id'])) {
             $p = Page::findOrFail($data['page_id']);
@@ -741,7 +741,7 @@ class PageService extends BaseService implements TranslateInterface
         return $out;
     }
 
-    public static function getNextPositionByMenuId(?int $menuId): int
+    public function getNextPositionByMenuId(?int $menuId): int
     {
         if (empty($menuId)) {
             $page = Page::query()
@@ -765,7 +765,7 @@ class PageService extends BaseService implements TranslateInterface
     /**
      * @return Collection<int, Page>|array<int, Page>
      */
-    public static function getPagesByMenuId(?int $menuId, ?int $pageId): Collection|array
+    public function getPagesByMenuId(?int $menuId, ?int $pageId): Collection|array
     {
         $page = [];
         if ($menuId === null) {
@@ -802,7 +802,7 @@ class PageService extends BaseService implements TranslateInterface
         }
         $menuId = empty($page->menu_id) ? null : $page->menu_id;
         $pageId = empty($page->page_id) ? null : $page->page_id;
-        $pages = PageService::getPagesByMenuId($menuId, $pageId);
+        $pages = $this->getPagesByMenuId($menuId, $pageId);
 
         $countPages = count($pages);
         if ($countPages < 2) {

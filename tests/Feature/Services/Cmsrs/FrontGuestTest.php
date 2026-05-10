@@ -51,7 +51,7 @@ class FrontGuestTest extends Base
         $this->assertNotEmpty($p->id);
 
         $lang = 'en';
-        $page = PageService::getFirstPageByType('login');
+        $page = app(PageService::class)->getFirstPageByType('login');
         $pageTitle = (app(PageService::class))->translatesByColumnAndLang($page, 'title', $lang);
         $pageShortTitle = (app(PageService::class))->translatesByColumnAndLang($page, 'short_title', $lang);
         $this->assertNotEmpty($pageTitle);

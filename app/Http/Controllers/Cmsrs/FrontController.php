@@ -223,7 +223,7 @@ class FrontController extends Controller
         // it make sense only for payU - it my opinion
         $isNewOrders = false; // Order::copyDataFromBasketToOrderForUser();
 
-        $page = PageService::getMainPage();
+        $page = $this->pageService->getMainPage();
         $this->validatePage($page);
 
         // slider_main

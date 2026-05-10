@@ -15,7 +15,7 @@
   $pRegister =  config('cmsrs.features.register');
   //$pHome = $pageService::getFirstPageByType('home');
 
-  $mainPage = $pageService::getFirstPageByType('main_page');
+  $mainPage = $pageService->getFirstPageByType('main_page');
   $urlMainPage = '/';
   if ($mainPage) {
       $urlMainPage = $pageService->getUrl($mainPage, $lang);
