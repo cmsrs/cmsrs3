@@ -210,7 +210,8 @@ class ProductTest extends Base
         $key = self::STR_PRODUCT_NAME_EN_1;
         $lang = 'en';
 
-        $objProducts = ProductService::searchProducts($lang, $key);
+
+        $objProducts = app(ProductService::class)->searchProducts($lang, $key);
         $arrProducts = ProductService::objToArray($objProducts);
 
         $this->assertEquals(1, count($arrProducts));
