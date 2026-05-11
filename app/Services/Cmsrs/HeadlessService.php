@@ -7,18 +7,7 @@ use App\Models\Cmsrs\Page;
 
 class HeadlessService extends BaseService
 {
-    private $pageService;
-
-    private $menuService;
-
-    private $imageService;
-
-    public function __construct()
-    {
-        $this->pageService = app(PageService::class); // TODO DI
-        $this->menuService = app(MenuService::class); // TODO DI
-        $this->imageService = app(ImageService::class); // TODO DI
-    }
+    public function __construct(private PageService $pageService, private MenuService $menuService, private ImageService $imageService) {}
 
     public function getPagesByShortTitleWithImages($shortTitle)
     {

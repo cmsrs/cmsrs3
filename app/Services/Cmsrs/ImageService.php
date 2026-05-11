@@ -13,7 +13,7 @@ use App\Services\Cmsrs\Interfaces\TranslateInterface;
 
 class ImageService extends BaseService implements TranslateInterface
 {
-    public function __construct(private TranslateService $translateService) {}
+    public function __construct(private ConfigService $configService, private TranslateService $translateService) {}
 
     public function setTranslate($objTranslate)
     {
@@ -25,7 +25,7 @@ class ImageService extends BaseService implements TranslateInterface
     public function getAllTranslate(Page|Image|Menu $mImage)
     {
         $imageId = $mImage->id;
-        $isCache = (new ConfigService)->isCacheEnable();
+        $isCache = $this->configService->isCacheEnable();
         if ($isCache) {
             $ret = cache()->remember('imagetranslate_'.$imageId, CacheService::setTime(), function () use ($mImage, $imageId) {
                 return $mImage->translates()->where('image_id', $imageId)->get(['lang', 'column', 'value'])->toArray();

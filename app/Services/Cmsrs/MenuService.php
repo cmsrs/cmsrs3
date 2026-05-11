@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 
 class MenuService extends BaseService implements TranslateInterface
 {
-    public function __construct(private TranslateService $translateService) {}
+    public function __construct(private ConfigService $configService, private TranslateService $translateService) {}
 
     public function setTranslate($objTranslate)
     {
@@ -23,7 +23,7 @@ class MenuService extends BaseService implements TranslateInterface
 
     public function getMenu()
     {
-        $isCache = (new ConfigService)->isCacheEnable();
+        $isCache = $this->configService->isCacheEnable();
         if ($isCache) {
             $menus = cache()->remember('menus', CacheService::setTime(), function () {
                 return Menu::all()->sortBy('position');
@@ -78,7 +78,7 @@ class MenuService extends BaseService implements TranslateInterface
     public function getAllTranslate(Image|Page|Menu $mMenu)
     {
         $menuId = $mMenu->id;
-        $isCache = (new ConfigService)->isCacheEnable();
+        $isCache = $this->configService->isCacheEnable();
         if ($isCache) {
             $ret = cache()->remember('menutranslatemenuid_'.$menuId, CacheService::setTime(), function () use ($mMenu, $menuId) {
                 return $mMenu->translates()->where('menu_id', $menuId)->get(['lang', 'column', 'value'])->toArray();

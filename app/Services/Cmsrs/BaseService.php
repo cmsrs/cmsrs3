@@ -27,6 +27,8 @@ abstract class BaseService
         'page_id',
     ];
 
+    // public function __construct(private ConfigService $configService) {}
+
     public function getArrLangs()
     {
         if ($this->arrLangs) {

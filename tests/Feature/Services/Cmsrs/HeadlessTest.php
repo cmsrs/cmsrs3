@@ -83,7 +83,7 @@ class HeadlessTest extends Base
         $this->assertEquals($predefinedShortTitle[0], $data->data[0]->short_title->en);
     }
 
-    public function test_it_will_get_one_page_by_lang_without_auth() // old _docs
+    public function test_it_will_get_one_page_by_lang_without_auth_123() // old _docs
     {
         $lang = 'en';
         $testData =
@@ -171,7 +171,7 @@ class HeadlessTest extends Base
         $objPage = (app(PageService::class))->wrapCreate($testData);
         $this->assertNotEmpty($objPage->id);
 
-        $page = (new HeadlessService)->getAllPagesWithImagesOneItemByLang($objPage, 'en');
+        $page = app(HeadlessService::class)->getAllPagesWithImagesOneItemByLang($objPage, 'en');
 
         $this->assertEquals($testData['title']['en'], $page['title']);
         $this->assertEquals($testData['short_title']['en'], $page['short_title']);
@@ -229,7 +229,7 @@ class HeadlessTest extends Base
     {
         (new Demo)->pagesAndMenu(true);
 
-        $menuUrls = (new HeadlessService)->getAllUrlRelatedToMenus();
+        $menuUrls = app(HeadlessService::class)->getAllUrlRelatedToMenus();
 
         $this->assertHelper($menuUrls);
     }

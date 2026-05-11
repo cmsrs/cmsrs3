@@ -26,13 +26,16 @@ class ProductService extends BaseService
     public array $productFields;
 
     public function __construct(
+        private ConfigService $configService,
         private PageService $pageService,
         private ImageService $imageService,
         private PriceHelperService $priceHelperService,
-        private DeliverService $deliverService
+        private DeliverService $deliverService,
+        private TranslateService $translateService,
+        private ContentService $contentService,
     ) {
-        $this->translate = new TranslateService;
-        $this->content = new ContentService;
+        // $this->translate = new TranslateService;
+        // $this->content = new ContentService;
 
         $this->productFields = [
             'id',
@@ -330,7 +333,7 @@ class ProductService extends BaseService
         $this->createTranslate(['product_id' => $product->id, 'data' => $data]);
 
         if (! empty($data['images']) && is_array($data['images'])) {
-            $this->imageService->setTranslate($this->translate);
+            $this->imageService->setTranslate($this->translateService);
             $this->imageService->createImages($data['images'], 'product', $product->id);
         }
 
@@ -342,8 +345,8 @@ class ProductService extends BaseService
      */
     public function createTranslate(array $dd, bool $create = true): void
     {
-        $this->translate->wrapCreate($dd, $create);
-        $this->content->wrapCreate($dd, $create);
+        $this->translateService->wrapCreate($dd, $create);
+        $this->contentService->wrapCreate($dd, $create);
     }
 
     /**
@@ -558,7 +561,7 @@ class ProductService extends BaseService
      */
     public function getAllProductsWithImagesByLangCache(string $lang): array
     {
-        $isCache = (new ConfigService)->isCacheEnable();
+        $isCache = $this->configService->isCacheEnable();
         if ($isCache) {
             $products = cache()->remember('products_name_price_'.$lang, CacheService::setTime(), function () use ($lang) {
                 return $this->getAllProductsWithImagesByLang($lang);

@@ -14,12 +14,12 @@ use Illuminate\Support\Str;
 
 class PageService extends BaseService implements TranslateInterface
 {
-    public function __construct(private MenuService $menuService, private TranslateService $translateService, private ContentService $contentService, private ImageService $imageService) {}
+    public function __construct(private ConfigService $configService, private MenuService $menuService, private TranslateService $translateService, private ContentService $contentService, private ImageService $imageService) {}
 
     public function getPageDataByShortTitleCache(string $shortTitle, string $data = 'content', ?string $lang = null): string|bool
     {
         if (empty($lang)) {
-            $lang = ConfigService::getDefaultLang();
+            $lang = $this->configService->getDefaultLang();
         }
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
@@ -85,7 +85,7 @@ class PageService extends BaseService implements TranslateInterface
             $lang = ConfigService::getDefaultLang();
         }
 
-        $isCache = (new ConfigService)->isCacheEnable();
+        $isCache = $this->configService->isCacheEnable();
         if ($isCache) {
             $ret = cache()->remember('pageinner_by_pageid_'.$pageId.'_'.$lang, CacheService::setTime(), function () use ($pageId, $lang) {
                 return $this->getContentInnerPageByPageIdAndLang($pageId, $lang);
@@ -243,7 +243,7 @@ class PageService extends BaseService implements TranslateInterface
     {
         $pageId = $mPage->id;
 
-        $isCache = (new ConfigService)->isCacheEnable();
+        $isCache = $this->configService->isCacheEnable();
         if ($isCache) {
             $ret = cache()->remember('pagetranslatepageid_'.$pageId, CacheService::setTime(), function () use ($mPage, $pageId) {
                 return $this->getTranslateMerge($mPage, $pageId);
@@ -467,7 +467,7 @@ class PageService extends BaseService implements TranslateInterface
     public function getNumPagesBelongsToThisMenuCache(Page $mPage): ?int
     {
         $pageId = $mPage->id;
-        $isCache = (new ConfigService)->isCacheEnable();
+        $isCache = $this->configService->isCacheEnable();
         if ($isCache) {
             $countPages = cache()->remember('countpagesinthismenu_'.$pageId, CacheService::setTime(), function () use ($mPage) {
                 return $this->getNumPagesBelongsToThisMenu($mPage);
@@ -482,7 +482,7 @@ class PageService extends BaseService implements TranslateInterface
     private function getMenuSlugByLangCache(Page $mPage, string $lang): ?string
     {
         $pageId = $mPage->id;
-        $isCache = (new ConfigService)->isCacheEnable();
+        $isCache = $this->configService->isCacheEnable();
         if ($isCache) {
             $menuSlug = cache()->remember('menusluglang_'.$lang.'_'.$pageId, CacheService::setTime(), function () use ($mPage, $lang) {
                 return $this->getMenuSlugByLang($mPage, $lang);
@@ -565,7 +565,7 @@ class PageService extends BaseService implements TranslateInterface
 
     public function getFirstPageByType(string $type): ?Page
     {
-        $isCache = (new ConfigService)->isCacheEnable();
+        $isCache = $this->configService->isCacheEnable();
         if ($isCache) {
             $ret = cache()->remember('pagebytype_'.$type, CacheService::setTime(), function () use ($type) {
                 return Page::where('type', '=', $type)->where('published', '=', 1)->first();

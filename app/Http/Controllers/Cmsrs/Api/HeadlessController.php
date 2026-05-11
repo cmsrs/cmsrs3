@@ -64,7 +64,7 @@ class HeadlessController extends Controller
             return response()->json(['success' => false, 'error' => 'Page not published'], 403);
         }
 
-        $onePage = (new HeadlessService)->getAllPagesWithImagesOneItemByLang($page, $lang);
+        $onePage = $this->headlessService->getAllPagesWithImagesOneItemByLang($page, $lang);
 
         if ($onePage['type'] == 'shop') {
             $onePage['products'] = $this->productService->getGivenProductsWithImagesByPageId($page->id, false, $lang);
