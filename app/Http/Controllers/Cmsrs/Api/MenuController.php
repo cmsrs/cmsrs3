@@ -28,7 +28,7 @@ class MenuController extends Controller
 
     public function index()
     {
-        $menus = MenuService::getAllMenus();
+        $menus = $this->menuService->getAllMenus();
 
         return response()->json(['success' => true, 'data' => $menus], 200);
     }
@@ -50,7 +50,7 @@ class MenuController extends Controller
         }
 
         // check unique
-        $valid = MenuService::checkIsDuplicateName($data);
+        $valid = $this->menuService->checkIsDuplicateName($data);
         if (empty($valid['success'])) {
             return response()->json($valid, 200);
         }
@@ -82,7 +82,7 @@ class MenuController extends Controller
         }
 
         // check unique
-        $valid = MenuService::checkIsDuplicateName($data, $menu->id);
+        $valid = $this->menuService->checkIsDuplicateName($data, $menu->id);
         if (empty($valid['success'])) {
             return response()->json($valid, 200);
         }

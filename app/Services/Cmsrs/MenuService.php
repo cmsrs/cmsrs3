@@ -35,9 +35,9 @@ class MenuService extends BaseService implements TranslateInterface
         return $menus;
     }
 
-    public static function CreateMenu($data)
+    public function createMenu($data)
     {
-        $data['position'] = MenuService::getNextPosition();
+        $data['position'] = $this->getNextPosition();
 
         $menu = Menu::create($data);
         if (empty($menu->id)) {
@@ -61,7 +61,7 @@ class MenuService extends BaseService implements TranslateInterface
      */
     public function wrapCreate($data)
     {
-        $menu = MenuService::CreateMenu($data);
+        $menu = $this->createMenu($data);
         $this->translateService->wrapCreate(['menu_id' => $menu->id, 'data' => $data], true);
 
         return $menu;
@@ -108,7 +108,7 @@ class MenuService extends BaseService implements TranslateInterface
         return $pages;
     }
 
-    public static function getAllMenus()
+    public function getAllMenus()
     {
         $menus = Menu::with('translates')->orderBy('position', 'asc')->get()->toArray();
 
@@ -126,10 +126,10 @@ class MenuService extends BaseService implements TranslateInterface
         return $out;
     }
 
-    public static function checkIsDuplicateName($data, $id = '')
+    public function checkIsDuplicateName($data, $id = '')
     {
         $out = ['success' => true];
-        $menus = MenuService::getAllMenus();
+        $menus = $this->getAllMenus();
         foreach ($menus as $menu) {
             if ($menu['id'] == $id) {
                 continue;
@@ -151,7 +151,7 @@ class MenuService extends BaseService implements TranslateInterface
         return $out;
     }
 
-    public static function getNextPosition()
+    public function getNextPosition()
     {
         $menu = Menu::query()
             ->orderBy('position', 'desc')

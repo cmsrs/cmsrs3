@@ -33,7 +33,7 @@ class FrontController extends Controller
         protected PaymentService $paymentService,
         protected ProductService $productService,
     ) {
-        $this->menus =  $this->menuService->getMenu(); // $menus;
+        $this->menus = $this->menuService->getMenu(); // $menus;
         $this->langs = $this->configService->arrGetLangs();
     }
 
@@ -117,7 +117,7 @@ class FrontController extends Controller
         App::setLocale($lang);
 
         $payments = PaymentService::getPayment();
-        $delivers = DeliverService::getDeliver();
+        $delivers = $this->deliverService->getDeliver();
 
         // $token =  '123todo'; // User::getTokenForClient(); //todo - when user not auth
         $data = [
