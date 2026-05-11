@@ -1,6 +1,9 @@
 @extends('layouts.default')
 
 @section('content')
+<?php
+    $priceHelperService = app(\App\Services\Cmsrs\Helpers\PriceHelperService::class);
+?>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -20,7 +23,7 @@
                         <?php }else{ ?>
                             <ul  class="mt-3 list-group">
                             <?php foreach($orders as $order){ ?>
-                                <li class="list-group-item"><a href="{{$order['product_url']}}" ><img src="{{$order['product_img']}}"  alt="{{$order['name']}}" ></a><span class="ms-3"> <a href="{{$order['product_url']}}" > {{$order['name']}} </a> <span class="ms-3">{{ \App\Services\Cmsrs\Helpers\PriceHelperService::getPriceDescriptionWrap( $order['unitPrice'] ) }} x {{$order['qty'] }}</span> </span> </li>
+                                <li class="list-group-item"><a href="{{$order['product_url']}}" ><img src="{{$order['product_img']}}"  alt="{{$order['name']}}" ></a><span class="ms-3"> <a href="{{$order['product_url']}}" > {{$order['name']}} </a> <span class="ms-3">{{ $priceHelperService->getPriceDescriptionWrap( $order['unitPrice'] ) }} x {{$order['qty'] }}</span> </span> </li>
                             <?php } ?>
                             </ul>
                         <?php } ?>
@@ -31,10 +34,10 @@
                 {{ __('TO PAY') }}:            
                 <ul  class="mt-3 list-group">
                     <?php foreach($checkouts as $checkout){ ?>
-                        <li class="ms-4" >{{  __('Order number') }} : {{ $checkout['id'] }}. {{  __('Amount to pay') }}  <strong> {{ \App\Services\Cmsrs\Helpers\PriceHelperService::getPriceDescriptionWrap( $checkout['price_total_add_deliver'] ) }} </strong>  = {{ \App\Services\Cmsrs\Helpers\PriceHelperService::getPriceDescriptionWrap( $checkout['price_total'] ) }} + {{  __('deliver') }} : {{  \App\Services\Cmsrs\Helpers\PriceHelperService::getPriceDescriptionWrap( $checkout['price_deliver'] ) }} </li>
+                        <li class="ms-4" >{{  __('Order number') }} : {{ $checkout['id'] }}. {{  __('Amount to pay') }}  <strong> {{ $priceHelperService->getPriceDescriptionWrap( $checkout['price_total_add_deliver'] ) }} </strong>  = {{ $priceHelperService->getPriceDescriptionWrap( $checkout['price_total'] ) }} + {{  __('deliver') }} : {{  $priceHelperService->getPriceDescriptionWrap( $checkout['price_deliver'] ) }} </li>
                         <ul>
                         <?php foreach($checkout['baskets'] as $basket){ ?>
-                            <li class="ms-4" ><a href="{{ $basket['product_url'] }}"> {{ $basket['product_name'] }}</a> {{ $basket['qty'] }} x {{  \App\Services\Cmsrs\Helpers\PriceHelperService::getPriceDescriptionWrap( $basket['price'] ) }} </li>
+                            <li class="ms-4" ><a href="{{ $basket['product_url'] }}"> {{ $basket['product_name'] }}</a> {{ $basket['qty'] }} x {{  $priceHelperService->getPriceDescriptionWrap( $basket['price'] ) }} </li>
                         <?php } ?>
                         </ul>
                     <?php } ?>

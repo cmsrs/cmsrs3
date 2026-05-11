@@ -83,7 +83,7 @@ class ProductTest extends Base
 
         $this->name2 = 'phpunittest2.jpg';
 
-        $this->priceDescription = PriceHelperService::getPriceDescriptionWrap(self::INT_PRODUCT_PRICE);
+        $this->priceDescription = app(PriceHelperService::class)->getPriceDescriptionWrap(self::INT_PRODUCT_PRICE);
         $this->assertNotEmpty($this->priceDescription);
 
         $pagination = ConfigService::getPagination(); // 10 - change .env.testing
@@ -222,15 +222,16 @@ class ProductTest extends Base
 
     private function simpleTestCheckoutData($data)
     {
+        $priceHelperService = app(PriceHelperService::class);
         $this->assertNotEmpty($data->user_id);
         $this->assertNotEmpty($data->price_total);
-        $this->assertEquals($data->price_total_description, PriceHelperService::getPriceDescriptionWrap($data->price_total));
+        $this->assertEquals($data->price_total_description, $priceHelperService->getPriceDescriptionWrap($data->price_total));
 
         $this->assertNotEmpty($data->price_deliver);
-        $this->assertEquals($data->price_deliver_description, PriceHelperService::getPriceDescriptionWrap($data->price_deliver));
+        $this->assertEquals($data->price_deliver_description, $priceHelperService->getPriceDescriptionWrap($data->price_deliver));
 
         $this->assertNotEmpty($data->price_total_add_deliver);
-        $this->assertEquals($data->price_total_add_deliver_description, PriceHelperService::getPriceDescriptionWrap($data->price_total_add_deliver));
+        $this->assertEquals($data->price_total_add_deliver_description, $priceHelperService->getPriceDescriptionWrap($data->price_total_add_deliver));
 
         $this->assertNotEmpty($data->email);
         $this->assertNotEmpty($data->first_name);
@@ -249,7 +250,7 @@ class ProductTest extends Base
         $this->assertNotEmpty($data->baskets[0]->qty);
         $this->assertNotEmpty($data->baskets[0]->price);
         $this->assertNotEmpty($data->baskets[0]->price_description);
-        $this->assertEquals($data->baskets[0]->price_description, PriceHelperService::getPriceDescriptionWrap($data->baskets[0]->price));
+        $this->assertEquals($data->baskets[0]->price_description, $priceHelperService->getPriceDescriptionWrap($data->baskets[0]->price));
 
         $this->assertNotEmpty($data->baskets[0]->product_id);
         $this->assertNotEmpty($data->baskets[0]->product_name);
@@ -359,40 +360,39 @@ class ProductTest extends Base
         $this->assertEquals(Auth::user()->id, $res->data[0]->user_id);
 
         $this->simpleTestCheckoutData($res->data[0]);
-        /*
-        $this->assertNotEmpty($res->data[0]->user_id);
-        $this->assertNotEmpty($res->data[0]->price_total);
-        $this->assertEquals($res->data[0]->price_total_description, PriceHelperService::getPriceDescriptionWrap($res->data[0]->price_total) );
 
-        $this->assertNotEmpty($res->data[0]->price_deliver);
-        $this->assertEquals($res->data[0]->price_deliver_description, PriceHelperService::getPriceDescriptionWrap($res->data[0]->price_deliver) );
+        // $this->assertNotEmpty($res->data[0]->user_id);
+        // $this->assertNotEmpty($res->data[0]->price_total);
+        // $this->assertEquals($res->data[0]->price_total_description, PriceHelperService::getPriceDescriptionWrap($res->data[0]->price_total) );
 
-        $this->assertNotEmpty($res->data[0]->price_total_add_deliver);
-        $this->assertEquals($res->data[0]->price_total_add_deliver_description, PriceHelperService::getPriceDescriptionWrap($res->data[0]->price_total_add_deliver) );
+        // $this->assertNotEmpty($res->data[0]->price_deliver);
+        // $this->assertEquals($res->data[0]->price_deliver_description, PriceHelperService::getPriceDescriptionWrap($res->data[0]->price_deliver) );
 
-        $this->assertNotEmpty($res->data[0]->email);
-        $this->assertNotEmpty($res->data[0]->first_name);
-        $this->assertNotEmpty($res->data[0]->last_name);
-        $this->assertNotEmpty($res->data[0]->address);
-        $this->assertNotEmpty($res->data[0]->country);
-        $this->assertNotEmpty($res->data[0]->city);
-        $this->assertNotEmpty($res->data[0]->telephone);
-        $this->assertNotEmpty($res->data[0]->postcode);
-        $this->assertEquals(0, $res->data[0]->is_pay);
-        $this->assertNotEmpty($res->data[0]->created_at);
+        // $this->assertNotEmpty($res->data[0]->price_total_add_deliver);
+        // $this->assertEquals($res->data[0]->price_total_add_deliver_description, PriceHelperService::getPriceDescriptionWrap($res->data[0]->price_total_add_deliver) );
 
-        $this->assertNotEmpty($res->data[0]->baskets);
-        $this->assertTrue(is_array($res->data[0]->baskets));
+        // $this->assertNotEmpty($res->data[0]->email);
+        // $this->assertNotEmpty($res->data[0]->first_name);
+        // $this->assertNotEmpty($res->data[0]->last_name);
+        // $this->assertNotEmpty($res->data[0]->address);
+        // $this->assertNotEmpty($res->data[0]->country);
+        // $this->assertNotEmpty($res->data[0]->city);
+        // $this->assertNotEmpty($res->data[0]->telephone);
+        // $this->assertNotEmpty($res->data[0]->postcode);
+        // $this->assertEquals(0, $res->data[0]->is_pay);
+        // $this->assertNotEmpty($res->data[0]->created_at);
 
-        $this->assertNotEmpty($res->data[0]->baskets[0]->qty);
-        $this->assertNotEmpty($res->data[0]->baskets[0]->price);
-        $this->assertNotEmpty($res->data[0]->baskets[0]->price_description);
-        $this->assertEquals($res->data[0]->baskets[0]->price_description, PriceHelperService::getPriceDescriptionWrap($res->data[0]->baskets[0]->price) );
+        // $this->assertNotEmpty($res->data[0]->baskets);
+        // $this->assertTrue(is_array($res->data[0]->baskets));
 
-        $this->assertNotEmpty($res->data[0]->baskets[0]->product_id);
-        $this->assertNotEmpty($res->data[0]->baskets[0]->product_name);
-        $this->assertNotEmpty($res->data[0]->baskets[0]->product_url);
-        */
+        // $this->assertNotEmpty($res->data[0]->baskets[0]->qty);
+        // $this->assertNotEmpty($res->data[0]->baskets[0]->price);
+        // $this->assertNotEmpty($res->data[0]->baskets[0]->price_description);
+        // $this->assertEquals($res->data[0]->baskets[0]->price_description, PriceHelperService::getPriceDescriptionWrap($res->data[0]->baskets[0]->price) );
+
+        // $this->assertNotEmpty($res->data[0]->baskets[0]->product_id);
+        // $this->assertNotEmpty($res->data[0]->baskets[0]->product_name);
+        // $this->assertNotEmpty($res->data[0]->baskets[0]->product_url);
 
         $orders = Order::all()->toArray();
         $this->assertEmpty($orders);
@@ -846,7 +846,7 @@ class ProductTest extends Base
         $response1->assertStatus(302);
         $this->assertEquals(2, Checkout::all()->count());
 
-        $ch = CheckoutService::findActiveOrder();
+        $ch = app(CheckoutService::class)->findActiveOrder();
         $this->assertNotEmpty($ch);
         $this->assertEquals(0, $ch->is_pay);
 

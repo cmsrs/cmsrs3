@@ -6,14 +6,16 @@ use App\Services\Cmsrs\ConfigService;
 
 class PriceHelperService
 {
+    public function __construct(private ConfigService $configService) {}
+
     /**
      * this function are used converted in javascript too
      */
-    public static function getPriceDescriptionWrap(int $price): string
+    public function getPriceDescriptionWrap(int $price): string
     {
-        $currency = (new ConfigService)->getCurrency();
+        $currency = $this->configService->getCurrency();
 
-        return self::getPriceDescription($price, $currency);
+        return PriceHelperService::getPriceDescription($price, $currency);
     }
 
     /**

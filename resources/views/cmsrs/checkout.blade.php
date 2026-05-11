@@ -1,6 +1,8 @@
 @extends('layouts.default')
 @section('content')
-  
+<?php    
+    $priceHelperService = app(\App\Services\Cmsrs\Helpers\PriceHelperService::class);
+?>
   <h1 class="mb-4 mt-3">{{__('Checkout')}}</h1>
 
     <div class="container">
@@ -173,7 +175,7 @@
               <div class="form-check">
                 <input class="form-check-input" type="radio" name="deliver" id="{{ $key_deliver }}" value="{{ $key_deliver }}"  v-on:change="deliver( '{{ $deliverPrice }}' )"  @if(old("deliver") == $key_deliver ) checked @endif >
                 <label class="form-check-label" for="{{ $key_deliver }}">
-                  {{ __($deliver['name']) }} ({{  \App\Services\Cmsrs\Helpers\PriceHelperService::getPriceDescriptionWrap($deliverPrice) }})
+                  {{ __($deliver['name']) }} ({{   $priceHelperService->getPriceDescriptionWrap($deliverPrice) }})
                 </label>
               </div>
 

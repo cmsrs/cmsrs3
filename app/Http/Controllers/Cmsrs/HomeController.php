@@ -31,6 +31,7 @@ class HomeController extends Controller
         protected PageService $pageService,
         protected ProductService $productService,
         protected OrderService $orderService,
+        protected CheckoutService $checkoutService,
 
     ) {
         // $lang = Config::getLangFromSession();  //not working proper
@@ -60,8 +61,8 @@ class HomeController extends Controller
             $this->productService->getDataToPayment($arrOrdersReindex, $baskets, $orders);
         }
 
-        $objCheckouts = CheckoutService::findActiveOrders()->get();
-        $checkouts = CheckoutService::printCheckouts($objCheckouts, $lang);
+        $objCheckouts = $this->checkoutService->findActiveOrders()->get();
+        $checkouts = $this->checkoutService->printCheckouts($objCheckouts, $lang);
 
         $data = [
             'checkouts' => $checkouts,

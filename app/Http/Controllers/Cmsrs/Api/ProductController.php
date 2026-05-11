@@ -25,6 +25,7 @@ class ProductController extends Controller
         protected ConfigService $configService,
         protected ProductService $productService,
         protected ImageService $imageService,
+        protected PriceHelperService $priceHelperService,
     ) {
         $this->validationRules['type'] = 'in:'.ConfigService::getPageTypes();
         $this->validationRules['published'] = 'boolean';
@@ -124,7 +125,7 @@ class ProductController extends Controller
             return response()->json(['success' => false, 'error' => 'Add product problem, details in the log file.'], 200); // .$e->getMessage()
         }
 
-        $data['price_description'] = PriceHelperService::getPriceDescriptionWrap($data['price']);
+        $data['price_description'] = $this->priceHelperService->getPriceDescriptionWrap($data['price']);
 
         return response()->json(['success' => true, 'data' => ['productId' => $product->id, 'data' => $data]]);
     }

@@ -1,5 +1,8 @@
 @extends('layouts.default')
 @section('content')
+<?php
+    $priceHelperService = app(\App\Services\Cmsrs\Helpers\PriceHelperService::class);
+?>
 
 
 <h1 class="mb-4 mt-3">{{  __('Shopping Success') }}</h1>
@@ -10,7 +13,7 @@
   </div>
   <ul>
     <li>{{  __('Order number') }} : {{ $checkout->id }}</li>
-    <li>{{  __('Amount to pay') }} : {{ \App\Services\Cmsrs\Helpers\PriceHelperService::getPriceDescriptionWrap($checkout->price_total_add_deliver) }}</li> 
+    <li>{{  __('Amount to pay') }} : {{ $priceHelperService->getPriceDescriptionWrap($checkout->price_total_add_deliver) }}</li> 
   <ul>
 </div>
 

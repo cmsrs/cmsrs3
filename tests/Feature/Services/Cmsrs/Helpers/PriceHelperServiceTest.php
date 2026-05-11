@@ -32,7 +32,7 @@ class PriceHelperServiceTest extends TestCase
     {
         $price = 123;
         // $currency = 'USD'; //get it from env file
-        $priceDescription = PriceHelperService::getPriceDescriptionWrap($price);
+        $priceDescription = app(PriceHelperService::class)->getPriceDescriptionWrap($price);
         $this->assertEquals('$1.23', $priceDescription);
     }
 

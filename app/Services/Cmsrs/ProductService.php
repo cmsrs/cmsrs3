@@ -25,8 +25,12 @@ class ProductService extends BaseService
     /** @var array<int, string> */
     public array $productFields;
 
-    public function __construct(private PageService $pageService, private ImageService $imageService)
-    {
+    public function __construct(
+        private PageService $pageService,
+        private ImageService $imageService,
+        private PriceHelperService $priceHelperService,
+        private DeliverService $deliverService
+    ) {
         $this->translate = new TranslateService;
         $this->content = new ContentService;
 
@@ -53,7 +57,7 @@ class ProductService extends BaseService
             throw new \Exception('Payment problem - checkout');
         }
 
-        $deliver = DeliverService::getDeliver($data['deliver']);
+        $deliver = $this->deliverService->getDeliver($data['deliver']);
         if (empty($deliver)) {
             throw new \Exception('Deliver problem - checkout');
         }
@@ -134,7 +138,7 @@ class ProductService extends BaseService
             $product->setAttribute('page_short_title', $pageShortTitle);
             unset($product['translatesPage']);
 
-            $priceDescription = PriceHelperService::getPriceDescriptionWrap($product->price);
+            $priceDescription = $this->priceHelperService->getPriceDescriptionWrap($product->price);
             $product->setAttribute('price_description', $priceDescription);
         });
 
@@ -365,7 +369,7 @@ class ProductService extends BaseService
             $out[$field] = $product[$field];
         }
         $price = ! empty($product['price']) ? $product['price'] : 0;
-        $out['price_description'] = PriceHelperService::getPriceDescriptionWrap($price);
+        $out['price_description'] = $this->priceHelperService->getPriceDescriptionWrap($price);
         foreach ($product['translates'] as $translate) {
             $out[$translate['column']][$translate['lang']] = $translate['value'];
             if ($translate['column'] == 'product_name') {
@@ -537,7 +541,7 @@ class ProductService extends BaseService
                 $productId = $product['id'];
                 // $out[$productId]["product_id"] = $productId;
                 $out[$productId]['price'] = $product['price'];
-                $out[$productId]['price_description'] = PriceHelperService::getPriceDescriptionWrap($product['price']);
+                $out[$productId]['price_description'] = $this->priceHelperService->getPriceDescriptionWrap($product['price']);
                 $out[$productId]['name'] = $product['product_name'][$lang];
                 $out[$productId]['url_product'] = $product['url_product'][$lang];
                 if (! empty($product['images']) && ! empty($img = $product['images']->first())) {

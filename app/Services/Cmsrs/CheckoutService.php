@@ -9,14 +9,16 @@ use Illuminate\Support\Facades\Auth;
 
 class CheckoutService extends BaseService
 {
-    public static function findActiveOrder()
+    public function __construct(private ProductService $productService, private PriceHelperService $priceHelperService) {}
+
+    public function findActiveOrder()
     {
-        $orders = self::findActiveOrders();
+        $orders = $this->findActiveOrders();
 
         return $orders?->first();
     }
 
-    public static function findActiveOrders()
+    public function findActiveOrders()
     {
         $user = Auth::user();
         if (empty($user)) {
@@ -43,37 +45,37 @@ class CheckoutService extends BaseService
         //     $objCheckouts = Checkout::orderBy($column, $direction)->get();
         // }
 
-        $checkouts = CheckoutService::printCheckouts($objCheckouts, $lang);
+        $checkouts = $this->printCheckouts($objCheckouts, $lang);
 
         return $this->getPaginationFromCollection(collect($checkouts));
 
     }
 
-    public static function printCheckouts($checkouts, $lang)
+    public function printCheckouts($checkouts, $lang)
     {
         $out = [];
         $i = 0;
         foreach ($checkouts as $checkout) {
-            $out[$i] = self::getCheckoutItems($checkout);
-            $out[$i]['baskets'] = self::getBasketItems($checkout->baskets, $lang);
+            $out[$i] = $this->getCheckoutItems($checkout);
+            $out[$i]['baskets'] = $this->getBasketItems($checkout->baskets, $lang);
             $i++;
         }
 
         return $out;
     }
 
-    private static function getCheckoutItems($checkout)
+    private function getCheckoutItems($checkout)
     {
         $out = [];
         $out['id'] = $checkout->id;
         $out['price_total'] = $checkout->price_total;
-        $out['price_total_description'] = PriceHelperService::getPriceDescriptionWrap($checkout->price_total);
+        $out['price_total_description'] = $this->priceHelperService->getPriceDescriptionWrap($checkout->price_total);
 
         $out['price_deliver'] = $checkout->price_deliver;
-        $out['price_deliver_description'] = PriceHelperService::getPriceDescriptionWrap($checkout->price_deliver);
+        $out['price_deliver_description'] = $this->priceHelperService->getPriceDescriptionWrap($checkout->price_deliver);
 
         $out['price_total_add_deliver'] = $checkout->price_total_add_deliver;
-        $out['price_total_add_deliver_description'] = PriceHelperService::getPriceDescriptionWrap($checkout->price_total_add_deliver);
+        $out['price_total_add_deliver_description'] = $this->priceHelperService->getPriceDescriptionWrap($checkout->price_total_add_deliver);
 
         $out['user_id'] = $checkout->user_id;
         $out['email'] = $checkout->email;
@@ -90,7 +92,7 @@ class CheckoutService extends BaseService
         return $out;
     }
 
-    private static function getBasketItems($baskets, $lang)
+    private function getBasketItems($baskets, $lang)
     {
         $out = [];
         $j = 0;
@@ -110,15 +112,15 @@ class CheckoutService extends BaseService
                 throw new \Exception("can't find product id =".$basket['product_id']);
             }
 
-            $productName = ProductService::getDefaultProductName($product->translates, $lang);
+            $productName = $this->productService->getDefaultProductName($product->translates, $lang);
             $out[$j]['qty'] = $basket->qty;
 
             $out[$j]['price'] = $basket->price;
-            $out[$j]['price_description'] = PriceHelperService::getPriceDescriptionWrap($basket->price);
+            $out[$j]['price_description'] = $this->priceHelperService->getPriceDescriptionWrap($basket->price);
 
             $out[$j]['product_id'] = $basket['product_id'];
             $out[$j]['product_name'] = $productName;
-            $out[$j]['product_url'] = app(ProductService::class)->getProductUrl($product, $lang, $productName); // TODO DI
+            $out[$j]['product_url'] = $this->productService->getProductUrl($product, $lang, $productName); // TODO DI
             $j++;
         }
 

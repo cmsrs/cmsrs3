@@ -107,7 +107,8 @@ createApp({
         });
         
         // Methods
-        //see: App\Services\Cmsrs\Helpers\PriceHelperService - start
+        //see (old) : App\Services\Cmsrs\Helpers\PriceHelperService - start
+        //see: App\Services\Cmsrs\ProductService
         const getPriceDescriptionWrap = (price) => {
             return getPriceDescription(price, currency.value);
         };
