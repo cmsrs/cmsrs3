@@ -16,7 +16,7 @@ class OrderService extends BaseService
      *   //$checkout->is_pay = 1;
      *   //$checkout->save();
      */
-    public static function copyDataFromBasketToOrderForUser($checkout)
+    public function copyDataFromBasketToOrderForUser($checkout)
     {
 
         $userId = $checkout->user_id;
@@ -89,7 +89,7 @@ class OrderService extends BaseService
 
     }
 
-    public static function inOrdersByUserId($userId)
+    public function inOrdersByUserId($userId)
     {
         return Order::where('user_id', '=', $userId)->get(); // ->toArray();
     }

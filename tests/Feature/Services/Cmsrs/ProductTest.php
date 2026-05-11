@@ -210,7 +210,6 @@ class ProductTest extends Base
         $key = self::STR_PRODUCT_NAME_EN_1;
         $lang = 'en';
 
-
         $objProducts = app(ProductService::class)->searchProducts($lang, $key);
         $arrProducts = ProductService::objToArray($objProducts);
 

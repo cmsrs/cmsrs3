@@ -30,6 +30,7 @@ class HomeController extends Controller
         protected MenuService $menuService,
         protected PageService $pageService,
         protected ProductService $productService,
+        protected OrderService $orderService,
 
     ) {
         // $lang = Config::getLangFromSession();  //not working proper
@@ -51,7 +52,7 @@ class HomeController extends Controller
             return redirect()->route('login');
         }
 
-        $arrOrders = OrderService::inOrdersByUserId($user->id)->toArray();
+        $arrOrders = $this->orderService->inOrdersByUserId($user->id)->toArray();
         $orders = [];
         if (! empty($arrOrders)) {
             $arrOrdersReindex = BaseService::reIndexArr($arrOrders, 'product_id');

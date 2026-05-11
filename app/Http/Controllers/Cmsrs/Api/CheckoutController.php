@@ -20,6 +20,7 @@ class CheckoutController extends Controller
     public function __construct(
         protected CheckoutService $checkoutService,
         protected ConfigService $configService,
+        protected OrderService $orderService,
     ) {}
 
     public function index()
@@ -91,7 +92,7 @@ class CheckoutController extends Controller
         }
 
         if (empty($beforeIsPay) && ! empty($data['is_pay'])) {
-            OrderService::copyDataFromBasketToOrderForUser($checkout);
+            $this->orderService->copyDataFromBasketToOrderForUser($checkout);
         }
 
         return response()->json(['success' => true], 200);
