@@ -37,7 +37,7 @@ class HomeController extends Controller
         // $lang = Config::getLangFromSession();  //not working proper
         // App::setLocale($lang);
 
-        $this->menus = MenuService::getMenu(); // $menus;
+        $this->menus = $this->menuService->getMenu(); // $menus;
         $this->langs = $this->configService->arrGetLangs();
     }
 

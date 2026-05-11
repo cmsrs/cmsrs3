@@ -21,7 +21,7 @@ class MenuService extends BaseService implements TranslateInterface
         }
     }
 
-    public static function getMenu()
+    public function getMenu()
     {
         $isCache = (new ConfigService)->isCacheEnable();
         if ($isCache) {
