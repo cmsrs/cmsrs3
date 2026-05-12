@@ -18,10 +18,6 @@ use Illuminate\Support\Str;
 
 class ProductService extends BaseService
 {
-    private TranslateService $translate;
-
-    private ContentService $content;
-
     /** @var array<int, string> */
     public array $productFields;
 
@@ -34,8 +30,6 @@ class ProductService extends BaseService
         private TranslateService $translateService,
         private ContentService $contentService,
     ) {
-        // $this->translate = new TranslateService;
-        // $this->content = new ContentService;
 
         $this->productFields = [
             'id',
@@ -333,7 +327,7 @@ class ProductService extends BaseService
         $this->createTranslate(['product_id' => $product->id, 'data' => $data]);
 
         if (! empty($data['images']) && is_array($data['images'])) {
-            $this->imageService->setTranslate($this->translateService);
+            // $this->imageService->setTranslate($this->translateService);
             $this->imageService->createImages($data['images'], 'product', $product->id);
         }
 

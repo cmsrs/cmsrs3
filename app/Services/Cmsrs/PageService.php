@@ -109,17 +109,6 @@ class PageService extends BaseService implements TranslateInterface
     /**
      * @return void
      */
-    public function setTranslate(TranslateService $objTranslate)
-    {
-        // ---phpstan-ignore-next-line empty() on object always false – but logic stays
-        if (! empty($objTranslate)) {
-            $this->translateService = $objTranslate;
-        }
-    }
-
-    /**
-     * @return void
-     */
     public function setContent(ContentService $objContent)
     {
         // ---phpstan-ignore-next-line empty() on object always false – but logic stays
@@ -299,7 +288,7 @@ class PageService extends BaseService implements TranslateInterface
         $this->createTranslate(['page_id' => $page->id, 'data' => $data]);
 
         if (! empty($data['images']) && is_array($data['images'])) {
-            $this->imageService->setTranslate($this->translateService);
+            // $this->imageService->setTranslate($this->translateService);
             $this->imageService->createImages($data['images'], 'page', $page->id);
         }
 

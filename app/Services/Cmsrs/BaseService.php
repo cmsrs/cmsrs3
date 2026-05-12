@@ -9,12 +9,8 @@ use App\Services\Cmsrs\Interfaces\TranslateInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 
-// use Illuminate\Support\Number;
-
 abstract class BaseService
 {
-    // private $arrLangs;
-
     public $pageFields = [
         'id',
         'published',
@@ -25,22 +21,6 @@ abstract class BaseService
         'menu_id',
         'page_id',
     ];
-
-    // public function __construct(private ConfigService $configService) {}
-
-    // public function getArrLangs()
-    // {
-    //     if ($this->arrLangs) {
-    //         return $this->arrLangs;
-    //     }
-
-    //     return (new ConfigService)->arrGetLangs();
-    // }
-
-    // public function setArrLangs($arrLangs)
-    // {
-    //     $this->arrLangs = $arrLangs;
-    // }
 
     protected function getPageDataFormat(array $page, ?string $lang = null)
     {

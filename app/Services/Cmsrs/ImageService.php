@@ -15,13 +15,6 @@ class ImageService extends BaseService implements TranslateInterface
 {
     public function __construct(private ConfigService $configService, private TranslateService $translateService) {}
 
-    public function setTranslate($objTranslate)
-    {
-        if (! empty($objTranslate)) {
-            $this->translateService = $objTranslate;
-        }
-    }
-
     public function getAllTranslate(Page|Image|Menu $mImage)
     {
         $imageId = $mImage->id;
@@ -120,8 +113,6 @@ class ImageService extends BaseService implements TranslateInterface
 
     public function getImgDir(Image $objImg, $isAbs = true)
     {
-        // $imageService = new ImageService;
-
         return $this->getImageDir($this->getRefType($objImg), $this->getRefId($objImg), $objImg->id, $isAbs);
     }
 
@@ -405,10 +396,6 @@ class ImageService extends BaseService implements TranslateInterface
 
         return true;
     }
-
-    /**
-     * it was in BaseService - images in fs - start
-     */
 
     /**
      * this function is useful only in tests

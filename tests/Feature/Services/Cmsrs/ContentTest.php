@@ -6,6 +6,8 @@ use App\Models\Cmsrs\Content;
 use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\ContentService;
+use App\Services\Cmsrs\ImageService;
+use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\TranslateService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -79,7 +81,7 @@ class ContentTest extends Base
         $this->assertEquals(2, Content::query()->where('page_id', $p->id)->count());
     }
 
-    public function test_page_content_wrap_create_ok_2()
+    public function test_page_content_wrap_create_ok_2_mock()
     {
         $data = $this->getPageTestData();
 
@@ -89,11 +91,26 @@ class ContentTest extends Base
         $translate = new TranslateService($configMock);
         $content = new ContentService($configMock);
 
-        $objPage = app(PageService::class);
-        $objPage->setTranslate($translate);
-        $objPage->setContent($content);
+        // konstruktor: public function __construct(private ConfigService $configService, private MenuService $menuService, private TranslateService $translateService, private ContentService $contentService, private ImageService $imageService)
+        // $objPage = app(PageService::class); //jak wstrzyknac te zaleznosci - pyt do AI
+        // $objPage->setTranslate($translate);
+        // $objPage->setContent($content);
 
-        $page = $objPage->wrapCreate($data, $translate, $content);
+        $imageServiceMock = Mockery::mock(ImageService::class);
+        $imageServiceMock
+            ->shouldReceive('createImages')
+            ->once()
+            ->andReturn(null);
+
+        $objPage = new PageService(
+            $configMock,
+            Mockery::mock(MenuService::class),
+            $translate,
+            $content,
+            $imageServiceMock
+        );
+
+        $page = $objPage->wrapCreate($data, $translate, $content); // linia 107
         $this->assertNotEmpty($page->id);
 
         $this->assertEquals(1, Content::query()->where('page_id', $page->id)->count());

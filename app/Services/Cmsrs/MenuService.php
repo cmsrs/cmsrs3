@@ -14,13 +14,6 @@ class MenuService extends BaseService implements TranslateInterface
 {
     public function __construct(private ConfigService $configService, private TranslateService $translateService) {}
 
-    public function setTranslate($objTranslate)
-    {
-        if (! empty($objTranslate)) {
-            $this->translateService = $objTranslate;
-        }
-    }
-
     public function getMenu()
     {
         $isCache = $this->configService->isCacheEnable();

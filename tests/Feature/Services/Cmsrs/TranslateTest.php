@@ -5,6 +5,8 @@ namespace Tests\Feature\Services\Cmsrs;
 use App\Models\Cmsrs\Content;
 use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\ConfigService;
+use App\Services\Cmsrs\ContentService;
+use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\TranslateService;
@@ -100,8 +102,10 @@ class TranslateTest extends Base
         $configMock->shouldReceive('arrGetLangs')->andReturn($arrLangTest);
         $translate = new TranslateService($configMock);
 
-        $objMenu = app(MenuService::class);
-        $objMenu->setTranslate($translate);
+        $objMenu = new MenuService(
+            $configMock,
+            $translate,
+        );
 
         $menu = $objMenu->wrapCreate($data);
 
@@ -199,16 +203,30 @@ class TranslateTest extends Base
         $arrLangTest = ['pl'];
         $configMock->shouldReceive('arrGetLangs')->andReturn($arrLangTest);
         $translate = new TranslateService($configMock);
+        $content = new ContentService($configMock);
 
-        $objPage = app(PageService::class);
-        $objPage->setTranslate($translate);
+        $imageService = new ImageService($configMock, $translate);
+
+        // $imageServiceMock = Mockery::mock(ImageService::class);
+        // $imageServiceMock
+        //     ->shouldReceive('createImages')
+        //     ->once()
+        //     ->andReturn(null);
+
+        $objPage = new PageService(
+            $configMock,
+            app(MenuService::class),
+            $translate,
+            $content,
+            $imageService
+        );
 
         $page = $objPage->wrapCreate($data, $translate);
 
         $this->assertEquals(1, Translate::query()->where('page_id', $page->id)->where('column', 'title')->count());
         $this->assertEquals(1, Translate::query()->where('page_id', $page->id)->where('column', 'short_title')->where('lang', 'pl')->count());
         $this->assertEquals(1, Translate::query()->where('page_id', $page->id)->where('column', 'description')->count());
-        $this->assertEquals(2, Content::query()->where('page_id', $page->id)->count()); // not set DI, therefore is 2
+        $this->assertEquals(1, Content::query()->where('page_id', $page->id)->count()); // (wczesniej mailaem 2 a powinna byc 1 - jak myslisz AI)  not set DI, therefore is 2
 
         $this->assertEquals(3, Translate::query()->whereNotNull('image_id')->where('column', 'alt')->count());
     }
