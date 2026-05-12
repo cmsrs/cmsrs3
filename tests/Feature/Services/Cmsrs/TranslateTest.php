@@ -202,6 +202,9 @@ class TranslateTest extends Base
         $configMock = Mockery::mock(ConfigService::class);
         $arrLangTest = ['pl'];
         $configMock->shouldReceive('arrGetLangs')->andReturn($arrLangTest);
+        $configMock->shouldReceive('arrAllowedUploadFileExt')
+            ->andReturn(['jpg', 'png', 'gif']);
+
         $translate = new TranslateService($configMock);
         $content = new ContentService($configMock);
 
