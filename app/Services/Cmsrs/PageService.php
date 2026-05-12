@@ -397,7 +397,7 @@ class PageService extends BaseService implements TranslateInterface
     public function getUrls(Page $mPage, ?string $urlParam = null): array
     {
         $urls = [];
-        $langs = $this->getArrLangs();
+        $langs = $this->configService->arrGetLangs();
         foreach ($langs as $l) {
             $urls[$l] = $this->getUrl($mPage, $l, $urlParam);
         }

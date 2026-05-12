@@ -3,13 +3,13 @@
 namespace Tests\Feature\Services\Cmsrs;
 
 use App\Models\Cmsrs\Content;
-use App\Models\Cmsrs\Menu;
-use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Translate;
+use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\TranslateService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mockery;
 
 class TranslateTest extends Base
 {
@@ -46,16 +46,26 @@ class TranslateTest extends Base
 
     public function test_get_arr_langs()
     {
-        $translate = new TranslateService;
-        $translate->setArrLangs(['en', 'pl']);
+
+        $translate = app(TranslateService::class);
+        // $translate->setArrLangs(['en', 'pl']);
         $arrLangs = $translate->getArrLangs();
 
         $this->assertTrue(is_array($arrLangs));
         $this->assertEquals(2, count($arrLangs));
 
+        // $configMock = Mockery::mock(ConfigService::class);
+        // $arrLangTest = ['en'];
+        // $configMock->shouldReceive('arrGetLangs')->andReturn($arrLangTest);
+        // $content2 = new ContentService($configMock);
+        // $arrLangs2 = $content2->getArrLangs();
+        // $this->assertSame($arrLangTest, $arrLangs2);
+
+        $configMock = Mockery::mock(ConfigService::class);
         $arrLangTest = ['en'];
-        $translate->setArrLangs($arrLangTest);
-        $arrLangs2 = $translate->getArrLangs();
+        $configMock->shouldReceive('arrGetLangs')->andReturn($arrLangTest);
+        $translate2 = new TranslateService($configMock);
+        $arrLangs2 = $translate2->getArrLangs();
         $this->assertSame($arrLangTest, $arrLangs2);
     }
 
@@ -75,8 +85,8 @@ class TranslateTest extends Base
 
         $menu = (app(MenuService::class))->wrapCreate($data);
 
-        $translate = new TranslateService;
-        $translate->setArrLangs(['en', 'pl']);
+        $translate = app(TranslateService::class);
+        // $translate->setArrLangs(['en', 'pl']);
         $countItem = Translate::query()->where('menu_id', $menu->id)->where('column', 'name')->count();
         $this->assertEquals(2, $countItem);
     }
@@ -85,8 +95,10 @@ class TranslateTest extends Base
     {
         $data = ['name' => ['pl' => 'O cmsRS', 'en' => 'fake']];
 
-        $translate = new TranslateService;
-        $translate->setArrLangs(['pl']);
+        $configMock = Mockery::mock(ConfigService::class);
+        $arrLangTest = ['pl'];
+        $configMock->shouldReceive('arrGetLangs')->andReturn($arrLangTest);
+        $translate = new TranslateService($configMock);
 
         $objMenu = app(MenuService::class);
         $objMenu->setTranslate($translate);
@@ -152,7 +164,8 @@ class TranslateTest extends Base
     public function test_page_translate_wrap_create_ok_1()
     {
         $data1p = $this->getPageTestData();
-        $numOfLangs = (new TranslateService)->getArrLangs();
+
+        $numOfLangs = app(TranslateService::class)->getArrLangs();
         $this->assertEquals(2, count($numOfLangs));
 
         $p = (app(PageService::class))->wrapCreate($data1p);
@@ -182,8 +195,10 @@ class TranslateTest extends Base
             ['name' => 'phpunittest2.jpg', 'data' => $this->getFixtureBase64('phpunittest2.jpg'), 'alt' => ['en' => 'some desc2', 'pl' => 'jakis opis2', 'es' => 'Fake2']],
         ];
 
-        $translate = new TranslateService;
-        $translate->setArrLangs(['pl']);
+        $configMock = Mockery::mock(ConfigService::class);
+        $arrLangTest = ['pl'];
+        $configMock->shouldReceive('arrGetLangs')->andReturn($arrLangTest);
+        $translate = new TranslateService($configMock);
 
         $objPage = app(PageService::class);
         $objPage->setTranslate($translate);
@@ -200,7 +215,7 @@ class TranslateTest extends Base
 
     public function test_page_translate_wrap_create_null_val()
     {
-        $numOfLangs = count((new TranslateService)->getArrLangs());
+        $numOfLangs = count(app(TranslateService::class)->getArrLangs());
         $this->assertEquals(2, $numOfLangs);
 
         $data = $this->getPageTestData();

@@ -6,11 +6,11 @@ use App\Data\Demo;
 use App\Models\Cmsrs\Comment;
 use App\Models\User;
 use App\Services\Cmsrs\ContactService;
-use App\Services\Cmsrs\ContentService;
+// use App\Services\Cmsrs\ContentService;
 use App\Services\Cmsrs\DeliverService;
 use App\Services\Cmsrs\PaymentService;
 use App\Services\Cmsrs\ProductService;
-use App\Services\Cmsrs\TranslateService;
+// use App\Services\Cmsrs\TranslateService;
 use Illuminate\Console\Command;
 
 class LoadDemoDataCommand extends Command
@@ -29,11 +29,9 @@ class LoadDemoDataCommand extends Command
      */
     protected $description = 'Load Demo Data';
 
-    private $langs;
-
-    private $translate;
-
-    private $content;
+    // private $langs;
+    // private $translate;
+    // private $content;
 
     /**
      * Create a new command instance.
@@ -44,11 +42,11 @@ class LoadDemoDataCommand extends Command
     {
         parent::__construct();
 
-        $this->langs = ['en'];
-        $this->translate = new TranslateService;
-        $this->translate->setArrLangs($this->langs);
-        $this->content = new ContentService;
-        $this->content->setArrLangs($this->langs);
+        // $this->langs = ['en'];
+        // $this->translate = new TranslateService;
+        // $this->translate->setArrLangs($this->langs);
+        // $this->content = new ContentService;
+        // $this->content->setArrLangs($this->langs);
     }
 
     private function wrapSaveUser($i)

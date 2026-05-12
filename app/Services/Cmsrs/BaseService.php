@@ -6,7 +6,6 @@ use App\Models\Cmsrs\Content;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\Interfaces\TranslateInterface;
-use App\Services\Cmsrs\Interfaces\TranslateValueInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 
@@ -14,7 +13,7 @@ use Illuminate\Pagination\Paginator;
 
 abstract class BaseService
 {
-    private $arrLangs;
+    // private $arrLangs;
 
     public $pageFields = [
         'id',
@@ -29,19 +28,19 @@ abstract class BaseService
 
     // public function __construct(private ConfigService $configService) {}
 
-    public function getArrLangs()
-    {
-        if ($this->arrLangs) {
-            return $this->arrLangs;
-        }
+    // public function getArrLangs()
+    // {
+    //     if ($this->arrLangs) {
+    //         return $this->arrLangs;
+    //     }
 
-        return (new ConfigService)->arrGetLangs();
-    }
+    //     return (new ConfigService)->arrGetLangs();
+    // }
 
-    public function setArrLangs($arrLangs)
-    {
-        $this->arrLangs = $arrLangs;
-    }
+    // public function setArrLangs($arrLangs)
+    // {
+    //     $this->arrLangs = $arrLangs;
+    // }
 
     protected function getPageDataFormat(array $page, ?string $lang = null)
     {
@@ -100,37 +99,6 @@ abstract class BaseService
         return $tree;
     }
 
-    public function genericCreateTranslate($d, $refName, $columns, $create = true)
-    {
-        $refId = $d[$refName];
-        $data = $d['data'];
-        foreach ($columns as $column => $require) {
-            if ($require && empty($data[$column])) {
-                throw new \Exception("Translation problem, require column: $column, var= ".var_export($data, true));
-            } else {
-                $col = ! empty($data[$column]) ? $data[$column] : [];
-                foreach ($this->getArrLangs() as $lang) {
-                    $value = ! empty($col[$lang]) ? $col[$lang] : null;
-
-                    if ($require && ! $value) {
-                        throw new \Exception("Translation problem, require lang: $lang for column: $column, var= ".var_export($data, true));
-                    }
-
-                    $row = [$refName => $refId, 'column' => $column, 'lang' => $lang, 'value' => $value];
-                    if ($create) {
-                        $this->createRow($row);
-                    } else {
-                        if ($this instanceof TranslateValueInterface) {
-                            $this->updateRow($row); // from child
-                        }
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
-
     public function getAllTranslateByColumn($model)
     {
         $out = [];
@@ -141,20 +109,6 @@ abstract class BaseService
             foreach ($data as $d) {
                 $out[$d['column']][$d['lang']] = $d['value'];
             }
-        }
-
-        return $out;
-    }
-
-    /*
-    * use in headless
-    */
-    public function translatesByColumn($model, $column)
-    {
-        $langs = $this->getArrLangs();
-        $out = [];
-        foreach ($langs as $lang) {
-            $out[$lang] = $this->translatesByColumnAndLang($model, $column, $lang);
         }
 
         return $out;

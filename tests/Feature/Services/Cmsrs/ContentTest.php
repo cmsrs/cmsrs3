@@ -4,10 +4,12 @@ namespace Tests\Feature\Services\Cmsrs;
 
 use App\Models\Cmsrs\Content;
 use App\Models\Cmsrs\Translate;
+use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\ContentService;
 use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\TranslateService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mockery;
 
 class ContentTest extends Base
 {
@@ -33,9 +35,11 @@ class ContentTest extends Base
 
         $this->createUser();
 
-        $numOfLangs = count((new TranslateService)->getArrLangs());
-        $this->assertEquals(2, $numOfLangs);
-        $this->numOfLangs = $numOfLangs;
+        $numOfLangs = app(ConfigService::class)->arrGetLangs();
+        $numOfLangsContent = app(ContentService::class)->getArrLangs();
+        $this->assertSame($numOfLangs, $numOfLangsContent);
+        $this->assertEquals(2, count($numOfLangs));
+        $this->numOfLangs = count($numOfLangs);
     }
 
     protected function tearDown(): void
@@ -49,14 +53,16 @@ class ContentTest extends Base
 
     public function test_get_arr_langs()
     {
-        $content = new ContentService;
+        $content = app(ContentService::class);
         $arrLangs = $content->getArrLangs();
         $this->assertTrue(is_array($arrLangs));
         $this->assertEquals(2, count($arrLangs));
 
+        $configMock = Mockery::mock(ConfigService::class);
         $arrLangTest = ['en'];
-        $content->setArrLangs($arrLangTest);
-        $arrLangs2 = $content->getArrLangs();
+        $configMock->shouldReceive('arrGetLangs')->andReturn($arrLangTest);
+        $content2 = new ContentService($configMock);
+        $arrLangs2 = $content2->getArrLangs();
         $this->assertSame($arrLangTest, $arrLangs2);
     }
 
@@ -77,10 +83,11 @@ class ContentTest extends Base
     {
         $data = $this->getPageTestData();
 
-        $translate = new TranslateService;
-        $translate->setArrLangs(['pl']);
-        $content = new ContentService;
-        $content->setArrLangs(['pl']);
+        $configMock = Mockery::mock(ConfigService::class);
+        $arrLangTest = ['pl'];
+        $configMock->shouldReceive('arrGetLangs')->andReturn($arrLangTest);
+        $translate = new TranslateService($configMock);
+        $content = new ContentService($configMock);
 
         $objPage = app(PageService::class);
         $objPage->setTranslate($translate);

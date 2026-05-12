@@ -42,9 +42,10 @@ class CreateSiteMap extends Command
     public function handle()
     {
         $pageService = app(PageService::class); // TODO DI
+        $configService = app(ConfigService::class); // TODO DI
         // $appUrl = env('APP_URL');
         $appUrl = config('app.url');
-        $langs = $pageService->getArrLangs();
+        $langs = $configService->arrGetLangs();
         $pages = Page::where('after_login', '=', 0)->where('published', '=', 1)->where('type', '!=', 'inner')->get();
         $prodUrls = app(ProductService::class)->getProductsUrl(); // TODO DI
 
@@ -60,7 +61,7 @@ class CreateSiteMap extends Command
 
         $isLogin = config('cmsrs.features.login');  // env('IS_LOGIN', true);
         $isRegister = config('cmsrs.features.register');  // env('IS_REGISTER', true);
-        $isManyLangs = (new ConfigService)->isManyLangs();
+        $isManyLangs = $configService->isManyLangs();
         if ($isManyLangs) {
             if ($isLogin) {
                 foreach ($langs as $lang) {
