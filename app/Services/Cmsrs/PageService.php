@@ -21,7 +21,7 @@ class PageService extends BaseService implements TranslateInterface
         if (empty($lang)) {
             $lang = $this->configService->getDefaultLang();
         }
-        $isCache = (new ConfigService)->isCacheEnable();
+        $isCache = $this->configService->isCacheEnable();
         if ($isCache) {
             $ret = cache()->remember('page_by_short_title_'.$data.'_'.Str::slug($shortTitle, '_').'_'.$lang, CacheService::setTime(), function () use ($shortTitle, $data, $lang) {
                 return $this->getPageDataByShortTitle($shortTitle, $data, $lang);
@@ -107,17 +107,6 @@ class PageService extends BaseService implements TranslateInterface
     }
 
     /**
-     * @return void
-     */
-    public function setContent(ContentService $objContent)
-    {
-        // ---phpstan-ignore-next-line empty() on object always false – but logic stays
-        if (! empty($objContent)) {
-            $this->contentService = $objContent;
-        }
-    }
-
-    /**
      * @param  array<string, mixed>  $dataIn
      * @return array<string, mixed>
      */
@@ -130,7 +119,7 @@ class PageService extends BaseService implements TranslateInterface
 
         $products = null;
         if ($mPage->type === 'shop') {
-            $products = app(ProductService::class)->getProductsWithImagesByPage($mPage->id);
+            $products = app(ProductService::class)->getProductsWithImagesByPage($mPage->id); // TODO: break circular dependency between PageService and ProductService (future: DDD / clean architecture)
         }
 
         $data = [

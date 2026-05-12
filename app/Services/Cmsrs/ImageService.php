@@ -206,7 +206,7 @@ class ImageService extends BaseService implements TranslateInterface
     private function sanitizeNameImages($images)
     {
         $sanitizeNameImages = [];
-        $allowedExtensions = (new ConfigService)->arrAllowedUploadFileExt();  // ['jpg', 'jpeg', 'png', 'gif']; //, 'bmp', 'svg', 'webp'];
+        $allowedExtensions = $this->configService->arrAllowedUploadFileExt();  // ['jpg', 'jpeg', 'png', 'gif']; //, 'bmp', 'svg', 'webp'];
         foreach ($images as $key => $image) {
             $basename = pathinfo($image['name'], PATHINFO_FILENAME);
             $extension = strtolower(trim(pathinfo($image['name'], PATHINFO_EXTENSION)));
