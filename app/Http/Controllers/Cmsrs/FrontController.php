@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Integration\Payu;
 use App\Models\Cmsrs\Checkout;
 use App\Models\Cmsrs\Page;
+use App\Models\Cmsrs\Menu;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\DeliverService;
 use App\Services\Cmsrs\Helpers\CacheService;
@@ -18,11 +19,22 @@ use Illuminate\Session\Store;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Collection;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
+
 
 class FrontController extends Controller
 {
+    /**
+     * @var Collection<int, Menu>
+     */
     private $menus;
 
+    /**
+     * @var array<int, string>
+     */
     private $langs;
 
     public function __construct(
@@ -37,7 +49,7 @@ class FrontController extends Controller
         $this->langs = $this->configService->arrGetLangs();
     }
 
-    private function validatePage($page)
+    private function validatePage(?Page $page)
     {
         if (empty($page)) {
             abort(404);
@@ -48,7 +60,7 @@ class FrontController extends Controller
         }
     }
 
-    public function search(Request $request, $lang = null)
+    public function search(Request $request, $lang = null) : View
     {
 
         if (empty($lang)) {
@@ -74,7 +86,7 @@ class FrontController extends Controller
         return view('cmsrs.search', $data);
     }
 
-    public function shoppingsuccess(Request $request, $lang = null)
+    public function shoppingsuccess(Request $request, $lang = null) : View
     {
         if (empty($lang)) {
             $lang = $this->langs[0];
@@ -106,7 +118,7 @@ class FrontController extends Controller
         return view('cmsrs.shoppingsuccess', $data);
     }
 
-    public function checkout(Request $request, $lang = null)
+    public function checkout(Request $request, $lang = null) : View
     {
         if (empty($lang)) {
             $lang = $this->langs[0];
@@ -132,7 +144,7 @@ class FrontController extends Controller
         return view('cmsrs.checkout', $data);
     }
 
-    public function postCheckout(Request $request)
+    public function postCheckout(Request $request) : RedirectResponse|JsonResponse
     {
         $lang = $request->input('lang');
         if (! in_array($lang, $this->langs)) {
@@ -194,7 +206,7 @@ class FrontController extends Controller
             return redirect($redirectUri);
 
         } else {
-            $isManyLangs = (new ConfigService)->isManyLangs();
+            $isManyLangs = $this->configService->isManyLangs();
             $urlShoppingSuccess = $isManyLangs ? route('shoppingsuccess', ['lang' => $lang]) : route('shoppingsuccess');
 
             /** @var Store $session */
@@ -206,7 +218,7 @@ class FrontController extends Controller
 
     }
 
-    public function index($lang = null)
+    public function index($lang = null) : View
     {
         if ((count($this->langs) > 1) && $lang == $this->langs[0]) {
             abort(404);
@@ -242,14 +254,14 @@ class FrontController extends Controller
         return view('cmsrs.index', $data);
     }
 
-    public function getPageLangs($lang, $menuSlug, $pageSlug = null, $productSlug = null)
+    public function getPageLangs($lang, $menuSlug, $pageSlug = null, $productSlug = null) : View
     {
         $data = $this->getPage($menuSlug, $pageSlug, $productSlug, $lang);
 
         return view($data['view'], $data);
     }
 
-    public function getPage($menuSlug, $pageSlug = null, $productSlug = null, $lang = null)
+    public function getPage($menuSlug, $pageSlug = null, $productSlug = null, $lang = null) : View|array
     {
         if (empty($lang)) {
             $manyLangs = false;
@@ -306,14 +318,14 @@ class FrontController extends Controller
         return view($data['view'], $data);
     }
 
-    public function getSeparatePageLangs($lang, $pageSlug)
+    public function getSeparatePageLangs($lang, $pageSlug) : View
     {
         $data = $this->getSeparatePage($pageSlug, $lang);
 
         return view($data['view'], $data);
     }
 
-    public function getSeparatePage($pageSlug, $lang = null)
+    public function getSeparatePage($pageSlug, $lang = null) : View|array
     {
         if (empty($lang)) {
             $manyLangs = false;
