@@ -15,6 +15,9 @@ class ImageService extends BaseService implements TranslateInterface
 {
     public function __construct(private ConfigService $configService, private TranslateService $translateService) {}
 
+    /**
+     * @return array<int, array{lang: string, column: string, value: mixed}>
+     */
     public function getAllTranslate(Page|Image|Menu $mImage): array
     {
         $imageId = $mImage->id;
@@ -153,7 +156,10 @@ class ImageService extends BaseService implements TranslateInterface
         return '/'.$url;
     }
 
-    public function createImagesAndUpdateAlt($images, string $type, string $refId)
+    /**
+     * @param  array<int, array{id?: int, name?: string, alt?: string, data?: mixed}>  $images
+     */
+    public function createImagesAndUpdateAlt(array $images, string $type, string $refId)
     {
         $imagesCreate = [];
         $imagesUpdate = [];
@@ -177,6 +183,9 @@ class ImageService extends BaseService implements TranslateInterface
         return true;
     }
 
+    /**
+     * @param  array<int, array{id: int, alt?: string, position?: int}>  $images
+     */
     public function updateImages(array $images)
     {
         foreach ($images as $image) {
@@ -184,6 +193,9 @@ class ImageService extends BaseService implements TranslateInterface
         }
     }
 
+    /**
+     * @param  array<int, array{id: int, position: int}>  $images
+     */
     public function updatePositionImages(array $images)
     {
         foreach ($images as $image) {
@@ -203,6 +215,10 @@ class ImageService extends BaseService implements TranslateInterface
         }
     }
 
+    /**
+     * @param  array<int, array{name: string, alt?: string}>  $images
+     * @return array<int, string>
+     */
     private function sanitizeNameImages(array $images): array
     {
         $sanitizeNameImages = [];
@@ -225,6 +241,10 @@ class ImageService extends BaseService implements TranslateInterface
         return $sanitizeNameImages;
     }
 
+    /**
+     * @param  array<int, array{name: string, data: mixed, alt?: string}>  $images
+     * @return array<int, Image>
+     */
     public function createImages(array $images, string $type, string $refId)
     {
         $out = [];
@@ -294,6 +314,9 @@ class ImageService extends BaseService implements TranslateInterface
         return $image->position + 1;
     }
 
+    /**
+     * @return array{files: array<int, string>, dirs_imgs: array<int, string>}
+     */
     public function getImagesAndThumbsByTypeAndRefId(string $type, ?int $refId = null, ?string $lang = null)
     {
         $images = $this->getImagesByTypeAndRefId($type, $refId);
