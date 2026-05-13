@@ -10,6 +10,7 @@ use App\Services\Cmsrs\Helpers\CacheService;
 use App\Services\Cmsrs\Helpers\ImageHelperService;
 use App\Services\Cmsrs\Helpers\StrHelperService;
 use App\Services\Cmsrs\Interfaces\TranslateInterface;
+use Illuminate\Database\Eloquent\Collection;
 
 class ImageService extends BaseService implements TranslateInterface
 {
@@ -129,6 +130,7 @@ class ImageService extends BaseService implements TranslateInterface
     public function getAllImage(object $img, bool $isAbs = true): bool|array
     {
         $out = [];
+        /** @var Image $objImg */
         $objImg = Image::find($img->id);
         if (empty($objImg)) {
             return false;
@@ -163,7 +165,7 @@ class ImageService extends BaseService implements TranslateInterface
     /**
      * @param  array<int, array{id?: int, name?: string, alt?: string, data?: mixed}>  $images
      */
-    public function createImagesAndUpdateAlt(array $images, string $type, int $refId)
+    public function createImagesAndUpdateAlt(array $images, string $type, int $refId): bool
     {
         $imagesCreate = [];
         $imagesUpdate = [];
@@ -249,7 +251,7 @@ class ImageService extends BaseService implements TranslateInterface
      * @param  array<int, array{name: string, data: mixed, alt?: string}>  $images
      * @return array<int, Image>
      */
-    public function createImages(array $images, string $type, int $refId)
+    public function createImages(array $images, string $type, int $refId): array
     {
         $out = [];
 
@@ -319,9 +321,9 @@ class ImageService extends BaseService implements TranslateInterface
     }
 
     /**
-     * @return array{files: array<int, string>, dirs_imgs: array<int, string>}
+     * @return Collection<int, Image>
      */
-    public function getImagesAndThumbsByTypeAndRefId(string $type, ?int $refId = null, ?string $lang = null)
+    public function getImagesAndThumbsByTypeAndRefId(string $type, ?int $refId = null, ?string $lang = null): Collection
     {
         $images = $this->getImagesByTypeAndRefId($type, $refId);
 
@@ -331,7 +333,7 @@ class ImageService extends BaseService implements TranslateInterface
                 ? ($alts[$lang] ?? null)
                 : $alts;
             $images[$k]['fs'] = $this->getAllImage($img, false);
-            unset($img['translates']);
+            unset($img['translates']); // to na kopi nie jest potrzebne ?
         }
 
         return $images;
@@ -353,13 +355,15 @@ class ImageService extends BaseService implements TranslateInterface
         return $out;
     }
 
-    public function getImagesByTypeAndRefId(string $type, ?int $refId = null)
+    /**
+     * @return Collection<int, Image>
+     */
+    public function getImagesByTypeAndRefId(string $type, ?int $refId = null): Collection
     {
         if (empty($strRefId = Image::$type[$type])) {
             throw new \Exception("I can't get image type in getImagesByTypeAndRefId");
         }
 
-        $image = [];
         if (empty($refId)) {
             throw new \Exception('Image: refId must be defined');
             // $image = Image::with(['translates'])
@@ -368,12 +372,11 @@ class ImageService extends BaseService implements TranslateInterface
             //       ->get()
             //       ;
         }
-        $image = Image::with(['translates'])
+
+        return Image::with(['translates'])
             ->where($strRefId, '=', $refId)
             ->orderBy('position', 'asc')
             ->get();
-
-        return $image;
     }
 
     public function swapPosition(string $direction, int $id): bool
@@ -382,6 +385,7 @@ class ImageService extends BaseService implements TranslateInterface
             throw new \Exception('Wrong direction (Image). It can be up or down direction = '.$direction);
         }
 
+        /** @var Image $image */
         $image = Image::find($id);
         if (! $image) {
             return false;
@@ -403,6 +407,7 @@ class ImageService extends BaseService implements TranslateInterface
             return false;
         }
 
+        /** @var Image $img */
         foreach ($images as $key => $img) {
             if (($img->id == $id)) {
                 $swapKey = null;
