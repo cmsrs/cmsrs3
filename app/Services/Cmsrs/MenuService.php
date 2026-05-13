@@ -31,7 +31,7 @@ class MenuService extends BaseService implements TranslateInterface
         return $menus;
     }
 
-    public function createMenu($data) : Menu|Throwable
+    public function createMenu(array $data) : Menu|Throwable
     {
         $data['position'] = $this->getNextPosition();
 
@@ -43,7 +43,7 @@ class MenuService extends BaseService implements TranslateInterface
         return $menu;
     }
 
-    public function wrapUpdate(Menu $mMenu, $data)
+    public function wrapUpdate(Menu $mMenu, array $data) : bool
     {
         $mMenu->update($data);
         $this->translateService->wrapCreate(['menu_id' => $mMenu->id, 'data' => $data], false);
@@ -55,7 +55,7 @@ class MenuService extends BaseService implements TranslateInterface
      * use also in script to load demo (test) data
      * php artisan cmsrs:load-demo-data
      */
-    public function wrapCreate($data)
+    public function wrapCreate(array $data) : Menu|Throwable
     {
         $menu = $this->createMenu($data);
         $this->translateService->wrapCreate(['menu_id' => $menu->id, 'data' => $data], true);
@@ -63,7 +63,7 @@ class MenuService extends BaseService implements TranslateInterface
         return $menu;
     }
 
-    public function getSlugByLang(Menu $model, $lang): string
+    public function getSlugByLang(Menu $model, string $lang): string
     {
         $column = 'name';
         $name = $this->translatesByColumnAndLang($model, $column, $lang);
@@ -71,7 +71,7 @@ class MenuService extends BaseService implements TranslateInterface
         return Str::slug($name, '-');
     }
 
-    public function getAllTranslate(Image|Page|Menu $mMenu)
+    public function getAllTranslate(Image|Page|Menu $mMenu) : array
     {
         $menuId = $mMenu->id;
         $isCache = $this->configService->isCacheEnable();
@@ -86,7 +86,7 @@ class MenuService extends BaseService implements TranslateInterface
         return $ret;
     }
 
-    public function pagesPublished(Menu $mMenu)
+    public function pagesPublished(Menu $mMenu) : Collection
     {
         $pages = $mMenu->pages()->where('published', '=', 1)->orderBy('position', 'asc')->get();
 
@@ -104,7 +104,7 @@ class MenuService extends BaseService implements TranslateInterface
         return $pages;
     }
 
-    public function getAllMenus()
+    public function getAllMenus() : array
     {
         $menus = Menu::with('translates')->orderBy('position', 'asc')->get()->toArray();
 
@@ -122,7 +122,7 @@ class MenuService extends BaseService implements TranslateInterface
         return $out;
     }
 
-    public function checkIsDuplicateName($data, $id = '')
+    public function checkIsDuplicateName(array $data, string $id = ''): array
     {
         $out = ['success' => true];
         $menus = $this->getAllMenus();
@@ -147,7 +147,7 @@ class MenuService extends BaseService implements TranslateInterface
         return $out;
     }
 
-    public function getNextPosition()
+    public function getNextPosition() : int
     {
         $menu = Menu::query()
             ->orderBy('position', 'desc')
@@ -160,7 +160,7 @@ class MenuService extends BaseService implements TranslateInterface
         return $menu->position + 1;
     }
 
-    public function swapPosition($direction, $id)
+    public function swapPosition(string $direction, string $id) : bool
     {
         if (! in_array($direction, ['up', 'down'])) {
             throw new \Exception('Wrong direction (Menu). It can be up or down direction = '.$direction);
