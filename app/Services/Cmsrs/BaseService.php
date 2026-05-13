@@ -8,6 +8,7 @@ use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\Interfaces\TranslateInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
@@ -25,7 +26,7 @@ abstract class BaseService
         'page_id',
     ];
 
-    protected function getPageDataFormat(array $page, ?string $lang = null)
+    protected function getPageDataFormat(array|Collection $page, ?string $lang = null)
     {
         $out = [];
         foreach ($this->pageFields as $field) {
