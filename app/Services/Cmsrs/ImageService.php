@@ -57,6 +57,9 @@ class ImageService extends BaseService implements TranslateInterface
         return $mImage->delete(); // parent::delete();
     }
 
+    /**
+     * @param  array<int, string>  $allImg
+     */
     public static function deleteImagesFromFs(array|bool $allImg): void
     {
         foreach ($allImg as $path) {
@@ -83,7 +86,7 @@ class ImageService extends BaseService implements TranslateInterface
         self::deleteDirectoryIfEmpty($higherDirectory);
     }
 
-    public function getHtmlImage(Image $mImage, string $type = Image::IMAGE_THUMB_TYPE_MEDIUM)
+    public function getHtmlImage(Image $mImage, string $type = Image::IMAGE_THUMB_TYPE_MEDIUM): string
     {
         $img = $this->getAllImage($mImage, false);
 
@@ -120,7 +123,8 @@ class ImageService extends BaseService implements TranslateInterface
     }
 
     /**
-     *  return all thumbs and main img
+     * @return array<string, string>|false
+     *                                     return all thumbs and main img
      */
     public function getAllImage(object $img, bool $isAbs = true): bool|array
     {
@@ -141,7 +145,7 @@ class ImageService extends BaseService implements TranslateInterface
         return $out;
     }
 
-    public function getImageDir(string $type, ?int $refId, int $imageId, bool $isAbs = true): string
+    public function getImageDir(string $type, int $refId, int $imageId, bool $isAbs = true): string
     {
         if (empty(Image::$type[$type])) {
             throw new \Exception("I can't get image type");
@@ -159,7 +163,7 @@ class ImageService extends BaseService implements TranslateInterface
     /**
      * @param  array<int, array{id?: int, name?: string, alt?: string, data?: mixed}>  $images
      */
-    public function createImagesAndUpdateAlt(array $images, string $type, string $refId)
+    public function createImagesAndUpdateAlt(array $images, string $type, int $refId)
     {
         $imagesCreate = [];
         $imagesUpdate = [];
@@ -186,7 +190,7 @@ class ImageService extends BaseService implements TranslateInterface
     /**
      * @param  array<int, array{id: int, alt?: string, position?: int}>  $images
      */
-    public function updateImages(array $images)
+    public function updateImages(array $images): void
     {
         foreach ($images as $image) {
             $this->translateService->wrapCreate(['image_id' => $image['id'], 'data' => $image], false);
@@ -196,7 +200,7 @@ class ImageService extends BaseService implements TranslateInterface
     /**
      * @param  array<int, array{id: int, position: int}>  $images
      */
-    public function updatePositionImages(array $images)
+    public function updatePositionImages(array $images): void
     {
         foreach ($images as $image) {
             if (empty($image['id'])) {
@@ -245,7 +249,7 @@ class ImageService extends BaseService implements TranslateInterface
      * @param  array<int, array{name: string, data: mixed, alt?: string}>  $images
      * @return array<int, Image>
      */
-    public function createImages(array $images, string $type, string $refId)
+    public function createImages(array $images, string $type, int $refId)
     {
         $out = [];
 
@@ -322,7 +326,10 @@ class ImageService extends BaseService implements TranslateInterface
         $images = $this->getImagesByTypeAndRefId($type, $refId);
 
         foreach ($images as $k => $img) {
-            $images[$k]['alt'] = $this->getAltImg($img, $lang);
+            $alts = $this->getAltImg($img);
+            $images[$k]['alt'] = $lang !== null
+                ? ($alts[$lang] ?? null)
+                : $alts;
             $images[$k]['fs'] = $this->getAllImage($img, false);
             unset($img['translates']);
         }
@@ -330,7 +337,10 @@ class ImageService extends BaseService implements TranslateInterface
         return $images;
     }
 
-    public function getAltImg(object $objImg, ?string $lang = null)
+    /**
+     * @return array<string, string>
+     */
+    public function getAltImg(object $objImg): array
     {
         $out = [];
         $translates = $objImg->translates->toArray();
@@ -338,10 +348,6 @@ class ImageService extends BaseService implements TranslateInterface
             if ($translate['column'] == 'alt') {
                 $out[$translate['lang']] = $translate['value'];
             }
-        }
-
-        if ($lang) {
-            return isset($out[$lang]) ? $out[$lang] : null;
         }
 
         return $out;
@@ -370,7 +376,7 @@ class ImageService extends BaseService implements TranslateInterface
         return $image;
     }
 
-    public function swapPosition(string $direction, int $id)
+    public function swapPosition(string $direction, int $id): bool
     {
         if (! in_array($direction, ['up', 'down'])) {
             throw new \Exception('Wrong direction (Image). It can be up or down direction = '.$direction);
@@ -433,6 +439,9 @@ class ImageService extends BaseService implements TranslateInterface
         }
     }
 
+    /**
+     * @return array{files: array<int, string>, dirs_imgs: array<int, string>}
+     */
     public function getImagesFsFiles(Page|Product $mObj): array
     {
         $files = [];
