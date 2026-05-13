@@ -6,6 +6,39 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * @property int $id
+ * @property int $published
+ * @property int $commented
+ * @property int $after_login
+ * @property int|null $position
+ * @property string $type
+ * @property int|null $page_id
+ * @property int|null $menu_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Cmsrs\Content> $contents
+ * @property-read int|null $contents_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Cmsrs\Image> $images
+ * @property-read int|null $images_count
+ * @property-read \App\Models\Cmsrs\Menu|null $menu
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Cmsrs\Translate> $translates
+ * @property-read int|null $translates_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereAfterLogin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereCommented($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereMenuId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page wherePageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page wherePosition($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page wherePublished($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Page whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Page extends Model
 {
     const PREFIX_CMS_URL = 'cms';

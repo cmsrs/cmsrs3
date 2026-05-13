@@ -100,7 +100,7 @@ class ContentTest extends Base
         $imageServiceMock
             ->shouldReceive('createImages')
             ->once()
-            ->andReturn(null);
+            ->andReturn([]);
 
         $objPage = new PageService(
             $configMock,

@@ -6,6 +6,35 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * @property int $id
+ * @property string|null $sku
+ * @property int|null $price
+ * @property int $published
+ * @property int|null $page_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Cmsrs\Content> $contents
+ * @property-read int|null $contents_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Cmsrs\Image> $images
+ * @property-read int|null $images_count
+ * @property-read \App\Models\Cmsrs\Page|null $page
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Cmsrs\Translate> $translates
+ * @property-read int|null $translates_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Cmsrs\Translate> $translatesPage
+ * @property-read int|null $translates_page_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product wherePageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product wherePublished($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereSku($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
 class Product extends Model
 {
     /**

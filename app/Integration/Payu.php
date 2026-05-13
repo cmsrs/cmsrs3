@@ -9,6 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payu newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payu newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Payu query()
+ * @mixin \Eloquent
+ */
 class Payu extends Model
 {
     private $client;
