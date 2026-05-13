@@ -10,12 +10,14 @@ use App\Services\Cmsrs\Interfaces\TranslateInterface;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
+use Throwable;
 
 class MenuService extends BaseService implements TranslateInterface
 {
     public function __construct(private ConfigService $configService, private TranslateService $translateService) {}
 
-    public function getMenu()
+    public function getMenu() : Collection 
     {
         $isCache = $this->configService->isCacheEnable();
         if ($isCache) {
@@ -29,7 +31,7 @@ class MenuService extends BaseService implements TranslateInterface
         return $menus;
     }
 
-    public function createMenu($data)
+    public function createMenu($data) : Menu|Throwable
     {
         $data['position'] = $this->getNextPosition();
 
