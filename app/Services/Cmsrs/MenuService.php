@@ -8,16 +8,19 @@ use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\Helpers\CacheService;
 use App\Services\Cmsrs\Interfaces\TranslateInterface;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Illuminate\Support\Collection;
 use Throwable;
 
 class MenuService extends BaseService implements TranslateInterface
 {
     public function __construct(private ConfigService $configService, private TranslateService $translateService) {}
 
-    public function getMenu() : Collection 
+    /**
+     * @return Collection<int, Menu>
+     */
+    public function getMenu(): Collection
     {
         $isCache = $this->configService->isCacheEnable();
         if ($isCache) {
@@ -31,7 +34,12 @@ class MenuService extends BaseService implements TranslateInterface
         return $menus;
     }
 
-    public function createMenu(array $data) : Menu|Throwable
+    /**
+     * @param  array<string, mixed>  $data
+     *
+     * @throws Throwable
+     */
+    public function createMenu(array $data): Menu
     {
         $data['position'] = $this->getNextPosition();
 
@@ -43,7 +51,7 @@ class MenuService extends BaseService implements TranslateInterface
         return $menu;
     }
 
-    public function wrapUpdate(Menu $mMenu, array $data) : bool
+    public function wrapUpdate(Menu $mMenu, array $data): bool
     {
         $mMenu->update($data);
         $this->translateService->wrapCreate(['menu_id' => $mMenu->id, 'data' => $data], false);
@@ -54,8 +62,10 @@ class MenuService extends BaseService implements TranslateInterface
     /**
      * use also in script to load demo (test) data
      * php artisan cmsrs:load-demo-data
+     *
+     * @param  array<string, mixed>  $data
      */
-    public function wrapCreate(array $data) : Menu|Throwable
+    public function wrapCreate(array $data): Menu
     {
         $menu = $this->createMenu($data);
         $this->translateService->wrapCreate(['menu_id' => $menu->id, 'data' => $data], true);
@@ -71,7 +81,10 @@ class MenuService extends BaseService implements TranslateInterface
         return Str::slug($name, '-');
     }
 
-    public function getAllTranslate(Image|Page|Menu $mMenu) : array
+    /**
+     * @return array<int, Menu>
+     */
+    public function getAllTranslate(Image|Page|Menu $mMenu): array
     {
         $menuId = $mMenu->id;
         $isCache = $this->configService->isCacheEnable();
@@ -86,7 +99,10 @@ class MenuService extends BaseService implements TranslateInterface
         return $ret;
     }
 
-    public function pagesPublished(Menu $mMenu) : Collection
+    /**
+     * @return Collection<int, Page>
+     */
+    public function pagesPublished(Menu $mMenu): Collection
     {
         $pages = $mMenu->pages()->where('published', '=', 1)->orderBy('position', 'asc')->get();
 
@@ -104,7 +120,10 @@ class MenuService extends BaseService implements TranslateInterface
         return $pages;
     }
 
-    public function getAllMenus() : array
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function getAllMenus(): array
     {
         $menus = Menu::with('translates')->orderBy('position', 'asc')->get()->toArray();
 
@@ -122,6 +141,9 @@ class MenuService extends BaseService implements TranslateInterface
         return $out;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function checkIsDuplicateName(array $data, string $id = ''): array
     {
         $out = ['success' => true];
@@ -147,7 +169,7 @@ class MenuService extends BaseService implements TranslateInterface
         return $out;
     }
 
-    public function getNextPosition() : int
+    public function getNextPosition(): int
     {
         $menu = Menu::query()
             ->orderBy('position', 'desc')
@@ -160,7 +182,7 @@ class MenuService extends BaseService implements TranslateInterface
         return $menu->position + 1;
     }
 
-    public function swapPosition(string $direction, string $id) : bool
+    public function swapPosition(string $direction, string $id): bool
     {
         if (! in_array($direction, ['up', 'down'])) {
             throw new \Exception('Wrong direction (Menu). It can be up or down direction = '.$direction);
