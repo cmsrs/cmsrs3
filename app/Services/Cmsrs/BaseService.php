@@ -3,9 +3,12 @@
 namespace App\Services\Cmsrs;
 
 use App\Models\Cmsrs\Content;
+use App\Models\Cmsrs\Image;
 use App\Models\Cmsrs\Menu;
+use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\Interfaces\TranslateInterface;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 
@@ -52,7 +55,7 @@ abstract class BaseService
         return $arr;
     }
 
-    protected function pagesPublishedAndAccessNotAuth(Menu $mMenu)
+    protected function pagesPublishedAndAccessNotAuth(Menu $mMenu): HasMany
     {
         return $mMenu->pages()->where('published', '=', 1)->where('after_login', '=', 0)->orderBy('position', 'asc');
     }
@@ -79,7 +82,7 @@ abstract class BaseService
         return $tree;
     }
 
-    public function getAllTranslateByColumn($model)
+    public function getAllTranslateByColumn(Page|Image|Menu $model)
     {
         $out = [];
 
@@ -94,7 +97,7 @@ abstract class BaseService
         return $out;
     }
 
-    public function translatesByColumnAndLang($model, $column, $lang)
+    public function translatesByColumnAndLang(Page|Image|Menu $model, string $column, string $lang)
     {
         $data = $this->getAllTranslateByColumn($model);
 

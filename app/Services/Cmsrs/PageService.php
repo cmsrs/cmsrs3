@@ -383,10 +383,7 @@ class PageService extends BaseService implements TranslateInterface
         return $urls;
     }
 
-    /**
-     * @return string|false
-     */
-    public function getUrl(Page $mPage, string $lang, ?string $urlParam = null): string
+    public function getUrl(Page $mPage, string $lang, ?string $urlParam = null): string|false
     {
         $type = $mPage->type;
         if ($type == 'inner') {
@@ -423,7 +420,7 @@ class PageService extends BaseService implements TranslateInterface
 
     private function getMenuSlugByLang(Page $mPage, string $lang): ?string
     {
-        $menu = $mPage->menu()->get()->first();
+        $menu = $mPage->menu()->first();
 
         if (empty($menu)) {
             return null;
@@ -434,7 +431,7 @@ class PageService extends BaseService implements TranslateInterface
 
     public function getNumPagesBelongsToThisMenu(Page $mPage): ?int
     {
-        $menu = $mPage->menu()->get()->first();
+        $menu = $mPage->menu()->first();
         if (empty($menu)) {
             return null;
         }

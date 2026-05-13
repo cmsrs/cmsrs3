@@ -7,6 +7,7 @@ use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\Helpers\CacheService;
 use App\Services\Cmsrs\Interfaces\TranslateInterface;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -60,7 +61,7 @@ class MenuService extends BaseService implements TranslateInterface
         return $menu;
     }
 
-    public function getSlugByLang(Menu $model, $lang)
+    public function getSlugByLang(Menu $model, $lang): string
     {
         $column = 'name';
         $name = $this->translatesByColumnAndLang($model, $column, $lang);
@@ -90,7 +91,7 @@ class MenuService extends BaseService implements TranslateInterface
         return $pages;
     }
 
-    public function pagesPublishedAndAccess(Menu $mMenu)
+    public function pagesPublishedAndAccess(Menu $mMenu): HasMany
     {
         if (Auth::check()) {
             $pages = $mMenu->pages()->where('published', '=', 1)->orderBy('position', 'asc');
