@@ -50,7 +50,7 @@ class HeadlessService extends BaseService
         return $out;
     }
 
-    public function getAllPagesWithImages($type) : array
+    public function getAllPagesWithImages(string $type) : array
     {
         if (! in_array($type, ConfigService::arrGetPageTypes())) {
             throw new \Exception('Wrong type : '.$type);
