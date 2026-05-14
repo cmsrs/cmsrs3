@@ -25,10 +25,19 @@ class ConfigService
 
     const COOKIE_FRONT_LOGIN_LANG_NAME = 'front_login_lang';
 
+    /**
+     * @var string
+     */
     private $langs;
 
+    /**
+     * @var string
+     */
     private $cacheEnableFile;
 
+    /**
+     * @var string
+     */
     private $filePath;
 
     public function __construct()
@@ -38,23 +47,29 @@ class ConfigService
         $this->filePath = $this->getCacheEnableFilePath();
     }
 
-    public function arrAllowedUploadFileExt()
+    /**
+     * @return array<int, string>
+     */
+    public function arrAllowedUploadFileExt(): array
     {
         return explode(',', $this->allowedUploadFileExt());
     }
 
-    private function allowedUploadFileExt()
+    private function allowedUploadFileExt(): string
     {
         return config('cmsrs.allowed_upload_extensions');
         // return env('ALLOWED_UPLOAD_EXTENSIONS', ConfigService::ALLOWED_UPLOAD_FILE_EXT_DEFAULT);
     }
 
-    public function getCacheFilePath()
+    public function getCacheFilePath(): string
     {
         return $this->filePath;
     }
 
-    public static function getAvailableSortingDirection()
+    /**
+     * @return array<int, string>
+     */
+    public static function getAvailableSortingDirection(): array
     {
         return [
             ConfigService::SORT_ASC,
@@ -62,32 +77,32 @@ class ConfigService
         ];
     }
 
-    public function getIsShop()
+    public function getIsShop(): bool
     {
         return config('cmsrs.features.shop'); // env('IS_SHOP', true);
     }
 
-    public function getDemoStatus()
+    public function getDemoStatus(): bool
     {
         return config('cmsrs.demo'); // env('DEMO_STATUS', false);
     }
 
-    public function getCurrency()
+    public function getCurrency(): string
     {
         return config('cmsrs.currency'); // env('CURRENCY', ConfigService::CURRENCY_DEFAULT);
     }
 
-    public function getCacheEnableFilePath()
+    public function getCacheEnableFilePath(): string
     {
         return storage_path($this->cacheEnableFile);
     }
 
-    public function isExistCacheFileEnable()
+    public function isExistCacheFileEnable(): bool
     {
         return File::exists($this->filePath);
     }
 
-    public function deleteFileCacheEnableIfExist()
+    public function deleteFileCacheEnableIfExist(): bool
     {
         if (File::exists($this->filePath)) {
             File::delete($this->filePath);
@@ -98,7 +113,7 @@ class ConfigService
         return false;
     }
 
-    public function createFileCacheEnableIfNotExist()
+    public function createFileCacheEnableIfNotExist(): bool
     {
         if (! File::exists($this->filePath)) {
             File::put($this->filePath, '');
@@ -109,39 +124,42 @@ class ConfigService
         return false;
     }
 
-    public function clearCache()
+    public function clearCache(): void
     {
         Artisan::call('cache:clear');
     }
 
-    public function setLangs($langs)
+    public function setLangs(string $langs): void
     {
         $this->langs = $langs;
     }
 
-    public function getLangs()
+    public function getLangs(): string
     {
         return $this->langs;
     }
 
-    public static function getPagination()
+    public static function getPagination(): int
     {
         return config('cmsrs.pagination'); // env('PAGINATION', ConfigService::PAGINATION_DEFAULT);
     }
 
-    public static function getPageTypes()
+    public static function getPageTypes(): string
     {
         return config('cmsrs.page_types'); // env('PAGE_TYPES', ConfigService::PAGE_TYPES_STR_DEFAULT);
     }
 
-    public static function arrGetPageTypes()
+    /**
+     * @return array<int, string>
+     */
+    public static function arrGetPageTypes(): array
     {
         $strPageTypes = ConfigService::getPageTypes();
 
         return explode(',', $strPageTypes);
     }
 
-    public function getLangsFromEnv()
+    public function getLangsFromEnv(): string
     {
         $langs = '';
         if ($this->getLangs()) {
@@ -154,6 +172,9 @@ class ConfigService
         return $langs;
     }
 
+    /**
+     * @return array<int, string>
+     */
     public function arrGetLangs()
     {
         $strLangs = ConfigService::getLangsFromEnv();
@@ -161,17 +182,23 @@ class ConfigService
         return explode(',', $strLangs);
     }
 
-    public function isManyLangs()
+    public function isManyLangs(): bool
     {
         return count($this->arrGetLangs()) > 1;
     }
 
-    public static function arrGetLangsEnv()
+    /**
+     * @return array<int, string>
+     */
+    public static function arrGetLangsEnv(): array
     {
         // env('LANGS', ConfigService::LANG_DEFAULT)
         return explode(',', config('cmsrs.langs'));
     }
 
+    /**
+     * @return string
+     */
     public static function getDefaultLang()
     {
         $langs = ConfigService::arrGetLangsEnv();
@@ -184,12 +211,12 @@ class ConfigService
         return $langs[0];
     }
 
-    public function getConfigCacheEnable()
+    public function getConfigCacheEnable(): bool
     {
         return config('cmsrs.cache_enabled'); // env('CACHE_ENABLE', false);
     }
 
-    public function isCacheEnable()
+    public function isCacheEnable(): bool
     {
         $formEnv = $this->getConfigCacheEnable();
         $isFileExist = $this->isExistCacheFileEnable();
@@ -197,7 +224,7 @@ class ConfigService
         return $formEnv && $isFileExist;
     }
 
-    public function getLangFromRequest()
+    public function getLangFromRequest(): string
     {
         // \Illuminate\Support\Facades\Log::info('1='  .  request()->route('lang') .' 2='. request('lang') );
         $lang = request()->route('lang') ?? request('lang') ?? $this->getDefaultLang();
@@ -208,7 +235,7 @@ class ConfigService
         return $lang;
     }
 
-    public function getLangFromCookie()
+    public function getLangFromCookie(): string
     {
         $lang = request()->cookie(ConfigService::COOKIE_FRONT_LOGIN_LANG_NAME);
 
