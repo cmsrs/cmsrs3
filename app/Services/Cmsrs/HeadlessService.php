@@ -2,17 +2,15 @@
 
 namespace App\Services\Cmsrs;
 
+use App\Models\Cmsrs\Image;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
-use App\Models\Cmsrs\Image;
-
 
 class HeadlessService extends BaseService
 {
     public function __construct(private ConfigService $configService, private PageService $pageService, private MenuService $menuService, private ImageService $imageService) {}
 
-
-    public function translatesByColumn(PageService|MenuService $service, Page|Menu|Image $model, string $column) : array
+    public function translatesByColumn(PageService|MenuService $service, Page|Menu|Image $model, string $column): array
     {
         $langs = $this->configService->arrGetLangs();
         $out = [];
@@ -23,7 +21,7 @@ class HeadlessService extends BaseService
         return $out;
     }
 
-    public function getPagesByShortTitleWithImages( string $shortTitle) : array
+    public function getPagesByShortTitleWithImages(string $shortTitle): array
     {
         $defaultLang = ConfigService::getDefaultLang();
 
@@ -50,7 +48,7 @@ class HeadlessService extends BaseService
         return $out;
     }
 
-    public function getAllPagesWithImages(string $type) : array
+    public function getAllPagesWithImages(string $type): array
     {
         if (! in_array($type, ConfigService::arrGetPageTypes())) {
             throw new \Exception('Wrong type : '.$type);
@@ -121,7 +119,7 @@ class HeadlessService extends BaseService
         return $PageData;
     }
 
-    public function getAllPagesWithImagesOneItemByLang(Page $mPage, ?string $lang) : array
+    public function getAllPagesWithImagesOneItemByLang(Page $mPage, ?string $lang): array
     {
         $page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->first()->toArray();
 

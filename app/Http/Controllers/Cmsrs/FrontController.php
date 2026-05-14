@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Cmsrs;
 use App\Http\Controllers\Controller;
 use App\Integration\Payu;
 use App\Models\Cmsrs\Checkout;
-use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Menu;
+use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\DeliverService;
 use App\Services\Cmsrs\Helpers\CacheService;
@@ -14,16 +14,15 @@ use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\PaymentService;
 use App\Services\Cmsrs\ProductService;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Session\Store;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Collection;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\JsonResponse;
-
 
 class FrontController extends Controller
 {
@@ -60,7 +59,7 @@ class FrontController extends Controller
         }
     }
 
-    public function search(Request $request, $lang = null) : View
+    public function search(Request $request, $lang = null): View
     {
 
         if (empty($lang)) {
@@ -86,7 +85,7 @@ class FrontController extends Controller
         return view('cmsrs.search', $data);
     }
 
-    public function shoppingsuccess(Request $request, $lang = null) : View
+    public function shoppingsuccess(Request $request, $lang = null): View
     {
         if (empty($lang)) {
             $lang = $this->langs[0];
@@ -118,7 +117,7 @@ class FrontController extends Controller
         return view('cmsrs.shoppingsuccess', $data);
     }
 
-    public function checkout(Request $request, $lang = null) : View
+    public function checkout(Request $request, $lang = null): View
     {
         if (empty($lang)) {
             $lang = $this->langs[0];
@@ -144,7 +143,7 @@ class FrontController extends Controller
         return view('cmsrs.checkout', $data);
     }
 
-    public function postCheckout(Request $request) : RedirectResponse|JsonResponse
+    public function postCheckout(Request $request): RedirectResponse|JsonResponse
     {
         $lang = $request->input('lang');
         if (! in_array($lang, $this->langs)) {
@@ -218,7 +217,7 @@ class FrontController extends Controller
 
     }
 
-    public function index($lang = null) : View
+    public function index($lang = null): View
     {
         if ((count($this->langs) > 1) && $lang == $this->langs[0]) {
             abort(404);
@@ -254,14 +253,14 @@ class FrontController extends Controller
         return view('cmsrs.index', $data);
     }
 
-    public function getPageLangs($lang, $menuSlug, $pageSlug = null, $productSlug = null) : View
+    public function getPageLangs($lang, $menuSlug, $pageSlug = null, $productSlug = null): View
     {
         $data = $this->getPage($menuSlug, $pageSlug, $productSlug, $lang);
 
         return view($data['view'], $data);
     }
 
-    public function getPage($menuSlug, $pageSlug = null, $productSlug = null, $lang = null) : View|array
+    public function getPage($menuSlug, $pageSlug = null, $productSlug = null, $lang = null): View|array
     {
         if (empty($lang)) {
             $manyLangs = false;
@@ -318,14 +317,14 @@ class FrontController extends Controller
         return view($data['view'], $data);
     }
 
-    public function getSeparatePageLangs($lang, $pageSlug) : View
+    public function getSeparatePageLangs($lang, $pageSlug): View
     {
         $data = $this->getSeparatePage($pageSlug, $lang);
 
         return view($data['view'], $data);
     }
 
-    public function getSeparatePage($pageSlug, $lang = null) : View|array
+    public function getSeparatePage($pageSlug, $lang = null): View|array
     {
         if (empty($lang)) {
             $manyLangs = false;

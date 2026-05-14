@@ -2,7 +2,9 @@
 
 namespace App\Models\Cmsrs;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -20,10 +22,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $price_deliver
  * @property int|null $price_total
  * @property int|null $price_total_add_deliver
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Cmsrs\Basket> $baskets
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection<int, Basket> $baskets
  * @property-read int|null $baskets_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Checkout newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Checkout newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Checkout query()
@@ -44,6 +47,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Checkout whereTelephone($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Checkout whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Checkout whereUserId($value)
+ *
  * @mixin \Eloquent
  */
 class Checkout extends Model

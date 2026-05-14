@@ -2,7 +2,6 @@
 
 namespace App\Services\Cmsrs;
 
-use App\Models\Cmsrs\Content;
 use App\Models\Cmsrs\Image;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
@@ -61,7 +60,7 @@ abstract class BaseService
         return $mMenu->pages()->where('published', '=', 1)->where('after_login', '=', 0)->orderBy('position', 'asc');
     }
 
-    public function pagesPublishedTree($pagesByMenu)
+    public function pagesPublishedTree(Collection $pagesByMenu)
     {
         $tree = [];
         foreach ($pagesByMenu as $page) {
@@ -110,24 +109,15 @@ abstract class BaseService
         return $value;
     }
 
-    protected function wrapTranslateUpdate(Translate|Content|false $obj, $row)
-    {
-        if ($obj) {
-            $obj->update(['value' => $row['value']]);
-        } else {
-            $this->createRow($row);
-        }
-    }
+    // protected function createRow($row)
+    // {
+    //     $translate = Translate::create($row);
+    //     if (empty($translate->id)) {
+    //         throw new \Exception('problem with save into translate table');
+    //     }
+    // }
 
-    protected function createRow($row)
-    {
-        $translate = Translate::create($row);
-        if (empty($translate->id)) {
-            throw new \Exception('problem with save into translate table');
-        }
-    }
-
-    public static function reIndexArr($arr, $key = 'id')
+    public static function reIndexArr(array $arr, string $key = 'id')
     {
         $out = [];
         foreach ($arr as $item) {

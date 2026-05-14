@@ -2,9 +2,11 @@
 
 namespace App\Models\Cmsrs;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -12,17 +14,18 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int|null $price
  * @property int $published
  * @property int|null $page_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Cmsrs\Content> $contents
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection<int, Content> $contents
  * @property-read int|null $contents_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Cmsrs\Image> $images
+ * @property-read Collection<int, Image> $images
  * @property-read int|null $images_count
- * @property-read \App\Models\Cmsrs\Page|null $page
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Cmsrs\Translate> $translates
+ * @property-read Page|null $page
+ * @property-read Collection<int, Translate> $translates
  * @property-read int|null $translates_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Cmsrs\Translate> $translatesPage
+ * @property-read Collection<int, Translate> $translatesPage
  * @property-read int|null $translates_page_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product query()
@@ -33,6 +36,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product wherePublished($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereSku($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class Product extends Model

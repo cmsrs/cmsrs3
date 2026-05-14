@@ -11,18 +11,23 @@ class TranslateService extends BaseService implements TranslateValueInterface
 {
     public function __construct(private ConfigService $configService) {}
 
-    /*
-    * use in tests
-    */
-    public function getArrLangs()
+    /**
+     * @return array<int, string>
+     *                            use in tests
+     */
+    public function getArrLangs(): array
     {
         return $this->configService->arrGetLangs();
     }
 
     /**
-     * DRY!!: ContentService.php and TranslateService.php, in Base service I don't want use ConfigService (because of tests - new instance problem in tests, and phpstan)
+     * @param  array<string, mixed>  $d
+     * @param  array<string, bool>  $columns
+     *
+     * @throws \Exception
+     *                    DRY!!: ContentService.php and TranslateService.php, in Base service I don't want use ConfigService (because of tests - new instance problem in tests, and phpstan)
      */
-    public function genericCreateTranslate($d, $refName, $columns, $create = true)
+    public function genericCreateTranslate(array $d, string $refName, array $columns, bool $create = true): bool
     {
         $refId = $d[$refName];
         $data = $d['data'];
@@ -42,15 +47,25 @@ class TranslateService extends BaseService implements TranslateValueInterface
                     if ($create) {
                         $this->createRow($row);
                     } else {
-                        if ($this instanceof TranslateValueInterface) {
-                            $this->updateRow($row); // from child
-                        }
+                        $this->updateRow($row);
                     }
                 }
             }
         }
 
         return true;
+    }
+
+    /**
+     * @param  array<string, mixed>  $row
+     *                                     DRY!!: ContentService.php and TranslateService.php
+     */
+    protected function createRow($row): void
+    {
+        $translate = Translate::create($row);
+        if (empty($translate->id)) {
+            throw new \Exception('problem with save into translate table');
+        }
     }
 
     /**
@@ -102,5 +117,18 @@ class TranslateService extends BaseService implements TranslateValueInterface
         $this->wrapTranslateUpdate($obj, $row);
 
         return true;
+    }
+
+    /**
+     * @param  array<string, mixed>  $row
+     *                                     DRY!!: ContentService.php and TranslateService.php
+     */
+    protected function wrapTranslateUpdate(Translate|false $obj, $row): void
+    {
+        if ($obj) {
+            $obj->update(['value' => $row['value']]);
+        } else {
+            $this->createRow($row);
+        }
     }
 }

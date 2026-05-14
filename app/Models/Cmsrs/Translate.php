@@ -3,6 +3,7 @@
 namespace App\Models\Cmsrs;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -13,9 +14,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $menu_id
  * @property int|null $page_id
  * @property int|null $image_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Cmsrs\Page|null $page
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Page|null $page
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Translate newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Translate newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Translate query()
@@ -29,6 +31,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Translate whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Translate whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Translate whereValue($value)
+ *
  * @mixin \Eloquent
  */
 class Translate extends Model

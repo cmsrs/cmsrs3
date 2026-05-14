@@ -7,6 +7,9 @@ use App\Services\Cmsrs\Interfaces\TranslateValueInterface;
 
 class ContentService extends BaseService implements TranslateValueInterface
 {
+    /**
+     * @var array<int, string>
+     */
     protected $fillable = [
         'lang',
         'column',
@@ -15,6 +18,9 @@ class ContentService extends BaseService implements TranslateValueInterface
         'product_id',
     ];
 
+    /**
+     * @var array<string, string>
+     */
     protected $casts = [
         'page_id' => 'integer',
         'product_id' => 'integer',
@@ -23,6 +29,7 @@ class ContentService extends BaseService implements TranslateValueInterface
     public function __construct(private ConfigService $configService) {}
 
     /*
+    * @return array<int, string>
     * use in tests
     */
     public function getArrLangs()
@@ -31,9 +38,13 @@ class ContentService extends BaseService implements TranslateValueInterface
     }
 
     /**
-     * DRY!!: ContentService.php and TranslateService.php, in Base service I don't want use ConfigService (because of tests - new instance problem in tests, and phpstan)
+     * @param  array<string, mixed>  $d
+     * @param  array<string, bool>  $columns
+     *
+     * @throws \Exception
+     *                    DRY!!: ContentService.php and TranslateService.php, in Base service I don't want use ConfigService (because of tests - new instance problem in tests, and phpstan)
      */
-    public function genericCreateTranslate($d, $refName, $columns, $create = true)
+    public function genericCreateTranslate(array $d, string $refName, array $columns, bool $create = true): bool
     {
         $refId = $d[$refName];
         $data = $d['data'];
@@ -53,9 +64,7 @@ class ContentService extends BaseService implements TranslateValueInterface
                     if ($create) {
                         $this->createRow($row);
                     } else {
-                        if ($this instanceof TranslateValueInterface) {
-                            $this->updateRow($row); // from child
-                        }
+                        $this->updateRow($row);
                     }
                 }
             }
@@ -64,7 +73,10 @@ class ContentService extends BaseService implements TranslateValueInterface
         return true;
     }
 
-    public function wrapCreate($data, $create = true)
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    public function wrapCreate(array $data, bool $create = true): bool
     {
         if (! empty($data['page_id'])) {
             $columns = [
@@ -81,7 +93,10 @@ class ContentService extends BaseService implements TranslateValueInterface
         return true;
     }
 
-    public function updateRow(array $row)
+    /**
+     * @param  array<string, mixed>  $row
+     */
+    public function updateRow(array $row): bool
     {
         $obj = false;
         if (! empty($row['page_id'])) {
@@ -95,12 +110,29 @@ class ContentService extends BaseService implements TranslateValueInterface
         return true;
     }
 
-    public function createRow($row)
+    /**
+     * @param  array<string, mixed>  $row
+     *                                     DRY!!: ContentService.php and TranslateService.php
+     */
+    public function createRow(array $row): void
     {
         $objContent = new Content;
         $content = $objContent->create($row);
         if (empty($content->id)) {
             throw new \Exception('problem with save into content table');
+        }
+    }
+
+    /**
+     * @param  array<string, mixed>  $row
+     *                                     DRY!!: ContentService.php and TranslateService.php
+     */
+    protected function wrapTranslateUpdate(Content|false $obj, array $row): void
+    {
+        if ($obj) {
+            $obj->update(['value' => $row['value']]);
+        } else {
+            $this->createRow($row);
         }
     }
 }

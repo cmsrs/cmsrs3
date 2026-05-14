@@ -3,6 +3,7 @@
 namespace App\Models\Cmsrs;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -10,8 +11,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $checkout_id
  * @property int|null $price
  * @property int $product_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Basket newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Basket newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Basket query()
@@ -22,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Basket whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Basket whereQty($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Basket whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class Basket extends Model
