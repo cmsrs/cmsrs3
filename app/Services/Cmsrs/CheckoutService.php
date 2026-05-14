@@ -5,12 +5,18 @@ namespace App\Services\Cmsrs;
 use App\Models\Cmsrs\Checkout;
 use App\Models\Cmsrs\Product;
 use App\Services\Cmsrs\Helpers\PriceHelperService;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class CheckoutService extends BaseService
 {
     public function __construct(private ProductService $productService, private PriceHelperService $priceHelperService) {}
 
+    /**
+     * @return Checkout|null
+     */
     public function findActiveOrder()
     {
         $orders = $this->findActiveOrders();
@@ -18,6 +24,9 @@ class CheckoutService extends BaseService
         return $orders?->first();
     }
 
+    /**
+     * @return Builder|false
+     */
     public function findActiveOrders()
     {
         $user = Auth::user();
@@ -29,10 +38,13 @@ class CheckoutService extends BaseService
         return Checkout::where('user_id', '=', $user->id)->where('is_pay', '=', 0);
     }
 
-    public function getPaginationItems($lang, $column, $direction, $search)
+    /**
+     * @return LengthAwarePaginator
+     */
+    public function getPaginationItems(string $lang, string $column, string $direction, ?string $search)
     {
 
-        $search = trim($search);
+        $search = trim($search ?? '');
 
         $objCheckouts = Checkout::when($search, function ($query, $search) {
             return $query->where('email', 'like', '%'.$search.'%');
@@ -51,7 +63,10 @@ class CheckoutService extends BaseService
 
     }
 
-    public function printCheckouts($checkouts, $lang)
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function printCheckouts(Collection $checkouts, string $lang)
     {
         $out = [];
         $i = 0;
@@ -64,7 +79,10 @@ class CheckoutService extends BaseService
         return $out;
     }
 
-    private function getCheckoutItems($checkout)
+    /**
+     * @return array<string, mixed>
+     */
+    private function getCheckoutItems(Checkout $checkout): array
     {
         $out = [];
         $out['id'] = $checkout->id;
@@ -92,7 +110,10 @@ class CheckoutService extends BaseService
         return $out;
     }
 
-    private function getBasketItems($baskets, $lang)
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function getBasketItems(Collection $baskets, string $lang)
     {
         $out = [];
         $j = 0;

@@ -6,11 +6,13 @@ use App\Models\Cmsrs\Contact;
 
 class ContactService extends BaseService
 {
+    /** @var array<int, string> */
     protected $fillable = [
         'email',
         'message',
     ];
 
+    /** @var array<int, string> */
     public $columnsAllowedToSort = [
         'id',
         'email',
@@ -19,6 +21,9 @@ class ContactService extends BaseService
         'updated_at',
     ];
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public function getAllData()
     {
         $out = [];
@@ -36,9 +41,10 @@ class ContactService extends BaseService
     }
 
     /**
-     * only for demo purpose
+     * @param  array<string, string>  $data
+     *                                       only for demo purpose
      */
-    public function wrapCreate($data)
+    public function wrapCreate(array $data): Contact
     {
         return Contact::create($data);
     }

@@ -351,8 +351,8 @@ class ProductTest extends Base
         /*** start testing */
 
         $response = $this->get('api/checkouts?token='.$this->token);
-
         $res = $response->getData();
+
         $this->assertTrue($res->success);
         $this->assertEquals($c1, count($res->data));
 
