@@ -7,7 +7,7 @@ use Intervention\Image\Laravel\Facades\Image as LibImage;
 
 class ImageHelperService
 {
-    public static function saveImageAndThumbs($data, $dirImg, $name)
+    public static function saveImageAndThumbs(string $data, string $dirImg, string $name): void
     {
         LibImage::read($data)->save($dirImg.'/'.$name);
 

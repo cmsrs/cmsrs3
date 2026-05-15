@@ -6,7 +6,7 @@ use Illuminate\Support\Str;
 
 class StrHelperService
 {
-    public static function filterFileName($basename, $extension)
+    public static function filterFileName(string $basename, string $extension): string
     {
         $delimiter = '-';
 
