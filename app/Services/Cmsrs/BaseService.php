@@ -143,6 +143,7 @@ abstract class BaseService
     // }
 
     /**
+     * @param  array<array-key, array<string, mixed>>  $arr
      * @return array<array-key, array<string, mixed>>
      */
     public static function reIndexArr(array $arr, string $key = 'id'): array
