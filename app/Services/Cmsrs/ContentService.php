@@ -3,9 +3,8 @@
 namespace App\Services\Cmsrs;
 
 use App\Models\Cmsrs\Content;
-use App\Services\Cmsrs\Interfaces\TranslateValueInterface;
 
-class ContentService extends BaseService implements TranslateValueInterface
+class ContentService extends BaseService
 {
     /**
      * @var array<int, string>

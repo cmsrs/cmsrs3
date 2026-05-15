@@ -5,9 +5,8 @@ namespace App\Services\Cmsrs;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Translate;
-use App\Services\Cmsrs\Interfaces\TranslateValueInterface;
 
-class TranslateService extends BaseService implements TranslateValueInterface
+class TranslateService extends BaseService
 {
     public function __construct(private ConfigService $configService) {}
 
