@@ -8,5 +8,8 @@ use App\Models\Cmsrs\Page;
 
 interface TranslateInterface
 {
-    public function getAllTranslate(Page|Image|Menu $model);
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function getAllTranslate(Page|Image|Menu $model): array;
 }

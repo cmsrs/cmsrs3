@@ -127,12 +127,11 @@ class ImageService extends BaseService implements TranslateInterface
      * @return array<string, string>|false
      *                                     return all thumbs and main img
      */
-    public function getAllImage(object $img, bool $isAbs = true): bool|array
+    public function getAllImage(?object $img, bool $isAbs = true): bool|array
     {
         $out = [];
-        /** @var Image $objImg */
         $objImg = Image::find($img->id);
-        if (empty($objImg)) {
+        if ($objImg === null) {
             return false;
         }
         $imgDir = self::getImgDir($objImg, $isAbs);
@@ -385,11 +384,7 @@ class ImageService extends BaseService implements TranslateInterface
             throw new \Exception('Wrong direction (Image). It can be up or down direction = '.$direction);
         }
 
-        /** @var Image $image */
-        $image = Image::find($id);
-        if (! $image) {
-            return false;
-        }
+        $image = Image::findOrFail($id);
 
         $t = 'page';
         $refId = null;

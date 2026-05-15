@@ -85,7 +85,7 @@ class MenuService extends BaseService implements TranslateInterface
     }
 
     /**
-     * @return array<int, Menu>
+     * @return array<int, array<string, mixed>>
      */
     public function getAllTranslate(Image|Page|Menu $mMenu): array
     {
