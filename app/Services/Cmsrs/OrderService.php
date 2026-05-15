@@ -2,8 +2,10 @@
 
 namespace App\Services\Cmsrs;
 
+use App\Models\Cmsrs\Checkout;
 use App\Models\Cmsrs\Order;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 
 class OrderService extends BaseService
 {
@@ -16,7 +18,7 @@ class OrderService extends BaseService
      *   //$checkout->is_pay = 1;
      *   //$checkout->save();
      */
-    public function copyDataFromBasketToOrderForUser($checkout)
+    public function copyDataFromBasketToOrderForUser(Checkout $checkout): bool
     {
 
         $userId = $checkout->user_id;
@@ -89,7 +91,10 @@ class OrderService extends BaseService
 
     }
 
-    public function inOrdersByUserId($userId)
+    /**
+     * @return Collection<int, Order>
+     */
+    public function inOrdersByUserId(int $userId): Collection
     {
         return Order::where('user_id', '=', $userId)->get(); // ->toArray();
     }

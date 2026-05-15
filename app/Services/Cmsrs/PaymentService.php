@@ -10,6 +10,9 @@ class PaymentService
 
     const KEY_PAYU = 'payu';
 
+    /**
+     * @return array<string, array{name: string}>|array{name: string}
+     */
     public static function getPayment(?string $key = null): array
     {
         $payments = [

@@ -51,6 +51,9 @@ class MenuService extends BaseService implements TranslateInterface
         return $menu;
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public function wrapUpdate(Menu $mMenu, array $data): bool
     {
         $mMenu->update($data);
@@ -142,9 +145,10 @@ class MenuService extends BaseService implements TranslateInterface
     }
 
     /**
+     * @param  array<string, array<string, string>>  $data
      * @return array<string, mixed>
      */
-    public function checkIsDuplicateName(array $data, string $id = ''): array
+    public function checkIsDuplicateName(array $data, ?int $id = null): array
     {
         $out = ['success' => true];
         $menus = $this->getAllMenus();
