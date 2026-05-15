@@ -7,13 +7,16 @@ use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\Interfaces\TranslateInterface;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
 
 abstract class BaseService
 {
+    /**
+     * @var array<int, string>
+     */
     public $pageFields = [
         'id',
         'published',
@@ -25,6 +28,10 @@ abstract class BaseService
         'page_id',
     ];
 
+    /**
+     * @param  array<string, mixed>|Collection  $page
+     * @return array<string, mixed>
+     */
     protected function getPageDataFormat(array|Collection $page): array
     {
         $out = [];
@@ -41,6 +48,10 @@ abstract class BaseService
         return $out;
     }
 
+    /**
+     * @param  array<string, mixed>|Collection  $page
+     * @return array<string, mixed>
+     */
     public function getPageDataFormatByLang(array|Collection $page, string $lang): array
     {
         $data = $this->getPageDataFormat($page);
@@ -48,6 +59,10 @@ abstract class BaseService
         return $this->removeKeyLangInArr($data, $lang);
     }
 
+    /**
+     * @param  array<string, mixed>  $arr
+     * @return array<string, mixed>
+     */
     public function removeKeyLangInArr(array $arr, string $lang): array
     {
         foreach ($arr as $key => $value) {
@@ -64,6 +79,9 @@ abstract class BaseService
         return $mMenu->pages()->where('published', '=', 1)->where('after_login', '=', 0)->orderBy('position', 'asc');
     }
 
+    /**
+     * @return array<int, Page>
+     */
     public function pagesPublishedTree(Collection $pagesByMenu)
     {
         $tree = [];
@@ -86,7 +104,10 @@ abstract class BaseService
         return $tree;
     }
 
-    public function getAllTranslateByColumn(Page|Image|Menu $model)
+    /**
+     * @return array<string, array<string, string>>
+     */
+    public function getAllTranslateByColumn(Page|Image|Menu $model): array
     {
         $out = [];
 
@@ -101,7 +122,7 @@ abstract class BaseService
         return $out;
     }
 
-    public function translatesByColumnAndLang(Page|Image|Menu $model, string $column, string $lang)
+    public function translatesByColumnAndLang(Page|Image|Menu $model, string $column, string $lang): string
     {
         $data = $this->getAllTranslateByColumn($model);
 
@@ -121,7 +142,10 @@ abstract class BaseService
     //     }
     // }
 
-    public static function reIndexArr(array $arr, string $key = 'id')
+    /**
+     * @return array<array-key, array<string, mixed>>
+     */
+    public static function reIndexArr(array $arr, string $key = 'id'): array
     {
         $out = [];
         foreach ($arr as $item) {
@@ -139,7 +163,7 @@ abstract class BaseService
     /**
      * @return LengthAwarePaginator
      */
-    protected function getPaginationFromCollection($collection)
+    protected function getPaginationFromCollection(Collection $collection)
     {
         $perPage = ConfigService::getPagination();
         $page = Paginator::resolveCurrentPage() ?: 1;

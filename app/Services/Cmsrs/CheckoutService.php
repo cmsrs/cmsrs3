@@ -7,7 +7,7 @@ use App\Models\Cmsrs\Product;
 use App\Services\Cmsrs\Helpers\PriceHelperService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class CheckoutService extends BaseService
