@@ -6,7 +6,7 @@ use Carbon\Carbon;
 
 class CacheService
 {
-    public static function setTime()
+    public static function setTime(): Carbon
     {
         return Carbon::now()->addYears(2);
     }

@@ -10,6 +10,9 @@ class HeadlessService extends BaseService
 {
     public function __construct(private ConfigService $configService, private PageService $pageService, private MenuService $menuService, private ImageService $imageService) {}
 
+    /**
+     * @return array<string, string>
+     */
     public function translatesByColumn(PageService|MenuService $service, Page|Menu|Image $model, string $column): array
     {
         $langs = $this->configService->arrGetLangs();
@@ -119,11 +122,11 @@ class HeadlessService extends BaseService
         return $PageData;
     }
 
-    public function getAllPagesWithImagesOneItemByLang(Page $mPage, ?string $lang): array
+    public function getAllPagesWithImagesOneItemByLang(Page $mPage, string $lang): array
     {
         $page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->first()->toArray();
 
-        $formatPage = $this->getPageDataFormat($page, $lang);
+        $formatPage = $this->getPageDataFormatByLang($page, $lang);
         $formatPage['images'] = $this->imageService->getImagesAndThumbsByTypeAndRefId('page', $page['id'], $lang);
 
         return $formatPage;

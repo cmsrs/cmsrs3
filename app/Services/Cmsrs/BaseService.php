@@ -25,7 +25,7 @@ abstract class BaseService
         'page_id',
     ];
 
-    protected function getPageDataFormat(array|Collection $page, ?string $lang = null)
+    protected function getPageDataFormat(array|Collection $page): array
     {
         $out = [];
         foreach ($this->pageFields as $field) {
@@ -37,11 +37,15 @@ abstract class BaseService
         foreach ($page['contents'] ?? [] as $translate) {
             $out[$translate['column']][$translate['lang']] = $translate['value'];
         }
-        if ($lang) {
-            return $this->removeKeyLangInArr($out, $lang);
-        }
 
         return $out;
+    }
+
+    public function getPageDataFormatByLang(array|Collection $page, string $lang): array
+    {
+        $data = $this->getPageDataFormat($page);
+
+        return $this->removeKeyLangInArr($data, $lang);
     }
 
     public function removeKeyLangInArr(array $arr, string $lang): array
