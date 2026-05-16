@@ -80,7 +80,7 @@ class MenuService extends BaseService
     public function getSlugByLang(Menu $model, string $lang): string
     {
         $column = 'name';
-        $name = $this->translatesByColumnAndLang($model, $column, $lang, $this->configService);
+        $name = $this->translatesByColumnAndLang($model, $column, $lang);
 
         return Str::slug($name, '-');
     }

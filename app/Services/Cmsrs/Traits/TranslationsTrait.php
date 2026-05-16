@@ -60,13 +60,11 @@ trait TranslationsTrait
     {
         $out = [];
 
-        // if ($this instanceof TranslateInterface) {
         $data = $this->getAllTranslate($model); // from child
 
         foreach ($data as $d) {
             $out[$d['column']][$d['lang']] = $d['value'];
         }
-        // }
 
         return $out;
     }
