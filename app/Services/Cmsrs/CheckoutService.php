@@ -17,7 +17,7 @@ class CheckoutService extends BaseService
     /**
      * @return Checkout|null
      */
-    public function findActiveOrder()
+    public function findActiveOrder() : ?Checkout
     {
         $orders = $this->findActiveOrders();
 
@@ -25,9 +25,9 @@ class CheckoutService extends BaseService
     }
 
     /**
-     * @return Builder|false
+     * @return Builder<Checkout>|false
      */
-    public function findActiveOrders()
+    public function findActiveOrders() : Builder|false
     {
         $user = Auth::user();
         if (empty($user)) {
@@ -64,6 +64,7 @@ class CheckoutService extends BaseService
     }
 
     /**
+     * @param Collection<int, Checkout> $checkouts
      * @return array<int, array<string, mixed>>
      */
     public function printCheckouts(Collection $checkouts, string $lang)
@@ -80,6 +81,7 @@ class CheckoutService extends BaseService
     }
 
     /**
+     * @param Checkout $checkout
      * @return array<string, mixed>
      */
     private function getCheckoutItems(Checkout $checkout): array
@@ -111,6 +113,8 @@ class CheckoutService extends BaseService
     }
 
     /**
+     * @param Collection<int, Checkout> $baskets
+     * @param string $lang
      * @return array<int, array<string, mixed>>
      */
     private function getBasketItems(Collection $baskets, string $lang)
