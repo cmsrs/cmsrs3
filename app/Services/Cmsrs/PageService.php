@@ -778,4 +778,26 @@ class PageService extends BaseService
 
         return true;
     }
+
+    /**
+     * @param  array<string, mixed>|Collection  $page
+     * @return array<string, mixed>
+     */
+    public function getPageDataFormat(array|Collection $page): array
+    {
+        $out = [];
+        foreach ($this->pageFields as $field) {
+            $out[$field] = $page[$field];
+        }
+        foreach ($page['translates'] ?? [] as $translate) {
+            $out[$translate['column']][$translate['lang']] = $translate['value'];
+        }
+        foreach ($page['contents'] ?? [] as $translate) {
+            $out[$translate['column']][$translate['lang']] = $translate['value'];
+        }
+
+        return $out;
+    }
+
+
 }

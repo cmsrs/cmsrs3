@@ -63,7 +63,7 @@ class HeadlessService extends BaseService
         $i = 0;
         $out = [];
         foreach ($pages as $page) {
-            $out[$i] = $this->getPageDataFormat($page);
+            $out[$i] = $this->pageService->getPageDataFormat($page);
             $out[$i]['images'] = $this->imageService->getImagesAndThumbsByTypeAndRefId('page', $page['id']);
             $i++;
         }
@@ -85,7 +85,7 @@ class HeadlessService extends BaseService
         $i = 0;
         $out = [];
         foreach ($pages as $page) {
-            $out[$i] = $this->getPageDataFormat($page);
+            $out[$i] = $this->pageService->getPageDataFormat($page);
             $out[$i]['images'] = $this->imageService->getImagesAndThumbsByTypeAndRefId('page', $page['id']);
             $i++;
         }
@@ -163,7 +163,7 @@ class HeadlessService extends BaseService
      */
     public function getPageDataFormatByLang(array $page, string $lang): array
     {
-        $data = $this->getPageDataFormat($page);
+        $data = $this->pageService->getPageDataFormat($page);
 
         return $this->removeKeyLangInArr($data, $lang);
     }
