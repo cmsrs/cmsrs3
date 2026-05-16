@@ -4,6 +4,8 @@ namespace App\Services\Cmsrs;
 
 use App\Models\Cmsrs\Checkout;
 use App\Models\Cmsrs\Product;
+use App\Models\Cmsrs\Basket;
+
 use App\Services\Cmsrs\Helpers\PriceHelperService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -25,13 +27,13 @@ class CheckoutService extends BaseService
     }
 
     /**
-     * @return Builder<Checkout>|false
+     * @return Builder<Checkout>|null
      */
-    public function findActiveOrders() : Builder|false
+    public function findActiveOrders() : Builder|null
     {
         $user = Auth::user();
-        if (empty($user)) {
-            return false;
+        if (! $user) {
+            return null;
         }
 
         // where('session_id', '=', $sessionId)->
@@ -113,7 +115,7 @@ class CheckoutService extends BaseService
     }
 
     /**
-     * @param Collection<int, Checkout> $baskets
+     * @param Collection<int, Basket> $baskets
      * @param string $lang
      * @return array<int, array<string, mixed>>
      */
@@ -129,7 +131,7 @@ class CheckoutService extends BaseService
         }
 
         $pIdsValues = array_values($pIds);
-        $products = (new Product)->whereIn('id', $pIdsValues)->with(['translates'])->get()->pluck(null, 'id')->all();
+        $products = (new Product)->whereIn('id', $pIdsValues)->with(['translates'])->get()->keyBy('id'); //pluck(null, 'id')->all();
 
         foreach ($baskets as $basket) {
             // $product = Product::with(['translates'])->where('id', $basket['product_id'])->first(); //i don't want sql in foreach
