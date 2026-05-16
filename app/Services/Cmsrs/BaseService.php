@@ -47,17 +47,6 @@ abstract class BaseService
     }
 
     /**
-     * @param  array<string, mixed>|Collection  $page
-     * @return array<string, mixed>
-     */
-    public function getPageDataFormatByLang(array|Collection $page, string $lang): array
-    {
-        $data = $this->getPageDataFormat($page);
-
-        return $this->removeKeyLangInArr($data, $lang);
-    }
-
-    /**
      * @param  array<string, mixed>  $arr
      * @return array<string, mixed>
      */
@@ -130,7 +119,8 @@ abstract class BaseService
     }
 
     /**
-     * @return LengthAwarePaginator
+     * @param  Collection<int, mixed>  $collection
+     * @return LengthAwarePaginator<int, mixed>
      */
     protected function getPaginationFromCollection(Collection $collection)
     {

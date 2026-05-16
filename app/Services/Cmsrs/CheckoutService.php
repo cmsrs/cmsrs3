@@ -39,7 +39,7 @@ class CheckoutService extends BaseService
     }
 
     /**
-     * @return LengthAwarePaginator
+     * @return LengthAwarePaginator<int, mixed>
      */
     public function getPaginationItems(string $lang, string $column, string $direction, ?string $search)
     {

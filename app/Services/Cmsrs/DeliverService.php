@@ -20,6 +20,10 @@ class DeliverService
 
     public function __construct(private PriceHelperService $priceHelperService) {}
 
+    /**
+     * @param  string|null  $key
+     * @return array<string, mixed>|array<int, array<string, mixed>>
+     */
     public function getDeliver($key = null)
     {
         $Delivers = [

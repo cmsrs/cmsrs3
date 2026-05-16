@@ -13,7 +13,7 @@ trait TranslationsTrait
      */
     public function getAllTranslate(TranslatableInterface $model): array
     {
-        $id = $model->getId(); //for $model->id phpstan complains because of interface, so we need to use method
+        $id = $model->getId(); // for $model->id phpstan complains because of interface, so we need to use method
 
         $cacheKey = strtolower(class_basename($model)).'_translate_'.$id;
 

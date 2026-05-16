@@ -109,6 +109,5 @@ class Page extends Model implements ContentTranslatableInterface
     public function getId(): int
     {
         return $this->id;
-    }    
-
+    }
 }

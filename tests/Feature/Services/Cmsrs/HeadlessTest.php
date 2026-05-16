@@ -218,8 +218,8 @@ class HeadlessTest extends Base
     {
         (new Demo)->pagesAndMenu(true);
         $res = $this->get('api/headless/menus');
+        // dd($res->getContent());
         $data = $res->getData();
-        // $this->assertTrue($data->success);
         $this->assertTrue($data->success); // todo
 
         $this->assertEquals(5, count($data->data));

@@ -54,10 +54,9 @@ class Menu extends Model implements TranslatableInterface
     {
         return $this->hasMany('App\Models\Cmsrs\Translate', 'menu_id', 'id'); // it should be work without params - phpstan
     }
-    
+
     public function getId(): int
     {
         return $this->id;
-    }    
-
+    }
 }

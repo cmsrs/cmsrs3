@@ -27,10 +27,10 @@ class ContentService extends BaseService
 
     public function __construct(private ConfigService $configService) {}
 
-    /*
-    * @return array<int, string>
-    * use in tests
-    */
+    /**
+     * @return array<int, string>
+     *                            use in tests
+     */
     public function getArrLangs()
     {
         return $this->configService->arrGetLangs();

@@ -85,5 +85,5 @@ class Image extends Model implements TranslatableInterface
     public function getId(): int
     {
         return $this->id;
-    }    
+    }
 }

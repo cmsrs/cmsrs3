@@ -2,7 +2,6 @@
 
 namespace App\Services\Cmsrs;
 
-use App\Models\Cmsrs\Image;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 
@@ -13,17 +12,38 @@ class HeadlessService extends BaseService
     /**
      * @return array<string, string>
      */
-    public function translatesByColumn(PageService|MenuService $service, Page|Menu|Image $model, string $column): array
+    public function translatePageColumn(Page $page, string $column): array
     {
         $langs = $this->configService->arrGetLangs();
+
         $out = [];
+
         foreach ($langs as $lang) {
-            $out[$lang] = $service->translatesByColumnAndLang($model, $column, $lang);
+            $out[$lang] = $this->pageService->translatesByColumnAndLang($page, $column, $lang);
         }
 
         return $out;
     }
 
+    /**
+     * @return array<string, string>
+     */
+    public function translateMenuColumn(Menu $menu, string $column): array
+    {
+        $langs = $this->configService->arrGetLangs();
+
+        $out = [];
+
+        foreach ($langs as $lang) {
+            $out[$lang] = $this->menuService->translatesByColumnAndLang($menu, $column, $lang);
+        }
+
+        return $out;
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public function getPagesByShortTitleWithImages(string $shortTitle): array
     {
         $defaultLang = ConfigService::getDefaultLang();
@@ -51,6 +71,9 @@ class HeadlessService extends BaseService
         return $out;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public function getAllPagesWithImages(string $type): array
     {
         if (! in_array($type, ConfigService::arrGetPageTypes())) {
@@ -71,10 +94,15 @@ class HeadlessService extends BaseService
     }
 
     /**
+     * TODO - uwspolnic do innej funkcji !!
      * it is very similar to resources/views/includes/header.blade.php
      * it is very similar to getAllUrlRelatedToMenus too
      * and in tests (the same name)
      * it is always not auth - it is different
+     */
+
+    /**
+     * @return array<int, array<string, mixed>>
      */
     public function getAllUrlRelatedToMenus()
     {
@@ -87,12 +115,16 @@ class HeadlessService extends BaseService
         foreach ($menus as $menu) {
             $pagesPublishedAndAccess = $this->pagesPublishedAndAccessNotAuth($menu)->get(); // !! it is different getAllUrlRelatedToMenus in tests
             if ($pagesPublishedAndAccess->count() == 1) {
-                $urlInMenu[$j]['menu_name'] = $this->translatesByColumn($this->pageService, $pagesPublishedAndAccess->first(), 'short_title'); // to nie jest blad
-                $urlInMenu[$j]['url'] = $this->pageService->getUrls($pagesPublishedAndAccess->first());
-                $urlInMenu[$j]['page_id'] = $pagesPublishedAndAccess->first()->id;
+                $pageFirst = $pagesPublishedAndAccess->first();
+                if (! $pageFirst instanceof Page) {  // to avoid phpstan error, but it should not happen
+                    continue;
+                }
+                $urlInMenu[$j]['menu_name'] = $this->translatePageColumn($pageFirst, 'short_title'); // to nie jest blad
+                $urlInMenu[$j]['url'] = $this->pageService->getUrls($pageFirst);
+                $urlInMenu[$j]['page_id'] = $pageFirst->getId(); // phpstan error, but it should not happen
                 $urlInMenu[$j]['pages'] = [];
             } else {
-                $urlInMenu[$j]['menu_name'] = $this->translatesByColumn($this->menuService, $menu, 'name');
+                $urlInMenu[$j]['menu_name'] = $this->translateMenuColumn($menu, 'name');
                 $i = 0;
                 foreach ($this->pagesPublishedTree($pagesPublishedAndAccess) as $pageMenu) {
                     $urlInMenu[$j]['pages'][$i] = $this->getPageData($pageMenu);
@@ -112,16 +144,33 @@ class HeadlessService extends BaseService
         return $urlInMenu;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getPageData(Page $page)
     {
         $PageData = [];
         $PageData['url'] = $this->pageService->getUrls($page);
-        $PageData['short_title'] = $this->translatesByColumn($this->pageService, $page, 'short_title');
+        $PageData['short_title'] = $this->translatePageColumn($page, 'short_title');
         $PageData['page_id'] = $page->id;
 
         return $PageData;
     }
 
+    /**
+     * @param  array<string, mixed>  $page
+     * @return array<string, mixed>
+     */
+    public function getPageDataFormatByLang(array $page, string $lang): array
+    {
+        $data = $this->getPageDataFormat($page);
+
+        return $this->removeKeyLangInArr($data, $lang);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
     public function getAllPagesWithImagesOneItemByLang(Page $mPage, string $lang): array
     {
         $page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->first()->toArray();
