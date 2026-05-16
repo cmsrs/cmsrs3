@@ -46,6 +46,10 @@ class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
+    /**
+     * Roles dictionary
+      * @var array<string, string>
+     */
     public static $role_dict = [
         'admin' => 'admin',
         'client' => 'client',
@@ -79,6 +83,9 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * @var array<int, string>
+     */
     public $columnsAllowedToSort = [
         'id',
         'name',
@@ -107,6 +114,11 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+    /**
+     * Automatically hash the password when setting it
+      * @param string $password
+      * @return void
+     */
     public function setPasswordAttribute($password)
     {
         if (! empty($password)) {
@@ -120,6 +132,10 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
+    /**
+     * Get the token for the client
+     * @return string
+     */
     public static function getTokenForClient()
     {
         $user = Auth::user();
@@ -135,6 +151,10 @@ class User extends Authenticatable implements JWTSubject
         return $user->getTokenClient();
     }
 
+    /**
+     * Get the token for the client
+     * @return string
+     */
     public function getTokenClient()
     {
         $appKey = config('app.key'); // env('APP_KEY');
@@ -145,6 +165,11 @@ class User extends Authenticatable implements JWTSubject
         return sha1($this->email.'_'.$this->id.'_'.$appKey);
     }
 
+    /**
+     * Check if the client is valid by token
+     * @param string $token
+     * @return bool
+     */
     public function checkClientByToken($token)
     {
         $expectedToken = $this->getTokenClient();
@@ -155,6 +180,11 @@ class User extends Authenticatable implements JWTSubject
         return false;
     }
 
+    /**
+     * Check if the API client is valid by token
+     * @param string $token
+     * @return bool
+     */
     public static function checkApiClientByToken($token)
     {
         $user = Auth::user();
@@ -174,6 +204,10 @@ class User extends Authenticatable implements JWTSubject
         return true;
     }
 
+        /**
+         * @param array<string, mixed> $data
+         * @return \Illuminate\Contracts\Validation\Validator
+        */
     public static function clientValidator(array $data)
     {
         $rules = [
@@ -191,6 +225,10 @@ class User extends Authenticatable implements JWTSubject
         return Validator::make($data, $rules);
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @return User
+     */
     public static function createClient(array $data)
     {
         if (empty($data['name']) || empty($data['email']) || empty($data['password'])) {
