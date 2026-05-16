@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
+// use App\Models\Cmsrs\Product;
+
 /**
  * @property int $id
  * @property string|null $sku
@@ -77,7 +79,7 @@ class Product extends Model
     ];
 
     /**
-     * @var array<string>
+     * @var list<string>
      */
     protected $fillable = [
         'sku',
@@ -96,7 +98,7 @@ class Product extends Model
     ];
 
     /**
-     * @return HasOne<Page>
+     * @return HasOne<Page, Product>
      */
     public function page(): HasOne
     {
@@ -104,7 +106,7 @@ class Product extends Model
     }
 
     /**
-     * @return HasMany<Image>
+     * @return HasMany<Image, Product>
      */
     public function images(): HasMany
     {
@@ -112,7 +114,7 @@ class Product extends Model
     }
 
     /**
-     * @return HasMany<Translate>
+     * @return HasMany<Translate, Product>
      */
     public function translates(): HasMany
     {
@@ -120,7 +122,7 @@ class Product extends Model
     }
 
     /**
-     * @return HasMany<Translate>
+     * @return HasMany<Translate, Product>
      */
     public function translatesPage(): HasMany
     {
@@ -128,7 +130,7 @@ class Product extends Model
     }
 
     /**
-     * @return HasMany<Content>
+     * @return HasMany<Content, Product>
      */
     public function contents(): HasMany
     {

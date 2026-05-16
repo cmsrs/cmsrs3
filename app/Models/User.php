@@ -48,7 +48,8 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Roles dictionary
-      * @var array<string, string>
+     *
+     * @var array<string, string>
      */
     public static $role_dict = [
         'admin' => 'admin',
@@ -107,7 +108,7 @@ class User extends Authenticatable implements JWTSubject
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getJWTCustomClaims()
     {
@@ -116,8 +117,9 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Automatically hash the password when setting it
-      * @param string $password
-      * @return void
+     *
+     * @param  string  $password
+     * @return void
      */
     public function setPasswordAttribute($password)
     {
@@ -134,6 +136,7 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Get the token for the client
+     *
      * @return string
      */
     public static function getTokenForClient()
@@ -153,6 +156,7 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Get the token for the client
+     *
      * @return string
      */
     public function getTokenClient()
@@ -167,7 +171,8 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Check if the client is valid by token
-     * @param string $token
+     *
+     * @param  string  $token
      * @return bool
      */
     public function checkClientByToken($token)
@@ -182,7 +187,8 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Check if the API client is valid by token
-     * @param string $token
+     *
+     * @param  string  $token
      * @return bool
      */
     public static function checkApiClientByToken($token)
@@ -204,10 +210,10 @@ class User extends Authenticatable implements JWTSubject
         return true;
     }
 
-        /**
-         * @param array<string, mixed> $data
-         * @return \Illuminate\Contracts\Validation\Validator
-        */
+    /**
+     * @param  array<string, mixed>  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
     public static function clientValidator(array $data)
     {
         $rules = [
@@ -226,7 +232,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      * @return User
      */
     public static function createClient(array $data)

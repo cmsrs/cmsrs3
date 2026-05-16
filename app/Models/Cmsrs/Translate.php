@@ -3,6 +3,7 @@
 namespace App\Models\Cmsrs;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
@@ -53,8 +54,13 @@ class Translate extends Model
         'product_id' => 'integer',
     ];
 
-    public function page()
+    /**
+     * Get the page that owns the translation.
+     *
+     * @return BelongsTo<Page, $this>
+     */
+    public function page(): BelongsTo
     {
-        return $this->hasOne('App\Models\Cmsrs\Page', 'id', 'page_id');
+        return $this->belongsTo(Page::class);
     }
 }

@@ -2,10 +2,9 @@
 
 namespace App\Services\Cmsrs;
 
+use App\Models\Cmsrs\Basket;
 use App\Models\Cmsrs\Checkout;
 use App\Models\Cmsrs\Product;
-use App\Models\Cmsrs\Basket;
-
 use App\Services\Cmsrs\Helpers\PriceHelperService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,10 +15,7 @@ class CheckoutService extends BaseService
 {
     public function __construct(private ProductService $productService, private PriceHelperService $priceHelperService) {}
 
-    /**
-     * @return Checkout|null
-     */
-    public function findActiveOrder() : ?Checkout
+    public function findActiveOrder(): ?Checkout
     {
         $orders = $this->findActiveOrders();
 
@@ -29,7 +25,7 @@ class CheckoutService extends BaseService
     /**
      * @return Builder<Checkout>|null
      */
-    public function findActiveOrders() : Builder|null
+    public function findActiveOrders(): ?Builder
     {
         $user = Auth::user();
         if (! $user) {
@@ -66,7 +62,7 @@ class CheckoutService extends BaseService
     }
 
     /**
-     * @param Collection<int, Checkout> $checkouts
+     * @param  Collection<int, Checkout>  $checkouts
      * @return array<int, array<string, mixed>>
      */
     public function printCheckouts(Collection $checkouts, string $lang)
@@ -83,7 +79,6 @@ class CheckoutService extends BaseService
     }
 
     /**
-     * @param Checkout $checkout
      * @return array<string, mixed>
      */
     private function getCheckoutItems(Checkout $checkout): array
@@ -115,8 +110,7 @@ class CheckoutService extends BaseService
     }
 
     /**
-     * @param Collection<int, Basket> $baskets
-     * @param string $lang
+     * @param  Collection<int, Basket>  $baskets
      * @return array<int, array<string, mixed>>
      */
     private function getBasketItems(Collection $baskets, string $lang)
@@ -131,7 +125,7 @@ class CheckoutService extends BaseService
         }
 
         $pIdsValues = array_values($pIds);
-        $products = (new Product)->whereIn('id', $pIdsValues)->with(['translates'])->get()->keyBy('id'); //fix for phpstan - pluck(null, 'id')->all();
+        $products = (new Product)->whereIn('id', $pIdsValues)->with(['translates'])->get()->keyBy('id'); // fix for phpstan - pluck(null, 'id')->all();
 
         foreach ($baskets as $basket) {
             // $product = Product::with(['translates'])->where('id', $basket['product_id'])->first(); //i don't want sql in foreach

@@ -798,6 +798,4 @@ class PageService extends BaseService
 
         return $out;
     }
-
-
 }
