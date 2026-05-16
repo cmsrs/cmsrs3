@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Log;
  */
 class Payu extends Model
 {
+    /** @var Client */
     private $client;
 
     public function __construct(array $attributes = [])
@@ -35,6 +36,7 @@ class Payu extends Model
         ]);
     }
 
+    /** @return string|false */
     public function getAccessToken()
     {
         try {
@@ -51,7 +53,12 @@ class Payu extends Model
         return $token->access_token;
     }
 
-    public function dataToSend($additionalData, $checkoutData)
+    /**
+     * @param  array<string, mixed>  $additionalData
+     * @param  array<string, mixed>  $checkoutData
+     * @return array<string, mixed>
+     */
+    public function dataToSend(array $additionalData, array $checkoutData)
     {
         // dd( $objCheckout->toArray()  );
 
@@ -96,7 +103,10 @@ class Payu extends Model
         return array_merge($data, $additionalData);
     }
 
-    public function getOrder($data)
+    /**
+     * @return string|false
+     */
+    public function getOrder(string $data)
     {
         $accessToken = $this->getAccessToken();
 

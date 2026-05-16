@@ -6,8 +6,8 @@ use App\Models\Cmsrs\Interfaces\ContentTranslatableInterface;
 use App\Models\Cmsrs\Traits\HasTranslationsTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
@@ -56,9 +56,7 @@ class Page extends Model implements ContentTranslatableInterface
     // const PREFIX_SHOP_URL = 'shop';
     const PREFIX_IN_URL = 'in'; // (in) independent
 
-    /*
-     * @var array<string>
-     */
+    /** @var array<int, string> */
     public array $pageFields = [];
     // private $langs;
 
@@ -72,7 +70,8 @@ class Page extends Model implements ContentTranslatableInterface
         'page_id',
     ];
 
-    public $requiredColumn = [
+    /** @var list<string> */
+    public array $requiredColumn = [
         'title',
         'short_title',
     ];
@@ -86,21 +85,33 @@ class Page extends Model implements ContentTranslatableInterface
         'page_id' => 'integer',
     ];
 
-    public function menu(): HasOne
+    /**
+     * @return BelongsTo<Menu, $this>
+     */
+    public function menu(): BelongsTo
     {
-        return $this->hasOne('App\Models\Cmsrs\Menu', 'id', 'menu_id');
+        return $this->belongsTo('App\Models\Cmsrs\Menu', 'menu_id', 'id');
     }
 
+    /**
+     * @return HasMany<Translate, $this>
+     */
     public function translates(): HasMany
     {
         return $this->hasMany('App\Models\Cmsrs\Translate');
     }
 
+    /**
+     * @return HasMany<Content, $this>
+     */
     public function contents(): HasMany
     {
         return $this->hasMany('App\Models\Cmsrs\Content');
     }
 
+    /**
+     * @return HasMany<Image, $this>
+     */
     public function images(): HasMany
     {
         return $this->hasMany('App\Models\Cmsrs\Image')->orderBy('position');
