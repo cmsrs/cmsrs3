@@ -5,7 +5,7 @@ namespace App\Models\Cmsrs;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 // use App\Models\Cmsrs\Product;
@@ -98,15 +98,15 @@ class Product extends Model
     ];
 
     /**
-     * @return HasOne<Page, Product>
+     * @return BelongsTo<Page, $this>
      */
-    public function page(): HasOne
+    public function page(): BelongsTo
     {
-        return $this->hasOne('App\Models\Cmsrs\Page', 'id', 'page_id');
+        return $this->belongsTo('App\Models\Cmsrs\Page', 'page_id', 'id');
     }
 
     /**
-     * @return HasMany<Image, Product>
+     * @return HasMany<Image, $this>
      */
     public function images(): HasMany
     {
@@ -114,7 +114,7 @@ class Product extends Model
     }
 
     /**
-     * @return HasMany<Translate, Product>
+     * @return HasMany<Translate, $this>
      */
     public function translates(): HasMany
     {
@@ -122,7 +122,7 @@ class Product extends Model
     }
 
     /**
-     * @return HasMany<Translate, Product>
+     * @return HasMany<Translate, $this>
      */
     public function translatesPage(): HasMany
     {
@@ -130,7 +130,7 @@ class Product extends Model
     }
 
     /**
-     * @return HasMany<Content, Product>
+     * @return HasMany<Content, $this>
      */
     public function contents(): HasMany
     {
