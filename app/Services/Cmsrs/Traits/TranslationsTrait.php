@@ -11,32 +11,29 @@ trait TranslationsTrait
     /**
      * ___return array<int, array{lang: string, column: string, value: mixed}>
      */
-    // public function getAllTranslate(TranslatableInterface $model): array
-    // {
-    // $id = $model->id;
+    public function getAllTranslate(TranslatableInterface $model): array
+    {
+        $id = $model->id;
 
-    // $cacheKey = strtolower(class_basename($model)).'_translate_'.$id;
+        $cacheKey = strtolower(class_basename($model)).'_translate_'.$id;
 
-    // $fetch = function () use ($model) {
-    //     return $model->translates()
-    //         ->get(['lang', 'column', 'value'])
-    //         ->toArray();
-    // };
+        $fetch = function () use ($model) {
+            return $this->getAllTranslateWithoutCache($model);
+        };
 
-    // TODO Cache
-    // if ($configService->isCacheEnable()) {
-    //    return cache()->remember($cacheKey, CacheService::setTime(), $fetch);
-    // }
+        if ($this->configService->isCacheEnable()) {
+            return cache()->remember($cacheKey, CacheService::setTime(), $fetch);
+        }
 
-    // return $fetch();
-    // }
+        return $fetch();
+    }
 
     /**
      * Get all translations for a given translatable model - for menu and image
      *
      * @return array<string, array<string, string>>
      */
-    public function getAllTranslate(TranslatableInterface $model): array
+    public function getAllTranslateWithoutCache(TranslatableInterface $model): array
     {
         $translates = $model->translates()
             ->get(['lang', 'column', 'value'])
@@ -60,7 +57,7 @@ trait TranslationsTrait
     {
         $out = [];
 
-        $data = $this->getAllTranslate($model); // from child
+        $data = $this->getAllTranslate($model); // from service
 
         foreach ($data as $d) {
             $out[$d['column']][$d['lang']] = $d['value'];
