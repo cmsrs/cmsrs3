@@ -2,6 +2,8 @@
 
 namespace App\Models\Cmsrs;
 
+use App\Models\Cmsrs\Interfaces\TranslatableInterface;
+use App\Models\Cmsrs\Traits\HasTranslationsTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -27,8 +29,10 @@ use Illuminate\Support\Carbon;
  *
  * @mixin \Eloquent
  */
-class Menu extends Model
+class Menu extends Model implements TranslatableInterface
 {
+    use HasTranslationsTrait;
+
     protected $fillable = [
         'position',
     ];

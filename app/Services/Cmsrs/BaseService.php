@@ -2,11 +2,9 @@
 
 namespace App\Services\Cmsrs;
 
-use App\Models\Cmsrs\Image;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Translate;
-use App\Services\Cmsrs\Interfaces\TranslateInterface;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
@@ -102,36 +100,6 @@ abstract class BaseService
         }
 
         return $tree;
-    }
-
-    /**
-     * @return array<string, array<string, string>>
-     */
-    public function getAllTranslateByColumn(Page|Image|Menu $model): array
-    {
-        $out = [];
-
-        if ($this instanceof TranslateInterface) {
-            $data = $this->getAllTranslate($model); // from child
-
-            foreach ($data as $d) {
-                $out[$d['column']][$d['lang']] = $d['value'];
-            }
-        }
-
-        return $out;
-    }
-
-    public function translatesByColumnAndLang(Page|Image|Menu $model, string $column, string $lang): string
-    {
-        $data = $this->getAllTranslateByColumn($model);
-
-        $value = '';
-        if (isset($data[$column]) && isset($data[$column][$lang])) {
-            $value = $data[$column][$lang];
-        }
-
-        return $value;
     }
 
     // protected function createRow($row)

@@ -2,19 +2,20 @@
 
 namespace App\Services\Cmsrs;
 
-use App\Models\Cmsrs\Image;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\Helpers\CacheService;
-use App\Services\Cmsrs\Interfaces\TranslateInterface;
+use App\Services\Cmsrs\Traits\TranslationsTrait;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Throwable;
 
-class MenuService extends BaseService implements TranslateInterface
+class MenuService extends BaseService
 {
+    use TranslationsTrait;
+
     public function __construct(private ConfigService $configService, private TranslateService $translateService) {}
 
     /**
@@ -79,27 +80,9 @@ class MenuService extends BaseService implements TranslateInterface
     public function getSlugByLang(Menu $model, string $lang): string
     {
         $column = 'name';
-        $name = $this->translatesByColumnAndLang($model, $column, $lang);
+        $name = $this->translatesByColumnAndLang($model, $column, $lang, $this->configService);
 
         return Str::slug($name, '-');
-    }
-
-    /**
-     * @return array<int, array<string, mixed>>
-     */
-    public function getAllTranslate(Image|Page|Menu $mMenu): array
-    {
-        $menuId = $mMenu->id;
-        $isCache = $this->configService->isCacheEnable();
-        if ($isCache) {
-            $ret = cache()->remember('menutranslatemenuid_'.$menuId, CacheService::setTime(), function () use ($mMenu, $menuId) {
-                return $mMenu->translates()->where('menu_id', $menuId)->get(['lang', 'column', 'value'])->toArray();
-            });
-        } else {
-            $ret = $mMenu->translates()->where('menu_id', $menuId)->get(['lang', 'column', 'value'])->toArray();
-        }
-
-        return $ret;
     }
 
     /**

@@ -3,36 +3,18 @@
 namespace App\Services\Cmsrs;
 
 use App\Models\Cmsrs\Image;
-use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Product;
-use App\Services\Cmsrs\Helpers\CacheService;
 use App\Services\Cmsrs\Helpers\ImageHelperService;
 use App\Services\Cmsrs\Helpers\StrHelperService;
-use App\Services\Cmsrs\Interfaces\TranslateInterface;
+use App\Services\Cmsrs\Traits\TranslationsTrait;
 use Illuminate\Database\Eloquent\Collection;
 
-class ImageService extends BaseService implements TranslateInterface
+class ImageService extends BaseService
 {
+    use TranslationsTrait;
+
     public function __construct(private ConfigService $configService, private TranslateService $translateService) {}
-
-    /**
-     * @return array<int, array{lang: string, column: string, value: mixed}>
-     */
-    public function getAllTranslate(Page|Image|Menu $mImage): array
-    {
-        $imageId = $mImage->id;
-        $isCache = $this->configService->isCacheEnable();
-        if ($isCache) {
-            $ret = cache()->remember('imagetranslate_'.$imageId, CacheService::setTime(), function () use ($mImage, $imageId) {
-                return $mImage->translates()->where('image_id', $imageId)->get(['lang', 'column', 'value'])->toArray();
-            });
-        } else {
-            $ret = $mImage->translates()->where('image_id', $imageId)->get(['lang', 'column', 'value'])->toArray();
-        }
-
-        return $ret;
-    }
 
     private static function deleteDirectoryIfEmpty(string $dirPath): bool
     {

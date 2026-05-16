@@ -2,6 +2,8 @@
 
 namespace App\Models\Cmsrs;
 
+use App\Models\Cmsrs\Interfaces\TranslatableInterface;
+use App\Models\Cmsrs\Traits\HasTranslationsTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -43,17 +45,16 @@ use Illuminate\Support\Carbon;
  *
  * @mixin \Eloquent
  */
-class Page extends Model
+class Page extends Model implements TranslatableInterface
 {
+    use HasTranslationsTrait;
+
     const PREFIX_CMS_URL = 'cms';
 
     const PREFIX_CMS_ONE_PAGE_IN_MENU_URL = 'o';
 
     // const PREFIX_SHOP_URL = 'shop';
     const PREFIX_IN_URL = 'in'; // (in) independent
-
-    // private $translate;
-    // private $content;
 
     /*
      * @var array<string>

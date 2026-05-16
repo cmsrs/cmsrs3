@@ -3,6 +3,7 @@
 namespace App\Services\Cmsrs;
 
 use App\Models\Cmsrs\Image;
+use App\Models\Cmsrs\Interfaces\TranslatableInterface;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Translate;
@@ -12,7 +13,9 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
-class PageService extends BaseService implements TranslateInterface
+// use App\Services\Cmsrs\Traits\TranslationsTrait;
+
+class PageService extends BaseService
 {
     public function __construct(private ConfigService $configService, private MenuService $menuService, private TranslateService $translateService, private ContentService $contentService, private ImageService $imageService) {}
 
@@ -217,18 +220,18 @@ class PageService extends BaseService implements TranslateInterface
     /**
      * @return array<int, array<string, mixed>>
      */
-    public function getAllTranslate(Page|Image|Menu $mPage): array
+    public function getAllTranslate(TranslatableInterface $mPage): array // TODO remove configService
     {
         $pageId = $mPage->id;
 
-        $isCache = $this->configService->isCacheEnable();
-        if ($isCache) {
-            $ret = cache()->remember('pagetranslatepageid_'.$pageId, CacheService::setTime(), function () use ($mPage, $pageId) {
-                return $this->getTranslateMerge($mPage, $pageId);
-            });
-        } else {
-            $ret = $this->getTranslateMerge($mPage, $pageId);
-        }
+        // $isCache = $this->configService->isCacheEnable();
+        // if ($isCache) {
+        //     $ret = cache()->remember('pagetranslatepageid_'.$pageId, CacheService::setTime(), function () use ($mPage, $pageId) {
+        //         return $this->getTranslateMerge($mPage, $pageId);
+        //     });
+        // } else {
+        $ret = $this->getTranslateMerge($mPage, $pageId);
+        // }
 
         return $ret;
     }
@@ -245,6 +248,36 @@ class PageService extends BaseService implements TranslateInterface
         $ret = array_merge($translates, $contents);
 
         return $ret;
+    }
+
+    /**
+     * @return array<string, array<string, string>>
+     */
+    public function getAllTranslateByColumn(TranslatableInterface $model): array
+    {
+        $out = [];
+
+        // if ($this instanceof TranslateInterface) {
+        $data = $this->getAllTranslate($model); // from child
+
+        foreach ($data as $d) {
+            $out[$d['column']][$d['lang']] = $d['value'];
+        }
+        // }
+
+        return $out;
+    }
+
+    public function translatesByColumnAndLang(TranslatableInterface $model, string $column, string $lang): string
+    {
+        $data = $this->getAllTranslateByColumn($model);
+
+        $value = '';
+        if (isset($data[$column]) && isset($data[$column][$lang])) {
+            $value = $data[$column][$lang];
+        }
+
+        return $value;
     }
 
     /**
@@ -317,14 +350,14 @@ class PageService extends BaseService implements TranslateInterface
         $policyTitle = null;
         if (! empty($privacyPolicy)) {
             $policyUrl = $this->getUrl($privacyPolicy, $lang);
-            $policyTitle = $this->translatesByColumnAndLang($privacyPolicy, 'title', $lang);
+            $policyTitle = $this->translatesByColumnAndLang($privacyPolicy, 'title', $lang, $this->configService);
         }
 
         $contactUrl = null;
         $contactTitle = null;
         if (! empty($contact)) {
             $contactUrl = $this->getUrl($contact, $lang);
-            $contactTitle = $this->translatesByColumnAndLang($contact, 'title', $lang);
+            $contactTitle = $this->translatesByColumnAndLang($contact, 'title', $lang, $this->configService);
         }
 
         $out['policyUrl'] = $policyUrl;
