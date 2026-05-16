@@ -66,6 +66,9 @@ class Image extends Model implements TranslatableInterface
         'product_id',
     ];
 
+    /**
+     * @var array<string, string>
+     */
     public static $type = [
         'page' => 'page_id',
         'product' => 'product_id',
@@ -77,6 +80,9 @@ class Image extends Model implements TranslatableInterface
         'position' => 'integer',
     ];
 
+    /**
+     * @return HasMany<Translate, $this>
+     */
     public function translates(): HasMany
     {
         return $this->hasMany('App\Models\Cmsrs\Translate', 'image_id', 'id'); // it should be work without params - phpstan

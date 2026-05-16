@@ -41,15 +41,24 @@ class Menu extends Model implements TranslatableInterface
         'position' => 'integer',
     ];
 
+    /**
+     * @var list<string>
+     */
     public $requiredColumn = [
         'name',
     ];
 
+    /**
+     * @return HasMany<Page, $this>
+     */
     public function pages()
     {
         return $this->hasMany('App\Models\Cmsrs\Page');
     }
 
+    /**
+     * @return HasMany<Translate, $this>
+     */
     public function translates(): HasMany
     {
         return $this->hasMany('App\Models\Cmsrs\Translate', 'menu_id', 'id'); // it should be work without params - phpstan

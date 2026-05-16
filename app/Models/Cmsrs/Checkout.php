@@ -4,6 +4,7 @@ namespace App\Models\Cmsrs;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -73,6 +74,9 @@ class Checkout extends Model
         'is_pay' => 'boolean',
     ];
 
+    /**
+     * @var list<string>
+     */
     public $columnsAllowedToSort = [
         'id',
         'price_total_add_deliver',
@@ -80,6 +84,9 @@ class Checkout extends Model
         'updated_at',
     ];
 
+    /**
+     * @return HasMany<Basket, $this>
+     */
     public function baskets()
     {
         return $this->hasMany('App\Models\Cmsrs\Basket');

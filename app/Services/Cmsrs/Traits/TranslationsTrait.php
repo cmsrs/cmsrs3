@@ -6,9 +6,13 @@ use App\Models\Cmsrs\Interfaces\ContentTranslatableInterface;
 use App\Models\Cmsrs\Interfaces\TranslatableInterface;
 use App\Services\Cmsrs\Helpers\CacheService;
 
+/**
+ * @template TModel of \Illuminate\Database\Eloquent\Model&TranslatableInterface
+ */
 trait TranslationsTrait
 {
     /**
+     * @param  TModel  $model
      * @return array<string, array<string, string>>
      */
     public function getAllTranslate(TranslatableInterface $model): array
@@ -31,6 +35,7 @@ trait TranslationsTrait
     /**
      * Get all translations for a given translatable model - for menu and image
      *
+     * @param  TModel  $model
      * @return array<string, array<string, string>>
      */
     public function getAllTranslateWithoutCache(TranslatableInterface $model): array
@@ -51,6 +56,7 @@ trait TranslationsTrait
     }
 
     /**
+     * @param  TModel  $model
      * @return array<string, array<string, string>>
      */
     public function getAllTranslateByColumn(TranslatableInterface $model): array
@@ -66,6 +72,9 @@ trait TranslationsTrait
         return $out;
     }
 
+    /**
+     * @param  TModel  $model
+     */
     public function translatesByColumnAndLang(TranslatableInterface $model, string $column, string $lang): string
     {
         $data = $this->getAllTranslateByColumn($model);

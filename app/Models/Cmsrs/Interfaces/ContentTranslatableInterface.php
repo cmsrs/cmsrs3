@@ -2,7 +2,14 @@
 
 namespace App\Models\Cmsrs\Interfaces;
 
+use App\Models\Cmsrs\Translate;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 interface ContentTranslatableInterface extends TranslatableInterface
 {
+    /**
+     * @return HasMany<Translate, Model>
+     */
     public function contents();
 }

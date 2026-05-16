@@ -30,6 +30,9 @@ class Contact extends Model
         'message',
     ];
 
+    /**
+     * @var list<string>
+     */
     public $columnsAllowedToSort = [
         'id',
         'email',
