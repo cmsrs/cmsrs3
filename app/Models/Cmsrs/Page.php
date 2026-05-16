@@ -105,4 +105,10 @@ class Page extends Model implements ContentTranslatableInterface
     {
         return $this->hasMany('App\Models\Cmsrs\Image')->orderBy('position');
     }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }    
+
 }

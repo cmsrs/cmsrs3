@@ -9,11 +9,11 @@ use App\Services\Cmsrs\Helpers\CacheService;
 trait TranslationsTrait
 {
     /**
-     * ___return array<int, array{lang: string, column: string, value: mixed}>
+     * @return array<string, array<string, string>>
      */
     public function getAllTranslate(TranslatableInterface $model): array
     {
-        $id = $model->id;
+        $id = $model->getId(); //for $model->id phpstan complains because of interface, so we need to use method
 
         $cacheKey = strtolower(class_basename($model)).'_translate_'.$id;
 
