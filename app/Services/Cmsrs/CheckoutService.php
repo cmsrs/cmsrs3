@@ -131,14 +131,13 @@ class CheckoutService extends BaseService
         }
 
         $pIdsValues = array_values($pIds);
-        $products = (new Product)->whereIn('id', $pIdsValues)->with(['translates'])->get()->keyBy('id'); //pluck(null, 'id')->all();
+        $products = (new Product)->whereIn('id', $pIdsValues)->with(['translates'])->get()->keyBy('id'); //fix for phpstan - pluck(null, 'id')->all();
 
         foreach ($baskets as $basket) {
             // $product = Product::with(['translates'])->where('id', $basket['product_id'])->first(); //i don't want sql in foreach
             if (empty($product = $products[$basket['product_id']])) {
                 throw new \Exception("can't find product id =".$basket['product_id']);
             }
-
             $productName = $this->productService->getDefaultProductName($product->translates, $lang);
             $out[$j]['qty'] = $basket->qty;
 
