@@ -42,12 +42,11 @@ trait TranslationsTrait
             ->get(['lang', 'column', 'value'])
             ->toArray();
 
+        $contents = [];
         if ($model instanceof ContentTranslatableInterface) {
             $contents = $model->contents()
                 ->get(['lang', 'column', 'value'])
                 ->toArray();
-        } else {
-            $contents = [];
         }
 
         return array_merge($translates, $contents);
