@@ -3,7 +3,6 @@
 namespace App\Services\Cmsrs;
 
 use App\Models\Cmsrs\Image;
-use App\Models\Cmsrs\Interfaces\TranslatableInterface;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Translate;
@@ -215,14 +214,6 @@ class PageService extends BaseService
         // }
 
         return Str::slug($name, '-');
-    }
-
-    /**
-     * @return array<int, array<string, mixed>>
-     */
-    public function getAllTranslate(TranslatableInterface $model): array
-    {
-        return $this->getTranslationRows($model);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Services\Cmsrs\Traits;
 
+use App\Models\Cmsrs\Interfaces\ContentTranslatableInterface;
 use App\Models\Cmsrs\Interfaces\TranslatableInterface;
 use App\Services\Cmsrs\Helpers\CacheService;
 
@@ -37,28 +38,20 @@ trait TranslationsTrait
      */
     public function getAllTranslate(TranslatableInterface $model): array
     {
-        return $model->translates()
-            ->get(['lang', 'column', 'value'])
-            ->toArray();
-
-    }
-
-    /**
-     * Get translation rows for a given translatable model - use for page with content - only if PageService
-     *
-     * @return array<string, array<string, string>>
-     */
-    public function getTranslationRows(TranslatableInterface $model): array
-    {
         $translates = $model->translates()
             ->get(['lang', 'column', 'value'])
             ->toArray();
 
-        $contents = $model->contents()
-            ->get(['lang', 'column', 'value'])
-            ->toArray();
+        if ($model instanceof ContentTranslatableInterface) {
+            $contents = $model->contents()
+                ->get(['lang', 'column', 'value'])
+                ->toArray();
+        } else {
+            $contents = [];
+        }
 
         return array_merge($translates, $contents);
+
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace App\Models\Cmsrs;
 
-use App\Models\Cmsrs\Interfaces\TranslatableInterface;
+use App\Models\Cmsrs\Interfaces\ContentTranslatableInterface;
 use App\Models\Cmsrs\Traits\HasTranslationsTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -45,7 +45,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin \Eloquent
  */
-class Page extends Model implements TranslatableInterface
+class Page extends Model implements ContentTranslatableInterface
 {
     use HasTranslationsTrait;
 
