@@ -8,26 +8,57 @@ use App\Services\Cmsrs\Helpers\CacheService;
 trait TranslationsTrait
 {
     /**
-     * @return array<int, array{lang: string, column: string, value: mixed}>
+     * ___return array<int, array{lang: string, column: string, value: mixed}>
+     */
+    // public function getAllTranslate(TranslatableInterface $model): array
+    // {
+    // $id = $model->id;
+
+    // $cacheKey = strtolower(class_basename($model)).'_translate_'.$id;
+
+    // $fetch = function () use ($model) {
+    //     return $model->translates()
+    //         ->get(['lang', 'column', 'value'])
+    //         ->toArray();
+    // };
+
+    // TODO Cache
+    // if ($configService->isCacheEnable()) {
+    //    return cache()->remember($cacheKey, CacheService::setTime(), $fetch);
+    // }
+
+    // return $fetch();
+    // }
+
+    /**
+     * Get all translations for a given translatable model - for menu and image
+     *
+     * @return array<string, array<string, string>>
      */
     public function getAllTranslate(TranslatableInterface $model): array
     {
-        $id = $model->id;
+        return $model->translates()
+            ->get(['lang', 'column', 'value'])
+            ->toArray();
 
-        $cacheKey = strtolower(class_basename($model)).'_translate_'.$id;
+    }
 
-        $fetch = function () use ($model) {
-            return $model->translates()
-                ->get(['lang', 'column', 'value'])
-                ->toArray();
-        };
+    /**
+     * Get translation rows for a given translatable model - use for page with content - only if PageService
+     *
+     * @return array<string, array<string, string>>
+     */
+    public function getTranslationRows(TranslatableInterface $model): array
+    {
+        $translates = $model->translates()
+            ->get(['lang', 'column', 'value'])
+            ->toArray();
 
-        // TODO Cache
-        // if ($configService->isCacheEnable()) {
-        //    return cache()->remember($cacheKey, CacheService::setTime(), $fetch);
-        // }
+        $contents = $model->contents()
+            ->get(['lang', 'column', 'value'])
+            ->toArray();
 
-        return $fetch();
+        return array_merge($translates, $contents);
     }
 
     /**
