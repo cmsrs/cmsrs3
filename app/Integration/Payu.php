@@ -104,9 +104,9 @@ class Payu extends Model
     }
 
     /**
-     * @return string|false
+     * @param  array<string, mixed>  $data
      */
-    public function getOrder(string $data)
+    public function getOrder(array $data): string|bool
     {
         $accessToken = $this->getAccessToken();
 

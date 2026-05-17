@@ -48,6 +48,9 @@ class FrontController extends Controller
         $this->langs = $this->configService->arrGetLangs();
     }
 
+    /**
+     * @return void
+     */
     private function validatePage(?Page $page)
     {
         if (empty($page)) {
@@ -59,7 +62,7 @@ class FrontController extends Controller
         }
     }
 
-    public function search(Request $request, $lang = null): View
+    public function search(Request $request, ?string $lang = null): View
     {
 
         if (empty($lang)) {
@@ -85,7 +88,7 @@ class FrontController extends Controller
         return view('cmsrs.search', $data);
     }
 
-    public function shoppingsuccess(Request $request, $lang = null): View
+    public function shoppingsuccess(Request $request, ?string $lang = null): View
     {
         if (empty($lang)) {
             $lang = $this->langs[0];
@@ -117,7 +120,7 @@ class FrontController extends Controller
         return view('cmsrs.shoppingsuccess', $data);
     }
 
-    public function checkout(Request $request, $lang = null): View
+    public function checkout(Request $request, ?string $lang = null): View
     {
         if (empty($lang)) {
             $lang = $this->langs[0];
@@ -217,7 +220,7 @@ class FrontController extends Controller
 
     }
 
-    public function index($lang = null): View
+    public function index(?string $lang = null): View
     {
         if ((count($this->langs) > 1) && $lang == $this->langs[0]) {
             abort(404);
@@ -253,14 +256,17 @@ class FrontController extends Controller
         return view('cmsrs.index', $data);
     }
 
-    public function getPageLangs($lang, $menuSlug, $pageSlug = null, $productSlug = null): View
+    public function getPageLangs(?string $lang, string $menuSlug, ?string $pageSlug = null, ?string $productSlug = null): View
     {
         $data = $this->getPage($menuSlug, $pageSlug, $productSlug, $lang);
 
         return view($data['view'], $data);
     }
 
-    public function getPage($menuSlug, $pageSlug = null, $productSlug = null, $lang = null): View|array
+    /**
+     * @return View|array<string, mixed>
+     */
+    public function getPage(?string $menuSlug, ?string $pageSlug = null, ?string $productSlug = null, ?string $lang = null): View|array
     {
         if (empty($lang)) {
             $manyLangs = false;
@@ -317,14 +323,18 @@ class FrontController extends Controller
         return view($data['view'], $data);
     }
 
-    public function getSeparatePageLangs($lang, $pageSlug): View
+    public function getSeparatePageLangs(?string $lang, string $pageSlug): View
     {
         $data = $this->getSeparatePage($pageSlug, $lang);
 
         return view($data['view'], $data);
     }
 
-    public function getSeparatePage($pageSlug, $lang = null): View|array
+    /**
+     * @param  string  $pageSlug
+     * @return View|array<string, mixed>
+     */
+    public function getSeparatePage($pageSlug, ?string $lang = null): View|array
     {
         if (empty($lang)) {
             $manyLangs = false;
