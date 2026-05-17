@@ -77,15 +77,6 @@ class ProductController extends Controller
         return response()->json(['success' => true, 'data' => $products], 200);
     }
 
-    /**
-     * TODO remove i can't find this method in routes/api.php - todo
-     */
-    public function getProductsByPageId(Request $request, $id, $lang): JsonResponse
-    {
-        $products = $this->productService->getGivenProductsWithImagesByPageId($id);
-
-        return response()->json(['success' => true, 'data' => $products], 200);
-    }
 
     public function index(): JsonResponse
     {
