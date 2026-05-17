@@ -15,6 +15,11 @@ use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
+    /**
+     * Validation rules for product create and update
+     *
+     * @var array<string, string>
+     */
     private $validationRules = [
         // 'name' => 'max:255|required',
         'sku' => 'max:128|required|unique:products',
@@ -76,7 +81,6 @@ class ProductController extends Controller
 
         return response()->json(['success' => true, 'data' => $products], 200);
     }
-
 
     public function index(): JsonResponse
     {
@@ -176,7 +180,7 @@ class ProductController extends Controller
         return response()->json(['success' => true], 200);
     }
 
-    public function getNameAndPrice(Request $request, $lang = ''): JsonResponse
+    public function getNameAndPrice(Request $request, ?string $lang = ''): JsonResponse
     {
         if (empty($lang)) {
             $lang = ConfigService::getDefaultLang();

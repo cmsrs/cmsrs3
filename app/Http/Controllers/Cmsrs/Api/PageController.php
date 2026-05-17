@@ -14,6 +14,17 @@ use Illuminate\Support\Facades\Validator;
 
 class PageController extends Controller
 {
+    /**
+     * Validation rules for page create and update
+     *
+     * @var array<string, string>
+     */
+    private $validationRules = [
+        'published' => 'boolean',
+        'commented' => 'boolean',
+        'after_login' => 'boolean',
+    ];
+
     public function __construct(
         protected ConfigService $configService,
         protected PageService $pageService,
@@ -28,12 +39,6 @@ class PageController extends Controller
             $this->validationRules['description.'.$lang] = 'max:1027';
         }
     }
-
-    private $validationRules = [
-        'published' => 'boolean',
-        'commented' => 'boolean',
-        'after_login' => 'boolean',
-    ];
 
     /*
     //not remove this comment

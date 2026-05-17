@@ -172,7 +172,7 @@ class PageService extends BaseService
      * @param  array<string, mixed>  $data
      * @return array{success: bool, error?: string}
      */
-    public function checkIsDuplicateTitleByMenu(array $data, string $id = ''): array
+    public function checkIsDuplicateTitleByMenu(array $data, ?int $id = null): array
     {
         $menuId = empty($data['menu_id']) ? 0 : $data['menu_id'];
 
