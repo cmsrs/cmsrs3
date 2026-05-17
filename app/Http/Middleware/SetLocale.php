@@ -4,13 +4,19 @@ namespace App\Http\Middleware;
 
 use App\Services\Cmsrs\ConfigService;
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 
 class SetLocale
 {
-    public function handle($request, Closure $next)
+    /**
+     * Handle an incoming request.
+     *
+     * @return mixed
+     */
+    public function handle(Request $request, Closure $next)
     {
         $configService = new ConfigService;
 

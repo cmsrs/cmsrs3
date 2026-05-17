@@ -3,10 +3,17 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
 
 class CmsRsIsDemo
 {
-    public function handle($request, Closure $next, $guard = null)
+    /**
+     * Handle an incoming request.
+     *
+     * @param  string|null  $guard
+     * @return mixed
+     */
+    public function handle(Request $request, Closure $next, $guard = null)
     {
         $isDemo = config('cmsrs.demo');  // env('DEMO_STATUS', false);
 

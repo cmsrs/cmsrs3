@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Cmsrs;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cmsrs\Menu;
 use App\Services\Cmsrs\BaseService;
 use App\Services\Cmsrs\CheckoutService;
 use App\Services\Cmsrs\ConfigService;
@@ -10,14 +11,23 @@ use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\OrderService;
 use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\ProductService;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
+    /**
+     * @var Collection<int, Menu>
+     */
     private $menus;
 
+    /**
+     * @var array<int, string>
+     */
     private $langs;
 
     /**
@@ -44,7 +54,7 @@ class HomeController extends Controller
     /**
      * Show the application dashboard.
      */
-    public function index(Request $request)
+    public function index(Request $request): View|RedirectResponse
     {
         $lang = App::getLocale();
 
