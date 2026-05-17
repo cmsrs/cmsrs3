@@ -6,18 +6,26 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\Cmsrs\ConfigService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
-    public function getClients()
+    /**
+     * Get all clients
+     */
+    public function getClients() : JsonResponse
     {
         $clients = User::query()->where('role', User::$role_dict['client'])->orderBy('id', 'asc')->get(['id', 'name', 'email', 'created_at', 'updated_at'])->toArray();
 
         return response()->json(['success' => true, 'data' => $clients], 200);
     }
 
-    public function getClient(Request $request, User $user)
+    /**
+     * Get a specific client by ID
+     */
+    public function getClient(Request $request, User $user) : JsonResponse
     {
         $client = User::query()->where('role', User::$role_dict['client'])->where('id', $user->id)->first();
         if (empty($client)) {
@@ -27,7 +35,7 @@ class UserController extends Controller
         return response()->json(['success' => true, 'data' => $client->toArray()], 200);
     }
 
-    public function getClientsPaginateAndSort(Request $request, $column, $direction)
+    public function getClientsPaginateAndSort(Request $request, string $column, string $direction) : JsonResponse
     {
         $search = $request->input('search', null);
         if ($search) {
@@ -73,7 +81,7 @@ class UserController extends Controller
         return response()->json(['success' => true, 'data' => $clients], 200);
     }
 
-    public function createClient(Request $request)
+    public function createClient(Request $request) : JsonResponse
     {
         $data = $request->only(
             'name',
@@ -81,6 +89,7 @@ class UserController extends Controller
             'password',
             'password_confirmation'
         );
+        /** @var \Illuminate\Validation\Validator $validator */
         $validator = User::clientValidator($data);
         if ($validator->fails()) {
             return response()->json(['success' => false, 'error' => $validator->messages()], 200);
@@ -97,7 +106,7 @@ class UserController extends Controller
         return response()->json(['success' => true, 'data' => ['userId' => $user->id]]);
     }
 
-    public function updateClient(Request $request, User $user)
+    public function updateClient(Request $request, User $user) : JsonResponse
     {
 
         if (User::$role_dict['admin'] == $user->role) {
@@ -114,6 +123,7 @@ class UserController extends Controller
         $data['id'] = $user->id;
         $data['email'] = $user->email;
 
+        /** @var \Illuminate\Validation\Validator $validator */
         $validator = User::clientValidator($data);
         if ($validator->fails()) {
             return response()->json(['success' => false, 'error' => $validator->messages()], 200);
@@ -130,7 +140,7 @@ class UserController extends Controller
         return response()->json(['success' => true, 'data' => ['userId' => $user->id]]);
     }
 
-    public function deleteClient(Request $request, User $user)
+    public function deleteClient(Request $request, User $user) : JsonResponse
     {
         if (User::$role_dict['admin'] == $user->role) {
             return response()->json(['success' => false, 'error' => 'delete admin is prohibited'], 403);
