@@ -2,13 +2,15 @@
 
 namespace App\Data;
 
+use App\Models\Cmsrs\Page;
+use App\Models\Cmsrs\Product;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\ProductService;
 
 class Demo
 {
-    private function getPageObj()
+    private function getPageObj(): PageService
     {
         $pageObj = app(PageService::class); // TODO DI
 
@@ -17,7 +19,7 @@ class Demo
         return $pageObj;
     }
 
-    private function getMenuObj()
+    private function getMenuObj(): MenuService
     {
         $menuObj = app(MenuService::class); // TODO DI
 
@@ -25,7 +27,7 @@ class Demo
         return $menuObj;
     }
 
-    private function getProductObj()
+    private function getProductObj(): ProductService
     {
         $productObj = app(ProductService::class); // TODO DI
 
@@ -33,7 +35,10 @@ class Demo
         return $productObj;
     }
 
-    private function imgUnit1()
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function imgUnit1(): array
     {
         $images = [
             ['name' => 'phpunittest1.jpg', 'data' => $this->getTestPhoto('test/phpunittest1.jpg'), 'alt' => ['en' => 'phpunittest1', 'pl' => 'phpunittest1']],
@@ -42,17 +47,23 @@ class Demo
         return $images;
     }
 
-    private function imgUnit2()
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function imgUnit2(): array
     {
         $images = [
             ['name' => 'phpunittest1.jpg', 'data' => $this->getTestPhoto('test/phpunittest1.jpg'), 'alt' => ['en' => 'phpunittest1', 'pl' => 'phpunittest1']],
-            ['name' => 'phpunittest2.jpg', 'data' => $this->getTestPhoto('test/phpunittest2.jpg'), 'alt' => ['en' => 'phpunittest2', 'pl' => 'phpunittest1']],
+            ['name' => 'phpunittest2.jpg', 'data' => $this->getTestPhoto('test/phpunittest2.jpg'), 'alt' => ['en' => 'phpunittest2', 'pl' => 'phpunittest2']], // change - mistake, it was: 'pl' => 'phpunittest1'
         ];
 
         return $images;
     }
 
-    private function getTestImg($unitTest)
+    /**
+     * @return array<string, array<int, array<string, mixed>>>
+     */
+    private function getTestImg(bool $unitTest): array
     {
         if (! $unitTest) {
             $img = [
@@ -115,7 +126,10 @@ class Demo
         return ['about_me' => $img, 'poland' => $images, 'greece' => $imagesGrec, 'slider' => $imagesSlider];
     }
 
-    private function getProductImg($unitTest)
+    /**
+     * @return array<string, array<int|string, array<string, mixed>|string>>
+     */
+    private function getProductImg(bool $unitTest): array
     {
         $out = [];
         if (! $unitTest) {
@@ -185,7 +199,10 @@ class Demo
         return $out;
     }
 
-    public function pagesAndMenu($unitTest = false)
+    /**
+     * @return array<string, Page>
+     */
+    public function pagesAndMenu(bool $unitTest = false): array
     {
         $images = $this->getTestImg($unitTest);
 
@@ -644,7 +661,11 @@ class Demo
         return $p;
     }
 
-    public function product($p, $unitTest = false)
+    /**
+     * @param  array<string, Page>  $p
+     * @return array<int, Product>
+     */
+    public function product(array $p, bool $unitTest = false): array
     {
         $images = $this->getProductImg($unitTest);
 
@@ -655,7 +676,7 @@ class Demo
             'price' => 1100,
             'published' => 1,
             'product_description' => ['en' => 'Php3 book description',   'pl' => 'Php3 opis ksiazki'],
-            'page_id' => $p['p5']->id,
+            'page_id' => $p['p5']->getId(),
             'images' => $images['product1'],
         ];
         $products['product2'] = [
@@ -664,7 +685,7 @@ class Demo
             'price' => 3000,
             'published' => 0,
             'product_description' => ['en' => 'Php5 book', 'pl' => 'Ksiazka o PHP5'],
-            'page_id' => $p['p5']->id,
+            'page_id' => $p['p5']->getId(),
             'images' => $images['product2'],
         ];
         $products['product3'] = [
@@ -673,7 +694,7 @@ class Demo
             'price' => 2300,
             'published' => 1,
             'product_description' => ['en' => 'Java book', 'pl' => 'Książka o Javie'],
-            'page_id' => $p['p6']->id,
+            'page_id' => $p['p6']->getId(),
             'images' => $images['product3'],
         ];
         $products['product4'] = [
@@ -682,7 +703,7 @@ class Demo
             'price' => 2800,
             'published' => 1,
             'product_description' => ['en' => 'English book', 'pl' => 'Ksiązka do nauki angielskiego'],
-            'page_id' => $p['p7']->id,
+            'page_id' => $p['p7']->getId(),
             'images' => $images['product4'],
         ];
 
@@ -692,7 +713,7 @@ class Demo
             'price' => 1100,
             'published' => 1,
             'product_description' => ['en' => 'English book', 'pl' => 'Ksiązka do nauki angielskiego'],
-            'page_id' => $p['p7']->id,
+            'page_id' => $p['p7']->getId(),
             'images' => $images['product5'],
         ];
 
@@ -702,7 +723,7 @@ class Demo
             'price' => 2200,
             'published' => 1,
             'product_description' => ['en' => 'English book', 'pl' => 'Ksiązka do nauki angielskiego'],
-            'page_id' => $p['p7']->id,
+            'page_id' => $p['p7']->getId(),
             'images' => $images['product6'],
         ];
         $products['product7'] = [
@@ -711,7 +732,7 @@ class Demo
             'price' => 3300,
             'published' => 1,
             'product_description' => ['en' => 'English book', 'pl' => 'Ksiązka do nauki angielskiego'],
-            'page_id' => $p['p7']->id,
+            'page_id' => $p['p7']->getId(),
             'images' => $images['product7'],
         ];
         $products['product8'] = [
@@ -720,7 +741,7 @@ class Demo
             'price' => 4400,
             'published' => 1,
             'product_description' => ['en' => 'English book', 'pl' => 'Ksiązka do nauki angielskiego'],
-            'page_id' => $p['p7']->id,
+            'page_id' => $p['p7']->getId(),
             'images' => $images['product8'],
         ];
         $products['product9'] = [
@@ -729,7 +750,7 @@ class Demo
             'price' => 5500,
             'published' => 1,
             'product_description' => ['en' => 'English book', 'pl' => 'Ksiązka do nauki angielskiego'],
-            'page_id' => $p['p7']->id,
+            'page_id' => $p['p7']->getId(),
             'images' => $images['product9'],
         ];
 
@@ -739,7 +760,7 @@ class Demo
             'price' => 56000,
             'published' => 1,
             'product_description' => ['en' => 'Php5 book frameworks', 'pl' => 'Ksiazka o PHP5 frameworks'],
-            'page_id' => $p['p5']->id,
+            'page_id' => $p['p5']->getId(),
             'images' => $images['product10'],
         ];
 
@@ -749,7 +770,7 @@ class Demo
             'price' => 5700,
             'published' => 1,
             'product_description' => ['en' => 'programme managers', 'pl' => 'kierownik programistów'],
-            'page_id' => $p['p4']->id, // $p['p4']
+            'page_id' => $p['p4']->getId(), // $p['p4']
             'images' => $images['product11'],
         ];
 
@@ -759,7 +780,7 @@ class Demo
             'price' => 500,
             'published' => 1,
             'product_description' => ['en' => 'socks', 'pl' => 'skarpety'],
-            'page_id' => $p['p8b']->id, // $p['p4']
+            'page_id' => $p['p8b']->getId(), // $p['p4']
             'images' => $images['product12'],
         ];
 
@@ -783,7 +804,7 @@ class Demo
         // return $products;
     }
 
-    private function getTestPhoto($imgPath)
+    private function getTestPhoto(string $imgPath): string
     {
         $base = base_path().'/rs/demo_data/img/';
         $img = $base.$imgPath;
@@ -798,12 +819,12 @@ class Demo
         return $base64;
     }
 
-    private function getDummyTest()
+    private function getDummyTest(): string
     {
         return "<b>Lorem Ipsum</b> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
     }
 
-    private function getDummyTestPl()
+    private function getDummyTestPl(): string
     {
         return '<b>Lorem Ipsum</b> jest tekstem stosowanym jako przykładowy wypełniacz w przemyśle poligraficznym. Został po raz pierwszy użyty w XV w. przez nieznanego drukarza do wypełnienia tekstem próbnej książki. Pięć wieków później zaczął być używany przemyśle elektronicznym, pozostając praktycznie niezmienionym. Spopularyzował się w latach 60. XX w. wraz z publikacją arkuszy Letrasetu, zawierających fragmenty Lorem Ipsum, a ostatnio z zawierającym różne wersje Lorem Ipsum oprogramowaniem przeznaczonym do realizacji druków na komputerach osobistych, jak Aldus PageMaker';
     }
