@@ -67,9 +67,9 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::get($apiSecret.'users/clients', [UserController::class, 'getClients']);
     Route::get($apiSecret.'clients/{column}/{direction}', [UserController::class, 'getClientsPaginateAndSort']);
     Route::post($apiSecret.'clients', [UserController::class, 'createClient']);
-    Route::put($apiSecret.'clients/{id}', [UserController::class, 'updateClient']);
-    Route::delete($apiSecret.'clients/{id}', [UserController::class, 'deleteClient']);
-    Route::get($apiSecret.'clients/{id}', [UserController::class, 'getClient']);
+    Route::put($apiSecret.'clients/{user}', [UserController::class, 'updateClient'])->whereNumber('user');
+    Route::delete($apiSecret.'clients/{user}', [UserController::class, 'deleteClient'])->whereNumber('user');
+    Route::get($apiSecret.'clients/{user}', [UserController::class, 'getClient'])->whereNumber('user');
 
     Route::get($apiSecret.'menus', [MenuController::class, 'index']);
     Route::post($apiSecret.'menus', [MenuController::class, 'create']);

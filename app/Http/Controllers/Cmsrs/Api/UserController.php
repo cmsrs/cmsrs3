@@ -17,9 +17,9 @@ class UserController extends Controller
         return response()->json(['success' => true, 'data' => $clients], 200);
     }
 
-    public function getClient(Request $request, $id)
+    public function getClient(Request $request, User $user)
     {
-        $client = User::query()->where('role', User::$role_dict['client'])->where('id', $id)->first();
+        $client = User::query()->where('role', User::$role_dict['client'])->where('id', $user->id)->first();
         if (empty($client)) {
             return response()->json(['error' => 'Client not found'], 404);
         }
@@ -97,13 +97,8 @@ class UserController extends Controller
         return response()->json(['success' => true, 'data' => ['userId' => $user->id]]);
     }
 
-    public function updateClient(Request $request, $id)
+    public function updateClient(Request $request, User $user)
     {
-        $user = User::find($id);
-
-        if (empty($user)) {
-            return response()->json(['success' => false, 'error' => 'User no found'], 404);
-        }
 
         if (User::$role_dict['admin'] == $user->role) {
             return response()->json(['success' => false, 'error' => 'update admin is prohibited'], 403);
@@ -135,14 +130,8 @@ class UserController extends Controller
         return response()->json(['success' => true, 'data' => ['userId' => $user->id]]);
     }
 
-    public function deleteClient(Request $request, $id)
+    public function deleteClient(Request $request, User $user)
     {
-        $user = User::find($id);
-
-        if (empty($user)) {
-            return response()->json(['success' => false, 'error' => 'User no found'], 404);
-        }
-
         if (User::$role_dict['admin'] == $user->role) {
             return response()->json(['success' => false, 'error' => 'delete admin is prohibited'], 403);
         }
