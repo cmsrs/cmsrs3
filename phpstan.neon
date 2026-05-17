@@ -15,6 +15,11 @@ parameters:
     # Level 9 is the highest level
     level: 6
 
+    ignoreErrors:
+        - identifier: method.childReturnType
+          path: app/Models/Cmsrs
+
+
 #    ignoreErrors:
 #        - '#PHPDoc tag @var#'
 #

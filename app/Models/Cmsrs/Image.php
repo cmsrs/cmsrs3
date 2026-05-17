@@ -85,7 +85,7 @@ class Image extends Model implements TranslatableInterface
      */
     public function translates(): HasMany
     {
-        return $this->hasMany('App\Models\Cmsrs\Translate', 'image_id', 'id'); // it should be work without params - phpstan
+        return $this->hasMany(Translate::class, 'image_id', 'id');
     }
 
     public function getId(): int

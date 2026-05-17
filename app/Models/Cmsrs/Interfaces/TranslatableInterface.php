@@ -11,7 +11,7 @@ interface TranslatableInterface
     /**
      * @return HasMany<Translate, Model>
      */
-    public function translates();
+    public function translates(): HasMany;
 
     public function getId(): int;
 }
