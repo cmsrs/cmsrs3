@@ -33,7 +33,7 @@ class GetConfig extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
      */
     public function handle()
     {
@@ -62,5 +62,7 @@ class GetConfig extends Command
         exec($cmdGetConfig, $out2);
 
         print_r($out2);
+
+        return 0;
     }
 }

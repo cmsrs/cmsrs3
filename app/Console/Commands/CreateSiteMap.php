@@ -36,10 +36,8 @@ class CreateSiteMap extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function handle()
+    public function handle(): int
     {
         $pageService = app(PageService::class); // TODO DI
         $configService = app(ConfigService::class); // TODO DI
@@ -92,5 +90,7 @@ class CreateSiteMap extends Command
 
         $siteMapPath = public_path().'/sitemap.txt';
         file_put_contents($siteMapPath, $strUrls);
+
+        return 0;
     }
 }

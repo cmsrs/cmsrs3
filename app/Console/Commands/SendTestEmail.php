@@ -24,7 +24,7 @@ class SendTestEmail extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): int
     {
         $toEmail = $this->argument('email');
 
@@ -44,5 +44,6 @@ class SendTestEmail extends Command
         //     $message->to($toEmail, $toName)->subject('Artisans Web Testing Mail');
         //     $message->from('test@gmail.com','Artisans Web');
         // });
+        return 0;
     }
 }

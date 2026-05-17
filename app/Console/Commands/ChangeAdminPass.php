@@ -24,7 +24,7 @@ class ChangeAdminPass extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): int
     {
         $pass = $this->argument('pass');
 

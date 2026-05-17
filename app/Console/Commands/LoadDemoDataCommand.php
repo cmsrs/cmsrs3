@@ -4,13 +4,14 @@ namespace App\Console\Commands;
 
 use App\Data\Demo;
 use App\Models\Cmsrs\Comment;
+use App\Models\Cmsrs\Product;
 use App\Models\User;
-use App\Services\Cmsrs\ContactService;
 // use App\Services\Cmsrs\ContentService;
+use App\Services\Cmsrs\ContactService;
 use App\Services\Cmsrs\DeliverService;
 use App\Services\Cmsrs\PaymentService;
-use App\Services\Cmsrs\ProductService;
 // use App\Services\Cmsrs\TranslateService;
+use App\Services\Cmsrs\ProductService;
 use Illuminate\Console\Command;
 
 class LoadDemoDataCommand extends Command
@@ -49,7 +50,7 @@ class LoadDemoDataCommand extends Command
         // $this->content->setArrLangs($this->langs);
     }
 
-    private function wrapSaveUser($i)
+    private function wrapSaveUser(int $i): int
     {
         $name = 'client'.$i;
         $emailClient = $name.'@cmsrs.pl';
@@ -67,7 +68,11 @@ class LoadDemoDataCommand extends Command
         return $user32->id;
     }
 
-    private function getDataSaveCheckout($products, $i)
+    /**
+     * @param  array<int, Product>  $products
+     * @return array<string, mixed>
+     */
+    private function getDataSaveCheckout(array $products, int $i): array
     {
         $prod0 = empty($products[0]) ? exit("can't find product0 to checkout") : $products[0];
         $prod1 = empty($products[1]) ? exit("can't find product1 to checkout") : $products[1];
@@ -122,10 +127,8 @@ class LoadDemoDataCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function handle()
+    public function handle(): int
     {
         ini_set('memory_limit', '1028M');
         $objDemoData = new Demo;
@@ -244,5 +247,6 @@ class LoadDemoDataCommand extends Command
         Order::create($order1);
         Order::create($order2);
         */
+        return 0;
     }
 }

@@ -24,7 +24,7 @@ class CreateClient extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): int
     {
         $client = $this->argument('client');
         $pass = $this->argument('pass');
