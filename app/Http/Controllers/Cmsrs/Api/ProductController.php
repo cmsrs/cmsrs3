@@ -8,6 +8,7 @@ use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\Helpers\PriceHelperService;
 use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\ProductService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -37,14 +38,14 @@ class ProductController extends Controller
         }
     }
 
-    public function getItem(Request $request, Product $product)
+    public function getItem(Request $request, Product $product): JsonResponse
     {
         $data = $this->productService->getProductWithTranslatesContentsAndImages($product);
 
         return response()->json(['success' => true, 'data' => $data], 200);
     }
 
-    public function getItemsWithPaginateAndSort(Request $request, $lang, $column, $direction)
+    public function getItemsWithPaginateAndSort(Request $request, string $lang, string $column, string $direction): JsonResponse
     {
         $search = $request->input('search', null);
 
@@ -77,23 +78,23 @@ class ProductController extends Controller
     }
 
     /**
-     * i can't find this method in routes/api.php - todo
+     * TODO remove i can't find this method in routes/api.php - todo
      */
-    public function getProductsByPageId(Request $request, $id, $lang)
+    public function getProductsByPageId(Request $request, $id, $lang): JsonResponse
     {
         $products = $this->productService->getGivenProductsWithImagesByPageId($id);
 
         return response()->json(['success' => true, 'data' => $products], 200);
     }
 
-    public function index()
+    public function index(): JsonResponse
     {
         $products = $this->productService->getAllProductsWithImages();
 
         return response()->json(['success' => true, 'data' => $products], 200);
     }
 
-    public function create(Request $request)
+    public function create(Request $request): JsonResponse
     {
         $data = $request->only(
             'product_name',
@@ -130,7 +131,7 @@ class ProductController extends Controller
         return response()->json(['success' => true, 'data' => ['productId' => $product->id, 'data' => $data]]);
     }
 
-    public function update(Request $request, Product $product)
+    public function update(Request $request, Product $product): JsonResponse
     {
 
         $data = $request->only(
@@ -174,7 +175,7 @@ class ProductController extends Controller
         return response()->json(['success' => true], 200);
     }
 
-    public function delete(Request $request, Product $product)
+    public function delete(Request $request, Product $product): JsonResponse
     {
         $res = $this->imageService->deletePageOrProductWithImgs($product);
         if (empty($res)) {
@@ -184,7 +185,7 @@ class ProductController extends Controller
         return response()->json(['success' => true], 200);
     }
 
-    public function getNameAndPrice(Request $request, $lang = '')
+    public function getNameAndPrice(Request $request, $lang = ''): JsonResponse
     {
         if (empty($lang)) {
             $lang = ConfigService::getDefaultLang();
