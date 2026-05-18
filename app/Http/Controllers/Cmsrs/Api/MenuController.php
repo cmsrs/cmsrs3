@@ -23,6 +23,9 @@ class MenuController extends Controller
         }
     }
 
+    /**
+     * @var array<string, string>
+     */
     private $validationRules = [
         'position' => 'numeric',
     ];

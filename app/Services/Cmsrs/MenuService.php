@@ -169,7 +169,7 @@ class MenuService extends BaseService
         return $menu->position + 1;
     }
 
-    public function swapPosition(string $direction, string $id): bool
+    public function swapPosition(string $direction, int $id): bool
     {
         if (! in_array($direction, ['up', 'down'])) {
             throw new \Exception('Wrong direction (Menu). It can be up or down direction = '.$direction);
