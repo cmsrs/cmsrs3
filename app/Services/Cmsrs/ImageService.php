@@ -304,7 +304,7 @@ class ImageService extends BaseService
     /**
      * @return Collection<int, Image>
      */
-    public function getImagesAndThumbsByTypeAndRefId(string $type, ?int $refId = null, ?string $lang = null): Collection
+    public function getImagesAndThumbsByTypeAndRefId(string $type, ?string $refId = null, ?string $lang = null): Collection
     {
         $images = $this->getImagesByTypeAndRefId($type, $refId);
 

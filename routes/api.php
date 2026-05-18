@@ -61,8 +61,8 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     Route::get($apiSecret.'images/{type}/{pageId}', [ImageController::class, 'getItemByTypeAndRefId']); // getItemByPageId, it can be pageId or productId
     Route::post($apiSecret.'image/{type}/{pageId}', [ImageController::class, 'uploadImageByTypeAndRefId']); // it can be pageId or productId
-    Route::delete($apiSecret.'images/{id}', [ImageController::class, 'delete']);
-    Route::patch($apiSecret.'images/position/{direction}/{id}', [ImageController::class, 'position']); // only for type page and product is working
+    Route::delete($apiSecret.'images/{id}', [ImageController::class, 'delete']); // delete one or more images, id can be 1 or 1,2,3
+    Route::patch($apiSecret.'images/position/{direction}/{image}', [ImageController::class, 'position'])->whereNumber('image'); // only for type page and product is working
 
     Route::get($apiSecret.'users/clients', [UserController::class, 'getClients']);
     Route::get($apiSecret.'clients/{column}/{direction}', [UserController::class, 'getClientsPaginateAndSort']);
