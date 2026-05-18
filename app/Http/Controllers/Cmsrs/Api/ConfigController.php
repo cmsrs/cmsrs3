@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Cmsrs\Api;
 
 use App\Http\Controllers\Controller;
 use App\Services\Cmsrs\ConfigService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Http\JsonResponse;
 
 class ConfigController extends Controller
 {
@@ -15,7 +15,7 @@ class ConfigController extends Controller
         protected ConfigService $configService,
     ) {}
 
-    public function index() : JsonResponse
+    public function index(): JsonResponse
     {
         try {
             $config = [];
@@ -36,7 +36,7 @@ class ConfigController extends Controller
         return response()->json(['success' => true, 'data' => $config], 200);
     }
 
-    public function clearCache() : JsonResponse
+    public function clearCache(): JsonResponse
     {
         if (! $this->configService->getConfigCacheEnable()) {
             return response()->json(['success' => false, 'error' => ['clear_cache' => "don't allowed, because cache_enable is false"]]);
@@ -54,7 +54,7 @@ class ConfigController extends Controller
         return response()->json(['success' => true], 200);
     }
 
-    public function createSiteMap() : JsonResponse
+    public function createSiteMap(): JsonResponse
     {
         try {
             Artisan::call('cmsrs:create-site-map');
@@ -67,7 +67,7 @@ class ConfigController extends Controller
         return response()->json(['success' => true], 200);
     }
 
-    public function toggleCacheEnableFile(Request $request) : JsonResponse
+    public function toggleCacheEnableFile(Request $request): JsonResponse
     {
         $action = $request->input('action', null);
         if (! $this->configService->getConfigCacheEnable()) {
@@ -95,7 +95,7 @@ class ConfigController extends Controller
         }
     }
 
-    public function isCacheEnable() : JsonResponse
+    public function isCacheEnable(): JsonResponse
     {
         try {
             $ret = $this->configService->isCacheEnable();

@@ -11,25 +11,26 @@ use Illuminate\Support\Facades\Validator;
 
 class CommentController extends Controller
 {
+    /**
+     * Validation rules for comment create
+     *
+     * @var array<string, string>
+     */
     private $validationRules = [
         'content' => 'max:1280|required',
     ];
 
-    public function create(Request $request, $pageId)
+    public function create(Request $request, Page $page)
     {
         $data = $request->only(
             'content'
         );
 
-        $p = Page::find($pageId);
-        if (empty($p)) {
-            abort(404);
-        }
-        if (empty($p->commented)) {
+        if (empty($page->commented)) {
             abort(404);
         }
 
-        $data['page_id'] = $pageId;
+        $data['page_id'] = $page->id;
 
         $validator = Validator::make($data, $this->validationRules);
         if ($validator->fails()) {
@@ -50,17 +51,13 @@ class CommentController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function index(Request $request, $pageId)
+    public function index(Request $request, Page $page)
     {
-        $p = Page::find($pageId);
-        if (empty($p)) {
-            abort(404);
-        }
-        if (empty($p->commented)) {
+        if (empty($page->commented)) {
             abort(404);
         }
 
-        $comments = Comment::where('page_id', $pageId)->orderby('created_at', 'desc')->get(['content'])->toArray();
+        $comments = Comment::where('page_id', $page->id)->orderby('created_at', 'desc')->get(['content'])->toArray();
 
         return response()->json(['success' => true, 'data' => $comments], 200);
     }

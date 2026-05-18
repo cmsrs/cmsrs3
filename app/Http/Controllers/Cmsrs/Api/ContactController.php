@@ -6,12 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Cmsrs\Contact;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\ContactService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\JsonResponse;
 
 class ContactController extends Controller
 {
@@ -22,6 +22,7 @@ class ContactController extends Controller
 
     /**
      * Validation rules for contact create
+     *
      * @var array<string, string>
      */
     private $validationRules = [
@@ -111,14 +112,14 @@ message: '.$data['message'];
         return response()->json(['success' => true, 'message' => __('Thank you for using the contact form')]);
     }
 
-    public function index() : JsonResponse
+    public function index(): JsonResponse
     {
         $contact = $this->contactService->getAllData();
 
         return response()->json(['success' => true, 'data' => $contact], 200);
     }
 
-    public function getItemsWithPaginateAndSort(Request $request, string $column, string $direction) : JsonResponse
+    public function getItemsWithPaginateAndSort(Request $request, string $column, string $direction): JsonResponse
     {
         $search = $request->input('search', null);
         if ($search) {

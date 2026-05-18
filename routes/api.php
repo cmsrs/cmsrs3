@@ -29,8 +29,8 @@ if (config('cmsrs.features.shop')) {
 }
 
 Route::post('login', [AuthController::class, 'login']);
-Route::get('comments/{pageId}', [CommentController::class,  'index']);
-Route::post('comments/{pageId}', [CommentController::class, 'create']);
+Route::get('comments/{page}', [CommentController::class,  'index'])->whereNumber('page');
+Route::post('comments/{page}', [CommentController::class, 'create'])->whereNumber('page');
 Route::post('contact/{lang}', [ContactController::class, 'create']);
 
 /* is_headless start */
