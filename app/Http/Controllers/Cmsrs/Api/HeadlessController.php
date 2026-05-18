@@ -9,6 +9,7 @@ use App\Services\Cmsrs\HeadlessService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\ProductService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -22,7 +23,7 @@ class HeadlessController extends Controller
         protected ProductService $productService,
     ) {}
 
-    public function getPagesByShortTitle(Request $request, $shortTitle)
+    public function getPagesByShortTitle(Request $request, string $shortTitle): JsonResponse
     {
         if (empty($shortTitle)) {
             return response()->json(['success' => false, 'error' => 'Short title is required'], 200);
@@ -33,7 +34,7 @@ class HeadlessController extends Controller
         return response()->json(['success' => true, 'data' => $pages], 200);
     }
 
-    public function getAllPagesByType(Request $request, $type)
+    public function getAllPagesByType(Request $request, string $type): JsonResponse
     {
         if (! in_array($type, ConfigService::arrGetPageTypes())) {
             return response()->json(['success' => false, 'error' => 'wrong type'], 200);
@@ -44,16 +45,10 @@ class HeadlessController extends Controller
         return response()->json(['success' => true, 'data' => $pages], 200);
     }
 
-    public function onePageItemByLang(Request $request, $id, $lang)
+    public function onePageItemByLang(Request $request, Page $page, string $lang): JsonResponse
     {
         if (! in_array($lang, ConfigService::arrGetLangsEnv())) {
             return response()->json(['success' => false, 'error' => 'wrong lang'], 200);
-        }
-
-        $page = Page::find($id);
-
-        if (empty($page)) {
-            return response()->json(['success' => false, 'error' => 'Page not find'], 404);
         }
 
         if ($page->after_login) {
@@ -73,14 +68,14 @@ class HeadlessController extends Controller
         return response()->json(['success' => true, 'data' => $onePage], 200);
     }
 
-    public function getMenus(Request $request)
+    public function getMenus(Request $request): JsonResponse
     {
         $menus = $this->headlessService->getAllUrlRelatedToMenus();
 
         return response()->json(['success' => true, 'data' => $menus], 200);
     }
 
-    public function config()
+    public function config(): JsonResponse
     {
         try {
             $config = [];

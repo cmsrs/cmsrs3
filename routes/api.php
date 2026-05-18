@@ -37,7 +37,7 @@ Route::post('contact/{lang}', [ContactController::class, 'create']);
 if (config('cmsrs.is_headless')) {
     Route::get('headless/pages-short-title/{shortTitle}', [HeadlessController::class, 'getPagesByShortTitle']);
     Route::get('headless/pages-type/{type}', [HeadlessController::class, 'getAllPagesByType']);
-    Route::get('headless/page/{id}/{lang}', [HeadlessController::class, 'onePageItemByLang']);
+    Route::get('headless/page/{page}/{lang}', [HeadlessController::class, 'onePageItemByLang'])->whereNumber('page');
     Route::get('headless/menus', [HeadlessController::class, 'getMenus']);
     Route::get('headless/config', [HeadlessController::class, 'config']);
 }

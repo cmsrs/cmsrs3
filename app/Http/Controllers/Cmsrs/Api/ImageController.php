@@ -26,11 +26,11 @@ class ImageController extends Controller
             return response()->json(['success' => false, 'error' => 'page type not exist'], 404);
         }
 
-        if (!is_numeric($refId)) {
+        if (! is_numeric($refId)) {
             return response()->json(['success' => false, 'error' => 'refId must be numeric'], 400);
         }
 
-        $images = $this->imageService->getImagesAndThumbsByTypeAndRefId($type, (int)$refId);
+        $images = $this->imageService->getImagesAndThumbsByTypeAndRefId($type, (int) $refId);
 
         return response()->json(['success' => true, 'data' => $images], 200);
     }
@@ -41,7 +41,7 @@ class ImageController extends Controller
             return response()->json(['success' => false, 'error' => 'page type not exist'], 404);
         }
 
-        if (!is_numeric($refId)) {
+        if (! is_numeric($refId)) {
             return response()->json(['success' => false, 'error' => 'refId must be numeric'], 400);
         }
 
