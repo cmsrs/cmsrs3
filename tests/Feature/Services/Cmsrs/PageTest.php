@@ -1297,8 +1297,16 @@ class PageTest extends Base
 
         $responseFake = $this->delete('api/pages/rs_I_eW23423fsd?token='.$this->token);
         $responseFake->assertStatus(404);
+        $resFake = $responseFake->getData();
+        $this->assertFalse($resFake->success);
+        $this->assertNotEmpty($resFake->error);
+        $this->assertNotEmpty($resFake->message);
+
         $data = $responseFake->json();
+
         $this->assertArrayHasKey('message', $data);
+        $this->assertNotEmpty($data['message']);
+        // dd($data);
 
         // fake id - error handlings
         // $responseFake = $this->delete('api/pages/rs_I_eW23423fsd?token='.$this->token);

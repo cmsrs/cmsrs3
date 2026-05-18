@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cmsrs\Menu;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\MenuService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -26,21 +27,21 @@ class MenuController extends Controller
         'position' => 'numeric',
     ];
 
-    public function index()
+    public function index(): JsonResponse
     {
         $menus = $this->menuService->getAllMenus();
 
         return response()->json(['success' => true, 'data' => $menus], 200);
     }
 
-    public function position(Request $request, $direction, $id)
+    public function position(Request $request, string $direction, Menu $menu): JsonResponse
     {
-        $ret = $this->menuService->swapPosition($direction, $id);
+        $ret = $this->menuService->swapPosition($direction, $menu->id);
 
         return response()->json(['success' => $ret]);
     }
 
-    public function create(Request $request)
+    public function create(Request $request): JsonResponse
     {
         $data = $request->only('name');
 
@@ -66,14 +67,8 @@ class MenuController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Menu $menu): JsonResponse
     {
-        $menu = Menu::find($id);
-
-        if (empty($menu)) {
-            return response()->json(['success' => false, 'error' => 'Menu not find'], 200);
-        }
-
         $data = $request->only('name');
 
         $validator = Validator::make($data, $this->validationRules);
@@ -102,14 +97,8 @@ class MenuController extends Controller
         return response()->json(['success' => true], 200);
     }
 
-    public function delete(Request $request, $id)
+    public function delete(Request $request, Menu $menu): JsonResponse
     {
-        $menu = Menu::find($id);
-
-        if (empty($menu)) {
-            return response()->json(['success' => false, 'error' => 'Menu not find'], 200);
-        }
-
         $res = $menu->delete();
         if (empty($res)) {
             return response()->json(['success' => false, 'error' => 'Update delete problem'], 200);

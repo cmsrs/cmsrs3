@@ -395,8 +395,22 @@ class MenuTest extends Base
         $this->setTestData();
         // fake id - error handling
         $responseFake = $this->delete('api/menus/rs_I_eW23423fsd?token='.$this->token);
+        // dd($responseFake->getContent());
         $resFake = $responseFake->getData();
         $this->assertFalse($resFake->success);
         $this->assertNotEmpty($resFake->error);
+        $this->assertNotEmpty($resFake->message);
+    }
+
+    public function test_it_will_delete_fake_menu()
+    {
+        $id = 99999;
+        $response0 = $this->delete('api/menus/'.$id.'?token='.$this->token);
+        $response0->assertStatus(404);
+        $resFake = $response0->getData();
+
+        $this->assertFalse($resFake->success);
+        $this->assertNotEmpty($resFake->error);
+        $this->assertNotEmpty($resFake->message);
     }
 }

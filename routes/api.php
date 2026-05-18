@@ -73,9 +73,9 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     Route::get($apiSecret.'menus', [MenuController::class, 'index']);
     Route::post($apiSecret.'menus', [MenuController::class, 'create']);
-    Route::put($apiSecret.'menus/{id}', [MenuController::class, 'update']);
-    Route::delete($apiSecret.'menus/{id}', [MenuController::class, 'delete']);
-    Route::patch($apiSecret.'menus/position/{direction}/{id}', [MenuController::class, 'position']);
+    Route::put($apiSecret.'menus/{menu}', [MenuController::class, 'update'])->whereNumber('menu');
+    Route::delete($apiSecret.'menus/{menu}', [MenuController::class, 'delete'])->whereNumber('menu');
+    Route::patch($apiSecret.'menus/position/{direction}/{menu}', [MenuController::class, 'position'])->whereNumber('menu');
 
     Route::get($apiSecret.'contacts', [ContactController::class, 'index']);
     Route::get($apiSecret.'contacts/pagination/{column}/{direction}', [ContactController::class, 'getItemsWithPaginateAndSort']);
