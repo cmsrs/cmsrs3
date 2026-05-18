@@ -79,7 +79,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     Route::get($apiSecret.'contacts', [ContactController::class, 'index']);
     Route::get($apiSecret.'contacts/pagination/{column}/{direction}', [ContactController::class, 'getItemsWithPaginateAndSort']);
-    Route::delete($apiSecret.'contacts/{id}', [ContactController::class, 'delete']);
+    Route::delete($apiSecret.'contacts/{contact}', [ContactController::class, 'delete'])->whereNumber('contact');
 
     Route::get($apiSecret.'config', [ConfigController::class, 'index']);
     Route::put($apiSecret.'config/clearcache', [ConfigController::class, 'clearCache']);

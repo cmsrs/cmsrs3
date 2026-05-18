@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\JsonResponse;
 
 class ContactController extends Controller
 {
@@ -19,12 +20,16 @@ class ContactController extends Controller
         protected ConfigService $configService,
     ) {}
 
+    /**
+     * Validation rules for contact create
+     * @var array<string, string>
+     */
     private $validationRules = [
         'email' => 'required|regex:/^[a-zA-Z0-9\.\-_]+\@[a-zA-Z0-9\.\-_]+\.[a-z]{2,4}$/D',
         'message' => 'max:500|required',
     ];
 
-    public function create(Request $request, $lang)
+    public function create(Request $request, string $lang): JsonResponse
     {
         $langs = $this->configService->arrGetLangs();
         if (! in_array($lang, $langs)) {
@@ -106,14 +111,14 @@ message: '.$data['message'];
         return response()->json(['success' => true, 'message' => __('Thank you for using the contact form')]);
     }
 
-    public function index()
+    public function index() : JsonResponse
     {
         $contact = $this->contactService->getAllData();
 
         return response()->json(['success' => true, 'data' => $contact], 200);
     }
 
-    public function getItemsWithPaginateAndSort(Request $request, $column, $direction)
+    public function getItemsWithPaginateAndSort(Request $request, string $column, string $direction) : JsonResponse
     {
         $search = $request->input('search', null);
         if ($search) {
@@ -150,14 +155,8 @@ message: '.$data['message'];
         return response()->json(['success' => true, 'data' => $contacts], 200);
     }
 
-    public function delete(Request $request, $id)
+    public function delete(Request $request, Contact $contact): JsonResponse
     {
-        $contact = Contact::find($id);
-
-        if (empty($contact)) {
-            return response()->json(['success' => false, 'error' => 'Contact not find'], 200);
-        }
-
         $res = $contact->delete();
 
         if (empty($res)) {
