@@ -21,7 +21,16 @@ class ImageController extends Controller
 
     public function getItemByTypeAndRefId(Request $request, string $type, string $refId): JsonResponse
     {
-        $images = $this->imageService->getImagesAndThumbsByTypeAndRefId($type, $refId);
+
+        if (empty(Image::$type[$type])) {
+            return response()->json(['success' => false, 'error' => 'page type not exist'], 404);
+        }
+
+        if (!is_numeric($refId)) {
+            return response()->json(['success' => false, 'error' => 'refId must be numeric'], 400);
+        }
+
+        $images = $this->imageService->getImagesAndThumbsByTypeAndRefId($type, (int)$refId);
 
         return response()->json(['success' => true, 'data' => $images], 200);
     }
@@ -30,6 +39,10 @@ class ImageController extends Controller
     {
         if (empty(Image::$type[$type])) {
             return response()->json(['success' => false, 'error' => 'page type not exist'], 404);
+        }
+
+        if (!is_numeric($refId)) {
+            return response()->json(['success' => false, 'error' => 'refId must be numeric'], 400);
         }
 
         $strObj = '\\App\\Models\\Cmsrs\\'.ucfirst($type);
