@@ -14,10 +14,8 @@ class AuthController extends Controller
 {
     /**
      * API Login, on success return JWT Auth token
-     *
-     * @return JsonResponse
      */
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse
     {
         $credentials = $request->only('email', 'password');
 
@@ -35,7 +33,12 @@ class AuthController extends Controller
         return $this->getTokenByCredentials($credentials);
     }
 
-    private function getTokenByCredentials($credentials)
+    /**
+     * Get the token by the given credentials.
+     *
+     * @param  array<string, string>  $credentials
+     */
+    private function getTokenByCredentials(array $credentials): JsonResponse
     {
         try {
             // attempt to verify the credentials and create a token for the user
@@ -61,7 +64,7 @@ class AuthController extends Controller
      * Invalidate the token, so user cannot use it anymore
      * They have to relogin to get a new token
      */
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse
     {
         $request->validate([
             'token' => 'required',
@@ -79,10 +82,8 @@ class AuthController extends Controller
 
     /**
      * API Register
-     *
-     * @return JsonResponse
      */
-    public function register(Request $request)
+    public function register(Request $request): JsonResponse
     {
         $demoStatus = config('cmsrs.demo'); // env('DEMO_STATUS', false);
         if ($demoStatus) {

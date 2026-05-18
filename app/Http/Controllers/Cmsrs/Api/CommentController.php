@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Cmsrs\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Cmsrs\Comment;
 use App\Models\Cmsrs\Page;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -20,7 +21,7 @@ class CommentController extends Controller
         'content' => 'max:1280|required',
     ];
 
-    public function create(Request $request, Page $page)
+    public function create(Request $request, Page $page): JsonResponse
     {
         $data = $request->only(
             'content'
@@ -51,7 +52,7 @@ class CommentController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function index(Request $request, Page $page)
+    public function index(Request $request, Page $page): JsonResponse
     {
         if (empty($page->commented)) {
             abort(404);

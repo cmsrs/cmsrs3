@@ -7,12 +7,18 @@ use App\Models\Cmsrs\Checkout;
 use App\Services\Cmsrs\CheckoutService;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\OrderService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class CheckoutController extends Controller
 {
+    /**
+     * Validation rules for checkout update
+     *
+     * @var array<string, string>
+     */
     private $validationRules = [
         'is_pay' => 'boolean',
     ];
@@ -23,7 +29,7 @@ class CheckoutController extends Controller
         protected OrderService $orderService,
     ) {}
 
-    public function index()
+    public function index(): JsonResponse
     {
         $lang = ConfigService::getDefaultLang();
         $objCheckouts = Checkout::All();
@@ -32,7 +38,7 @@ class CheckoutController extends Controller
         return response()->json(['success' => true, 'data' => $checkouts], 200);
     }
 
-    public function getItemsWithPaginateAndSort(Request $request, $lang, $column, $direction)
+    public function getItemsWithPaginateAndSort(Request $request, string $lang, string $column, string $direction): JsonResponse
     {
         $search = $request->input('search', null);
 
@@ -63,14 +69,8 @@ class CheckoutController extends Controller
         return response()->json(['success' => true, 'data' => $checkouts], 200);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Checkout $checkout): JsonResponse
     {
-        $checkout = Checkout::find($id);
-
-        if (empty($checkout)) {
-            return response()->json(['success' => false, 'error' => 'Checkout not find'], 200);
-        }
-
         $data = $request->only('is_pay');
 
         $validator = Validator::make($data, $this->validationRules);

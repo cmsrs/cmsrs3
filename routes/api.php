@@ -98,7 +98,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
         Route::get($apiSecret.'checkouts', [CheckoutController::class, 'index']);
         Route::get($apiSecret.'checkouts/pagination/{lang}/{column}/{direction}', [CheckoutController::class, 'getItemsWithPaginateAndSort']);
-        Route::patch($apiSecret.'checkouts/{id}', [CheckoutController::class, 'update']);
+        Route::patch($apiSecret.'checkouts/{checkout}', [CheckoutController::class, 'update'])->whereNumber('checkout');
     }
     /* shop stop */
 });
