@@ -12,6 +12,9 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ImageService extends BaseService
 {
+    /**
+     * @use TranslationsTrait<Image>
+     */
     use TranslationsTrait;
 
     public function __construct(private ConfigService $configService, private TranslateService $translateService) {}

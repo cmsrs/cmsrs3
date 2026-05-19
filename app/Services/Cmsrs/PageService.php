@@ -14,6 +14,9 @@ use Illuminate\Support\Str;
 
 class PageService extends BaseService
 {
+    /**
+     * @use TranslationsTrait<Page>
+     */
     use TranslationsTrait;
 
     public function __construct(private ConfigService $configService, private MenuService $menuService, private TranslateService $translateService, private ContentService $contentService, private ImageService $imageService) {}

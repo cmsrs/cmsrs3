@@ -14,6 +14,9 @@ use Throwable;
 
 class MenuService extends BaseService
 {
+    /**
+     * @use TranslationsTrait<Menu>
+     */
     use TranslationsTrait;
 
     public function __construct(private ConfigService $configService, private TranslateService $translateService) {}

@@ -35,10 +35,9 @@ trait TranslationsTrait
     /**
      * Get all translations for a given translatable model - for menu and image
      *
-     * @param  TModel  $model
      * @return array<string, array<string, string>>
      */
-    public function getAllTranslateWithoutCache(TranslatableInterface $model): array
+    public function getAllTranslateWithoutCache(TranslatableInterface|ContentTranslatableInterface $model): array
     {
         $translates = $model->translates()
             ->get(['lang', 'column', 'value'])
