@@ -74,11 +74,11 @@ trait TranslationsTrait
     /**
      * @param  TModel  $model
      */
-    public function translatesByColumnAndLang(TranslatableInterface $model, string $column, string $lang): string
+    public function translatesByColumnAndLang(TranslatableInterface $model, string $column, string $lang): ?string
     {
         $data = $this->getAllTranslateByColumn($model);
 
-        $value = '';
+        $value = null;
         if (isset($data[$column]) && isset($data[$column][$lang])) {
             $value = $data[$column][$lang];
         }
