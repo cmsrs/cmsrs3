@@ -50,7 +50,7 @@ abstract class BaseService
     }
 
     /**
-     * @param Collection<int, Page> $pagesByMenu
+     * @param  Collection<int, Page>  $pagesByMenu
      * @return array<int, Page>
      */
     public function pagesPublishedTree(Collection $pagesByMenu)

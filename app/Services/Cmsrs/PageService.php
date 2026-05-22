@@ -2,7 +2,6 @@
 
 namespace App\Services\Cmsrs;
 
-use App\Models\Cmsrs\Image;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Translate;
@@ -779,10 +778,10 @@ class PageService extends BaseService
     }
 
     /**
-     * @param  array<string, mixed>|Collection  $page
+     * @param  array<string, mixed>  $page
      * @return array<string, mixed>
      */
-    public function getPageDataFormat(array|Collection $page): array
+    public function getPageDataFormat(array $page): array
     {
         $out = [];
         foreach ($this->pageFields as $field) {
