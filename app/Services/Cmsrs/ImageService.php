@@ -417,9 +417,6 @@ class ImageService extends BaseService
     public function deleteImagesFs(Page|Product $mObj): void
     {
         foreach ($mObj->images()->get() as $img) {
-            if (! $img instanceof Image) {
-                throw new \Exception('image is not instance of \\App\\Models\\Cmsrs\\Image - case deleteImagesFs');
-            }
             $this->deleteImg($img);
         }
     }
@@ -432,9 +429,6 @@ class ImageService extends BaseService
         $files = [];
         $dirsImgs = [];
         foreach ($mObj->images()->get() as $img) {
-            if (! $img instanceof Image) {
-                throw new \Exception('image is not instance of \\App\\Models\\Cmsrs\\Image - case getImagesFsFiles');
-            }
             $images = $this->getAllImage($img);
 
             if (is_array($images) && ! empty($images)) {
