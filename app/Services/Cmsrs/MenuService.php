@@ -100,7 +100,7 @@ class MenuService extends BaseService
 
     /**
      * @return HasMany<Page, Menu>
-     */    
+     */
     public function pagesPublishedAndAccess(Menu $mMenu): HasMany
     {
         if (Auth::check()) {

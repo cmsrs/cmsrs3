@@ -43,7 +43,7 @@ abstract class BaseService
 
     /**
      * @return HasMany<Page, Menu>
-     */    
+     */
     protected function pagesPublishedAndAccessNotAuth(Menu $mMenu): HasMany
     {
         return $mMenu->pages()->where('published', '=', 1)->where('after_login', '=', 0)->orderBy('position', 'asc');
