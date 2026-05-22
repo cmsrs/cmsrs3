@@ -579,10 +579,6 @@ class PageService extends BaseService
         $out = [];
         foreach ($mPage->images as $image) {
 
-            if (! ($image instanceof Image)) {
-                throw new \Exception('ImageService::arrImages - image is not instance of Image');
-            }
-
             $item = $this->imageService->getAllImage($image, false);
             $item['id'] = $image->id;
             $item['alt'] = $this->imageService->getAltImg($image);
