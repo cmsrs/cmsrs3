@@ -68,12 +68,14 @@ class FrontController extends Controller
         if (empty($lang)) {
             $lang = $this->langs[0];
         }
+
         if (! in_array($lang, $this->langs)) {
             abort(404);
         }
         App::setLocale($lang);
 
         $key = $request->input('key');
+
         $products = $this->productService->wrapSearchProducts($lang, $key);
 
         $data = [

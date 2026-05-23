@@ -2375,6 +2375,44 @@ class ProductTest extends Base
         $this->simpleTestCheckoutData($res->data->data[0]);
     }
 
+    public function test_front_search_fake_products()
+    {
+        $response = $this->get('/search?key=abc');
+        $response->assertStatus(200);
+    }
+
+    public function test_front_search_fake_with_wrong_lang_products()
+    {
+        $response = $this->get('/enn_fake/search?key=abc');
+        $response->assertStatus(404);
+    }
+
+    public function test_front_search_fake_with_correct_lang_products()
+    {
+        $response = $this->get('/en/search?key=abc');
+        $response->assertStatus(404); // because in one lang we can't add lang in url
+    }
+
+    public function test_front_search_real_products()
+    {
+        $this->setTestData();
+        $product_name = self::STR_PRODUCT_NAME_EN;
+        $response = $this->get('/search?key='.$product_name);
+        $response->assertStatus(200);
+    }
+
+    public function test_front_search_all_products()
+    {
+        $response = $this->get('/search?key=');
+        $response->assertStatus(200);
+    }
+
+    public function test_front_checkout()
+    {
+        $response = $this->get('/checkout');
+        $response->assertStatus(200);
+    }
+
     /**
      * OLD TESTS
      */

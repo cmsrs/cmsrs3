@@ -163,14 +163,6 @@ class ProductService extends BaseService
     }
 
     /**
-     * @return array<int, mixed>
-     */
-    public function searchProducts(string $lang, string $key): array
-    {
-        return DB::select("select distinct product_id from translates where (`product_id` is not null) and (`lang` = :lang) and (`column` = 'product_name') and (`value` like  :key )", ['lang' => $lang, 'key' => '%'.$key.'%']);
-    }
-
-    /**
      * @param  array<int, mixed>  $obj
      * @return array<int, mixed>
      */
@@ -187,7 +179,15 @@ class ProductService extends BaseService
     /**
      * @return array<int, mixed>
      */
-    public function wrapSearchProducts(string $lang, string $key): array
+    public function searchProducts(string $lang, ?string $key): array
+    {
+        return DB::select("select distinct product_id from translates where (`product_id` is not null) and (`lang` = :lang) and (`column` = 'product_name') and (`value` like  :key )", ['lang' => $lang, 'key' => '%'.$key.'%']);
+    }
+
+    /**
+     * @return array<int, mixed>
+     */
+    public function wrapSearchProducts(string $lang, ?string $key): array
     {
         $objProducts = $this->searchProducts($lang, $key);
         $arrProducts = ProductService::objToArray($objProducts);
