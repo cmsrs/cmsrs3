@@ -62,17 +62,29 @@ class FrontController extends Controller
         }
     }
 
-    public function search(Request $request, ?string $lang = null): View
+    private function validateLangs(?string $lang): string
     {
-
         if (empty($lang)) {
             $lang = $this->langs[0];
         }
+        $this->validateLang($lang);
 
+        App::setLocale($lang);
+
+        return $lang;
+    }
+
+    private function validateLang(?string $lang): void
+    {
+        // it is useless because route validation to do it - it can be deleted - but i want to keep it for now
         if (! in_array($lang, $this->langs)) {
             abort(404);
         }
-        App::setLocale($lang);
+    }
+
+    public function search(Request $request, ?string $lang = null): View
+    {
+        $lang = $this->validateLangs($lang);
 
         $key = $request->input('key');
 
@@ -92,13 +104,7 @@ class FrontController extends Controller
 
     public function shoppingsuccess(Request $request, ?string $lang = null): View
     {
-        if (empty($lang)) {
-            $lang = $this->langs[0];
-        }
-        if (! in_array($lang, $this->langs)) {
-            abort(404);
-        }
-        App::setLocale($lang);
+        $lang = $this->validateLangs($lang);
 
         $objCheckout = null;
         if ($request->session()->has('checkout_id')) {
@@ -124,12 +130,8 @@ class FrontController extends Controller
 
     public function checkout(Request $request, ?string $lang = null): View
     {
-        if (empty($lang)) {
-            $lang = $this->langs[0];
-        }
-        if (! in_array($lang, $this->langs)) {
-            abort(404);
-        }
+        $lang = $this->validateLangs($lang);
+
         App::setLocale($lang);
 
         $payments = PaymentService::getPayment();
@@ -151,9 +153,7 @@ class FrontController extends Controller
     public function postCheckout(Request $request): RedirectResponse|JsonResponse
     {
         $lang = $request->input('lang');
-        if (! in_array($lang, $this->langs)) {
-            abort(404);
-        }
+        $this->validateLang($lang);
         App::setLocale($lang);
 
         $request->validate([
@@ -227,13 +227,8 @@ class FrontController extends Controller
         if ((count($this->langs) > 1) && $lang == $this->langs[0]) {
             abort(404);
         }
-        if (empty($lang)) {
-            $lang = $this->langs[0];
-        }
-        if (! in_array($lang, $this->langs)) {
-            abort(404);
-        }
-        App::setLocale($lang);
+
+        $lang = $this->validateLangs($lang);
 
         // todo - http_referer - i don't know how to obtain this value - it should be from payu
         // it make sense only for payU - it my opinion
