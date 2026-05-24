@@ -144,9 +144,9 @@ class PageService extends BaseService
     }
 
     /**
-     * @param  Collection<int, Menu>|array<Menu>  $menus
+     * @param  Collection<int, Menu>  $menus
      */
-    public function getPageBySlug(Collection|array $menus, string $menuSlug, ?string $pageSlug, string $lang): ?Page
+    public function getPageBySlug(Collection $menus, string $menuSlug, ?string $pageSlug, string $lang): ?Page
     {
         $pageOut = null;
         foreach ($menus as $menu) {

@@ -29,10 +29,10 @@ class MenuService extends BaseService
         $isCache = $this->configService->isCacheEnable();
         if ($isCache) {
             $menus = cache()->remember('menus', CacheService::setTime(), function () {
-                return Menu::all()->sortBy('position');
+                return Menu::orderBy('position')->get();
             });
         } else {
-            $menus = Menu::all()->sortBy('position');
+            $menus = Menu::orderBy('position')->get();
         }
 
         return $menus;
