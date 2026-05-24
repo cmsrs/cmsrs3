@@ -561,6 +561,7 @@ class PageService extends BaseService
     public function validateParentPublished(array $data): array
     {
         if (! empty($data['page_id'])) {
+            /** @var Page $p */
             $p = Page::findOrFail($data['page_id']);
             if ($p->published == 0) {
                 $data['published'] = 0;
@@ -579,6 +580,9 @@ class PageService extends BaseService
         foreach ($mPage->images as $image) {
 
             $item = $this->imageService->getAllImage($image, false);
+            if (! $item) {
+                continue;
+            }
             $item['id'] = $image->id;
             $item['alt'] = $this->imageService->getAltImg($image);
             $item['altlang'] = ! empty($item['alt'][$lang]) ? $item['alt'][$lang] : ''; // it neeeds to javascript - to modal window in gallery

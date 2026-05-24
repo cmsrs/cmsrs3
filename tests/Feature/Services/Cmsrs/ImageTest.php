@@ -309,7 +309,7 @@ class ImageTest extends Base
 
         foreach ($resAllBefore->data as $img) {
             $imagesFs = app(ImageService::class)->getAllImage($img);
-            $this->assertFalse($imagesFs); // because object not exist
+            $this->assertNull($imagesFs); // because object not exist
         }
 
         $ii = 0;

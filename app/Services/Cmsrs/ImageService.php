@@ -112,12 +112,12 @@ class ImageService extends BaseService
      * @return array<string, string>|false
      *                                     return all thumbs and main img
      */
-    public function getAllImage(?object $img, bool $isAbs = true): bool|array
+    public function getAllImage(?object $img, bool $isAbs = true): ?array
     {
         $out = [];
         $objImg = Image::find($img->id);
         if ($objImg === null) {
-            return false;
+            return null;
         }
         $imgDir = self::getImgDir($objImg, $isAbs);
         $fileName = pathinfo($img->name, PATHINFO_FILENAME);
