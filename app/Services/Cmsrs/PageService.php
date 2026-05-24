@@ -50,7 +50,7 @@ class PageService extends BaseService
         $page = $this->getPageByShortTitle($shortTitle);
 
         if (empty($page)) {
-            return false;
+            return null;
         }
 
         if ($data == 'url') {
