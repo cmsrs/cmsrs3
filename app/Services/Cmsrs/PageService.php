@@ -20,7 +20,7 @@ class PageService extends BaseService
 
     public function __construct(private ConfigService $configService, private MenuService $menuService, private TranslateService $translateService, private ContentService $contentService, private ImageService $imageService) {}
 
-    public function getPageDataByShortTitleCache(string $shortTitle, string $data = 'content', ?string $lang = null): string|bool
+    public function getPageDataByShortTitleCache(string $shortTitle, string $data = 'content', ?string $lang = null): ?string
     {
         if (empty($lang)) {
             $lang = $this->configService->getDefaultLang();
@@ -37,7 +37,7 @@ class PageService extends BaseService
         return $ret;
     }
 
-    public function getPageDataByShortTitle(string $shortTitle, string $data = 'content', ?string $lang = null): string|bool
+    public function getPageDataByShortTitle(string $shortTitle, string $data = 'content', ?string $lang = null): ?string
     {
         if (! in_array($data, ['content', 'title', 'images', 'url'])) {
             throw new \Exception('second param is: content title images and url allowed, but now is: '.$data);
@@ -354,11 +354,11 @@ class PageService extends BaseService
         return $urls;
     }
 
-    public function getUrl(Page $mPage, string $lang, ?string $urlParam = null): string|false
+    public function getUrl(Page $mPage, string $lang, ?string $urlParam = null): ?string
     {
         $type = $mPage->type;
         if ($type == 'inner') {
-            return false;
+            return null;
         } elseif ($type == 'main_page') {
             return $this->getMainUrl($lang);
 

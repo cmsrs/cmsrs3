@@ -74,6 +74,12 @@ class ConfigTest extends Base
             $in = true;
 
             $url = (app(PageService::class))->getUrl($p, 'en');
+            if (! $url) { // inner type
+                $this->assertEquals('inner', $data['type']);
+
+                continue;
+            }
+
             $response = $this->get($url);
 
             // $status = (($page_type === 'login') || ($page_type === 'register') || ($page_type === 'forgot')) ? 302 : 200; //I don't understand - todo (why register and forgot??)

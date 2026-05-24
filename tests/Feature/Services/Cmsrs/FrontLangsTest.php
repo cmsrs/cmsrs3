@@ -378,6 +378,12 @@ class FrontLangsTest extends Base
 
             foreach ($langs as $lang) {
                 $url = (app(PageService::class))->getUrl($page, $lang);
+                if (! $url) {
+                    $this->assertEquals('inner', $page->type);
+
+                    continue;
+                }
+
                 $response = $this->get($url);
 
                 $status = 200; // (($page->type === 'login') || ($page->type === 'register') || ($page->type === 'forgot')) ? 302 : 200;

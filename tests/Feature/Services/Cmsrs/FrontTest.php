@@ -150,6 +150,12 @@ class FrontTest extends Base
 
             foreach ($langs as $lang) {
                 $url = (app(PageService::class))->getUrl($page, $lang);
+                if (! $url) {
+                    $this->assertEquals('inner', $page->type);
+
+                    continue;
+                }
+
                 $response = $this->get($url);
 
                 $status = 200;
