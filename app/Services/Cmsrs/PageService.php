@@ -67,17 +67,17 @@ class PageService extends BaseService
         return empty($dataByLang[$lang]) ? '' : $dataByLang[$lang];
     }
 
-    private function getPageByShortTitle(string $shortTitle): Page|bool
+    private function getPageByShortTitle(string $shortTitle): ?Page
     {
         $translate = Translate::where('value', '=', $shortTitle)->where('column', '=', 'short_title')->first();  // where('lang', '=', $defaultLang )->first();
         if (empty($translate)) {
-            return false;
+            return null;
         }
 
         // ->where('type', '=', 'inner') //todo why is this condition ? 'published', '=', 1 - is it make sense (see inner page post:/api/pages)? see test: it_will_get_data_page_by_short_title
         $page = $translate->page()->where('published', '=', 1)->first();
         if (empty($page)) {
-            return false;
+            return null;
         }
 
         return $page;
