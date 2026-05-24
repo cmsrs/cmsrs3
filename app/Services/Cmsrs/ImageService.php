@@ -44,9 +44,9 @@ class ImageService extends BaseService
     }
 
     /**
-     * @param  array<int, string>  $allImg
+     * @param  null|array<string, string>  $allImg
      */
-    public static function deleteImagesFromFs(array|bool $allImg): void
+    public static function deleteImagesFromFs(?array $allImg): void
     {
         foreach ($allImg as $path) {
             if (file_exists($path)) {
@@ -109,12 +109,19 @@ class ImageService extends BaseService
     }
 
     /**
-     * @return array<string, string>|false
+     * TODO DTO
+     * @return array<string, string>|null
      *                                     return all thumbs and main img
      */
     public function getAllImage(?object $img, bool $isAbs = true): ?array
     {
         $out = [];
+
+        if (!$img || !isset($img->id)) {
+            return null;
+        }
+
+        /** @var Image|null $objImg */
         $objImg = Image::find($img->id);
         if ($objImg === null) {
             return null;
@@ -422,7 +429,7 @@ class ImageService extends BaseService
     }
 
     /**
-     * @return array{files: array<int, string>, dirs_imgs: array<int, string>}
+     * @return array{files: array<string, string>, dirs_imgs: array<int, string>}
      */
     public function getImagesFsFiles(Page|Product $mObj): array
     {

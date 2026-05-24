@@ -199,7 +199,7 @@ class ConfigService
     /**
      * @return string
      */
-    public static function getDefaultLang()
+    public static function getDefaultLang() : string
     {
         $langs = ConfigService::arrGetLangsEnv();
         if (empty($langs) || empty($langs[0])) {
@@ -239,6 +239,26 @@ class ConfigService
     {
         $lang = request()->cookie(ConfigService::COOKIE_FRONT_LOGIN_LANG_NAME);
 
+        // Normalize array → string (cookie can sometimes be array)
+        if (is_array($lang)) {
+            $lang = $lang[0] ?? null;
+        }
+
+        if ($lang && !in_array($lang, $this->arrGetLangs(), true)) {
+            abort(404);
+        }
+
+        if (empty($lang)) {
+            $lang = $this->getDefaultLang();
+        }
+
+        return (string) $lang;
+    }
+    /*
+    public function getLangFromCookie(): string
+    {
+        $lang = request()->cookie(ConfigService::COOKIE_FRONT_LOGIN_LANG_NAME);
+
         if ($lang && (! in_array($lang, $this->arrGetLangs()))) {
             abort(404);
         }
@@ -248,4 +268,5 @@ class ConfigService
 
         return $lang;
     }
+    */
 }
