@@ -196,10 +196,7 @@ class ConfigService
         return explode(',', config('cmsrs.langs'));
     }
 
-    /**
-     * @return string
-     */
-    public static function getDefaultLang() : string
+    public static function getDefaultLang(): string
     {
         $langs = ConfigService::arrGetLangsEnv();
         if (empty($langs) || empty($langs[0])) {
@@ -244,7 +241,7 @@ class ConfigService
             $lang = $lang[0] ?? null;
         }
 
-        if ($lang && !in_array($lang, $this->arrGetLangs(), true)) {
+        if ($lang && ! in_array($lang, $this->arrGetLangs(), true)) {
             abort(404);
         }
 

@@ -110,14 +110,15 @@ class ImageService extends BaseService
 
     /**
      * TODO DTO
+     *
      * @return array<string, string>|null
-     *                                     return all thumbs and main img
+     *                                    return all thumbs and main img
      */
     public function getAllImage(?object $img, bool $isAbs = true): ?array
     {
         $out = [];
 
-        if (!$img || !isset($img->id)) {
+        if (! $img || ! isset($img->id)) {
             return null;
         }
 

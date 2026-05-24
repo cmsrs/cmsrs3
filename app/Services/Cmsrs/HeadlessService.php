@@ -114,6 +114,14 @@ class HeadlessService extends BaseService
         $j = 0;
         foreach ($menus as $menu) {
             $pagesPublishedAndAccess = $this->pagesPublishedAndAccessNotAuth($menu)->get(); // !! it is different getAllUrlRelatedToMenus in tests
+
+            $urlInMenu[$j] = [
+                'menu_name' => null,
+                'url' => null,
+                'short_title' => null,
+                'page_id' => null,
+                'pages' => [],
+            ];
             if ($pagesPublishedAndAccess->count() == 1) {
                 $pageFirst = $pagesPublishedAndAccess->first();
                 if (! $pageFirst instanceof Page) {  // to avoid phpstan error, but it should not happen
