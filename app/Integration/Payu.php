@@ -106,7 +106,7 @@ class Payu extends Model
     /**
      * @param  array<string, mixed>  $data
      */
-    public function getOrder(array $data): string|bool
+    public function getOrder(array $data): ?string
     {
         $accessToken = $this->getAccessToken();
 
@@ -159,7 +159,7 @@ class Payu extends Model
             $strErr = 'Caught exception: --payu order--'.$e->getMessage();
             Log::error($strErr);
 
-            return false;
+            return null;
         }
 
         return $redirectUri;
