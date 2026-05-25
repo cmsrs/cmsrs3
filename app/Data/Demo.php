@@ -812,8 +812,13 @@ class Demo
             exit('no file: '.$img);
         }
 
-        $type = pathinfo($img, PATHINFO_EXTENSION);
         $data = file_get_contents($img);
+        if ($data === false) {
+            exit('cannot read file: '.$img);
+        }
+
+        $type = pathinfo($img, PATHINFO_EXTENSION);
+
         $base64 = 'data:image/'.$type.';base64,'.base64_encode($data);
 
         return $base64;

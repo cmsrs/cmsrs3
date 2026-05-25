@@ -75,6 +75,13 @@ class ContactController extends Controller
 
             curl_close($ch);
 
+            if (! is_string($server_output)) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'Google recaptcha error',
+                ], 200);
+            }
+
             $googleResponse = json_decode($server_output);
             if (empty($googleResponse->success)) {
                 return response()->json(['success' => false, 'error' => 'Wrong recaptcha'], 200);
