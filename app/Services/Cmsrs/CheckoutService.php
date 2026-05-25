@@ -2,6 +2,7 @@
 
 namespace App\Services\Cmsrs;
 
+use App\Enums\Cmsrs\SortDirection;
 use App\Models\Cmsrs\Basket;
 use App\Models\Cmsrs\Checkout;
 use App\Models\Cmsrs\Product;
@@ -39,14 +40,15 @@ class CheckoutService extends BaseService
     /**
      * @return LengthAwarePaginator<int, mixed>
      */
-    public function getPaginationItems(string $lang, string $column, string $direction, ?string $search)
+    public function getPaginationItems(string $lang, string $column, SortDirection $direction, ?string $search)
     {
+        // $direction = strtolower($direction) === 'desc' ? 'desc' : 'asc';
 
         $search = trim($search ?? '');
 
         $objCheckouts = Checkout::when($search, function ($query, $search) {
             return $query->where('email', 'like', '%'.$search.'%');
-        })->orderBy($column, $direction)->get();
+        })->orderBy($column, $direction->value)->get();
 
         // if($search){
         //     $search = '%'.$search.'%';

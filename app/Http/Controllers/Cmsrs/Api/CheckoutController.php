@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Cmsrs\Api;
 
+use App\Enums\Cmsrs\SortDirection;
 use App\Http\Controllers\Controller;
 use App\Models\Cmsrs\Checkout;
 use App\Services\Cmsrs\CheckoutService;
@@ -57,10 +58,12 @@ class CheckoutController extends Controller
             ], 404);
         }
 
-        if (! in_array($direction, ConfigService::getAvailableSortingDirection())) {
+        $direction = SortDirection::tryFrom($direction);
+
+        if (! $direction) {
             return response()->json([
                 'success' => false,
-                'error' => 'available direction to sort: '.implode(',', ConfigService::getAvailableSortingDirection()),
+                'error' => 'available direction to sort: '.implode(',', SortDirection::values()),
             ], 404);
         }
 

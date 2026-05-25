@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Cmsrs\Api;
 
+use App\Enums\Cmsrs\SortDirection;
 use App\Http\Controllers\Controller;
 use App\Models\Cmsrs\Contact;
 use App\Services\Cmsrs\ConfigService;
@@ -135,10 +136,12 @@ message: '.$data['message'];
             ], 404);
         }
 
-        if (! in_array($direction, ConfigService::getAvailableSortingDirection())) {
+        $directionEnum = SortDirection::tryFrom($direction);
+
+        if (! $directionEnum) {
             return response()->json([
                 'success' => false,
-                'error' => 'available direction to sort: '.implode(',', ConfigService::getAvailableSortingDirection()),
+                'error' => 'available direction to sort: '.implode(',', SortDirection::values()),
             ], 404);
         }
 
@@ -150,7 +153,7 @@ message: '.$data['message'];
                         ->orWhere('message', 'like', $search);
                 });
             })
-            ->orderBy($column, $direction)
+            ->orderBy($column, $directionEnum->value)
             ->paginate($paginationPerPage);
 
         return response()->json(['success' => true, 'data' => $contacts], 200);

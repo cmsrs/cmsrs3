@@ -2,10 +2,11 @@
 
 namespace App\Services\Cmsrs;
 
+use App\Enums\Cmsrs\SortDirection;
 use App\Models\Cmsrs\Basket;
 use App\Models\Cmsrs\Checkout;
-use App\Models\Cmsrs\Page;
 // use App\Models\Cmsrs\Translate;
+use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Product;
 use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\Helpers\CacheService;
@@ -115,7 +116,7 @@ class ProductService extends BaseService
     /**
      * @return LengthAwarePaginator<int, array<string, mixed>>
      */
-    public function getPaginationItems(string $lang, string $column, string $direction, ?string $search): LengthAwarePaginator
+    public function getPaginationItems(string $lang, string $column, SortDirection $direction, ?string $search): LengthAwarePaginator
     {
         $products = (new Product)->with(['translates' => function ($query) use ($lang) {
             $query->where('lang', $lang)->where('column', 'product_name');
@@ -151,7 +152,13 @@ class ProductService extends BaseService
             $products = $products->values(); // reset keys - start from 0
         }
 
-        $products = ($direction == 'desc') ? $products->sortByDesc($column) : $products->sortBy($column);
+        // $products = ($direction == 'desc') ? $products->sortByDesc($column) : $products->sortBy($column);
+        $isDesc = $direction === SortDirection::DESC;
+
+        $products = $isDesc
+            ? $products->sortByDesc($column)
+            : $products->sortBy($column);
+
         $productsPagination = $this->getPaginationFromCollection($products->values()); // values() - reset keys
 
         // For optimization purposes, we only retrieve images for products on the given page.

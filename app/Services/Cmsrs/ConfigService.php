@@ -66,17 +66,6 @@ class ConfigService
         return $this->filePath;
     }
 
-    /**
-     * @return array<int, string>
-     */
-    public static function getAvailableSortingDirection(): array
-    {
-        return [
-            ConfigService::SORT_ASC,
-            ConfigService::SORT_DESC,
-        ];
-    }
-
     public function getIsShop(): bool
     {
         return config('cmsrs.features.shop'); // env('IS_SHOP', true);

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Services\Cmsrs;
 
+use App\Enums\Cmsrs\SortDirection;
 use App\Models\Cmsrs\Contact;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\ContactService;
@@ -181,7 +182,7 @@ class ContactTest extends Base
         $this->assertEquals(404, $response->status());
         $response->assertJson([
             'success' => false,
-            'error' => 'available direction to sort: '.implode(',', ConfigService::getAvailableSortingDirection()),
+            'error' => 'available direction to sort: '.implode(',', SortDirection::values()),
         ]);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Cmsrs\Api;
 
+use App\Enums\Cmsrs\SortDirection;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\Cmsrs\ConfigService;
@@ -51,10 +52,12 @@ class UserController extends Controller
             ], 404);
         }
 
-        if (! in_array($direction, ConfigService::getAvailableSortingDirection())) {
+        $directionEnum = SortDirection::tryFrom($direction);
+
+        if (! $directionEnum) {
             return response()->json([
                 'success' => false,
-                'error' => 'available direction to sort: '.implode(',', ConfigService::getAvailableSortingDirection()),
+                'error' => 'available direction to sort: '.implode(',', SortDirection::values()),
             ], 404);
         }
 
@@ -74,7 +77,7 @@ class UserController extends Controller
             //         ->orWhere('email', 'like', $search);
             //     }
             // })
-            ->orderBy($column, $direction)
+            ->orderBy($column, $directionEnum->value)
             // ->simplePaginate($paginationPerPage)
             ->paginate($paginationPerPage);
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Cmsrs\Api;
 
+use App\Enums\Cmsrs\SortDirection;
 use App\Http\Controllers\Controller;
 use App\Models\Cmsrs\Product;
 use App\Services\Cmsrs\ConfigService;
@@ -70,14 +71,16 @@ class ProductController extends Controller
             ], 404);
         }
 
-        if (! in_array($direction, ConfigService::getAvailableSortingDirection())) {
+        $directionEnum = SortDirection::tryFrom($direction);
+
+        if (! $directionEnum) {
             return response()->json([
                 'success' => false,
-                'error' => 'available direction to sort: '.implode(',', ConfigService::getAvailableSortingDirection()),
+                'error' => 'available direction to sort: '.implode(',', SortDirection::values()),
             ], 404);
         }
 
-        $products = $this->productService->getPaginationItems($lang, $column, $direction, $search);
+        $products = $this->productService->getPaginationItems($lang, $column, $directionEnum, $search);
 
         return response()->json(['success' => true, 'data' => $products], 200);
     }

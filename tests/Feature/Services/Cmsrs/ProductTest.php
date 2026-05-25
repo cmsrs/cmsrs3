@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Services\Cmsrs;
 
+use App\Enums\Cmsrs\SortDirection;
 use App\Models\Cmsrs\Basket;
 use App\Models\Cmsrs\Checkout;
 use App\Models\Cmsrs\Content;
@@ -2039,7 +2040,7 @@ class ProductTest extends Base
         $this->assertEquals(404, $response->status());
         $response->assertJson([
             'success' => false,
-            'error' => 'available direction to sort: '.implode(',', ConfigService::getAvailableSortingDirection()),
+            'error' => 'available direction to sort: '.implode(',', SortDirection::values()),
         ]);
     }
 
@@ -2302,7 +2303,7 @@ class ProductTest extends Base
         $this->assertEquals(404, $response->status());
         $response->assertJson([
             'success' => false,
-            'error' => 'available direction to sort: '.implode(',', ConfigService::getAvailableSortingDirection()),
+            'error' => 'available direction to sort: '.implode(',', SortDirection::values()),
         ]);
     }
 
