@@ -45,8 +45,8 @@ class ImageController extends Controller
             return response()->json(['success' => false, 'error' => 'refId must be numeric'], 400);
         }
 
-        $strObj = '\\App\\Models\\Cmsrs\\'.ucfirst($type);
-        $obj = (new $strObj)->find($refId);
+        $modelClass = '\\App\\Models\\Cmsrs\\'.ucfirst($type);
+        $obj = $modelClass::find($refId);
         if (empty($obj)) {
             return response()->json(['success' => false, 'error' => 'obj not found'], 404);
         }
