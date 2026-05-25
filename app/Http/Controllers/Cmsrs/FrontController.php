@@ -9,7 +9,6 @@ use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\DeliverService;
-use App\Services\Cmsrs\Helpers\CacheService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\PaymentService;
@@ -253,37 +252,19 @@ class FrontController extends Controller
         return view('cmsrs.index', $data);
     }
 
-    public function getPageLangs(?string $lang, string $menuSlug, ?string $pageSlug = null, ?string $productSlug = null): View
+    public function getPageLangs(string $lang, string $menuSlug, ?string $pageSlug = null, ?string $productSlug = null): View
     {
-        $data = $this->getPage($menuSlug, $pageSlug, $productSlug, $lang);
+        $data = $this->getPageData($lang, $menuSlug, $pageSlug, $productSlug);
 
         return view($data['view'], $data);
     }
 
     /**
-     * @return View|array<string, mixed>
+     * @return array<string, mixed>
      */
-    public function getPage(?string $menuSlug, ?string $pageSlug = null, ?string $productSlug = null, ?string $lang = null): View|array
+    private function getPageData(string $lang, string $menuSlug, ?string $pageSlug = null, ?string $productSlug = null): array
     {
-        if (empty($lang)) {
-            $manyLangs = false;
-            $lang = $this->langs[0];
-        } else {
-            $manyLangs = true;
-        }
-        App::setLocale($lang);
-
-        $menus = $this->menus;
-
-        $isCache = $this->configService->isCacheEnable();
-        if ($isCache) {
-            $pageOut = cache()->remember('page_'.$menuSlug.'_'.$pageSlug.'_'.$lang, CacheService::setTime(), function () use ($menus, $menuSlug, $pageSlug, $lang) {
-                return $this->pageService->getPageBySlug($menus, $menuSlug, $pageSlug, $lang);
-            });
-        } else {
-            $pageOut = $this->pageService->getPageBySlug($menus, $menuSlug, $pageSlug, $lang);
-        }
-
+        $pageOut = $this->pageService->getPageBySlugCache($this->menus, $menuSlug, $pageSlug, $lang);
         $this->validatePage($pageOut);
 
         $data = $this->pageService->getDataToView($pageOut, [
@@ -301,26 +282,26 @@ class FrontController extends Controller
                 abort(404);
             }
 
-            $urls = $this->productService->getProductUrls($product);
-            $data['url_category'] = $urls['url_category'];
-            // $data['url_product'] = $urls['url_product'];
-            $product = $this->productService->getProductDataByProductArr($product);
-            $data['product'] = $product;
-            $data['h1'] = $product['product_name'][$lang];
-            $data['product_name'] = $product['product_name'];
-            $data['product_name_slug'] = $product['product_name_slug'];
-            $data['page_title'] = $product['product_name'][$lang] ?? config('app.name', 'cmsRS');
-            $data['seo_description'] = $product['product_description'][$lang] ?? config('app.name', 'cmsRS');
+            $productDataArr = $this->productService->getProductData($product, $lang);
+            $data = array_merge($data, $productDataArr);
         }
 
-        if ($manyLangs) {
-            return $data;
+        return $data;
+    }
+
+    public function getPage(?string $menuSlug, ?string $pageSlug = null, ?string $productSlug = null, ?string $lang = null): View
+    {
+        if (empty($lang)) {
+            $lang = $this->langs[0];
         }
+        App::setLocale($lang);
+
+        $data = $this->getPageData($lang, $menuSlug, $pageSlug, $productSlug);
 
         return view($data['view'], $data);
     }
 
-    public function getSeparatePageLangs(?string $lang, string $pageSlug): View
+    public function getSeparatePageLangs(string $lang, string $pageSlug): View
     {
         $data = $this->getSeparatePage($pageSlug, $lang);
 

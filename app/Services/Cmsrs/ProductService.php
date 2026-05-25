@@ -42,6 +42,26 @@ class ProductService extends BaseService
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    public function getProductData(Product $product, string $lang): array
+    {
+        $data = [];
+        $urls = $this->getProductUrls($product);
+        $data['url_category'] = $urls['url_category'];
+        // $data['url_product'] = $urls['url_product'];
+        $productArr = $this->getProductDataByProductArr($product);
+        $data['product'] = $productArr;
+        $data['h1'] = $productArr['product_name'][$lang];
+        $data['product_name'] = $productArr['product_name'];
+        $data['product_name_slug'] = $productArr['product_name_slug'];
+        $data['page_title'] = $productArr['product_name'][$lang] ?? config('app.name', 'cmsRS');
+        $data['seo_description'] = $productArr['product_description'][$lang] ?? config('app.name', 'cmsRS');
+
+        return $data;
+    }
+
+    /**
      * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
