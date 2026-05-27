@@ -157,6 +157,9 @@ class PageService extends BaseService
         return $pageOut;
     }
 
+    /**
+     * @param  Collection<int, Menu>  $menus
+     */
     public function getPageBySlugCache(Collection $menus, string $menuSlug, ?string $pageSlug, string $lang): ?Page
     {
         $isCache = $this->configService->isCacheEnable();
