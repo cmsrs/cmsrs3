@@ -37,40 +37,6 @@ class PageService extends BaseService
         return $ret;
     }
 
-    public function getPageData(Page $page, ?string $menuSlug, ?string $pageSlug = null, ?string $productSlug = null, ?string $lang = null): array
-    {
-        $menus = $this->menuService->getMenu();
-
-        $data = $this->getDataToView($page, [
-            'lang' => $lang,
-            'langs' => $this->langs,
-            'menus' => $menus,
-        ]);
-
-        if ($productSlug) { // product page
-            $product = $this->productService->getProductBySlug($productSlug, $lang);
-            if (empty($product)) {
-                abort(404);
-            }
-            if (empty($product->published)) {
-                abort(404);
-            }
-
-            $urls = $this->productService->getProductUrls($product);
-            $data['url_category'] = $urls['url_category'];
-            // $data['url_product'] = $urls['url_product'];
-            $product = $this->productService->getProductDataByProductArr($product);
-            $data['product'] = $product;
-            $data['h1'] = $product['product_name'][$lang];
-            $data['product_name'] = $product['product_name'];
-            $data['product_name_slug'] = $product['product_name_slug'];
-            $data['page_title'] = $product['product_name'][$lang] ?? config('app.name', 'cmsRS');
-            $data['seo_description'] = $product['product_description'][$lang] ?? config('app.name', 'cmsRS');
-        }
-
-        return $data;
-    }
-
     public function getPageDataByShortTitle(string $shortTitle, string $data = 'content', ?string $lang = null): ?string
     {
         if (! in_array($data, ['content', 'title', 'images', 'url'])) {
