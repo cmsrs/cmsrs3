@@ -256,6 +256,10 @@ class FrontController extends Controller
     {
         $data = $this->getPageData($lang, $menuSlug, $pageSlug, $productSlug);
 
+        if (!isset($data['view'])) {
+            abort(500, 'array key view is not set in data to view');
+        }
+
         return view($data['view'], $data);
     }
 
@@ -304,6 +308,10 @@ class FrontController extends Controller
     public function getSeparatePageLangs(string $lang, string $pageSlug): View
     {
         $data = $this->getSeparatePage($pageSlug, $lang);
+
+        if (!isset($data['view'])) {
+            abort(500, 'array key view is not set in data to view');
+        }
 
         return view($data['view'], $data);
     }
