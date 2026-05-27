@@ -338,9 +338,6 @@ class FrontController extends Controller
         return view($data['view'], $data);
     }
 
-    /**
-     * @return View|array<string, mixed>
-     */
     public function getSeparatePage(string $pageSlug): View
     {
         $lang = $this->validateLangs();
