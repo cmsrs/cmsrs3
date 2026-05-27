@@ -43,9 +43,9 @@ if (empty($langs) || (count($langs) == 1)) {
         Route::get('/checkout', [FrontController::class, 'checkout'])->name('checkout');
     }
 
-    Route::get('/'.Page::PREFIX_CMS_ONE_PAGE_IN_MENU_URL.'/{menuSlug}', [FrontController::class, 'getPage'])->where('lang', $langRegex);
-    Route::get('/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}/{productSlug?}', [FrontController::class,  'getPage'])->where('lang', $langRegex);
-    Route::get('/'.Page::PREFIX_IN_URL.'/{pageSlug}', [FrontController::class,  'getSeparatePage'])->where('lang', $langRegex);
+    Route::get('/'.Page::PREFIX_CMS_ONE_PAGE_IN_MENU_URL.'/{menuSlug}', [FrontController::class, 'getPage']);
+    Route::get('/'.Page::PREFIX_CMS_URL.'/{menuSlug}/{pageSlug}/{productSlug?}', [FrontController::class,  'getPage']);
+    Route::get('/'.Page::PREFIX_IN_URL.'/{pageSlug}', [FrontController::class,  'getSeparatePage']);
 } else {
     if ($isShop) {
         Route::get('/{lang}/shoppingsuccess', [FrontController::class, 'shoppingsuccess'])->where('lang', $langRegex)->name('shoppingsuccess');

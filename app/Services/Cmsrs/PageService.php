@@ -143,6 +143,20 @@ class PageService extends BaseService
         return array_merge($data, $dataIn);
     }
 
+    public function getSeparatePageBySlug(string $pageSlug, string $lang): ?Page
+    {
+        $pageOut = null;
+        $pages = Page::all();
+        foreach ($pages as $page) {
+            if ($this->getSlugByLang($page, $lang) == $pageSlug) {
+                $pageOut = $page;
+                break;
+            }
+        }
+
+        return $pageOut;
+    }
+
     public function getPageBySlugCache(Collection $menus, string $menuSlug, ?string $pageSlug, string $lang): ?Page
     {
         $isCache = $this->configService->isCacheEnable();

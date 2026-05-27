@@ -61,7 +61,7 @@ class FrontController extends Controller
         }
     }
 
-    private function validateLangs(?string $lang): string
+    private function validateLangs(?string $lang = null): string
     {
         if (empty($lang)) {
             $lang = $this->langs[0];
@@ -252,17 +252,6 @@ class FrontController extends Controller
         return view('cmsrs.index', $data);
     }
 
-    public function getPageLangs(string $lang, string $menuSlug, ?string $pageSlug = null, ?string $productSlug = null): View
-    {
-        $data = $this->getPageData($lang, $menuSlug, $pageSlug, $productSlug);
-
-        if (!isset($data['view'])) {
-            abort(500, 'array key view is not set in data to view');
-        }
-
-        return view($data['view'], $data);
-    }
-
     /**
      * @return array<string, mixed>
      */
@@ -293,51 +282,14 @@ class FrontController extends Controller
         return $data;
     }
 
-    public function getPage(?string $menuSlug, ?string $pageSlug = null, ?string $productSlug = null, ?string $lang = null): View
-    {
-        if (empty($lang)) {
-            $lang = $this->langs[0];
-        }
-        App::setLocale($lang);
-
-        $data = $this->getPageData($lang, $menuSlug, $pageSlug, $productSlug);
-
-        return view($data['view'], $data);
-    }
-
-    public function getSeparatePageLangs(string $lang, string $pageSlug): View
-    {
-        $data = $this->getSeparatePage($pageSlug, $lang);
-
-        if (!isset($data['view'])) {
-            abort(500, 'array key view is not set in data to view');
-        }
-
-        return view($data['view'], $data);
-    }
-
     /**
-     * @param  string  $pageSlug
-     * @return View|array<string, mixed>
+     * @return array<string, mixed>
      */
-    public function getSeparatePage($pageSlug, ?string $lang = null): View|array
+    private function getSeparatePageData(string $lang, string $pageSlug): array
     {
-        if (empty($lang)) {
-            $manyLangs = false;
-            $lang = $this->langs[0];
-        } else {
-            $manyLangs = true;
-        }
-        App::setLocale($lang);
 
-        $pageOut = null;
-        $pages = Page::all();
-        foreach ($pages as $page) {
-            if ($this->pageService->getSlugByLang($page, $lang) == $pageSlug) {
-                $pageOut = $page;
-                break;
-            }
-        }
+        $pageOut = $this->pageService->getSeparatePageBySlug($pageSlug, $lang);
+
         $this->validatePage($pageOut);
 
         $data = $this->pageService->getDataToView($pageOut, [
@@ -346,8 +298,56 @@ class FrontController extends Controller
             'menus' => $this->menus,
         ]);
 
-        if ($manyLangs) {
-            return $data;
+        return $data;
+    }
+
+    public function getPageLangs(string $lang, string $menuSlug, ?string $pageSlug = null, ?string $productSlug = null): View
+    {
+        $lang = $this->validateLangs($lang);
+        $data = $this->getPageData($lang, $menuSlug, $pageSlug, $productSlug);
+
+        if (! isset($data['view'])) {
+            abort(500, 'array key view is not set in data to view');
+        }
+
+        return view($data['view'], $data);
+    }
+
+    public function getPage(?string $menuSlug, ?string $pageSlug = null, ?string $productSlug = null): View
+    {
+
+        $lang = $this->validateLangs();
+        $data = $this->getPageData($lang, $menuSlug, $pageSlug, $productSlug);
+
+        if (! isset($data['view'])) {
+            abort(500, 'array key view is not set in data to view');
+        }
+
+        return view($data['view'], $data);
+    }
+
+    public function getSeparatePageLangs(string $lang, string $pageSlug): View
+    {
+        $lang = $this->validateLangs($lang);
+        $data = $this->getSeparatePageData($lang, $pageSlug);
+
+        if (! isset($data['view'])) {
+            abort(500, 'array key view is not set in data to view');
+        }
+
+        return view($data['view'], $data);
+    }
+
+    /**
+     * @return View|array<string, mixed>
+     */
+    public function getSeparatePage(string $pageSlug): View
+    {
+        $lang = $this->validateLangs();
+        $data = $this->getSeparatePageData($lang, $pageSlug);
+
+        if (! isset($data['view'])) {
+            abort(500, 'array key view is not set in data to view - langs');
         }
 
         return view($data['view'], $data);
