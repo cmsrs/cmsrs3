@@ -44,7 +44,7 @@ class ImageService extends BaseService
     }
 
     /**
-     * @param  null|array<string, string>  $allImg
+     * @param  null|array<array-key, string>  $allImg
      */
     public static function deleteImagesFromFs(?array $allImg): void
     {
@@ -155,7 +155,7 @@ class ImageService extends BaseService
     }
 
     /**
-     * @param  array<int, array{id?: int, name?: string, alt?: string, data?: mixed}>  $images
+     * @param  array<int, array{id?: int, name: string, alt?: array<string, string>, data: string}>  $images
      */
     public function createImagesAndUpdateAlt(array $images, string $type, int $refId): bool
     {
@@ -182,7 +182,7 @@ class ImageService extends BaseService
     }
 
     /**
-     * @param  array<int, array{id: int, alt?: string, position?: int}>  $images
+     * @param  array<int, array{id: int, alt?: array<string, string>, position?: int}>  $images
      */
     public function updateImages(array $images): void
     {
@@ -214,7 +214,7 @@ class ImageService extends BaseService
     }
 
     /**
-     * @param  array<int, array{name: string, alt?: string}>  $images
+     * @param  array<int, array{ name: string, data: string, alt?: array<string, string> }>  $images
      * @return array<int, string>
      */
     private function sanitizeNameImages(array $images): array
@@ -240,7 +240,7 @@ class ImageService extends BaseService
     }
 
     /**
-     * @param  array<int, array{name: string, data: mixed, alt?: string}>  $images
+     * @param  array<int, array{ name: string, data: string, alt?: array<string, string> }>  $images
      * @return array<int, Image>
      */
     public function createImages(array $images, string $type, int $refId): array
@@ -430,7 +430,7 @@ class ImageService extends BaseService
     }
 
     /**
-     * @return array{files: array<string, string>, dirs_imgs: array<int, string>}
+     * @return array{files: array<int, string>, dirs_imgs: array<int, string>}
      */
     public function getImagesFsFiles(Page|Product $mObj): array
     {

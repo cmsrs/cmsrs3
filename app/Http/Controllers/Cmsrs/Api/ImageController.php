@@ -51,7 +51,10 @@ class ImageController extends Controller
             return response()->json(['success' => false, 'error' => 'obj not found'], 404);
         }
 
-        $dataImage = $request->only('data', 'name');
+        $dataImage = [
+            'name' => (string) $request->input('name'),
+            'data' => (string) $request->input('data'),
+        ];
         try {
             $this->imageService->createImages([$dataImage], $type, $obj->id); //  (int)$refId);
         } catch (\Exception $e) {
