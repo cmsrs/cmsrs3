@@ -113,7 +113,6 @@ class ImageService extends BaseService
     }
 
     /**
-     *
      * @return array<string, string>|null
      *                                    return all thumbs and main img
      */
@@ -328,7 +327,7 @@ class ImageService extends BaseService
     /**
      * @return array<string, string>
      */
-    public function getAltImg(object $objImg): array
+    public function getAltImg(Image $objImg): array
     {
         $out = [];
         $translates = $objImg->translates->toArray();
