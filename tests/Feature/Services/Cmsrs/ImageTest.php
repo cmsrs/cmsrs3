@@ -261,7 +261,8 @@ class ImageTest extends Base
         $i = 0;
         $ImagesInFs = [];
         foreach ($resAllBefore->data as $img) {
-            $imagesFs = app(ImageService::class)->getAllImage($img);
+            $imgDb = Image::find($img->id);
+            $imagesFs = app(ImageService::class)->getAllImage($imgDb);
             $j = 0;
             foreach ($imagesFs as $imgFs) {
                 $ImagesInFs[$i][$j] = $imgFs;
@@ -308,8 +309,8 @@ class ImageTest extends Base
         $this->assertEmpty($resAllImgAfter->data);
 
         foreach ($resAllBefore->data as $img) {
-            $imagesFs = app(ImageService::class)->getAllImage($img);
-            $this->assertNull($imagesFs); // because object not exist
+            $imgDb = Image::find($img->id);
+            $this->assertNull($imgDb);
         }
 
         $ii = 0;

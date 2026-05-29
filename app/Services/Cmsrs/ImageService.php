@@ -76,6 +76,10 @@ class ImageService extends BaseService
     {
         $img = $this->getAllImage($mImage, false);
 
+        if (! isset($img[$type])) {
+            throw new \Exception("Image type not found: $type");
+        }
+
         return $img[$type];
     }
 
@@ -109,28 +113,18 @@ class ImageService extends BaseService
     }
 
     /**
-     * TODO DTO
      *
      * @return array<string, string>|null
      *                                    return all thumbs and main img
      */
-    public function getAllImage(?object $img, bool $isAbs = true): ?array
+    public function getAllImage(Image $img, bool $isAbs = true): ?array
     {
-        $out = [];
 
-        if (! $img || ! isset($img->id)) {
-            return null;
-        }
-
-        /** @var Image|null $objImg */
-        $objImg = Image::find($img->id);
-        if ($objImg === null) {
-            return null;
-        }
-        $imgDir = self::getImgDir($objImg, $isAbs);
+        $imgDir = self::getImgDir($img, $isAbs);
         $fileName = pathinfo($img->name, PATHINFO_FILENAME);
         $fileExt = pathinfo($img->name, PATHINFO_EXTENSION);
 
+        $out = [];
         $out[Image::IMAGE_ORG] = $imgDir.'/'.$img->name;
         foreach (array_keys(Image::$thumbs) as $imgName) {
             $out[$imgName] = $imgDir.'/'.$fileName.'-'.$imgName.'.'.$fileExt;
