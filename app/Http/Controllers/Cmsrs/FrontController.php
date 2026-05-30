@@ -55,7 +55,11 @@ class FrontController extends Controller
         if (empty($page)) {
             abort(404);
         }
+        $this->checkAuth($page);
+    }
 
+    private function checkAuth(?Page $page): void
+    {
         if (! $this->pageService->checkAuth($page)) {
             abort(401);
         }
@@ -129,6 +133,10 @@ class FrontController extends Controller
 
     public function checkout(Request $request, ?string $lang = null): View
     {
+        if (! Auth::check()) {
+            abort(401);
+        }
+
         $lang = $this->validateLangs($lang);
 
         App::setLocale($lang);
@@ -151,6 +159,11 @@ class FrontController extends Controller
 
     public function postCheckout(Request $request): RedirectResponse|JsonResponse
     {
+        if (! Auth::check()) {
+            abort(401);
+        }
+        $user = Auth::user();
+
         $lang = $request->input('lang');
         $this->validateLang($lang);
         App::setLocale($lang);
@@ -187,7 +200,7 @@ class FrontController extends Controller
             'productsDataAndTotalAmount' => $productsDataAndTotalAmount,
             'checkout' => $checkout,
             'objCheckout' => $objCheckout
-        ] = $this->productService->saveCheckout($data, (Auth::check() ? Auth::user()->id : null), session()->getId());
+        ] = $this->productService->saveCheckout($data, $user->id, session()->getId());
 
         if ($data['payment'] == PaymentService::KEY_PAYU) {
             // redirect to payU

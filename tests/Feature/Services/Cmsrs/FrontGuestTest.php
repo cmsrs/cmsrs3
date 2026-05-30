@@ -459,7 +459,7 @@ class FrontGuestTest extends Base
         $response3->assertStatus(200);
     }
 
-    public function test_it_launches_post_login_page_302()
+    private function make_auth_and_tests()
     {
         $this->createClientUser();
         $data = [
@@ -473,6 +473,11 @@ class FrontGuestTest extends Base
 
         $redirectUrl = $response->headers->get('Location');
         $this->assertEquals('http://localhost/home', $redirectUrl);
+    }
+
+    public function test_it_launches_post_login_page_302()
+    {
+        $this->make_auth_and_tests();
     }
 
     public function test_it_launches_post_register_page_302()
@@ -490,5 +495,30 @@ class FrontGuestTest extends Base
 
         $redirectUrl = $response->headers->get('Location');
         $this->assertEquals('http://localhost/home', $redirectUrl);
+    }
+
+    public function test_checkout_not_auth_401()
+    {
+        $response = $this->get('/checkout');
+        $response->assertStatus(401);
+    }
+
+    public function test_checkout_auth_200()
+    {
+        $this->make_auth_and_tests();
+        $response = $this->get('/checkout');
+        $response->assertStatus(200);
+    }
+
+    public function test_post_checkout_not_auth_401()
+    {
+        $response = $this->post('/post/checkout');
+        $response->assertStatus(401);
+    }
+
+    public function test_post_checkout_not_auth_get_request()
+    {
+        $response = $this->get('/post/checkout');
+        $response->assertStatus(405); // wrong method (should be post not get)
     }
 }
