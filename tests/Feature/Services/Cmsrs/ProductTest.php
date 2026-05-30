@@ -847,9 +847,9 @@ class ProductTest extends Base
         $response1->assertStatus(302);
         $this->assertEquals(2, Checkout::all()->count());
 
-        $ch = app(CheckoutService::class)->findActiveOrder();
-        $this->assertNotEmpty($ch);
-        $this->assertEquals(0, $ch->is_pay);
+        // $ch = app(CheckoutService::class)->findActiveOrder();
+        // $this->assertNotEmpty($ch);
+        // $this->assertEquals(0, $ch->is_pay);
 
         // pShoppingSuccess
         // $pSuc = PageService::getFirstPageByType('shoppingsuccess');

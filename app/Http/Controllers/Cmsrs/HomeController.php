@@ -71,7 +71,7 @@ class HomeController extends Controller
             $this->productService->getDataToPayment($arrOrdersReindex, $baskets, $orders);
         }
 
-        $objCheckouts = $this->checkoutService->findActiveOrders()->get();
+        $objCheckouts = $this->checkoutService->findActiveOrdersForUser($user->id);
         $checkouts = $this->checkoutService->printCheckouts($objCheckouts, $lang);
 
         $data = [

@@ -8,33 +8,21 @@ use App\Models\Cmsrs\Checkout;
 use App\Models\Cmsrs\Product;
 use App\Services\Cmsrs\Helpers\PriceHelperService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Collection;
 
 class CheckoutService extends BaseService
 {
     public function __construct(private ProductService $productService, private PriceHelperService $priceHelperService) {}
 
-    public function findActiveOrder(): ?Checkout
-    {
-        $orders = $this->findActiveOrders();
-
-        return $orders?->first();
-    }
-
     /**
-     * @return Builder<Checkout>|null
-     */
-    public function findActiveOrders(): ?Builder
+    * @return Collection<int, Checkout>
+    */
+    public function findActiveOrdersForUser(int $userId): Collection
     {
-        $user = Auth::user();
-        if (! $user) {
-            return null;
-        }
-
-        // where('session_id', '=', $sessionId)->
-        return Checkout::where('user_id', '=', $user->id)->where('is_pay', '=', 0);
+        return Checkout::query()
+            ->where('user_id', $userId)
+            ->where('is_pay', 0)
+            ->get();
     }
 
     /**
