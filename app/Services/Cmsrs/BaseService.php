@@ -56,20 +56,30 @@ abstract class BaseService
     public function pagesPublishedTree(Collection $pagesByMenu)
     {
         $tree = [];
+
         foreach ($pagesByMenu as $page) {
-            if (empty($page->page_id)) {
+            if ($page->page_id === null) {
                 $tree[$page->id] = $page;
             }
         }
 
         foreach ($pagesByMenu as $page) {
-            if (! empty($page->page_id)) {
-                $children = empty($tree[$page->page_id]['children']) ? [] : $tree[$page->page_id]['children'];
-                array_push($children, $page);
-                if (! empty($tree[$page->page_id])) {
-                    $tree[$page->page_id]->setAttribute('children', $children);
-                }
+            if ($page->page_id === null) {
+                continue;
             }
+
+            $parentId = $page->page_id;
+
+            if (!isset($tree[$parentId])) {
+                continue;
+            }
+
+            $parent = $tree[$parentId];
+
+            $children = $parent->children ?? [];
+            $children[] = $page;
+
+            $parent->setAttribute('children', $children);
         }
 
         return $tree;
