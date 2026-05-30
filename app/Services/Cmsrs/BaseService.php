@@ -70,7 +70,7 @@ abstract class BaseService
 
             $parentId = $page->page_id;
 
-            if (!isset($tree[$parentId])) {
+            if (! isset($tree[$parentId])) {
                 continue;
             }
 

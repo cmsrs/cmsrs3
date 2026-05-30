@@ -15,8 +15,8 @@ class CheckoutService extends BaseService
     public function __construct(private ProductService $productService, private PriceHelperService $priceHelperService) {}
 
     /**
-    * @return Collection<int, Checkout>
-    */
+     * @return Collection<int, Checkout>
+     */
     public function findActiveOrdersForUser(int $userId): Collection
     {
         return Checkout::query()
@@ -76,13 +76,13 @@ class CheckoutService extends BaseService
         $out = [];
         $out['id'] = $checkout->id;
         $out['price_total'] = $checkout->price_total;
-        $out['price_total_description'] = $this->priceHelperService->getPriceDescriptionWrap($checkout->price_total);
+        $out['price_total_description'] = $this->priceHelperService->getPriceDescriptionWrap((int) ($checkout->price_total ?? 0)); // phpstan8
 
         $out['price_deliver'] = $checkout->price_deliver;
-        $out['price_deliver_description'] = $this->priceHelperService->getPriceDescriptionWrap($checkout->price_deliver);
+        $out['price_deliver_description'] = $this->priceHelperService->getPriceDescriptionWrap((int) ($checkout->price_deliver ?? 0));
 
         $out['price_total_add_deliver'] = $checkout->price_total_add_deliver;
-        $out['price_total_add_deliver_description'] = $this->priceHelperService->getPriceDescriptionWrap($checkout->price_total_add_deliver);
+        $out['price_total_add_deliver_description'] = $this->priceHelperService->getPriceDescriptionWrap((int) ($checkout->price_total_add_deliver ?? 0));
 
         $out['user_id'] = $checkout->user_id;
         $out['email'] = $checkout->email;
@@ -126,7 +126,7 @@ class CheckoutService extends BaseService
             $out[$j]['qty'] = $basket->qty;
 
             $out[$j]['price'] = $basket->price;
-            $out[$j]['price_description'] = $this->priceHelperService->getPriceDescriptionWrap($basket->price);
+            $out[$j]['price_description'] = $this->priceHelperService->getPriceDescriptionWrap((int) ($basket->price ?? 0));
 
             $out[$j]['product_id'] = $basket['product_id'];
             $out[$j]['product_name'] = $productName;
