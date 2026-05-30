@@ -47,18 +47,17 @@ class FrontController extends Controller
         $this->langs = $this->configService->arrGetLangs();
     }
 
-    /**
-     * @return void
-     */
-    private function validatePage(?Page $page)
+    private function validatePage(?Page $page): Page
     {
         if (empty($page)) {
             abort(404);
         }
         $this->checkAuth($page);
+
+        return $page;
     }
 
-    private function checkAuth(?Page $page): void
+    private function checkAuth(Page $page): void
     {
         if (! $this->pageService->checkAuth($page)) {
             abort(401);
@@ -163,6 +162,9 @@ class FrontController extends Controller
             abort(401);
         }
         $user = Auth::user();
+        if (empty($user)) { // phpstan8 - fix - it is useless because of Auth::check()
+            abort(401);
+        }
 
         $lang = $request->input('lang');
         $this->validateLang($lang);
@@ -246,8 +248,9 @@ class FrontController extends Controller
         // it make sense only for payU - it my opinion
         $isNewOrders = false; // Order::copyDataFromBasketToOrderForUser();
 
-        $page = $this->pageService->getMainPage();
-        $this->validatePage($page);
+        $page = $this->validatePage( // phpstan8
+            $this->pageService->getMainPage()
+        );
 
         // slider_main
         $sliderDataImages = $this->pageService->getPageDataByShortTitleCache('main_page_slider', 'images');
@@ -270,8 +273,9 @@ class FrontController extends Controller
      */
     private function getPageData(string $lang, string $menuSlug, ?string $pageSlug = null, ?string $productSlug = null): array
     {
-        $pageOut = $this->pageService->getPageBySlugCache($this->menus, $menuSlug, $pageSlug, $lang);
-        $this->validatePage($pageOut);
+        $pageOut = $this->validatePage(
+            $this->pageService->getPageBySlugCache($this->menus, $menuSlug, $pageSlug, $lang)
+        );
 
         $data = $this->pageService->getDataToView($pageOut, [
             'lang' => $lang,
@@ -300,10 +304,9 @@ class FrontController extends Controller
      */
     private function getSeparatePageData(string $lang, string $pageSlug): array
     {
-
-        $pageOut = $this->pageService->getSeparatePageBySlug($pageSlug, $lang);
-
-        $this->validatePage($pageOut);
+        $pageOut = $this->validatePage(
+            $this->pageService->getSeparatePageBySlug($pageSlug, $lang)
+        );
 
         $data = $this->pageService->getDataToView($pageOut, [
             'lang' => $lang,
@@ -326,7 +329,7 @@ class FrontController extends Controller
         return view($data['view'], $data);
     }
 
-    public function getPage(?string $menuSlug, ?string $pageSlug = null, ?string $productSlug = null): View
+    public function getPage(string $menuSlug, ?string $pageSlug = null, ?string $productSlug = null): View
     {
 
         $lang = $this->validateLangs();
