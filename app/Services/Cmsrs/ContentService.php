@@ -97,12 +97,17 @@ class ContentService extends BaseService
      */
     public function updateRow(array $row): bool
     {
-        $obj = false;
+        $query = Content::query()
+            ->where('column', $row['column'])
+            ->where('lang', $row['lang']);
+
         if (! empty($row['page_id'])) {
-            $obj = Content::where('page_id', $row['page_id'])->where('column', $row['column'])->where('lang', $row['lang'])->first();
+            $query->where('page_id', $row['page_id']);
         } elseif (! empty($row['product_id'])) {
-            $obj = Content::where('product_id', $row['product_id'])->where('column', $row['column'])->where('lang', $row['lang'])->first();
+            $query->where('product_id', $row['product_id']);
         }
+
+        $obj = $query->first();
 
         $this->wrapTranslateUpdate($obj, $row);
 
@@ -126,12 +131,16 @@ class ContentService extends BaseService
      * @param  array<string, mixed>  $row
      *                                     DRY!!: ContentService.php and TranslateService.php
      */
-    protected function wrapTranslateUpdate(Content|false $obj, array $row): void
+    protected function wrapTranslateUpdate(?Content $obj, array $row): void
     {
-        if ($obj) {
-            $obj->update(['value' => $row['value']]);
-        } else {
+        if ($obj === null) {
             $this->createRow($row);
+
+            return;
         }
+
+        $obj->update([
+            'value' => $row['value'],
+        ]);
     }
 }

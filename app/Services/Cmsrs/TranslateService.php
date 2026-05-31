@@ -102,16 +102,21 @@ class TranslateService extends BaseService
      */
     public function updateRow(array $row): bool
     {
-        $obj = false;
+        $query = Translate::query()
+            ->where('column', $row['column'])
+            ->where('lang', $row['lang']);
+
         if (! empty($row['menu_id'])) {
-            $obj = Translate::where('menu_id', $row['menu_id'])->where('column', $row['column'])->where('lang', $row['lang'])->first();
+            $query->where('menu_id', $row['menu_id']);
         } elseif (! empty($row['page_id'])) {
-            $obj = Translate::where('page_id', $row['page_id'])->where('column', $row['column'])->where('lang', $row['lang'])->first();
+            $query->where('page_id', $row['page_id']);
         } elseif (! empty($row['image_id'])) {
-            $obj = Translate::where('image_id', $row['image_id'])->where('column', $row['column'])->where('lang', $row['lang'])->first();
+            $query->where('image_id', $row['image_id']);
         } elseif (! empty($row['product_id'])) {
-            $obj = Translate::where('product_id', $row['product_id'])->where('column', $row['column'])->where('lang', $row['lang'])->first();
+            $query->where('product_id', $row['product_id']);
         }
+
+        $obj = $query->first();
 
         $this->wrapTranslateUpdate($obj, $row);
 
@@ -122,12 +127,16 @@ class TranslateService extends BaseService
      * @param  array<string, mixed>  $row
      *                                     DRY!!: ContentService.php and TranslateService.php
      */
-    protected function wrapTranslateUpdate(Translate|false $obj, $row): void
+    protected function wrapTranslateUpdate(?Translate $obj, array $row): void
     {
-        if ($obj) {
-            $obj->update(['value' => $row['value']]);
-        } else {
+        if ($obj === null) {
             $this->createRow($row);
+
+            return;
         }
+
+        $obj->update([
+            'value' => $row['value'],
+        ]);
     }
 }
