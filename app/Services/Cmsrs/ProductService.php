@@ -156,7 +156,7 @@ class ProductService extends BaseService
             $product->setAttribute('page_short_title', $pageShortTitle);
             unset($product['translatesPage']);
 
-            $priceDescription = $this->priceHelperService->getPriceDescriptionWrap($product->price);
+            $priceDescription = $this->priceHelperService->getPriceDescriptionWrap($product->price ?? 0);
             $product->setAttribute('price_description', $priceDescription);
         });
 
@@ -165,7 +165,7 @@ class ProductService extends BaseService
             $products = $products->filter(function ($product) use ($search) {
                 $productName = $product->getAttribute('product_name');
                 $productNameContainsSearch = $productName !== null && str_contains(trim($productName), $search);
-                $skuContainsSearch = str_contains(trim($product->sku), $search);
+                $skuContainsSearch = $product->sku !== null && str_contains(trim($product->sku), $search);
 
                 return $productNameContainsSearch || $skuContainsSearch;
             });
@@ -496,6 +496,9 @@ class ProductService extends BaseService
     public function getProductWithTranslatesContentsAndImages(Product $mProduct): array
     {
         $productOut = Product::with(['translates', 'contents'])->find($mProduct->id);
+        if (! $productOut) { // phpstan8 fix
+            throw new \Exception('Product not found');
+        }
 
         return $this->getProductDataByProductArr($productOut);
     }
