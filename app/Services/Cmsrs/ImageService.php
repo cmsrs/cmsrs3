@@ -48,7 +48,7 @@ class ImageService extends BaseService
      */
     public static function deleteImagesFromFs(?array $allImg): void
     {
-        foreach ($allImg as $path) {
+        foreach ($allImg ?? [] as $path) {
             if (file_exists($path)) {
                 unlink($path);
             }
@@ -109,7 +109,14 @@ class ImageService extends BaseService
 
     public function getImgDir(Image $objImg, bool $isAbs = true): string
     {
-        return $this->getImageDir($this->getRefType($objImg), $this->getRefId($objImg), $objImg->id, $isAbs);
+        $type = $this->getRefType($objImg);
+        $refId = $this->getRefId($objImg);
+
+        if ($type === null || $refId === null) {
+            throw new \RuntimeException('Image has no valid reference type or ID');
+        }
+
+        return $this->getImageDir($type, $refId, $objImg->id, $isAbs);
     }
 
     /**
@@ -120,6 +127,9 @@ class ImageService extends BaseService
     {
 
         $imgDir = self::getImgDir($img, $isAbs);
+        if (empty($img->name)) {
+            throw new \RuntimeException('Image name is missing');
+        }
         $fileName = pathinfo($img->name, PATHINFO_FILENAME);
         $fileExt = pathinfo($img->name, PATHINFO_EXTENSION);
 
@@ -135,7 +145,7 @@ class ImageService extends BaseService
     public function getImageDir(string $type, int $refId, int $imageId, bool $isAbs = true): string
     {
         if (empty(Image::$type[$type])) {
-            throw new \Exception("I can't get image type");
+            throw new \Exception("I can't get image type: $type");
         }
 
         $url = Image::IMAGE_DIR.'/'.$type.'/'.$refId.'/'.$imageId;
@@ -401,11 +411,18 @@ class ImageService extends BaseService
                     $swapKey = ($key === ($countImages - 1)) ? 0 : $key + 1;
                 }
 
+                $swapImg = $images[$swapKey] ?? null;
+                if (!$swapImg) {
+                    continue;
+                }
+
                 $positionKey = $img->position;
-                $img->position = $images[$swapKey]->position;
+
+                $img->position = $swapImg->position;
                 $img->save();
-                $images[$swapKey]->position = $positionKey;
-                $images[$swapKey]->save();
+
+                $swapImg->position = $positionKey;
+                $swapImg->save();
             }
         }
 
