@@ -19,7 +19,7 @@ class HeadlessService extends BaseService
         $out = [];
 
         foreach ($langs as $lang) {
-            $out[$lang] = $this->pageService->translatesByColumnAndLang($page, $column, $lang);
+            $out[$lang] = $this->pageService->translatesByColumnAndLang($page, $column, $lang) ?? '';
         }
 
         return $out;
@@ -35,7 +35,7 @@ class HeadlessService extends BaseService
         $out = [];
 
         foreach ($langs as $lang) {
-            $out[$lang] = $this->menuService->translatesByColumnAndLang($menu, $column, $lang);
+            $out[$lang] = $this->menuService->translatesByColumnAndLang($menu, $column, $lang) ?? '';
         }
 
         return $out;
@@ -181,7 +181,16 @@ class HeadlessService extends BaseService
      */
     public function getAllPagesWithImagesOneItemByLang(Page $mPage, string $lang): array
     {
-        $page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->first()->toArray();
+        /*
+        $pageModel = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->first();
+
+        $page = [];
+        if ($pageModel) {
+            $page = $pageModel->toArray();
+        }
+            */
+        $pageModel = Page::with(['translates', 'contents'])->find($mPage->id);
+        $page = $pageModel?->toArray() ?? [];
 
         $formatPage = $this->getPageDataFormatByLang($page, $lang);
         $formatPage['images'] = $this->imageService->getImagesAndThumbsByTypeAndRefId('page', $page['id'], $lang);
