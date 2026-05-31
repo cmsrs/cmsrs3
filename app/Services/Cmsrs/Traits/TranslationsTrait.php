@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Cmsrs\Traits;
 
 use App\Models\Cmsrs\Interfaces\ContentTranslatableInterface;
