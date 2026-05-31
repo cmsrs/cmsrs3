@@ -33,7 +33,9 @@ class ContactService extends BaseService
             $item['id'] = $contact->id;
             $item['email'] = $contact->email;
             $item['message'] = $contact->message;
-            $item['created_at_format'] = $contact->created_at->format('Y-m-d H:i:s');
+            $item['created_at_format'] = $contact->created_at
+                ? $contact->created_at->format('Y-m-d H:i:s')
+                : null;
             $out[] = $item;
         }
 
