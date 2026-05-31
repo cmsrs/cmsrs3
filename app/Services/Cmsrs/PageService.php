@@ -44,6 +44,7 @@ class PageService extends BaseService
     }
 
     /**
+     * TODO - it is better to split this method into few methods, because it is not good to return different types of data (string, collection or null) - but it is tested, so i will do it in the future
      * @return Collection<int, Image>|null|string
      */
     public function getPageDataByShortTitle(string $shortTitle, string $data = 'content', ?string $lang = null): Collection|null|string

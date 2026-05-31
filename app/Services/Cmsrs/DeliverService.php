@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Cmsrs;
 
 use App\Services\Cmsrs\Helpers\PriceHelperService;
