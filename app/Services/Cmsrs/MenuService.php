@@ -85,6 +85,11 @@ class MenuService extends BaseService
         $column = 'name';
         $name = $this->translatesByColumnAndLang($model, $column, $lang);
 
+        if (!is_string($name) || $name === '') {
+            throw new \RuntimeException("Missing translation for menu name in lang: $lang");
+        }
+
+
         return Str::slug($name, '-');
     }
 
@@ -202,12 +207,19 @@ class MenuService extends BaseService
                     $swapKey = ($key === ($countMenus - 1)) ? 0 : $key + 1;
                 }
 
+                $swapMenu = $menus[$swapKey] ?? null;
+
+                if (!$swapMenu) {
+                    continue;
+                }
+
                 $positionKey = $menu->position;
-                $menu->position = $menus[$swapKey]->position;
+
+                $menu->position = $swapMenu->position;
                 $menu->save();
-                $menus[$swapKey]->position = $positionKey;
-                $menus[$swapKey]->save();
-            }
+
+                $swapMenu->position = $positionKey;
+                $swapMenu->save();            }
         }
 
         return true;
