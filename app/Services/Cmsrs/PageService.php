@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services\Cmsrs;
 
+use App\Models\Cmsrs\Image;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Translate;
@@ -20,7 +23,10 @@ class PageService extends BaseService
 
     public function __construct(private ConfigService $configService, private MenuService $menuService, private TranslateService $translateService, private ContentService $contentService, private ImageService $imageService) {}
 
-    public function getPageDataByShortTitleCache(string $shortTitle, string $data = 'content', ?string $lang = null): ?string
+    /**
+     * @return Collection<int, Image>|null|string
+     */
+    public function getPageDataByShortTitleCache(string $shortTitle, string $data = 'content', ?string $lang = null): Collection|null|string
     {
         if (empty($lang)) {
             $lang = $this->configService->getDefaultLang();
@@ -37,7 +43,10 @@ class PageService extends BaseService
         return $ret;
     }
 
-    public function getPageDataByShortTitle(string $shortTitle, string $data = 'content', ?string $lang = null): ?string
+    /**
+     * @return Collection<int, Image>|null|string
+     */
+    public function getPageDataByShortTitle(string $shortTitle, string $data = 'content', ?string $lang = null): Collection|null|string
     {
         if (! in_array($data, ['content', 'title', 'images', 'url'])) {
             throw new \Exception('second param is: content title images and url allowed, but now is: '.$data);
@@ -61,7 +70,7 @@ class PageService extends BaseService
 
         $dataByLang = empty($pageData[$data]) ? '' : $pageData[$data];
         if ($data == 'images') {
-            return $dataByLang;
+            return $dataByLang; // return Collection of images, not string
         }
 
         return empty($dataByLang[$lang]) ? '' : $dataByLang[$lang];
