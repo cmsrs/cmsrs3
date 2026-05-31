@@ -405,12 +405,12 @@ class PageService extends BaseService
     }
 
     public function getUrlByPageOrRouteName(
-        ?Page $mPage, 
-        string $lang, 
-        ?string $productSlug = null, 
+        ?Page $mPage,
+        string $lang,
+        ?string $productSlug = null,
         ?string $routeName = null
     ): string {
-        //return (! empty($mPage)) ? $this->getUrl($mPage, $lang, $productSlug) : route($routeName, ['lang' => $lang]);
+        // return (! empty($mPage)) ? $this->getUrl($mPage, $lang, $productSlug) : route($routeName, ['lang' => $lang]);
         if ($mPage !== null) {
             return $this->getUrl($mPage, $lang, $productSlug) ?? '';
         }
@@ -660,9 +660,19 @@ class PageService extends BaseService
      */
     public function getAllPagesWithImagesOneItem(Page $mPage, ?string $simple = null)
     {
-        // ---phpstan-ignore-next-line unnecessary collection call – but code kept as is
-        $page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->first()->toArray();
-        // $page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->get($this->pageFields)->first()->toArray(); //phpstan fix
+
+        // $page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->first()->toArray();
+        $pageModel = (new Page)
+            ->where('id', $mPage->id)
+            ->with(['translates', 'contents'])
+            ->orderBy('position', 'asc')
+            ->first();
+
+        if ($pageModel === null) {
+            return [];
+        }
+
+        $page = $pageModel->toArray();
 
         $formatPage = $this->getPageDataFormat($page);
         if (! $simple) {
@@ -812,11 +822,17 @@ class PageService extends BaseService
                     $swapKey = ($key === ($countPages - 1)) ? 0 : $key + 1;
                 }
 
+                $swapPage = $pages[$swapKey] ?? null;
+
+                if (! $swapPage) {
+                    continue;
+                }
+
                 $positionKey = $p->position;
 
-                Page::where('id', $p->id)->update(['position' => $pages[$swapKey]->position]);
+                Page::where('id', $p->id)->update(['position' => $swapPage->position]);
 
-                Page::where('id', $pages[$swapKey]->id)->update(['position' => $positionKey]);
+                Page::where('id', $swapPage->id)->update(['position' => $positionKey]);
                 // $obj2 = Page::find($pages[$swapKey]->id);
                 // $obj2->position = 44;  //$positionKey;
                 // $obj2->save();
