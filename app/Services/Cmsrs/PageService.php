@@ -404,9 +404,23 @@ class PageService extends BaseService
         return $this->getCmsUrl($mPage, $lang, $urlParam);
     }
 
-    public function getUrlByPageOrRouteName(?Page $mPage, string $lang, ?string $productSlug = null, ?string $routeName = null): string
-    {
-        return (! empty($mPage)) ? $this->getUrl($mPage, $lang, $productSlug) : route($routeName, ['lang' => $lang]);
+    public function getUrlByPageOrRouteName(
+        ?Page $mPage, 
+        string $lang, 
+        ?string $productSlug = null, 
+        ?string $routeName = null
+    ): string {
+        //return (! empty($mPage)) ? $this->getUrl($mPage, $lang, $productSlug) : route($routeName, ['lang' => $lang]);
+        if ($mPage !== null) {
+            return $this->getUrl($mPage, $lang, $productSlug) ?? '';
+        }
+
+        if ($routeName === null) {
+            throw new \InvalidArgumentException('routeName cannot be null when page is null');
+        }
+
+        return route($routeName, ['lang' => $lang]);
+
     }
 
     // private function getTypeUrl($type, $lang)
