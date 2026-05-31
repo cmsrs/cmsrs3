@@ -242,9 +242,9 @@ class PageService extends BaseService
         $column = 'title';
         $name = $this->translatesByColumnAndLang($model, $column, $lang);
 
-        // if( empty($name) ){
-        //   throw new \Exception("I cant create slug for page column: $column for lang: $lang, because value is empty");
-        // }
+        if ($name === null || $name === '') {
+            throw new \RuntimeException("I cant create slug for page column: $column for lang: $lang, because value is empty");
+        }
 
         return Str::slug($name, '-');
     }
@@ -289,7 +289,7 @@ class PageService extends BaseService
     /**
      * @param  array{page_id: int, data: array<string, mixed>}  $dd
      */
-    public function createTranslate(array $dd, ?bool $create = true): void
+    public function createTranslate(array $dd, bool $create = true): void
     {
         $this->translateService->wrapCreate($dd, $create);
         $this->contentService->wrapCreate($dd, $create);
@@ -379,7 +379,7 @@ class PageService extends BaseService
         $urls = [];
         $langs = $this->configService->arrGetLangs();
         foreach ($langs as $l) {
-            $urls[$l] = $this->getUrl($mPage, $l, $urlParam);
+            $urls[$l] = $this->getUrl($mPage, $l, $urlParam) ?? '';
         }
 
         return $urls;

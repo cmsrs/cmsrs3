@@ -412,7 +412,7 @@ class ImageService extends BaseService
                 }
 
                 $swapImg = $images[$swapKey] ?? null;
-                if (!$swapImg) {
+                if (! $swapImg) {
                     continue;
                 }
 
