@@ -527,11 +527,10 @@ class ProductService extends BaseService
     }
 
     /**
-     * @param  Collection<int, Product>|array<int, Product>  $products
+     * @param  Collection<int, Product>  $products
      * @return array<int, array<string, mixed>>
      */
-    public function getAllProductsWithImagesArr(Collection|array $products, bool $withUrls = false, ?string $lang = null): array
-    {
+    public function getAllProductsWithImagesArr(Collection $products, bool $withUrls = false, ?string $lang = null): array    {
         $i = 0;
         $out = [];
         foreach ($products as $product) {
@@ -656,15 +655,15 @@ class ProductService extends BaseService
     }
 
     /**
-     * @param  Collection<int, Product>|array<int, Product>  $products
+     * @param  Collection<int, Product>  $products
      * @return array<int, array<string, mixed>>
      */
-    private function dataToRender(Collection|array $products): array
+    private function dataToRender(Collection $products): array
     {
         $i = 0;
         $out = [];
 
-        foreach ($products as $key => $product) {
+        foreach ($products as $product) {
             $urls = $this->getProductUrls($product);
             $out[$i] = array_merge($this->getProductDataByProductArr($product), $urls);
             $i++;
