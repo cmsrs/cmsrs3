@@ -379,10 +379,9 @@ class ProductService extends BaseService
     }
 
     /**
-     * @param  Product|array<string, mixed>  $product
      * @return array<string, mixed>
      */
-    private function getProductDataFormat(Product|array $product): array
+    private function getProductDataFormat(Product $product): array
     {
 
         $out = [];
@@ -473,16 +472,15 @@ class ProductService extends BaseService
      */
     public function getProductDataByProductArr(Product $product, ?string $lang = null): array
     {
-        $arrProduct = $product->toArray();
 
         $out = [];
-        $out = $this->getProductDataFormat($arrProduct);
+        $out = $this->getProductDataFormat($product);
         $out['product_name_default_lang'] = $this->getProductNameDefaultLang($out);
         if ($lang) {
             $out = $this->removeKeyLangInArr($out, $lang);
         }
 
-        $out['images'] = $this->imageService->getImagesAndThumbsByTypeAndRefId('product', $arrProduct['id'], $lang);
+        $out['images'] = $this->imageService->getImagesAndThumbsByTypeAndRefId('product', $product->id, $lang);
 
         return $out;
     }
@@ -604,7 +602,7 @@ class ProductService extends BaseService
         $urls = [];
         $products = Product::with(['translates', 'contents', 'page'])->where('published', '=', 1)->orderBy('id', 'asc')->get();
         $i = 0;
-        foreach ($products as $key => $product) {
+        foreach ($products as $product) {
             if ($product['page']->published && $product->published) {
                 $arrProduct = $this->getProductDataFormat($product);
                 $langs = ConfigService::arrGetLangsEnv();
