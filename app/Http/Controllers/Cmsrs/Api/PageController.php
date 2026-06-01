@@ -62,13 +62,13 @@ class PageController extends Controller
     }
     */
 
-    public function oneItemAdmin(Request $request, Page $page, ?string $simple = null): JsonResponse
+    public function oneItemAdmin(Request $request, Page $page): JsonResponse
     {
         // if (empty($page)) {
         //    return response()->json(['success' => false, 'error' => 'Page not find'], 404);
         // }
 
-        $onePage = $this->pageService->getAllPagesWithImagesOneItem($page, $simple);
+        $onePage = $this->pageService->getAllPagesWithImagesOneItem($page);
 
         return response()->json(['success' => true, 'data' => $onePage], 200);
     }

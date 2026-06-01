@@ -139,6 +139,7 @@ class ImageTest extends Base
 
     public function test_it_will_get_page_without_images_with_auth_simple()
     {
+        $this->markTestSkipped('param /simple in API url is not used in the project');
         $this->prepareTestPage();
 
         $response0 = $this->get('api/pages/'.$this->pageId.'/simple?token='.$this->token);

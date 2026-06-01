@@ -50,7 +50,7 @@ class PageService extends BaseService
      */
     public function getPageDataByShortTitle(string $shortTitle, string $data = 'content', ?string $lang = null): Collection|null|string
     {
-        if (! in_array($data, ['content', 'title', 'images', 'url'])) {
+        if (! in_array($data, ['content', 'title', 'images', 'url'])) { //
             throw new \Exception('second param is: content title images and url allowed, but now is: '.$data);
         }
 
@@ -669,7 +669,7 @@ class PageService extends BaseService
     /**
      * @return array<string, mixed>
      */
-    public function getAllPagesWithImagesOneItem(Page $mPage, ?string $simple = null)
+    public function getAllPagesWithImagesOneItem(Page $mPage): array
     {
 
         // $page = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->first()->toArray();
@@ -686,9 +686,7 @@ class PageService extends BaseService
         $page = $pageModel->toArray();
 
         $formatPage = $this->getPageDataFormat($page);
-        if (! $simple) {
-            $formatPage['images'] = $this->imageService->getImagesAndThumbsByTypeAndRefId('page', $page['id']);
-        }
+        $formatPage['images'] = $this->imageService->getImagesAndThumbsByTypeAndRefId('page', $page['id']);
 
         return $formatPage;
     }

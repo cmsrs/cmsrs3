@@ -52,7 +52,7 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::get($apiSecret.'logout', [AuthController::class, 'logout']);
 
     Route::get($apiSecret.'pages', [PageController::class, 'index']);
-    Route::get($apiSecret.'pages/{page}/{simple?}', [PageController::class, 'oneItemAdmin'])->whereNumber('page'); // ->where('id', '[0-9]+');
+    Route::get($apiSecret.'pages/{page}', [PageController::class, 'oneItemAdmin'])->whereNumber('page'); // ->where('id', '[0-9]+');
     Route::post($apiSecret.'pages', [PageController::class, 'create']);
     Route::put($apiSecret.'pages/{page}', [PageController::class, 'update'])->whereNumber('page');
     Route::delete($apiSecret.'pages/{page}', [PageController::class, 'delete'])->whereNumber('page');
