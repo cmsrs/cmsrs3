@@ -309,7 +309,7 @@ class ProductService extends BaseService
      * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
-    public function checkIsDuplicateName(array $data, string|int $id = ''): array
+    public function checkIsDuplicateName(array $data, ?int $id = null): array
     {
         $out = ['success' => true];
         $products = $this->getAllProductsWithImages();
