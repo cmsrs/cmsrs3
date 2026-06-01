@@ -793,11 +793,11 @@ class PageService extends BaseService
     }
 
     /**
-     * @return Collection<int, Page>|array<int, Page>
+     * @return Collection<int, Page>
      */
-    public function getPagesByMenuId(?int $menuId, ?int $pageId): Collection|array
+    public function getPagesByMenuId(?int $menuId, ?int $pageId): Collection
     {
-        $page = [];
+        $page = collect([]);
         if ($menuId === null) {
             $page = Page::query()
                 ->whereNull('menu_id')
