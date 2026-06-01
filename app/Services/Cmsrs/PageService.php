@@ -23,10 +23,7 @@ class PageService extends BaseService
 
     public function __construct(private ConfigService $configService, private MenuService $menuService, private TranslateService $translateService, private ContentService $contentService, private ImageService $imageService) {}
 
-    /**
-     * @return Collection<int, Image>|null|string
-     */
-    public function getPageDataByShortTitleCache(string $shortTitle, string $data = 'content', ?string $lang = null): Collection|null|string
+    public function getPageDataByShortTitleCache(string $shortTitle, string $data = 'content', ?string $lang = null): ?string
     {
         if (empty($lang)) {
             $lang = $this->configService->getDefaultLang();
@@ -44,23 +41,49 @@ class PageService extends BaseService
     }
 
     /**
-     * TODO - it is better to split this method into few methods, because it is not good to return different types of data (string, collection or null) - but it is tested, so i will do it in the future
-     *
-     * @return Collection<int, Image>|null|string
+     * @return Collection<int, Image>|null
      */
-    public function getPageDataByShortTitle(string $shortTitle, string $data = 'content', ?string $lang = null): Collection|null|string
+    public function getPageDataImagesByShortTitleCache(string $shortTitle): ?Collection
     {
-        if (! in_array($data, ['content', 'title', 'images', 'url'])) { //
+        $isCache = $this->configService->isCacheEnable();
+        if ($isCache) {
+            $ret = cache()->remember('page_by_short_title_images_'.Str::slug($shortTitle, '_'), CacheService::setTime(), function () use ($shortTitle) {
+                return $this->getPageDataImagesByShortTitle($shortTitle);
+            });
+        } else {
+            $ret = $this->getPageDataImagesByShortTitle($shortTitle);
+        }
+
+        return $ret;
+    }
+
+    /**
+     * @return Collection<int, Image>|null
+     */
+    public function getPageDataImagesByShortTitle(string $shortTitle): ?Collection
+    {
+        $page = $this->getPageByShortTitle($shortTitle);
+
+        if ($page === null) {
+            return null;
+        }
+
+        return $this->imageService->getImagesAndThumbsByTypeAndRefId('page', $page->id);
+    }
+
+    public function getPageDataByShortTitle(string $shortTitle, string $data = 'content', ?string $lang = null): ?string
+    {
+        if (! in_array($data, ['content', 'title', 'images', 'url'])) {
             throw new \Exception('second param is: content title images and url allowed, but now is: '.$data);
         }
 
-        if (empty($lang)) {
+        if ($lang === null) {
             $lang = ConfigService::getDefaultLang();
         }
 
         $page = $this->getPageByShortTitle($shortTitle);
 
-        if (empty($page)) {
+        if ($page === null) {
             return null;
         }
 
@@ -71,9 +94,6 @@ class PageService extends BaseService
         $pageData = $this->getAllPagesWithImagesOneItem($page);
 
         $dataByLang = empty($pageData[$data]) ? '' : $pageData[$data];
-        if ($data == 'images') {
-            return $dataByLang; // return Collection of images, not string
-        }
 
         return empty($dataByLang[$lang]) ? '' : $dataByLang[$lang];
     }
