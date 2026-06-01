@@ -225,20 +225,15 @@ class ProductService extends BaseService
     }
 
     /**
-     * @param  Collection<int, Translate>|array<int, array<string, mixed>>  $productTranslates
+     * @param  Collection<int, Translate>  $productTranslates
      */
-    public static function getDefaultProductName(Collection|array $productTranslates, string $lang): string
+    public static function getDefaultProductName(Collection $productTranslates, string $lang): string
     {
         $defaultProductName = '';
 
         foreach ($productTranslates as $translate) {
-            // Obsługuje zarówno Translate object jak i array
-            $column = $translate instanceof Translate ? $translate->column : $translate['column'];
-            $langVal = $translate instanceof Translate ? $translate->lang : $translate['lang'];
-            $value = $translate instanceof Translate ? $translate->value : $translate['value'];
-
-            if (($column == 'product_name') && ($langVal == $lang)) {
-                $defaultProductName = $value;
+            if (($translate->column == 'product_name') && ($translate->lang == $lang)) {
+                $defaultProductName = $translate->value ?? '';
                 break;
             }
         }
