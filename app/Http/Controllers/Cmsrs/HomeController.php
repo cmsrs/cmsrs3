@@ -67,8 +67,8 @@ class HomeController extends Controller
         $orders = [];
         if (! empty($arrOrders)) {
             $arrOrdersReindex = BaseService::reIndexArr($arrOrders, 'product_id');
-            $baskets = false;
-            $this->productService->getDataToPayment($arrOrdersReindex, $baskets, $orders);
+            $dataToPayment = $this->productService->getDataToPayment($arrOrdersReindex, null, $orders);
+            $orders = $dataToPayment['orders'];
         }
 
         $objCheckouts = $this->checkoutService->findActiveOrdersForUser($user->id);

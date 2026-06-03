@@ -354,6 +354,8 @@ class ProductTest extends Base
         $response = $this->get('api/checkouts?token='.$this->token);
         $res = $response->getData();
 
+        // dd($res);
+
         $this->assertTrue($res->success);
         $this->assertEquals($c1, count($res->data));
 
@@ -1012,9 +1014,14 @@ class ProductTest extends Base
         $arrCart = BaseService::reIndexArr($obj->cart);
 
         $baskets = [];
-        $orders = '';
+        $orders = null;
         $productService = app(ProductService::class);
         $data = $productService->getDataToPayment($arrCart, $baskets, $orders);
+        $baskets = $data['baskets'];
+        $orders = $data['orders'];
+
+        // dd($data);
+
         $this->assertEquals(2, count($baskets));
         $this->assertEmpty($orders);
 
@@ -1030,9 +1037,12 @@ class ProductTest extends Base
         $this->assertEquals($qty2, $data['products'][1]['quantity']);
         $this->assertEquals($price2, $data['products'][1]['unitPrice']);
 
-        $baskets2 = false;
+        $baskets2 = null;
         $orders2 = [];
-        $productService->getDataToPayment($arrCart, $baskets2, $orders2);
+        $dd = $productService->getDataToPayment($arrCart, $baskets2, $orders2);
+        $baskets2 = $dd['baskets'];
+        $orders2 = $dd['orders'];
+
         $this->assertEmpty($baskets2);
 
         $this->assertTrue(is_array($orders2));

@@ -85,9 +85,10 @@ class ProductService extends BaseService
         $reindexBaskets = BaseService::reIndexArr($data['products']);
         $baskets = [];
         $productsDataAndTotalAmount = $this->getDataToPayment($reindexBaskets, $baskets);
-        if (empty($baskets)) {
+        if (empty($productsDataAndTotalAmount['baskets'])) {
             throw new \Exception('No data in basket (not found data in db)');
         }
+        $baskets = $productsDataAndTotalAmount['baskets'];
 
         unset($data['products']);
         $checkout = $data;
@@ -241,13 +242,102 @@ class ProductService extends BaseService
         return $defaultProductName;
     }
 
+    public function createPaymentData(array $arrCart): array
+    {
+        $ids = array_keys($arrCart);
+
+        $products = Product::with(['translates'])
+            ->whereIn('id', $ids)
+            ->orderBy('id', 'asc')
+            ->get();
+
+        $lang = ConfigService::getDefaultLang();
+
+        $result = [
+            'products' => null,
+            'baskets' => null,
+            'orders' => [],
+            'totalAmount' => 0,
+        ];
+
+        foreach ($products as $product) {
+
+            $item = $arrCart[$product->id];
+
+            if (empty($item['qty'])) {
+                throw new \Exception('qty empty - something wrong');
+            }
+
+            $qty = $item['qty'];
+
+            $name = ProductService::getDefaultProductName(
+                $product->translates,
+                $lang
+            );
+
+            // 1. PAYMENT PRODUCTS
+            $result['products'][] = [
+                'name' => $name,
+                'unitPrice' => $product->price,
+                'quantity' => $qty,
+            ];
+
+            // 2. BASKETS
+            $result['baskets'][] = [
+                'qty' => $qty,
+                'price' => $product->price,
+                'product_id' => $product->id,
+            ];
+
+            // 3. ORDERS
+            $productImage = $this->imageService
+                ->getImagesAndThumbsByTypeAndRefId('product', $product->id)
+                ->toArray();
+
+            $result['orders'][] = [
+                'name' => $name,
+                'unitPrice' => $product->price,
+                'qty' => $qty,
+                'product_id' => $product->id,
+                'product_url' => $this->getProductUrl($product, $lang, $name),
+                'product_img' => $productImage[0]['fs']['small'] ?? '',
+            ];
+
+            $result['totalAmount'] += $product->price * $qty;
+        }
+
+        return $result;
+    }
+
+    public function getDataToPayment(array $arrCart, ?array $basketsOld = null, ?array $ordersOld = null): array
+    {
+        $result = $this->createPaymentData($arrCart);
+
+        // baskets
+        if (is_array($basketsOld)) {
+            $result['baskets'] = array_merge($basketsOld, $result['baskets']);
+        } else {
+            $result['baskets'] = [];
+        }
+
+        // orders
+        if (is_array($ordersOld)) {
+            $result['orders'] = array_merge($ordersOld, $result['orders']);
+        } else {
+            $result['orders'] = [];
+        }
+
+        return $result;
+    }
+
     /**
      * @param  array<int, mixed>  $arrCart
      * @param  array<int, array<string, mixed>>|false  $baskets
      * @param  array<int, array<string, mixed>>|false|string  $orders
      * @return array<string, mixed>
      */
-    public function getDataToPayment(array $arrCart, array|false &$baskets, array|false|string &$orders = false): array
+    /*
+    public function old__getDataToPayment(array $arrCart, array|false &$baskets, array|false|string &$orders = false): array
     {
         // $user = Auth::user();
         // if( empty($user) ){
@@ -304,6 +394,7 @@ class ProductService extends BaseService
 
         return $out;
     }
+        */
 
     /**
      * @param  array<string, mixed>  $data
@@ -530,7 +621,8 @@ class ProductService extends BaseService
      * @param  Collection<int, Product>  $products
      * @return array<int, array<string, mixed>>
      */
-    public function getAllProductsWithImagesArr(Collection $products, bool $withUrls = false, ?string $lang = null): array    {
+    public function getAllProductsWithImagesArr(Collection $products, bool $withUrls = false, ?string $lang = null): array
+    {
         $i = 0;
         $out = [];
         foreach ($products as $product) {
