@@ -7,8 +7,8 @@
 <a href="https://www.php.net/"><img src="https://img.shields.io/badge/php-8.5-yellowgreen"></a>
 <a href="https://github.com/laravel/laravel"><img src="https://img.shields.io/badge/Laravel-13-yellowgreen"></a>
 <a href="https://www.cmsrs.pl/en/cms/cmsrs/coverage-test"><img src="https://img.shields.io/badge/coverage-90%25-yellowgreen"></a>
-<a href="https://github.com/cmsrs/cmsrs3/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green"></a>
 <a href="#"><img src="https://img.shields.io/badge/PHPStan-8-yellowgreen"></a>
+<a href="https://github.com/cmsrs/cmsrs3/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green"></a>
 </p>
 </br>
 </br>
