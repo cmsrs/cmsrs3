@@ -41,9 +41,9 @@ class PageService extends BaseService
     }
 
     /**
-     * @return Collection<int, Image>|null
+     * @return Collection<int, Image>
      */
-    public function getPageDataImagesByShortTitleCache(string $shortTitle): ?Collection
+    public function getPageDataImagesByShortTitleCache(string $shortTitle): Collection
     {
         $isCache = $this->configService->isCacheEnable();
         if ($isCache) {
@@ -58,14 +58,14 @@ class PageService extends BaseService
     }
 
     /**
-     * @return Collection<int, Image>|null
+     * @return Collection<int, Image>
      */
-    public function getPageDataImagesByShortTitle(string $shortTitle): ?Collection
+    public function getPageDataImagesByShortTitle(string $shortTitle): Collection
     {
         $page = $this->getPageByShortTitle($shortTitle);
 
         if ($page === null) {
-            return null;
+            return new Collection;
         }
 
         return $this->imageService->getImagesAndThumbsByTypeAndRefId('page', $page->id);

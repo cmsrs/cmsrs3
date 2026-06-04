@@ -253,7 +253,7 @@ class FrontController extends Controller
         );
 
         // slider_main
-        $sliderDataImages = $this->pageService->getPageDataImagesByShortTitleCache('main_page_slider');
+        $sliderDataImages = $this->pageService->getPageDataImagesByShortTitleCache('main_page_slider')->toArray();
 
         $data = $this->pageService->getDataToView($page, [
             // 'url_search' =>  $urlSearch,
