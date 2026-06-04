@@ -49,7 +49,8 @@ class PageService extends BaseService
             return $this->getPageDataImagesByShortTitle($shortTitle);
         }
 
-        $key = 'page_by_short_title_images_' . Str::slug($shortTitle, '_');        
+        $key = 'page_by_short_title_images_'.Str::slug($shortTitle, '_');
+
         return cache()->remember(
             $key,
             CacheService::setTime(),

@@ -132,9 +132,9 @@ class FrontController extends Controller
 
     public function checkout(Request $request, ?string $lang = null): View
     {
-        //if (! Auth::check()) {
+        // if (! Auth::check()) {
         //    abort(401);
-        //}
+        // }
 
         $lang = $this->validateLangs($lang);
 
@@ -156,19 +156,8 @@ class FrontController extends Controller
 
     public function postCheckout(Request $request): RedirectResponse|JsonResponse
     {
-        $userId = Auth::id();
-        // if (empty($user)) { // phpstan8 - fix - it is useless because of Auth::check()
-        //    abort(401);
-        // }
-
-
-        //if (! Auth::check()) {
-        //    abort(401);
-        //}
-        //$user = Auth::user();
-        //if (empty($user)) { // phpstan8 - fix - it is useless because of Auth::check()
-        //    abort(401);
-        //}
+        $userId = Auth::user()?->id; // phpstan8 - fix
+        // $userId = Auth::id();
 
         $lang = $request->input('lang');
         $lang = $this->validateLangs($lang);
