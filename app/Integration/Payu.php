@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Integration;
 
 use App\Services\Cmsrs\ConfigService;
@@ -42,7 +44,7 @@ class Payu extends Model
         try {
             // $response = $this->client->post(env('PAYU_URL').'/pl/standard/user/oauth/authorize');
             $response = $this->client->post('/pl/standard/user/oauth/authorize');
-            $token = (object) json_decode($response->getBody(), true);
+            $token = (object) json_decode($response->getBody()->getContents(), true);
         } catch (\Exception $e) {
             $strErr = 'Caught exception --payu auth--: '.$e->getMessage();
             Log::error($strErr);
