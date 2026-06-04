@@ -45,6 +45,24 @@ class PageService extends BaseService
      */
     public function getPageDataImagesByShortTitleCache(string $shortTitle): Collection
     {
+        if (! $this->configService->isCacheEnable()) {
+            return $this->getPageDataImagesByShortTitle($shortTitle);
+        }
+
+        $key = 'page_by_short_title_images_' . Str::slug($shortTitle, '_');        
+        return cache()->remember(
+            $key,
+            CacheService::setTime(),
+            fn () => $this->getPageDataImagesByShortTitle($shortTitle)
+        );
+    }
+
+    /**
+     * __return Collection<int, Image>
+     */
+    /*
+    public function getPageDataImagesByShortTitleCache(string $shortTitle): Collection
+    {
         $isCache = $this->configService->isCacheEnable();
         if ($isCache) {
             $ret = cache()->remember('page_by_short_title_images_'.Str::slug($shortTitle, '_'), CacheService::setTime(), function () use ($shortTitle) {
@@ -56,6 +74,7 @@ class PageService extends BaseService
 
         return $ret;
     }
+    */
 
     /**
      * @return Collection<int, Image>
