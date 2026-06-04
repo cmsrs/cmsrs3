@@ -46,11 +46,11 @@ class ImageService extends BaseService
     }
 
     /**
-     * @param  null|array<array-key, string>  $allImg
+     * @param  array<array-key, string>  $allImg
      */
-    public static function deleteImagesFromFs(?array $allImg): void
+    public static function deleteImagesFromFs(array $allImg): void
     {
-        foreach ($allImg ?? [] as $path) {
+        foreach ($allImg as $path) {
             if (file_exists($path)) {
                 unlink($path);
             }
@@ -122,10 +122,10 @@ class ImageService extends BaseService
     }
 
     /**
-     * @return array<string, string>|null
-     *                                    return all thumbs and main img
+     * @return array<string, string>
+     *                               return all thumbs and main img
      */
-    public function getAllImage(Image $img, bool $isAbs = true): ?array
+    public function getAllImage(Image $img, bool $isAbs = true): array
     {
 
         $imgDir = self::getImgDir($img, $isAbs);
@@ -291,20 +291,23 @@ class ImageService extends BaseService
         return $out;
     }
 
-    public function getNextPositionByTypeAndRefId(string $type, ?int $refId): int
+    public function getNextPositionByTypeAndRefId(string $type, int $refId): int
     {
-        if (empty($strRefId = Image::$type[$type])) {
+        if (! isset(Image::$type[$type])) {
             throw new \Exception("I can't get image type in getNextPositionByTypeAndRefId");
         }
 
-        if (empty($refId)) {
-            throw new \Exception('Image (next pos): refId must be defined');
-            // $image = Image::query()
-            //       ->whereNull($strRefId)
-            //       ->orderBy('position', 'desc')
-            //       ->first()
-            //       ;
-        }
+        $strRefId = Image::$type[$type];
+
+        // if (empty($refId)) {
+        //     throw new \Exception('Image (next pos): refId must be defined');
+        //     // $image = Image::query()
+        //     //       ->whereNull($strRefId)
+        //     //       ->orderBy('position', 'desc')
+        //     //       ->first()
+        //     //       ;
+        // }
+
         $image = Image::query()
             ->where($strRefId, '=', $refId)
             ->orderBy('position', 'desc')
@@ -320,7 +323,7 @@ class ImageService extends BaseService
     /**
      * @return Collection<int, Image>
      */
-    public function getImagesAndThumbsByTypeAndRefId(string $type, ?int $refId = null, ?string $lang = null): Collection
+    public function getImagesAndThumbsByTypeAndRefId(string $type, int $refId, ?string $lang = null): Collection
     {
         $images = $this->getImagesByTypeAndRefId($type, $refId);
 
@@ -355,20 +358,22 @@ class ImageService extends BaseService
     /**
      * @return Collection<int, Image>
      */
-    public function getImagesByTypeAndRefId(string $type, ?int $refId = null): Collection
+    public function getImagesByTypeAndRefId(string $type, int $refId): Collection
     {
-        if (empty($strRefId = Image::$type[$type])) {
+        if (! isset(Image::$type[$type])) {
             throw new \Exception("I can't get image type in getImagesByTypeAndRefId");
         }
 
-        if (empty($refId)) {
-            throw new \Exception('Image: refId must be defined');
-            // $image = Image::with(['translates'])
-            //       ->whereNull($strRefId)
-            //       ->orderBy('position', 'asc')
-            //       ->get()
-            //       ;
-        }
+        $strRefId = Image::$type[$type];
+
+        // if (empty($refId)) {
+        //     throw new \Exception('Image: refId must be defined');
+        //     // $image = Image::with(['translates'])
+        //     //       ->whereNull($strRefId)
+        //     //       ->orderBy('position', 'asc')
+        //     //       ->get()
+        //     //       ;
+        // }
 
         return Image::with(['translates'])
             ->where($strRefId, '=', $refId)
@@ -451,7 +456,7 @@ class ImageService extends BaseService
         foreach ($mObj->images()->get() as $img) {
             $images = $this->getAllImage($img);
 
-            if (is_array($images) && ! empty($images)) {
+            if (! empty($images)) {
                 $dirsImgs[] = ImageService::getImgDir($img);
                 $files = array_merge($files, array_values($images));
             }
