@@ -1013,17 +1013,17 @@ class ProductTest extends Base
 
         $arrCart = BaseService::reIndexArr($obj->cart);
 
-        $baskets = [];
-        $orders = null;
         $productService = app(ProductService::class);
-        $data = $productService->getDataToPayment($arrCart, $baskets, $orders);
+        $data = $productService->createPaymentData($arrCart);
         $baskets = $data['baskets'];
         $orders = $data['orders'];
 
         // dd($data);
 
         $this->assertEquals(2, count($baskets));
-        $this->assertEmpty($orders);
+
+        $this->assertNotEmpty($orders); // right now
+        // $this->assertEmpty($orders); //TODO - it is useless tests (but it was before refactor, so I will comment it for now) - in code i don't use this feature
 
         $this->assertEquals(2, count($data['products']));
         $this->assertEquals(($price1 * $qty1 + $price2 * $qty2), $data['totalAmount']);
@@ -1037,13 +1037,12 @@ class ProductTest extends Base
         $this->assertEquals($qty2, $data['products'][1]['quantity']);
         $this->assertEquals($price2, $data['products'][1]['unitPrice']);
 
-        $baskets2 = null;
-        $orders2 = [];
-        $dd = $productService->getDataToPayment($arrCart, $baskets2, $orders2);
+        $dd = $productService->createPaymentData($arrCart);
         $baskets2 = $dd['baskets'];
         $orders2 = $dd['orders'];
 
-        $this->assertEmpty($baskets2);
+        $this->assertNotEmpty($baskets2); // right now
+        // $this->assertEmpty($baskets2);//TODO - it is useless tests (but it was before refactor, so I will comment it for now) - in code i don't use this feature
 
         $this->assertTrue(is_array($orders2));
         $this->assertEquals(2, count($orders2));

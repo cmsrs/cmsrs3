@@ -83,8 +83,7 @@ class ProductService extends BaseService
         }
 
         $reindexBaskets = BaseService::reIndexArr($data['products']);
-        $baskets = [];
-        $productsDataAndTotalAmount = $this->getDataToPayment($reindexBaskets, $baskets);
+        $productsDataAndTotalAmount = $this->createPaymentData($reindexBaskets);
         if (empty($productsDataAndTotalAmount['baskets'])) {
             throw new \Exception('No data in basket (not found data in db)');
         }
@@ -242,6 +241,10 @@ class ProductService extends BaseService
         return $defaultProductName;
     }
 
+    /**
+     * @param  array<int, mixed>  $arrCart
+     * @return array<string, mixed>
+     */
     public function createPaymentData(array $arrCart): array
     {
         $ids = array_keys($arrCart);
@@ -254,8 +257,8 @@ class ProductService extends BaseService
         $lang = ConfigService::getDefaultLang();
 
         $result = [
-            'products' => null,
-            'baskets' => null,
+            'products' => [],
+            'baskets' => [],
             'orders' => [],
             'totalAmount' => 0,
         ];
@@ -308,93 +311,6 @@ class ProductService extends BaseService
 
         return $result;
     }
-
-    public function getDataToPayment(array $arrCart, ?array $basketsOld = null, ?array $ordersOld = null): array
-    {
-        $result = $this->createPaymentData($arrCart);
-
-        // baskets
-        if (is_array($basketsOld)) {
-            $result['baskets'] = array_merge($basketsOld, $result['baskets']);
-        } else {
-            $result['baskets'] = [];
-        }
-
-        // orders
-        if (is_array($ordersOld)) {
-            $result['orders'] = array_merge($ordersOld, $result['orders']);
-        } else {
-            $result['orders'] = [];
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param  array<int, mixed>  $arrCart
-     * @param  array<int, array<string, mixed>>|false  $baskets
-     * @param  array<int, array<string, mixed>>|false|string  $orders
-     * @return array<string, mixed>
-     */
-    /*
-    public function old__getDataToPayment(array $arrCart, array|false &$baskets, array|false|string &$orders = false): array
-    {
-        // $user = Auth::user();
-        // if( empty($user) ){
-        //     throw new \Exception("User not auth - this exception is impossible");
-        // }
-
-        $ids = array_keys($arrCart);
-        $arrProducts = Product::with(['translates'])->whereIn('id', $ids)->orderBy('id', 'asc')->get(); // ->toArray();
-
-        $out = [];
-        $totalAmount = 0;
-        $lang = ConfigService::getDefaultLang();
-        foreach ($arrProducts as $product) {
-
-            $itemIn = $arrCart[$product->id];
-            if (empty($itemIn['qty'])) {
-                throw new \Exception('qty empty - something wrong');
-            }
-
-            $productName = ProductService::getDefaultProductName($product->translates, $lang);
-            $qty = $itemIn['qty'];
-
-            $out['products'][] = [
-                'name' => $productName,
-                'unitPrice' => $product->price,
-                'quantity' => $qty,
-            ];
-
-            if (is_array($baskets)) {
-                $baskets[] = [
-                    'qty' => $qty,
-                    // "user_id" => $user->id,
-                    'price' => $product->price,
-                    'product_id' => $product->id,
-                    // "checkout_id" => $checkoutId
-                ];
-            }
-
-            if (is_array($orders)) {
-                $productImage = $this->imageService->getImagesAndThumbsByTypeAndRefId('product', $product->id)->toArray();
-                $orders[] = [
-                    'name' => $productName,
-                    'unitPrice' => $product->price,
-                    'qty' => $qty,
-                    'product_id' => $product->id,
-                    'product_url' => $this->getProductUrl($product, $lang, $productName),
-                    'product_img' => empty($productImage[0]) ? '' : $productImage[0]['fs']['small'],
-                ];
-            }
-
-            $totalAmount += $product->price * $qty;
-        }
-        $out['totalAmount'] = $totalAmount;
-
-        return $out;
-    }
-        */
 
     /**
      * @param  array<string, mixed>  $data
@@ -764,3 +680,94 @@ class ProductService extends BaseService
         return $out;
     }
 }
+
+/*
+now see: createPaymentData
+public function old1______getDataToPayment(array $arrCart, ?array $basketsOld = null, ?array $ordersOld = null): array
+{
+    $result = $this->createPaymentData($arrCart);
+
+    // baskets
+    if (is_array($basketsOld)) {
+        $result['baskets'] = array_merge($basketsOld, $result['baskets']);
+    } else {
+        $result['baskets'] = [];
+    }
+
+    // orders
+    if (is_array($ordersOld)) {
+        $result['orders'] = array_merge($ordersOld, $result['orders']);
+    } else {
+        $result['orders'] = [];
+    }
+
+    return $result;
+}
+*/
+
+/**
+ * __param  array<int, mixed>  $arrCart
+ * __param  array<int, array<string, mixed>>|false  $baskets
+ * __param  array<int, array<string, mixed>>|false|string  $orders
+ * __return array<string, mixed>
+ */
+/*
+now see: createPaymentData
+public function old2__getDataToPayment(array $arrCart, array|false &$baskets, array|false|string &$orders = false): array
+{
+    // $user = Auth::user();
+    // if( empty($user) ){
+    //     throw new \Exception("User not auth - this exception is impossible");
+    // }
+
+    $ids = array_keys($arrCart);
+    $arrProducts = Product::with(['translates'])->whereIn('id', $ids)->orderBy('id', 'asc')->get(); // ->toArray();
+
+    $out = [];
+    $totalAmount = 0;
+    $lang = ConfigService::getDefaultLang();
+    foreach ($arrProducts as $product) {
+
+        $itemIn = $arrCart[$product->id];
+        if (empty($itemIn['qty'])) {
+            throw new \Exception('qty empty - something wrong');
+        }
+
+        $productName = ProductService::getDefaultProductName($product->translates, $lang);
+        $qty = $itemIn['qty'];
+
+        $out['products'][] = [
+            'name' => $productName,
+            'unitPrice' => $product->price,
+            'quantity' => $qty,
+        ];
+
+        if (is_array($baskets)) {
+            $baskets[] = [
+                'qty' => $qty,
+                // "user_id" => $user->id,
+                'price' => $product->price,
+                'product_id' => $product->id,
+                // "checkout_id" => $checkoutId
+            ];
+        }
+
+        if (is_array($orders)) {
+            $productImage = $this->imageService->getImagesAndThumbsByTypeAndRefId('product', $product->id)->toArray();
+            $orders[] = [
+                'name' => $productName,
+                'unitPrice' => $product->price,
+                'qty' => $qty,
+                'product_id' => $product->id,
+                'product_url' => $this->getProductUrl($product, $lang, $productName),
+                'product_img' => empty($productImage[0]) ? '' : $productImage[0]['fs']['small'],
+            ];
+        }
+
+        $totalAmount += $product->price * $qty;
+    }
+    $out['totalAmount'] = $totalAmount;
+
+    return $out;
+}
+    */

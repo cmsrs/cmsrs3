@@ -67,7 +67,7 @@ class HomeController extends Controller
         $orders = [];
         if (! empty($arrOrders)) {
             $arrOrdersReindex = BaseService::reIndexArr($arrOrders, 'product_id');
-            $dataToPayment = $this->productService->getDataToPayment($arrOrdersReindex, null, $orders);
+            $dataToPayment = $this->productService->createPaymentData($arrOrdersReindex);
             $orders = $dataToPayment['orders'];
         }
 
