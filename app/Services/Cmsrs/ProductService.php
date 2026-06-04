@@ -67,7 +67,7 @@ class ProductService extends BaseService
      * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
-    public function saveCheckout(array $data, int $userId, ?string $sessionId): array
+    public function saveCheckout(array $data, ?int $userId, ?string $sessionId): array
     {
         if (empty($data['products']) || ! is_array($data['products'])) {
             throw new \Exception('No products in post - checkout');

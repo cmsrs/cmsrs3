@@ -500,7 +500,7 @@ class FrontGuestTest extends Base
     public function test_checkout_not_auth_401()
     {
         $response = $this->get('/checkout');
-        $response->assertStatus(401);
+        $response->assertStatus(200); //we allow to see checkout page for guest - gests can buy without registration. 
     }
 
     public function test_checkout_auth_200()
@@ -513,7 +513,7 @@ class FrontGuestTest extends Base
     public function test_post_checkout_not_auth_401()
     {
         $response = $this->post('/post/checkout');
-        $response->assertStatus(401);
+        $response->assertStatus(302);//(302 because we not provided inputs)  gests can buy without registration. 
     }
 
     public function test_post_checkout_not_auth_get_request()
