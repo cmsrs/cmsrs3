@@ -6,6 +6,7 @@ namespace App\Services\Cmsrs;
 
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
+use App\Services\Cmsrs\Helpers\LangHelperService;
 
 class HeadlessService extends BaseService
 {
@@ -175,7 +176,7 @@ class HeadlessService extends BaseService
     {
         $data = $this->pageService->getPageDataFormat($page);
 
-        return $this->removeKeyLangInArr($data, $lang);
+        return LangHelperService::removeKeyLangInArr($data, $lang);
     }
 
     /**

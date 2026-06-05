@@ -15,21 +15,6 @@ use Illuminate\Support\Collection;
 abstract class BaseService
 {
     /**
-     * @param  array<string, mixed>  $arr
-     * @return array<string, mixed>
-     */
-    public function removeKeyLangInArr(array $arr, string $lang): array
-    {
-        foreach ($arr as $key => $value) {
-            if (is_array($value)) {
-                $arr[$key] = isset($value[$lang]) ? $value[$lang] : null;
-            }
-        }
-
-        return $arr;
-    }
-
-    /**
      * @return HasMany<Page, Menu>
      */
     protected function pagesPublishedAndAccessNotAuth(Menu $mMenu): HasMany

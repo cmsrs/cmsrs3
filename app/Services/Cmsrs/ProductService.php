@@ -18,6 +18,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use App\Services\Cmsrs\Helpers\LangHelperService;
 
 class ProductService extends BaseService
 {
@@ -484,7 +485,7 @@ class ProductService extends BaseService
         $out = $this->getProductDataFormat($product);
         $out['product_name_default_lang'] = $this->getProductNameDefaultLang($out);
         if ($lang) {
-            $out = $this->removeKeyLangInArr($out, $lang);
+            $out = LangHelperService::removeKeyLangInArr($out, $lang);
         }
 
         $out['images'] = $this->imageService->getImagesAndThumbsByTypeAndRefId('product', $product->id, $lang);
