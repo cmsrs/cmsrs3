@@ -7,9 +7,12 @@ namespace App\Services\Cmsrs;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Translate;
+use App\Services\Cmsrs\Traits\ContentTranslateTrait;
 
 class TranslateService extends BaseService
 {
+    use ContentTranslateTrait;
+
     public function __construct(private ConfigService $configService) {}
 
     /**
@@ -19,54 +22,6 @@ class TranslateService extends BaseService
     public function getArrLangs(): array
     {
         return $this->configService->arrGetLangs();
-    }
-
-    /**
-     * @param  array<string, mixed>  $d
-     * @param  array<string, bool>  $columns
-     *
-     * @throws \Exception
-     *                    DRY!!: ContentService.php and TranslateService.php, in Base service I don't want use ConfigService (because of tests - new instance problem in tests, and phpstan)
-     */
-    public function genericCreateTranslate(array $d, string $refName, array $columns, bool $create = true): bool
-    {
-        $refId = $d[$refName];
-        $data = $d['data'];
-        foreach ($columns as $column => $require) {
-            if ($require && empty($data[$column])) {
-                throw new \Exception("Translation problem, require column: $column, var= ".var_export($data, true));
-            } else {
-                $col = ! empty($data[$column]) ? $data[$column] : [];
-                foreach ($this->getArrLangs() as $lang) {
-                    $value = ! empty($col[$lang]) ? $col[$lang] : null;
-
-                    if ($require && ! $value) {
-                        throw new \Exception("Translation problem, require lang: $lang for column: $column, var= ".var_export($data, true));
-                    }
-
-                    $row = [$refName => $refId, 'column' => $column, 'lang' => $lang, 'value' => $value];
-                    if ($create) {
-                        $this->createRow($row);
-                    } else {
-                        $this->updateRow($row);
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * @param  array<string, mixed>  $row
-     *                                     DRY!!: ContentService.php and TranslateService.php
-     */
-    protected function createRow($row): void
-    {
-        $translate = Translate::create($row);
-        if (empty($translate->id)) {
-            throw new \Exception('problem with save into translate table');
-        }
     }
 
     /**
@@ -129,16 +84,11 @@ class TranslateService extends BaseService
      * @param  array<string, mixed>  $row
      *                                     DRY!!: ContentService.php and TranslateService.php
      */
-    protected function wrapTranslateUpdate(?Translate $obj, array $row): void
+    protected function createRow($row): void
     {
-        if ($obj === null) {
-            $this->createRow($row);
-
-            return;
+        $translate = Translate::create($row);
+        if (empty($translate->id)) {
+            throw new \Exception('problem with save into translate table');
         }
-
-        $obj->update([
-            'value' => $row['value'],
-        ]);
     }
 }
