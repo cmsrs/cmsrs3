@@ -20,6 +20,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use App\Services\Cmsrs\Helpers\PaginationHelperService;
 
 class ProductService extends BaseService
 {
@@ -183,7 +184,7 @@ class ProductService extends BaseService
             ? $products->sortByDesc($column)
             : $products->sortBy($column);
 
-        $productsPagination = $this->getPaginationFromCollection($products->values()); // values() - reset keys
+        $productsPagination = PaginationHelperService::getPaginationFromCollection($products->values()); // values() - reset keys
 
         // For optimization purposes, we only retrieve images for products on the given page.
         $productsPagination->each(function ($product) {

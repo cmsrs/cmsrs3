@@ -23,23 +23,6 @@ abstract class BaseService
     //     }
     // }
 
-    /**
-     * @param  Collection<int, mixed>  $collection
-     * @return LengthAwarePaginator<int, mixed>
-     */
-    protected function getPaginationFromCollection(Collection $collection)
-    {
-        $perPage = ConfigService::getPagination();
-        $page = Paginator::resolveCurrentPage() ?: 1;
-
-        return new LengthAwarePaginator(
-            $collection->forPage($page, $perPage)->values(),
-            $collection->count(),
-            $perPage,
-            $page,
-            ['path' => request()->url()]
-        );
-    }
 
     // see: App\Services\Cmsrs\Helpers\PriceHelperService
     // protected static function formatCurrency($number)

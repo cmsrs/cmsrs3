@@ -11,6 +11,7 @@ use App\Models\Cmsrs\Product;
 use App\Services\Cmsrs\Helpers\PriceHelperService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use App\Services\Cmsrs\Helpers\PaginationHelperService;
 
 class CheckoutService extends BaseService
 {
@@ -49,7 +50,7 @@ class CheckoutService extends BaseService
 
         $checkouts = $this->printCheckouts($objCheckouts, $lang);
 
-        return $this->getPaginationFromCollection(collect($checkouts));
+        return PaginationHelperService::getPaginationFromCollection(collect($checkouts));
 
     }
 
