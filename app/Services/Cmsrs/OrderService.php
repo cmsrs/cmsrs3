@@ -9,7 +9,7 @@ use App\Models\Cmsrs\Order;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 
-class OrderService extends BaseService
+class OrderService
 {
     /**
      * another and old approach:

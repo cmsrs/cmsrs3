@@ -12,7 +12,7 @@ use App\Services\Cmsrs\Helpers\StrHelperService;
 use App\Services\Cmsrs\Traits\TranslationsTrait;
 use Illuminate\Database\Eloquent\Collection;
 
-class ImageService extends BaseService
+class ImageService
 {
     /**
      * @use TranslationsTrait<Image>

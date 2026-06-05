@@ -8,12 +8,12 @@ use App\Enums\Cmsrs\SortDirection;
 use App\Models\Cmsrs\Basket;
 use App\Models\Cmsrs\Checkout;
 use App\Models\Cmsrs\Product;
+use App\Services\Cmsrs\Helpers\PaginationHelperService;
 use App\Services\Cmsrs\Helpers\PriceHelperService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
-use App\Services\Cmsrs\Helpers\PaginationHelperService;
 
-class CheckoutService extends BaseService
+class CheckoutService
 {
     public function __construct(private ProductService $productService, private PriceHelperService $priceHelperService) {}
 

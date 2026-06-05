@@ -9,7 +9,7 @@ use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\Traits\ContentTranslateTrait;
 
-class TranslateService extends BaseService
+class TranslateService
 {
     use ContentTranslateTrait;
 

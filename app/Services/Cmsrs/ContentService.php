@@ -7,7 +7,7 @@ namespace App\Services\Cmsrs;
 use App\Models\Cmsrs\Content;
 use App\Services\Cmsrs\Traits\ContentTranslateTrait;
 
-class ContentService extends BaseService
+class ContentService
 {
     use ContentTranslateTrait;
 

@@ -8,7 +8,7 @@ use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\Helpers\LangHelperService;
 
-class HeadlessService extends BaseService
+class HeadlessService
 {
     public function __construct(private ConfigService $configService, private PageService $pageService, private MenuService $menuService, private ImageService $imageService) {}
 

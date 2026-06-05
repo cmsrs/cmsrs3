@@ -6,7 +6,7 @@ namespace App\Services\Cmsrs;
 
 use App\Models\Cmsrs\Contact;
 
-class ContactService extends BaseService
+class ContactService
 {
     /** @var array<int, string> */
     protected $fillable = [

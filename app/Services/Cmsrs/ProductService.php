@@ -14,15 +14,15 @@ use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\Helpers\ArrObjHelperService;
 use App\Services\Cmsrs\Helpers\CacheService;
 use App\Services\Cmsrs\Helpers\LangHelperService;
+use App\Services\Cmsrs\Helpers\PaginationHelperService;
 use App\Services\Cmsrs\Helpers\PriceHelperService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use App\Services\Cmsrs\Helpers\PaginationHelperService;
 
-class ProductService extends BaseService
+class ProductService
 {
     /** @var array<int, string> */
     public array $productFields;

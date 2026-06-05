@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Throwable;
 
-class MenuService extends BaseService
+class MenuService
 {
     /**
      * @use TranslationsTrait<Menu>
@@ -270,5 +270,4 @@ class MenuService extends BaseService
     {
         return $mMenu->pages()->where('published', '=', 1)->where('after_login', '=', 0)->orderBy('position', 'asc');
     }
-
 }
