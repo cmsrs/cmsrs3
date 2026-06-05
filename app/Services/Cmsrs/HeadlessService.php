@@ -116,7 +116,7 @@ class HeadlessService extends BaseService
         $menus = Menu::orderBy('position', 'asc')->get();
         $j = 0;
         foreach ($menus as $menu) {
-            $pagesPublishedAndAccess = $this->pagesPublishedAndAccessNotAuth($menu)->get(); // !! it is different getAllUrlRelatedToMenus in tests
+            $pagesPublishedAndAccess = $this->menuService->pagesPublishedAndAccessNotAuth($menu)->get(); // !! it is different getAllUrlRelatedToMenus in tests
 
             $urlInMenu[$j] = [
                 'menu_name' => null,
