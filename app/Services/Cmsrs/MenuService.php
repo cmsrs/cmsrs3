@@ -226,4 +226,40 @@ class MenuService extends BaseService
 
         return true;
     }
+
+    /**
+     * @param  Collection<int, Page>  $pagesByMenu
+     * @return array<int, Page>
+     */
+    public function pagesPublishedTree(Collection $pagesByMenu)
+    {
+        $tree = [];
+
+        foreach ($pagesByMenu as $page) {
+            if ($page->page_id === null) {
+                $tree[$page->id] = $page;
+            }
+        }
+
+        foreach ($pagesByMenu as $page) {
+            if ($page->page_id === null) {
+                continue;
+            }
+
+            $parentId = $page->page_id;
+
+            if (! isset($tree[$parentId])) {
+                continue;
+            }
+
+            $parent = $tree[$parentId];
+
+            $children = $parent->children ?? [];
+            $children[] = $page;
+
+            $parent->setAttribute('children', $children);
+        }
+
+        return $tree;
+    }
 }

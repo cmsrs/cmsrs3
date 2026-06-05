@@ -22,42 +22,6 @@ abstract class BaseService
         return $mMenu->pages()->where('published', '=', 1)->where('after_login', '=', 0)->orderBy('position', 'asc');
     }
 
-    /**
-     * @param  Collection<int, Page>  $pagesByMenu
-     * @return array<int, Page>
-     */
-    public function pagesPublishedTree(Collection $pagesByMenu)
-    {
-        $tree = [];
-
-        foreach ($pagesByMenu as $page) {
-            if ($page->page_id === null) {
-                $tree[$page->id] = $page;
-            }
-        }
-
-        foreach ($pagesByMenu as $page) {
-            if ($page->page_id === null) {
-                continue;
-            }
-
-            $parentId = $page->page_id;
-
-            if (! isset($tree[$parentId])) {
-                continue;
-            }
-
-            $parent = $tree[$parentId];
-
-            $children = $parent->children ?? [];
-            $children[] = $page;
-
-            $parent->setAttribute('children', $children);
-        }
-
-        return $tree;
-    }
-
     // protected function createRow($row)
     // {
     //     $translate = Translate::create($row);
@@ -65,25 +29,6 @@ abstract class BaseService
     //         throw new \Exception('problem with save into translate table');
     //     }
     // }
-
-    /**
-     * @param  array<array-key, array<string, mixed>>  $arr
-     * @return array<array-key, array<string, mixed>>
-     */
-    public static function reIndexArr(array $arr, string $key = 'id'): array
-    {
-        $out = [];
-        foreach ($arr as $item) {
-            $arrItem = (array) $item;
-            if (empty($arrItem[$key])) {
-                throw new \Exception('not found key id in arr');
-            }
-
-            $out[$arrItem[$key]] = $arrItem;
-        }
-
-        return $out;
-    }
 
     /**
      * @param  Collection<int, mixed>  $collection

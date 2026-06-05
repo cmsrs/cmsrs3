@@ -6,9 +6,9 @@ namespace App\Http\Controllers\Cmsrs;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cmsrs\Menu;
-use App\Services\Cmsrs\BaseService;
 use App\Services\Cmsrs\CheckoutService;
 use App\Services\Cmsrs\ConfigService;
+use App\Services\Cmsrs\Helpers\ArrObjHelperService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\OrderService;
 use App\Services\Cmsrs\PageService;
@@ -68,7 +68,7 @@ class HomeController extends Controller
         $arrOrders = $this->orderService->inOrdersByUserId($user->id)->toArray();
         $orders = [];
         if (! empty($arrOrders)) {
-            $arrOrdersReindex = BaseService::reIndexArr($arrOrders, 'product_id');
+            $arrOrdersReindex = ArrObjHelperService::reIndexArr($arrOrders, 'product_id');
             $dataToPayment = $this->productService->createPaymentData($arrOrdersReindex);
             $orders = $dataToPayment['orders'];
         }

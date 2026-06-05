@@ -11,10 +11,11 @@ use App\Models\Cmsrs\Order;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Product;
 use App\Models\Cmsrs\Translate;
-use App\Services\Cmsrs\BaseService;
-use App\Services\Cmsrs\CheckoutService;
+// use App\Services\Cmsrs\BaseService;
+// use App\Services\Cmsrs\CheckoutService;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\DeliverService;
+use App\Services\Cmsrs\Helpers\ArrObjHelperService;
 use App\Services\Cmsrs\Helpers\PriceHelperService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
@@ -1011,7 +1012,7 @@ class ProductTest extends Base
         $obj = json_decode($json);
         $this->assertEquals(2, count($obj->cart));
 
-        $arrCart = BaseService::reIndexArr($obj->cart);
+        $arrCart = ArrObjHelperService::reIndexArr($obj->cart);
 
         $productService = app(ProductService::class);
         $data = $productService->createPaymentData($arrCart);

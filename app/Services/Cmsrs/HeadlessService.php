@@ -137,7 +137,7 @@ class HeadlessService extends BaseService
             } else {
                 $urlInMenu[$j]['menu_name'] = $this->translateMenuColumn($menu, 'name');
                 $i = 0;
-                foreach ($this->pagesPublishedTree($pagesPublishedAndAccess) as $pageMenu) {
+                foreach ($this->menuService->pagesPublishedTree($pagesPublishedAndAccess) as $pageMenu) {
                     $urlInMenu[$j]['pages'][$i] = $this->getPageData($pageMenu);
                     if (! empty($pageMenu['children']) && ! empty($pageMenu->published)) {
                         $ii = 0;

@@ -20,5 +20,4 @@ class LangHelperService
 
         return $arr;
     }
-
 }

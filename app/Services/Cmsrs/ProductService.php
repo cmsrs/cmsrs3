@@ -11,14 +11,15 @@ use App\Models\Cmsrs\Checkout;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Product;
 use App\Models\Cmsrs\Translate;
+use App\Services\Cmsrs\Helpers\ArrObjHelperService;
 use App\Services\Cmsrs\Helpers\CacheService;
+use App\Services\Cmsrs\Helpers\LangHelperService;
 use App\Services\Cmsrs\Helpers\PriceHelperService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use App\Services\Cmsrs\Helpers\LangHelperService;
 
 class ProductService extends BaseService
 {
@@ -83,7 +84,7 @@ class ProductService extends BaseService
             throw new \Exception('Deliver problem - checkout');
         }
 
-        $reindexBaskets = BaseService::reIndexArr($data['products']);
+        $reindexBaskets = ArrObjHelperService::reIndexArr($data['products']);
         $productsDataAndTotalAmount = $this->createPaymentData($reindexBaskets);
         if (empty($productsDataAndTotalAmount['baskets'])) {
             throw new \Exception('No data in basket (not found data in db)');
