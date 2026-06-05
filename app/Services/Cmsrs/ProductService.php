@@ -681,30 +681,6 @@ class ProductService extends BaseService
     }
 }
 
-/*
-now see: createPaymentData
-public function old1______getDataToPayment(array $arrCart, ?array $basketsOld = null, ?array $ordersOld = null): array
-{
-    $result = $this->createPaymentData($arrCart);
-
-    // baskets
-    if (is_array($basketsOld)) {
-        $result['baskets'] = array_merge($basketsOld, $result['baskets']);
-    } else {
-        $result['baskets'] = [];
-    }
-
-    // orders
-    if (is_array($ordersOld)) {
-        $result['orders'] = array_merge($ordersOld, $result['orders']);
-    } else {
-        $result['orders'] = [];
-    }
-
-    return $result;
-}
-*/
-
 /**
  * __param  array<int, mixed>  $arrCart
  * __param  array<int, array<string, mixed>>|false  $baskets

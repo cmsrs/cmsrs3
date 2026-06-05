@@ -737,9 +737,9 @@ class PageService extends BaseService
     public function getAllPagesWithImages(?string $type = null): array
     {
         if ($type) {
-            $pages = Page::with(['translates', 'contents'])->where('type', $type)->orderBy('position', 'asc')->get($this->pageFields)->toArray();
+            $pages = Page::with(['translates', 'contents'])->where('type', $type)->orderBy('position', 'asc')->get(Page::FIELDS)->toArray();
         } else {
-            $pages = Page::with(['translates', 'contents'])->orderBy('position', 'asc')->get($this->pageFields)->toArray();
+            $pages = Page::with(['translates', 'contents'])->orderBy('position', 'asc')->get(Page::FIELDS)->toArray();
         }
 
         $i = 0;
@@ -777,7 +777,7 @@ class PageService extends BaseService
                     ->where('value', $shortTitle);
             })
             ->orderBy('position', 'asc')
-            ->get($this->pageFields)
+            ->get(Page::FIELDS)
             ->toArray();
 
         $i = 0;
@@ -898,7 +898,7 @@ class PageService extends BaseService
     public function getPageDataFormat(array $page): array
     {
         $out = [];
-        foreach ($this->pageFields as $field) {
+        foreach (Page::FIELDS as $field) {
             $out[$field] = $page[$field];
         }
         foreach ($page['translates'] ?? [] as $translate) {

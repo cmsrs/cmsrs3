@@ -58,10 +58,6 @@ class Page extends Model implements ContentTranslatableInterface
     // const PREFIX_SHOP_URL = 'shop';
     const PREFIX_IN_URL = 'in'; // (in) independent
 
-    /** @var array<int, string> */
-    public array $pageFields = [];
-    // private $langs;
-
     protected $fillable = [
         'published',
         'commented',
@@ -85,6 +81,23 @@ class Page extends Model implements ContentTranslatableInterface
         'position' => 'integer',
         'menu_id' => 'integer',
         'page_id' => 'integer',
+    ];
+
+    /**
+     * cmsrs page fields that are used in the list of pages in the admin panel and in the page tree
+     * old name: $pageFields
+     *
+     * @var array<int, string>
+     */
+    public const FIELDS = [
+        'id',
+        'published',
+        'commented',
+        'after_login',
+        'position',
+        'type',
+        'menu_id',
+        'page_id',
     ];
 
     /**

@@ -125,7 +125,7 @@ class ImageTest extends Base
         $res0 = $response0->getData();
         $this->assertTrue($res0->success);
 
-        $pageFields = app(PageService::class)->pageFields;
+        $pageFields = Page::FIELDS; // app(PageService::class)->pageFields;
         $this->assertFalse(in_array('created_at', $pageFields));
         $this->assertTrue(in_array('id', $pageFields));
 

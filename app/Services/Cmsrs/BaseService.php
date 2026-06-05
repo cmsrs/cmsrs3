@@ -15,20 +15,6 @@ use Illuminate\Support\Collection;
 abstract class BaseService
 {
     /**
-     * @var array<int, string>
-     */
-    public $pageFields = [
-        'id',
-        'published',
-        'commented',
-        'after_login',
-        'position',
-        'type',
-        'menu_id',
-        'page_id',
-    ];
-
-    /**
      * @param  array<string, mixed>  $arr
      * @return array<string, mixed>
      */

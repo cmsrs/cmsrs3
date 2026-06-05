@@ -59,7 +59,7 @@ class HeadlessService extends BaseService
                     ->where('value', 'like', "%$shortTitle%");
             })
             ->orderBy('position', 'asc')
-            ->get($this->pageFields)
+            ->get(Page::FIELDS)
             ->toArray();
 
         $i = 0;
@@ -82,7 +82,7 @@ class HeadlessService extends BaseService
             throw new \Exception('Wrong type : '.$type);
         }
 
-        $pages = Page::with(['translates', 'contents'])->where('type', $type)->where('published', true)->where('after_login', false)->orderBy('position', 'asc')->get($this->pageFields)->toArray();
+        $pages = Page::with(['translates', 'contents'])->where('type', $type)->where('published', true)->where('after_login', false)->orderBy('position', 'asc')->get(Page::FIELDS)->toArray();
 
         $i = 0;
         $out = [];

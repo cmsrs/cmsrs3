@@ -326,7 +326,7 @@ class PageTest extends Base
         $this->assertNotEmpty($data->id);
         $this->assertNotEmpty($data->position);
 
-        $pageFields = (app(PageService::class))->pageFields;
+        $pageFields = Page::FIELDS; // app(PageService::class)->pageFields;
         $this->assertNotEmpty($pageFields);
         foreach ($pageFields as $pageField) {
             if ($pageField != 'id' && $pageField != 'position') {

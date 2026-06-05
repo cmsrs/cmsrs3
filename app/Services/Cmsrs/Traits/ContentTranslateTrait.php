@@ -14,7 +14,6 @@ trait ContentTranslateTrait
      * @param  array<string, bool>  $columns
      *
      * @throws \Exception
-     *                    DRY!!: ContentService.php and TranslateService.php, in Base service I don't want use ConfigService (because of tests - new instance problem in tests, and phpstan)
      */
     public function genericCreateTranslate(array $d, string $refName, array $columns, bool $create = true): bool
     {
@@ -47,7 +46,6 @@ trait ContentTranslateTrait
 
     /**
      * @param  array<string, mixed>  $row
-     *                                     DRY!!: ContentService.php and TranslateService.php
      */
     protected function wrapTranslateUpdate(Translate|Content|null $obj, array $row): void
     {
