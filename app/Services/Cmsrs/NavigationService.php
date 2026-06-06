@@ -41,16 +41,19 @@ class NavigationService
                 'url' => null,
                 'short_title' => null,
                 'page_id' => null,
+                'menu_id' => null,
                 'pages' => [],
             ];
+            $urlInMenu[$j]['menu_id'] = $menu->id;
             if ($pagesPublishedAndAccess->count() == 1) {
                 $pageFirst = $pagesPublishedAndAccess->first();
                 if (! $pageFirst instanceof Page) {  // to avoid phpstan error, but it should not happen
                     continue;
                 }
-                $urlInMenu[$j]['menu_name'] = $this->translatePageColumn($pageFirst, 'short_title'); // to nie jest blad
+                $urlInMenu[$j]['menu_name'] = $this->translatePageColumn($pageFirst, 'short_title'); // it is not mistake!
                 $urlInMenu[$j]['url'] = $this->pageService->getUrls($pageFirst);
                 $urlInMenu[$j]['page_id'] = $pageFirst->getId(); // phpstan error, but it should not happen
+                $urlInMenu[$j]['menu_id'] = $menu->id;
                 $urlInMenu[$j]['pages'] = [];
             } else {
                 $urlInMenu[$j]['menu_name'] = $this->translateMenuColumn($menu, 'name');
@@ -92,7 +95,7 @@ class NavigationService
     /**
      * @return array<string, string>
      */
-    public function translatePageColumn(Page $page, string $column): array
+    private function translatePageColumn(Page $page, string $column): array
     {
         $langs = $this->configService->arrGetLangs();
 
@@ -108,7 +111,7 @@ class NavigationService
     /**
      * @return array<string, string>
      */
-    public function translateMenuColumn(Menu $menu, string $column): array
+    private function translateMenuColumn(Menu $menu, string $column): array
     {
         $langs = $this->configService->arrGetLangs();
 

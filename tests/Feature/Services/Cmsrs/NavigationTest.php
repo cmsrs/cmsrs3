@@ -53,11 +53,17 @@ class NavigationTest extends Base
         foreach ($menuUrls as $menuUrl) {
             $this->assertNotEmpty($menuUrl['menu_name']);
             $this->assertNotEmpty($menuUrl['menu_name']['en']);
+            $this->assertNotEmpty($menuUrl['menu_id']);
             if (isset($menuUrl['url'])) {
                 $this->assertNotEmpty($menuUrl['url']);
                 $this->assertNotEmpty($menuUrl['url']['en']);
                 $this->assertNotEmpty($menuUrl['page_id']);
                 $this->assertEmpty($menuUrl['pages']); // !!
+            } else {
+                $this->assertNull($menuUrl['url']);
+                // $this->assertEmpty($menuUrl['url']['en']);
+                $this->assertNull($menuUrl['page_id']);
+                $this->assertNotEmpty($menuUrl['pages']); // !!
             }
             if (isset($menuUrl['pages'])) {
                 foreach ($menuUrl['pages'] as $page) {
@@ -85,6 +91,7 @@ class NavigationTest extends Base
         $this->assertNotEmpty($menuUrls[4]['url']);
         $this->assertNotEmpty($menuUrls[4]['page_id']);
         $this->assertNotEmpty($menuUrls[4]['menu_name']);
+        $this->assertNotEmpty($menuUrls[4]['menu_id']);
         $this->assertEmpty($menuUrls[4]['pages']);    // menu is connected with page, so pages is empty
     }
 } // class
