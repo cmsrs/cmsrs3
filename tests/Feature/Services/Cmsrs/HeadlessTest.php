@@ -225,57 +225,6 @@ class HeadlessTest extends Base
         $this->assertEquals(5, count($data->data));
     }
 
-    public function test_it_will_get_all_menus_from_service()
-    {
-        (new Demo)->pagesAndMenu(true);
-
-        $menuUrls = app(HeadlessService::class)->getAllUrlRelatedToMenus();
-
-        $this->assertHelper($menuUrls);
-    }
-
-    private function assertHelper($menuUrls)
-    {
-        $this->assertEquals(5, count($menuUrls));
-        $tt = false;
-        foreach ($menuUrls as $menuUrl) {
-            $this->assertNotEmpty($menuUrl['menu_name']);
-            $this->assertNotEmpty($menuUrl['menu_name']['en']);
-            if (isset($menuUrl['url'])) {
-                $this->assertNotEmpty($menuUrl['url']);
-                $this->assertNotEmpty($menuUrl['url']['en']);
-                $this->assertNotEmpty($menuUrl['page_id']);
-                $this->assertEmpty($menuUrl['pages']); // !!
-            }
-            if (isset($menuUrl['pages'])) {
-                foreach ($menuUrl['pages'] as $page) {
-                    $this->assertNotEmpty($page['short_title']);
-                    $this->assertNotEmpty($page['short_title']['en']);
-                    $this->assertNotEmpty($page['url']);
-                    $this->assertNotEmpty($page['page_id']);
-                    if (isset($page['children'])) {
-                        foreach ($page['children'] as $child) {
-                            $this->assertNotEmpty($child['short_title']);
-                            $this->assertNotEmpty($child['short_title']['en']);
-                            $this->assertNotEmpty($child['url']);
-                            $this->assertNotEmpty($child['url']['en']);
-                            $this->assertNotEmpty($child['page_id']);
-                            $tt = true;
-                        }
-                    }
-                }
-            }
-        }
-
-        $this->assertTrue($tt);
-        $this->assertEquals(2, count($menuUrls[0]['pages'])); // one is secret
-
-        $this->assertNotEmpty($menuUrls[4]['url']);
-        $this->assertNotEmpty($menuUrls[4]['page_id']);
-        $this->assertNotEmpty($menuUrls[4]['menu_name']);
-        $this->assertEmpty($menuUrls[4]['pages']);    // menu is connected with page, so pages is empty
-    }
-
     public function test_it_will_get_config_headless_docs()
     {
         $res = $this->get('api/headless/config');

@@ -270,4 +270,8 @@ class MenuService
     {
         return $mMenu->pages()->where('published', '=', 1)->where('after_login', '=', 0)->orderBy('position', 'asc');
     }
+
+    /** navigation service - start */
+
+    /** navigation service - stop */
 }

@@ -9,6 +9,7 @@ use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\HeadlessService;
 use App\Services\Cmsrs\MenuService;
+use App\Services\Cmsrs\NavigationService;
 use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\ProductService;
 use Illuminate\Http\JsonResponse;
@@ -22,6 +23,7 @@ class HeadlessController extends Controller
         protected PageService $pageService,
         protected MenuService $menuService,
         protected HeadlessService $headlessService,
+        protected NavigationService $navigationService,
         protected ProductService $productService,
     ) {}
 
@@ -72,7 +74,7 @@ class HeadlessController extends Controller
 
     public function getMenus(Request $request): JsonResponse
     {
-        $menus = $this->headlessService->getAllUrlRelatedToMenus();
+        $menus = $this->navigationService->getNavigationTree();
 
         return response()->json(['success' => true, 'data' => $menus], 200);
     }
