@@ -7,6 +7,7 @@ use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class MenuTest extends Base
@@ -157,7 +158,7 @@ class MenuTest extends Base
         $this->setTestData();
         $parentId = $this->dateToTestParent($this->objMenu->id);
 
-        $publishedAndAccess = (app(MenuService::class))->pagesPublishedAndAccess($this->objMenu)->get(); // ->toArray();
+        $publishedAndAccess = (app(MenuService::class))->pagesPublishedAndAccess($this->objMenu, Auth::check()); // ->toArray();
         $tree = (app(MenuService::class))->pagesPublishedTree($publishedAndAccess);
         $this->assertEquals(3, count($tree));
         $this->assertEquals(2, count($tree[$parentId]['children']));

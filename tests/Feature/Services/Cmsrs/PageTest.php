@@ -7,6 +7,7 @@ use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class PageTest extends Base
@@ -661,7 +662,7 @@ class PageTest extends Base
         $this->assertEquals($res2->data[2]->content->en, $testData3['content']['en']);
 
         $menu = Menu::findOrFail($this->menuId);
-        $pagePublish = (app(MenuService::class))->pagesPublishedAndAccess($menu)->get()->toArray();
+        $pagePublish = (app(MenuService::class))->pagesPublishedAndAccess($menu, Auth::check())->toArray();
 
         $this->assertEquals(2, count($pagePublish));
     }

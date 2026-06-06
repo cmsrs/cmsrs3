@@ -34,7 +34,7 @@ class NavigationService
         $menus = Menu::orderBy('position', 'asc')->get();
         $j = 0;
         foreach ($menus as $menu) {
-            $pagesPublishedAndAccess = $this->menuService->pagesPublishedAndAccessNotAuth($menu)->get(); // !! it is different getAllUrlRelatedToMenus in tests
+            $pagesPublishedAndAccess = $this->menuService->pagesPublishedAndAccess($menu, false); // !! it is different getAllUrlRelatedToMenus in tests
 
             $urlInMenu[$j] = [ // default values for menu
                 'menu_name' => null,

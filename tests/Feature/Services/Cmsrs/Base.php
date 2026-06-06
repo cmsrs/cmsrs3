@@ -116,7 +116,7 @@ class Base extends TestCase
         // print_r($menus->toArray());
         $mS = app(MenuService::class);
         foreach ($menus as $menu) {
-            $pagesPublishedAndAccess = $mS->pagesPublishedAndAccess($menu)->get();
+            $pagesPublishedAndAccess = $mS->pagesPublishedAndAccess($menu, Auth::check());
             // dump($pagesPublishedAndAccess->published);
             if ($pagesPublishedAndAccess->count() == 1) {
                 $f0 = true;

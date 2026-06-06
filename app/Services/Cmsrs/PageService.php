@@ -233,7 +233,7 @@ class PageService
         $pageOut = null;
         foreach ($menus as $menu) {
             if ($menuSlug == $this->menuService->getSlugByLang($menu, $lang)) {
-                $objPagesPublishedAndAccess = $this->menuService->pagesPublishedAndAccess($menu);
+                $objPagesPublishedAndAccess = $this->menuService->pagesPublishedAndAccess($menu, Auth::check());
                 if ($objPagesPublishedAndAccess->count() == 1) { // it is the case for pageSlug = null, 1 page in menu
                     $pageOut = $objPagesPublishedAndAccess->first();
                     break;
@@ -503,7 +503,7 @@ class PageService
             return null;
         }
 
-        return $this->menuService->pagesPublishedAndAccess($menu)->count();
+        return $this->menuService->pagesPublishedAndAccess($menu, Auth::check())->count();
     }
 
     public function getNumPagesBelongsToThisMenuCache(Page $mPage): ?int

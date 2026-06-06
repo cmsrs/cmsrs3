@@ -105,18 +105,45 @@ class MenuService
     }
 
     /**
-     * @return HasMany<Page, Menu>
+     * @return Collection<int, Page>
      */
-    public function pagesPublishedAndAccess(Menu $mMenu): HasMany
+    public function pagesPublishedAndAccess(Menu $menu, bool $isAuthenticated): Collection
+    {
+        $query = $menu->pages()
+            ->where('published', 1);
+
+        if (! $isAuthenticated) {
+            $query->where('after_login', 0);
+        }
+
+        return $query->orderBy('position')->get();
+    }
+
+    /**
+     * ___return HasMany<Page, Menu>
+     */
+    /*
+    public function old____pagesPublishedAndAccess(Menu $mMenu): HasMany
     {
         if (Auth::check()) {
             $pages = $mMenu->pages()->where('published', '=', 1)->orderBy('position', 'asc');
         } else {
-            $pages = $this->pagesPublishedAndAccessNotAuth($mMenu);
+            $pages = $this->old_pagesPublishedAndAccessNotAuth($mMenu);
         }
 
         return $pages;
     }
+        */
+
+    /**
+     * __return HasMany<Page, Menu>
+     */
+    /*
+    public function old_pagesPublishedAndAccessNotAuth(Menu $mMenu): HasMany
+    {
+        return $mMenu->pages()->where('published', '=', 1)->where('after_login', '=', 0)->orderBy('position', 'asc');
+    }
+        */
 
     /**
      * @return array<int, array<string, mixed>>
@@ -262,16 +289,4 @@ class MenuService
 
         return $tree;
     }
-
-    /**
-     * @return HasMany<Page, Menu>
-     */
-    public function pagesPublishedAndAccessNotAuth(Menu $mMenu): HasMany
-    {
-        return $mMenu->pages()->where('published', '=', 1)->where('after_login', '=', 0)->orderBy('position', 'asc');
-    }
-
-    /** navigation service - start */
-
-    /** navigation service - stop */
 }

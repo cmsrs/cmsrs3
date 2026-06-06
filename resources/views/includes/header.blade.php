@@ -51,7 +51,7 @@
       <ul class="nav-main-rs  navbar-nav me-auto">
           @foreach ($menus as $menu)
             @php 
-                $pagesPublishedAndAccess = $menuService->pagesPublishedAndAccess($menu)->get(); 
+                $pagesPublishedAndAccess = $menuService->pagesPublishedAndAccess($menu, \Illuminate\Support\Facades\Auth::check()); 
             @endphp
             <li class="nav-item dropdown">
             @if ($pagesPublishedAndAccess->count() == 1)
