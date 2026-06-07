@@ -22,31 +22,6 @@ class NavigationService
      * it is always not auth - it is different
      */
 
-    /*
-   return array<int, array{
-    menu_name: array<string, string>,
-    url: array<string, string>|null,
-    page_id: int|null,
-    id: int,
-    pages: array<int, array{
-        url: array<string, string>,
-        short_title: array<string, string>,
-        page_id: int, children?: array<int,
-            array{
-                url: array<string, string>,
-                short_title: array<string, string>,
-                page_id: int}>}>}> but returns
-
-
-
-array<int<0, max>, non-empty-array<
-        'id'|'menu_name'|'page_id'|'pages'|'url',
-        array<int<0, max>|string,
-        array<'children'|' page_id'|'short_title'|'url',
-        array<int<0, max>|string,
-        array{url: array<string, string>, short_title: array<string, string>, page_id: int}|string>|int>|string>|int|null>>
-*/
-
     /**
      * @return array<int, array{
      *     menu_name: array<string, string>,
