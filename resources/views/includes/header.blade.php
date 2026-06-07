@@ -1,10 +1,14 @@
 <?php 
+
+  $navigationService = app(App\Services\Cmsrs\NavigationService::class);
+  $treeMenu = $navigationService->getNavigationTree( \Illuminate\Support\Facades\Auth::check() );
+
   $configService = new App\Services\Cmsrs\ConfigService;
   $pageService = app(App\Services\Cmsrs\PageService::class); 
   $menuService = app(App\Services\Cmsrs\MenuService::class); 
 
   $lang =  $configService->getLangFromRequest(); //request()->route('lang') ?? request('lang') ?? $configService->getDefaultLang();
-  $menus = App\Models\Cmsrs\Menu::all()->sortBy('position');
+  //$menus = App\Models\Cmsrs\Menu::all()->sortBy('position');
 
   $currency = $configService->getCurrency();
   $langs = $configService->arrGetLangs();  
@@ -49,28 +53,25 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
       <ul class="nav-main-rs  navbar-nav me-auto">
-          @foreach ($menus as $menu)
-            @php 
-                $pagesPublishedAndAccess = $menuService->pagesPublishedAndAccess($menu, \Illuminate\Support\Facades\Auth::check()); 
-            @endphp
+          @foreach ($treeMenu as $menu)
             <li class="nav-item dropdown">
-            @if ($pagesPublishedAndAccess->count() == 1)
-              <a class=" ms-3 nav-link" href="{{ $pageService->getUrl($pagesPublishedAndAccess->first(),  $lang)}}">
-                {{$pageService->translatesByColumnAndLang(  $pagesPublishedAndAccess->first(), 'short_title', $lang ) }}
+            @if ($menu['url'])
+              <a class=" ms-3 nav-link" href="{{ $menu['url'][$lang] }}">
+                {{ $menu['menu_name'][$lang] }}
               </a>
             @else
-              <a class="nav-link dropdown-toggle ms-3" href="#" id="dropdown{{ $menu->id }}" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{ $menuService->translatesByColumnAndLang($menu, 'name', $lang ) }}
+              <a class="nav-link dropdown-toggle ms-3" href="#" id="dropdown{{ $menu['id'] }}" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ $menu['menu_name'][$lang] }}
               </a>
-              <div class="dropdown-menu" aria-labelledby="dropdown{{ $menu->id }}">
-                @foreach ($menuService->pagesPublishedTree($pagesPublishedAndAccess) as $pageMenu)
-                    <a class="dropdown-item" href="{{ $pageService->getUrl($pageMenu, $lang)}}">
-                      {{  $pageService->translatesByColumnAndLang($pageMenu, 'short_title', $lang ) }}
+              <div class="dropdown-menu" aria-labelledby="dropdown{{ $menu['id'] }}">
+                @foreach ($menu['pages'] as $pageMenu)
+                    <a class="dropdown-item" href="{{ $pageMenu['url'][$lang] }}">
+                      {{  $pageMenu['short_title'][$lang] }}
                     </a>
-                    @if (! empty($pageMenu['children']) && ! empty($pageMenu->published))
+                    @if (isSet($pageMenu['children']) && is_array($pageMenu['children']) )
                         @foreach ($pageMenu['children'] as $p)
-                            <a class="dropdown-item ms-3" href="{{ $pageService->getUrl($p, $lang)}}">
-                                {{ $pageService->translatesByColumnAndLang($p, 'short_title', $lang ) }}
+                            <a class="dropdown-item ms-3" href="{{ $p['url'][$lang]}}">
+                                {{ $p['short_title'][$lang] }}
                             </a>
                         @endforeach
                     @endif
@@ -149,7 +150,7 @@
             @php  
                 $classActive = ($ll == $lang) ? 'active' : '';
                 $productSlug = $productNameSlug ? $productNameSlug[$ll]  : null;
-                $changeLang = $pageService->getUrlByPageOrRouteName(($page ?? null), $ll, $productSlug, $routeName);
+                $changeLang = $pageService->getUrlByPageOrRouteName(($page ?? null), $ll, $productSlug, $routeName); //
             @endphp
             <div class="ms-2  nav-item">
               <a class="changelang nav-link  {{ $classActive }}" href="{{ $changeLang }}">

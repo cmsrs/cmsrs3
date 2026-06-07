@@ -23,28 +23,38 @@ class NavigationService
      */
 
     /**
-     * @return array<int, array<string, mixed>>
-     */
-    public function getNavigationTree(): array
+     * @return array<int, array{
+     *     menu_name: array<string, string>,
+     *     url: null|array<string, string>,
+     *     page_id: int|null,
+     *     id: int,
+     *     pages: array<int, array{
+     *          url: array<string,string>,
+     *          short_title: array<string, string>,
+     *          page_id: int,
+     *          children?: array<int, array{
+     *               url: array<string,string>,
+     *               short_title: array<string,string>,
+     *               page_id: int
+     *          }>     
+     *     }>
+     * }>
+     */    
+    public function getNavigationTree(bool $isAuth = false): array
     {
-        // cms link
-        // see in: resources/views/includes/header.blade.php
-
         $urlInMenu = [];
         $menus = Menu::orderBy('position', 'asc')->get();
         $j = 0;
         foreach ($menus as $menu) {
-            $pagesPublishedAndAccess = $this->menuService->pagesPublishedAndAccess($menu, false); // !! it is different getAllUrlRelatedToMenus in tests
+            $pagesPublishedAndAccess = $this->menuService->pagesPublishedAndAccess($menu, $isAuth); // !! it is different getAllUrlRelatedToMenus in tests
 
             $urlInMenu[$j] = [ // default values for menu
-                'menu_name' => null,
+                'menu_name' => [],
                 'url' => null,
-                'short_title' => null,
                 'page_id' => null,
-                'menu_id' => null,
-                'pages' => [],
+                'id' => $menu->id, //tu zawsze bedzie int - to mam incjowac 0?
+                'pages' => [], //a tu moze byc pusta tablica albo to co zwraca funcja  getPageData
             ];
-            $urlInMenu[$j]['menu_id'] = $menu->id;
             if ($pagesPublishedAndAccess->count() == 1) {
                 $pageFirst = $pagesPublishedAndAccess->first();
                 if (! $pageFirst instanceof Page) {  // to avoid phpstan error, but it should not happen
@@ -53,18 +63,16 @@ class NavigationService
                 $urlInMenu[$j]['menu_name'] = $this->translatePageColumn($pageFirst, 'short_title'); // it is not mistake!
                 $urlInMenu[$j]['url'] = $this->pageService->getUrls($pageFirst);
                 $urlInMenu[$j]['page_id'] = $pageFirst->getId(); // phpstan error, but it should not happen
-                $urlInMenu[$j]['menu_id'] = $menu->id;
                 $urlInMenu[$j]['pages'] = [];
             } else {
                 $urlInMenu[$j]['menu_name'] = $this->translateMenuColumn($menu, 'name');
                 $i = 0;
                 foreach ($this->menuService->pagesPublishedTree($pagesPublishedAndAccess) as $pageMenu) {
-                    $urlInMenu[$j]['pages'][$i] = $this->getPageData($pageMenu);
-                    if (! empty($pageMenu['children']) && ! empty($pageMenu->published)) {
-                        $ii = 0;
-                        foreach ($pageMenu['children'] as $p) {
-                            $urlInMenu[$j]['pages'][$i]['children'][$ii] = $this->getPageData($p);
-                            $ii++;
+                    $urlInMenu[$j]['pages'][$i] = $this->getPageData($pageMenu);  //
+                    if (! empty($pageMenu->children) && ! empty($pageMenu->published)) {
+                        $urlInMenu[$j]['pages'][$i]['children'] = [];
+                        foreach ($pageMenu->children as $p) {
+                            $urlInMenu[$j]['pages'][$i]['children'][] = $this->getPageData($p);
                         }
                     }
                     $i++;
@@ -80,16 +88,19 @@ class NavigationService
      * pages in menu
      * children, but it is optional, because it is not always needed (second level of page is not needed)
      *
-     * @return array<string, mixed>
+     * @return array{
+     *         url: array<string,string>,
+     *         short_title: array<string, string>,
+     *         page_id: int,
+     * }
      */
     private function getPageData(Page $page)
     {
-        $PageData = [];
-        $PageData['url'] = $this->pageService->getUrls($page);
-        $PageData['short_title'] = $this->translatePageColumn($page, 'short_title');
-        $PageData['page_id'] = $page->id;
-
-        return $PageData;
+        return [
+            'url' => $this->pageService->getUrls($page),
+            'short_title' => $this->translatePageColumn($page, 'short_title'),
+            'page_id' => $page->id
+        ];
     }
 
     /**
