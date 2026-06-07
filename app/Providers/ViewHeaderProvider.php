@@ -62,5 +62,21 @@ class ViewHeaderProvider extends ServiceProvider
                 ]);
             });
         });
+
+        View::composer('includes.footer', function ($view) {
+
+            return app()->call(function (
+                ConfigService $configService,
+                PageService $pageService,
+            ) use ($view) {
+                $lang = $configService->getLangFromRequest();
+                $footerPages = $pageService->getFooterPages($lang);
+
+                $view->with([
+                    'footerPages' => $footerPages,
+                ]);
+            });
+        });
+
     }
 } // END OF CLASS

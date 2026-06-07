@@ -112,7 +112,7 @@
               </form>
         @endguest
       @endif
-      @if ( count($allUrlsByPageOrRouteName) > 1 )
+      @if ( $manyLangs )
         <li class="d-flex flex-row">
         @foreach ($allUrlsByPageOrRouteName as $ll => $changeLang)
             <div class="ms-2  nav-item">
