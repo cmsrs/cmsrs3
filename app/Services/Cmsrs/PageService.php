@@ -455,12 +455,8 @@ class PageService
         return $this->getCmsUrl($mPage, $lang, $urlParam);
     }
 
-    public function getUrlByPageOrRouteName(
-        ?Page $mPage,
-        string $lang,
-        ?string $productSlug = null,
-        ?string $routeName = null
-    ): string {
+    public function getUrlByPageOrRouteName(?Page $mPage, string $lang, ?string $productSlug = null, ?string $routeName = null): string
+    {
         // return (! empty($mPage)) ? $this->getUrl($mPage, $lang, $productSlug) : route($routeName, ['lang' => $lang]);
         if ($mPage !== null) {
             return $this->getUrl($mPage, $lang, $productSlug) ?? '';
@@ -472,6 +468,29 @@ class PageService
 
         return route($routeName, ['lang' => $lang]);
 
+    }
+
+    /**
+     * Get all URLs for a given page or route name across all supported languages.
+     *
+     * @param  ?array <string, string>  $productSlug
+     * @return array <string, string> An associative array where keys are language codes and values are URLs.
+     */
+    public function getAllUrlsByPageOrRouteName(?Page $mPage, ?array $productSlug = null, ?string $routeName = null): array
+    {
+
+        if ($routeName == 'shoppingsuccess') { // TODO - tests
+            return [];
+        }
+
+        $urls = [];
+        $langs = $this->configService->arrGetLangs();
+        foreach ($langs as $l) {
+            $productSlugForLang = $productSlug[$l] ?? null;
+            $urls[$l] = $this->getUrlByPageOrRouteName($mPage, $l, $productSlugForLang, $routeName);
+        }
+
+        return $urls;
     }
 
     // private function getTypeUrl($type, $lang)

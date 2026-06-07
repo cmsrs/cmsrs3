@@ -115,14 +115,21 @@ class FrontLangsTest extends Base
         $pageId = $pages[0]['id'];
 
         $pageService = app(PageService::class);
-        $urlEn = $pageService->getUrlByPageOrRouteName($mPage1, 'en');
-        $this->assertEquals('/en/cms/menu-test/page-1-test-test-slug', $urlEn);
+        $urlEn1 = $pageService->getUrlByPageOrRouteName($mPage1, 'en');
+        $urlEnStr1 = '/en/cms/menu-test/page-1-test-test-slug';
+
+        $this->assertEquals($urlEnStr1, $urlEn1);
         // $response1 = $this->get('/changelang/en/'.$pageId);
         // $response1->assertStatus(302);
         // $response1->assertRedirect('/en/cms/menu-test/page-1-test-test-slug');
 
-        $urlPl = $pageService->getUrlByPageOrRouteName($mPage1, 'pl');
-        $this->assertEquals('/pl/cms/test-men7-zolc/strona-testowa', $urlPl);
+        $urlPl1 = $pageService->getUrlByPageOrRouteName($mPage1, 'pl');
+        $urlPlStr1 = '/pl/cms/test-men7-zolc/strona-testowa';
+        $this->assertEquals($urlPlStr1, $urlPl1);
+
+        $allUrls1 = $pageService->getAllUrlsByPageOrRouteName($mPage1);
+        $this->assertEquals($urlEnStr1, $allUrls1['en']);
+        $this->assertEquals($urlPlStr1, $allUrls1['pl']);
 
         // dd('__END__');
         // $response2 = $this->get('/changelang/pl/'.$pageId);
@@ -143,16 +150,37 @@ class FrontLangsTest extends Base
         $this->assertTrue($res0->success);
 
         $productNameSlug = Str::slug($productTestData['product_name']['en'], '-');
-        $urlEn = $pageService->getUrlByPageOrRouteName($mPage1, 'en', $productNameSlug);
-        $this->assertEquals('/en/cms/menu-test/page-1-test-test-slug/'.$productNameSlug, $urlEn);
+        $urlEn2 = $pageService->getUrlByPageOrRouteName($mPage1, 'en', $productNameSlug);
+
+        $urlEnStr2 = '/en/cms/menu-test/page-1-test-test-slug/'.$productNameSlug;
+        $this->assertEquals($urlEnStr2, $urlEn2);
 
         // $response11 = $this->get('/changelang/en/'.$pageId.'/'.$productNameSlug);
         // $response11->assertStatus(302);
         // $response11->assertRedirect('/en/cms/menu-test/page-1-test-test-slug/'.$productNameSlug);
 
         $productNameSlugPl = Str::slug($productTestData['product_name']['pl'], '-');
-        $urlPl = $pageService->getUrlByPageOrRouteName($mPage1, 'pl', $productNameSlugPl);
-        $this->assertEquals('/pl/cms/test-men7-zolc/strona-testowa/'.$productNameSlugPl, $urlPl);
+        $urlPl2 = $pageService->getUrlByPageOrRouteName($mPage1, 'pl', $productNameSlugPl);
+
+        $urlPlStr2 = '/pl/cms/test-men7-zolc/strona-testowa/'.$productNameSlugPl;
+        $this->assertEquals($urlPlStr2, $urlPl2);
+
+        $product_name_slug = [
+            'en' => $productNameSlug,
+            'pl' => $productNameSlugPl,
+        ];
+
+        $allUrls2 = $pageService->getAllUrlsByPageOrRouteName($mPage1, $product_name_slug);
+        $this->assertEquals($urlEnStr2, $allUrls2['en']);
+        $this->assertEquals($urlPlStr2, $allUrls2['pl']);
+
+        $crashTest = $pageService->getAllUrlsByPageOrRouteName(null, null, 'search');
+        $this->assertEquals(2, count($crashTest));
+        $this->assertNotEmpty($crashTest['en']);
+        $this->assertNotEmpty($crashTest['pl']);
+
+        $crashTest2 = $pageService->getAllUrlsByPageOrRouteName(null, null, 'shoppingsuccess');
+        $this->assertEquals(0, count($crashTest2));  // exception!!! - prawdopodobnie jest sejsa tymczasowa i nie działa poprawnie przelaczanie miedzy jezykami
 
         // $response22 = $this->get('/changelang/pl/'.$pageId.'/'.$productNameSlugPl);
         // $response22->assertStatus(302);

@@ -1,32 +1,3 @@
-<?php 
-
-  $navigationService = app(App\Services\Cmsrs\NavigationService::class);
-  $treeMenu = $navigationService->getNavigationTree( \Illuminate\Support\Facades\Auth::check() );
-
-  $configService = new App\Services\Cmsrs\ConfigService;
-  $pageService = app(App\Services\Cmsrs\PageService::class); 
-  $menuService = app(App\Services\Cmsrs\MenuService::class); 
-
-  $lang =  $configService->getLangFromRequest(); //request()->route('lang') ?? request('lang') ?? $configService->getDefaultLang();
-  //$menus = App\Models\Cmsrs\Menu::all()->sortBy('position');
-
-  $currency = $configService->getCurrency();
-  $langs = $configService->arrGetLangs();  
-  $manyLangs = $configService->isManyLangs(); //(count($langs) > 1);
-  $bg = config('cmsrs.demo') ? 'bg-dark' : 'bg-secondary'; 
-  //$bg = 'bg-secondary';
-  $pLogin = config('cmsrs.features.login');
-  $pRegister =  config('cmsrs.features.register');
-  //$pHome = $pageService::getFirstPageByType('home');
-
-  $mainPage = $pageService->getFirstPageByType('main_page');
-  $urlMainPage = '/';
-  if ($mainPage) {
-      $urlMainPage = $pageService->getUrl($mainPage, $lang);
-  }
-
-  $productNameSlug = ! empty($product_name_slug) ? $product_name_slug : null;
-?>
 <div id="page_id" data-page-id="{{ !empty($page) ? $page->id : ''}}"></div>  
 <div id="lang" data-lang="{{$lang ?  $lang : ''}}"></div>    
 <div id="is_shop" data-is-shop="{{ config('cmsrs.features.shop') }}"></div>          
@@ -35,7 +6,7 @@
 <div id="currency" data-currency="{{ $currency }}"></div>          
 
 
-<nav class="navbar navbar-expand-lg navbar-dark  {{ $bg }} fixed-top lead">
+<nav class="navbar navbar-expand-lg navbar-dark  {{ config('cmsrs.demo') ? 'bg-dark' : 'bg-secondary' }} fixed-top lead">
     <a class="navbar-brand" href="{{ url($urlMainPage) }}">
         @php
             $path = public_path('images/mysite/logo.svg');
@@ -110,19 +81,19 @@
     </ul>
     <ul class="nav navbar-nav ms-auto" >
       <!-- Authentication Links -->
-      @if ($pLogin && ! config('cmsrs.demo'))
+      @if (config('cmsrs.features.login') && ! config('cmsrs.demo'))
         @php 
             $loginStyle = $manyLangs ? 'me-4' : '';
         @endphp
         @guest            
-              @if ( $pLogin )        
+              @if ( config('cmsrs.features.login') )        
               <li class="nav-item {{$loginStyle}}">
                   <a class="nav-link" href="{{ $manyLangs ? route('login', ['lang' => $lang ]) : route('login') }}">
                     {{ __('Login') }}
                   </a>
               </li>
               @endif              
-              @if (Route::has('register') && $pRegister )
+              @if (Route::has('register') && config('cmsrs.features.register') )
                   <li class="nav-item  {{$loginStyle}}">
                       <a class="nav-link" href="{{ $manyLangs ? route('register', ['lang' => $lang ]) : route('register') }}">
                       {{ __('Register') }}
@@ -141,19 +112,11 @@
               </form>
         @endguest
       @endif
-      @php        
-          $routeName = request()->route()->getName();
-      @endphp
-      @if ($manyLangs &&  ($routeName != 'shoppingsuccess') )
+      @if ( count($allUrlsByPageOrRouteName) > 1 )
         <li class="d-flex flex-row">
-        @foreach ($langs as $ll)
-            @php  
-                $classActive = ($ll == $lang) ? 'active' : '';
-                $productSlug = $productNameSlug ? $productNameSlug[$ll]  : null;
-                $changeLang = $pageService->getUrlByPageOrRouteName(($page ?? null), $ll, $productSlug, $routeName); //
-            @endphp
+        @foreach ($allUrlsByPageOrRouteName as $ll => $changeLang)
             <div class="ms-2  nav-item">
-              <a class="changelang nav-link  {{ $classActive }}" href="{{ $changeLang }}">
+              <a class="changelang nav-link  {{ ($ll == $lang) ? 'active' : '' }}" href="{{ $changeLang }}">
                 <img src="/images/cms/{{ $ll }}.png" alt="{{ $ll }}" /> {{ strtoupper($ll) }}
               </a>
             </div>

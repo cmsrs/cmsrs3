@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use App\Services\Cmsrs\ConfigService;
-use App\Services\Cmsrs\MenuService;
+use App\Services\Cmsrs\NavigationService;
 use App\Services\Cmsrs\PageService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -28,9 +31,8 @@ class ViewHeaderProvider extends ServiceProvider
             return app()->call(function (
                 ConfigService $configService,
                 PageService $pageService,
-                MenuService $menuService
+                NavigationService $navigationService,
             ) use ($view) {
-
                 $lang = $configService->getLangFromRequest();
                 $langs = $configService->arrGetLangs();
                 $manyLangs = $configService->isManyLangs();
@@ -40,24 +42,23 @@ class ViewHeaderProvider extends ServiceProvider
                     ? $pageService->getUrl($mainPage, $lang)
                     : '/';
 
+                $data = $view->getData();
+                $page = $data['page'] ?? null;   //
+                $productNameSlug = $data['product_name_slug'] ?? null;
+                $routeName = request()->route()?->getName(); //
+
+                $allUrlsByPageOrRouteName = $pageService->getAllUrlsByPageOrRouteName($page, $productNameSlug, $routeName);
+
                 $view->with([
+                    'treeMenu' => $navigationService->getNavigationTree(Auth::check()),
                     'lang' => $lang,
                     'langs' => $langs,
                     'manyLangs' => $manyLangs,
 
                     'currency' => $configService->getCurrency(),
-                    'bg' => config('cmsrs.demo') ? 'bg-dark' : 'bg-secondary',
-                    'pLogin' => config('cmsrs.features.login'),
-                    'pRegister' => config('cmsrs.features.register'),
-                    'isShop' => config('cmsrs.features.shop'),
-                    'isDemo' => config('cmsrs.demo'),
-
                     'urlMainPage' => $urlMainPage,
+                    'allUrlsByPageOrRouteName' => $allUrlsByPageOrRouteName,
 
-                    // 'pageId' => $page->id,
-                    // 'commented' => $page->commented ?? null,
-
-                    // 'productNameSlug' => $product_name_slug ?? null,
                 ]);
             });
         });
