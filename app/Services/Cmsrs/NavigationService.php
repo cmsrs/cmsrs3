@@ -22,6 +22,31 @@ class NavigationService
      * it is always not auth - it is different
      */
 
+    /*
+   return array<int, array{
+    menu_name: array<string, string>,
+    url: array<string, string>|null,
+    page_id: int|null,
+    id: int,
+    pages: array<int, array{
+        url: array<string, string>,
+        short_title: array<string, string>,
+        page_id: int, children?: array<int,
+            array{
+                url: array<string, string>,
+                short_title: array<string, string>,
+                page_id: int}>}>}> but returns
+
+
+
+array<int<0, max>, non-empty-array<
+        'id'|'menu_name'|'page_id'|'pages'|'url',
+        array<int<0, max>|string,
+        array<'children'|' page_id'|'short_title'|'url',
+        array<int<0, max>|string,
+        array{url: array<string, string>, short_title: array<string, string>, page_id: int}|string>|int>|string>|int|null>>
+*/
+
     /**
      * @return array<int, array{
      *     menu_name: array<string, string>,
@@ -36,10 +61,10 @@ class NavigationService
      *               url: array<string,string>,
      *               short_title: array<string,string>,
      *               page_id: int
-     *          }>     
+     *          }>
      *     }>
      * }>
-     */    
+     */
     public function getNavigationTree(bool $isAuth = false): array
     {
         $urlInMenu = [];
@@ -48,36 +73,40 @@ class NavigationService
         foreach ($menus as $menu) {
             $pagesPublishedAndAccess = $this->menuService->pagesPublishedAndAccess($menu, $isAuth); // !! it is different getAllUrlRelatedToMenus in tests
 
-            $urlInMenu[$j] = [ // default values for menu
+            $menuData = [ // default values for menu
                 'menu_name' => [],
                 'url' => null,
                 'page_id' => null,
-                'id' => $menu->id, //tu zawsze bedzie int - to mam incjowac 0?
-                'pages' => [], //a tu moze byc pusta tablica albo to co zwraca funcja  getPageData
+                'id' => $menu->id,
+                'pages' => [],
             ];
             if ($pagesPublishedAndAccess->count() == 1) {
                 $pageFirst = $pagesPublishedAndAccess->first();
                 if (! $pageFirst instanceof Page) {  // to avoid phpstan error, but it should not happen
                     continue;
                 }
-                $urlInMenu[$j]['menu_name'] = $this->translatePageColumn($pageFirst, 'short_title'); // it is not mistake!
-                $urlInMenu[$j]['url'] = $this->pageService->getUrls($pageFirst);
-                $urlInMenu[$j]['page_id'] = $pageFirst->getId(); // phpstan error, but it should not happen
-                $urlInMenu[$j]['pages'] = [];
+                $menuData['menu_name'] = $this->translatePageColumn($pageFirst, 'short_title'); // it is not mistake!
+                $menuData['url'] = $this->pageService->getUrls($pageFirst);
+                $menuData['page_id'] = $pageFirst->getId(); // phpstan error, but it should not happen
+                $menuData['pages'] = [];
             } else {
-                $urlInMenu[$j]['menu_name'] = $this->translateMenuColumn($menu, 'name');
+                $menuData['menu_name'] = $this->translateMenuColumn($menu, 'name');
                 $i = 0;
+                $pages = [];
                 foreach ($this->menuService->pagesPublishedTree($pagesPublishedAndAccess) as $pageMenu) {
-                    $urlInMenu[$j]['pages'][$i] = $this->getPageData($pageMenu);  //
+                    $pageData = $this->getPageData($pageMenu);  //
                     if (! empty($pageMenu->children) && ! empty($pageMenu->published)) {
-                        $urlInMenu[$j]['pages'][$i]['children'] = [];
+                        $pageData['children'] = [];
                         foreach ($pageMenu->children as $p) {
-                            $urlInMenu[$j]['pages'][$i]['children'][] = $this->getPageData($p);
+                            $pageData['children'][] = $this->getPageData($p);
                         }
                     }
+                    $pages[$i] = $pageData;
                     $i++;
                 }
+                $menuData['pages'] = $pages;
             }
+            $urlInMenu[$j] = $menuData;
             $j++;
         }
 
@@ -99,7 +128,7 @@ class NavigationService
         return [
             'url' => $this->pageService->getUrls($page),
             'short_title' => $this->translatePageColumn($page, 'short_title'),
-            'page_id' => $page->id
+            'page_id' => $page->id,
         ];
     }
 
