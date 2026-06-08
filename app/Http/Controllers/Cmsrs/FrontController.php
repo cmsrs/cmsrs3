@@ -24,6 +24,7 @@ use Illuminate\Session\Store;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Services\Cmsrs\Helpers\PriceHelperService;
 
 class FrontController extends Controller
 {
@@ -44,6 +45,7 @@ class FrontController extends Controller
         protected PageService $pageService,
         protected PaymentService $paymentService,
         protected ProductService $productService,
+        protected PriceHelperService $priceHelperService,
     ) {
         $this->menus = $this->menuService->getMenu(); // $menus;
         $this->langs = $this->configService->arrGetLangs();
@@ -122,7 +124,8 @@ class FrontController extends Controller
         }
 
         $data = [
-            'checkout' => $objCheckout,
+            'checkout_id' => $objCheckout->id,
+            'price_total_add_deliver_description' => $this->priceHelperService->getPriceDescriptionWrap($objCheckout->price_total_add_deliver),
             'lang' => $lang,
             'langs' => $this->langs,
             'menus' => $this->menus,
