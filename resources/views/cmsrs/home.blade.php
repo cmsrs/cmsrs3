@@ -1,9 +1,6 @@
 @extends('layouts.default')
 
 @section('content')
-<?php
-    $priceHelperService = app(\App\Services\Cmsrs\Helpers\PriceHelperService::class);
-?>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -18,29 +15,29 @@
             <div class="border mt-3 p-3 mb-4">
                     {{ __('ORDERS') }}:
                     <div class="m-3 ">
-                        <?php if( empty($orders) ){ ?>
+                        @if (empty($orders))
                             {{ __('No orders') }}
-                        <?php }else{ ?>
+                        @else
                             <ul  class="mt-3 list-group">
-                            <?php foreach($orders as $order){ ?>
-                                <li class="list-group-item"><a href="{{$order['product_url']}}" ><img src="{{$order['product_img']}}"  alt="{{$order['name']}}" ></a><span class="ms-3"> <a href="{{$order['product_url']}}" > {{$order['name']}} </a> <span class="ms-3">{{ $priceHelperService->getPriceDescriptionWrap( $order['unitPrice'] ) }} x {{$order['qty'] }}</span> </span> </li>
-                            <?php } ?>
+                                @foreach($orders as $order)
+                                    <li class="list-group-item"><a href="{{ $order['product_url'] }}" ><img src="{{ $order['product_img'] }}"  alt="{{ $order['name'] }}" ></a><span class="ms-3"> <a href="{{ $order['product_url'] }}" > {{ $order['name'] }} </a> <span class="ms-3">{{ $order['unit_price_description']  }} x {{ $order['qty'] }}</span> </span> </li>
+                                @endforeach
                             </ul>
-                        <?php } ?>
+                        @endif
                     </div>
             </div>    
 
             <div class="border mt-3 p-3 mb-4">
                 {{ __('TO PAY') }}:            
                 <ul  class="mt-3 list-group">
-                    <?php foreach($checkouts as $checkout){ ?>
-                        <li class="ms-4" >{{  __('Order number') }} : {{ $checkout['id'] }}. {{  __('Amount to pay') }}  <strong> {{ $priceHelperService->getPriceDescriptionWrap( $checkout['price_total_add_deliver'] ) }} </strong>  = {{ $priceHelperService->getPriceDescriptionWrap( $checkout['price_total'] ) }} + {{  __('deliver') }} : {{  $priceHelperService->getPriceDescriptionWrap( $checkout['price_deliver'] ) }} </li>
+                    @foreach($checkouts as $checkout)
+                        <li class="ms-4" >{{  __('Order number') }} : {{ $checkout['id'] }}. {{  __('Amount to pay') }}  <strong> {{ $checkout['price_total_add_deliver_description']  }} </strong>  = {{  $checkout['price_total_description']  }} + {{  __('deliver') }} : {{   $checkout['price_deliver_description'] }} </li>
                         <ul>
-                        <?php foreach($checkout['baskets'] as $basket){ ?>
-                            <li class="ms-4" ><a href="{{ $basket['product_url'] }}"> {{ $basket['product_name'] }}</a> {{ $basket['qty'] }} x {{  $priceHelperService->getPriceDescriptionWrap( $basket['price'] ) }} </li>
-                        <?php } ?>
+                            @foreach($checkout['baskets'] as $basket)
+                                <li class="ms-4" ><a href="{{ $basket['product_url'] }}"> {{ $basket['product_name'] }}</a> {{ $basket['qty'] }} x {{   $basket['price_description']  }} </li>
+                            @endforeach
                         </ul>
-                    <?php } ?>
+                    @endforeach
                 </ul>
             </div>
 

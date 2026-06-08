@@ -303,6 +303,7 @@ class ProductService
             $result['orders'][] = [
                 'name' => $name,
                 'unitPrice' => $product->price,
+                'unit_price_description' => $this->priceHelperService->getPriceDescriptionWrap($product->price),
                 'qty' => $qty,
                 'product_id' => $product->id,
                 'product_url' => $this->getProductUrl($product, $lang, $name),
