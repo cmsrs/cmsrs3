@@ -63,6 +63,8 @@ class ProductService
         $data['page_title'] = $productArr['product_name'][$lang] ?? config('app.name', 'cmsRS');
         $data['seo_description'] = $productArr['product_description'][$lang] ?? config('app.name', 'cmsRS');
 
+        $data['images'] = $this->imageService->getImagesAndThumbsByTypeAndRefId('product', $product->id, $lang);       
+
         return $data;
     }
 

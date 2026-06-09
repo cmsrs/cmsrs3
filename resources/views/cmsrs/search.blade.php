@@ -25,16 +25,16 @@
                   {{ __('Not products found') }}
                 </div>
                 @else
-                <?php $i = 0; ?>
+                @php $i = 0; @endphp
                 @foreach($products as $product)
-                <?php  $ifRow = !($i%2); ?>
-                <?php if($ifRow){ ?>
+                @php  $ifRow = !($i%2); @endphp
+                @if($ifRow)
                   <div class="row mb-5">
-                <?php } ?>
+                @endif
                   <div class="col">
                   @if( !empty($product['images']) &&  !empty($product['images'][0]) )
                     <a href="{{$product['url_product'][$lang] }}">
-                      <img class="m-3" src="{{ (app(App\Services\Cmsrs\ImageService::class))->getHtmlImage($product['images'][0])}}" alt="{{$product['images'][0]->alt[$lang]}}" />
+                      <x-show-image :image="$product['images'][0]" :lang="$lang"  class="m-3"/>
                     </a>
                   @endif
 <!--                  </div>
@@ -48,19 +48,19 @@
                       <li>{{ __('Price') }}: {{$product['price_description'] }}</li>
                       <li>{{$product['product_description'][$lang] }}</li>
                     </ul>
-                    <?php
+                    @php
                       $id =  $product['id'];
                       $name = $product['product_name'][$lang];
                       $price = $product['price'];
-                    ?>
+                    @endphp
                     <button v-on:click="addToCart({ id: {{$id}}, name: '{{$name}}', price: {{$price}} })" class="add-to-cart btn">{{ __('Add to Cart') }}</button>
                   </div>
 
-                <?php if(!$ifRow){ ?>
+                @if(!$ifRow)
                 </div>
-                <?php } ?>
+                @endif
 
-                <?php $i++; ?>
+                @php $i++; @endphp
                 @endforeach
                 @endif
               </div>

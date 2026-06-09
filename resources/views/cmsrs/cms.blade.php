@@ -25,15 +25,14 @@
 
   @elseif($page->type  === 'contact')
 
-  <?php 
+  @php
       $companyData = $pageService->getPageDataByShortTitleCache( 'company_data', 'content', $lang );
-      $classCompany1 = !empty($companyData) ? "col-xl-9" : "col";
-  ?>
+  @endphp
 
   <div class="container">
     <div class="row">
 
-      <div class="<?php echo $classCompany1;?>">
+      <div class="{{ !empty($companyData) ? 'col-xl-9' : 'col' }}">
 
         <div v-if="messageInfo"  class="alert alert-success" role="alert">
           @{{ messageInfo }}
@@ -58,15 +57,13 @@
 
       </div><!-- col -->
 
-      <?php if( !empty($companyData ) ){ ?>
+      @if( !empty($companyData ) )
       <div class="col-xl-3">
         <div class="mt-3">
-            <?php 
-                echo $companyData;
-            ?>
+          {{ $companyData }}
         </div>
       </div>
-      <?php } ?>
+      @endif
 
     </div>
   </div>

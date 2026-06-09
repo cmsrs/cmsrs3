@@ -15,8 +15,9 @@
                   {{ __('Category') }}: <a href="{{ $pageService->getUrl($page, $lang)}}">{{ $pageService->translatesByColumnAndLang( $page, 'title', $lang )}}</a>
                   <br>
                   @if( !empty($product['images']) &&  !empty($product['images'][0]) )
-                      <img class="m-3" src="{{  app(App\Services\Cmsrs\ImageService::class) ->getHtmlImage( $product['images'][0] )}}" alt="{{$product['images'][0]->alt[$lang]}}" />
+                      <x-show-image :image="$product['images'][0]" :lang="$lang"  />
                   @endif
+
 <!--                  </div>
                   <div class="col">-->
                     <ul class="ms-3 list-unstyled">
@@ -79,7 +80,7 @@
                   <div class="col">
                   @if( !empty($product['images']) &&  !empty($product['images'][0]) )
                     <a href="{{$product['url_product'][$lang] }}">
-                      <img class="m-3" src="{{  app(App\Services\Cmsrs\ImageService::class) ->getHtmlImage( $product['images'][0] )}}" alt="{{$product['images'][0]->alt[$lang]}}" />
+                      <x-show-image :image="$product['images'][0]" :lang="$lang"  class="m-3"/>
                     </a>
                   @endif
 <!--                  </div>
