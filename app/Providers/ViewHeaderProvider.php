@@ -27,73 +27,67 @@ class ViewHeaderProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('includes.header', function ($view) {
+            $configService = app(ConfigService::class);
+            $pageService = app(PageService::class);
+            $navigationService = app(NavigationService::class);
 
-            return app()->call(function (
-                ConfigService $configService,
-                PageService $pageService,
-                NavigationService $navigationService,
-            ) use ($view) {
-                $lang = $configService->getLangFromRequest();
-                $langs = $configService->arrGetLangs();
-                $manyLangs = $configService->isManyLangs();
+            $lang = $configService->getLangFromRequest();
+            $langs = $configService->arrGetLangs();
+            $manyLangs = $configService->isManyLangs();
 
-                $mainPage = $pageService->getFirstPageByType('main_page');
-                $urlMainPage = $mainPage
-                    ? $pageService->getUrl($mainPage, $lang)
-                    : '/';
+            $mainPage = $pageService->getFirstPageByType('main_page');
+            $urlMainPage = $mainPage
+                ? $pageService->getUrl($mainPage, $lang)
+                : '/';
 
-                $data = $view->getData();
-                $page = $data['page'] ?? null;   //
-                $productNameSlug = $data['product_name_slug'] ?? null;
-                $routeName = request()->route()?->getName(); //
+            $data = $view->getData();
+            $page = $data['page'] ?? null;   //
+            $productNameSlug = $data['product_name_slug'] ?? null;
+            $routeName = request()->route()?->getName(); //
 
-                $allUrlsByPageOrRouteName = $pageService->getAllUrlsByPageOrRouteName($page, $productNameSlug, $routeName);
+            $allUrlsByPageOrRouteName = $pageService->getAllUrlsByPageOrRouteName($page, $productNameSlug, $routeName);
 
-                $view->with([
-                    'treeMenu' => $navigationService->getNavigationTree(Auth::check()),
-                    'lang' => $lang,
-                    'langs' => $langs,
-                    'manyLangs' => $manyLangs,
+            $view->with([
+                'treeMenu' => $navigationService->getNavigationTree(Auth::check()),
+                'lang' => $lang,
+                'langs' => $langs,
+                'manyLangs' => $manyLangs,
 
-                    'currency' => $configService->getCurrency(),
-                    'urlMainPage' => $urlMainPage,
-                    'allUrlsByPageOrRouteName' => $allUrlsByPageOrRouteName,
+                'currency' => $configService->getCurrency(),
+                'urlMainPage' => $urlMainPage,
+                'allUrlsByPageOrRouteName' => $allUrlsByPageOrRouteName,
 
-                ]);
-            });
+            ]);
         });
 
         View::composer('includes.footer', function ($view) {
 
-            return app()->call(function (
-                ConfigService $configService,
-                PageService $pageService,
-            ) use ($view) {
-                $lang = $configService->getLangFromRequest();
-                $footerPages = $pageService->getFooterPages($lang);
+            $configService = app(ConfigService::class);
+            $pageService = app(PageService::class);
 
-                $view->with([
-                    'footerPages' => $footerPages,
-                ]);
-            });
+            $lang = $configService->getLangFromRequest();
+            $footerPages = $pageService->getFooterPages($lang);
+
+            $view->with([
+                'footerPages' => $footerPages,
+            ]);
         });
 
         View::composer('layouts.default', function ($view) {
-            return app()->call(function (
-                ConfigService $configService,
-                PageService $pageService,
-            ) use ($view) {
-                $lang = $configService->getLangFromRequest();
-                $data = $view->getData();
-                $page = $data['page'] ?? null;   //
 
-                $imagesGlobal = [];
-                if ($page && $page->type === 'gallery') {
-                    $imagesGlobal = $pageService->arrImages($page, $lang);
-                }
+            $configService = app(ConfigService::class);
+            $pageService = app(PageService::class);
 
-                $view->with('imagesGlobal', $imagesGlobal);
-            });
+            $lang = $configService->getLangFromRequest();
+            $data = $view->getData();
+            $page = $data['page'] ?? null;   //
+
+            $imagesGlobal = [];
+            if ($page && $page->type === 'gallery') {
+                $imagesGlobal = $pageService->arrImages($page, $lang);
+            }
+
+            $view->with('imagesGlobal', $imagesGlobal);
         });
 
     }
