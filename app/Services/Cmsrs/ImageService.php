@@ -74,16 +74,17 @@ class ImageService
         self::deleteDirectoryIfEmpty($higherDirectory);
     }
 
-    public function getHtmlImage(Image $mImage, string $type = Image::IMAGE_THUMB_TYPE_MEDIUM): string
-    {
-        $img = $this->getAllImage($mImage, false);
+    //old
+    // public function getHtmlImage(Image $mImage, string $type = Image::IMAGE_THUMB_TYPE_MEDIUM): string
+    // {
+    //     $img = $this->getAllImage($mImage, false);
 
-        if (! isset($img[$type])) {
-            throw new \Exception("Image type not found: $type");
-        }
+    //     if (! isset($img[$type])) {
+    //         throw new \Exception("Image type not found: $type");
+    //     }
 
-        return $img[$type];
-    }
+    //     return $img[$type];
+    // }
 
     public function getRefId(Image $mImage): ?int
     {
