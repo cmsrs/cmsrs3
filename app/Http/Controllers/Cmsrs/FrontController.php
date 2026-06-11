@@ -115,6 +115,7 @@ class FrontController extends Controller
         $objCheckout = null;
         if ($request->session()->has('checkout_id')) {
             $checkoutId = $request->session()->get('checkout_id');
+            /** @var Checkout|null $objCheckout */
             $objCheckout = Checkout::find($checkoutId);
             $request->session()->forget('checkout_id');
         }
@@ -125,7 +126,7 @@ class FrontController extends Controller
 
         $data = [
             'checkout_id' => $objCheckout->id,
-            'price_total_add_deliver_description' => $this->priceHelperService->getPriceDescriptionWrap($objCheckout->price_total_add_deliver),
+            'price_total_add_deliver_description' => $this->priceHelperService->getPriceDescriptionWrap($objCheckout->price_total_add_deliver ?? 0),
             'lang' => $lang,
             'langs' => $this->langs,
             'menus' => $this->menus,

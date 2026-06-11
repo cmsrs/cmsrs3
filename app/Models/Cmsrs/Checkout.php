@@ -93,4 +93,9 @@ class Checkout extends Model
     {
         return $this->hasMany('App\Models\Cmsrs\Basket');
     }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
 }
