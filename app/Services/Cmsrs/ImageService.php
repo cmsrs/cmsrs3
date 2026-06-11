@@ -74,7 +74,7 @@ class ImageService
         self::deleteDirectoryIfEmpty($higherDirectory);
     }
 
-    //old
+    // old
     // public function getHtmlImage(Image $mImage, string $type = Image::IMAGE_THUMB_TYPE_MEDIUM): string
     // {
     //     $img = $this->getAllImage($mImage, false);

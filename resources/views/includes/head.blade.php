@@ -13,10 +13,12 @@
 <!-- Bootstrap core CSS -->
 <link href="/css/lib/bootstrap.min.css" rel="stylesheet">
 
-<?php if(  config('cmsrs.features.shop') ){ ?>
-    <?php //it is only use for display basket - maybe it is not worth to use this big library to one task - todo ?>
+@if(  config('cmsrs.features.shop') )
+    @php 
+    //it is only use for display basket - maybe it is not worth to use this big library to one task - todo 
+    @endphp
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<?php } ?>
+@endif
 
 <!-- Custom styles for this template -->
 <link href="/css/front.css" rel="stylesheet">

@@ -622,9 +622,9 @@ class ImageTest extends Base
         $this->assertEquals($testPage->images[2]->alt->en, null);
         $this->assertEquals($testPage->images[3]->alt->en, null);
 
-        //$imageObj11 = Image::find($testPage->images[2]->id);
-        //$mediumHtml = app(ImageService::class)->getHtmlImage($imageObj11);
-        //$this->assertEquals($mediumHtml, $testPage->images[2]->fs->medium);
+        // $imageObj11 = Image::find($testPage->images[2]->id);
+        // $mediumHtml = app(ImageService::class)->getHtmlImage($imageObj11);
+        // $this->assertEquals($mediumHtml, $testPage->images[2]->fs->medium);
     }
 
     public function test_it_will_get_change_position_images_docs()

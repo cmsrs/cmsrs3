@@ -14,7 +14,7 @@
 
   <div id="app">
 
-      <?php //reaped code - dry - todo ?>
+      @php //reaped code - dry - todo @endphp
       <div class="container">
         <div class="row">
           <div class="col">
