@@ -2,13 +2,10 @@
 
 namespace App\View\Components;
 
+use App\Models\Cmsrs\Image;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
-
-use App\Models\Cmsrs\Image;
-
-
 
 class ShowImage extends Component
 {
@@ -30,7 +27,7 @@ class ShowImage extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct( Image $image, string $lang, ?string $class = null )
+    public function __construct(Image $image, string $lang, ?string $class = null)
     {
         $this->image = $image;
         $this->lang = $lang;

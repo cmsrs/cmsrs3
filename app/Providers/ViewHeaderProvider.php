@@ -78,5 +78,23 @@ class ViewHeaderProvider extends ServiceProvider
             });
         });
 
+        View::composer('layouts.default', function ($view) {
+            return app()->call(function (
+                ConfigService $configService,
+                PageService $pageService,
+            ) use ($view) {
+                $lang = $configService->getLangFromRequest();
+                $data = $view->getData();
+                $page = $data['page'] ?? null;   //
+
+                $imagesGlobal = [];
+                if ($page && $page->type === 'gallery') {
+                    $imagesGlobal = $pageService->arrImages($page, $lang);
+                }
+
+                $view->with('imagesGlobal', $imagesGlobal);
+            });
+        });
+
     }
 } // END OF CLASS

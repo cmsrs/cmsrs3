@@ -26,30 +26,30 @@
    <script type="application/javascript" src="/js/lib/axios.min.js"></script>
    <script type="application/javascript" src="/js/cmsrs.js"></script>  
 
-   <?php $view = empty($view) ? '' : $view; ?>
-   <?php if( 'cmsrs.gallery' == $view ){ ?>
+   @php $view = empty($view) ? '' : $view; @endphp
+   @if( 'cmsrs.gallery' == $view )
       <script type="application/javascript">
-         var imagesGlobal = JSON.parse('<?php echo json_encode(  ( app(App\Services\Cmsrs\PageService::class)) ->arrImages($page, $lang)) ?>');    
+         var imagesGlobal = @json($imagesGlobal ?? []);
       </script>
       <script type="application/javascript" src="/js/gallery.js"></script>  
-   <?php } ?>
+   @endif
 
 
-   <?php if( 'cmsrs.cms' == $view ){ ?>      
+   @if( 'cmsrs.cms' == $view )
       @if( ($page->type == 'contact') &&  $re_public )
          <script src="https://www.google.com/recaptcha/api.js?render={{ $re_public }}"></script>
          <script>
             var rePublic = '{{ $re_public }}';
          </script>
       @endif      
-   <?php } ?>
+   @endif
 
-   <?php if( 'cmsrs.shoppingsuccess' == $view ){ ?>
+   @if( 'cmsrs.shoppingsuccess' == $view )
       <script>
          localStorage.removeItem('cart');
          //localStorage.clear();
       </script>
-   <?php } ?>
+   @endif
 
 
    @include('includes.footer')

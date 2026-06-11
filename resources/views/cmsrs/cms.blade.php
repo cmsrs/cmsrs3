@@ -7,9 +7,9 @@
 
   @if ( $page->type  === 'cms')
 
-      @if( $page->images)
-        @foreach($page->images as $image)
-            <img class="m-3" src="{{ app(App\Services\Cmsrs\ImageService::class)->getHtmlImage($image)}}" alt="{{ app(App\Services\Cmsrs\ImageService::class)->translatesByColumnAndLang($image, 'alt', $lang ) }}" />
+      @if( $images)
+        @foreach($images as $image)
+            <x-show-image :image="$image" :lang="$lang"  class="m-3"/>
         @endforeach
       @endif
 
@@ -24,10 +24,6 @@
     @endif
 
   @elseif($page->type  === 'contact')
-
-  @php
-      $companyData = $pageService->getPageDataByShortTitleCache( 'company_data', 'content', $lang );
-  @endphp
 
   <div class="container">
     <div class="row">

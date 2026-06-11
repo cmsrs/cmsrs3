@@ -181,6 +181,7 @@ class PageService
             'pageService' => $this,
             'menus' => isset($dataIn['menus']) ? $dataIn['menus'] : null,
             'page' => $mPage,
+            'images' => $this->imageService->getImagesAndThumbsByTypeAndRefId('page', $mPage->id),
             'h1' => $this->translatesByColumnAndLang($mPage, 'title', $lang),
             'page_title' => $this->translatesByColumnAndLang($mPage, 'title', $lang) ?? config('app.name', 'cmsRS'),
             'seo_description' => $this->translatesByColumnAndLang($mPage, 'description', $lang) ?? config('app.name', 'cmsRS'),
@@ -189,6 +190,7 @@ class PageService
             'langs' => $dataIn['langs'],
             're_public' => config('cmsrs.recaptcha.public'),  // env('GOOGLE_RECAPTCHA_PUBLIC', ''),
             'view' => 'cmsrs.'.$this->getViewNameByType($mPage),
+            'companyData' => $this->getPageDataByShortTitleCache('company_data', 'content', $lang),
         ];
 
         return array_merge($data, $dataIn);
@@ -473,8 +475,8 @@ class PageService
     /**
      * Get all URLs for a given page or route name across all supported languages.
      *
-     * @param  ?array <string, string>  $productSlug
-     * @return array <string, string> An associative array where keys are language codes and values are URLs.
+     * @param  array<string, string>|null  $productSlug
+     * @return array<string, string> An associative array where keys are language codes and values are URLs.
      */
     public function getAllUrlsByPageOrRouteName(?Page $mPage, ?array $productSlug = null, ?string $routeName = null): array
     {

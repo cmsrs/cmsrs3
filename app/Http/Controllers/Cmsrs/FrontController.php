@@ -11,6 +11,7 @@ use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\DeliverService;
+use App\Services\Cmsrs\Helpers\PriceHelperService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
 use App\Services\Cmsrs\PaymentService;
@@ -24,7 +25,6 @@ use Illuminate\Session\Store;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use App\Services\Cmsrs\Helpers\PriceHelperService;
 
 class FrontController extends Controller
 {
