@@ -56,7 +56,7 @@
       @if( !empty($companyData ) )
       <div class="col-xl-3">
         <div class="mt-3">
-          {{!! $companyData !!}}
+          {!! $companyData !!}
         </div>
       </div>
       @endif
