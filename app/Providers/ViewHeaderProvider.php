@@ -60,7 +60,7 @@ class ViewHeaderProvider extends ServiceProvider
             ]);
         });
 
-        View::composer('includes.footer', function ($view) {
+        View::composer('includes.*footer', function ($view) {
 
             $configService = app(ConfigService::class);
             $pageService = app(PageService::class);
@@ -69,6 +69,7 @@ class ViewHeaderProvider extends ServiceProvider
             $footerPages = $pageService->getFooterPages($lang);
 
             $view->with([
+                'lang' => $lang,
                 'footerPages' => $footerPages,
             ]);
         });
