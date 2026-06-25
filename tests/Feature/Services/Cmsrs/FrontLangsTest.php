@@ -268,7 +268,7 @@ class FrontLangsTest extends Base
         $response1 = $this->get('/');
         $response1->assertStatus(200);
 
-        //dd($response1->getContent(), $this->titlePl );
+        // dd($response1->getContent(), $this->titlePl );
         $this->assertNotEmpty(strpos($response1->getContent(), $this->titlePl));
 
         $response2 = $this->get('/en');
