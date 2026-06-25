@@ -179,13 +179,13 @@ class PageService
         $langs = $dataIn['langs'];
 
         $data = [
-            'pageService' => $this, //TODO - remove
-            'page' => $mPage, //TODO - remove
+            // 'pageService' => $this, //TODO - remove
+            'page' => $mPage,
             'menus' => isset($dataIn['menus']) ? $dataIn['menus'] : null,
             'images' => $this->imageService->getImagesAndThumbsByTypeAndRefId('page', $mPage->id),
             'h1_title' => $this->translatesByColumnAndLang($mPage, 'title', $lang) ?? config('app.name', 'cmsRS'),
             'content' => $this->translatesByColumnAndLang($mPage, 'content', $lang),
-            'content_default_lang' => $this->translatesByColumnAndLang($mPage, 'content', $langs[0]),            
+            'content_default_lang' => $this->translatesByColumnAndLang($mPage, 'content', $langs[0]),
             // 'page_title' => $this->translatesByColumnAndLang($mPage, 'title', $lang) ?? config('app.name', 'cmsRS'),
             'seo_description' => $this->translatesByColumnAndLang($mPage, 'description', $lang) ?? config('app.name', 'cmsRS'),
             'products' => $products,
@@ -194,6 +194,7 @@ class PageService
             're_public' => config('cmsrs.recaptcha.public'),  // env('GOOGLE_RECAPTCHA_PUBLIC', ''),
             'view' => 'cmsrs.'.$this->getViewNameByType($mPage),
             'companyData' => $this->getPageDataByShortTitleCache('company_data', 'content', $lang),
+            'page_url' => $this->getUrl($mPage, $lang), // only useful in shop view - mayby refactor this
         ];
 
         return array_merge($data, $dataIn);

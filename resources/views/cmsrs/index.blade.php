@@ -14,8 +14,7 @@
 
       @if (Auth::check())
       <br>
-        @php $pHome = $pageService->getFirstPageByType('home');  @endphp
-        {{ __('Your:') }} <a class="nav-link" href="{{ $pageService->getUrl($pHome, $lang) }}">{{ __('Orders') }}</a>
+        {{ __('Your:') }} <a class="nav-link" href="{{ $url_home }}">{{ __('Orders') }}</a>
       @endif
       </div>
     </div>
