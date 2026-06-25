@@ -13,7 +13,7 @@
         @endforeach
       @endif
 
-      <div class="mt-2">{!!  $pageService->translatesByColumnAndLang($page, 'content', $lang ) !!}</div>
+      <div class="mt-2">{!! $content !!}</div>
 
   @elseif($page->type  === 'gallery')
 
@@ -56,7 +56,7 @@
       @if( !empty($companyData ) )
       <div class="col-xl-3">
         <div class="mt-3">
-          {{ $companyData }}
+          {{!! $companyData !!}}
         </div>
       </div>
       @endif
