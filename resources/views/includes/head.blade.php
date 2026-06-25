@@ -7,7 +7,7 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/site.webmanifest" />
 
-<title>{{ $page_title ?? '' }}</title>
+<title>{{ $h1_title ?? '' }}</title>
 <meta name="author" content="Robert Szczepanski - cmsRS">
 <meta name="description" content="{{ $seo_description ?? '' }}">
 <!-- Bootstrap core CSS -->
@@ -25,4 +25,3 @@
 <script>
     var lang = '{{ !empty($lang) ? $lang : "" }}';
 </script>
-

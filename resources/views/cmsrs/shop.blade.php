@@ -12,7 +12,7 @@
               <div class="container">
                 <div class="row">
                   <div class="col">
-                  {{ __('Category') }}: <a href="{{ $pageService->getUrl($page, $lang)}}">{{ $pageService->translatesByColumnAndLang( $page, 'title', $lang )}}</a>
+                  {{ __('Category') }}: <a href="{{ $pageService->getUrl($page, $lang)}}">{{ $h1_title}}</a>
                   <br>
                   @if( !empty($product['images']) &&  !empty($product['images'][0]) )
                       <x-show-image :image="$product['images'][0]" :lang="$lang"  />
