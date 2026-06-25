@@ -179,7 +179,6 @@ class PageService
         $langs = $dataIn['langs'];
 
         $data = [
-            // 'pageService' => $this, //TODO - remove
             'page' => $mPage,
             'menus' => isset($dataIn['menus']) ? $dataIn['menus'] : null,
             'images' => $this->imageService->getImagesAndThumbsByTypeAndRefId('page', $mPage->id),
