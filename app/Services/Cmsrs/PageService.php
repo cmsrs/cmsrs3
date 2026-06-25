@@ -179,9 +179,9 @@ class PageService
         $langs = $dataIn['langs'];
 
         $data = [
-            'pageService' => $this,
+            'pageService' => $this, //TODO - remove
+            'page' => $mPage, //TODO - remove
             'menus' => isset($dataIn['menus']) ? $dataIn['menus'] : null,
-            'page' => $mPage,
             'images' => $this->imageService->getImagesAndThumbsByTypeAndRefId('page', $mPage->id),
             'h1_title' => $this->translatesByColumnAndLang($mPage, 'title', $lang) ?? config('app.name', 'cmsRS'),
             'content' => $this->translatesByColumnAndLang($mPage, 'content', $lang),
@@ -484,7 +484,7 @@ class PageService
     public function getAllUrlsByPageOrRouteName(?Page $mPage, ?array $productSlug = null, ?string $routeName = null): array
     {
 
-        if ($routeName == 'shoppingsuccess') { // TODO - tests
+        if ($routeName == 'shoppingsuccess') { // TODO - manual tests
             return [];
         }
 
