@@ -161,44 +161,6 @@ class PageService
         return empty($contents[$lang]) ? '' : $contents[$lang];
     }
 
-    /**
-     * @param  array<string, mixed>  $dataIn
-     * @return array<string, mixed>
-     */
-    public function getDataToView(Page $mPage, array $dataIn): array
-    {
-        $lang = $dataIn['lang'];
-        if (empty($lang)) {
-            throw new \Exception('Now lang in dataIn');
-        }
-
-        $products = null;
-        if ($mPage->type === 'shop') {
-            $products = app(ProductService::class)->getProductsWithImagesByPage($mPage->id); // TODO: break circular dependency between PageService and ProductService (future: DDD / clean architecture)
-        }
-        $langs = $dataIn['langs'];
-
-        $data = [
-            'page' => $mPage,
-            'menus' => isset($dataIn['menus']) ? $dataIn['menus'] : null,
-            'images' => $this->imageService->getImagesAndThumbsByTypeAndRefId('page', $mPage->id),
-            'h1_title' => $this->translatesByColumnAndLang($mPage, 'title', $lang) ?? config('app.name', 'cmsRS'),
-            'content' => $this->translatesByColumnAndLang($mPage, 'content', $lang),
-            'content_default_lang' => $this->translatesByColumnAndLang($mPage, 'content', $langs[0]),
-            // 'page_title' => $this->translatesByColumnAndLang($mPage, 'title', $lang) ?? config('app.name', 'cmsRS'),
-            'seo_description' => $this->translatesByColumnAndLang($mPage, 'description', $lang) ?? config('app.name', 'cmsRS'),
-            'products' => $products,
-            'lang' => $lang,
-            'langs' => $langs,
-            're_public' => config('cmsrs.recaptcha.public'),  // env('GOOGLE_RECAPTCHA_PUBLIC', ''),
-            'view' => 'cmsrs.'.$this->getViewNameByType($mPage),
-            'companyData' => $this->getPageDataByShortTitleCache('company_data', 'content', $lang),
-            'page_url' => $this->getUrl($mPage, $lang), // only useful in shop view - mayby refactor this
-        ];
-
-        return array_merge($data, $dataIn);
-    }
-
     public function getSeparatePageBySlug(string $pageSlug, string $lang): ?Page
     {
         $pageOut = null;

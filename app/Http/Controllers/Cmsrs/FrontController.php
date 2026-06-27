@@ -14,6 +14,7 @@ use App\Services\Cmsrs\DeliverService;
 use App\Services\Cmsrs\Helpers\PriceHelperService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\PageService;
+use App\Services\Cmsrs\PageViewService;
 use App\Services\Cmsrs\PaymentService;
 use App\Services\Cmsrs\ProductService;
 use Illuminate\Contracts\View\View;
@@ -46,6 +47,7 @@ class FrontController extends Controller
         protected PaymentService $paymentService,
         protected ProductService $productService,
         protected PriceHelperService $priceHelperService,
+        protected PageViewService $pageViewService
     ) {
         $this->menus = $this->menuService->getMenu(); // $menus;
         $this->langs = $this->configService->arrGetLangs();
@@ -254,7 +256,7 @@ class FrontController extends Controller
         $sliderDataImages = $this->pageService->getPageDataImagesByShortTitleCache('main_page_slider')->toArray();
 
         $mPageHome = $this->pageService->getFirstPageByType('home');
-        $data = $this->pageService->getDataToView($page, [
+        $data = $this->pageViewService->getDataToView($page, [
             // 'url_search' =>  $urlSearch,
             'url_home' => (Auth::check() && $mPageHome) ? $this->pageService->getUrl($mPageHome, $lang) : null,
             'view' => 'index',
@@ -277,7 +279,7 @@ class FrontController extends Controller
             $this->pageService->getPageBySlugCache($this->menus, $menuSlug, $pageSlug, $lang)
         );
 
-        $data = $this->pageService->getDataToView($pageOut, [
+        $data = $this->pageViewService->getDataToView($pageOut, [
             'lang' => $lang,
             'langs' => $this->langs,
             'menus' => $this->menus,
@@ -308,7 +310,7 @@ class FrontController extends Controller
             $this->pageService->getSeparatePageBySlug($pageSlug, $lang)
         );
 
-        $data = $this->pageService->getDataToView($pageOut, [
+        $data = $this->pageViewService->getDataToView($pageOut, [
             'lang' => $lang,
             'langs' => $this->langs,
             'menus' => $this->menus,
