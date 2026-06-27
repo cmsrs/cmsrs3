@@ -74,18 +74,6 @@ class ImageService
         self::deleteDirectoryIfEmpty($higherDirectory);
     }
 
-    // old
-    // public function getHtmlImage(Image $mImage, string $type = Image::IMAGE_THUMB_TYPE_MEDIUM): string
-    // {
-    //     $img = $this->getAllImage($mImage, false);
-
-    //     if (! isset($img[$type])) {
-    //         throw new \Exception("Image type not found: $type");
-    //     }
-
-    //     return $img[$type];
-    // }
-
     public function getRefId(Image $mImage): ?int
     {
         if ($mImage->page_id) {
@@ -300,15 +288,6 @@ class ImageService
 
         $strRefId = Image::$type[$type];
 
-        // if (empty($refId)) {
-        //     throw new \Exception('Image (next pos): refId must be defined');
-        //     // $image = Image::query()
-        //     //       ->whereNull($strRefId)
-        //     //       ->orderBy('position', 'desc')
-        //     //       ->first()
-        //     //       ;
-        // }
-
         $image = Image::query()
             ->where($strRefId, '=', $refId)
             ->orderBy('position', 'desc')
@@ -483,7 +462,4 @@ class ImageService
 
         return $ret;
     }
-    /**
-     * images in fs - stop
-     */
 }

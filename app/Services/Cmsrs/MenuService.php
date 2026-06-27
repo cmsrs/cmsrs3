@@ -9,8 +9,6 @@ use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\Helpers\CacheService;
 use App\Services\Cmsrs\Traits\TranslationsTrait;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Throwable;
 
@@ -118,32 +116,6 @@ class MenuService
 
         return $query->orderBy('position')->get();
     }
-
-    /**
-     * ___return HasMany<Page, Menu>
-     */
-    /*
-    public function old____pagesPublishedAndAccess(Menu $mMenu): HasMany
-    {
-        if (Auth::check()) {
-            $pages = $mMenu->pages()->where('published', '=', 1)->orderBy('position', 'asc');
-        } else {
-            $pages = $this->old_pagesPublishedAndAccessNotAuth($mMenu);
-        }
-
-        return $pages;
-    }
-        */
-
-    /**
-     * __return HasMany<Page, Menu>
-     */
-    /*
-    public function old_pagesPublishedAndAccessNotAuth(Menu $mMenu): HasMany
-    {
-        return $mMenu->pages()->where('published', '=', 1)->where('after_login', '=', 0)->orderBy('position', 'asc');
-    }
-        */
 
     /**
      * @return array<int, array<string, mixed>>

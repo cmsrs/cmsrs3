@@ -242,19 +242,4 @@ class ConfigService
 
         return (string) $lang;
     }
-    /*
-    public function getLangFromCookie(): string
-    {
-        $lang = request()->cookie(ConfigService::COOKIE_FRONT_LOGIN_LANG_NAME);
-
-        if ($lang && (! in_array($lang, $this->arrGetLangs()))) {
-            abort(404);
-        }
-        if (empty($lang)) {
-            $lang = $this->getDefaultLang();
-        }
-
-        return $lang;
-    }
-    */
 }

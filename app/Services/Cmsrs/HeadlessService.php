@@ -80,14 +80,6 @@ class HeadlessService
      */
     public function getAllPagesWithImagesOneItemByLang(Page $mPage, string $lang): array
     {
-        /*
-        $pageModel = (new Page)->where('id', $mPage->id)->with(['translates', 'contents'])->orderBy('position', 'asc')->first();
-
-        $page = [];
-        if ($pageModel) {
-            $page = $pageModel->toArray();
-        }
-            */
         $pageModel = Page::with(['translates', 'contents'])->find($mPage->id);
         $page = $pageModel?->toArray() ?? [];
 

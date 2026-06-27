@@ -7,7 +7,6 @@ namespace App\Services\Cmsrs;
 use App\Enums\Cmsrs\SortDirection;
 use App\Models\Cmsrs\Basket;
 use App\Models\Cmsrs\Checkout;
-// use App\Models\Cmsrs\Translate;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Product;
 use App\Models\Cmsrs\Translate;
@@ -659,14 +658,6 @@ class ProductService
         $products = $this->getDataProductsWithImagesByPage($pageId);
 
         return $this->dataToRender($products);
-        // $i = 0;
-        // $out = [];
-        // foreach ($products as $key => $product) {
-        //     $urls =  $product->getProductUrls($product);
-        //     $out[$i] =  array_merge( $this->getProductDataByProductArr( $product ), $urls);
-        //     $i++;
-        // }
-        // return $out;
     }
 
     /**
@@ -687,70 +678,3 @@ class ProductService
         return $out;
     }
 }
-
-/**
- * __param  array<int, mixed>  $arrCart
- * __param  array<int, array<string, mixed>>|false  $baskets
- * __param  array<int, array<string, mixed>>|false|string  $orders
- * __return array<string, mixed>
- */
-/*
-now see: createPaymentData
-public function old2__getDataToPayment(array $arrCart, array|false &$baskets, array|false|string &$orders = false): array
-{
-    // $user = Auth::user();
-    // if( empty($user) ){
-    //     throw new \Exception("User not auth - this exception is impossible");
-    // }
-
-    $ids = array_keys($arrCart);
-    $arrProducts = Product::with(['translates'])->whereIn('id', $ids)->orderBy('id', 'asc')->get(); // ->toArray();
-
-    $out = [];
-    $totalAmount = 0;
-    $lang = ConfigService::getDefaultLang();
-    foreach ($arrProducts as $product) {
-
-        $itemIn = $arrCart[$product->id];
-        if (empty($itemIn['qty'])) {
-            throw new \Exception('qty empty - something wrong');
-        }
-
-        $productName = ProductService::getDefaultProductName($product->translates, $lang);
-        $qty = $itemIn['qty'];
-
-        $out['products'][] = [
-            'name' => $productName,
-            'unitPrice' => $product->price,
-            'quantity' => $qty,
-        ];
-
-        if (is_array($baskets)) {
-            $baskets[] = [
-                'qty' => $qty,
-                // "user_id" => $user->id,
-                'price' => $product->price,
-                'product_id' => $product->id,
-                // "checkout_id" => $checkoutId
-            ];
-        }
-
-        if (is_array($orders)) {
-            $productImage = $this->imageService->getImagesAndThumbsByTypeAndRefId('product', $product->id)->toArray();
-            $orders[] = [
-                'name' => $productName,
-                'unitPrice' => $product->price,
-                'qty' => $qty,
-                'product_id' => $product->id,
-                'product_url' => $this->getProductUrl($product, $lang, $productName),
-                'product_img' => empty($productImage[0]) ? '' : $productImage[0]['fs']['small'],
-            ];
-        }
-
-        $totalAmount += $product->price * $qty;
-    }
-    $out['totalAmount'] = $totalAmount;
-
-    return $out;
-}
-    */

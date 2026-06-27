@@ -68,29 +68,6 @@ class OrderService
         }
 
         return true;
-
-        // $orders = [];
-        // if($objBaskets->count()){
-        //     foreach($objBaskets as $objBasket){
-        //         $arrBasket = $objBasket->toArray();
-        //         $arrBasket['user_id'] = $user->id;
-
-        //         unset($arrBasket['created_at']);
-        //         unset($arrBasket['updated_at']);
-        //         $productId = $arrBasket['product_id'];
-
-        //         if( empty($orders[$productId]) ){
-        //             $orders[$productId] = $arrBasket;
-        //         }else{
-        //             $orders[$productId]['qty'] += $arrBasket['qty'];
-        //         }
-        //     }
-        //     Order::where('user_id', '=', $user->id)->delete();
-        //     foreach($orders as $order){
-        //         Order::create($order);
-        //     }
-        // }
-
     }
 
     /**

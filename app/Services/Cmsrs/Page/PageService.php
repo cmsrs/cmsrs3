@@ -64,25 +64,6 @@ class PageService
     }
 
     /**
-     * __return Collection<int, Image>
-     */
-    /*
-    public function getPageDataImagesByShortTitleCache(string $shortTitle): Collection
-    {
-        $isCache = $this->configService->isCacheEnable();
-        if ($isCache) {
-            $ret = cache()->remember('page_by_short_title_images_'.Str::slug($shortTitle, '_'), CacheService::setTime(), function () use ($shortTitle) {
-                return $this->getPageDataImagesByShortTitle($shortTitle);
-            });
-        } else {
-            $ret = $this->getPageDataImagesByShortTitle($shortTitle);
-        }
-
-        return $ret;
-    }
-    */
-
-    /**
      * @return Collection<int, Image>
      */
     public function getPageDataImagesByShortTitle(string $shortTitle): Collection
@@ -465,17 +446,6 @@ class PageService
         return $urls;
     }
 
-    // private function getTypeUrl($type, $lang)
-    // {
-    //     $url = '/'.$type;
-    //     $langs = ConfigService::arrGetLangsEnv();
-    //     if (count($langs) > 1) {
-    //         $url = '/'.$lang.$url;
-    //     }
-
-    //     return $url;
-    // }
-
     private function getMenuSlugByLang(Page $mPage, string $lang): ?string
     {
         $menu = $mPage->menu()->first();
@@ -679,24 +649,6 @@ class PageService
         return $out;
     }
 
-    /*
-    //not remove this comment see: https://www.cmsrs.pl/pl/cms/cmsrs/rest-api
-    public function getPageWithImages(Page $mPage, $lang)
-    {
-        $langs = $this->getArrLangs();
-
-        if (! in_array($lang, $langs)) {
-            throw new \Exception("Problem with langs - lang: $lang no exist");
-        }
-
-        $p['id'] = $mPage->id;
-        $p['type'] = $mPage->type;
-        $p['images'] = $this->arrImages($mPage, $lang);
-
-        return $p;
-    }
-    */
-
     /**
      * @return array<string, mixed>
      */
@@ -873,9 +825,6 @@ class PageService
                 Page::where('id', $p->id)->update(['position' => $swapPage->position]);
 
                 Page::where('id', $swapPage->id)->update(['position' => $positionKey]);
-                // $obj2 = Page::find($pages[$swapKey]->id);
-                // $obj2->position = 44;  //$positionKey;
-                // $obj2->save();
             }
         }
 
