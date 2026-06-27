@@ -4,7 +4,7 @@ namespace Tests\Feature\Services\Cmsrs;
 
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\MenuService;
-use App\Services\Cmsrs\PageService;
+use App\Services\Cmsrs\Page\PageService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PageSecretTest extends Base

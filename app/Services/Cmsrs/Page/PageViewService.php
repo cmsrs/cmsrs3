@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Services\Cmsrs;
+namespace App\Services\Cmsrs\Page;
 
 use App\Models\Cmsrs\Page;
+use App\Services\Cmsrs\ImageService;
+use App\Services\Cmsrs\ProductService;
 
 class PageViewService
 {

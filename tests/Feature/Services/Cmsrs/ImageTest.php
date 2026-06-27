@@ -7,7 +7,7 @@ use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\ImageService;
-use App\Services\Cmsrs\PageService;
+use App\Services\Cmsrs\Page\PageService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ImageTest extends Base

@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\ImageService;
-use App\Services\Cmsrs\PageService;
+use App\Services\Cmsrs\Page\PageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;

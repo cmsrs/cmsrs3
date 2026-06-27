@@ -7,7 +7,7 @@ namespace App\Data;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Product;
 use App\Services\Cmsrs\MenuService;
-use App\Services\Cmsrs\PageService;
+use App\Services\Cmsrs\Page\PageService;
 use App\Services\Cmsrs\ProductService;
 
 class Demo

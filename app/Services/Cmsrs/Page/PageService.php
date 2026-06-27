@@ -2,14 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Services\Cmsrs;
+namespace App\Services\Cmsrs\Page;
 
 use App\Models\Cmsrs\Image;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Translate;
+use App\Services\Cmsrs\ConfigService;
+use App\Services\Cmsrs\ContentService;
 use App\Services\Cmsrs\Helpers\CacheService;
+use App\Services\Cmsrs\ImageService;
+use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\Traits\TranslationsTrait;
+use App\Services\Cmsrs\TranslateService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;

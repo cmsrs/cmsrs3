@@ -6,7 +6,7 @@ namespace App\Console\Commands;
 
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
-use App\Services\Cmsrs\PageService;
+use App\Services\Cmsrs\Page\PageService;
 use App\Services\Cmsrs\ProductService;
 use Illuminate\Console\Command;
 

@@ -16,7 +16,7 @@ use App\Services\Cmsrs\DeliverService;
 use App\Services\Cmsrs\Helpers\ArrObjHelperService;
 use App\Services\Cmsrs\Helpers\PriceHelperService;
 use App\Services\Cmsrs\MenuService;
-use App\Services\Cmsrs\PageService;
+use App\Services\Cmsrs\Page\PageService;
 use App\Services\Cmsrs\PaymentService;
 use App\Services\Cmsrs\ProductService;
 use Illuminate\Foundation\Testing\RefreshDatabase;

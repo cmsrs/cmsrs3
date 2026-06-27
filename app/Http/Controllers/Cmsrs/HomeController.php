@@ -11,7 +11,7 @@ use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\Helpers\ArrObjHelperService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\OrderService;
-use App\Services\Cmsrs\PageService;
+use App\Services\Cmsrs\Page\PageService;
 use App\Services\Cmsrs\ProductService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;

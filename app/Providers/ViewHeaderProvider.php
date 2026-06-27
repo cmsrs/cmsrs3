@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Services\Cmsrs\ConfigService;
-use App\Services\Cmsrs\NavigationService;
-use App\Services\Cmsrs\PageService;
+use App\Services\Cmsrs\Page\NavigationService;
+use App\Services\Cmsrs\Page\PageService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;

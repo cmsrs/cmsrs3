@@ -8,7 +8,7 @@ use App\Models\Cmsrs\Product;
 use App\Models\User;
 use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\MenuService;
-use App\Services\Cmsrs\PageService;
+use App\Services\Cmsrs\Page\PageService;
 use App\Services\Cmsrs\ProductService;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
