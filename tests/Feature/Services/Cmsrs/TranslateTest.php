@@ -6,6 +6,7 @@ use App\Models\Cmsrs\Content;
 use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\ContentService;
+use App\Services\Cmsrs\Helpers\CacheManagerService;
 use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\Page\PageService;
@@ -221,7 +222,8 @@ class TranslateTest extends Base
             app(MenuService::class),
             $translate,
             $content,
-            $imageService
+            $imageService,
+            app(CacheManagerService::class)
         );
 
         $page = $objPage->wrapCreate($data, $translate);

@@ -10,6 +10,7 @@ use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\ContentService;
+use App\Services\Cmsrs\Helpers\CacheManagerService;
 use App\Services\Cmsrs\Helpers\CacheService;
 use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\MenuService;
@@ -26,9 +27,23 @@ class PageService
      */
     use TranslationsTrait;
 
-    public function __construct(private ConfigService $configService, private MenuService $menuService, private TranslateService $translateService, private ContentService $contentService, private ImageService $imageService) {}
+    public function __construct(private ConfigService $configService, private MenuService $menuService, private TranslateService $translateService, private ContentService $contentService, private ImageService $imageService, private CacheManagerService $cacheManagerService) {}
 
     public function getPageDataByShortTitleCache(string $shortTitle, string $data = 'content', ?string $lang = null): ?string
+    {
+        $key = $this->cacheManagerService->key(
+            'page_by_short_title_'.$data,
+            $shortTitle
+        );
+
+        return $this->cacheManagerService->remember(
+            $key,
+            fn () => $this->getPageDataByShortTitle($shortTitle, $data, $lang)
+        );
+    }
+
+    /*
+    public function getPageDataByShortTitleCache_old(string $shortTitle, string $data = 'content', ?string $lang = null): ?string
     {
         if (empty($lang)) {
             $lang = $this->configService->getDefaultLang();
@@ -44,6 +59,7 @@ class PageService
 
         return $ret;
     }
+    */
 
     /**
      * @return Collection<int, Image>

@@ -6,6 +6,7 @@ use App\Models\Cmsrs\Content;
 use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\ContentService;
+use App\Services\Cmsrs\Helpers\CacheManagerService;
 use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\Page\PageService;
@@ -107,7 +108,8 @@ class ContentTest extends Base
             Mockery::mock(MenuService::class),
             $translate,
             $content,
-            $imageServiceMock
+            $imageServiceMock,
+            Mockery::mock(CacheManagerService::class),
         );
 
         $page = $objPage->wrapCreate($data, $translate, $content); // linia 107
