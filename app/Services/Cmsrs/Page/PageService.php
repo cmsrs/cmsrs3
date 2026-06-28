@@ -341,38 +341,6 @@ class PageService
         return $out;
     }
 
-    public function getViewNameByType(Page $mPage): string
-    {
-        $type = $mPage->type;
-        if ($type == 'projects') {
-            $view = 'projects';
-        } elseif ($type == 'clear') {
-            $view = 'clear';
-        } elseif ($type == 'privacy_policy') { // it is used in footer, not related in menu
-            $view = 'in'; // (before: 'in' ) it can be cms (each language have got own language, not one language in each pages)
-        } elseif ($type == 'gallery') {
-            $view = 'gallery';
-        } elseif ($type == 'shop') {
-            $view = 'shop';
-            // } elseif ($type == 'checkout') {
-            //     $view = 'checkout';
-            // } elseif ($type == 'register') {
-            //     $view = 'register';
-            // } elseif ($type == 'home') {
-            //     $view = 'home';
-            // } elseif ($type == 'shoppingsuccess') {
-            //     $view = 'shoppingsuccess';
-            // } elseif ($type == 'search') {
-            //     $view = 'search';
-            // } elseif ($type == 'forgot') {
-            //     $view = 'forgot';
-        } else {
-            $view = 'cms';
-        }
-
-        return $view;
-    }
-
     /**
      * use in headless
      *

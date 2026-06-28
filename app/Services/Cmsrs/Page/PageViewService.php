@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Cmsrs\Page;
 
 use App\Models\Cmsrs\Page;
+use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\ProductService;
 
@@ -14,6 +15,7 @@ class PageViewService
         private PageService $pageService,
         private ProductService $productService,
         private ImageService $imageService,
+        private ConfigService $configService,
     ) {}
 
     /**
@@ -32,6 +34,8 @@ class PageViewService
             $products = $this->productService->getProductsWithImagesByPage($mPage->id);
         }
         $langs = $dataIn['langs'];
+        $view = $this->getViewNameByType($mPage);
+        $dataDependOnView = $this->getDataDependOnView($mPage, $view, $lang);
 
         $data = [
             'page' => $mPage,
@@ -39,17 +43,62 @@ class PageViewService
             'images' => $this->imageService->getImagesAndThumbsByTypeAndRefId('page', $mPage->id),
             'h1_title' => $this->pageService->translatesByColumnAndLang($mPage, 'title', $lang) ?? config('app.name', 'cmsRS'),
             'content' => $this->pageService->translatesByColumnAndLang($mPage, 'content', $lang),
-            'content_default_lang' => $this->pageService->translatesByColumnAndLang($mPage, 'content', $langs[0]), // only in project view - mayby refactor this
             'seo_description' => $this->pageService->translatesByColumnAndLang($mPage, 'description', $lang) ?? config('app.name', 'cmsRS'),
             'products' => $products,
             'lang' => $lang,
             'langs' => $langs,
             're_public' => config('cmsrs.recaptcha.public'),  // env('GOOGLE_RECAPTCHA_PUBLIC', ''),
-            'view' => 'cmsrs.'.$this->pageService->getViewNameByType($mPage),
+            'view' => 'cmsrs.'.$view,
             'companyData' => $this->pageService->getPageDataByShortTitleCache('company_data', 'content', $lang),
-            'page_url' => $this->pageService->getUrl($mPage, $lang), // only useful in shop view - mayby refactor this
         ];
 
-        return array_merge($data, $dataIn);
+        return array_merge($data, $dataDependOnView, $dataIn);
+    }
+
+    private function getViewNameByType(Page $mPage): string
+    {
+        $type = $mPage->type;
+        if ($type == 'projects') {
+            $view = 'projects';
+        } elseif ($type == 'clear') {
+            $view = 'clear';
+        } elseif ($type == 'privacy_policy') { // it is used in footer, not related in menu
+            $view = 'in'; // (before: 'in' ) it can be cms (each language have got own language, not one language in each pages)
+        } elseif ($type == 'gallery') {
+            $view = 'gallery';
+        } elseif ($type == 'shop') {
+            $view = 'shop';
+            // } elseif ($type == 'checkout') {
+            //     $view = 'checkout';
+            // } elseif ($type == 'register') {
+            //     $view = 'register';
+            // } elseif ($type == 'home') {
+            //     $view = 'home';
+            // } elseif ($type == 'shoppingsuccess') {
+            //     $view = 'shoppingsuccess';
+            // } elseif ($type == 'search') {
+            //     $view = 'search';
+            // } elseif ($type == 'forgot') {
+            //     $view = 'forgot';
+        } else {
+            $view = 'cms';
+        }
+
+        return $view;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function getDataDependOnView(Page $mPage, string $view, string $lang): array
+    {
+        $data = [];
+        if ($view == 'projects') {
+            $data['content_default_lang'] = $this->pageService->translatesByColumnAndLang($mPage, 'content', $this->configService->getDefaultLang());
+        } elseif ($view == 'shop') {
+            $data['page_url'] = $this->pageService->getUrl($mPage, $lang);
+        }
+
+        return $data;
     }
 }
