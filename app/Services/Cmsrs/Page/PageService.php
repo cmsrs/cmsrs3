@@ -47,24 +47,21 @@ class PageService
         );
     }
 
-    /*
-    public function getPageDataByShortTitleCache_old(string $shortTitle, string $data = 'content', ?string $lang = null): ?string
+    private function getPageByShortTitle(string $shortTitle): ?Page
     {
-        if (empty($lang)) {
-            $lang = $this->configService->getDefaultLang();
-        }
-        $isCache = $this->configService->isCacheEnable();
-        if ($isCache) {
-            $ret = cache()->remember('page_by_short_title_'.$data.'_'.Str::slug($shortTitle, '_').'_'.$lang, CacheService::setTime(), function () use ($shortTitle, $data, $lang) {
-                return $this->getPageDataByShortTitle($shortTitle, $data, $lang);
-            });
-        } else {
-            $ret = $this->getPageDataByShortTitle($shortTitle, $data, $lang);
+        $translate = Translate::where('value', '=', $shortTitle)->where('column', '=', 'short_title')->first();  // where('lang', '=', $defaultLang )->first();
+        if (empty($translate)) {
+            return null;
         }
 
-        return $ret;
+        // ->where('type', '=', 'inner') //todo why is this condition ? 'published', '=', 1 - is it make sense (see inner page post:/api/pages)? see test: it_will_get_data_page_by_short_title
+        $page = $translate->page()->where('published', '=', 1)->first();
+        if (empty($page)) {
+            return null;
+        }
+
+        return $page;
     }
-    */
 
     /**
      * @return Collection<int, Image>
@@ -87,7 +84,7 @@ class PageService
     /**
      * @return Collection<int, Image>
      */
-    public function getPageDataImagesByShortTitle(string $shortTitle): Collection
+    private function getPageDataImagesByShortTitle(string $shortTitle): Collection
     {
         $page = $this->getPageByShortTitle($shortTitle);
 
@@ -98,7 +95,7 @@ class PageService
         return $this->imageService->getImagesAndThumbsByTypeAndRefId('page', $page->id);
     }
 
-    public function getPageDataByShortTitle(string $shortTitle, string $data = 'content', ?string $lang = null): ?string
+    private function getPageDataByShortTitle(string $shortTitle, string $data = 'content', ?string $lang = null): ?string
     {
         if (! in_array($data, ['content', 'title', 'images', 'url'])) {
             throw new \Exception('second param is: content title images and url allowed, but now is: '.$data);
@@ -125,21 +122,6 @@ class PageService
         return empty($dataByLang[$lang]) ? '' : $dataByLang[$lang];
     }
 
-    private function getPageByShortTitle(string $shortTitle): ?Page
-    {
-        $translate = Translate::where('value', '=', $shortTitle)->where('column', '=', 'short_title')->first();  // where('lang', '=', $defaultLang )->first();
-        if (empty($translate)) {
-            return null;
-        }
-
-        // ->where('type', '=', 'inner') //todo why is this condition ? 'published', '=', 1 - is it make sense (see inner page post:/api/pages)? see test: it_will_get_data_page_by_short_title
-        $page = $translate->page()->where('published', '=', 1)->first();
-        if (empty($page)) {
-            return null;
-        }
-
-        return $page;
-    }
 
     public function getContentInnerPageByIdCache(int $pageId, ?string $lang = null): string
     {
@@ -168,20 +150,6 @@ class PageService
         return empty($contents[$lang]) ? '' : $contents[$lang];
     }
 
-    public function getSeparatePageBySlug(string $pageSlug, string $lang): ?Page
-    {
-        $pageOut = null;
-        $pages = Page::all();
-        foreach ($pages as $page) {
-            if ($this->getSlugByLang($page, $lang) == $pageSlug) {
-                $pageOut = $page;
-                break;
-            }
-        }
-
-        return $pageOut;
-    }
-
     /**
      * @param  Collection<int, Menu>  $menus
      */
@@ -202,7 +170,7 @@ class PageService
     /**
      * @param  Collection<int, Menu>  $menus
      */
-    public function getPageBySlug(Collection $menus, string $menuSlug, ?string $pageSlug, string $lang): ?Page
+    private function getPageBySlug(Collection $menus, string $menuSlug, ?string $pageSlug, string $lang): ?Page
     {
         $pageOut = null;
         foreach ($menus as $menu) {
@@ -225,6 +193,53 @@ class PageService
 
         return $pageOut;
     }
+
+    public function getNumPagesBelongsToThisMenuCache(Page $mPage): ?int
+    {
+        $pageId = $mPage->id;
+        $isCache = $this->configService->isCacheEnable();
+        if ($isCache) {
+            $countPages = cache()->remember('countpagesinthismenu_'.$pageId, CacheService::setTime(), function () use ($mPage) {
+                return $this->getNumPagesBelongsToThisMenu($mPage);
+            });
+        } else {
+            $countPages = $this->getNumPagesBelongsToThisMenu($mPage);
+        }
+
+        return $countPages;
+    }
+
+
+    /** cache */
+
+
+
+    private function getMenuSlugByLangCache(Page $mPage, string $lang): ?string
+    {
+        $pageId = $mPage->id;
+        $isCache = $this->configService->isCacheEnable();
+        if ($isCache) {
+            $menuSlug = cache()->remember('menusluglang_'.$lang.'_'.$pageId, CacheService::setTime(), function () use ($mPage, $lang) {
+                return $this->getMenuSlugByLang($mPage, $lang);
+            });
+        } else {
+            $menuSlug = $this->getMenuSlugByLang($mPage, $lang);
+        }
+
+        return $menuSlug;
+    }
+
+    private function getMenuSlugByLang(Page $mPage, string $lang): ?string
+    {
+        $menu = $mPage->menu()->first();
+
+        if (empty($menu)) {
+            return null;
+        }
+
+        return $this->menuService->getSlugByLang($menu, $lang);
+    }
+
 
     /**
      * @param  array<string, mixed>  $data
@@ -435,16 +450,6 @@ class PageService
         return $urls;
     }
 
-    private function getMenuSlugByLang(Page $mPage, string $lang): ?string
-    {
-        $menu = $mPage->menu()->first();
-
-        if (empty($menu)) {
-            return null;
-        }
-
-        return $this->menuService->getSlugByLang($menu, $lang);
-    }
 
     public function getNumPagesBelongsToThisMenu(Page $mPage): ?int
     {
@@ -456,35 +461,6 @@ class PageService
         return $this->menuService->pagesPublishedAndAccess($menu, Auth::check())->count();
     }
 
-    public function getNumPagesBelongsToThisMenuCache(Page $mPage): ?int
-    {
-        $pageId = $mPage->id;
-        $isCache = $this->configService->isCacheEnable();
-        if ($isCache) {
-            $countPages = cache()->remember('countpagesinthismenu_'.$pageId, CacheService::setTime(), function () use ($mPage) {
-                return $this->getNumPagesBelongsToThisMenu($mPage);
-            });
-        } else {
-            $countPages = $this->getNumPagesBelongsToThisMenu($mPage);
-        }
-
-        return $countPages;
-    }
-
-    private function getMenuSlugByLangCache(Page $mPage, string $lang): ?string
-    {
-        $pageId = $mPage->id;
-        $isCache = $this->configService->isCacheEnable();
-        if ($isCache) {
-            $menuSlug = cache()->remember('menusluglang_'.$lang.'_'.$pageId, CacheService::setTime(), function () use ($mPage, $lang) {
-                return $this->getMenuSlugByLang($mPage, $lang);
-            });
-        } else {
-            $menuSlug = $this->getMenuSlugByLang($mPage, $lang);
-        }
-
-        return $menuSlug;
-    }
 
     private function getCmsUrl(Page $mPage, string $lang, ?string $urlParam = null): string
     {
@@ -839,4 +815,19 @@ class PageService
 
         return $out;
     }
+
+    public function getSeparatePageBySlug(string $pageSlug, string $lang): ?Page
+    {
+        $pageOut = null;
+        $pages = Page::all();
+        foreach ($pages as $page) {
+            if ($this->getSlugByLang($page, $lang) == $pageSlug) {
+                $pageOut = $page;
+                break;
+            }
+        }
+
+        return $pageOut;
+    }
+
 }
