@@ -13,6 +13,8 @@ class PageDataTest extends Base
 {
     use RefreshDatabase;
 
+    const STR_DESC_IMG1 = 'description img1';
+
     const STR_PARENT_TWO = 'parent2 p2';
 
     const STR_PARENT_TREE = 'parent3 p5';
@@ -35,6 +37,24 @@ class PageDataTest extends Base
 
     private $strTestMenuName;
 
+    private $name1;
+
+    private $name2;
+
+    private $file2;
+
+    private $pageId;
+
+    private $arrPageId;
+
+    private $testImgData;
+
+    private $pagesData;
+
+    private $pageData;
+
+    private $testProductData;
+
     protected function setUp(): void
     {
         putenv('LANGS="en"');
@@ -52,27 +72,28 @@ class PageDataTest extends Base
         parent::setUp();
 
         $this->createUser();
-        $this->strTestTitle = 'page 1 test';
 
-        $this->testData =
-        [
-            'title' => ['en' => $this->strTestTitle],
-            'short_title' => ['en' => 'page1'],
-            'description' => ['en' => 'this page: test desc ...'],
-            'published' => 1,
-            'commented' => 1,
-            'after_login' => 0,
-            'type' => 'cms',
-            'content' => ['en' => 'content test133445'],
-            'menu_id' => null,
-            'page_id' => null,
-        ];
+        // $this->strTestTitle = 'page 1 test';
+        // $this->testData =
+        // [
+        //     'title' => ['en' => $this->strTestTitle],
+        //     'short_title' => ['en' => 'page1'],
+        //     'description' => ['en' => 'this page: test desc ...'],
+        //     'published' => 1,
+        //     'commented' => 1,
+        //     'after_login' => 0,
+        //     'type' => 'cms',
+        //     'content' => ['en' => 'content test133445'],
+        //     'menu_id' => null,
+        //     'page_id' => null,
+        // ];
 
-        $this->strTestMenuName = 'test men7';
-        $this->testDataMenu =
-        [
-            'name' => ['en' => $this->strTestMenuName],
-        ];
+        // $this->strTestMenuName = 'test men7';
+        // $this->testDataMenu =
+        // [
+        //     'name' => ['en' => $this->strTestMenuName],
+        // ];
+
         (new ConfigService)->createFileCacheEnableIfNotExist();
     }
 
@@ -82,16 +103,61 @@ class PageDataTest extends Base
         parent::tearDown();
     }
 
+    private function prepareTestPage($withImages = true)
+    {
+        $this->arrPageId = [];
+
+        $this->name1 = 'phpunittest1.jpg';
+        $file1 = $this->getFixtureBase64($this->name1);
+
+        $this->name2 = 'phpunittest2.jpg';
+        $file2 = $this->getFixtureBase64($this->name2);
+        $this->file2 = $file2;
+
+        $images = [
+            ['name' => $this->name1, 'data' => $file1, 'alt' => ['en' => self::STR_DESC_IMG1]],
+            ['name' => $this->name2, 'data' => $file2], // , 'alt' => ['en' => 'description img2' ]]
+        ];
+
+        $this->testImgData =
+        [
+            'title' => ['en' => 'test p2'],
+            'short_title' => ['en' => 'p22'],
+            'description' => ['en' => 'test1234'],
+            'published' => 1,
+            'commented' => 0,
+            'after_login' => 0,
+            'type' => 'cms', // this page will be useful for create product   'contact',
+            'content' => ['en' => 'lorem ipsum'],
+            'menu_id' => null,
+            'page_id' => null,
+            'images' => $withImages ? $images : null,
+        ];
+
+        $response = $this->post('api/pages?token='.$this->token, $this->testImgData);
+        $res = $response->getData();
+
+        $this->assertTrue($res->success);
+
+        $pageId = $res->data->pageId;
+        $this->assertNotEmpty($pageId);
+
+        $this->pageData = $res->data->data;
+
+        $this->pageId = $pageId;
+    }
+
     public function test_it_uses_cache_for_page_by_short_title()
     {
 
         Cache::flush();
+        $this->prepareTestPage();
 
         $service = app(PageDataService::class);
 
-        app(PageService::class)->wrapCreate($this->testData);
+        // app(PageService::class)->wrapCreate($this->testData);
 
-        $shortTitle = $this->testData['short_title']['en'];
+        $shortTitle = $this->testImgData['short_title']['en'];
 
         DB::flushQueryLog();
         DB::enableQueryLog();
