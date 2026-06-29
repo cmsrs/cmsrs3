@@ -5,6 +5,7 @@ namespace Tests\Feature\Services\Cmsrs;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\Page\PageDataService;
 use App\Services\Cmsrs\Page\PageService;
+use App\Services\Cmsrs\MenuService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -73,40 +74,6 @@ class PageDataTest extends Base
 
         $this->createUser();
 
-        // $this->strTestTitle = 'page 1 test';
-        // $this->testData =
-        // [
-        //     'title' => ['en' => $this->strTestTitle],
-        //     'short_title' => ['en' => 'page1'],
-        //     'description' => ['en' => 'this page: test desc ...'],
-        //     'published' => 1,
-        //     'commented' => 1,
-        //     'after_login' => 0,
-        //     'type' => 'cms',
-        //     'content' => ['en' => 'content test133445'],
-        //     'menu_id' => null,
-        //     'page_id' => null,
-        // ];
-
-        // $this->strTestMenuName = 'test men7';
-        // $this->testDataMenu =
-        // [
-        //     'name' => ['en' => $this->strTestMenuName],
-        // ];
-
-        (new ConfigService)->createFileCacheEnableIfNotExist();
-    }
-
-    protected function tearDown(): void
-    {
-        (new ConfigService)->deleteFileCacheEnableIfExist();
-        parent::tearDown();
-    }
-
-    private function prepareTestPage($withImages = true)
-    {
-        $this->arrPageId = [];
-
         $this->name1 = 'phpunittest1.jpg';
         $file1 = $this->getFixtureBase64($this->name1);
 
@@ -131,27 +98,56 @@ class PageDataTest extends Base
             'content' => ['en' => 'lorem ipsum'],
             'menu_id' => null,
             'page_id' => null,
-            'images' => $withImages ? $images : null,
+            'images' => $images,
         ];
 
-        $response = $this->post('api/pages?token='.$this->token, $this->testImgData);
-        $res = $response->getData();
+        $this->strTestMenuName = 'test men7';
+        $this->testDataMenu =
+        [
+             'name' => ['en' => $this->strTestMenuName],
+        ];
 
-        $this->assertTrue($res->success);
 
-        $pageId = $res->data->pageId;
-        $this->assertNotEmpty($pageId);
+        // $this->strTestTitle = 'page 1 test';
+        // $this->testData =
+        // [
+        //     'title' => ['en' => $this->strTestTitle],
+        //     'short_title' => ['en' => 'page1'],
+        //     'description' => ['en' => 'this page: test desc ...'],
+        //     'published' => 1,
+        //     'commented' => 1,
+        //     'after_login' => 0,
+        //     'type' => 'cms',
+        //     'content' => ['en' => 'content test133445'],
+        //     'menu_id' => null,
+        //     'page_id' => null,
+        // ];
 
-        $this->pageData = $res->data->data;
 
-        $this->pageId = $pageId;
+        (new ConfigService)->createFileCacheEnableIfNotExist();
+    }
+
+    protected function tearDown(): void
+    {
+        (new ConfigService)->deleteFileCacheEnableIfExist();
+        parent::tearDown();
+    }
+
+    private function setTestData()
+    {
+        $this->objPage = (app(PageService::class))->wrapCreate($this->testImgData);
+
+        $menu = (app(MenuService::class))->wrapCreate($this->testDataMenu);
+
+        $this->menuObj = $menu->all()->first();
+        $this->menuId = $this->menuObj->id;
     }
 
     public function test_it_uses_cache_for_page_with_images_by_short_title()
     {
 
         Cache::flush();
-        $this->prepareTestPage();
+        $this->setTestData(); //  prepareTestPage();
 
         $service = app(PageDataService::class);
 
@@ -189,7 +185,7 @@ class PageDataTest extends Base
     {
 
         Cache::flush();
-        $this->prepareTestPage();
+        $this->setTestData(); //  prepareTestPage();
 
         $service = app(PageDataService::class);
 
@@ -222,5 +218,9 @@ class PageDataTest extends Base
             'Second call should not hit database'
         );
     }
+
+
+
+
 
 }
