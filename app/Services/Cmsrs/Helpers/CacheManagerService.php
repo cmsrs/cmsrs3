@@ -23,6 +23,7 @@ class CacheManagerService
      */
     public function remember(string $key, Closure $callback)
     {
+        // dump( $this->configService->isCacheEnable());
         if (! $this->configService->isCacheEnable()) {
             return $callback();
         }
@@ -34,9 +35,9 @@ class CacheManagerService
         );
     }
 
-    public function key(string $prefix, string $value): string
+    public function key(string $prefix, string $value, string $lang): string
     {
-        return $prefix.'_'.Str::slug($value, '_');
+        return $prefix.'_'.Str::slug($value, '_').'_'.$lang;
     }
 
     public function setTime(): Carbon

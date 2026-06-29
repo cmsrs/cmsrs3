@@ -31,9 +31,14 @@ class PageService
 
     public function getPageDataByShortTitleCache(string $shortTitle, string $data = 'content', ?string $lang = null): ?string
     {
+        if (empty($lang)) {
+            $lang = $this->configService->getDefaultLang();
+        }
+
         $key = $this->cacheManagerService->key(
             'page_by_short_title_'.$data,
-            $shortTitle
+            $shortTitle,
+            $lang
         );
 
         return $this->cacheManagerService->remember(
