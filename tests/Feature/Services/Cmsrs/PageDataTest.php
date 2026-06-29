@@ -147,7 +147,7 @@ class PageDataTest extends Base
         $this->pageId = $pageId;
     }
 
-    public function test_it_uses_cache_for_page_by_short_title()
+    public function test_it_uses_cache_for_page_with_images_by_short_title()
     {
 
         Cache::flush();
@@ -155,7 +155,43 @@ class PageDataTest extends Base
 
         $service = app(PageDataService::class);
 
-        // app(PageService::class)->wrapCreate($this->testData);
+        $shortTitle = $this->testImgData['short_title']['en'];
+
+        DB::flushQueryLog();
+        DB::enableQueryLog();
+
+        // 1st call → DB hit
+        $result1 = $service->getPageDataImagesByShortTitleCache($shortTitle);
+        $queriesAfterFirst = count(DB::getQueryLog());
+        $this->assertTrue($queriesAfterFirst > 0);
+        // dump('first='. $queriesAfterFirst);
+
+        DB::flushQueryLog(); // 🔥 reset między wywołaniami
+
+        // 2nd call → should be cache
+        $result2 = $service->getPageDataImagesByShortTitleCache($shortTitle);
+        $queriesAfterSecond = count(DB::getQueryLog());
+        // dump('second='. $queriesAfterSecond);
+
+        $this->assertTrue($queriesAfterFirst > $queriesAfterSecond);
+
+        $this->assertEquals($result1, $result2);
+
+        // 🔥 KLUCZOWE
+        $this->assertEquals(
+            0,
+            $queriesAfterSecond,
+            'Second call should not hit database'
+        );
+    }
+
+    public function test_it_uses_cache_for_page_by_short_title()
+    {
+
+        Cache::flush();
+        $this->prepareTestPage();
+
+        $service = app(PageDataService::class);
 
         $shortTitle = $this->testImgData['short_title']['en'];
 
@@ -186,4 +222,5 @@ class PageDataTest extends Base
             'Second call should not hit database'
         );
     }
+
 }

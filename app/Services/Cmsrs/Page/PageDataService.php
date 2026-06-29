@@ -52,15 +52,13 @@ class PageDataService
      */
     public function getPageDataImagesByShortTitleCache(string $shortTitle): Collection
     {
-        if (! $this->configService->isCacheEnable()) {
-            return $this->getPageDataImagesByShortTitle($shortTitle);
-        }
+        $key = $this->cacheManagerService->key(
+            'page_by_short_title_images',
+            $shortTitle,
+        );
 
-        $key = 'page_by_short_title_images_'.Str::slug($shortTitle, '_');
-
-        return cache()->remember(
+        return $this->cacheManagerService->remember(
             $key,
-            CacheService::setTime(),
             fn () => $this->getPageDataImagesByShortTitle($shortTitle)
         );
     }

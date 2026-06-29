@@ -34,9 +34,10 @@ class CacheManagerService
         );
     }
 
-    public function key(string $prefix, string $value, string $lang): string
+    public function key(string $prefix, string $value, ?string $lang = null): string
     {
-        return $prefix.'_'.Str::slug($value, '_').'_'.$lang;
+        $sufix = $lang ? '_'.$lang : '';
+        return $prefix.'_'.Str::slug($value, '_').$sufix;
     }
 
     public function setTime(): Carbon
