@@ -5,6 +5,7 @@ namespace Tests\Feature\Services\Cmsrs;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\MenuService;
+use App\Services\Cmsrs\Page\PageDataService;
 use App\Services\Cmsrs\Page\PageService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
@@ -122,26 +123,26 @@ class PageTest extends Base
         $this->assertNotEmpty($objPage2->id);
 
         $shortTitle = $testData2['short_title']['en'];
-        $content = (app(PageService::class))->getPageDataByShortTitleCache($shortTitle);
+        $content = (app(PageDataService::class))->getPageDataByShortTitleCache($shortTitle);
 
         $this->assertEquals($testData2['content']['en'], $content);
 
-        $title = (app(PageService::class))->getPageDataByShortTitleCache($shortTitle, 'title');
+        $title = (app(PageDataService::class))->getPageDataByShortTitleCache($shortTitle, 'title');
 
         $this->assertEquals($testData2['title']['en'], $title);
 
-        $url = (app(PageService::class))->getPageDataByShortTitleCache($shortTitle, 'url');
+        $url = (app(PageDataService::class))->getPageDataByShortTitleCache($shortTitle, 'url');
 
         $this->assertEmpty($url); // because it is inner page
 
         $shortTitle = $this->testData['short_title']['en'];
-        $content = (app(PageService::class))->getPageDataByShortTitleCache($shortTitle);
+        $content = (app(PageDataService::class))->getPageDataByShortTitleCache($shortTitle);
         $this->assertEquals($this->testData['content']['en'], $content);
 
-        $title = (app(PageService::class))->getPageDataByShortTitleCache($shortTitle, 'title');
+        $title = (app(PageDataService::class))->getPageDataByShortTitleCache($shortTitle, 'title');
         $this->assertEquals($this->testData['title']['en'], $title);
 
-        $url = (app(PageService::class))->getPageDataByShortTitleCache($shortTitle, 'url');
+        $url = (app(PageDataService::class))->getPageDataByShortTitleCache($shortTitle, 'url');
         $this->assertNotEmpty($url);
 
         $response = $this->get('api/pages?token='.$this->token);
@@ -192,7 +193,7 @@ class PageTest extends Base
         $content = $objPage->contents->first();
         $this->assertEquals($testData['content']['en'], $content->value);
 
-        $contentValue = (app(PageService::class))->getContentInnerPageByIdCache($objPage->id);
+        $contentValue = (app(PageDataService::class))->getContentInnerPageByIdCache($objPage->id);
         $this->assertEquals($testData['content']['en'], $contentValue);
     }
 

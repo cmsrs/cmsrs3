@@ -13,6 +13,7 @@ class PageViewService
 {
     public function __construct(
         private PageService $pageService,
+        private PageDataService $pageDataService,
         private ProductService $productService,
         private ImageService $imageService,
         private ConfigService $configService,
@@ -49,7 +50,7 @@ class PageViewService
             'langs' => $langs,
             're_public' => config('cmsrs.recaptcha.public'),  // env('GOOGLE_RECAPTCHA_PUBLIC', ''),
             'view' => 'cmsrs.'.$view,
-            'companyData' => $this->pageService->getPageDataByShortTitleCache('company_data', 'content', $lang),
+            'companyData' => $this->pageDataService->getPageDataByShortTitleCache('company_data', 'content', $lang),
         ];
 
         return array_merge($data, $dataDependOnView, $dataIn);

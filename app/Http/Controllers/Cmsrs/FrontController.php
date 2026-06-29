@@ -13,6 +13,7 @@ use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\DeliverService;
 use App\Services\Cmsrs\Helpers\PriceHelperService;
 use App\Services\Cmsrs\MenuService;
+use App\Services\Cmsrs\Page\PageDataService;
 use App\Services\Cmsrs\Page\PageService;
 use App\Services\Cmsrs\Page\PageViewService;
 use App\Services\Cmsrs\PaymentService;
@@ -44,6 +45,7 @@ class FrontController extends Controller
         protected DeliverService $deliverService,
         protected MenuService $menuService,
         protected PageService $pageService,
+        protected PageDataService $pageDataService,
         protected PaymentService $paymentService,
         protected ProductService $productService,
         protected PriceHelperService $priceHelperService,
@@ -253,7 +255,7 @@ class FrontController extends Controller
         );
 
         // slider_main
-        $sliderDataImages = $this->pageService->getPageDataImagesByShortTitleCache('main_page_slider')->toArray();
+        $sliderDataImages = $this->pageDataService->getPageDataImagesByShortTitleCache('main_page_slider')->toArray();
 
         $mPageHome = $this->pageService->getFirstPageByType('home');
         $data = $this->pageViewService->getDataToView($page, [
@@ -276,7 +278,7 @@ class FrontController extends Controller
     private function getPageData(string $lang, string $menuSlug, ?string $pageSlug = null, ?string $productSlug = null): array
     {
         $pageOut = $this->validatePage(
-            $this->pageService->getPageBySlugCache($this->menus, $menuSlug, $pageSlug, $lang)
+            $this->pageDataService->getPageBySlugCache($this->menus, $menuSlug, $pageSlug, $lang)
         );
 
         $data = $this->pageViewService->getDataToView($pageOut, [

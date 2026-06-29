@@ -3,12 +3,13 @@
 namespace Tests\Feature\Services\Cmsrs;
 
 use App\Services\Cmsrs\ConfigService;
+use App\Services\Cmsrs\Page\PageDataService;
 use App\Services\Cmsrs\Page\PageService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
-class PageCacheTest extends Base
+class PageDataTest extends Base
 {
     use RefreshDatabase;
 
@@ -86,9 +87,9 @@ class PageCacheTest extends Base
 
         Cache::flush();
 
-        $service = app(PageService::class);
+        $service = app(PageDataService::class);
 
-        $service->wrapCreate($this->testData);
+        app(PageService::class)->wrapCreate($this->testData);
 
         $shortTitle = $this->testData['short_title']['en'];
 
