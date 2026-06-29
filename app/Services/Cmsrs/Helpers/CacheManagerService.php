@@ -23,7 +23,6 @@ class CacheManagerService
      */
     public function remember(string $key, Closure $callback)
     {
-        // dump( $this->configService->isCacheEnable());
         if (! $this->configService->isCacheEnable()) {
             return $callback();
         }

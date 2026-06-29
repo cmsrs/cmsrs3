@@ -209,6 +209,8 @@ class ConfigService
         $formEnv = $this->getConfigCacheEnable();
         $isFileExist = $this->isExistCacheFileEnable();
 
+        // dump( 'formEnv='.$formEnv.' isFileExist ='.$isFileExist);
+
         return $formEnv && $isFileExist;
     }
 

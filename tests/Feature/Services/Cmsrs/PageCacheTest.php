@@ -72,17 +72,17 @@ class PageCacheTest extends Base
         [
             'name' => ['en' => $this->strTestMenuName],
         ];
+        (new ConfigService)->createFileCacheEnableIfNotExist();
     }
 
     protected function tearDown(): void
     {
+        (new ConfigService)->deleteFileCacheEnableIfExist();
         parent::tearDown();
     }
 
     public function test_it_uses_cache_for_page_by_short_title()
     {
-        $createFile = (new ConfigService)->createFileCacheEnableIfNotExist();
-        $this->assertTrue($createFile);
 
         Cache::flush();
 
