@@ -61,6 +61,7 @@ class Product extends Model
      */
     public ?string $price_description = null;
 
+    // TODO - it is in ProductDataService
     /**
      * @var array<string>
      */

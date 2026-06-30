@@ -7,15 +7,11 @@ namespace App\Services\Cmsrs;
 use App\Enums\Cmsrs\SortDirection;
 use App\Models\Cmsrs\Basket;
 use App\Models\Cmsrs\Checkout;
-use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Product;
 use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\Helpers\ArrObjHelperService;
-use App\Services\Cmsrs\Helpers\CacheService;
-use App\Services\Cmsrs\Helpers\LangHelperService;
 use App\Services\Cmsrs\Helpers\PaginationHelperService;
 use App\Services\Cmsrs\Helpers\PriceHelperService;
-use App\Services\Cmsrs\Page\PageService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -24,27 +20,14 @@ use Illuminate\Support\Str;
 
 class ProductService
 {
-    /** @var array<int, string> */
-    public array $productFields;
-
     public function __construct(
-        private ConfigService $configService,
-        private PageService $pageService,
         private ImageService $imageService,
         private PriceHelperService $priceHelperService,
         private DeliverService $deliverService,
         private TranslateService $translateService,
         private ContentService $contentService,
-    ) {
-
-        $this->productFields = [
-            'id',
-            'published',
-            'sku',
-            'price',
-            'page_id',
-        ];
-    }
+        private ProductDataService $productDataService,
+    ) {}
 
     /**
      * @return array<string, mixed>
@@ -52,10 +35,10 @@ class ProductService
     public function getProductData(Product $product, string $lang): array
     {
         $data = [];
-        $urls = $this->getProductUrls($product);
+        $urls = $this->productDataService->getProductUrls($product);
         $data['url_category'] = $urls['url_category'];
         // $data['url_product'] = $urls['url_product'];
-        $productArr = $this->getProductDataByProductArr($product);
+        $productArr = $this->productDataService->getProductDataByProductArr($product);
         $data['product'] = $productArr;
         $data['h1'] = $productArr['product_name'][$lang];
         $data['product_name'] = $productArr['product_name'];
@@ -308,7 +291,7 @@ class ProductService
                 'unit_price_description' => $this->priceHelperService->getPriceDescriptionWrap($product->price ?? 0),
                 'qty' => $qty,
                 'product_id' => $product->id,
-                'product_url' => $this->getProductUrl($product, $lang, $name),
+                'product_url' => $this->productDataService->getProductUrl($product, $lang, $name),
                 'product_img' => $productImage[0]['fs']['small'] ?? '',
             ];
 
@@ -325,7 +308,7 @@ class ProductService
     public function checkIsDuplicateName(array $data, ?int $id = null): array
     {
         $out = ['success' => true];
-        $products = $this->getAllProductsWithImages();
+        $products = $this->productDataService->getAllProductsWithImages();
         foreach ($products as $product) {
             if ($product['id'] == $id) {
                 continue;
@@ -391,37 +374,12 @@ class ProductService
         return $res;
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    private function getProductDataFormat(Product $product): array
-    {
-
-        $out = [];
-        foreach ($this->productFields as $field) {
-            $out[$field] = $product[$field];
-        }
-        $price = ! empty($product['price']) ? $product['price'] : 0;
-        $out['price_description'] = $this->priceHelperService->getPriceDescriptionWrap($price);
-        foreach ($product['translates'] as $translate) {
-            $out[$translate['column']][$translate['lang']] = $translate['value'];
-            if ($translate['column'] == 'product_name') {
-                $out['product_name_slug'][$translate['lang']] = Str::slug($translate['value'], '-');
-            }
-        }
-        foreach ($product['contents'] as $translate) {
-            $out[$translate['column']][$translate['lang']] = $translate['value'];
-        }
-
-        return $out;
-    }
-
     public function getProductBySlug(string $productSlug, string $lang): ?Product
     {
         $productOut = null;
-        $products = $this->getAllProductsWithTranslates();
+        $products = $this->productDataService->getAllProductsWithTranslates();
         foreach ($products as $product) {
-            $arrProduct = $this->getProductDataFormat($product);
+            $arrProduct = $this->productDataService->getProductDataFormat($product);
             if ($productSlug == Str::slug($arrProduct['product_name'][$lang], '-')) {
                 $productOut = $product;
                 break;
@@ -429,73 +387,6 @@ class ProductService
         }
 
         return $productOut;
-    }
-
-    public function getCategoryUrl(Product $mProduct, string $lang): ?string
-    {
-        $mPage = $mProduct->page()->first();
-
-        if ($mPage instanceof Page) { // phpstan fix
-            return $this->pageService->getUrl($mPage, $lang);
-        }
-
-        return null; // todo - handle this case properly, maybe throw an exception or return a default URL
-    }
-
-    public function getProductUrl(Product $mProduct, string $lang, string $productName): ?string
-    {
-        $mPage = $mProduct->page()->first();
-
-        if ($mPage instanceof Page) { // phpstan fix
-            return $this->pageService->getUrl($mPage, $lang, Str::slug($productName, '-'));
-        }
-
-        return null; // todo - handle this case properly, maybe throw an exception or return a default URL
-    }
-
-    /**
-     * @return array<string, array<string, string|null>>
-     */
-    public function getProductUrls(Product $productWithTranslate): array
-    {
-        $out = [];
-        $arrProduct = $this->getProductDataFormat($productWithTranslate);
-        $langs = ConfigService::arrGetLangsEnv();
-
-        foreach ($langs as $lang) {
-            $out['url_category'][$lang] = $this->getCategoryUrl($productWithTranslate, $lang);
-            $out['url_product'][$lang] = $this->getProductUrl($productWithTranslate, $lang, $arrProduct['product_name'][$lang]);
-        }
-
-        return $out;
-    }
-
-    /**
-     * @param  array<string, mixed>  $arrProductFormat
-     */
-    private function getProductNameDefaultLang(array $arrProductFormat): string
-    {
-        $lang = ConfigService::getDefaultLang();
-
-        return $arrProductFormat['product_name'][$lang];
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    public function getProductDataByProductArr(Product $product, ?string $lang = null): array
-    {
-
-        $out = [];
-        $out = $this->getProductDataFormat($product);
-        $out['product_name_default_lang'] = $this->getProductNameDefaultLang($out);
-        if ($lang) {
-            $out = LangHelperService::removeKeyLangInArr($out, $lang);
-        }
-
-        $out['images'] = $this->imageService->getImagesAndThumbsByTypeAndRefId('product', $product->id, $lang);
-
-        return $out;
     }
 
     /**
@@ -508,101 +399,7 @@ class ProductService
             throw new \Exception('Product not found');
         }
 
-        return $this->getProductDataByProductArr($productOut);
-    }
-
-    /**
-     * @return Collection<int, Product>
-     */
-    private function getAllProductsWithTranslates(): Collection
-    {
-        return Product::with(['translates', 'contents'])->orderBy('id', 'asc')->get();
-    }
-
-    /**
-     * @return array<int, mixed>
-     */
-    public function getGivenProductsWithImagesByPageId(int $pageId, bool $withUrls = false, ?string $lang = null): array
-    {
-        $products = $this->getDataProductsWithImagesByPage($pageId);
-
-        return $this->getAllProductsWithImagesArr($products, $withUrls, $lang);
-    }
-
-    /**
-     * @return array<int, mixed>
-     */
-    public function getAllProductsWithImages(bool $withUrls = false): array
-    {
-        $products = $this->getAllProductsWithTranslates();
-
-        return $this->getAllProductsWithImagesArr($products, $withUrls);
-    }
-
-    /**
-     * @param  Collection<int, Product>  $products
-     * @return array<int, array<string, mixed>>
-     */
-    public function getAllProductsWithImagesArr(Collection $products, bool $withUrls = false, ?string $lang = null): array
-    {
-        $i = 0;
-        $out = [];
-        foreach ($products as $product) {
-            $out[$i] = $this->getProductDataByProductArr($product, $lang);
-
-            if ($withUrls) {
-                $urls = $this->getProductUrls($product);
-                $out[$i] = array_merge($out[$i], $urls);
-            }
-            $i++;
-        }
-
-        return $out;
-    }
-
-    /**
-     * function use on the frontend
-     * it should be cached
-     *
-     * @return array<int, array<string, mixed>>
-     */
-    public function getAllProductsWithImagesByLang(string $lang): array
-    {
-        $products = $this->getAllProductsWithImages(true);
-
-        $out = [];
-        foreach ($products as $product) {
-            if (! empty($product['published'])) {
-                $productId = $product['id'];
-                // $out[$productId]["product_id"] = $productId;
-                $out[$productId]['price'] = $product['price'];
-                $out[$productId]['price_description'] = $this->priceHelperService->getPriceDescriptionWrap($product['price']);
-                $out[$productId]['name'] = $product['product_name'][$lang];
-                $out[$productId]['url_product'] = $product['url_product'][$lang];
-                if (! empty($product['images']) && ! empty($img = $product['images']->first())) {
-                    $out[$productId]['url_image'] = $img->fs['small'];
-                }
-            }
-        }
-
-        return $out;
-    }
-
-    /**
-     * @return array<int, array<string, mixed>>
-     */
-    public function getAllProductsWithImagesByLangCache(string $lang): array
-    {
-        $isCache = $this->configService->isCacheEnable();
-        if ($isCache) {
-            $products = cache()->remember('products_name_price_'.$lang, CacheService::setTime(), function () use ($lang) {
-                return $this->getAllProductsWithImagesByLang($lang);
-            });
-        } else {
-            $products = $this->getAllProductsWithImagesByLang($lang);
-        }
-
-        return $products;
+        return $this->productDataService->getProductDataByProductArr($productOut);
     }
 
     /**
@@ -617,10 +414,10 @@ class ProductService
         $i = 0;
         foreach ($products as $product) {
             if ($product['page']->published && $product->published) {
-                $arrProduct = $this->getProductDataFormat($product);
+                $arrProduct = $this->productDataService->getProductDataFormat($product);
                 $langs = ConfigService::arrGetLangsEnv();
                 foreach ($langs as $lang) {
-                    $urls[$i][$lang] = $this->getProductUrl($product, $lang, $arrProduct['product_name'][$lang]);
+                    $urls[$i][$lang] = $this->productDataService->getProductUrl($product, $lang, $arrProduct['product_name'][$lang]);
                 }
                 $i++;
             }
@@ -639,42 +436,6 @@ class ProductService
     {
         $products = Product::with(['translates', 'contents'])->whereIn('id', $ids)->orderBy('id', 'asc')->where('published', '=', 1)->get();
 
-        return $this->dataToRender($products);
-    }
-
-    /**
-     * @return Collection<int, Product>
-     */
-    private function getDataProductsWithImagesByPage(int $pageId): Collection
-    {
-        return Product::with(['translates', 'contents'])->where('page_id', $pageId)->orderBy('id', 'asc')->where('published', '=', 1)->get(); // ->toArray();
-    }
-
-    /**
-     * @return array<int, mixed>
-     */
-    public function getProductsWithImagesByPage(int $pageId): array
-    {
-        $products = $this->getDataProductsWithImagesByPage($pageId);
-
-        return $this->dataToRender($products);
-    }
-
-    /**
-     * @param  Collection<int, Product>  $products
-     * @return array<int, array<string, mixed>>
-     */
-    private function dataToRender(Collection $products): array
-    {
-        $i = 0;
-        $out = [];
-
-        foreach ($products as $product) {
-            $urls = $this->getProductUrls($product);
-            $out[$i] = array_merge($this->getProductDataByProductArr($product), $urls);
-            $i++;
-        }
-
-        return $out;
+        return $this->productDataService->dataToRender($products);
     }
 }

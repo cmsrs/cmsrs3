@@ -7,14 +7,14 @@ namespace App\Services\Cmsrs\Page;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\ImageService;
-use App\Services\Cmsrs\ProductService;
+use App\Services\Cmsrs\ProductDataService;
 
 class PageViewService
 {
     public function __construct(
         private PageService $pageService,
         private PageDataService $pageDataService,
-        private ProductService $productService,
+        private ProductDataService $productDataService,
         private ImageService $imageService,
         private ConfigService $configService,
     ) {}
@@ -32,7 +32,7 @@ class PageViewService
 
         $products = null;
         if ($mPage->type === 'shop') {
-            $products = $this->productService->getProductsWithImagesByPage($mPage->id);
+            $products = $this->productDataService->getProductsWithImagesByPage($mPage->id);
         }
         $langs = $dataIn['langs'];
         $view = $this->getViewNameByType($mPage);

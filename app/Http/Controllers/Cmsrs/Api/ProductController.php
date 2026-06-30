@@ -10,6 +10,7 @@ use App\Models\Cmsrs\Product;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\Helpers\PriceHelperService;
 use App\Services\Cmsrs\ImageService;
+use App\Services\Cmsrs\ProductDataService;
 use App\Services\Cmsrs\ProductService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -33,6 +34,7 @@ class ProductController extends Controller
     public function __construct(
         protected ConfigService $configService,
         protected ProductService $productService,
+        protected ProductDataService $productDataService,
         protected ImageService $imageService,
         protected PriceHelperService $priceHelperService,
     ) {
@@ -89,7 +91,7 @@ class ProductController extends Controller
 
     public function index(): JsonResponse
     {
-        $products = $this->productService->getAllProductsWithImages();
+        $products = $this->productDataService->getAllProductsWithImages();
 
         return response()->json(['success' => true, 'data' => $products], 200);
     }
@@ -191,7 +193,7 @@ class ProductController extends Controller
             $lang = ConfigService::getDefaultLang();
         }
 
-        $products = $this->productService->getAllProductsWithImagesByLangCache($lang);
+        $products = $this->productDataService->getAllProductsWithImagesByLangCache($lang);
 
         return response()->json(['success' => true, 'data' => $products]);
     }

@@ -9,7 +9,7 @@ use App\Models\User;
 use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\Page\PageService;
-use App\Services\Cmsrs\ProductService;
+use App\Services\Cmsrs\ProductDataService;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
@@ -144,7 +144,7 @@ class Base extends TestCase
 
     public function checkProductsPagesByLang($products, $lang)
     {
-        $productsDb = app(ProductService::class)->getAllProductsWithImages();
+        $productsDb = app(ProductDataService::class)->getAllProductsWithImages();
         $this->assertNotEmpty(count($productsDb));
         $this->assertEquals(count($productsDb), count($products));
 
@@ -152,7 +152,7 @@ class Base extends TestCase
             $productName = $product['product_name'][$lang];
 
             $objProduct = Product::find($product['id']);
-            $url = app(ProductService::class)->getProductUrl($objProduct, $lang, $productName);
+            $url = app(ProductDataService::class)->getProductUrl($objProduct, $lang, $productName);
             $response = $this->get($url);
             $response->assertStatus(empty($objProduct->published) ? 404 : 200);
         }

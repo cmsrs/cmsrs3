@@ -18,6 +18,7 @@ use App\Services\Cmsrs\Helpers\PriceHelperService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\Page\PageService;
 use App\Services\Cmsrs\PaymentService;
+use App\Services\Cmsrs\ProductDataService;
 use App\Services\Cmsrs\ProductService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
@@ -1069,7 +1070,7 @@ class ProductTest extends Base
         $countProd = Product::all()->count();
         $this->assertEquals(2, $countProd);
 
-        $products = app(ProductService::class)->getProductsWithImagesByPage($this->pageId);
+        $products = app(ProductDataService::class)->getProductsWithImagesByPage($this->pageId);
         $this->assertEquals(1, count($products));
         $this->assertEquals($this->pageId, $products[0]['page_id']);
         $this->assertEquals(1, $products[0]['published']);
@@ -1211,7 +1212,7 @@ class ProductTest extends Base
 
         $this->assertEquals($productId, $product['id']);
 
-        $urls = $productService->getProductUrls($product);
+        $urls = app(ProductDataService::class)->getProductUrls($product);
         $this->assertNotEmpty($urls);
 
         $urlCategory = $urls['url_category']['en'];
@@ -1248,7 +1249,7 @@ class ProductTest extends Base
 
         $this->assertEquals($productId, $product['id']);
 
-        $urls = app(ProductService::class)->getProductUrls($product);
+        $urls = app(ProductDataService::class)->getProductUrls($product);
         $this->assertNotEmpty($urls);
 
         $urlCategory = $urls['url_category']['en'];

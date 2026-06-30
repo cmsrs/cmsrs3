@@ -11,6 +11,7 @@ use App\Services\Cmsrs\HeadlessService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\Page\NavigationService;
 use App\Services\Cmsrs\Page\PageService;
+use App\Services\Cmsrs\ProductDataService;
 use App\Services\Cmsrs\ProductService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -25,6 +26,7 @@ class HeadlessController extends Controller
         protected HeadlessService $headlessService,
         protected NavigationService $navigationService,
         protected ProductService $productService,
+        protected ProductDataService $productDataService,
     ) {}
 
     public function getPagesByShortTitle(Request $request, string $shortTitle): JsonResponse
@@ -66,7 +68,7 @@ class HeadlessController extends Controller
         $onePage = $this->headlessService->getAllPagesWithImagesOneItemByLang($page, $lang);
 
         if ($onePage['type'] == 'shop') {
-            $onePage['products'] = $this->productService->getGivenProductsWithImagesByPageId($page->id, false, $lang);
+            $onePage['products'] = $this->productDataService->getGivenProductsWithImagesByPageId($page->id, false, $lang);
         }
 
         return response()->json(['success' => true, 'data' => $onePage], 200);

@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class CheckoutService
 {
-    public function __construct(private ProductService $productService, private PriceHelperService $priceHelperService) {}
+    public function __construct(private ProductService $productService, private ProductDataService $productDataService, private PriceHelperService $priceHelperService) {}
 
     /**
      * @return Collection<int, Checkout>
@@ -133,7 +133,7 @@ class CheckoutService
 
             $out[$j]['product_id'] = $basket['product_id'];
             $out[$j]['product_name'] = $productName;
-            $out[$j]['product_url'] = $this->productService->getProductUrl($product, $lang, $productName);
+            $out[$j]['product_url'] = $this->productDataService->getProductUrl($product, $lang, $productName);
             $j++;
         }
 
