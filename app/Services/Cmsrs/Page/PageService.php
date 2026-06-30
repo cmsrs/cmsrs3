@@ -8,7 +8,6 @@ use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\ContentService;
 use App\Services\Cmsrs\Helpers\CacheManagerService;
-use App\Services\Cmsrs\Helpers\CacheService;
 use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\Traits\TranslationsTrait;
@@ -154,37 +153,6 @@ class PageService
         $this->createTranslate(['page_id' => $mPage->id, 'data' => $data], false);
 
         return true;
-    }
-
-    /**
-     * @return array{policyUrl: ?string, policyTitle: ?string, contactUrl: ?string, contactTitle: ?string}
-     */
-    public function getFooterPages(string $lang): array
-    {
-        $privacyPolicy = $this->getFirstPageByType('privacy_policy');
-        $contact = $this->getFirstPageByType('contact');
-
-        $out = [];
-        $policyUrl = null;
-        $policyTitle = null;
-        if (! empty($privacyPolicy)) {
-            $policyUrl = $this->getUrl($privacyPolicy, $lang);
-            $policyTitle = $this->translatesByColumnAndLang($privacyPolicy, 'title', $lang);
-        }
-
-        $contactUrl = null;
-        $contactTitle = null;
-        if (! empty($contact)) {
-            $contactUrl = $this->getUrl($contact, $lang);
-            $contactTitle = $this->translatesByColumnAndLang($contact, 'title', $lang);
-        }
-
-        $out['policyUrl'] = $policyUrl;
-        $out['policyTitle'] = $policyTitle;
-        $out['contactUrl'] = $contactUrl;
-        $out['contactTitle'] = $contactTitle;
-
-        return $out;
     }
 
     /**
@@ -352,26 +320,61 @@ class PageService
         return true;
     }
 
-    public function getFirstPageByType(string $type): ?Page
-    {
-        $isCache = $this->configService->isCacheEnable();
-        if ($isCache) {
-            $ret = cache()->remember('pagebytype_'.$type, CacheService::setTime(), function () use ($type) {
-                return Page::where('type', '=', $type)->where('published', '=', 1)->first();
-            });
-        } else {
-            $ret = Page::where('type', '=', $type)->where('published', '=', 1)->first();
-        }
-
-        return $ret;
-    }
-
     /**
      * @return Page|null
      */
     public function getMainPage()
     {
-        return $this->getFirstPageByType('main_page');
+        return $this->getFirstPageByTypeCache('main_page');
+    }
+
+    /**
+     * @return array{policyUrl: ?string, policyTitle: ?string, contactUrl: ?string, contactTitle: ?string}
+     */
+    public function getFooterPages(string $lang): array
+    {
+        $privacyPolicy = $this->getFirstPageByTypeCache('privacy_policy');
+        $contact = $this->getFirstPageByTypeCache('contact');
+
+        $out = [];
+        $policyUrl = null;
+        $policyTitle = null;
+        if (! empty($privacyPolicy)) {
+            $policyUrl = $this->getUrl($privacyPolicy, $lang);
+            $policyTitle = $this->translatesByColumnAndLang($privacyPolicy, 'title', $lang);
+        }
+
+        $contactUrl = null;
+        $contactTitle = null;
+        if (! empty($contact)) {
+            $contactUrl = $this->getUrl($contact, $lang);
+            $contactTitle = $this->translatesByColumnAndLang($contact, 'title', $lang);
+        }
+
+        $out['policyUrl'] = $policyUrl;
+        $out['policyTitle'] = $policyTitle;
+        $out['contactUrl'] = $contactUrl;
+        $out['contactTitle'] = $contactTitle;
+
+        return $out;
+    }
+
+    public function getFirstPageByTypeCache(string $type): ?Page
+    {
+        $key = $this->cacheManagerService->key(
+            'pagebytype',
+            $type
+        );
+
+        return $this->cacheManagerService->remember(
+            $key,
+            fn () => $this->getFirstPageByTypePriv($type)
+        );
+    }
+
+    private function getFirstPageByTypePriv(string $type): ?Page
+    {
+        return Page::where('type', '=', $type)->where('published', '=', 1)->first();
     }
 
     /**
@@ -382,7 +385,7 @@ class PageService
     {
         if (isset($data['type']) && ($data['type'] == 'main_page')) {
             if ($create) {
-                $p = PageService::getMainPage();
+                $p = $this->getMainPage();
                 if ($p) {
                     throw new \Exception('Two main page not allowed');
                 }
@@ -483,7 +486,7 @@ class PageService
     }
 
     /**
-     * TODO - cached
+     * TODO - cached - maybe..  remove this function...
      * We can delete this method
      * old method: getPageDataByShortTitleCache
      *

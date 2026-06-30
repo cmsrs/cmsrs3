@@ -35,7 +35,7 @@ class ViewHeaderProvider extends ServiceProvider
             $langs = $configService->arrGetLangs();
             $manyLangs = $configService->isManyLangs();
 
-            $mainPage = $pageService->getFirstPageByType('main_page');
+            $mainPage = $pageService->getFirstPageByTypeCache('main_page');
             $urlMainPage = $mainPage
                 ? $pageService->getUrl($mainPage, $lang)
                 : '/';

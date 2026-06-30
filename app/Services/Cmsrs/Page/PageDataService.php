@@ -11,21 +11,14 @@ use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\ContentService;
 use App\Services\Cmsrs\Helpers\CacheManagerService;
-use App\Services\Cmsrs\Helpers\CacheService;
 use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\MenuService;
-use App\Services\Cmsrs\Traits\TranslationsTrait;
 use App\Services\Cmsrs\TranslateService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class PageDataService
 {
-    /**
-     * @use TranslationsTrait<Page>
-     */
-    use TranslationsTrait;
-
     public function __construct(private ConfigService $configService, private MenuService $menuService, private TranslateService $translateService, private ContentService $contentService, private ImageService $imageService, private CacheManagerService $cacheManagerService, private PageService $pageService) {}
 
     public function getPageDataByShortTitleCache(string $shortTitle, string $data = 'content', ?string $lang = null): ?string
@@ -88,16 +81,17 @@ class PageDataService
             $lang = ConfigService::getDefaultLang();
         }
 
-        $isCache = $this->configService->isCacheEnable();
-        if ($isCache) {
-            $ret = cache()->remember('pageinner_by_pageid_'.$pageId.'_'.$lang, CacheService::setTime(), function () use ($pageId, $lang) {
-                return $this->getContentInnerPageByPageIdAndLang($pageId, $lang);
-            });
-        } else {
-            $ret = $this->getContentInnerPageByPageIdAndLang($pageId, $lang);
-        }
+        $key = $this->cacheManagerService->key(
+            'pageinner_by_pageid',
+            (string) $pageId,
+            $lang
+        );
 
-        return $ret;
+        return $this->cacheManagerService->remember(
+            $key,
+            fn () => $this->getContentInnerPageByPageIdAndLang($pageId, $lang)
+        );
+
     }
 
     /**

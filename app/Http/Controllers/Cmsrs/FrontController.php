@@ -257,7 +257,7 @@ class FrontController extends Controller
         // slider_main
         $sliderDataImages = $this->pageDataService->getPageDataImagesByShortTitleCache('main_page_slider')->toArray();
 
-        $mPageHome = $this->pageService->getFirstPageByType('home');
+        $mPageHome = $this->pageService->getFirstPageByTypeCache('home');
         $data = $this->pageViewService->getDataToView($page, [
             // 'url_search' =>  $urlSearch,
             'url_home' => (Auth::check() && $mPageHome) ? $this->pageService->getUrl($mPageHome, $lang) : null,
