@@ -18,7 +18,6 @@ use App\Services\Cmsrs\Traits\TranslationsTrait;
 use App\Services\Cmsrs\TranslateService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 
 class PageDataService
 {
@@ -157,6 +156,7 @@ class PageDataService
     private function getPageBySlug(Collection $menus, string $menuSlug, ?string $pageSlug, string $lang): ?Page
     {
         $pageOut = null;
+
         foreach ($menus as $menu) {
             if ($menuSlug == $this->menuService->getSlugByLang($menu, $lang)) {
                 $objPagesPublishedAndAccess = $this->menuService->pagesPublishedAndAccess($menu, Auth::check());

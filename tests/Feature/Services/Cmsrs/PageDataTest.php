@@ -2,13 +2,15 @@
 
 namespace Tests\Feature\Services\Cmsrs;
 
+use App\Models\Cmsrs\Menu;
 use App\Services\Cmsrs\ConfigService;
+use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\Page\PageDataService;
 use App\Services\Cmsrs\Page\PageService;
-use App\Services\Cmsrs\MenuService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class PageDataTest extends Base
 {
@@ -104,9 +106,8 @@ class PageDataTest extends Base
         $this->strTestMenuName = 'test men7';
         $this->testDataMenu =
         [
-             'name' => ['en' => $this->strTestMenuName],
+            'name' => ['en' => $this->strTestMenuName],
         ];
-
 
         // $this->strTestTitle = 'page 1 test';
         // $this->testData =
@@ -123,7 +124,6 @@ class PageDataTest extends Base
         //     'page_id' => null,
         // ];
 
-
         (new ConfigService)->createFileCacheEnableIfNotExist();
     }
 
@@ -135,12 +135,18 @@ class PageDataTest extends Base
 
     private function setTestData()
     {
-        $this->objPage = (app(PageService::class))->wrapCreate($this->testImgData);
-
         $menu = (app(MenuService::class))->wrapCreate($this->testDataMenu);
 
-        $this->menuObj = $menu->all()->first();
+        $this->assertEquals(1, Menu::all()->count());
+        $this->menuObj = Menu::all()->first();
+
         $this->menuId = $this->menuObj->id;
+        $this->assertNotEmpty($this->menuId);
+        $this->assertEquals($menu->id, $this->menuId);
+
+        $this->testImgData['menu_id'] = $this->menuId;
+        $this->objPage = (app(PageService::class))->wrapCreate($this->testImgData);
+        $this->assertNotEmpty($this->objPage->id);
     }
 
     public function test_it_uses_cache_for_page_with_images_by_short_title()
@@ -219,8 +225,45 @@ class PageDataTest extends Base
         );
     }
 
+    public function test_it_uses_cache_for_page_by_slugs()
+    {
+        $this->setTestData();
+        $menus = app(MenuService::class)->getMenu();
 
+        $menuSlug = Str::slug($this->strTestMenuName, '-');
+        $titleSlug = Str::slug($this->testImgData['title']['en'], '-');
+        $lang = 'en';
 
+        Cache::flush();
 
+        $service = app(PageDataService::class);
 
+        DB::flushQueryLog();
+        DB::enableQueryLog();
+
+        // 1st call → DB hit
+        $result1 = $service->getPageBySlugCache($menus, $menuSlug, $titleSlug, $lang);
+
+        $queriesAfterFirst = count(DB::getQueryLog());
+        // $this->assertTrue($queriesAfterFirst > 0);
+
+        DB::flushQueryLog(); // 🔥 reset między wywołaniami
+
+        // 2nd call → should be cache
+        $result2 = $service->getPageBySlugCache($menus, $menuSlug, $titleSlug, $lang);
+        $queriesAfterSecond = count(DB::getQueryLog());
+
+        $this->assertTrue($queriesAfterFirst > $queriesAfterSecond);
+
+        $this->assertEquals($result1, $result2);
+        $this->assertEquals($this->objPage->id, $result2->id);
+        $this->assertEquals($result1->id, $result2->id);
+
+        // 🔥 KLUCZOWE
+        $this->assertEquals(
+            0,
+            $queriesAfterSecond,
+            'Second call should not hit database'
+        );
+    }
 }

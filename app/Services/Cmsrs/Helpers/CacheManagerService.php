@@ -37,6 +37,7 @@ class CacheManagerService
     public function key(string $prefix, string $value, ?string $lang = null): string
     {
         $sufix = $lang ? '_'.$lang : '';
+
         return $prefix.'_'.Str::slug($value, '_').$sufix;
     }
 
