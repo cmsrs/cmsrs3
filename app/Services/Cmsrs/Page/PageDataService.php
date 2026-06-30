@@ -67,16 +67,16 @@ class PageDataService
      */
     public function getPageBySlugCache(Collection $menus, string $menuSlug, ?string $pageSlug, string $lang): ?Page
     {
-        $isCache = $this->configService->isCacheEnable();
-        if ($isCache) {
-            $pageOut = cache()->remember('page_'.$menuSlug.'_'.$pageSlug.'_'.$lang, CacheService::setTime(), function () use ($menus, $menuSlug, $pageSlug, $lang) {
-                return $this->getPageBySlug($menus, $menuSlug, $pageSlug, $lang);
-            });
-        } else {
-            $pageOut = $this->getPageBySlug($menus, $menuSlug, $pageSlug, $lang);
-        }
+        $key = $this->cacheManagerService->key(
+            'page',
+            $menuSlug.'_'.$pageSlug,
+            $lang
+        );
 
-        return $pageOut;
+        return $this->cacheManagerService->remember(
+            $key,
+            fn () => $this->getPageBySlug($menus, $menuSlug, $pageSlug, $lang)
+        );
     }
 
     /**
@@ -98,6 +98,18 @@ class PageDataService
         }
 
         return $ret;
+    }
+
+    /**
+     * TODO - it is not use right now. - to remove...
+     */
+    private function getContentInnerPageByPageIdAndLang(int $pageId, string $lang): string
+    {
+        $page = Page::findOrFail($pageId);
+
+        $contents = $page->contents->pluck('value', 'lang')->toArray();
+
+        return empty($contents[$lang]) ? '' : $contents[$lang];
     }
 
     /**
@@ -139,15 +151,6 @@ class PageDataService
         $dataByLang = empty($pageData[$data]) ? '' : $pageData[$data];
 
         return empty($dataByLang[$lang]) ? '' : $dataByLang[$lang];
-    }
-
-    private function getContentInnerPageByPageIdAndLang(int $pageId, string $lang): string
-    {
-        $page = Page::findOrFail($pageId);
-
-        $contents = $page->contents->pluck('value', 'lang')->toArray();
-
-        return empty($contents[$lang]) ? '' : $contents[$lang];
     }
 
     /**
