@@ -28,17 +28,16 @@ class PageService
 
     private function getMenuSlugByLangCache(Page $mPage, string $lang): ?string
     {
-        $pageId = $mPage->id;
-        $isCache = $this->configService->isCacheEnable();
-        if ($isCache) {
-            $menuSlug = cache()->remember('menusluglang_'.$lang.'_'.$pageId, CacheService::setTime(), function () use ($mPage, $lang) {
-                return $this->getMenuSlugByLang($mPage, $lang);
-            });
-        } else {
-            $menuSlug = $this->getMenuSlugByLang($mPage, $lang);
-        }
+        $key = $this->cacheManagerService->key(
+            'menusluglang',
+            (string) $mPage->id,
+            $lang
+        );
 
-        return $menuSlug;
+        return $this->cacheManagerService->remember(
+            $key,
+            fn () => $this->getMenuSlugByLang($mPage, $lang)
+        );
     }
 
     private function getMenuSlugByLang(Page $mPage, string $lang): ?string
@@ -273,17 +272,15 @@ class PageService
 
     private function getNumPagesBelongsToThisMenuCache(Page $mPage): ?int
     {
-        $pageId = $mPage->id;
-        $isCache = $this->configService->isCacheEnable();
-        if ($isCache) {
-            $countPages = cache()->remember('countpagesinthismenu_'.$pageId, CacheService::setTime(), function () use ($mPage) {
-                return $this->getNumPagesBelongsToThisMenu($mPage);
-            });
-        } else {
-            $countPages = $this->getNumPagesBelongsToThisMenu($mPage);
-        }
+        $key = $this->cacheManagerService->key(
+            'countpagesinthismenu',
+            (string) $mPage->id
+        );
 
-        return $countPages;
+        return $this->cacheManagerService->remember(
+            $key,
+            fn () => $this->getNumPagesBelongsToThisMenu($mPage)
+        );
     }
 
     private function getCmsUrl(Page $mPage, string $lang, ?string $urlParam = null): string
