@@ -2,14 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Services\Cmsrs;
+namespace App\Services\Cmsrs\Product;
 
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Product;
+use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\Helpers\CacheService;
 use App\Services\Cmsrs\Helpers\LangHelperService;
 use App\Services\Cmsrs\Helpers\PriceHelperService;
-use App\Services\Cmsrs\Page\UrlService;
+use App\Services\Cmsrs\ImageService;
+use App\Services\Cmsrs\Navigation\UrlService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 
@@ -33,8 +35,6 @@ class ProductDataService
             'page_id',
         ];
     }
-
-    /* start */
 
     /**
      * @return array<int, array<string, mixed>>

@@ -7,8 +7,8 @@ use App\Data\Demo;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\MenuService;
+use App\Services\Cmsrs\Navigation\UrlService;
 use App\Services\Cmsrs\Page\PageService;
-use App\Services\Cmsrs\Page\UrlService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 

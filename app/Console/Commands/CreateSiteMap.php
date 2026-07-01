@@ -6,8 +6,8 @@ namespace App\Console\Commands;
 
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
-use App\Services\Cmsrs\Page\UrlService;
-use App\Services\Cmsrs\ProductService;
+use App\Services\Cmsrs\Navigation\UrlService;
+use App\Services\Cmsrs\Product\ProductService;
 use Illuminate\Console\Command;
 
 class CreateSiteMap extends Command

@@ -8,7 +8,7 @@ use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Product;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\Page\PageService;
-use App\Services\Cmsrs\ProductService;
+use App\Services\Cmsrs\Product\ProductService;
 
 class Demo
 {

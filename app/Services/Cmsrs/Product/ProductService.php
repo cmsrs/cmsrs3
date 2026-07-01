@@ -2,16 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Services\Cmsrs;
+namespace App\Services\Cmsrs\Product;
 
 use App\Enums\Cmsrs\SortDirection;
 use App\Models\Cmsrs\Basket;
 use App\Models\Cmsrs\Checkout;
 use App\Models\Cmsrs\Product;
 use App\Models\Cmsrs\Translate;
+use App\Services\Cmsrs\ConfigService;
+use App\Services\Cmsrs\ContentService;
+use App\Services\Cmsrs\DeliverService;
 use App\Services\Cmsrs\Helpers\ArrObjHelperService;
 use App\Services\Cmsrs\Helpers\PaginationHelperService;
 use App\Services\Cmsrs\Helpers\PriceHelperService;
+use App\Services\Cmsrs\ImageService;
+use App\Services\Cmsrs\PaymentService;
+use App\Services\Cmsrs\TranslateService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;

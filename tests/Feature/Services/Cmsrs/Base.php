@@ -8,9 +8,9 @@ use App\Models\Cmsrs\Product;
 use App\Models\User;
 use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\MenuService;
+use App\Services\Cmsrs\Navigation\UrlService;
 use App\Services\Cmsrs\Page\PageService;
-use App\Services\Cmsrs\Page\UrlService;
-use App\Services\Cmsrs\ProductDataService;
+use App\Services\Cmsrs\Product\ProductDataService;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 

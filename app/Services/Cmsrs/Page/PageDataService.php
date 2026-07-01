@@ -12,6 +12,7 @@ use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\Helpers\CacheManagerService;
 use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\MenuService;
+use App\Services\Cmsrs\Navigation\UrlService;
 use App\Services\Cmsrs\Traits\TranslationsTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;

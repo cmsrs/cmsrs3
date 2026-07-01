@@ -8,8 +8,8 @@ use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\ContentService;
 use App\Services\Cmsrs\Helpers\CacheManagerService;
 use App\Services\Cmsrs\ImageService;
+use App\Services\Cmsrs\Navigation\UrlService;
 use App\Services\Cmsrs\Page\PageService;
-use App\Services\Cmsrs\Page\urlService;
 use App\Services\Cmsrs\TranslateService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
@@ -109,7 +109,7 @@ class ContentTest extends Base
             $imageServiceMock,
             // $configMock,
             // Mockery::mock(MenuService::class),
-            Mockery::mock(urlService::class),
+            Mockery::mock(UrlService::class),
             Mockery::mock(CacheManagerService::class),
         );
 

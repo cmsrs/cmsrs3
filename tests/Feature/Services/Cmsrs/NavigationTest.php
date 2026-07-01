@@ -3,7 +3,7 @@
 namespace Tests\Feature\Services\Cmsrs;
 
 use App\Data\Demo;
-use App\Services\Cmsrs\Page\NavigationService;
+use App\Services\Cmsrs\Navigation\NavigationService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class NavigationTest extends Base

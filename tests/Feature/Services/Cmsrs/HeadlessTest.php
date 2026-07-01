@@ -7,7 +7,7 @@ use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\HeadlessService;
 use App\Services\Cmsrs\Page\PageService;
-use App\Services\Cmsrs\ProductService;
+use App\Services\Cmsrs\Product\ProductService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class HeadlessTest extends Base

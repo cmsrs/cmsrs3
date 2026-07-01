@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Services\Cmsrs\Page;
+namespace App\Services\Cmsrs\Navigation;
 
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\MenuService;
+use App\Services\Cmsrs\Page\PageService;
 
 class NavigationService
 {

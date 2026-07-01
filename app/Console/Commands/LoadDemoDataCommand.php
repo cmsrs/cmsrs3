@@ -13,7 +13,7 @@ use App\Services\Cmsrs\ContactService;
 use App\Services\Cmsrs\DeliverService;
 use App\Services\Cmsrs\PaymentService;
 // use App\Services\Cmsrs\TranslateService;
-use App\Services\Cmsrs\ProductService;
+use App\Services\Cmsrs\Product\ProductService;
 use Illuminate\Console\Command;
 
 class LoadDemoDataCommand extends Command
