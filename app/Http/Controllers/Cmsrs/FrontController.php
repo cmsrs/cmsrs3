@@ -16,6 +16,7 @@ use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\Page\PageDataService;
 use App\Services\Cmsrs\Page\PageService;
 use App\Services\Cmsrs\Page\PageViewService;
+use App\Services\Cmsrs\Page\UrlService;
 use App\Services\Cmsrs\PaymentService;
 use App\Services\Cmsrs\ProductService;
 use Illuminate\Contracts\View\View;
@@ -49,7 +50,8 @@ class FrontController extends Controller
         protected PaymentService $paymentService,
         protected ProductService $productService,
         protected PriceHelperService $priceHelperService,
-        protected PageViewService $pageViewService
+        protected PageViewService $pageViewService,
+        protected UrlService $urlService
     ) {
         $this->menus = $this->menuService->getMenu(); // $menus;
         $this->langs = $this->configService->arrGetLangs();
@@ -260,7 +262,7 @@ class FrontController extends Controller
         $mPageHome = $this->pageService->getFirstPageByTypeCache('home');
         $data = $this->pageViewService->getDataToView($page, [
             // 'url_search' =>  $urlSearch,
-            'url_home' => (Auth::check() && $mPageHome) ? $this->pageService->getUrl($mPageHome, $lang) : null,
+            'url_home' => (Auth::check() && $mPageHome) ? $this->urlService->getUrl($mPageHome, $lang) : null,
             'view' => 'index',
             'is_new_orders' => $isNewOrders,
             'slider_images' => $sliderDataImages,

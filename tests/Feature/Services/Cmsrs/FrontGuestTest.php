@@ -5,6 +5,7 @@ namespace Tests\Feature\Services\Cmsrs;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\Page\PageService;
+use App\Services\Cmsrs\Page\UrlService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 
@@ -57,7 +58,7 @@ class FrontGuestTest extends Base
         $this->assertNotEmpty($pageTitle);
         $this->assertNotEmpty($pageShortTitle);
 
-        $urlLogin = (app(PageService::class))->getUrl($page, $lang);
+        $urlLogin = (app(UrlService::class))->getUrl($page, $lang);
         $response = $this->get($urlLogin);
         $response->assertStatus(200);
 
@@ -242,17 +243,17 @@ class FrontGuestTest extends Base
         $p1 = (app(PageService::class))->wrapCreate($data1p);
         $p2 = (app(PageService::class))->wrapCreate($data2p);
 
-        $page1Slug = (app(PageService::class))->getSlugByLang($p1, 'en'); // Str::slug($data1p['title']['en']);
-        $page2Slug = (app(PageService::class))->getSlugByLang($p2, 'en'); // Str::slug($data2p['title']['en']);
+        $page1Slug = (app(UrlService::class))->getSlugByLang($p1, 'en'); // Str::slug($data1p['title']['en']);
+        $page2Slug = (app(UrlService::class))->getSlugByLang($p2, 'en'); // Str::slug($data2p['title']['en']);
 
-        $url1 = (app(PageService::class))->getUrl($p1, 'en');
+        $url1 = (app(UrlService::class))->getUrl($p1, 'en');
 
         $this->assertSame('/'.Page::PREFIX_CMS_URL.'/'.(app(MenuService::class))->getSlugByLang($m1, 'en').'/'.$page1Slug, $url1);
 
         $response1 = $this->get($url1);
         $response1->assertStatus(200);
 
-        $url2 = (app(PageService::class))->getUrl($p2, 'en');
+        $url2 = (app(UrlService::class))->getUrl($p2, 'en');
         $this->assertSame('/'.Page::PREFIX_CMS_URL.'/'.(app(MenuService::class))->getSlugByLang($m1, 'en').'/'.$page2Slug, $url2);
         $response2 = $this->get($url2);
         $response2->assertStatus(200);
@@ -299,9 +300,9 @@ class FrontGuestTest extends Base
         $p1 = (app(PageService::class))->wrapCreate($data1p);
         $p2 = (app(PageService::class))->wrapCreate($data2p);
 
-        $response1 = $this->get((app(PageService::class))->getUrl($p1, 'en'));
+        $response1 = $this->get((app(UrlService::class))->getUrl($p1, 'en'));
         $response1->assertStatus(401);
-        $response2 = $this->get((app(PageService::class))->getUrl($p2, 'en'));
+        $response2 = $this->get((app(UrlService::class))->getUrl($p2, 'en'));
         $response2->assertStatus(401);
 
         $content = $response2->getContent();
@@ -353,10 +354,10 @@ class FrontGuestTest extends Base
         $page1Slug = Str::slug($data1p['title']['en']);
         $page2Slug = Str::slug($data2p['title']['en']);
 
-        $response1 = $this->get((app(PageService::class))->getUrl($p1, 'en'));
+        $response1 = $this->get((app(UrlService::class))->getUrl($p1, 'en'));
         $response1->assertStatus(401);
 
-        $url2 = (app(PageService::class))->getUrl($p2, 'en');
+        $url2 = (app(UrlService::class))->getUrl($p2, 'en');
         $response1 = $this->get($url2);
         $response1->assertStatus(404);
         // $response1->assertStatus(401); // This might need to be checked, possibly should be different
@@ -405,10 +406,10 @@ class FrontGuestTest extends Base
         $page1Slug = Str::slug($data1p['title']['en']);
         $page2Slug = Str::slug($data2p['title']['en']);
 
-        $response1 = $this->get((app(PageService::class))->getUrl($p1, 'en'));
+        $response1 = $this->get((app(UrlService::class))->getUrl($p1, 'en'));
         $response1->assertStatus(200);
 
-        $response2 = $this->get((app(PageService::class))->getUrl($p2, 'en'));
+        $response2 = $this->get((app(UrlService::class))->getUrl($p2, 'en'));
         $response2->assertStatus(200);
 
         $content = $response2->getContent();

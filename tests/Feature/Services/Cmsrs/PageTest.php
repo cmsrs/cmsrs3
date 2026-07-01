@@ -7,6 +7,7 @@ use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\Page\PageDataService;
 use App\Services\Cmsrs\Page\PageService;
+use App\Services\Cmsrs\Page\UrlService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -470,7 +471,7 @@ class PageTest extends Base
         ];
         (app(PageService::class))->wrapCreate($testDataChild3);
 
-        $url2 = (app(PageService::class))->getUrl($p, 'en');
+        $url2 = (app(UrlService::class))->getUrl($p, 'en');
         $response2 = $this->get($url2);
         $response2->assertStatus(200);
 
@@ -1121,7 +1122,7 @@ class PageTest extends Base
 
         $this->assertNotEmpty($id);
 
-        $slug = (app(PageService::class))->getSlugByLang(Page::find($id), 'en');
+        $slug = (app(UrlService::class))->getSlugByLang(Page::find($id), 'en');
         $this->assertEquals($slug, Str::slug($this->testData['title']['en'], '-'));
     }
 
@@ -1134,7 +1135,7 @@ class PageTest extends Base
 
         $this->assertNotEmpty($id);
 
-        $slug = (app(PageService::class))->getSlugByLang(Page::find($id), 'en');
+        $slug = (app(UrlService::class))->getSlugByLang(Page::find($id), 'en');
         $this->assertEquals($slug, Str::slug($this->testData['title']['en'], '-'));
 
         $testData3 =
@@ -1155,7 +1156,7 @@ class PageTest extends Base
 
         $response0 = $this->put('api/pages/'.$id.'?token='.$this->token, $testData3);
 
-        $slugAfter = (app(PageService::class))->getSlugByLang(Page::find($id), 'en');
+        $slugAfter = (app(UrlService::class))->getSlugByLang(Page::find($id), 'en');
         $this->assertNotEquals($slug, $slugAfter);
         $this->assertEquals($slugAfter, Str::slug($testData3['title']['en'], '-'));
 

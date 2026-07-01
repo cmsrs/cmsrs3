@@ -14,6 +14,7 @@ class PageViewService
     public function __construct(
         private PageService $pageService,
         private PageDataService $pageDataService,
+        private UrlService $urlService,
         private ProductDataService $productDataService,
         private ImageService $imageService,
         private ConfigService $configService,
@@ -97,7 +98,7 @@ class PageViewService
         if ($view == 'projects') {
             $data['content_default_lang'] = $this->pageService->translatesByColumnAndLang($mPage, 'content', $this->configService->getDefaultLang());
         } elseif ($view == 'shop') {
-            $data['page_url'] = $this->pageService->getUrl($mPage, $lang);
+            $data['page_url'] = $this->urlService->getUrl($mPage, $lang);
         }
 
         return $data;

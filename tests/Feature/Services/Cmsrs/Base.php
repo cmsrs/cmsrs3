@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\Page\PageService;
+use App\Services\Cmsrs\Page\UrlService;
 use App\Services\Cmsrs\ProductDataService;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
@@ -105,7 +106,7 @@ class Base extends TestCase
     {
         // cms link
         // see in: resources/views/includes/header.blade.php
-        $pageService = app(PageService::class);
+        $urlService = app(UrlService::class);
         $menuService = app(MenuService::class);
 
         $url = [];
@@ -120,16 +121,16 @@ class Base extends TestCase
             // dump($pagesPublishedAndAccess->published);
             if ($pagesPublishedAndAccess->count() == 1) {
                 $f0 = true;
-                $url[] = $pageService->getUrl($pagesPublishedAndAccess->first(), $lang);
+                $url[] = $urlService->getUrl($pagesPublishedAndAccess->first(), $lang);
             } else {
                 foreach ($menuService->pagesPublishedTree($pagesPublishedAndAccess) as $page) {
                     // dump($page->published);
-                    $url[] = $pageService->getUrl($page, $lang);
+                    $url[] = $urlService->getUrl($page, $lang);
                     $f1 = true;
                     if (! empty($page['children']) && ! empty($page->published)) {
                         foreach ($page['children'] as $p) {
                             $f2 = true;
-                            $url[] = $pageService->getUrl($p, $lang);
+                            $url[] = $urlService->getUrl($p, $lang);
                         }
                     }
                 }
@@ -161,6 +162,7 @@ class Base extends TestCase
     public function checkAllPagesByLang($p, $lang, $onlyOneLang = false)
     {
         $pageService = app(PageService::class);
+        $urlService = app(UrlService::class);
         $urlIn = [];
         $numOfInPages = 0;
         $numOfInAfterLoginPages = 0;
@@ -170,7 +172,7 @@ class Base extends TestCase
             $this->assertNotEmpty($pageTitle);
             $this->assertNotEmpty($pageShortTitle);
 
-            $itemUrlIn = $pageService->getUrl($page, $lang);
+            $itemUrlIn = $urlService->getUrl($page, $lang);
 
             if ($page->after_login) {
                 $numOfInAfterLoginPages++;
@@ -212,13 +214,13 @@ class Base extends TestCase
         }
 
         // independent
-        $urlPolicy = $pageService->getUrl($pageService->getFirstPageByTypeCache('privacy_policy'), $lang);
+        $urlPolicy = $urlService->getUrl($pageService->getFirstPageByTypeCache('privacy_policy'), $lang);
         $response2 = $this->get($urlPolicy);
         $response2->assertStatus(200);
         $url[] = $urlPolicy;
 
         // main page
-        $urlMainPage = $pageService->getUrl($pageService->getFirstPageByTypeCache('main_page'), $lang);
+        $urlMainPage = $urlService->getUrl($pageService->getFirstPageByTypeCache('main_page'), $lang);
         $response3 = $this->get($urlMainPage);
         $response3->assertStatus(200);
         $url[] = $urlMainPage;

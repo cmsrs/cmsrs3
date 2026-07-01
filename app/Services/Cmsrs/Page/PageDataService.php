@@ -9,17 +9,21 @@ use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\ConfigService;
-use App\Services\Cmsrs\ContentService;
 use App\Services\Cmsrs\Helpers\CacheManagerService;
 use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\MenuService;
-use App\Services\Cmsrs\TranslateService;
+use App\Services\Cmsrs\Traits\TranslationsTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class PageDataService
 {
-    public function __construct(private ConfigService $configService, private MenuService $menuService, private TranslateService $translateService, private ContentService $contentService, private ImageService $imageService, private CacheManagerService $cacheManagerService, private PageService $pageService) {}
+    /**
+     * @use TranslationsTrait<Page>
+     */
+    use TranslationsTrait;
+
+    public function __construct(private ConfigService $configService, private MenuService $menuService, private ImageService $imageService, private CacheManagerService $cacheManagerService, private PageService $pageService, private UrlService $urlService) {}
 
     public function getPageDataByShortTitleCache(string $shortTitle, string $data = 'content', ?string $lang = null): ?string
     {
@@ -137,7 +141,7 @@ class PageDataService
         }
 
         if ($data == 'url') {
-            return $this->pageService->getUrl($page, $lang);
+            return $this->urlService->getUrl($page, $lang);
         }
 
         $pageData = $this->pageService->getAllPagesWithImagesOneItem($page);
@@ -164,7 +168,7 @@ class PageDataService
 
                 $pagesPublished = $this->menuService->pagesPublished($menu);
                 foreach ($pagesPublished as $page) {
-                    if ($pageSlug == $this->pageService->getSlugByLang($page, $lang)) {
+                    if ($pageSlug == $this->urlService->getSlugByLang($page, $lang)) {
                         $pageOut = $page;
                         break;
                     }

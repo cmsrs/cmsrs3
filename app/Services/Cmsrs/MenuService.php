@@ -6,7 +6,7 @@ namespace App\Services\Cmsrs;
 
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
-use App\Services\Cmsrs\Helpers\CacheService;
+use App\Services\Cmsrs\Helpers\CacheManagerService;
 use App\Services\Cmsrs\Traits\TranslationsTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
@@ -19,23 +19,38 @@ class MenuService
      */
     use TranslationsTrait;
 
-    public function __construct(private ConfigService $configService, private TranslateService $translateService) {}
+    public function __construct(private CacheManagerService $cacheManagerService, private TranslateService $translateService) {}
 
     /**
      * @return Collection<int, Menu>
      */
     public function getMenu(): Collection
     {
-        $isCache = $this->configService->isCacheEnable();
-        if ($isCache) {
-            $menus = cache()->remember('menus', CacheService::setTime(), function () {
-                return Menu::orderBy('position')->get();
-            });
-        } else {
-            $menus = Menu::orderBy('position')->get();
-        }
+        $key = $this->cacheManagerService->key(
+            'menus',
+            'all'
+        );
 
-        return $menus;
+        return $this->cacheManagerService->remember(
+            $key,
+            fn () => $this->getMenuPriv()
+        );
+
+        // $isCache = $this->configService->isCacheEnable();
+        // if ($isCache) {
+        //     $menus = cache()->remember('menus', CacheService::setTime(), function () {
+        //         return Menu::orderBy('position')->get();
+        //     });
+        // } else {
+        //     $menus = Menu::orderBy('position')->get();
+        // }
+
+        // return $menus;
+    }
+
+    private function getMenuPriv(): Collection
+    {
+        return Menu::orderBy('position')->get();
     }
 
     /**

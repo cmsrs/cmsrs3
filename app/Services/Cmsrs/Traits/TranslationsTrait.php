@@ -6,7 +6,6 @@ namespace App\Services\Cmsrs\Traits;
 
 use App\Models\Cmsrs\Interfaces\ContentTranslatableInterface;
 use App\Models\Cmsrs\Interfaces\TranslatableInterface;
-use App\Services\Cmsrs\Helpers\CacheService;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model&TranslatableInterface
@@ -21,17 +20,27 @@ trait TranslationsTrait
     {
         $id = $model->getId(); // for $model->id phpstan complains because of interface, so we need to use method
 
-        $cacheKey = strtolower(class_basename($model)).'_translate_'.$id;
+        $key = $this->cacheManagerService->key(
+            strtolower(class_basename($model)).'_translate',
+            (string) $id,
+        );
 
-        $fetch = function () use ($model) {
-            return $this->getAllTranslateWithoutCache($model);
-        };
+        return $this->cacheManagerService->remember(
+            $key,
+            fn () => $this->getAllTranslateWithoutCache($model)
+        );
 
-        if ($this->configService->isCacheEnable()) {
-            return cache()->remember($cacheKey, CacheService::setTime(), $fetch);
-        }
+        // $cacheKey = strtolower(class_basename($model)).'_translate_'.$id;
 
-        return $fetch();
+        // $fetch = function () use ($model) {
+        //     return $this->getAllTranslateWithoutCache($model);
+        // };
+
+        // if ($this->configService->isCacheEnable()) {
+        //     return cache()->remember($cacheKey, CacheService::setTime(), $fetch);
+        // }
+
+        // return $fetch();
     }
 
     /**

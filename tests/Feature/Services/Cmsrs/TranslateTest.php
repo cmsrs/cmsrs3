@@ -10,6 +10,7 @@ use App\Services\Cmsrs\Helpers\CacheManagerService;
 use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\Page\PageService;
+use App\Services\Cmsrs\Page\UrlService;
 use App\Services\Cmsrs\TranslateService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
@@ -99,12 +100,13 @@ class TranslateTest extends Base
         $data = ['name' => ['pl' => 'O cmsRS', 'en' => 'fake']];
 
         $configMock = Mockery::mock(ConfigService::class);
+        $cacheManagerServiceMock = Mockery::mock(CacheManagerService::class);
         $arrLangTest = ['pl'];
         $configMock->shouldReceive('arrGetLangs')->andReturn($arrLangTest);
         $translate = new TranslateService($configMock);
 
         $objMenu = new MenuService(
-            $configMock,
+            $cacheManagerServiceMock,
             $translate,
         );
 
@@ -201,6 +203,7 @@ class TranslateTest extends Base
         ];
 
         $configMock = Mockery::mock(ConfigService::class);
+        $cacheManagerServiceMock = Mockery::mock(CacheManagerService::class);
         $arrLangTest = ['pl'];
         $configMock->shouldReceive('arrGetLangs')->andReturn($arrLangTest);
         $configMock->shouldReceive('arrAllowedUploadFileExt')
@@ -209,7 +212,7 @@ class TranslateTest extends Base
         $translate = new TranslateService($configMock);
         $content = new ContentService($configMock);
 
-        $imageService = new ImageService($configMock, $translate);
+        $imageService = new ImageService($cacheManagerServiceMock, $configMock, $translate);
 
         // $imageServiceMock = Mockery::mock(ImageService::class);
         // $imageServiceMock
@@ -218,11 +221,10 @@ class TranslateTest extends Base
         //     ->andReturn(null);
 
         $objPage = new PageService(
-            $configMock,
-            app(MenuService::class),
             $translate,
             $content,
             $imageService,
+            app(UrlService::class),
             app(CacheManagerService::class)
         );
 

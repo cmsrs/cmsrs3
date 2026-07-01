@@ -7,6 +7,7 @@ namespace App\Services\Cmsrs;
 use App\Models\Cmsrs\Image;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Product;
+use App\Services\Cmsrs\Helpers\CacheManagerService;
 use App\Services\Cmsrs\Helpers\ImageHelperService;
 use App\Services\Cmsrs\Helpers\StrHelperService;
 use App\Services\Cmsrs\Traits\TranslationsTrait;
@@ -19,7 +20,11 @@ class ImageService
      */
     use TranslationsTrait;
 
-    public function __construct(private ConfigService $configService, private TranslateService $translateService) {}
+    public function __construct(
+        private CacheManagerService $cacheManagerService, // TranslationsTrait use dont remove it
+        private ConfigService $configService,
+        private TranslateService $translateService
+    ) {}
 
     private static function deleteDirectoryIfEmpty(string $dirPath): bool
     {

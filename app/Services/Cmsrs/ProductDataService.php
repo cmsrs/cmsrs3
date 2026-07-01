@@ -10,6 +10,7 @@ use App\Services\Cmsrs\Helpers\CacheService;
 use App\Services\Cmsrs\Helpers\LangHelperService;
 use App\Services\Cmsrs\Helpers\PriceHelperService;
 use App\Services\Cmsrs\Page\PageService;
+use App\Services\Cmsrs\Page\UrlService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 
@@ -21,6 +22,7 @@ class ProductDataService
     public function __construct(
         private ConfigService $configService,
         private PageService $pageService,
+        private UrlService $urlService,
         private ImageService $imageService,
         private PriceHelperService $priceHelperService,
     ) {
@@ -241,7 +243,7 @@ class ProductDataService
         $mPage = $mProduct->page()->first();
 
         if ($mPage instanceof Page) { // phpstan fix
-            return $this->pageService->getUrl($mPage, $lang);
+            return $this->urlService->getUrl($mPage, $lang);
         }
 
         return null; // todo - handle this case properly, maybe throw an exception or return a default URL
@@ -252,7 +254,7 @@ class ProductDataService
         $mPage = $mProduct->page()->first();
 
         if ($mPage instanceof Page) { // phpstan fix
-            return $this->pageService->getUrl($mPage, $lang, Str::slug($productName, '-'));
+            return $this->urlService->getUrl($mPage, $lang, Str::slug($productName, '-'));
         }
 
         return null; // todo - handle this case properly, maybe throw an exception or return a default URL

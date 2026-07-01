@@ -6,7 +6,7 @@ namespace App\Console\Commands;
 
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
-use App\Services\Cmsrs\Page\PageService;
+use App\Services\Cmsrs\Page\UrlService;
 use App\Services\Cmsrs\ProductService;
 use Illuminate\Console\Command;
 
@@ -31,8 +31,11 @@ class CreateSiteMap extends Command
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct(
+        private readonly ConfigService $configService,
+        private readonly UrlService $urlService,
+        private readonly ProductService $productService,
+    ) {
         parent::__construct();
     }
 
@@ -41,18 +44,16 @@ class CreateSiteMap extends Command
      */
     public function handle(): int
     {
-        $pageService = app(PageService::class); // TODO DI
-        $configService = app(ConfigService::class); // TODO DI
         // $appUrl = env('APP_URL');
         $appUrl = config('app.url');
-        $langs = $configService->arrGetLangs();
+        $langs = $this->configService->arrGetLangs();
         $pages = Page::where('after_login', '=', 0)->where('published', '=', 1)->where('type', '!=', 'inner')->get();
-        $prodUrls = app(ProductService::class)->getProductsUrl(); // TODO DI
+        $prodUrls = $this->productService->getProductsUrl();
 
         $strUrls = '';
         foreach ($langs as $lang) {
             foreach ($pages as $page) {
-                $strUrls .= $appUrl.$pageService->getUrl($page, $lang)."\n";
+                $strUrls .= $appUrl.$this->urlService->getUrl($page, $lang)."\n";
             }
             foreach ($prodUrls as $prodUrl) {
                 $strUrls .= $appUrl.$prodUrl[$lang]."\n";
@@ -61,7 +62,7 @@ class CreateSiteMap extends Command
 
         $isLogin = config('cmsrs.features.login');  // env('IS_LOGIN', true);
         $isRegister = config('cmsrs.features.register');  // env('IS_REGISTER', true);
-        $isManyLangs = $configService->isManyLangs();
+        $isManyLangs = $this->configService->isManyLangs();
         if ($isManyLangs) {
             if ($isLogin) {
                 foreach ($langs as $lang) {

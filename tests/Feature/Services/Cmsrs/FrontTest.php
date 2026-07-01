@@ -9,6 +9,7 @@ use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\Page\PageService;
+use App\Services\Cmsrs\Page\UrlService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 
@@ -149,7 +150,7 @@ class FrontTest extends Base
         foreach ($pages as $page) {
 
             foreach ($langs as $lang) {
-                $url = (app(PageService::class))->getUrl($page, $lang);
+                $url = (app(UrlService::class))->getUrl($page, $lang);
                 if (! $url) {
                     $this->assertEquals('inner', $page->type);
 
@@ -306,7 +307,7 @@ class FrontTest extends Base
         $p0 = Page::query()->where('menu_id', $this->menuId)->get()->first();
         $this->assertNotEmpty($p0);
 
-        $url = (app(PageService::class))->getUrl($p0, 'en');
+        $url = (app(UrlService::class))->getUrl($p0, 'en');
 
         $response1 = $this->get($url);
         $response1->assertStatus(200);
@@ -352,7 +353,7 @@ class FrontTest extends Base
 
         $i = 0;
         foreach ($p as $pp) {
-            $url0 = (app(PageService::class))->getUrl($pp, 'en');
+            $url0 = (app(UrlService::class))->getUrl($pp, 'en');
             $response = $this->get($url0);
             $response->assertStatus(200);
             $i++;
@@ -381,7 +382,7 @@ class FrontTest extends Base
         $this->assertNotEmpty($p->id);
 
         $lang = 'en';
-        $url = (app(PageService::class))->getUrl($p, $lang);
+        $url = (app(UrlService::class))->getUrl($p, $lang);
         $this->assertNotEmpty($url);
         $response1 = $this->get($url);
         $response1->assertStatus(200);

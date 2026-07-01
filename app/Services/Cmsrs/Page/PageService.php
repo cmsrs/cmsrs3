@@ -9,7 +9,6 @@ use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\ContentService;
 use App\Services\Cmsrs\Helpers\CacheManagerService;
 use App\Services\Cmsrs\ImageService;
-use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\Traits\TranslationsTrait;
 use App\Services\Cmsrs\TranslateService;
 use Illuminate\Database\Eloquent\Collection;
@@ -23,32 +22,13 @@ class PageService
      */
     use TranslationsTrait;
 
-    public function __construct(private ConfigService $configService, private MenuService $menuService, private TranslateService $translateService, private ContentService $contentService, private ImageService $imageService, private CacheManagerService $cacheManagerService) {}
-
-    private function getMenuSlugByLangCache(Page $mPage, string $lang): ?string
-    {
-        $key = $this->cacheManagerService->key(
-            'menusluglang',
-            (string) $mPage->id,
-            $lang
-        );
-
-        return $this->cacheManagerService->remember(
-            $key,
-            fn () => $this->getMenuSlugByLang($mPage, $lang)
-        );
-    }
-
-    private function getMenuSlugByLang(Page $mPage, string $lang): ?string
-    {
-        $menu = $mPage->menu()->first();
-
-        if (empty($menu)) {
-            return null;
-        }
-
-        return $this->menuService->getSlugByLang($menu, $lang);
-    }
+    public function __construct(
+        private TranslateService $translateService,
+        private ContentService $contentService,
+        private ImageService $imageService,
+        private UrlService $urlService,
+        private CacheManagerService $cacheManagerService
+    ) {}
 
     /**
      * @param  array<string, mixed>  $data
@@ -84,18 +64,6 @@ class PageService
         }
 
         return $out;
-    }
-
-    public function getSlugByLang(Page $model, string $lang): ?string
-    {
-        $column = 'title';
-        $name = $this->translatesByColumnAndLang($model, $column, $lang);
-
-        if ($name === null || $name === '') {
-            throw new \RuntimeException("I cant create slug for page column: $column for lang: $lang, because value is empty");
-        }
-
-        return Str::slug($name, '-');
     }
 
     /**
@@ -155,153 +123,6 @@ class PageService
         return true;
     }
 
-    /**
-     * use in headless
-     *
-     * @return array<string, string>
-     */
-    public function getUrls(Page $mPage, ?string $urlParam = null): array
-    {
-        $urls = [];
-        $langs = $this->configService->arrGetLangs();
-        foreach ($langs as $l) {
-            $urls[$l] = $this->getUrl($mPage, $l, $urlParam) ?? '';
-        }
-
-        return $urls;
-    }
-
-    public function getUrl(Page $mPage, string $lang, ?string $urlParam = null): ?string
-    {
-        $type = $mPage->type;
-        if ($type == 'inner') {
-            return null;
-        } elseif ($type == 'main_page') {
-            return $this->getMainUrl($lang);
-
-            // TODO!!! - it should be removed
-            // } elseif (($type == 'login') || ($type == 'checkout') || ($type == 'register') || ($type == 'home') || ($type == 'shoppingsuccess') || ($type == 'search') || ($type == 'forgot')) {
-            //    return $this->getTypeUrl($type, $lang);
-        }
-
-        // elseif ('privacy_policy' == $this->type) {
-        //    return $this->getIndependentUrl($lang);
-        // }
-        return $this->getCmsUrl($mPage, $lang, $urlParam);
-    }
-
-    public function getUrlByPageOrRouteName(?Page $mPage, string $lang, ?string $productSlug = null, ?string $routeName = null): string
-    {
-        // return (! empty($mPage)) ? $this->getUrl($mPage, $lang, $productSlug) : route($routeName, ['lang' => $lang]);
-        if ($mPage !== null) {
-            return $this->getUrl($mPage, $lang, $productSlug) ?? '';
-        }
-
-        if ($routeName === null) {
-            throw new \InvalidArgumentException('routeName cannot be null when page is null');
-        }
-
-        return route($routeName, ['lang' => $lang]);
-
-    }
-
-    /**
-     * Get all URLs for a given page or route name across all supported languages.
-     *
-     * @param  array<string, string>|null  $productSlug
-     * @return array<string, string> An associative array where keys are language codes and values are URLs.
-     */
-    public function getAllUrlsByPageOrRouteName(?Page $mPage, ?array $productSlug = null, ?string $routeName = null): array
-    {
-
-        if ($routeName == 'shoppingsuccess') { // TODO - manual tests
-            return [];
-        }
-
-        $urls = [];
-        $langs = $this->configService->arrGetLangs();
-        foreach ($langs as $l) {
-            $productSlugForLang = $productSlug[$l] ?? null;
-            $urls[$l] = $this->getUrlByPageOrRouteName($mPage, $l, $productSlugForLang, $routeName);
-        }
-
-        return $urls;
-    }
-
-    private function getNumPagesBelongsToThisMenu(Page $mPage): ?int
-    {
-        $menu = $mPage->menu()->first();
-        if (empty($menu)) {
-            return null;
-        }
-
-        return $this->menuService->pagesPublishedAndAccess($menu, Auth::check())->count();
-    }
-
-    private function getNumPagesBelongsToThisMenuCache(Page $mPage): ?int
-    {
-        $key = $this->cacheManagerService->key(
-            'countpagesinthismenu',
-            (string) $mPage->id
-        );
-
-        return $this->cacheManagerService->remember(
-            $key,
-            fn () => $this->getNumPagesBelongsToThisMenu($mPage)
-        );
-    }
-
-    private function getCmsUrl(Page $mPage, string $lang, ?string $urlParam = null): string
-    {
-        $menuSlug = $this->getMenuSlugByLangCache($mPage, $lang);
-
-        if (empty($menuSlug)) {
-            return $this->getIndependentUrl($mPage, $lang);
-        }
-
-        $countPages = $this->getNumPagesBelongsToThisMenuCache($mPage);
-        if (($countPages == 1) && ($mPage->type != 'shop')) {
-            $url = '/'.Page::PREFIX_CMS_ONE_PAGE_IN_MENU_URL.'/'.$menuSlug;
-        } else {
-            $url = '/'.Page::PREFIX_CMS_URL.'/'.$menuSlug.'/'.$this->getSlugByLang($mPage, $lang);
-        }
-        if ($urlParam) {
-            // $url = $url."/".Str::slug($urlParam, '-');
-            $url = $url.'/'.$urlParam;
-        }
-        $langs = ConfigService::arrGetLangsEnv();
-        if (count($langs) > 1) {
-            $url = '/'.$lang.$url;
-        }
-
-        return $url;
-    }
-
-    private function getMainUrl(string $lang): string
-    {
-        $langs = ConfigService::arrGetLangsEnv();
-        array_shift($langs); // after this langs will be changed. It has rest of langs without first one.
-
-        if (empty($langs)) {
-            $url = '/';
-        } else {
-            $url = in_array($lang, $langs) ? '/'.$lang : '/';
-        }
-
-        return $url;
-    }
-
-    private function getIndependentUrl(Page $mPage, string $lang): string
-    {
-        $url = '/'.Page::PREFIX_IN_URL.'/'.$this->getSlugByLang($mPage, $lang);
-        $langs = ConfigService::arrGetLangsEnv();
-        if (count($langs) > 1) {
-            $url = '/'.$lang.$url;
-        }
-
-        return $url;
-    }
-
     public function unpublishedChildren(Page $mPage): void
     {
         $pages = Page::where('page_id', '=', $mPage->id)->get();
@@ -340,14 +161,14 @@ class PageService
         $policyUrl = null;
         $policyTitle = null;
         if (! empty($privacyPolicy)) {
-            $policyUrl = $this->getUrl($privacyPolicy, $lang);
+            $policyUrl = $this->urlService->getUrl($privacyPolicy, $lang);
             $policyTitle = $this->translatesByColumnAndLang($privacyPolicy, 'title', $lang);
         }
 
         $contactUrl = null;
         $contactTitle = null;
         if (! empty($contact)) {
-            $contactUrl = $this->getUrl($contact, $lang);
+            $contactUrl = $this->urlService->getUrl($contact, $lang);
             $contactTitle = $this->translatesByColumnAndLang($contact, 'title', $lang);
         }
 
@@ -646,7 +467,7 @@ class PageService
         $pageOut = null;
         $pages = Page::all();
         foreach ($pages as $page) {
-            if ($this->getSlugByLang($page, $lang) == $pageSlug) {
+            if ($this->urlService->getSlugByLang($page, $lang) == $pageSlug) {
                 $pageOut = $page;
                 break;
             }

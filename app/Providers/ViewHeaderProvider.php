@@ -7,6 +7,7 @@ namespace App\Providers;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\Page\NavigationService;
 use App\Services\Cmsrs\Page\PageService;
+use App\Services\Cmsrs\Page\UrlService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -29,6 +30,7 @@ class ViewHeaderProvider extends ServiceProvider
         View::composer('includes.header', function ($view) {
             $configService = app(ConfigService::class);
             $pageService = app(PageService::class);
+            $urlService = app(UrlService::class);
             $navigationService = app(NavigationService::class);
 
             $lang = $configService->getLangFromRequest();
@@ -37,7 +39,7 @@ class ViewHeaderProvider extends ServiceProvider
 
             $mainPage = $pageService->getFirstPageByTypeCache('main_page');
             $urlMainPage = $mainPage
-                ? $pageService->getUrl($mainPage, $lang)
+                ? $urlService->getUrl($mainPage, $lang)
                 : '/';
 
             $data = $view->getData();
@@ -45,7 +47,7 @@ class ViewHeaderProvider extends ServiceProvider
             $productNameSlug = $data['product_name_slug'] ?? null;
             $routeName = request()->route()?->getName(); //
 
-            $allUrlsByPageOrRouteName = $pageService->getAllUrlsByPageOrRouteName($page, $productNameSlug, $routeName);
+            $allUrlsByPageOrRouteName = $urlService->getAllUrlsByPageOrRouteName($page, $productNameSlug, $routeName);
 
             $view->with([
                 'treeMenu' => $navigationService->getNavigationTree(Auth::check()),

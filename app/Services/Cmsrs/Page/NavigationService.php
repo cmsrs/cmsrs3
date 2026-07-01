@@ -15,6 +15,7 @@ class NavigationService
         private MenuService $menuService,
         private PageService $pageService,
         private ConfigService $configService,
+        private UrlService $urlService,
     ) {}
 
     /**
@@ -63,7 +64,7 @@ class NavigationService
                     continue;
                 }
                 $menuData['menu_name'] = $this->translatePageColumn($pageFirst, 'short_title'); // it is not mistake!
-                $menuData['url'] = $this->pageService->getUrls($pageFirst);
+                $menuData['url'] = $this->urlService->getUrls($pageFirst);
                 $menuData['page_id'] = $pageFirst->getId(); // phpstan error, but it should not happen
                 $menuData['pages'] = [];
             } else {
@@ -103,7 +104,7 @@ class NavigationService
     private function getPageData(Page $page)
     {
         return [
-            'url' => $this->pageService->getUrls($page),
+            'url' => $this->urlService->getUrls($page),
             'short_title' => $this->translatePageColumn($page, 'short_title'),
             'page_id' => $page->id,
         ];

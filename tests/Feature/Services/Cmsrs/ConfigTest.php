@@ -5,6 +5,7 @@ namespace Tests\Feature\Services\Cmsrs;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\Page\PageService;
+use App\Services\Cmsrs\Page\UrlService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 // use Illuminate\Support\Facades\Cookie;
@@ -73,7 +74,7 @@ class ConfigTest extends Base
 
             $in = true;
 
-            $url = (app(PageService::class))->getUrl($p, 'en');
+            $url = (app(UrlService::class))->getUrl($p, 'en');
             if (! $url) { // inner type
                 $this->assertEquals('inner', $data['type']);
 
