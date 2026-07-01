@@ -29,18 +29,6 @@ trait TranslationsTrait
             $key,
             fn () => $this->getAllTranslateWithoutCache($model)
         );
-
-        // $cacheKey = strtolower(class_basename($model)).'_translate_'.$id;
-
-        // $fetch = function () use ($model) {
-        //     return $this->getAllTranslateWithoutCache($model);
-        // };
-
-        // if ($this->configService->isCacheEnable()) {
-        //     return cache()->remember($cacheKey, CacheService::setTime(), $fetch);
-        // }
-
-        // return $fetch();
     }
 
     /**
