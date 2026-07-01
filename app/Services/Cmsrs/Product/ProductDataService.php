@@ -7,7 +7,7 @@ namespace App\Services\Cmsrs\Product;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Product;
 use App\Services\Cmsrs\ConfigService;
-use App\Services\Cmsrs\Helpers\CacheService;
+use App\Services\Cmsrs\Helpers\CacheManagerService;
 use App\Services\Cmsrs\Helpers\LangHelperService;
 use App\Services\Cmsrs\Helpers\PriceHelperService;
 use App\Services\Cmsrs\ImageService;
@@ -21,10 +21,10 @@ class ProductDataService
     public array $productFields;
 
     public function __construct(
-        private ConfigService $configService,
         private UrlService $urlService,
         private ImageService $imageService,
         private PriceHelperService $priceHelperService,
+        private CacheManagerService $cacheManagerService
     ) {
 
         $this->productFields = [
@@ -41,16 +41,17 @@ class ProductDataService
      */
     public function getAllProductsWithImagesByLangCache(string $lang): array
     {
-        $isCache = $this->configService->isCacheEnable();
-        if ($isCache) {
-            $products = cache()->remember('products_name_price_'.$lang, CacheService::setTime(), function () use ($lang) {
-                return $this->getAllProductsWithImagesByLang($lang);
-            });
-        } else {
-            $products = $this->getAllProductsWithImagesByLang($lang);
-        }
+        $key = $this->cacheManagerService->key(
+            'products',
+            'name_price',
+            $lang
+        );
 
-        return $products;
+        return $this->cacheManagerService->remember(
+            $key,
+            fn () => $this->getAllProductsWithImagesByLang($lang)
+        );
+
     }
 
     /**

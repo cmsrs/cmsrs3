@@ -214,6 +214,9 @@ class ConfigService
         return $formEnv && $isFileExist;
     }
 
+    /**
+     * TODO - move to helpers directory
+     */
     public function getLangFromRequest(): string
     {
         // \Illuminate\Support\Facades\Log::info('1='  .  request()->route('lang') .' 2='. request('lang') );
@@ -225,6 +228,9 @@ class ConfigService
         return $lang;
     }
 
+    /**
+     * TODO - move to helpers directory
+     */
     public function getLangFromCookie(): string
     {
         $lang = request()->cookie(ConfigService::COOKIE_FRONT_LOGIN_LANG_NAME);
