@@ -36,18 +36,11 @@ class MenuService
             fn () => $this->getMenuPriv()
         );
 
-        // $isCache = $this->configService->isCacheEnable();
-        // if ($isCache) {
-        //     $menus = cache()->remember('menus', CacheService::setTime(), function () {
-        //         return Menu::orderBy('position')->get();
-        //     });
-        // } else {
-        //     $menus = Menu::orderBy('position')->get();
-        // }
-
-        // return $menus;
     }
 
+    /**
+     * @return Collection<int, Menu>
+     */
     private function getMenuPriv(): Collection
     {
         return Menu::orderBy('position')->get();

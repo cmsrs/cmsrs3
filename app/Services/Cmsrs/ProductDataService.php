@@ -9,7 +9,6 @@ use App\Models\Cmsrs\Product;
 use App\Services\Cmsrs\Helpers\CacheService;
 use App\Services\Cmsrs\Helpers\LangHelperService;
 use App\Services\Cmsrs\Helpers\PriceHelperService;
-use App\Services\Cmsrs\Page\PageService;
 use App\Services\Cmsrs\Page\UrlService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
@@ -21,7 +20,6 @@ class ProductDataService
 
     public function __construct(
         private ConfigService $configService,
-        private PageService $pageService,
         private UrlService $urlService,
         private ImageService $imageService,
         private PriceHelperService $priceHelperService,
