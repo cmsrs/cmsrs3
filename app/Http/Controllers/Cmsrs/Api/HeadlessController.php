@@ -76,7 +76,7 @@ class HeadlessController extends Controller
 
     public function getMenus(Request $request): JsonResponse
     {
-        $menus = $this->navigationService->getNavigationTree();
+        $menus = $this->navigationService->getNavigationTreeCache();
 
         return response()->json(['success' => true, 'data' => $menus], 200);
     }

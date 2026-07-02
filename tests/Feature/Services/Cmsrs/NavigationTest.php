@@ -3,8 +3,11 @@
 namespace Tests\Feature\Services\Cmsrs;
 
 use App\Data\Demo;
+use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\Navigation\NavigationService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class NavigationTest extends Base
 {
@@ -15,7 +18,7 @@ class NavigationTest extends Base
         putenv('LANGS="en"');
         putenv('API_SECRET=""');
         putenv('CURRENCY="USD"');
-        putenv('CACHE_ENABLE=false');
+        putenv('CACHE_ENABLE=true');
         putenv('CACHE_ENABLE_FILE="app/cache_enable_test.txt"');
         putenv('DEMO_STATUS=false');
         putenv('IS_SHOP=true');
@@ -27,18 +30,56 @@ class NavigationTest extends Base
         parent::setUp();
 
         $this->createUser();
+        (new ConfigService)->createFileCacheEnableIfNotExist();
     }
 
     protected function tearDown(): void
     {
+        (new ConfigService)->deleteFileCacheEnableIfExist();
         parent::tearDown();
+    }
+
+    public function test_it_will_get_all_menus_from_service_cache()
+    {
+        Cache::flush();
+        (new Demo)->pagesAndMenu(true);
+        DB::flushQueryLog();
+        DB::enableQueryLog();
+
+        $menuUrls1 = app(NavigationService::class)->getNavigationTreeCache();
+        $queriesAfterFirst = count(DB::getQueryLog());
+        $this->assertTrue($queriesAfterFirst > 0);
+
+        $this->assertHelper($menuUrls1);
+
+        DB::flushQueryLog();
+
+        $menuUrls2 = app(NavigationService::class)->getNavigationTreeCache();
+        $this->assertHelper($menuUrls2);
+
+        // dd($menuUrls);
+
+        $this->assertHelper($menuUrls2);
+
+        $queriesAfterSecond = count(DB::getQueryLog());
+        // dump('second='. $queriesAfterSecond);
+
+        $this->assertTrue($queriesAfterFirst > $queriesAfterSecond);
+
+        $this->assertEquals($menuUrls1, $menuUrls2);
+
+        $this->assertEquals(
+            0,
+            $queriesAfterSecond,
+            'Second call should not hit database'
+        );
     }
 
     public function test_it_will_get_all_menus_from_service()
     {
         (new Demo)->pagesAndMenu(true);
 
-        $menuUrls = app(NavigationService::class)->getNavigationTree();
+        $menuUrls = app(NavigationService::class)->getNavigationTreeCache();
 
         // dd($menuUrls);
 

@@ -50,7 +50,7 @@ class ViewHeaderProvider extends ServiceProvider
             $allUrlsByPageOrRouteName = $urlService->getAllUrlsByPageOrRouteName($page, $productNameSlug, $routeName);
 
             $view->with([
-                'treeMenu' => $navigationService->getNavigationTree(Auth::check()),
+                'treeMenu' => $navigationService->getNavigationTreeCache(Auth::check()),
                 'lang' => $lang,
                 'langs' => $langs,
                 'manyLangs' => $manyLangs,

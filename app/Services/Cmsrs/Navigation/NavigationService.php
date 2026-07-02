@@ -7,6 +7,7 @@ namespace App\Services\Cmsrs\Navigation;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
+use App\Services\Cmsrs\Helpers\CacheManagerService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\Page\PageService;
 
@@ -17,7 +18,39 @@ class NavigationService
         private PageService $pageService,
         private ConfigService $configService,
         private UrlService $urlService,
+        private CacheManagerService $cacheManagerService
     ) {}
+
+    /**
+     * @return array<int, array{
+     *     menu_name: array<string, string>,
+     *     url: null|array<string, string>,
+     *     page_id: int|null,
+     *     id: int,
+     *     pages: array<int, array{
+     *          url: array<string,string>,
+     *          short_title: array<string, string>,
+     *          page_id: int,
+     *          children?: array<int, array{
+     *               url: array<string,string>,
+     *               short_title: array<string,string>,
+     *               page_id: int
+     *          }>
+     *     }>
+     * }>
+     */
+    public function getNavigationTreeCache(bool $isAuth = false): array
+    {
+        $key = $this->cacheManagerService->key(
+            'navigationtree',
+            $isAuth ? 'auth' : 'not_auth'
+        );
+
+        return $this->cacheManagerService->remember(
+            $key,
+            fn () => $this->getNavigationTree($isAuth)
+        );
+    }
 
     /**
      * it is very similar to resources/views/includes/header.blade.php
@@ -44,7 +77,7 @@ class NavigationService
      *     }>
      * }>
      */
-    public function getNavigationTree(bool $isAuth = false): array
+    private function getNavigationTree(bool $isAuth = false): array
     {
         $urlInMenu = [];
         $menus = Menu::orderBy('position', 'asc')->get();
