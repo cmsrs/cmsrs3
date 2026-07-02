@@ -11,6 +11,7 @@ use App\Actions\Fortify\UpdateUserProfileInformation;
 // use App\Http\Controllers\Auth\CustomAuthenticatedSessionController;
 use App\Models\User;
 use App\Services\Cmsrs\ConfigService;
+use App\Services\Cmsrs\Helpers\RequestService;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -48,7 +49,7 @@ class FortifyServiceProvider extends ServiceProvider
                     return redirect('/');
                 }
 
-                $lang = $configService->getLangFromCookie();
+                $lang = app(RequestService::class)->getLangFromCookie();
                 App::setLocale($lang);
                 $redirect = ($lang == $configService->getDefaultLang()) ? '/' : '/'.$lang;
 
@@ -70,7 +71,7 @@ class FortifyServiceProvider extends ServiceProvider
                     return redirect()->route('home');
                 }
 
-                $lang = $configService->getLangFromCookie();
+                $lang = app(RequestService::class)->getLangFromCookie();
                 App::setLocale($lang);
 
                 return redirect()->route('home', ['lang' => $lang]);
@@ -91,7 +92,7 @@ class FortifyServiceProvider extends ServiceProvider
                     return redirect()->route('home');
                 }
 
-                $lang = $configService->getLangFromCookie();
+                $lang = app(RequestService::class)->getLangFromCookie();
                 App::setLocale($lang);
 
                 return redirect()->route('home', ['lang' => $lang]);

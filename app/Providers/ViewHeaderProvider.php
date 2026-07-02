@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Services\Cmsrs\ConfigService;
+use App\Services\Cmsrs\Helpers\RequestService;
 use App\Services\Cmsrs\Navigation\NavigationService;
 use App\Services\Cmsrs\Navigation\UrlService;
 use App\Services\Cmsrs\Page\PageService;
@@ -32,8 +33,9 @@ class ViewHeaderProvider extends ServiceProvider
             $pageService = app(PageService::class);
             $urlService = app(UrlService::class);
             $navigationService = app(NavigationService::class);
+            $requestService = app(RequestService::class);
 
-            $lang = $configService->getLangFromRequest();
+            $lang = $requestService->getLangFromRequest();
             $langs = $configService->arrGetLangs();
             $manyLangs = $configService->isManyLangs();
 
@@ -64,10 +66,10 @@ class ViewHeaderProvider extends ServiceProvider
 
         View::composer('includes.*footer', function ($view) {
 
-            $configService = app(ConfigService::class);
             $pageService = app(PageService::class);
+            $requestService = app(RequestService::class);
 
-            $lang = $configService->getLangFromRequest();
+            $lang = $requestService->getLangFromRequest();
             $footerPages = $pageService->getFooterPages($lang);
 
             $view->with([
@@ -78,10 +80,10 @@ class ViewHeaderProvider extends ServiceProvider
 
         View::composer('layouts.default', function ($view) {
 
-            $configService = app(ConfigService::class);
             $pageService = app(PageService::class);
+            $requestService = app(RequestService::class);
 
-            $lang = $configService->getLangFromRequest();
+            $lang = $requestService->getLangFromRequest();
             $data = $view->getData();
             $page = $data['page'] ?? null;   //
 

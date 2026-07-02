@@ -4,6 +4,7 @@ namespace Tests\Feature\Services\Cmsrs;
 
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
+use App\Services\Cmsrs\Helpers\RequestService;
 use App\Services\Cmsrs\Navigation\UrlService;
 use App\Services\Cmsrs\Page\PageService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -302,7 +303,7 @@ class ConfigTest extends Base
         $defaultLang = (new ConfigService)->getDefaultLang();
         $this->assertEquals('en', $defaultLang);
 
-        $langFromCookie = (new ConfigService)->getLangFromCookie();
+        $langFromCookie = app(RequestService::class)->getLangFromCookie();
         $this->assertEquals($defaultLang, $langFromCookie);
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Middleware;
 
 use App\Services\Cmsrs\ConfigService;
+use App\Services\Cmsrs\Helpers\RequestService;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -22,7 +23,7 @@ class SetLocale
     {
         $configService = new ConfigService;
 
-        $lang = $configService->getLangFromRequest();
+        $lang = app(RequestService::class)->getLangFromRequest();
 
         if (! in_array($lang, $configService->arrGetLangs())) {
             Log::info('all langs: '.json_encode($configService->arrGetLangs()).'Invalid language detected: '.$lang.' | Action: abort(404) | URL: '.$request->fullUrl().' | Request: '.json_encode($request->all()));
