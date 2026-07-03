@@ -2,20 +2,28 @@
 
 declare(strict_types=1);
 
-namespace App\Services\Cmsrs\Traits;
+namespace App\Services\Cmsrs\Translation;
 
 use App\Models\Cmsrs\Interfaces\ContentTranslatableInterface;
 use App\Models\Cmsrs\Interfaces\TranslatableInterface;
+use App\Services\Cmsrs\Helpers\CacheManagerService;
 
-/**
- * @template TModel of \Illuminate\Database\Eloquent\Model&TranslatableInterface
- */
-trait TranslationsTrait
+class TranslationReader
 {
-    /**
-     * @param  TModel  $model
-     * @return array<string, array<string, string>>
-     */
+    public function __construct(private CacheManagerService $cacheManagerService) {}
+
+    public function translatesByColumnAndLang(TranslatableInterface $model, string $column, string $lang): ?string
+    {
+        $data = $this->getAllTranslateByColumn($model);
+
+        $value = null;
+        if (isset($data[$column]) && isset($data[$column][$lang])) {
+            $value = $data[$column][$lang];
+        }
+
+        return $value;
+    }
+
     public function getAllTranslate(TranslatableInterface $model): array
     {
         $id = $model->getId(); // for $model->id phpstan complains because of interface, so we need to use method
@@ -36,7 +44,7 @@ trait TranslationsTrait
      *
      * @return array<string, array<string, string>>
      */
-    public function getAllTranslateWithoutCache(TranslatableInterface|ContentTranslatableInterface $model): array
+    private function getAllTranslateWithoutCache(TranslatableInterface|ContentTranslatableInterface $model): array
     {
         $translates = $model->translates()
             ->get(['lang', 'column', 'value'])
@@ -54,10 +62,9 @@ trait TranslationsTrait
     }
 
     /**
-     * @param  TModel  $model
      * @return array<string, array<string, string>>
      */
-    public function getAllTranslateByColumn(TranslatableInterface $model): array
+    private function getAllTranslateByColumn(TranslatableInterface $model): array
     {
         $out = [];
 
@@ -68,20 +75,5 @@ trait TranslationsTrait
         }
 
         return $out;
-    }
-
-    /**
-     * @param  TModel  $model
-     */
-    public function translatesByColumnAndLang(TranslatableInterface $model, string $column, string $lang): ?string
-    {
-        $data = $this->getAllTranslateByColumn($model);
-
-        $value = null;
-        if (isset($data[$column]) && isset($data[$column][$lang])) {
-            $value = $data[$column][$lang];
-        }
-
-        return $value;
     }
 }

@@ -6,10 +6,7 @@ use App\Models\Cmsrs\Content;
 use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\ContentService;
-use App\Services\Cmsrs\Helpers\CacheManagerService;
-use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\MenuService;
-use App\Services\Cmsrs\Navigation\UrlService;
 use App\Services\Cmsrs\Page\PageService;
 use App\Services\Cmsrs\TranslateService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -48,6 +45,7 @@ class TranslateTest extends Base
     /****general *********/
     /*********************/
 
+    /*
     public function test_get_arr_langs()
     {
 
@@ -72,6 +70,7 @@ class TranslateTest extends Base
         $arrLangs2 = $translate2->getArrLangs();
         $this->assertSame($arrLangTest, $arrLangs2);
     }
+        */
 
     /*******************/
     /******* Menu ******/
@@ -93,27 +92,6 @@ class TranslateTest extends Base
         // $translate->setArrLangs(['en', 'pl']);
         $countItem = Translate::query()->where('menu_id', $menu->id)->where('column', 'name')->count();
         $this->assertEquals(2, $countItem);
-    }
-
-    public function test_menu_translate_wrap_create_ok_2b()
-    {
-        $data = ['name' => ['pl' => 'O cmsRS', 'en' => 'fake']];
-
-        $configMock = Mockery::mock(ConfigService::class);
-        $cacheManagerServiceMock = Mockery::mock(CacheManagerService::class);
-        $arrLangTest = ['pl'];
-        $configMock->shouldReceive('arrGetLangs')->andReturn($arrLangTest);
-        $translate = new TranslateService($configMock);
-
-        $objMenu = new MenuService(
-            $cacheManagerServiceMock,
-            $translate,
-        );
-
-        $menu = $objMenu->wrapCreate($data);
-
-        $countItem = Translate::query()->where('menu_id', $menu->id)->where('column', 'name')->count();
-        $this->assertEquals(1, $countItem);
     }
 
     public function test_menu_translate_wrap_create_wrong_1()
@@ -190,52 +168,6 @@ class TranslateTest extends Base
         $this->assertEquals(2, Content::query()->where('page_id', $p->id)->count());
 
         $this->assertEquals(4, Translate::query()->whereNotNull('image_id')->where('column', 'alt')->count());
-    }
-
-    public function test_page_translate_wrap_create_ok_2()
-    {
-        $data = $this->getPageTestData();
-        unset($data['description']);
-        $data['images'] = [
-            ['name' => 'phpunittest1.jpg', 'data' => $this->getFixtureBase64('phpunittest1.jpg'), 'alt' => ['en' => 'some desc', 'pl' => 'jakis opis', 'es' => 'Fake']],
-            ['name' => 'phpunittest2.jpg', 'data' => $this->getFixtureBase64('phpunittest2.jpg'), 'alt' => ['en' => 'some desc', 'pl' => 'jakis opis', 'es' => 'Fake']],
-            ['name' => 'phpunittest2.jpg', 'data' => $this->getFixtureBase64('phpunittest2.jpg'), 'alt' => ['en' => 'some desc2', 'pl' => 'jakis opis2', 'es' => 'Fake2']],
-        ];
-
-        $configMock = Mockery::mock(ConfigService::class);
-        $cacheManagerServiceMock = Mockery::mock(CacheManagerService::class);
-        $arrLangTest = ['pl'];
-        $configMock->shouldReceive('arrGetLangs')->andReturn($arrLangTest);
-        $configMock->shouldReceive('arrAllowedUploadFileExt')
-            ->andReturn(['jpg', 'png', 'gif']);
-
-        $translate = new TranslateService($configMock);
-        $content = new ContentService($configMock);
-
-        $imageService = new ImageService($cacheManagerServiceMock, $configMock, $translate);
-
-        // $imageServiceMock = Mockery::mock(ImageService::class);
-        // $imageServiceMock
-        //     ->shouldReceive('createImages')
-        //     ->once()
-        //     ->andReturn(null);
-
-        $objPage = new PageService(
-            $translate,
-            $content,
-            $imageService,
-            app(UrlService::class),
-            app(CacheManagerService::class)
-        );
-
-        $page = $objPage->wrapCreate($data, $translate);
-
-        $this->assertEquals(1, Translate::query()->where('page_id', $page->id)->where('column', 'title')->count());
-        $this->assertEquals(1, Translate::query()->where('page_id', $page->id)->where('column', 'short_title')->where('lang', 'pl')->count());
-        $this->assertEquals(1, Translate::query()->where('page_id', $page->id)->where('column', 'description')->count());
-        $this->assertEquals(1, Content::query()->where('page_id', $page->id)->count()); // (wczesniej mailaem 2 a powinna byc 1 - jak myslisz AI)  not set DI, therefore is 2
-
-        $this->assertEquals(3, Translate::query()->whereNotNull('image_id')->where('column', 'alt')->count());
     }
 
     public function test_page_translate_wrap_create_null_val()

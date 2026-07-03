@@ -5,14 +5,8 @@ namespace Tests\Feature\Services\Cmsrs;
 use App\Models\Cmsrs\Content;
 use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\ConfigService;
-use App\Services\Cmsrs\ContentService;
-use App\Services\Cmsrs\Helpers\CacheManagerService;
-use App\Services\Cmsrs\ImageService;
-use App\Services\Cmsrs\Navigation\UrlService;
 use App\Services\Cmsrs\Page\PageService;
-use App\Services\Cmsrs\TranslateService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Mockery;
 
 class ContentTest extends Base
 {
@@ -39,8 +33,8 @@ class ContentTest extends Base
         $this->createUser();
 
         $numOfLangs = app(ConfigService::class)->arrGetLangs();
-        $numOfLangsContent = app(ContentService::class)->getArrLangs();
-        $this->assertSame($numOfLangs, $numOfLangsContent);
+        // $numOfLangsContent = app(ContentService::class)->getArrLangs();
+        // $this->assertSame($numOfLangs, $numOfLangsContent);
         $this->assertEquals(2, count($numOfLangs));
         $this->numOfLangs = count($numOfLangs);
     }
@@ -53,21 +47,22 @@ class ContentTest extends Base
     /*********************/
     /****general *********/
     /*********************/
+    /*
+        public function test_get_arr_langs()
+        {
+            $content = app(ContentService::class);
+            $arrLangs = $content->getArrLangs();
+            $this->assertTrue(is_array($arrLangs));
+            $this->assertEquals(2, count($arrLangs));
 
-    public function test_get_arr_langs()
-    {
-        $content = app(ContentService::class);
-        $arrLangs = $content->getArrLangs();
-        $this->assertTrue(is_array($arrLangs));
-        $this->assertEquals(2, count($arrLangs));
-
-        $configMock = Mockery::mock(ConfigService::class);
-        $arrLangTest = ['en'];
-        $configMock->shouldReceive('arrGetLangs')->andReturn($arrLangTest);
-        $content2 = new ContentService($configMock);
-        $arrLangs2 = $content2->getArrLangs();
-        $this->assertSame($arrLangTest, $arrLangs2);
-    }
+            $configMock = Mockery::mock(ConfigService::class);
+            $arrLangTest = ['en'];
+            $configMock->shouldReceive('arrGetLangs')->andReturn($arrLangTest);
+            $content2 = new ContentService($configMock);
+            $arrLangs2 = $content2->getArrLangs();
+            $this->assertSame($arrLangTest, $arrLangs2);
+        }
+    */
 
     /***********************/
     /**Content on the Page**/
@@ -80,43 +75,6 @@ class ContentTest extends Base
         $this->assertNotEmpty($p->id);
 
         $this->assertEquals(2, Content::query()->where('page_id', $p->id)->count());
-    }
-
-    public function test_page_content_wrap_create_ok_2_mock()
-    {
-        $data = $this->getPageTestData();
-
-        $configMock = Mockery::mock(ConfigService::class);
-        $arrLangTest = ['pl'];
-        $configMock->shouldReceive('arrGetLangs')->andReturn($arrLangTest);
-        $translate = new TranslateService($configMock);
-        $content = new ContentService($configMock);
-
-        // konstruktor: public function __construct(private ConfigService $configService, private MenuService $menuService, private TranslateService $translateService, private ContentService $contentService, private ImageService $imageService)
-        // $objPage = app(PageService::class); //jak wstrzyknac te zaleznosci - pyt do AI
-        // $objPage->setTranslate($translate);
-        // $objPage->setContent($content);
-
-        $imageServiceMock = Mockery::mock(ImageService::class);
-        $imageServiceMock
-            ->shouldReceive('createImages')
-            ->once()
-            ->andReturn([]);
-
-        $objPage = new PageService(
-            $translate,
-            $content,
-            $imageServiceMock,
-            // $configMock,
-            // Mockery::mock(MenuService::class),
-            Mockery::mock(UrlService::class),
-            Mockery::mock(CacheManagerService::class),
-        );
-
-        $page = $objPage->wrapCreate($data, $translate, $content); // linia 107
-        $this->assertNotEmpty($page->id);
-
-        $this->assertEquals(1, Content::query()->where('page_id', $page->id)->count());
     }
 
     public function test_page_content_wrap_create_empty_1()

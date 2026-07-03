@@ -7,13 +7,14 @@ namespace App\Services\Cmsrs;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Models\Cmsrs\Translate;
-use App\Services\Cmsrs\Traits\ContentTranslateTrait;
+use App\Services\Cmsrs\Translation\TranslationWriter;
 
 class TranslateService
 {
-    use ContentTranslateTrait;
-
-    public function __construct(private ConfigService $configService) {}
+    public function __construct(
+        private ConfigService $configService,
+        private TranslationWriter $translationWriter,
+    ) {}
 
     /**
      * @return array<int, string>
@@ -31,32 +32,39 @@ class TranslateService
     {
         if (! empty($data['menu_id'])) {
             $requiredColumn = (new Menu)->requiredColumn;
-            $columns = ['name' => in_array('name', $requiredColumn) ? true : false];
-            $this->genericCreateTranslate($data, 'menu_id', $columns, $create);
+            $columns = ['name' => in_array('name', $requiredColumn)];
+            $this->translationWriter->genericCreateTranslate($data, 'menu_id', $columns, Translate::class, $create);
         } elseif (! empty($data['page_id'])) {
             $requiredColumn = (new Page)->requiredColumn;
             $columns = [
-                'title' => in_array('title', $requiredColumn) ? true : false,
-                'short_title' => in_array('short_title', $requiredColumn) ? true : false,
-                'description' => in_array('description', $requiredColumn) ? true : false,
+                'title' => in_array('title', $requiredColumn),
+                'short_title' => in_array('short_title', $requiredColumn),
+                'description' => in_array('description', $requiredColumn),
             ];
-            $this->genericCreateTranslate($data, 'page_id', $columns, $create);
+            $this->translationWriter->genericCreateTranslate($data, 'page_id', $columns, Translate::class, $create);
         } elseif (! empty($data['image_id'])) {
             $columns = ['alt' => false];
-            $this->genericCreateTranslate($data, 'image_id', $columns, $create);
+            $this->translationWriter->genericCreateTranslate($data, 'image_id', $columns, Translate::class, $create);
         } elseif (! empty($data['product_id'])) {
             $columns = [
                 'product_name' => true,
             ];
-            $this->genericCreateTranslate($data, 'product_id', $columns, $create);
+            $this->translationWriter->genericCreateTranslate($data, 'product_id', $columns, Translate::class, $create);
         }
 
         return true;
     }
 
+    // Delegacja do czytnika – jeśli inne części kodu używają tych metod
+    // public function getAllTranslate(TranslatableInterface $model): array
+    // {
+    //     return $this->reader->getAllTranslate($model);
+    // }
+
     /**
      * @param  array<string, mixed>  $row
      */
+    /*
     public function updateRow(array $row): bool
     {
         $query = Translate::query()
@@ -79,11 +87,13 @@ class TranslateService
 
         return true;
     }
+        */
 
     /**
      * @param  array<string, mixed>  $row
      *                                     DRY!!: ContentService.php and TranslateService.php
      */
+    /*
     protected function createRow($row): void
     {
         $translate = Translate::create($row);
@@ -91,4 +101,5 @@ class TranslateService
             throw new \Exception('problem with save into translate table');
         }
     }
+    */
 }

@@ -9,16 +9,17 @@ use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\Navigation\UrlService;
 use App\Services\Cmsrs\Product\ProductDataService;
+use App\Services\Cmsrs\Translation\TranslationReader;
 
 class PageViewService
 {
     public function __construct(
-        private PageService $pageService,
         private PageDataService $pageDataService,
         private UrlService $urlService,
         private ProductDataService $productDataService,
         private ImageService $imageService,
         private ConfigService $configService,
+        private TranslationReader $translationReader
     ) {}
 
     /**
@@ -44,9 +45,9 @@ class PageViewService
             'page' => $mPage,
             'menus' => isset($dataIn['menus']) ? $dataIn['menus'] : null,
             'images' => $this->imageService->getImagesAndThumbsByTypeAndRefId('page', $mPage->id),
-            'h1_title' => $this->pageService->translatesByColumnAndLang($mPage, 'title', $lang) ?? config('app.name', 'cmsRS'),
-            'content' => $this->pageService->translatesByColumnAndLang($mPage, 'content', $lang),
-            'seo_description' => $this->pageService->translatesByColumnAndLang($mPage, 'description', $lang) ?? config('app.name', 'cmsRS'),
+            'h1_title' => $this->translationReader->translatesByColumnAndLang($mPage, 'title', $lang) ?? config('app.name', 'cmsRS'),
+            'content' => $this->translationReader->translatesByColumnAndLang($mPage, 'content', $lang),
+            'seo_description' => $this->translationReader->translatesByColumnAndLang($mPage, 'description', $lang) ?? config('app.name', 'cmsRS'),
             'products' => $products,
             'lang' => $lang,
             'langs' => $langs,
@@ -97,7 +98,7 @@ class PageViewService
     {
         $data = [];
         if ($view == 'projects') {
-            $data['content_default_lang'] = $this->pageService->translatesByColumnAndLang($mPage, 'content', $this->configService->getDefaultLang());
+            $data['content_default_lang'] = $this->translationReader->translatesByColumnAndLang($mPage, 'content', $this->configService->getDefaultLang());
         } elseif ($view == 'shop') {
             $data['page_url'] = $this->urlService->getUrl($mPage, $lang);
         }

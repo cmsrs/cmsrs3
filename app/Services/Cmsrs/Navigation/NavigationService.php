@@ -10,15 +10,16 @@ use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\Helpers\CacheManagerService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\Page\PageService;
+use App\Services\Cmsrs\Translation\TranslationReader;
 
 class NavigationService
 {
     public function __construct(
         private MenuService $menuService,
-        private PageService $pageService,
         private ConfigService $configService,
         private UrlService $urlService,
-        private CacheManagerService $cacheManagerService
+        private CacheManagerService $cacheManagerService,
+        private TranslationReader $translationReader
     ) {}
 
     /**
@@ -154,7 +155,7 @@ class NavigationService
         $out = [];
 
         foreach ($langs as $lang) {
-            $out[$lang] = $this->pageService->translatesByColumnAndLang($page, $column, $lang) ?? '';
+            $out[$lang] = $this->translationReader->translatesByColumnAndLang($page, $column, $lang) ?? ''; // tu bylo pageService->translatesByColumnAndLang
         }
 
         return $out;
@@ -170,7 +171,7 @@ class NavigationService
         $out = [];
 
         foreach ($langs as $lang) {
-            $out[$lang] = $this->menuService->translatesByColumnAndLang($menu, $column, $lang) ?? '';
+            $out[$lang] = $this->translationReader->translatesByColumnAndLang($menu, $column, $lang) ?? ''; // tu bylo menuService->translatesByColumnAndLang
         }
 
         return $out;

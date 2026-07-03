@@ -10,25 +10,21 @@ use App\Services\Cmsrs\ContentService;
 use App\Services\Cmsrs\Helpers\CacheManagerService;
 use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\Navigation\UrlService;
-use App\Services\Cmsrs\Traits\TranslationsTrait;
 use App\Services\Cmsrs\TranslateService;
+use App\Services\Cmsrs\Translation\TranslationReader;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class PageService
 {
-    /**
-     * @use TranslationsTrait<Page>
-     */
-    use TranslationsTrait;
-
     public function __construct(
         private TranslateService $translateService,
         private ContentService $contentService,
         private ImageService $imageService,
         private UrlService $urlService,
-        private CacheManagerService $cacheManagerService
+        private CacheManagerService $cacheManagerService,
+        private TranslationReader $translationReader
     ) {}
 
     /**
@@ -163,14 +159,14 @@ class PageService
         $policyTitle = null;
         if (! empty($privacyPolicy)) {
             $policyUrl = $this->urlService->getUrl($privacyPolicy, $lang);
-            $policyTitle = $this->translatesByColumnAndLang($privacyPolicy, 'title', $lang);
+            $policyTitle = $this->translationReader->translatesByColumnAndLang($privacyPolicy, 'title', $lang);
         }
 
         $contactUrl = null;
         $contactTitle = null;
         if (! empty($contact)) {
             $contactUrl = $this->urlService->getUrl($contact, $lang);
-            $contactTitle = $this->translatesByColumnAndLang($contact, 'title', $lang);
+            $contactTitle = $this->translationReader->translatesByColumnAndLang($contact, 'title', $lang);
         }
 
         $out['policyUrl'] = $policyUrl;

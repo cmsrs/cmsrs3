@@ -8,18 +8,18 @@ use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\Helpers\CacheManagerService;
 use App\Services\Cmsrs\MenuService;
-use App\Services\Cmsrs\Traits\TranslationsTrait;
+use App\Services\Cmsrs\Translation\TranslationReader;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class UrlService
 {
-    /**
-     * @use TranslationsTrait<Page>
-     */
-    use TranslationsTrait;
-
-    public function __construct(private ConfigService $configService, private MenuService $menuService, private CacheManagerService $cacheManagerService) {}
+    public function __construct(
+        private ConfigService $configService,
+        private MenuService $menuService,
+        private CacheManagerService $cacheManagerService,
+        private TranslationReader $translationReader
+    ) {}
 
     public function getUrl(Page $mPage, string $lang, ?string $urlParam = null): ?string
     {
@@ -96,7 +96,7 @@ class UrlService
     public function getSlugByLang(Page $model, string $lang): ?string
     {
         $column = 'title';
-        $name = $this->translatesByColumnAndLang($model, $column, $lang);
+        $name = $this->translationReader->translatesByColumnAndLang($model, $column, $lang);
 
         if ($name === null || $name === '') {
             throw new \RuntimeException("I cant create slug for page column: $column for lang: $lang, because value is empty");

@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Services\Cmsrs;
 
 use App\Models\Cmsrs\Content;
-use App\Services\Cmsrs\Traits\ContentTranslateTrait;
+use App\Services\Cmsrs\Translation\TranslationWriter;
 
 class ContentService
 {
-    use ContentTranslateTrait;
+    public function __construct(
+        private TranslationWriter $translationWriter,
+    ) {}
 
     /**
      * @var array<int, string>
@@ -30,17 +32,6 @@ class ContentService
         'product_id' => 'integer',
     ];
 
-    public function __construct(private ConfigService $configService) {}
-
-    /**
-     * @return array<int, string>
-     *                            use in tests
-     */
-    public function getArrLangs()
-    {
-        return $this->configService->arrGetLangs();
-    }
-
     /**
      * @param  array<string, mixed>  $data
      */
@@ -50,12 +41,12 @@ class ContentService
             $columns = [
                 'content' => false,
             ];
-            $this->genericCreateTranslate($data, 'page_id', $columns, $create);
+            $this->translationWriter->genericCreateTranslate($data, 'page_id', $columns, Content::class, $create);
         } elseif (! empty($data['product_id'])) {
             $columns = [
                 'product_description' => false,
             ];
-            $this->genericCreateTranslate($data, 'product_id', $columns, $create);
+            $this->translationWriter->genericCreateTranslate($data, 'product_id', $columns, Content::class, $create);
         }
 
         return true;
@@ -64,6 +55,7 @@ class ContentService
     /**
      * @param  array<string, mixed>  $row
      */
+    /*
     public function updateRow(array $row): bool
     {
         $query = Content::query()
@@ -82,11 +74,13 @@ class ContentService
 
         return true;
     }
+        */
 
     /**
      * @param  array<string, mixed>  $row
      *                                     DRY!!: ContentService.php and TranslateService.php
      */
+    /*
     public function createRow(array $row): void
     {
         $objContent = new Content;
@@ -95,4 +89,5 @@ class ContentService
             throw new \Exception('problem with save into content table');
         }
     }
+        */
 }

@@ -13,17 +13,11 @@ use App\Services\Cmsrs\Helpers\CacheManagerService;
 use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\Navigation\UrlService;
-use App\Services\Cmsrs\Traits\TranslationsTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class PageDataService
 {
-    /**
-     * @use TranslationsTrait<Page>
-     */
-    use TranslationsTrait;
-
     public function __construct(private ConfigService $configService, private MenuService $menuService, private ImageService $imageService, private CacheManagerService $cacheManagerService, private PageService $pageService, private UrlService $urlService) {}
 
     public function getPageDataByShortTitleCache(string $shortTitle, string $data = 'content', ?string $lang = null): ?string

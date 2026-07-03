@@ -7,19 +7,18 @@ namespace App\Services\Cmsrs;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\Helpers\CacheManagerService;
-use App\Services\Cmsrs\Traits\TranslationsTrait;
+use App\Services\Cmsrs\Translation\TranslationReader;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use Throwable;
 
 class MenuService
 {
-    /**
-     * @use TranslationsTrait<Menu>
-     */
-    use TranslationsTrait;
-
-    public function __construct(private CacheManagerService $cacheManagerService, private TranslateService $translateService) {}
+    public function __construct(
+        private CacheManagerService $cacheManagerService,
+        private TranslateService $translateService,
+        private TranslationReader $translationReader
+    ) {}
 
     /**
      * @return Collection<int, Menu>
@@ -91,7 +90,7 @@ class MenuService
     public function getSlugByLang(Menu $model, string $lang): string
     {
         $column = 'name';
-        $name = $this->translatesByColumnAndLang($model, $column, $lang);
+        $name = $this->translationReader->translatesByColumnAndLang($model, $column, $lang);
 
         if (! is_string($name) || $name === '') {
             throw new \RuntimeException("Missing translation for menu name in lang: $lang");
