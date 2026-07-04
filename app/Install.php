@@ -57,6 +57,11 @@ class Install
 
     public static function finish(Event $event)
     {
-        $event->getIO()->write('Installation successful! Your cmsRS is ready. Please run the unit tests to ensure everything is working as expected.');
+        $event->getIO()->write('');
+        $event->getIO()->write('Step 2: System installation');
+        $event->getIO()->write('------------------------------------');
+        $event->getIO()->write('Go to the project directory and run:');
+        $event->getIO()->write('php artisan cmsrs:install');
+        $event->getIO()->write('');
     }
 }
