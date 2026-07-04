@@ -51,43 +51,4 @@ class ContentService
 
         return true;
     }
-
-    /**
-     * @param  array<string, mixed>  $row
-     */
-    /*
-    public function updateRow(array $row): bool
-    {
-        $query = Content::query()
-            ->where('column', $row['column'])
-            ->where('lang', $row['lang']);
-
-        if (! empty($row['page_id'])) {
-            $query->where('page_id', $row['page_id']);
-        } elseif (! empty($row['product_id'])) {
-            $query->where('product_id', $row['product_id']);
-        }
-
-        $obj = $query->first();
-
-        $this->wrapTranslateUpdate($obj, $row);
-
-        return true;
-    }
-        */
-
-    /**
-     * @param  array<string, mixed>  $row
-     *                                     DRY!!: ContentService.php and TranslateService.php
-     */
-    /*
-    public function createRow(array $row): void
-    {
-        $objContent = new Content;
-        $content = $objContent->create($row);
-        if (empty($content->id)) {
-            throw new \Exception('problem with save into content table');
-        }
-    }
-        */
 }

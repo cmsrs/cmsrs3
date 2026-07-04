@@ -1197,6 +1197,24 @@ class PageTest extends Base
 
         $this->assertNotEmpty($id);
 
+        $page = Page::All();
+        $this->assertEquals($page->count(), 1);
+
+        $pageObj = $page->first();
+        $this->assertEquals($this->testData['title']['en'], app(TranslationReader::class)->translatesByColumnAndLang($pageObj, 'title', 'en'));
+        $this->assertEquals($this->testData['short_title']['en'], app(TranslationReader::class)->translatesByColumnAndLang($pageObj, 'short_title', 'en'));
+        $this->assertEquals($this->testData['description']['en'], app(TranslationReader::class)->translatesByColumnAndLang($pageObj, 'description', 'en'));
+        $this->assertEquals($this->testData['content']['en'], app(TranslationReader::class)->translatesByColumnAndLang($pageObj, 'content', 'en'));
+
+        // 'title' => ['en' => $this->strTestTitle],
+        // 'short_title' => ['en' => `'page1'`],
+        // 'description' => ['en' => 'this page: test desc ...'],
+        // 'published' => 1,
+        // 'commented' => 1,
+        // 'after_login' => 0,
+        // 'type' => 'cms',
+        // 'content' => ['en' => 'content test133445'],
+
         // $allTranslate = (app(TranslationReader::class))->getAllTranslate(Page::find($id)); //dont use
         // $this->assertEquals(4, count($allTranslate));
 
@@ -1221,6 +1239,7 @@ class PageTest extends Base
 
         $resFake = $responseFake->getData();
         $this->assertFalse($resFake->success);
+        // dd($resFake->error);
         $this->assertNotEmpty($resFake->error);
 
         $testData3['menu_id'] = $this->menuId;
@@ -1235,6 +1254,16 @@ class PageTest extends Base
         $this->assertTrue($res->success);
         $this->assertEquals(count($res->data), 1);
         $data = $res->data[0];
+
+        $page2 = Page::All();
+        $this->assertEquals($page2->count(), 1);
+        $pageObj2 = $page2->first();
+
+        $this->assertEquals($testData3['title']['en'], app(TranslationReader::class)->translatesByColumnAndLang($pageObj2, 'title', 'en'));
+        $this->assertEquals($testData3['short_title']['en'], app(TranslationReader::class)->translatesByColumnAndLang($pageObj2, 'short_title', 'en'));
+        $this->assertEquals($testData3['description']['en'], app(TranslationReader::class)->translatesByColumnAndLang($pageObj2, 'description', 'en'));
+        $content = app(TranslationReader::class)->translatesByColumnAndLang($pageObj2, 'content', 'en');
+        $this->assertEquals($testData3['content']['en'], $content);
 
         // $allTranslate = (app(TranslationReader::class))->getAllTranslate(Page::find($id)); //dont use
         // $this->assertEquals(4, count($allTranslate));
@@ -1276,6 +1305,14 @@ class PageTest extends Base
         $this->assertNotEmpty($pageId);
         // $allTranslate = (app(TranslationReader::class))->getAllTranslate(Page::find($pageId)); //dont use
         // $this->assertEquals(4, count($allTranslate));
+
+        $page = Page::All();
+        $this->assertEquals($page->count(), 1);
+        $pageObj = $page->first();
+        $this->assertEquals($testData['title']['en'], app(TranslationReader::class)->translatesByColumnAndLang($pageObj, 'title', 'en'));
+        $this->assertEquals($testData['short_title']['en'], app(TranslationReader::class)->translatesByColumnAndLang($pageObj, 'short_title', 'en'));
+        $this->assertEquals($testData['description']['en'], app(TranslationReader::class)->translatesByColumnAndLang($pageObj, 'description', 'en'));
+        $this->assertEquals($testData['content']['en'], app(TranslationReader::class)->translatesByColumnAndLang($pageObj, 'content', 'en'));
 
         $this->comparePageFields($testData, $data);
     }
