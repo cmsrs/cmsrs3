@@ -7,7 +7,7 @@ use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 
-#[Signature('app:cmsrs-install')]
+#[Signature('cmsrs:install')]
 #[Description('Command description')]
 class CmsrsInstall extends Command
 {
@@ -48,7 +48,7 @@ class CmsrsInstall extends Command
         // Demo data question
         $this->newLine();
 
-        $demo = $this->confirm('Do you want to load demo system data?', false);
+        $demo = $this->confirm('Do you want to load demo system data?', true);
 
         if ($demo) {
             $this->call('cmsrs:load-demo-data');

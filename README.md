@@ -49,7 +49,25 @@
 
 Make sure all extensions match your installed PHP version (e.g., php8.5-mysql, php8.5-mbstring, etc.)
 
-## MANUAL INSTALLATION (RECOMMENDED)
+## INSTALLATION (RECOMMENDED - QUICK SETUP)
+
+Run the following command to create the project:
+
+```bash
+composer create-project cmsrs/cmsrs3
+cd cmsrs3 
+php artisan cmsrs:install
+php artisan serve
+```
+
+Once the server is running, open your browser and navigate to:
+
+```bash
+http://127.0.0.1:8000
+```
+
+
+## MANUAL INSTALLATION (for advanced users 🙂)
 
 * Download the source code:
  
@@ -102,20 +120,18 @@ php artisan migrate && php artisan db:seed
 ```bash
 ./rs/go/go_privilege.sh
 ```
- 
+
+* Run CMS installation
+This step finalizes setup (admin password reset + demo configuration):
+
+```bash
+php artisan cmsrs:install
+```
+
 * Start server
  
 ```bash
 php artisan serve
-```
-
-## INSTALLATION (QUICK SETUP)
-
-Run the following command to create the project:
-
-```bash
-composer create-project cmsrs/cmsrs3
-cd cmsrs3 && php artisan serve
 ```
 
 <!--
@@ -143,7 +159,7 @@ docker run -p 8000:8000 php-cmsrs3
 ```
 -->
 
-## RUN TESTS
+## RUN TESTS (RECOMMENDED)
 
 * Prepare .env.testing file, and change db connection:
 
@@ -188,7 +204,7 @@ It is recommended to run tests on a clean instance (without images)
 
     username: adm@cmsrs.pl
 
-    password: cmsrs123
+    default password: cmsrs123
 
 * Create main page (page type: **main_page**)
 
