@@ -4,6 +4,7 @@ namespace Tests\Feature\Services\Cmsrs;
 
 use App\Models\Cmsrs\Menu;
 use App\Services\Cmsrs\MenuService;
+use App\Services\Cmsrs\Translation\TranslationReader;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 
@@ -128,8 +129,8 @@ class MenuDemoTest extends Base
         $data = (array) $res->data[0];
 
         $mMenu = Menu::find($data['id']);
-        $this->assertEquals((app(MenuService::class))->translatesByColumnAndLang($mMenu, 'name', 'en'), $data['name']->en);
-        $this->assertSame((app(MenuService::class))->translatesByColumnAndLang($mMenu, 'name', 'en'), $this->testData['name']['en']);
+        $this->assertEquals((app(TranslationReader::class))->translatesByColumnAndLang($mMenu, 'name', 'en'), $data['name']->en);
+        $this->assertSame((app(TranslationReader::class))->translatesByColumnAndLang($mMenu, 'name', 'en'), $this->testData['name']['en']);
         $this->assertSame($data['position'], 1); // instead 1 use $this->testData['position']
 
         $this->assertIsInt($data['position']);

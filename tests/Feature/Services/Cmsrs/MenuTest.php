@@ -5,7 +5,7 @@ namespace Tests\Feature\Services\Cmsrs;
 use App\Models\Cmsrs\Menu;
 use App\Models\Cmsrs\Page;
 use App\Services\Cmsrs\MenuService;
-use App\Services\Cmsrs\Page\PageService;
+use App\Services\Cmsrs\Translation\TranslationReader;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -169,8 +169,8 @@ class MenuTest extends Base
         $page1 = Page::find($tree[$parentId]['children'][1]->id);
         $this->assertEquals($tree[$parentId]['children'][1]->id, $page1->id);
 
-        $title0 = (app(PageService::class))->translatesByColumnAndLang($page0, 'title', 'en');
-        $title1 = (app(PageService::class))->translatesByColumnAndLang($page1, 'title', 'en');
+        $title0 = (app(TranslationReader::class))->translatesByColumnAndLang($page0, 'title', 'en');
+        $title1 = (app(TranslationReader::class))->translatesByColumnAndLang($page1, 'title', 'en');
 
         $this->assertEquals(PageTest::STR_CHILD_ONE, $title0);
         $this->assertEquals(PageTest::STR_CHILD_TWO, $title1);
@@ -204,7 +204,7 @@ class MenuTest extends Base
         $this->assertEquals($res->data[1]->position, 2);
         $this->assertEquals($res->data[2]->position, 3);
 
-        $name = (app(MenuService::class))->translatesByColumnAndLang(Menu::find($res->data[2]->id), 'name', 'en');
+        $name = (app(TranslationReader::class))->translatesByColumnAndLang(Menu::find($res->data[2]->id), 'name', 'en');
         $this->assertNotEmpty($name);
         $this->assertEquals($name, $testData3['name']['en']);
 
@@ -215,11 +215,11 @@ class MenuTest extends Base
         $response = $this->get('api/menus?token='.$this->token);
         $res1 = $response->getData();
 
-        $name2 = (app(MenuService::class))->translatesByColumnAndLang(Menu::find($res1->data[2]->id), 'name', 'en');
+        $name2 = (app(TranslationReader::class))->translatesByColumnAndLang(Menu::find($res1->data[2]->id), 'name', 'en');
         $this->assertEquals($name2, $testData2['name']['en']);
         $this->assertNotEquals($name2, $name);
 
-        $name1 = (app(MenuService::class))->translatesByColumnAndLang(Menu::find($res1->data[2]->id), 'name', 'en');
+        $name1 = (app(TranslationReader::class))->translatesByColumnAndLang(Menu::find($res1->data[2]->id), 'name', 'en');
         $resDown = $this->patch('api/menus/position/down/'.$res1->data[2]->id.'?token='.$this->token);
         $res22a1 = $resDown->getData();
         $this->assertTrue($res22a1->success);
@@ -227,10 +227,10 @@ class MenuTest extends Base
         $response = $this->get('api/menus?token='.$this->token);
         $res2 = $response->getData();
 
-        $this->assertNotEquals((app(MenuService::class))->translatesByColumnAndLang(Menu::find($res2->data[2]->id), 'name', 'en'), $name1);
+        $this->assertNotEquals((app(TranslationReader::class))->translatesByColumnAndLang(Menu::find($res2->data[2]->id), 'name', 'en'), $name1);
 
-        $this->assertEquals((app(MenuService::class))->translatesByColumnAndLang(Menu::find($res2->data[0]->id), 'name', 'en'), $name1);
-        $this->assertEquals((app(MenuService::class))->translatesByColumnAndLang(Menu::find($res2->data[0]->id), 'name', 'en'), 'test menu2');
+        $this->assertEquals((app(TranslationReader::class))->translatesByColumnAndLang(Menu::find($res2->data[0]->id), 'name', 'en'), $name1);
+        $this->assertEquals((app(TranslationReader::class))->translatesByColumnAndLang(Menu::find($res2->data[0]->id), 'name', 'en'), 'test menu2');
         $this->assertEquals($res2->data[0]->position, 1);
     }
 
@@ -245,8 +245,8 @@ class MenuTest extends Base
 
         $data = (array) $res->data[0];
 
-        $this->assertEquals((app(MenuService::class))->translatesByColumnAndLang(Menu::find($data['id']), 'name', 'en'), $data['name']->en);
-        $this->assertSame((app(MenuService::class))->translatesByColumnAndLang(Menu::find($data['id']), 'name', 'en'), $this->testData['name']['en']);
+        $this->assertEquals((app(TranslationReader::class))->translatesByColumnAndLang(Menu::find($data['id']), 'name', 'en'), $data['name']->en);
+        $this->assertSame((app(TranslationReader::class))->translatesByColumnAndLang(Menu::find($data['id']), 'name', 'en'), $this->testData['name']['en']);
         $this->assertSame($data['position'], 1); // instead 1 use $this->testData['position']
 
         $this->assertIsInt($data['position']);
@@ -277,8 +277,8 @@ class MenuTest extends Base
         $this->assertEquals(count($res2->data), 2);
 
         $data = (array) $res2->data[0];
-        $this->assertSame((app(MenuService::class))->translatesByColumnAndLang(Menu::find($data['id']), 'name', 'en'), $data['name']->en);
-        $this->assertSame((app(MenuService::class))->translatesByColumnAndLang(Menu::find($data['id']), 'name', 'en'), $this->testData['name']['en']);
+        $this->assertSame((app(TranslationReader::class))->translatesByColumnAndLang(Menu::find($data['id']), 'name', 'en'), $data['name']->en);
+        $this->assertSame((app(TranslationReader::class))->translatesByColumnAndLang(Menu::find($data['id']), 'name', 'en'), $this->testData['name']['en']);
         $data2 = (array) $res2->data[1];
 
         $testData2['position'] = $data['position'] + 1;

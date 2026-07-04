@@ -8,6 +8,7 @@ use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\Navigation\UrlService;
 use App\Services\Cmsrs\Page\PageDataService;
 use App\Services\Cmsrs\Page\PageService;
+use App\Services\Cmsrs\Translation\TranslationReader;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -710,7 +711,7 @@ class PageTest extends Base
 
         $pageToDel = Page::findOrFail($parentId);
         $this->assertNotEmpty($pageToDel->id);
-        $this->assertEquals((app(PageService::class))->translatesByColumnAndLang($pageToDel, 'title', 'en'), PageTest::STR_PARENT_TWO);
+        $this->assertEquals((app(TranslationReader::class))->translatesByColumnAndLang($pageToDel, 'title', 'en'), PageTest::STR_PARENT_TWO);
         $pageToDel->delete();
 
         $pagesAfter = Page::All()->toArray();
@@ -741,8 +742,8 @@ class PageTest extends Base
         $positionBefore1 = $pages[0]['position'];
         $positionBefore2 = $pages[1]['position'];
 
-        $this->assertEquals((app(PageService::class))->translatesByColumnAndLang(Page::find($pages[0]['id']), 'title', 'en'), PageTest::STR_CHILD_ONE);
-        $this->assertEquals((app(PageService::class))->translatesByColumnAndLang(Page::find($pages[1]['id']), 'title', 'en'), PageTest::STR_CHILD_TWO);
+        $this->assertEquals((app(TranslationReader::class))->translatesByColumnAndLang(Page::find($pages[0]['id']), 'title', 'en'), PageTest::STR_CHILD_ONE);
+        $this->assertEquals((app(TranslationReader::class))->translatesByColumnAndLang(Page::find($pages[1]['id']), 'title', 'en'), PageTest::STR_CHILD_TWO);
 
         $res2a = $this->patch('api/pages/position/up/'.$pages[0]['id'].'?token='.$this->token);
 
@@ -760,8 +761,8 @@ class PageTest extends Base
         $this->assertEquals($positionBefore1, $positionAfter1);
         $this->assertEquals($positionBefore2, $positionAfter2);
 
-        $this->assertEquals(PageTest::STR_CHILD_TWO, (app(PageService::class))->translatesByColumnAndLang(Page::find($pages22[0]['id']), 'title', 'en'));
-        $this->assertEquals(PageTest::STR_CHILD_ONE, (app(PageService::class))->translatesByColumnAndLang(Page::find($pages22[1]['id']), 'title', 'en'));
+        $this->assertEquals(PageTest::STR_CHILD_TWO, (app(TranslationReader::class))->translatesByColumnAndLang(Page::find($pages22[0]['id']), 'title', 'en'));
+        $this->assertEquals(PageTest::STR_CHILD_ONE, (app(TranslationReader::class))->translatesByColumnAndLang(Page::find($pages22[1]['id']), 'title', 'en'));
     }
 
     public function test_it_will_add_test_page_id_check_position_parent()
@@ -773,8 +774,8 @@ class PageTest extends Base
 
         $this->assertEquals(count($pages), 3);
 
-        $this->assertEquals((app(PageService::class))->translatesByColumnAndLang(Page::find($pages[1]['id']), 'title', 'en'), PageTest::STR_PARENT_TWO);
-        $this->assertEquals((app(PageService::class))->translatesByColumnAndLang(Page::find($pages[2]['id']), 'title', 'en'), PageTest::STR_PARENT_TREE);
+        $this->assertEquals((app(TranslationReader::class))->translatesByColumnAndLang(Page::find($pages[1]['id']), 'title', 'en'), PageTest::STR_PARENT_TWO);
+        $this->assertEquals((app(TranslationReader::class))->translatesByColumnAndLang(Page::find($pages[2]['id']), 'title', 'en'), PageTest::STR_PARENT_TREE);
 
         $this->assertEquals($pages[1]['page_id'], null);
         $this->assertEquals($pages[2]['page_id'], null);
@@ -798,8 +799,8 @@ class PageTest extends Base
         $this->assertNotEmpty($positionAfter1);
         $this->assertNotEmpty($positionAfter2);
 
-        $this->assertEquals(PageTest::STR_PARENT_TREE, (app(PageService::class))->translatesByColumnAndLang(Page::find($pages22[1]['id']), 'title', 'en'));
-        $this->assertEquals(PageTest::STR_PARENT_TWO, (app(PageService::class))->translatesByColumnAndLang(Page::find($pages22[2]['id']), 'title', 'en'));
+        $this->assertEquals(PageTest::STR_PARENT_TREE, (app(TranslationReader::class))->translatesByColumnAndLang(Page::find($pages22[1]['id']), 'title', 'en'));
+        $this->assertEquals(PageTest::STR_PARENT_TWO, (app(TranslationReader::class))->translatesByColumnAndLang(Page::find($pages22[2]['id']), 'title', 'en'));
     }
 
     public function test_it_will_add3a_with_menu_pages()
@@ -863,7 +864,7 @@ class PageTest extends Base
         $pagesPublished = (app(MenuService::class))->pagesPublished($this->menuObj);
         $this->assertEquals(1, $pagesPublished->count());  // only one has got published ===1 for 'menu_id' =>  $this->menuId
         $this->assertNotEmpty($pagesPublished->first()->id);
-        $this->assertEquals((app(PageService::class))->translatesByColumnAndLang($pagesPublished->first(), 'title', 'en'), $testData2['title']['en']);
+        $this->assertEquals((app(TranslationReader::class))->translatesByColumnAndLang($pagesPublished->first(), 'title', 'en'), $testData2['title']['en']);
     }
 
     public function test_it_will_add_pages_to_check_position_docs()
@@ -983,7 +984,7 @@ class PageTest extends Base
             }
         }
 
-        $this->assertSame($tmpArr[0]->title->en, (app(PageService::class))->translatesByColumnAndLang(Page::find($tmpArr2[0]->id), 'title', 'en'));
+        $this->assertSame($tmpArr[0]->title->en, (app(TranslationReader::class))->translatesByColumnAndLang(Page::find($tmpArr2[0]->id), 'title', 'en'));
     }
 
     public function test_it_will_add_pages0()
@@ -1188,6 +1189,7 @@ class PageTest extends Base
 
     public function test_it_will_update2_page_with_menu()
     {
+        // $this->markTestSkipped('dont use getAllTranslate, therefore we skip this test' );
         $this->setTestData();
         $responseAll = $this->get('api/pages?token='.$this->token);
         $resAll = $responseAll->getData();
@@ -1195,8 +1197,8 @@ class PageTest extends Base
 
         $this->assertNotEmpty($id);
 
-        $allTranslate = (app(PageService::class))->getAllTranslate(Page::find($id));
-        $this->assertEquals(4, count($allTranslate));
+        // $allTranslate = (app(TranslationReader::class))->getAllTranslate(Page::find($id)); //dont use
+        // $this->assertEquals(4, count($allTranslate));
 
         // $id = 1;
         $testData3 =
@@ -1234,14 +1236,15 @@ class PageTest extends Base
         $this->assertEquals(count($res->data), 1);
         $data = $res->data[0];
 
-        $allTranslate = (app(PageService::class))->getAllTranslate(Page::find($id));
-        $this->assertEquals(4, count($allTranslate));
+        // $allTranslate = (app(TranslationReader::class))->getAllTranslate(Page::find($id)); //dont use
+        // $this->assertEquals(4, count($allTranslate));
 
         $this->comparePageFields($testData3, $data);
     }
 
     public function test_it_will_update_empty_val()
     {
+        // $this->markTestSkipped('dont use getAllTranslate, therefore we skip this test' );
         $menu = (app(MenuService::class))->wrapCreate($this->testDataMenu);
         $this->assertNotEmpty($menu->id);
 
@@ -1271,8 +1274,8 @@ class PageTest extends Base
         $data = $res2->data[0];
         $pageId = $data->id;
         $this->assertNotEmpty($pageId);
-        $allTranslate = (app(PageService::class))->getAllTranslate(Page::find($pageId));
-        $this->assertEquals(4, count($allTranslate));
+        // $allTranslate = (app(TranslationReader::class))->getAllTranslate(Page::find($pageId)); //dont use
+        // $this->assertEquals(4, count($allTranslate));
 
         $this->comparePageFields($testData, $data);
     }

@@ -65,4 +65,9 @@ class Translate extends Model
     {
         return $this->belongsTo(Page::class);
     }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
 }

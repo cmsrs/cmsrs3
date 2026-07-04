@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services\Cmsrs\Translation;
 
+use App\Models\Cmsrs\Content;
+use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\ConfigService;
-use Illuminate\Database\Eloquent\Model;
 
 class TranslationWriter
 {
@@ -48,21 +49,19 @@ class TranslationWriter
 
     /**
      * @param  array<string, mixed>  $row
-     * @param  class-string  $modelClass
      */
     private function createRow(array $row, string $modelClass): void
     {
-        /** @var Model $model */
+        /** @var Content|Translate $model */
         $model = new $modelClass;
         $created = $model->create($row);
-        if (! $created->id) {
+        if (! $created->getId()) {
             throw new \Exception("Problem with save into {$modelClass}");
         }
     }
 
     /**
      * @param  array<string, mixed>  $row
-     * @param  class-string  $modelClass
      */
     private function updateRow(array $row, string $modelClass): bool
     {

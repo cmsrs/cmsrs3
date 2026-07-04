@@ -45,4 +45,9 @@ class Content extends Model
         'page_id' => 'integer',
         'product_id' => 'integer',
     ];
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
 }

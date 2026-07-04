@@ -41,7 +41,7 @@ class CacheManagerService
         return $prefix.'_'.Str::slug($value, '_').$sufix;
     }
 
-    public function setTime(): Carbon
+    private function setTime(): Carbon
     {
         return Carbon::now()->addYears(2);
     }

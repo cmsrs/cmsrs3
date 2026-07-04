@@ -14,6 +14,22 @@ class TranslationReader
 
     public function translatesByColumnAndLang(TranslatableInterface $model, string $column, string $lang): ?string
     {
+        $id = (string) $model->getId(); // for $model->id phpstan complains because of interface, so we need to use method
+
+        $key = $this->cacheManagerService->key(
+            strtolower(class_basename($model)).'_translate',
+            $column.'_'.$id,
+            $lang
+        );
+
+        return $this->cacheManagerService->remember(
+            $key,
+            fn () => $this->translatesByColumnAndLangWithoutCache($model, $column, $lang)
+        );
+    }
+
+    private function translatesByColumnAndLangWithoutCache(TranslatableInterface $model, string $column, string $lang): ?string
+    {
         $data = $this->getAllTranslateByColumn($model);
 
         $value = null;
@@ -22,43 +38,6 @@ class TranslationReader
         }
 
         return $value;
-    }
-
-    public function getAllTranslate(TranslatableInterface $model): array
-    {
-        $id = $model->getId(); // for $model->id phpstan complains because of interface, so we need to use method
-
-        $key = $this->cacheManagerService->key(
-            strtolower(class_basename($model)).'_translate',
-            (string) $id,
-        );
-
-        return $this->cacheManagerService->remember(
-            $key,
-            fn () => $this->getAllTranslateWithoutCache($model)
-        );
-    }
-
-    /**
-     * Get all translations for a given translatable model - for menu and image
-     *
-     * @return array<string, array<string, string>>
-     */
-    private function getAllTranslateWithoutCache(TranslatableInterface|ContentTranslatableInterface $model): array
-    {
-        $translates = $model->translates()
-            ->get(['lang', 'column', 'value'])
-            ->toArray();
-
-        $contents = [];
-        if ($model instanceof ContentTranslatableInterface) {
-            $contents = $model->contents()
-                ->get(['lang', 'column', 'value'])
-                ->toArray();
-        }
-
-        return array_merge($translates, $contents);
-
     }
 
     /**
@@ -75,5 +54,27 @@ class TranslationReader
         }
 
         return $out;
+    }
+
+    /**
+     * Get all translations for a given translatable model - for menu and image
+     *
+     * @return array<string, array<string, string>>
+     */
+    private function getAllTranslate(TranslatableInterface|ContentTranslatableInterface $model): array
+    {
+        $translates = $model->translates()
+            ->get(['lang', 'column', 'value'])
+            ->toArray();
+
+        $contents = [];
+        if ($model instanceof ContentTranslatableInterface) {
+            $contents = $model->contents()
+                ->get(['lang', 'column', 'value'])
+                ->toArray();
+        }
+
+        return array_merge($translates, $contents);
+
     }
 }

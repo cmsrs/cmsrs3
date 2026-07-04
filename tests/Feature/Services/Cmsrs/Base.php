@@ -11,6 +11,7 @@ use App\Services\Cmsrs\MenuService;
 use App\Services\Cmsrs\Navigation\UrlService;
 use App\Services\Cmsrs\Page\PageService;
 use App\Services\Cmsrs\Product\ProductDataService;
+use App\Services\Cmsrs\Translation\TranslationReader;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
@@ -161,14 +162,15 @@ class Base extends TestCase
 
     public function checkAllPagesByLang($p, $lang, $onlyOneLang = false)
     {
+        $translationReader = app(TranslationReader::class);
         $pageService = app(PageService::class);
         $urlService = app(UrlService::class);
         $urlIn = [];
         $numOfInPages = 0;
         $numOfInAfterLoginPages = 0;
         foreach ($p as $page) {
-            $pageTitle = $pageService->translatesByColumnAndLang($page, 'title', $lang);
-            $pageShortTitle = $pageService->translatesByColumnAndLang($page, 'short_title', $lang);
+            $pageTitle = $translationReader->translatesByColumnAndLang($page, 'title', $lang);
+            $pageShortTitle = $translationReader->translatesByColumnAndLang($page, 'short_title', $lang);
             $this->assertNotEmpty($pageTitle);
             $this->assertNotEmpty($pageShortTitle);
 
@@ -360,7 +362,7 @@ class Base extends TestCase
         $parentId = null;
         $pages = Page::all();
         foreach ($pages as $p) {
-            $title = (app(PageService::class))->translatesByColumnAndLang(Page::find($p->id), 'title', 'en');
+            $title = (app(TranslationReader::class))->translatesByColumnAndLang(Page::find($p->id), 'title', 'en');
             if ($title == PageTest::STR_PARENT_TWO) {
                 $parentId = $p->id;
             }

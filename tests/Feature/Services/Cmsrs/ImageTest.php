@@ -8,6 +8,7 @@ use App\Models\Cmsrs\Translate;
 use App\Services\Cmsrs\ConfigService;
 use App\Services\Cmsrs\ImageService;
 use App\Services\Cmsrs\Page\PageService;
+use App\Services\Cmsrs\Translation\TranslationReader;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ImageTest extends Base
@@ -287,7 +288,7 @@ class ImageTest extends Base
 
         $objImage = $objPage->images()->first();
         $this->assertNotEmpty($objImage->id);
-        $altEn = app(ImageService::class)->translatesByColumnAndLang($objImage, 'alt', 'en'); // For this method (translatesByColumnAndLang) maybe should create new test.
+        $altEn = app(TranslationReader::class)->translatesByColumnAndLang($objImage, 'alt', 'en'); // For this method (translatesByColumnAndLang) maybe should create new test.
         $this->assertEquals(self::STR_DESC_IMG1, $altEn);
         $this->assertEquals(2, $objPage->images()->get()->count());
 
