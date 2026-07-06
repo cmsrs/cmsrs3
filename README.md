@@ -31,8 +31,6 @@
 </br>
 
 
-
-
 ## REQUIRED PACKAGES
 
 ```php-cli``` – PHP command-line interface
@@ -50,6 +48,8 @@
 Make sure all extensions match your installed PHP version (e.g., php8.5-mysql, php8.5-mbstring, etc.)
 
 ## INSTALLATION (RECOMMENDED - QUICK SETUP)
+
+Before running the script, make sure you have configured the database connection (host, database name, username, password, and port).
 
 Run the following command to create the project:
 

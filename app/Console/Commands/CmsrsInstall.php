@@ -51,6 +51,7 @@ class CmsrsInstall extends Command
         $demo = $this->confirm('Do you want to load demo system data?', true);
 
         if ($demo) {
+            $this->info('Loading demo data...');
             $this->call('cmsrs:load-demo-data');
             $this->info('Demo data loaded successfully.');
         }
