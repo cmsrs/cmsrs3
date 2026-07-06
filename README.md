@@ -22,11 +22,9 @@
 </p>
 
 </br>
-<p>
-    <img width="400" alt="admin panel - cmsRS" src="./rs/intro_imgs/s1.png">
-    <img width="400" alt="frontend - cmsRS" src="./rs/intro_imgs/s6.png">
-</p>
 
+["admin panel - cmsRS"](./rs/intro_imgs/s1.png)
+["frontend - cmsRS"](./rs/intro_imgs/s6.png)
 
 </br>
 
@@ -51,8 +49,6 @@ Unlike traditional CMS platforms:
 
 
 ## Technological diagram of cmsRS: Laravel (backend) + Vue.js or Nuxt (frontend) with communication via REST API
-
-<img src="./rs/readme_imgs/cmsrs_diagram_320.svg" alt="cmsrs_diagram technolgy">
 
 ![cmsRS diagram technolgy](./rs/readme_imgs/cmsrs_diagram_320.svg)
 
