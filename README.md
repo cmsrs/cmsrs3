@@ -23,8 +23,8 @@
 
 </br>
 
-["admin panel - cmsRS"](./rs/intro_imgs/s1.png)
-["frontend - cmsRS"](./rs/intro_imgs/s6.png)
+!["admin panel - cmsRS"](./rs/intro_imgs/s1.png)
+!["frontend - cmsRS"](./rs/intro_imgs/s6.png)
 
 </br>
 
