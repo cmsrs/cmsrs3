@@ -23,8 +23,10 @@
 
 </br>
 
-!["admin panel - cmsRS"](./rs/intro_imgs/s1.png)
-!["frontend - cmsRS"](./rs/intro_imgs/s6.png)
+<div>
+    <img width="400" alt="admin panel - cmsRS" src="./rs/intro_imgs/s1.png">
+    <img width="400" alt="frontend - cmsRS" src="./rs/intro_imgs/s6.png">
+</div>
 
 </br>
 
