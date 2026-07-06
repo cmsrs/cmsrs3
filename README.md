@@ -43,7 +43,7 @@ Unlike traditional CMS platforms:
 
 - ⚡ Laravel + Vue.js architecture
 - 🌍 Multi-language support
-- 🛒 Products managements
+- 🛒 Product management system
 - 🖼️ Gallery system
 - 🔐 Auth system (login/register)
 - 🧪 90% test coverage
