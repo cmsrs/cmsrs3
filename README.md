@@ -30,6 +30,38 @@
 
 </br>
 
+## 🤔 Why cmsRS?
+
+Unlike traditional CMS platforms:
+- No legacy chaos
+- Predictable updates thanks to tests
+- Developer-first architecture
+- Simple and logical database schema
+
+
+## ✨ Features
+
+- ⚡ Laravel + Vue.js architecture
+- 🌍 Multi-language support
+- 🛒 Products managements
+- 🖼️ Gallery system
+- 🔐 Auth system (login/register)
+- 🧪 90% test coverage
+- 🧠 Clean and predictable architecture
+
+
+## Technological diagram of cmsRS: Laravel (backend) + Vue.js or Nuxt (frontend) with communication via REST API
+
+<img src="./rs/readme_imgs/cmsrs_diagram_320.svg" alt="cmsrs_diagram technolgy">
+
+![cmsRS diagram technolgy](./rs/readme_imgs/cmsrs_diagram_320.svg)
+
+<ul>
+<li>(1) <a href="https://github.com/cmsrs/cmsrs3" target="_blank">GitHub – cmsrs3 (Laravel) - Serwer</a></li>
+<li>(2) <a href="https://github.com/cmsrs/cmsrs3-vuejs" target="_blank">GitHub – cmsrs3-vuejs - Admin Panel</a></li>
+<li>(3) <a href="https://github.com/cmsrs/cmsrs3-nuxt" target="_blank">GitHub – cmsrs3-nuxt - Frontend Nuxt</a></li>
+</ul>
+
 
 ## REQUIRED PACKAGES
 
@@ -67,136 +99,23 @@ http://127.0.0.1:8000
 ```
 
 
-## MANUAL INSTALLATION (for advanced users 🙂)
-
-* Download the source code:
- 
-```bash
-git clone https://github.com/cmsrs/cmsrs3.git && cd cmsrs3
-```
-
-* Install dependencies:
-
-```bash
-composer install
-```
-
-* Prepare .env file, and change db connection:
- 
-```bash
-cp .env.example .env
-```
-
-change db connection in .env file, for example:
-
-```bash
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=cmsrs
-DB_USERNAME=rs
-DB_PASSWORD="secret102*"
-```
-
-You can create a MySQL user and database using the script: ``` ./rs/go/go_create_user_and_db.sh ```
-
-* Set up Laravel and JWT (generate the application key and JWT secrets):
-
-```bash
-php artisan key:generate && php artisan jwt:secret
-```
- 
-* Create database tables and seed initial data:
-
-    - admin (email/login: adm@cmsrs.pl, pass: cmsrs123) 
-    - client (email/login: client@cmsrs.pl, pass: cmsrs456) 
-
-```bash
-php artisan migrate && php artisan db:seed
-```
- 
-* (optionally) Set up permission: 
- 
-```bash
-./rs/go/go_privilege.sh
-```
-
-* Run CMS installation
-This step finalizes setup (admin password reset + demo configuration):
-
-```bash
-php artisan cmsrs:install
-```
-
-* Start server
- 
-```bash
-php artisan serve
-```
-
-<!--
-#todo - add mysql auth - automatic
-## INSTALLATION USING DOCKER
-
-We are using SQLite as the database.
-
-* Download the Dockerfile from the ```cmsrs/cmsrs3``` GitHub repository:
-
-```bash
-wget https://raw.githubusercontent.com/cmsrs/cmsrs3/master/Dockerfile
-```
-
-* Build the image based on the Dockerfile:
-
-```bash
-docker build -t php-cmsrs3 .
-```
-
-* Run the container:
-
-```bash
-docker run -p 8000:8000 php-cmsrs3
-```
--->
-
 ## RUN TESTS (RECOMMENDED)
 
 * Prepare .env.testing file, and change db connection:
+
+Attention! DB_DATABASE should be different than the one in the .env file.
 
 ```bash
 cp  .env .env.testing 
 ```
 
-Change db connection in .env.testing file, for example:
-
-```bash
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=cmsrs_testing
-DB_USERNAME=rs
-DB_PASSWORD="secret102*"
-```
-
-Attention! DB_DATABASE should be different than the one in the .env file.
-
-You can create a MySQL database using the script ``` ./rs/go/go_create_test_db.sh ```
-
-* (optionally) set permission 
- 
-```bash
-./rs/go/go_privilege.sh
-```
-
 * run tests: 
-
-It is recommended to run tests on a clean instance (without images)
 
 ```bash
 ./vendor/bin/phpunit
 ```
 
-## MANAGMENT
+## MANAGEMENT
 
 * Go to the website http://127.0.0.1:8000/admin/
 
@@ -211,213 +130,9 @@ It is recommended to run tests on a clean instance (without images)
 * Add menu
     
 * Add pages   
- 
-## CONFIGURATION .env FILE
 
-**After each change to a configuration value, it is necessary to log in to the admin panel again.**
-
-*  Set up langs, the default is 'en,pl':
-
-```bash
-LANGS="en,pl"
-```
-
-The first one will be default language.
-If you don't set up this directive it will be 'en,pl'
-
-* Add api secret, the default is '':
-```bash
-API_SECRET=""
-```
-
-It must be the same like in the admin config file (see Vue.js).
-It can be empty string.
-
-* Set available page type that appear in the administration area: 
-
-The default page types are:
-```bash
-PAGE_TYPES="cms,gallery,shop,contact,main_page,privacy_policy,projects,clear,inner"
-```
-
-    - cms: Displays a WYSIWYG editor in the administration area.
-    - gallery: A page for showcasing photos.
-    - shop: A page for displaying products.
-    - contact: A page with contact information.
-    - main_page: The main page, which requires writing pure HTML code.
-    - privacy_policy: A page containing the privacy policy.
-    - projects: Displays the same content across all languages.
-    - clear: A page without a WYSIWYG editor; requires writing pure HTML code.
-    - inner: Represents a text box on an existing page that requires hardcoding in the layout. The key is the short_title. For example, in the code:
-        (new PageService)->getPageDataByShortTitleCache('main_page_box1', 'content'); //or DI style
-        The following short_title values are predefined:
-            - main_page_box1, main_page_box2, main_page_box3: Represent three content boxes on the main page.
-            - company_data: Displays company information on the contact page.
-            - main_page_slider: Contains images displayed in the slider on the main page, It requires adding a <div class='slidecontainer'></div> element to the main page.
-
-
-* Additionally sending an e-mail with information from the contact form.
-If the value is empty, the text of the message will appear only in the administration panel in the contact tab
-
-```bash
-CONTACT_EMAIL=""
-```
-
-* For Google reCAPTCHA v3 in the contact form, set up the following parameters:
-
-```bash
-GOOGLE_RECAPTCHA_PRIV
-GOOGLE_RECAPTCHA_PUBLIC
-```
- 
-* Enable database cache, the default is false: 
-
-```bash
-CACHE_ENABLE=false
-CACHE_ENABLE_FILE='app/cache_enable.txt'
-```
-
-* Set the currency, the default is USD:
-
-```bash
-CURRENCY=USD
-```
-
-* Set is_shop, the default is true:
-
-```bash
-IS_SHOP=true
-```
-
-* Set is_login, the default is true:
-
-```bash
-IS_LOGIN=true
-```
-
-* Set is_register, the default is true:
-
-```bash
-IS_REGISTER=true
-```
-
-* Set the allowed file extensions for uploads:
-
-The default file extensions for uploads are:
-```bash
-ALLOWED_UPLOAD_EXTENSIONS="jpg,jpeg,png,gif"
-```
-
-* PayU integration:
-
-```bash
-#https://merch-prod.snd.payu.com - sandbox
-PAYU_URL=https://merch-prod.snd.payu.com
-PAYU_POS_ID=123
-PAYU_MD5=xxx
-PAYU_CLIENT_ID=123
-PAYU_CLIENT_SECRET=zzz
-NOTIFY_URL=http://domain/home/orders
-CUSTOMER_IP="123.123.123.123"
-```
-
-* Administrator Credentials
-
-These credentials can be used to create the initial admin user during system installation (database seeding).
-
-```bash
-ADM_EMAIL="adm@cmsrs.pl"
-ADM_PASS="cmsrs123"
-```
-
-```ADM_EMAIL```: The default email address of the admin account.
-```ADM_PASS```: The default password for the admin account.
-
-Warning: Do not use the default credentials (adm@cmsrs.pl / cmsrs123) in production.
-Always update them for security reasons before deploying.
-
-* Client Account Credentials
-
-These credentials can be used to create a default client account during system installation (e.g., for seeding or demo purposes).
-
-```
-CLIENT_EMAIL="client@cmsrs.pl"
-CLIENT_PASS="cmsrs456"
-```
-
-```CLIENT_EMAIL```: The default email address for the client account.
-```CLIENT_PASS```: The default password for the client account.
-
-Warning: Do not use the default client credentials (client@cmsrs.pl / cmsrs456) in production environments.
-Always change them to secure values before deployment.
-
-
-* DEMO Mode
-
-Use this variable to enable demo mode, for example at http://demo.cmsrs.pl/
-Used to block saving changes or modifying sensitive data on public demo instances.
-
-```bash
-DEMO_STATUS=false
-```
-
-Default is false (disabled).
-
-* Pagination
-
-```bash
-PAGINATION=10
-```
-
-Number of items per page in the admin panel. The default value is 10.
-
-* Headless Mode
-
-```bash
-IS_HEADLESS=true
-```
-
-Enables headless API. The default option is true.
-
-```true```: Enables headless API. Headless mode with Nuxt frontend; pages are not rendered on the server side (Nuxt/SPA mode).
-
-```false```: Disables headless API.
-
-* SSR Mode
-
-```bash
-IS_SSR=true
-```
-
-Enables SSR mode. The default option is true.
-
-```true```: Enable traditional SSR (Server-Side Rendering) on the PHP server side.
-
-```false```: Disables SSR (Server-Side Rendering) on the PHP server side
-
-
-## SAMPLE .env CONFIGURATION FOR COMPANY PROFILE PAGE
-
-If you want to create a company profile page, I suggest setting the following CMS parameters, for example:
-
-```bash
-IS_SHOP=false
-IS_LOGIN=false
-IS_REGISTER=false
-LANGS="en"
-API_SECRET="string123"
-PAGE_TYPES="cms,gallery,contact,main_page,privacy_policy,inner"
-```
 
 ## CLI COMMANDS 
-
-* Load test (demo) data: 
-
-**I highly recommend running this script to understand how my CMS works. (Remember to leave the default values in the .env file.)**
-
-```bash
-./rs/go/go_clear_and_load_demo.sh
-```
 
 * Create sitemap (it is recommended to put this command in the crontab file): 
 
@@ -453,13 +168,6 @@ https://www.cmsrs.pl/en/cms/cmsrs/cmsrs-video-tutorial
 
 https://www.cmsrs.pl/en/cms/cmsrs/about-cmsrs
 
-## ADMIN PANEL - VUE.JS - SOURCE CODE 
-
-https://github.com/cmsrs/cmsrs3-vuejs
-
-## FRONTEND - NUXT - SOURCE CODE 
-
-https://github.com/cmsrs/cmsrs3-nuxt
 
 ## REPORTING ISSUES AND SUGGESTIONS
 
@@ -467,3 +175,11 @@ If you notice any problems or have ideas to improve the project, please use the 
 If you like it, give it a star!
 Your support motivates me to keep improving the project. Thank you! :)
 
+## CONTRIBUTING
+
+Contributions are welcome!  
+Feel free to open issues or submit pull requests.
+
+## LICENSE
+
+This project is licensed under the MIT License.
