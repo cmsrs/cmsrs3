@@ -33,19 +33,22 @@
 ## 🤔 Why cmsRS?
 
 Unlike traditional CMS platforms:
-- No legacy chaos
-- Predictable updates thanks to tests
-- Developer-first architecture
-- Simple and logical database schema
+- Clear separation of concerns: Laravel API + Vue.js/Nuxt frontend
+- Flexible frontend layer with optional Nuxt integration via REST API
+- Predictable updates supported by automated testing
+- Developer-friendly architecture based on modern standards
+- Clean and logical database structure
 
 
 ## ✨ Features
 
-- ⚡ Laravel + Vue.js architecture
+- ⚡ Modern Laravel API + Vue.js/Nuxt architecture
 - 🌍 Multi-language support
-- 🛒 Product management system
+- 📝 Content management system for pages and custom content
+- 🧭 Flexible menu and navigation management
 - 🖼️ Gallery system
-- 🔐 Auth system (login/register)
+- 🛒 Product catalog management
+- 🔐 User authentication and access management
 - 🧪 90% test coverage
 - 🧠 Clean and predictable architecture
 
