@@ -32,8 +32,9 @@
 ## 🤔 Why cmsRS?
 
 Unlike traditional CMS platforms:
-- Clear separation of concerns: Laravel API + Vue.js/Nuxt frontend
-- Flexible frontend layer with optional Nuxt integration via REST API
+- Clear separation of concerns: Laravel backend/API, Vue.js administration panel, and flexible frontend layer
+- Laravel-based API backend with Vue.js administration panel
+- Flexible frontend approach: Blade-based rendering or headless frontend via REST API
 - Predictable updates supported by automated testing
 - Developer-friendly architecture based on modern standards
 - Clean and logical database structure
@@ -52,7 +53,7 @@ Unlike traditional CMS platforms:
 - 🧠 Clean and predictable architecture
 
 
-## Technological diagram of cmsRS: Laravel (backend) + Vue.js or Nuxt (frontend) with communication via REST API
+## cmsRS architecture: Laravel (backend/API) + Vue.js (administration panel) + flexible frontend layer (Blade or Nuxt)
 
 ![cmsRS diagram technolgy](./rs/readme_imgs/cmsrs_diagram_320.svg)
 
@@ -101,12 +102,11 @@ http://127.0.0.1:8000
 
 ## RUN TESTS (RECOMMENDED)
 
-* Prepare .env.testing file, and change db connection:
+* Prepare .env.testing file, and change db connection (DB_DATABASE should be different than the one in the .env file):
 
-Attention! DB_DATABASE should be different than the one in the .env file.
 
 ```bash
-cp  .env .env.testing 
+cp .env .env.testing 
 ```
 
 * run tests: 
