@@ -20,10 +20,10 @@
 <p>This separation helps maintain order within the system and makes it easier to develop, test, and adapt to future needs.</p>
 
 <p>
-This also applies to the database structure, which is simple and straightforward, eliminating another layer of complexity (see: <a target="_blank" href='/en/cms/cmsrs/db-schema'>Database Schema</a>). <strong>Thanks to solid unit and integration test coverage, as well as the use of PHPStan, even upgrading to newer versions of PHP or Laravel becomes a more predictable and less painful process.</strong>
+This also applies to the database structure, which is simple and straightforward, eliminating another layer of complexity (see: <a target="_blank" href='https://cmsrs.pl/en/cms/cmsrs/db-schema'>Database Schema</a>). <strong>Thanks to solid unit and integration test coverage, as well as the use of PHPStan, even upgrading to newer versions of PHP or Laravel becomes a more predictable and less painful process.</strong>
 </p>
 
-<p>CmsRS offers native support for multiple languages (e.g., English and Polish) and includes a dedicated online shop module. It is released as open-source software under the MIT License.</p>
+<p><strong>CmsRS offers native support for multiple languages</strong> (e.g., English and Polish) and includes a dedicated online shop module. It is released as open-source software under the MIT License.</p>
 
 </br>
 <p>
@@ -63,7 +63,6 @@ Unlike traditional CMS platforms:
 - 🧪 90% test coverage
 - 🧠 Clean and predictable architecture
 
-
 ## cmsRS architecture: Laravel (backend/API) + Vue.js (administration panel) + flexible frontend layer (Blade or Nuxt)
 
 ![cmsRS diagram technolgy](./rs/readme_imgs/cmsrs_diagram_320.svg)
@@ -73,7 +72,6 @@ Unlike traditional CMS platforms:
 <li>(2) <a href="https://github.com/cmsrs/cmsrs3-vuejs" target="_blank">GitHub – cmsrs3-vuejs - Admin Panel</a></li>
 <li>(3) <a href="https://github.com/cmsrs/cmsrs3-nuxt" target="_blank">GitHub – cmsrs3-nuxt - Frontend Nuxt</a></li>
 </ul>
-
 
 ## REQUIRED PACKAGES
 
@@ -109,7 +107,6 @@ Once the server is running, open your browser and navigate to:
 ```bash
 http://127.0.0.1:8000
 ```
-
 
 ## RUN TESTS (RECOMMENDED)
 
