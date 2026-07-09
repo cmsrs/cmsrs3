@@ -13,9 +13,20 @@
 </br>
 </br>
 
+<p>CmsRS is a next-generation <a href="https://en.wikipedia.org/wiki/Content_management_system" target="_blank">CMS</a>, designed as an alternative to bloated solutions that become difficult to develop and maintain over time. Instead of dozens of plugins and complex dependencies, you get a clean architecture based on proven technologies.</p>
+
+<p>Its architecture is built on a clear separation of concerns: <strong>Laravel</strong> serves as the server-side <strong>API</strong>, while <strong>Vue.js</strong> powers the administrative panel. The frontend layer remains flexible — it can be implemented using Blade or in a <strong>headless</strong> mode (e.g., with <strong>Nuxt</strong>).</p>
+
+<p>This separation helps maintain order within the system and makes it easier to develop, test, and adapt to future needs.</p>
+
 <p>
-    <b>cmsRS</b> is a modern, open-source CMS built for developers who value clean code and maintainability. Released under the MIT License, it provides a flexible foundation that can be freely used, extended, and adapted to your needs. It combines the power of <b>Laravel</b> as a backend API with modern frontend technologies like <b>Vue.js</b> and <b>Nuxt</b>, providing a lightweight, well-tested framework—offering a refreshing alternative to bloated systems. Whether you need a multi-language site, a gallery, or product management, cmsRS provides a predictable foundation that respects your time. The architecture is simple, the database schema is logical, and updates are reliable thanks to extensive test coverage.
+This also applies to the database structure, which is simple and straightforward, eliminating another layer of complexity (see: <a target="_blank" href='/en/cms/cmsrs/db-schema'>Database Schema</a>). <strong>Thanks to solid unit and integration test coverage, as well as the use of PHPStan, even upgrading to newer versions of PHP or Laravel becomes a more predictable and less painful process.</strong>
 </p>
+
+<p>CmsRS offers native support for multiple languages (e.g., English and Polish) and includes a dedicated online shop module. It is released as open-source software under the MIT License.</p>
+
+</br>
+<p>
     <a href="https://www.cmsrs.pl/en/cms/cmsrs/cmsrs-installation">🚀 Install</a> | 
     <a target="_blank" href="https://www.cmsrs.pl/en/cms/cmsrs/demo-version">🌐 Demo</a>
 </p>
@@ -160,14 +171,9 @@ http://demo.cmsrs.pl
 
 http://demo.cmsrs.pl/admin-demo
 
-## TUTORIALS
-
-https://www.cmsrs.pl/en/cms/cmsrs/cmsrs-video-tutorial
-
 ## MORE INFORMATION
 
 https://www.cmsrs.pl/en/cms/cmsrs/about-cmsrs
-
 
 ## REPORTING ISSUES AND SUGGESTIONS
 
