@@ -20,6 +20,9 @@ class ImageHelperService
     ): void {
         $source = self::createImageFromString($data);
 
+        // Save original image.
+        self::saveImage($source, $dirImg.'/'.$name);
+
         $fileName = pathinfo($name, PATHINFO_FILENAME);
         $fileExt = strtolower(pathinfo($name, PATHINFO_EXTENSION));
 
@@ -75,7 +78,7 @@ class ImageHelperService
 
         return $image;
     }
-    
+
     /**
      * Create an exact-size thumbnail using a centered crop.
      *
@@ -121,7 +124,7 @@ class ImageHelperService
             throw new RuntimeException('Unable to create thumbnail.');
         }
 
-        self::prepareTransparency($thumbnail); //jpeg does not support transparency, but png and webp do
+        self::prepareTransparency($thumbnail); // jpeg does not support transparency, but png and webp do
 
         $result = imagecopyresampled(
             $thumbnail,
@@ -143,7 +146,6 @@ class ImageHelperService
 
         return $thumbnail;
     }
-
 
     /**
      * Save GD image according to the file extension.
