@@ -20,37 +20,25 @@ class ImageHelperService
     ): void {
         $source = self::createImageFromString($data);
 
-        try {
-            $originalPath = $dirImg . '/' . $name;
+        $fileName = pathinfo($name, PATHINFO_FILENAME);
+        $fileExt = strtolower(pathinfo($name, PATHINFO_EXTENSION));
 
-            self::saveImage($source, $originalPath);
+        foreach (Image::$thumbs as $thumbName => $dimension) {
+            $fileThumb = $dirImg
+                .'/'
+                .$fileName
+                .'-'
+                .$thumbName
+                .'.'
+                .$fileExt;
 
-            $fileName = pathinfo($name, PATHINFO_FILENAME);
-            $fileExt = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+            $thumbnail = self::createThumbnail(
+                $source,
+                $dimension['x'],
+                $dimension['y']
+            );
 
-            foreach (Image::$thumbs as $thumbName => $dimension) {
-                $fileThumb = $dirImg
-                    . '/'
-                    . $fileName
-                    . '-'
-                    . $thumbName
-                    . '.'
-                    . $fileExt;
-
-                $thumbnail = self::createThumbnail(
-                    $source,
-                    $dimension['x'],
-                    $dimension['y']
-                );
-
-                try {
-                    self::saveImage($thumbnail, $fileThumb);
-                } finally {
-                    imagedestroy($thumbnail);
-                }
-            }
-        } finally {
-            imagedestroy($source);
+            self::saveImage($thumbnail, $fileThumb);
         }
     }
 
@@ -113,7 +101,7 @@ class ImageHelperService
             throw new RuntimeException('Unable to create thumbnail.');
         }
 
-        self::prepareTransparency($source, $thumbnail);
+        self::prepareTransparency($thumbnail); //jpeg does not support transparency, but png and webp do
 
         $result = imagecopyresampled(
             $thumbnail,
@@ -129,36 +117,13 @@ class ImageHelperService
         );
 
         if ($result === false) {
-            imagedestroy($thumbnail);
-
+            // imagedestroy($thumbnail); //8.5 deprecated in PHP 8.5, no need to destroy manually
             throw new RuntimeException('Unable to resize image.');
         }
 
         return $thumbnail;
     }
 
-    /**
-     * Prepare transparency for PNG/WebP images.
-     */
-    private static function prepareTransparency(
-        GdImage $source,
-        GdImage $destination
-    ): void {
-        imagealphablending($destination, false);
-        imagesavealpha($destination, true);
-
-        $transparent = imagecolorallocatealpha(
-            $destination,
-            0,
-            0,
-            0,
-            127
-        );
-
-        if ($transparent !== false) {
-            imagefill($destination, 0, 0, $transparent);
-        }
-    }
 
     /**
      * Save GD image according to the file extension.
@@ -174,7 +139,7 @@ class ImageHelperService
         $result = match ($extension) {
             'jpg', 'jpeg' => imagejpeg($image, $path, 90),
             'png' => self::savePng($image, $path),
-            'webp' => imagewebp($image, $path, 90),
+            'webp' => self::saveWebP($image, $path, 90),
             default => throw new RuntimeException(
                 sprintf(
                     'Unsupported image format: "%s". Supported formats: jpg, jpeg, png, webp.',
@@ -190,16 +155,35 @@ class ImageHelperService
         }
     }
 
+    private static function prepareTransparency(
+        GdImage $image
+    ): void {
+        imagealphablending($image, false);
+        imagesavealpha($image, true);
+    }
+
     /**
-     * Save PNG with maximum quality and preserved transparency.
+     * Save PNG with preserved transparency.
      */
     private static function savePng(
         GdImage $image,
         string $path
     ): bool {
-        imagealphablending($image, false);
-        imagesavealpha($image, true);
+        self::prepareTransparency($image);
 
         return imagepng($image, $path, 6);
+    }
+
+    /**
+     * Save WebP with preserved transparency.
+     */
+    private static function saveWebP(
+        GdImage $image,
+        string $path,
+        int $quality = 90
+    ): bool {
+        self::prepareTransparency($image);
+
+        return imagewebp($image, $path, $quality);
     }
 }
