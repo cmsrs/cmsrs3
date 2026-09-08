@@ -43,10 +43,30 @@ class ImageHelperService
     }
 
     /**
-     * Create GD image from binary image data.
+     * Create GD image from binary image data or base64 data URI.
      */
     private static function createImageFromString(string $data): GdImage
     {
+        if ($data === '') {
+            throw new RuntimeException('Unable to read image data: empty data.');
+        }
+
+        // Handle base64 data URI, e.g.
+        // data:image/jpeg;base64,/9j/4AAQ...
+        if (str_starts_with($data, 'data:')) {
+            $parts = explode(',', $data, 2);
+
+            if (count($parts) !== 2) {
+                throw new RuntimeException('Unable to read image data: invalid data URI.');
+            }
+
+            $data = base64_decode($parts[1], true);
+
+            if ($data === false) {
+                throw new RuntimeException('Unable to read image data: invalid base64 data.');
+            }
+        }
+
         $image = @imagecreatefromstring($data);
 
         if ($image === false) {
@@ -55,7 +75,7 @@ class ImageHelperService
 
         return $image;
     }
-
+    
     /**
      * Create an exact-size thumbnail using a centered crop.
      *
