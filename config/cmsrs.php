@@ -103,10 +103,10 @@ return [
     | Allowed Upload File Extensions
     |--------------------------------------------------------------------------
     | File types allowed for file uploads.
-    | Default: jpg,jpeg,png,gif
+    | Default: jpg,jpeg,png,webp
     */
-    // 'allowed_upload_extensions' => explode(',', env('ALLOWED_UPLOAD_EXTENSIONS', 'jpg,jpeg,png,gif')),
-    'allowed_upload_extensions' => env('ALLOWED_UPLOAD_EXTENSIONS', 'jpg,jpeg,png,gif'),
+    'allowed_upload_extensions' => env('ALLOWED_UPLOAD_EXTENSIONS', 'jpg,jpeg,png,webp'),    
+    
 
     /*
     |--------------------------------------------------------------------------
