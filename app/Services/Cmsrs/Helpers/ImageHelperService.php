@@ -126,7 +126,7 @@ class ImageHelperService
 
         self::prepareTransparency($thumbnail); // jpeg does not support transparency, but png and webp do
 
-        $result = imagecopyresampled(
+        imagecopyresampled(
             $thumbnail,
             $source,
             0,
@@ -138,11 +138,6 @@ class ImageHelperService
             $cropWidth,
             $cropHeight
         );
-
-        if ($result === false) {
-            // imagedestroy($thumbnail); //8.5 deprecated in PHP 8.5, no need to destroy manually
-            throw new RuntimeException('Unable to resize image.');
-        }
 
         return $thumbnail;
     }
@@ -158,22 +153,35 @@ class ImageHelperService
             pathinfo($path, PATHINFO_EXTENSION)
         );
 
-        $result = match ($extension) {
-            'jpg', 'jpeg' => imagejpeg($image, $path, 90),
-            'png' => self::savePng($image, $path),
-            'webp' => self::saveWebP($image, $path, 90),
-            default => throw new RuntimeException(
-                sprintf(
-                    'Unsupported image format: "%s". Supported formats: jpg, jpeg, png, webp.',
-                    $extension
-                )
-            ),
-        };
+        switch ($extension) {
+            case 'jpg':
+            case 'jpeg':
+                imagejpeg($image, $path, 90);
+                break;
 
-        if ($result === false) {
-            throw new RuntimeException(
-                sprintf('Unable to save image: "%s".', $path)
-            );
+            case 'png':
+                if (! self::savePng($image, $path)) {
+                    throw new RuntimeException(
+                        sprintf('Unable to save image: "%s".', $path)
+                    );
+                }
+                break;
+
+            case 'webp':
+                if (! self::saveWebP($image, $path, 90)) {
+                    throw new RuntimeException(
+                        sprintf('Unable to save image: "%s".', $path)
+                    );
+                }
+                break;
+
+            default:
+                throw new RuntimeException(
+                    sprintf(
+                        'Unsupported image format: "%s". Supported formats: jpg, jpeg, png, webp.',
+                        $extension
+                    )
+                );
         }
     }
 
