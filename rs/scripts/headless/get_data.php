@@ -1,6 +1,6 @@
 <?php
 
-$domain = 'http://demo.cmsrs.pl';
+$domain = 'https://demo.cmsrs.pl';
 
 // get default_lang
 $config = "curl -s  -H 'Accept:application/json' -H 'Content-Type:application/json' $domain/api/headless/config";
