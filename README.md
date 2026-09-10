@@ -156,7 +156,7 @@ php artisan cmsrs:change-admin-pass {new-password}
 ## 🌐 Demo
 
 - [Frontend](https://demo.cmsrs.pl)
-- [Admin Panel](https://demo.cmsrs.pl/admin/)
+- [Admin Panel](https://demo.cmsrs.pl/admin-demo/)
 - [Headless / Nuxt](https://demo-headless.cmsrs.pl/)
 
 ## MORE INFORMATION
