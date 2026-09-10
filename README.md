@@ -13,17 +13,10 @@
 </br>
 </br>
 
-<p>CmsRS is a next-generation <a href="https://en.wikipedia.org/wiki/Content_management_system" target="_blank">CMS</a>, designed as an alternative to bloated solutions that become difficult to develop and maintain over time. Instead of dozens of plugins and complex dependencies, you get a clean architecture based on proven technologies.</p>
+<p>CmsRS is a next-generation <a href="https://en.wikipedia.org/wiki/Content_management_system" target="_blank">CMS</a> for websites, galleries, and online stores, built as a clean alternative to bloated CMS solutions.</p>
 
-<p>Its architecture is built on a clear separation of concerns: <strong>Laravel</strong> serves as the server-side <strong>API</strong>, while <strong>Vue.js</strong> powers the administrative panel. The frontend layer remains flexible — it can be implemented using Blade or in a <strong>headless</strong> mode (e.g., with <strong>Nuxt</strong>).</p>
+<p>It uses Laravel as the backend/API and Vue.js as the administration panel, with a flexible frontend that can be built with Blade or used headlessly with Nuxt.</p>
 
-<p>This separation helps maintain order within the system and makes it easier to develop, test, and adapt to future needs.</p>
-
-<p>
-This also applies to the database structure, which is simple and straightforward, eliminating another layer of complexity (see: <a target="_blank" href='https://cmsrs.pl/en/cms/cmsrs/db-schema'>Database Schema</a>). <strong>Thanks to solid unit and integration test coverage, as well as the use of PHPStan, even upgrading to newer versions of PHP or Laravel becomes a more predictable and less painful process.</strong>
-</p>
-
-<p><strong>CmsRS offers native support for multiple languages</strong> (e.g., English and Polish) and includes a dedicated online shop module. It is released as open-source software under the MIT License.</p>
 
 </br>
 <p>
@@ -160,13 +153,11 @@ php artisan cmsrs:create-client {user} {password}
 php artisan cmsrs:change-admin-pass {new-password}
 ```
 
-## DEMO - Frontend
+## 🌐 Demo
 
-http://demo.cmsrs.pl
-
-## DEMO - Admin Panel
-
-http://demo.cmsrs.pl/admin-demo
+- [Frontend](https://demo.cmsrs.pl)
+- [Admin Panel](https://demo.cmsrs.pl/admin/)
+- [Headless / Nuxt](https://demo-headless.cmsrs.pl/)
 
 ## MORE INFORMATION
 
