@@ -8,7 +8,7 @@
 <a href="https://github.com/laravel/laravel"><img src="https://img.shields.io/badge/Laravel-13-yellowgreen"></a>
 <a href="https://www.cmsrs.pl/en/cms/cmsrs/coverage-test"><img src="https://img.shields.io/badge/coverage-90%25-yellowgreen"></a>
 <a href="#"><img src="https://img.shields.io/badge/PHPStan-8-yellowgreen"></a>
-<a href="https://github.com/cmsrs/cmsrs3/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green"></a>
+<a href="https://github.com/cmsrs/cmsrs-laravel/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green"></a>
 </p>
 </br>
 </br>
@@ -61,9 +61,9 @@ Unlike traditional CMS platforms:
 ![cmsRS diagram technolgy](./rs/readme_imgs/cmsrs_diagram_320.svg)
 
 <ul>
-<li>(1) <a href="https://github.com/cmsrs/cmsrs3" target="_blank">GitHub – cmsrs3 (Laravel) - Serwer</a></li>
-<li>(2) <a href="https://github.com/cmsrs/cmsrs3-vuejs" target="_blank">GitHub – cmsrs3-vuejs - Admin Panel</a></li>
-<li>(3) <a href="https://github.com/cmsrs/cmsrs3-nuxt" target="_blank">GitHub – cmsrs3-nuxt - Frontend Nuxt</a></li>
+<li>(1) <a href="https://github.com/cmsrs/cmsrs-laravel" target="_blank">GitHub – cmsrs-laravel - Serwer</a></li>
+<li>(2) <a href="https://github.com/cmsrs/cmsrs-vuejs" target="_blank">GitHub – cmsrs-vuejs - Admin Panel</a></li>
+<li>(3) <a href="https://github.com/cmsrs/cmsrs-nuxt" target="_blank">GitHub – cmsrs-nuxt - Frontend Nuxt</a></li>
 </ul>
 
 ## REQUIRED PACKAGES
@@ -89,8 +89,8 @@ Before running the script, make sure you have configured the database connection
 Run the following command to create the project:
 
 ```bash
-composer create-project cmsrs/cmsrs3
-cd cmsrs3 
+composer create-project cmsrs/cmsrs-laravel
+cd cmsrs-laravel
 php artisan cmsrs:install
 php artisan serve
 ```
@@ -165,7 +165,7 @@ https://www.cmsrs.pl/en/cms/cmsrs/about-cmsrs
 
 ## REPORTING ISSUES AND SUGGESTIONS
 
-If you notice any problems or have ideas to improve the project, please use the [Issues](https://github.com/cmsrs/cmsrs3/issues) section to let me know.
+If you notice any problems or have ideas to improve the project, please use the [Issues](https://github.com/cmsrs/cmsrs-laravel/issues) section to let me know.
 If you like it, give it a star!
 Your support motivates me to keep improving the project. Thank you! :)
 
