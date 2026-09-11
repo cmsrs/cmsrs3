@@ -1,5 +1,5 @@
 {
-    "name": "cmsrs/cmsrs3",
+    "name": "cmsrs/cmsrs-laravel",
     "type": "project",
     "description": "CMS, gallery, and shop based on Laravel and Vue.js",
     "keywords": [
