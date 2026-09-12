@@ -17,6 +17,14 @@
 
 <p>It uses Laravel as the backend/API and Vue.js as the administration panel, with a flexible frontend that can be built with Blade or used headlessly with Nuxt.</p>
 
+</br>
+<p>
+    <a href="https://www.cmsrs.pl/en/cms/cmsrs/cmsrs-installation">🚀 Install</a> | 
+    <a target="_blank" href="https://www.cmsrs.pl/en/cms/cmsrs/demo-version">🌐 Demo</a>
+</p>
+</br>
+
+
 ## cmsRS ECOSYSTEM:
 
 ![cmsRS ecosystem diagram](./rs/readme_imgs/cmsrs_ecosystem.svg)
@@ -28,13 +36,6 @@
 </ul>
 
 
-</br>
-<p>
-    <a href="https://www.cmsrs.pl/en/cms/cmsrs/cmsrs-installation">🚀 Install</a> | 
-    <a target="_blank" href="https://www.cmsrs.pl/en/cms/cmsrs/demo-version">🌐 Demo</a>
-</p>
-
-</br>
 
 <div>
     <img width="400" alt="admin panel - cmsRS" src="./rs/intro_imgs/s1.png">
