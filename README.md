@@ -17,6 +17,16 @@
 
 <p>It uses Laravel as the backend/API and Vue.js as the administration panel, with a flexible frontend that can be built with Blade or used headlessly with Nuxt.</p>
 
+## cmsRS ecosystem:
+
+![cmsRS ecosystem diagram](./rs/readme_imgs/cmsrs_ecosystem.svg)
+
+<ul>
+<li>(1) <a href="https://github.com/cmsrs/cmsrs-laravel" target="_blank">GitHub – cmsrs-laravel - Laravel backend / API</a></li>
+<li>(2) <a href="https://github.com/cmsrs/cmsrs-vuejs" target="_blank">GitHub – cmsrs-vuejs - Vue.js administration panel</a></li>
+<li>(3) <a href="https://github.com/cmsrs/cmsrs-nuxt" target="_blank">GitHub – cmsrs-nuxt - Nuxt frontend </a></li>
+</ul>
+
 
 </br>
 <p>
@@ -28,7 +38,6 @@
 
 <div>
     <img width="400" alt="admin panel - cmsRS" src="./rs/intro_imgs/s1.png">
-    <img width="400" alt="frontend - cmsRS" src="./rs/intro_imgs/s6.png">
 </div>
 
 </br>
@@ -56,15 +65,6 @@ Unlike traditional CMS platforms:
 - 🧪 90% test coverage
 - 🧠 Clean and predictable architecture
 
-## cmsRS architecture: Laravel (backend/API) + Vue.js (administration panel) + flexible frontend layer (Blade or Nuxt)
-
-![cmsRS diagram technolgy](./rs/readme_imgs/cmsrs_diagram_320.svg)
-
-<ul>
-<li>(1) <a href="https://github.com/cmsrs/cmsrs-laravel" target="_blank">GitHub – cmsrs-laravel - Serwer</a></li>
-<li>(2) <a href="https://github.com/cmsrs/cmsrs-vuejs" target="_blank">GitHub – cmsrs-vuejs - Admin Panel</a></li>
-<li>(3) <a href="https://github.com/cmsrs/cmsrs-nuxt" target="_blank">GitHub – cmsrs-nuxt - Frontend Nuxt</a></li>
-</ul>
 
 ## REQUIRED PACKAGES
 
