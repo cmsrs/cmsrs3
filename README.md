@@ -35,7 +35,8 @@
 <li>(3) <a href="https://github.com/cmsrs/cmsrs-nuxt" target="_blank">GitHub – cmsrs-nuxt - Nuxt frontend </a></li>
 </ul>
 
-
+</br>
+</br>
 
 <div>
     <img width="400" alt="admin panel - cmsRS" src="./rs/intro_imgs/s1.png">
