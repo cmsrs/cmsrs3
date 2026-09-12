@@ -17,7 +17,7 @@
 
 <p>It uses Laravel as the backend/API and Vue.js as the administration panel, with a flexible frontend that can be built with Blade or used headlessly with Nuxt.</p>
 
-## cmsRS ecosystem:
+## cmsRS ECOSYSTEM:
 
 ![cmsRS ecosystem diagram](./rs/readme_imgs/cmsrs_ecosystem.svg)
 
@@ -42,7 +42,7 @@
 
 </br>
 
-## 🤔 Why cmsRS?
+## 🤔 WHY cmsRS?
 
 Unlike traditional CMS platforms:
 - Clear separation of concerns: Laravel backend/API, Vue.js administration panel, and flexible frontend layer
@@ -53,7 +53,7 @@ Unlike traditional CMS platforms:
 - Clean and logical database structure
 
 
-## ✨ Features
+## ✨ FEATURES
 
 - ⚡ Modern Laravel API + Vue.js/Nuxt architecture
 - 🌍 Multi-language support
