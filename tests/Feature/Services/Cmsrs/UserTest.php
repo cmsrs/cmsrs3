@@ -5,8 +5,10 @@ namespace Tests\Feature\Services\Cmsrs;
 use App\Enums\Cmsrs\SortDirection;
 use App\Models\User;
 use App\Services\Cmsrs\ConfigService;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class UserTest extends Base
 {
@@ -435,5 +437,96 @@ class UserTest extends Base
 
         $isCache = (new ConfigService)->isCacheEnable();
         $this->assertFalse($isCache);
+    }
+
+    public function test_debug_api_response_headers()
+    {
+        $response = $this->get(
+            'api/users/clients?token='.$this->token
+        );
+
+        $this->assertEquals(200, $response->status());
+        $response->assertOk();
+    }
+
+    public function test_api_returns_authorized(): void
+    {
+        $admin = User::where('email', 'test@email.com')->firstOrFail();
+
+        $originalTtl = config('jwt.ttl');
+
+        try {
+            // Ustaw TTL na jedną minutę.
+            config(['jwt.ttl' => 1]);
+
+            // Wygeneruj JWT dla administratora.
+            $token = JWTAuth::fromUser($admin);
+
+            $this->assertNotEmpty($token);
+
+            // Przywróć konfigurację aplikacji.
+            config(['jwt.ttl' => $originalTtl]);
+
+            // Sprawdź token przed upływem minuty.
+            $response = $this->getJson(
+                'api/users/clients?token='.urlencode($token)
+            );
+
+            $response->assertOk();
+        } finally {
+            config(['jwt.ttl' => $originalTtl]);
+        }
+    }
+
+    public function test_api_returns_unauthorized_when_admin_token_expires(): void
+    {
+        $admin = User::where('email', 'test@email.com')->firstOrFail();
+
+        $jwtFactory = JWTAuth::factory();
+
+        $originalTtl = $jwtFactory->getTTL();
+        $originalTime = Carbon::now();
+
+        try {
+            // Ustaw czas ważności tokenu na jedną minutę.
+            $jwtFactory->setTTL(1);
+
+            // Wygeneruj JWT dla administratora.
+            $token = JWTAuth::fromUser($admin);
+
+            $this->assertNotEmpty($token);
+
+            // Potwierdź, że token początkowo działa.
+            $response = $this->getJson(
+                'api/users/clients?token='.urlencode($token)
+            );
+
+            $response->assertOk();
+
+            // Przesuń zegar Carbon o dwie minuty.
+            Carbon::setTestNow(
+                $originalTime->copy()->addMinutes(2)
+            );
+
+            // Ten sam token powinien być już wygasły.
+            $response = $this->getJson(
+                'api/users/clients?token='.urlencode($token)
+            );
+
+            // dump($response->status());
+            // dump($response->getContent());
+
+            $response->assertUnauthorized();
+            $this->assertEquals(401, $response->status());
+            $response->assertJson([
+                'message' => 'Token has expired',
+            ]);
+
+        } finally {
+            // Przywróć zegar i TTL nawet w razie błędu.
+            Carbon::setTestNow();
+
+            $jwtFactory->setTTL($originalTtl);
+        }
     }
 }
