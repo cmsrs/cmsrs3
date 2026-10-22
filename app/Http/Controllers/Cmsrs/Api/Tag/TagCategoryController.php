@@ -48,15 +48,7 @@ class TagCategoryController extends Controller
 
     public function index(): JsonResponse
     {
-        $categories =
-            $this->tagCategoryService->getAllTagCategories();
-
-        $data = [];
-
-        foreach ($categories as $category) {
-            $data[] =
-                $this->tagCategoryService->toApi($category);
-        }
+        $data = $this->tagCategoryService->getAllCategoriesWithTagsGroupByCategoryType();
 
         return response()->json([
             'success' => true,

@@ -12,12 +12,54 @@ use Illuminate\Support\Str;
 
 class TagCategoryService
 {
+
+
+    public function getAllCategoriesWithTagsGroupByCategoryType()
+    {
+        return $this->toApiByEntityType($this->getAllTagCategories());
+    }
+
     /**
      * @return Collection<int, TagCategory>
      */
-    public function getAllTagCategories(): Collection
+    private function getAllTagCategories(): Collection
     {
-        return TagCategory::with('translations')->get();
+        return TagCategory::with([
+            'translations',
+            'tags.translations',
+        ])->get();
+    }
+
+    /**
+     * Group tag categories by entity type and convert them to API format.
+     *
+     * @param  Collection<int, TagCategory>  $categories
+     * @return array<string, array<int, array{id: int, name: array<string, string>, tags: array<int, array{id: int, name: array<string, string>}>}>>
+     */
+    private function toApiByEntityType(Collection $categories): array
+    {
+        $data = [];
+
+        foreach ($categories as $category) {
+            $tags = [];
+
+            foreach ($category->tags as $tag) {
+                $tags[] = [
+                    'id' => $tag->id,
+                    'name' => $tag->translations->pluck('value', 'lang')->all(),
+                ];
+            }
+
+            $entityType = $category->entity_type->value;
+            $data[$entityType] ??= [];
+            $data[$entityType][] = [
+                'id' => $category->id,
+                'name' => $category->translations->pluck('value', 'lang')->all(),
+                'tags' => $tags,
+            ];
+        }
+
+        return $data;
     }
 
     public function getTagCategory(int $id): ?TagCategory

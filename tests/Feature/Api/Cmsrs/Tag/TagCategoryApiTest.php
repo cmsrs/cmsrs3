@@ -102,6 +102,9 @@ class TagCategoryApiTest extends Base
         $category2 = TagCategory::create([
             'entity_type' => TagCategoryType::PAGE->value,
         ]);
+        $category3 = TagCategory::create([
+            'entity_type' => TagCategoryType::PRODUCT->value,
+        ]);
 
         TagCategoryTranslation::create([
             'tag_category_id' => $category1->id,
@@ -127,6 +130,32 @@ class TagCategoryApiTest extends Base
             'value' => 'Tytul',
         ]);
 
+        TagCategoryTranslation::create([
+            'tag_category_id' => $category3->id,
+            'lang' => 'en',
+            'value' => 'Material',
+        ]);
+
+        TagCategoryTranslation::create([
+            'tag_category_id' => $category3->id,
+            'lang' => 'pl',
+            'value' => 'Material',
+        ]);
+
+        $tag = Tag::create([
+            'tag_category_id' => $category1->id,
+        ]);
+        TagTranslation::create([
+            'tag_id' => $tag->id,
+            'lang' => 'en',
+            'value' => 'Red',
+        ]);
+        TagTranslation::create([
+            'tag_id' => $tag->id,
+            'lang' => 'pl',
+            'value' => 'Czerwony',
+        ]);
+
         $response = $this->get(
             'api/tag-categories?token='.$this->token
         );
@@ -136,36 +165,57 @@ class TagCategoryApiTest extends Base
         $res = $response->getData();
 
         $this->assertTrue($res->success);
-        $this->assertCount(2, $res->data);
+        $this->assertCount(2, $res->data->product);
+        $this->assertCount(1, $res->data->page);
 
         $this->assertEquals(
             'Product type',
-            $res->data[0]->name->en
-        );
-
-        $this->assertEquals(
-            'product',
-            $res->data[0]->entity_type
+            $res->data->product[0]->name->en
         );
 
         $this->assertEquals(
             'Typ produktu',
-            $res->data[0]->name->pl
+            $res->data->product[0]->name->pl
         );
 
         $this->assertEquals(
-            'page',
-            $res->data[1]->entity_type
+            $category1->id,
+            $res->data->product[0]->id
+        );
+
+        $this->assertEquals(
+            $tag->id,
+            $res->data->product[0]->tags[0]->id
+        );
+
+        $this->assertEquals(
+            'Red',
+            $res->data->product[0]->tags[0]->name->en
+        );
+
+        $this->assertEquals(
+            'Czerwony',
+            $res->data->product[0]->tags[0]->name->pl
         );
 
         $this->assertEquals(
             'Topic',
-            $res->data[1]->name->en
+            $res->data->page[0]->name->en
         );
 
         $this->assertEquals(
             'Tytul',
-            $res->data[1]->name->pl
+            $res->data->page[0]->name->pl
+        );
+
+        $this->assertEquals(
+            'Material',
+            $res->data->product[1]->name->en
+        );
+
+        $this->assertEquals(
+            'Material',
+            $res->data->product[1]->name->pl
         );
 
         $this->restDoc->add(
