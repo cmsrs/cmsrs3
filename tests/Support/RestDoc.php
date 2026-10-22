@@ -22,7 +22,11 @@ class RestDoc
         mixed $input,
         mixed $output,
     ): void {
-        return; // comment this line to generate rest api docs on every test run
+        $restDocParam = getenv('REST_DOC');
+
+        if ($restDocParam !== '1') {
+            return;
+        }
 
         $test = $this->getTestName();
 
