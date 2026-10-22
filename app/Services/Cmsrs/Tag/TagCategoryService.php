@@ -12,9 +12,10 @@ use Illuminate\Support\Str;
 
 class TagCategoryService
 {
-
-
-    public function getAllCategoriesWithTagsGroupByCategoryType()
+    /**
+     * @return array<string, list<array{id: int, name: array<string, string>, tags: list<array{id: int, name: array<string, string>}>}>>
+     */
+    public function getAllCategoriesWithTagsGroupedByEntityType(): array
     {
         return $this->toApiByEntityType($this->getAllTagCategories());
     }
@@ -34,7 +35,7 @@ class TagCategoryService
      * Group tag categories by entity type and convert them to API format.
      *
      * @param  Collection<int, TagCategory>  $categories
-     * @return array<string, array<int, array{id: int, name: array<string, string>, tags: array<int, array{id: int, name: array<string, string>}>}>>
+     * @return array<string, list<array{id: int, name: array<string, string>, tags: list<array{id: int, name: array<string, string>}>}>>
      */
     private function toApiByEntityType(Collection $categories): array
     {

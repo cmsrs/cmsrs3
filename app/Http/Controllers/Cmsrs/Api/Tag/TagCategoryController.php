@@ -48,7 +48,7 @@ class TagCategoryController extends Controller
 
     public function index(): JsonResponse
     {
-        $data = $this->tagCategoryService->getAllCategoriesWithTagsGroupByCategoryType();
+        $data = $this->tagCategoryService->getAllCategoriesWithTagsGroupedByEntityType();
 
         return response()->json([
             'success' => true,
